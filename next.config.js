@@ -2,6 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  exportPathMap: async function () {
+    return {
+      '/': { page: '/' },
+    }
+  },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig 
