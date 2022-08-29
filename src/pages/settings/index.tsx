@@ -1,11 +1,23 @@
-import { Heading } from "@chakra-ui/react"
-import { NextPage } from "next"
+import { Heading, Stack, Text } from "@chakra-ui/react"
 import { getSidebarLayout } from "../../components/Layout"
 import { NextPageWithLayout } from "../_app"
 
 const Settings: NextPageWithLayout = () => {
   return (
-    <Heading>Settings</Heading>
+    <Stack spacing={6}>
+      <Heading fontSize={'4xl'}>Settings</Heading>
+      <Text>
+        No personal information is stored on-chain, it’s all hosted with our on/off ramp partner Kado Money.
+      </Text>
+      <Heading fontSize={'xl'}>Title</Heading>
+      <Text>
+        CALC is a tool build for DeFi users, by DeFi users.
+      </Text>
+      <Heading fontSize={'xl'}>Title</Heading>
+      <Text>
+        CALC is a tool build for DeFi users, by DeFi users.
+      </Text>
+    </Stack>
   )
 }
 

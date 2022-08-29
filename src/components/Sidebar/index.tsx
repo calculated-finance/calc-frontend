@@ -98,8 +98,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       pos="fixed"
       h="full"
       {...rest}>
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" cursor={'pointer'}>
-        <Link href="/"><Image src="images/logo.svg" /></Link>
+      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between" >
+        <Link href="/"><Image cursor={'pointer'} src="images/logo.svg" /></Link>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
