@@ -1,4 +1,5 @@
 import { Badge, Box, Button, Divider, Grid, GridItem, Heading, Icon, SimpleGrid, Text, Image, Stack, Flex } from "@chakra-ui/react"
+import Link from "next/link"
 import { FiTablet } from "react-icons/fi"
 import { getSidebarLayout } from "../../components/Layout"
 import { NextPageWithLayout } from "../_app"
@@ -57,7 +58,9 @@ const Strategy = () => {
       </GridItem>
       <GridItem colSpan={3} >
         <Flex justifyContent='end' alignItems={'center'} h='full'>
-          <Button>Manage Portfolio</Button>
+          <Link href='/strategies/1'>
+            <Button>View Performance</Button>
+          </Link>
         </Flex>
       </GridItem>
     </Grid>
