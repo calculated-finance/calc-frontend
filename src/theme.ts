@@ -1,21 +1,21 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
+import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
   initialColorMode: 'dark',
   useSystemColorMode: false,
-}
+};
 
 const layerStyles = {
   panel: {
     bg: 'gray.900',
     color: 'gray.200',
   },
-}
+};
 
 const fonts = {
-  heading: `'Karla', sans-serif`,
-  body: `'Karla', sans-serif`,
-}
+  heading: "'Karla', sans-serif",
+  body: "'Karla', sans-serif",
+};
 
 const colors = {
   yellow: {
@@ -28,11 +28,10 @@ const colors = {
     700: '#FFB636',
     800: '#FFB636',
     900: '#FFB636',
-  }
-}
+  },
+};
 
-const semanticTokens = {
-}
+const semanticTokens = {};
 
 const components = {
   Button: {
@@ -41,10 +40,17 @@ const components = {
     },
     defaultProps: {
       colorScheme: 'yellow',
-    }
-  }
-}
+    },
+  },
+};
 
-const theme = extendTheme({ config, layerStyles, fonts, components, colors, semanticTokens })
+const theme = extendTheme({
+  config,
+  layerStyles,
+  fonts,
+  components,
+  colors,
+  semanticTokens,
+});
 
-export default theme
+export default theme;
