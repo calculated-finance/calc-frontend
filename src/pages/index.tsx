@@ -35,9 +35,7 @@ const Home: NextPageWithLayout = () => (
             Setting up a DCA strategy with CALC takes just 4 minutes. CALC, the ease of use offered by neobank apps
             combined with the power of DeFi.
           </Text>
-          <Button w="full" colorScheme="yellow">
-            Get Started
-          </Button>
+          <Button w="full">Get Started</Button>
         </Stack>
       </WrapItem>
       <WrapItem rounded={5} w="xs" layerStyle="panel" p={4}>
@@ -97,7 +95,7 @@ const Home: NextPageWithLayout = () => (
             <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
             <Text fontSize="sm">Recurring payments means no stress. Set &amp; forget.</Text>
           </Box>
-          <Flex bg="black" p={4} w="full" justifyContent="center">
+          <Flex p={4} w="full" justifyContent="center">
             <Image src="images/workflow.svg" />
           </Flex>
         </Flex>

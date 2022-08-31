@@ -74,10 +74,10 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         borderRadius="lg"
         role="group"
         cursor="pointer"
-        color={isActive ? 'yellow.500' : 'inherit'}
+        color={isActive ? 'brand.200' : 'inherit'}
         _hover={{
-          bg: 'gray.700',
-          color: isActive ? 'yellow.500' : 'white',
+          bg: 'navy',
+          color: isActive ? 'brand.200' : 'white',
         }}
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
@@ -87,7 +87,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
             mr="5"
             fontSize="16"
             _groupHover={{
-              color: isActive ? 'yellow.500' : 'white',
+              color: isActive ? 'brand.200' : 'white',
             }}
             as={icon}
           />
@@ -103,7 +103,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 
   return (
     <Flex
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue('white', 'abyss')}
       w={{ base: 'full', md: SIDEBAR_WIDTH }}
       pos="fixed"
       h="full"
@@ -147,7 +147,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
       px={{ base: 4, md: 24 }}
       height="20"
       alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue('white', 'abyss')}
       borderBottomWidth="1px"
       borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
       justifyContent="flex-start"
@@ -166,7 +166,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.800')}>
+    <Box minH="100vh" bg={useColorModeValue('gray.100', 'navy')}>
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
