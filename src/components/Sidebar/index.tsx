@@ -4,7 +4,6 @@ import {
   Box,
   CloseButton,
   Flex,
-  Icon,
   useColorModeValue,
   Drawer,
   DrawerContent,
@@ -16,40 +15,40 @@ import {
   Stack,
   LinkBox,
 } from '@chakra-ui/react';
-import {
-  FiHome,
-  FiSettings,
-  FiMenu,
-  FiInfo,
-  FiBarChart,
-  FiBriefcase,
-  FiPlusSquare,
-  FiTwitter,
-  FiMail,
-  FiMoon,
-} from 'react-icons/fi';
-import { IconType } from 'react-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import {
+  BarChartIcon,
+  TwitterIcon,
+  NightIcon,
+  PaperplaneIcon,
+  HomeIcon,
+  SettingsIcon,
+  MenuIcon,
+  Add1Icon,
+  LifebeltIcon,
+  ToolkitIcon,
+} from '@fusion-icons/react/interface';
+import Icon from '@components/Icon';
 
 interface LinkItemProps {
   name: string;
-  icon: IconType;
+  icon: any;
   active?: boolean;
   href: string;
 }
 const LinkItems: Array<LinkItemProps> = [
   {
     name: 'Home',
-    icon: FiHome,
+    icon: HomeIcon,
     active: true,
     href: '/',
   },
-  { name: 'Create Strategy', icon: FiPlusSquare, href: '/create-strategy' },
-  { name: 'My strategies', icon: FiBriefcase, href: '/strategies' },
-  { name: 'Performance', icon: FiBarChart, href: '/performance' },
-  { name: 'How it works', icon: FiInfo, href: '/how-it-works' },
-  { name: 'Settings', icon: FiSettings, href: '/settings' },
+  { name: 'Create Strategy', icon: Add1Icon, href: '/create-strategy' },
+  { name: 'My strategies', icon: ToolkitIcon, href: '/strategies' },
+  { name: 'Performance', icon: BarChartIcon, href: '/performance' },
+  { name: 'How it works', icon: LifebeltIcon, href: '/how-it-works' },
+  { name: 'Settings', icon: SettingsIcon, href: '/settings' },
 ];
 
 const SIDEBAR_WIDTH = 64;
@@ -86,8 +85,9 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
           <Icon
             mr="5"
             fontSize="16"
+            stroke={isActive ? 'brand.200' : 'white'}
             _groupHover={{
-              color: isActive ? 'brand.200' : 'white',
+              stroke: isActive ? 'brand.200' : 'white',
             }}
             as={icon}
           />
@@ -125,11 +125,11 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       <Stack position="absolute" p={6} bottom={0} color="white" w="full" spacing={6}>
         <Stack color="gray.500" direction="row" w="full" spacing={8}>
           <LinkBox>
-            <Icon as={FiTwitter} />
+            <Icon as={TwitterIcon} />
           </LinkBox>
-          <Icon as={FiMail} />
-          <Icon as={FiBarChart} />
-          <Icon as={FiMoon} />
+          <Icon as={PaperplaneIcon} />
+          <Icon as={BarChartIcon} />
+          <Icon as={NightIcon} />
         </Stack>
         <Text fontSize="xx-small">Proudly built on the Kujira Blockchain.</Text>
       </Stack>
@@ -154,7 +154,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
     >
-      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
+      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<MenuIcon />} />
 
       <Text fontSize="2xl" ml="8" fontWeight="bold">
         <Image src="images/logo.svg" />

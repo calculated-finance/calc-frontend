@@ -17,6 +17,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/karla": "^4.5.9",
+    "@fusion-icons/react": "^0.0.0",
     "@tanstack/react-query": "^4.2.3",
     "@wizard-ui/core": "^1.1.0",
     "@wizard-ui/react": "^2.1.0",
@@ -27,11 +28,13 @@
     "react-icons": "^4.4.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^6.3.1",
     "@types/node": "18.7.13",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.36.0",
     "@typescript-eslint/parser": "^5.35.1",
+    "babel-plugin-inline-react-svg": "^2.0.1",
     "eslint": "^8.23.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -41,6 +44,7 @@
     "eslint-import-resolver-typescript": "^3.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "next-images": "^1.8.4",
     "next-transpile-modules": "^9.0.0",
     "prettier": "^2.7.1",
     "typescript": "4.8.2"
