@@ -1,6 +1,5 @@
 import React, { ReactNode, ReactText } from 'react';
 import {
-  IconButton,
   Box,
   CloseButton,
   Flex,
@@ -13,23 +12,21 @@ import {
   FlexProps,
   Image,
   Stack,
-  LinkBox,
+  Spacer,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   BarChartIcon,
-  TwitterIcon,
-  NightIcon,
-  PaperplaneIcon,
   HomeIcon,
   SettingsIcon,
-  MenuIcon,
   Add1Icon,
   LifebeltIcon,
   ToolkitIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
+import CosmosWalletButton from '@components/CosmosWallet';
+import Footer from '@components/Footer';
 
 interface LinkItemProps {
   name: string;
@@ -69,11 +66,12 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
       <Flex
         align="center"
         p="4"
-        mx="4"
-        borderRadius="lg"
+        pl={8}
+        borderLeftWidth={2}
+        borderColor={isActive ? 'brand.200' : 'transparent'}
         role="group"
         cursor="pointer"
-        color={isActive ? 'brand.200' : 'inherit'}
+        color={isActive ? 'brand.200' : '#D5F8F9'}
         _hover={{
           bg: 'navy',
           color: isActive ? 'brand.200' : 'white',
@@ -85,7 +83,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
           <Icon
             mr="5"
             fontSize="16"
-            stroke={isActive ? 'brand.200' : 'white'}
+            stroke={isActive ? 'brand.200' : '#D5F8F9'}
             _groupHover={{
               stroke: isActive ? 'brand.200' : 'white',
             }}
@@ -110,7 +108,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+      <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
         <Link href="/">
           <Image cursor="pointer" src="images/logo.svg" />
         </Link>
@@ -122,16 +120,8 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
           {link.name}
         </NavItem>
       ))}
-      <Stack position="absolute" p={6} bottom={0} color="white" w="full" spacing={6}>
-        <Stack color="gray.500" direction="row" w="full" spacing={8}>
-          <LinkBox>
-            <Icon as={TwitterIcon} />
-          </LinkBox>
-          <Icon as={PaperplaneIcon} />
-          <Icon as={BarChartIcon} />
-          <Icon as={NightIcon} />
-        </Stack>
-        <Text fontSize="xx-small">Proudly built on the Kujira Blockchain.</Text>
+      <Stack position="absolute" p={6} bottom={0} color="grey" w="full" spacing={2}>
+        <Footer />
       </Stack>
     </Flex>
   );
@@ -141,24 +131,46 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 function MobileNav({ onOpen, ...rest }: MobileProps) {
+  const router = useRouter();
+
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
-      height="20"
+      px={8}
+      py={4}
       alignItems="center"
-      bg={useColorModeValue('white', 'abyss')}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+      bg={useColorModeValue('white', 'navy')}
       justifyContent="flex-start"
+      flexDirection="column"
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
     >
-      <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<MenuIcon />} />
-
-      <Text fontSize="2xl" ml="8" fontWeight="bold">
-        <Image src="images/logo.svg" />
-      </Text>
+      <Flex w="full" pb={8} alignItems="center">
+        <Text fontSize="2xl" fontWeight="bold">
+          <Image src="images/logo.svg" />
+        </Text>
+        <Spacer />
+        <CosmosWalletButton />
+      </Flex>
+      <Flex w="full" justifyContent="space-between">
+        {LinkItems.map((link) => (
+          <Link href={link.href} key={link.name}>
+            <Icon
+              as={link.icon}
+              p={3}
+              width={12}
+              height={12}
+              borderBottomWidth={2}
+              borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
+              cursor="pointer"
+              stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+              _hover={{
+                bg: 'darkGrey',
+                stroke: link.href === router.asPath ? 'brand.200' : 'white',
+              }}
+            />
+          </Link>
+        ))}
+      </Flex>
     </Flex>
   );
 }

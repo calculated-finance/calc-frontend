@@ -89,12 +89,17 @@ const components = {
   },
 };
 
+const shadows = {
+  content: '-4px 0px 20px 4px rgba(0, 0, 0, 0.25)',
+};
+
 const theme = extendTheme({
   config,
   layerStyles,
   fonts,
   components,
   colors,
+  shadows,
   semanticTokens,
 });
 
