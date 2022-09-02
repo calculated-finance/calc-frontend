@@ -79,24 +79,14 @@ const semanticTokens = {};
 const components = {
   Button: {
     baseStyle: {
-      borderRadius: 4,
+      borderRadius: 'lg',
+      fontSize: 'sm',
     },
     defaultProps: {
       colorScheme: 'brand',
+      size: 'sm',
     },
   },
-  // Icon: {
-  //   baseStyle: {
-  //     stroke: 'white',
-  //     strokeWidth: 4,
-  //     fontSize: 'md',
-  //   },
-  //   defaultProps: {
-  //     stroke: 'white',
-  //     strokeWidth: 4,
-  //     fontSize: 'md',
-  //   } as ComponentStyleConfig,
-  // },
 };
 
 const theme = extendTheme({

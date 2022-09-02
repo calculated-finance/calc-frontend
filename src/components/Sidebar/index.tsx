@@ -58,7 +58,7 @@ interface SidebarProps extends BoxProps {
 }
 
 interface NavItemProps extends FlexProps {
-  icon: IconType;
+  icon: any;
   children: ReactText;
   isActive: boolean | undefined;
   href: string;
@@ -183,9 +183,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
       </Drawer>
       {/* mobilenav */}
       <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: SIDEBAR_WIDTH }} p="4">
-        {children}
-      </Box>
+      <Box ml={{ base: 0, md: SIDEBAR_WIDTH }}>{children}</Box>
     </Box>
   );
 }

@@ -12,9 +12,9 @@ export function CosmosWallet() {
     return (
       <Box>
         <HStack spacing="3">
-          <IconButton aria-label="notifications" icon={<Icon as={FiBell} />} />
+          <IconButton aria-label="notifications" variant="ghost" icon={<Icon as={FiBell} />} />
           <Menu placement="bottom-end">
-            <MenuButton as={Button} rightIcon={<Icon as={FiChevronDown} />}>
+            <MenuButton as={Button} variant="outline" rightIcon={<Icon as={FiChevronDown} />}>
               {truncate(address)}
             </MenuButton>
             <MenuList>
@@ -27,7 +27,7 @@ export function CosmosWallet() {
     );
   }
 
-  return <WalletModalButton />;
+  return <WalletModalButton variant="outline">Connect to a wallet</WalletModalButton>;
 }
 
 export default CosmosWallet;
