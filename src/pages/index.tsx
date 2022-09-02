@@ -132,7 +132,7 @@ function InfoPanel() {
 
 function ActiveStrategies() {
   return (
-    <Flex rounded="2xl" h={308} layerStyle="panel" p={8} alignItems="center">
+    <Flex rounded="2xl" h={294} layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
         <Heading size="md">My Active CALC Strategies</Heading>
         <Heading fontSize="5xl">0</Heading>
@@ -173,22 +173,22 @@ const Home: NextPageWithLayout = () => (
       </Text>
     </Box>
     <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
-      <GridItem colSpan={{ base: 5, lg: 5, '2xl': 2 }}>
+      <GridItem colSpan={{ base: 5, xl: 2, '2xl': 2 }}>
         <Setup />
       </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }}>
+      <GridItem colSpan={{ base: 5, xl: 3, '2xl': 2 }}>
         <LearnMore />
       </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 2, '2xl': 1 }}>
+      <GridItem colSpan={{ base: 5, lg: 2, '2xl': 1 }} rowStart={{ lg: 3, xl: 3, '2xl': 1 }} colStart={{ '2xl': 5 }}>
         <FearAndGreed />
       </GridItem>
-      <GridItem colSpan={5}>
+      <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
         <InfoPanel />
       </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 2, '2xl': 2 }}>
+      <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }} rowStart={{ lg: 3, '2xl': 3 }} colStart={{ lg: 3, '2xl': 1 }}>
         <ActiveStrategies />
       </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 3, '2xl': 3 }}>
+      <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
         <WorkflowInformation />
       </GridItem>
     </Grid>
