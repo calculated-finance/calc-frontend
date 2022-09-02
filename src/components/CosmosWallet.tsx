@@ -27,6 +27,8 @@ export function CosmosWallet() {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore-next-line
   return <WalletModalButton variant="outline">Connect to a wallet</WalletModalButton>;
 }
 
