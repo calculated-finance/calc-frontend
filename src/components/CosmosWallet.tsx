@@ -1,12 +1,17 @@
 import React from 'react';
-import { useWallet, useWalletModal, WalletModalButton } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { truncate } from '@wizard-ui/core';
 import { HStack, Box, IconButton, Button, Menu, MenuButton, MenuList, MenuItem, Icon } from '@chakra-ui/react';
 import { FiBell, FiChevronDown } from 'react-icons/fi';
+import { useWalletModal } from 'src/hooks/useWalletModal';
 
-export function CosmosWallet() {
-  const { setVisible } = useWalletModal();
-  const { address, disconnect } = useWallet();
+function CosmosWallet() {
+  const { visible, setVisible } = useWalletModal();
+  const { address, connected, disconnect, connecting } = useWallet();
+
+  const handleClick = () => {
+    setVisible(!visible);
+  };
 
   if (address != null) {
     return (
@@ -27,9 +32,11 @@ export function CosmosWallet() {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore-next-line
-  return <WalletModalButton variant="outline">Connect to a wallet</WalletModalButton>;
+  return (
+    <Button variant="outline" onClick={handleClick}>
+      Connect to a wallet
+    </Button>
+  );
 }
 
 export default CosmosWallet;

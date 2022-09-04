@@ -8,6 +8,7 @@ const config: ThemeConfig = {
 const layerStyles = {
   panel: {
     bg: 'deepHorizon',
+    boxShadow: 'sm',
   },
 };
 
@@ -18,7 +19,18 @@ const fonts = {
 
 const colors = {
   black: '#0f0f12',
-  grey: '#A0A0A0',
+  grey: {
+    50: '#A0A0A0',
+    100: '#A0A0A0',
+    200: '#A0A0A0',
+    300: '#A0A0A0',
+    400: '#A0A0A0',
+    500: '#A0A0A0',
+    600: '#A0A0A0',
+    700: '#A0A0A0',
+    800: '#A0A0A0',
+    900: '#A0A0A0',
+  },
   slateGrey: '#8B8CA7',
   darkGrey: '#2C2D3A',
   navy: '#1B202B',
@@ -85,6 +97,18 @@ const components = {
     defaultProps: {
       colorScheme: 'brand',
       size: 'sm',
+    },
+  },
+  Link: {
+    baseStyle: {
+      color: 'blue.200',
+      fontWeight: 'bold',
+    },
+  },
+  Badge: {
+    baseStyle: {
+      borderRadius: 'lg',
+      textTransform: 'none',
     },
   },
 };

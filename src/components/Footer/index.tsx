@@ -6,18 +6,18 @@ function Footer() {
   return (
     <>
       <Stack color="grey" direction="row" w="full" spacing={8}>
-        <Link href="https://twitter.com/CALC_Finance">
+        <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
           <Icon as={TwitterIcon} stroke="slateGrey" />
         </Link>
-        <Link href="https://twitter.com/CALC_Finance">
+        <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
           <Icon as={PaperplaneIcon} stroke="slateGrey" />
         </Link>
-        <Link href="https://twitter.com/CALC_Finance">
+        <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
           <Icon as={DiscordIcon} stroke="slateGrey" />
         </Link>
-        <Link href="https://twitter.com/CALC_Finance">
+        {/* <Link target="_blank" href="https://twitter.com/CALC_Finance">
           <Icon as={NightIcon} stroke="slateGrey" />
-        </Link>
+        </Link> */}
       </Stack>
       <Text fontSize="10px">Proudly built on the Kujira Blockchain.</Text>
     </>

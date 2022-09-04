@@ -120,7 +120,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
           {link.name}
         </NavItem>
       ))}
-      <Stack position="absolute" p={6} bottom={0} color="grey" w="full" spacing={2}>
+      <Stack position="absolute" p={6} bottom={0} color="grey.200" w="full" spacing={2}>
         <Footer />
       </Stack>
     </Flex>

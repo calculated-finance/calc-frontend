@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { ReactElement } from 'react';
-import { CosmosWallet } from '@components/CosmosWallet';
 import Footer from '@components/Footer';
+import CosmosWallet from '@components/CosmosWallet';
 import Sidebar from '../Sidebar';
 
 function AppHeader() {

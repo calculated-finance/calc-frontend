@@ -2025,6 +2025,11 @@
   resolved "https://registry.yarnpkg.com/@fusion-icons/react/-/react-0.0.0.tgz#061c12b4edae01d823dd1dfea686effd86ef0098"
   integrity sha512-UiQzPbuYlIeWlHPLYlJwG7gDcPzCwTSS4ZKN6/edy9aEhH3MuBDP3RjxNkaTSPCqhmawMbyoHZXZBFHyEQ22hQ==
 
+"@headlessui/react@^1.6.6":
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.6.6.tgz#3073c066b85535c9d28783da0a4d9288b5354d0c"
+  integrity sha512-MFJtmj9Xh/hhBMhLccGbBoSk+sk61BlP6sJe4uQcVMtXZhCgGqd2GyIQzzmsdPdTEWGSF434CBi8mnhR6um46Q==
+
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.10.4.tgz#01e7366e57d2ad104feea63e72248f22015c520c"
@@ -2774,7 +2779,7 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@wizard-ui/core@*", "@wizard-ui/core@^1.1.0":
+"@wizard-ui/core@*":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.1.0.tgz#5869ea8fa2b218f26cf9fc7d3ea131732abfd62d"
   integrity sha512-ZwvB1W80jev70+sHzszzIm2GBsaClPZWwOE+rI8I8Vf5v1wmA1ML+VVU5WVVbO3ukamZJZsFfNIlwjlC5iP2aw==
@@ -2784,11 +2789,22 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@wizard-ui/react@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.1.0.tgz#91393c3d3868d1d36f8cd36b0389da002faa4cb8"
-  integrity sha512-pzlGomWmt/rrGirMVxetld7ev0Mj4djh1AmmWhmVXEf1ncgo5HXjt3g06bOkqSA69B04WJpM3vh4074nfkwO8Q==
+"@wizard-ui/core@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.2.0.tgz#6b214964b84fbfc4bd21cfffbcd83f74ea6b0e8b"
+  integrity sha512-3CIrjEdJoBvgmLPYhTzwFVrGYMwkF3q+dWth5UphPfRExv1DqAKhTJj1LCCtPdrqmk4RB9CDUPhdGQfip3flBg==
   dependencies:
+    bignumber.js "^9.1.0"
+    d3-format "^3.1.0"
+    eventemitter3 "^4.0.7"
+    lodash "^4.17.21"
+
+"@wizard-ui/react@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.2.0.tgz#6a4a5716b5c9576aefc21c50b31ccd77665dd6b5"
+  integrity sha512-OWoNjT2TTYWTJvTwnfrOPb3U+9V/Y4deXHjlQHznKAI5Gi8xvEHTbExjTuTMhBCwyElcYu8pgFm8aSprVk0q/Q==
+  dependencies:
+    "@headlessui/react" "^1.6.6"
     "@wizard-ui/core" "*"
     ahooks "^3.7.0"
     rifm "^0.12.1"
