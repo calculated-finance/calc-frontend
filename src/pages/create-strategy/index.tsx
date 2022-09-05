@@ -87,18 +87,20 @@ export function Balance() {
 
   const { data: balanceData } = useBalance({ address, token: 'ukuji' });
 
-  const {
-    data: contractData,
-    isLoading,
-    isError,
-    error,
-  } = useQueryContract({
+  const { data: contractData } = useQueryContract({
     address: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
     msg: {
       get_balance: {
         address,
         denom: 'ukuji',
       },
+    },
+  });
+
+  const { data: vaultsData } = useQueryContract({
+    address: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+    msg: {
+      get_all_active_vaults: {},
     },
   });
 
@@ -120,6 +122,13 @@ export function Balance() {
             {contractData.amount}
             &nbsp; uKUJI
           </Text>
+        </>
+      )}
+
+      {vaultsData && (
+        <>
+          <Heading>Contract Balance</Heading>
+          <Text>{JSON.stringify(vaultsData)}</Text>
         </>
       )}
     </Box>

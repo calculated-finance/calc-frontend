@@ -12,6 +12,17 @@ const layerStyles = {
   },
 };
 
+const textStyles = {
+  body: {
+    fontSize: 'sm',
+    color: 'grey.200',
+  },
+  'body-xs': {
+    fontSize: 'xs',
+    color: 'grey.200',
+  },
+};
+
 const fonts = {
   heading: "'Karla', sans-serif",
   body: "'Karla', sans-serif",
@@ -125,6 +136,7 @@ const theme = extendTheme({
   colors,
   shadows,
   semanticTokens,
+  textStyles,
 });
 
 export default theme;

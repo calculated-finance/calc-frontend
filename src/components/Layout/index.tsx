@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </Box>
       </main>
-      <Flex display={{ base: 'flex', md: 'flex', lg: 'none' }} p={8}>
+      <Flex display={{ base: 'flex', sm: 'flex', md: 'none' }} p={8}>
         <Footer />
       </Flex>
     </Sidebar>
