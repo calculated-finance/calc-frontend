@@ -8,29 +8,30 @@ import {
   Graph1Icon,
   PuzzleIcon,
 } from '@fusion-icons/react/interface';
-import { useBalance, useQueryContract, useWallet } from '@wizard-ui/react';
+import { useBalance, useExecuteContract, useQueryContract, useWallet } from '@wizard-ui/react';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import { getSidebarLayout } from '../../components/Layout';
 import { NextPageWithLayout } from '../_app';
+import CONTRACT_ADDRESS from './CONTRACT_ADDRESS';
 
 function InfoPanel() {
   return (
     <Stack rounded="2xl" direction="row" layerStyle="panel" p={4} spacing={4}>
-      <Image src="images/iceblock.svg" />
+      <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
           <Text as="span" color="blue.500">
             Dollar-cost averaging
-          </Text>
-          &nbsp;is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a
-          great way to practice buy-and-hold investing over a few cycles.
+          </Text>{' '}
+          is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
+          way to practice buy-and-hold investing over a few cycles.
         </Text>
       </Flex>
     </Stack>
   );
 }
 
-function StrategyCard({ name, description, advanced, icon, onClick, linkToInfo, enabled }: any) {
+function StrategyCard({ name, description, advanced, icon, href, linkToInfo, enabled }: any) {
   return (
     <Stack
       direction={['row', null, null, 'column']}
@@ -57,11 +58,11 @@ function StrategyCard({ name, description, advanced, icon, onClick, linkToInfo, 
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <Button mb={2} onClick={onClick}>
+          <Button as="a" mb={2} href={href}>
             Get started
           </Button>
         ) : (
-          <Button mb={2} onClick={onClick} cursor="unset" color="navy" colorScheme="grey">
+          <Button mb={2} cursor="unset" color="navy" colorScheme="grey">
             Coming soon
           </Button>
         )}
@@ -82,52 +83,112 @@ function StrategyCard({ name, description, advanced, icon, onClick, linkToInfo, 
   );
 }
 
+function CreatePair() {
+  const { mutate, data, ...rest } = useExecuteContract({
+    // contract address
+    address: CONTRACT_ADDRESS,
+  });
+
+  // debug
+  console.log('data', data);
+  console.log('rest', rest);
+
+  const handleClick = () => {
+    mutate({
+      // message to execute
+      msg: {
+        create_pair: {
+          address: 'kujira1haf627g0ly96gyqwjpyyqqq4v5e76z5levjjmu',
+          base_denom: 'DEMO',
+          quote_denom: 'kuji',
+        },
+      },
+    });
+  };
+
+  return (
+    <Box>
+      {data && <Text>{JSON.stringify(data)}</Text>}
+      <Button onClick={handleClick}>
+        <Text>create pair</Text>
+      </Button>
+    </Box>
+  );
+}
+
+function AddStrategy() {
+  const { mutate, ...rest } = useExecuteContract({
+    // contract address
+    address: CONTRACT_ADDRESS,
+  });
+
+  console.log('rest', rest);
+
+  const handleClick = () => {
+    mutate({
+      // message to execute
+      msg: {
+        create_vault: {
+          execution_interval: 'hourly',
+          pair_address: 'kujira1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sl8nek6',
+          position_type: 'enter',
+          swap_amount: '100',
+          total_executions: 10,
+          target_start_time_utc: '2022-09-22T05:48:31.056Z',
+        },
+      },
+      funds: [{ denom: 'ukuji', amount: '1000' }],
+    });
+  };
+
+  return <Button onClick={handleClick}>Add Strategy</Button>;
+}
+
 export function Balance() {
   const { address } = useWallet();
 
   const { data: balanceData } = useBalance({ address, token: 'ukuji' });
 
-  const { data: contractData } = useQueryContract({
-    address: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+  const { data: pairsData, isLoading } = useQueryContract({
+    address: CONTRACT_ADDRESS,
     msg: {
-      get_balance: {
-        address,
-        denom: 'ukuji',
-      },
+      get_all_pairs: {},
     },
   });
 
   const { data: vaultsData } = useQueryContract({
-    address: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+    address: CONTRACT_ADDRESS,
     msg: {
-      get_all_active_vaults: {},
+      get_all_active_vaults: {
+        address,
+      },
     },
   });
 
   return (
     <Box>
+      <AddStrategy />
+      <CreatePair />
       {balanceData && (
         <>
           <Heading>Wallet Balance</Heading>
-          <Text>
-            {balanceData}
-            &nbsp; uKUJI
-          </Text>
+          <Text>{balanceData} uKUJI</Text>
         </>
       )}
-      {contractData && (
+      {isLoading && <Text>Pairs Loading...</Text>}
+      {pairsData && (
         <>
-          <Heading>Contract Balance</Heading>
+          <Heading>All pairs</Heading>
           <Text>
-            {contractData.amount}
-            &nbsp; uKUJI
+            {JSON.stringify(pairsData)}
+            {pairsData.amount}
           </Text>
         </>
       )}
 
       {vaultsData && (
         <>
-          <Heading>Contract Balance</Heading>
+          <Heading>List of vaults</Heading>
           <Text>{JSON.stringify(vaultsData)}</Text>
         </>
       )}
@@ -143,7 +204,7 @@ function Strategies() {
           Accumulation strategies
         </Heading>
         <Text color="grey.200">
-          You want to build a position in an asset.&nbsp;
+          You want to build a position in an asset.{' '}
           <Text as="span" color="green.200">
             The current Fear and Greed Score of 34 (Fear) indicates it&apos;s likely a good time to employee these
             strategies.
@@ -156,6 +217,7 @@ function Strategies() {
           description="Dollar-cost Average into an asset with ease."
           icon={Fullscreen2Icon}
           enabled
+          href="/create-strategy/dca-in"
         />
         <StrategyCard
           name="Advanced DCA+"
@@ -239,7 +301,7 @@ const CreateStrategy: NextPageWithLayout = () => {
               <Center>Get started by connecting your wallet.</Center>
               <Button onClick={handleConnect}>Connect to a wallet</Button>
               <Text>
-                Don&apos;t have a wallet?&nbsp;
+                Don&apos;t have a wallet?{' '}
                 <Link href="https://www.keplr.app/" target="_blank" rel="noopener noreferrer">
                   Create one here
                 </Link>

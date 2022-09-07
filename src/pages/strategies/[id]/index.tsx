@@ -27,7 +27,6 @@ const CreateStrategy: NextPageWithLayout = () => (
       <Heading>DCA In</Heading>
     </Stack>
     <Heading size="md" pb={6}>
-      {' '}
       Strategy details
     </Heading>
     <Wrap spacing={8} pb={8}>
@@ -70,7 +69,6 @@ const CreateStrategy: NextPageWithLayout = () => (
       </Panel>
     </Wrap>
     <Heading size="md" pb={6}>
-      {' '}
       Strategy performance
     </Heading>
     <Wrap spacing={8}>

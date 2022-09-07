@@ -8,11 +8,12 @@
     "plugin:@typescript-eslint/recommended",
     "next",
     "next/core-web-vitals",
-    "prettier",
     "airbnb",
-    "airbnb-typescript"
+    "airbnb-typescript",
+    "prettier"
   ],
   "rules": {
+    "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "max-len": [
@@ -28,8 +29,8 @@
         "ignoreTemplateLiterals": true,
         "ignoreRegExpLiterals": true
       }
-    ],
-    "object-curly-newline": "off"
+    ]
+    // "object-curly-newline": "off"
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {

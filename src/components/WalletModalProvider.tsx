@@ -20,7 +20,6 @@ export function CalcWalletModalProvider({ children, ...props }: WalletModalProvi
       }}
     >
       {children}
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <WalletModal {...props} />
     </CalcWalletModalContext.Provider>
   );

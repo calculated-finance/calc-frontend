@@ -1,8 +1,7 @@
-import type { FC, MouseEventHandler } from 'react';
 import { WalletReadyState } from '@wizard-ui/core';
 import type { Wallet } from '@wizard-ui/react';
 
-import { Button, Center, Flex, Spacer, Image } from '@chakra-ui/react';
+import { Center, Spacer, Image } from '@chakra-ui/react';
 
 export interface WalletListItemProps {
   handleClick: any;

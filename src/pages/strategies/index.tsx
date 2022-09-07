@@ -23,7 +23,7 @@ function Strategy() {
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Asset(s):</Text>
-        <Image w={5} src="images/kujira.svg" />
+        <Image w={5} src="/images/kujira.svg" />
       </GridItem>
 
       <GridItem colSpan={{ base: 4, lg: 2 }}>
@@ -85,7 +85,6 @@ const Strategies: NextPageWithLayout = () => (
       </Box>
       <Box>
         <Heading size="md" pb={2}>
-          {' '}
           Completed Strategies (2)
         </Heading>
         <Text pb={4} textStyle="body">

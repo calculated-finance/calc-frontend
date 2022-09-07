@@ -5,10 +5,11 @@ import type { NextPage } from 'next';
 import { KeplrWalletAdapter } from '@wizard-ui/core';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
-import { ChakraProvider, CSSReset } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
+import { createStore, StateMachineProvider } from 'little-state-machine';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -16,14 +17,19 @@ type AppPropsWithLayout = AppProps & {
 
 const queryClient = new QueryClient();
 
+createStore({});
+
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const endpoint = useMemo(() => 'https://rpc.harpoon.kujira.setten.io', []);
-  const chainId = useMemo(() => 'harpoon-4', []);
+  // const endpoint = useMemo(() => 'http://localhost:26657', []);
+  // const chainId = useMemo(() => 'localkujira', []);
 
   // const endpoint = useMemo(() => 'https://rpc.kaiyo.kujira.setten.io:443', []);
   // const chainId = useMemo(() => 'kaiyo-1', []);
+
+  const endpoint = useMemo(() => 'https://rpc.harpoon.kujira.setten.io', []);
+  const chainId = useMemo(() => 'harpoon-4', []);
 
   const wallets = useMemo(
     () => [
@@ -43,11 +49,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
         <CalcWalletModalProvider>
           <QueryClientProvider client={queryClient}>
-            <CSSReset />
-            {getLayout(
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              <Component {...pageProps} />,
-            )}
+            <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
           </QueryClientProvider>
         </CalcWalletModalProvider>
       </WizardProvider>

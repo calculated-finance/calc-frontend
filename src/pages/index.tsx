@@ -93,7 +93,7 @@ function LearnMore() {
   return (
     <Stack direction="row" rounded="2xl" layerStyle="panel" h="full" minHeight={294}>
       <Center roundedLeft="2xl" bg="black" h="full" flexShrink={0} w={157}>
-        <Image src="images/layers.svg" w="200px" />
+        <Image src="/images/layers.svg" w="200px" />
       </Center>
       <Center>
         <Stack spacing={6} p={8}>
@@ -116,14 +116,14 @@ function LearnMore() {
 function InfoPanel() {
   return (
     <Stack rounded="2xl" direction="row" layerStyle="panel" p={4} spacing={4}>
-      <Image src="images/iceblock.svg" />
+      <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
           <Text as="span" color="blue.500">
             Dollar-cost averaging
-          </Text>
-          &nbsp;is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a
-          great way to practice buy-and-hold investing over a few cycles.
+          </Text>{' '}
+          is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
+          way to practice buy-and-hold investing over a few cycles.
         </Text>
       </Flex>
     </Stack>
@@ -153,7 +153,7 @@ function WorkflowInformation() {
           <Text fontSize="md">Recurring payments means no stress. Set &amp; forget.</Text>
         </Stack>
         <Flex w="full" justifyContent="center">
-          <Image src="images/workflow.svg" />
+          <Image src="/images/workflow.svg" />
         </Flex>
       </Flex>
     </Center>
