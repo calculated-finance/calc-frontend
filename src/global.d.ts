@@ -1,7 +1,7 @@
 import 'little-state-machine';
 
 declare module 'little-state-machine' {
-  interface GlobalState extends FormData {
+  interface GlobalState {
     baseDenom: string;
     quoteDenom: string;
     initialDeposit: number;

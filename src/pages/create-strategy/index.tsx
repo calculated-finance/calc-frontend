@@ -9,10 +9,13 @@ import {
   PuzzleIcon,
 } from '@fusion-icons/react/interface';
 import { useBalance, useExecuteContract, useQueryContract, useWallet } from '@wizard-ui/react';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import { useWalletModal } from 'src/hooks/useWalletModal';
+import NextLink from 'next/link';
 import { getSidebarLayout } from '../../components/Layout';
 import { NextPageWithLayout } from '../_app';
-import CONTRACT_ADDRESS from './CONTRACT_ADDRESS';
+
+// link next
 
 function InfoPanel() {
   return (
@@ -58,9 +61,11 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <Button as="a" mb={2} href={href}>
-            Get started
-          </Button>
+          <NextLink href={href ?? '/'}>
+            <Button as="a" mb={2} href={href}>
+              Get started
+            </Button>
+          </NextLink>
         ) : (
           <Button mb={2} cursor="unset" color="navy" colorScheme="grey">
             Coming soon
@@ -80,119 +85,6 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
         </Link>
       </Flex>
     </Stack>
-  );
-}
-
-function CreatePair() {
-  const { mutate, data, ...rest } = useExecuteContract({
-    // contract address
-    address: CONTRACT_ADDRESS,
-  });
-
-  // debug
-  console.log('data', data);
-  console.log('rest', rest);
-
-  const handleClick = () => {
-    mutate({
-      // message to execute
-      msg: {
-        create_pair: {
-          address: 'kujira1haf627g0ly96gyqwjpyyqqq4v5e76z5levjjmu',
-          base_denom: 'DEMO',
-          quote_denom: 'kuji',
-        },
-      },
-    });
-  };
-
-  return (
-    <Box>
-      {data && <Text>{JSON.stringify(data)}</Text>}
-      <Button onClick={handleClick}>
-        <Text>create pair</Text>
-      </Button>
-    </Box>
-  );
-}
-
-function AddStrategy() {
-  const { mutate, ...rest } = useExecuteContract({
-    // contract address
-    address: CONTRACT_ADDRESS,
-  });
-
-  console.log('rest', rest);
-
-  const handleClick = () => {
-    mutate({
-      // message to execute
-      msg: {
-        create_vault: {
-          execution_interval: 'hourly',
-          pair_address: 'kujira1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sl8nek6',
-          position_type: 'enter',
-          swap_amount: '100',
-          total_executions: 10,
-          target_start_time_utc: '2022-09-22T05:48:31.056Z',
-        },
-      },
-      funds: [{ denom: 'ukuji', amount: '1000' }],
-    });
-  };
-
-  return <Button onClick={handleClick}>Add Strategy</Button>;
-}
-
-export function Balance() {
-  const { address } = useWallet();
-
-  const { data: balanceData } = useBalance({ address, token: 'ukuji' });
-
-  const { data: pairsData, isLoading } = useQueryContract({
-    address: CONTRACT_ADDRESS,
-    msg: {
-      get_all_pairs: {},
-    },
-  });
-
-  const { data: vaultsData } = useQueryContract({
-    address: CONTRACT_ADDRESS,
-    msg: {
-      get_all_active_vaults: {
-        address,
-      },
-    },
-  });
-
-  return (
-    <Box>
-      <AddStrategy />
-      <CreatePair />
-      {balanceData && (
-        <>
-          <Heading>Wallet Balance</Heading>
-          <Text>{balanceData} uKUJI</Text>
-        </>
-      )}
-      {isLoading && <Text>Pairs Loading...</Text>}
-      {pairsData && (
-        <>
-          <Heading>All pairs</Heading>
-          <Text>
-            {JSON.stringify(pairsData)}
-            {pairsData.amount}
-          </Text>
-        </>
-      )}
-
-      {vaultsData && (
-        <>
-          <Heading>List of vaults</Heading>
-          <Text>{JSON.stringify(vaultsData)}</Text>
-        </>
-      )}
-    </Box>
   );
 }
 

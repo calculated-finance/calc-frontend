@@ -26,7 +26,7 @@ import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
 import { Controller, useController, useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
-import updateAction from './updateAction';
+import updateAction from '../../../updateAction';
 
 function RadioCard(props: any) {
   const { children } = props;

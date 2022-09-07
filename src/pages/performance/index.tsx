@@ -1,6 +1,5 @@
 import { Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '../../components/Layout';
-import { Balance } from '../create-strategy';
 import { NextPageWithLayout } from '../_app';
 
 // eslint-disable-next-line react/function-component-definition
@@ -23,7 +22,6 @@ const Performance: NextPageWithLayout = () => (
       rounded={5}
       layerStyle="panel"
     />
-    <Balance />
   </Stack>
 );
 

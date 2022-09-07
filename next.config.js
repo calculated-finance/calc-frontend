@@ -5,6 +5,7 @@ const withImages = require('next-images');
 const nextConfig = {
   swcMinify: true,
   reactStrictMode: false,
+  trailingSlash: true,
   experimental: {
     esmExternals: 'loose',
   },

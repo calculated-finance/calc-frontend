@@ -18,9 +18,9 @@ import { useExecuteContract } from '@wizard-ui/react';
 import { useStateMachine } from 'little-state-machine';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import { NextPageWithLayout } from 'src/pages/_app';
-import CONTRACT_ADDRESS from '../CONTRACT_ADDRESS';
-import updateAction, { FormData } from './updateAction';
+import updateAction from '../../../updateAction';
 
 const totalExecutions = (initialDeposit: number, swapAmount: number) => Math.floor(initialDeposit / swapAmount);
 

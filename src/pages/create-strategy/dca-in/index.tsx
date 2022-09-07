@@ -23,7 +23,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
-import updateAction, { FormData } from './updateAction';
+import updateAction from '../../../updateAction';
+import FormData from '../../../FormData';
 
 // eslint-disable-next-line react/function-component-definition
 const DcaIn: NextPageWithLayout = () => {

@@ -1,6 +1,7 @@
 import { Badge, Box, Button, Grid, GridItem, Heading, Text, Image, Stack, Flex } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
 import { getSidebarLayout } from '../../components/Layout';
 import { NextPageWithLayout } from '../_app';
