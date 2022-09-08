@@ -3,6 +3,8 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
   Input,
@@ -26,7 +28,7 @@ import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
 import { Controller, useController, useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
-import updateAction from '../../../updateAction';
+import updateAction from 'src/updateAction';
 
 function RadioCard(props: any) {
   const { children } = props;
@@ -113,7 +115,12 @@ const DcaIn: NextPageWithLayout = () => {
     router.push('/create-strategy/dca-in/confirmation');
   };
 
-  const { register, handleSubmit, control } = useForm({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
     defaultValues: state,
   });
 
@@ -137,6 +144,7 @@ const DcaIn: NextPageWithLayout = () => {
             <Stack direction="column" spacing={4}>
               <FormControl>
                 <FormLabel>Strategy start date</FormLabel>
+                {/* todo: validate that date is in the future */}
                 <Controller
                   control={control}
                   name="startDate"
@@ -150,13 +158,25 @@ const DcaIn: NextPageWithLayout = () => {
                 <Example name="executionInterval" defaultValue="daily" control={control} />
               </FormControl>
 
-              <FormControl>
+              <FormControl isInvalid={Boolean(errors.swapAmount)}>
                 <FormLabel>How much {state.baseDenom} each purchase?</FormLabel>
+                <FormHelperText>
+                  <Flex>
+                    <Text>The amount you want swapped each purchase for KUJI.</Text>
+                    <Spacer />
+                    Max: {new Intl.NumberFormat().format(state.initialDeposit) ?? '-'}
+                  </Flex>
+                </FormHelperText>
                 <Input
                   type="number"
                   placeholder="Enter amount"
-                  {...register('swapAmount', { required: true, min: 1 })}
+                  {...register('swapAmount', {
+                    required: true,
+                    min: { value: 1, message: 'Must be more than 0.' },
+                    max: { value: state.initialDeposit, message: 'Must be less than initial deposit.' },
+                  })}
                 />
+                <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
               </FormControl>
 
               <FormControl>

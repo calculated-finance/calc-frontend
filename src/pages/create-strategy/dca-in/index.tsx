@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
+import { useBalance, useWallet } from '@wizard-ui/react';
 import updateAction from '../../../updateAction';
 import FormData from '../../../FormData';
 
@@ -39,10 +40,19 @@ const DcaIn: NextPageWithLayout = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: state,
   });
+
+  // watch quoteDenom form
+  const watchedQuoteDenom = watch('quoteDenom');
+
+  const { address } = useWallet();
+  const { data: amount } = useBalance({ token: watchedQuoteDenom, address });
+
+  console.log(amount);
 
   return (
     <Modal isOpen onClose={() => {}}>
@@ -68,7 +78,7 @@ const DcaIn: NextPageWithLayout = () => {
                   <Flex>
                     <Text>Choose between stablecoins or fiat</Text>
                     <Spacer />
-                    Available: 0
+                    Available: {amount ? new Intl.NumberFormat().format(amount) : '-'}
                   </Flex>
                 </FormHelperText>
                 <Select placeholder="Select option" {...register('quoteDenom', { required: 'This is required' })}>
@@ -77,7 +87,13 @@ const DcaIn: NextPageWithLayout = () => {
                 <FormErrorMessage>{errors.quoteDenom && errors.quoteDenom?.message}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={Boolean(errors.initialDeposit)}>
-                <Input placeholder="Choose amount" {...register('initialDeposit', { required: 'This is required' })} />
+                <Input
+                  placeholder="Choose amount"
+                  {...register('initialDeposit', {
+                    required: 'This is required',
+                    max: { value: amount, message: 'Value must be less than total funds' },
+                  })}
+                />
                 <FormErrorMessage>{errors.initialDeposit && errors.initialDeposit?.message}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={Boolean(errors.baseDenom)}>

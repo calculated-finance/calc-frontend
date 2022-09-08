@@ -1,12 +1,12 @@
 import { Badge, Box, Button, Grid, GridItem, Heading, Text, Image, Stack, Flex } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import useStrategies from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '../../components/Layout';
 import { NextPageWithLayout } from '../_app';
 
-function Strategy() {
+function Strategy({ strategy }: any) {
   return (
     <Grid
       templateRows="repeat(1, 1fr)"
@@ -19,18 +19,21 @@ function Strategy() {
       borderRadius="2xl"
     >
       <GridItem colSpan={{ base: 11, lg: 3 }} rowStart={{ sm: 1, lg: 'auto' }}>
-        <Heading size="md">Rebalance</Heading>
-        <Text textStyle="body-xs">Low Risk Blue Chips</Text>
+        <Heading size="md">DCA</Heading>
+        <Text textStyle="body-xs">DCA In ({strategy.id})</Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Asset(s):</Text>
-        <Image w={5} src="/images/kujira.svg" />
+        {/* <Image w={5} src="/images/kujira.svg" /> */}
+        <Text textStyle="body-xs">{strategy.configuration.pair.base_denom}</Text>
       </GridItem>
 
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Start date:</Text>
 
-        <Text textStyle="body-xs">Sept 22 2022</Text>
+        <Text textStyle="body-xs">
+          {new Date(strategy.tracking_information.target_execution_time_utc).toLocaleDateString()}
+        </Text>
       </GridItem>
 
       <GridItem colSpan={{ base: 3, lg: 2 }}>
@@ -42,7 +45,9 @@ function Strategy() {
 
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Cadence:</Text>
-        <Text textStyle="body-xs">Weekly</Text>
+        <Text textStyle="body-xs" textTransform="capitalize">
+          {strategy.execution_interval}
+        </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 1 }} rowStart={{ sm: 1, lg: 'auto' }}>
         <Flex justifyContent="end" alignItems="center" h="full">
@@ -68,37 +73,52 @@ function Strategy() {
 }
 
 // eslint-disable-next-line react/function-component-definition
-const Strategies: NextPageWithLayout = () => (
-  <>
-    <Heading pb={12}>My CALC Strategies</Heading>
-    <Stack spacing={8}>
-      <Box>
-        <Heading pb={2} size="md">
-          Active Strategies (2)
-        </Heading>
-        <Text pb={4} textStyle="body">
-          You can analyse the performance of or cancel these strategies at anytime.
-        </Text>
-        <Stack spacing={4}>
-          <Strategy />
-          <Strategy />
-        </Stack>
-      </Box>
-      <Box>
-        <Heading size="md" pb={2}>
-          Completed Strategies (2)
-        </Heading>
-        <Text pb={4} textStyle="body">
-          View your past performance.
-        </Text>
-        <Stack spacing={4}>
-          <Strategy />
-          <Strategy />
-        </Stack>
-      </Box>
-    </Stack>
-  </>
-);
+const Strategies: NextPageWithLayout = () => {
+  const { data, isLoading } = useStrategies();
+
+  return (
+    <>
+      <Heading pb={12}>My CALC Strategies</Heading>
+      <Stack spacing={8}>
+        <Box>
+          <Heading pb={2} size="md">
+            Active Strategies (2)
+          </Heading>
+          <Text pb={4} textStyle="body">
+            You can analyse the performance of or cancel these strategies at anytime.
+          </Text>
+          <Stack spacing={4}>
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {isLoading ? (
+              <Text>Loading...</Text>
+            ) : data?.length === 0 ? (
+              <Stack spacing={4}>
+                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel" borderRadius="2xl">
+                  <Text>No active strategies</Text>
+                </Flex>
+              </Stack>
+            ) : (
+              data?.map((strategy: any) => <Strategy key={strategy.id} strategy={strategy} />)
+            )}
+          </Stack>
+        </Box>
+        <Box>
+          <Heading size="md" pb={2}>
+            Completed Strategies (2)
+          </Heading>
+          <Text pb={4} textStyle="body">
+            View your past performance.
+          </Text>
+          <Stack spacing={4}>
+            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel" borderRadius="2xl">
+              <Text>No completed strategies</Text>
+            </Flex>
+          </Stack>
+        </Box>
+      </Stack>
+    </>
+  );
+};
 
 Strategies.getLayout = getSidebarLayout;
 
