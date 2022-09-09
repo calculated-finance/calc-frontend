@@ -3,11 +3,14 @@ import { useExecuteContract } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import DcaInFormData from 'src/types/DcaInFormData';
 import totalExecutions from 'src/utils/totalExecutions';
+import usePairs from './usePairs';
 
 const useCreateVault = () => {
   const { mutate, ...rest } = useExecuteContract({
     address: CONTRACT_ADDRESS,
   });
+
+  const { data } = usePairs();
 
   const createVault = (state: DcaInFormData, options: any) => {
     const { startDate, initialDeposit, swapAmount, executionInterval, quoteDenom, baseDenom } = state;
@@ -16,12 +19,23 @@ const useCreateVault = () => {
       return;
     }
 
+    const pairAddress = data?.pairs.find(
+      (pair: any) => pair.base_denom === baseDenom && pair.quote_denom === quoteDenom,
+    ).address;
+
+    // throw error if pair not found
+    if (!pairAddress) {
+      return;
+    }
+
+    // TODO: note that we need to make sure pairAddress has been set by the time mutate is called (usePair might not have fetched yet)
+
     mutate(
       {
         msg: {
           create_vault: {
             execution_interval: executionInterval,
-            pair_address: 'kujira1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sl8nek6',
+            pair_address: pairAddress,
             position_type: 'enter',
             swap_amount: swapAmount.toString(),
             total_executions: totalExecutions(initialDeposit, swapAmount),

@@ -8,8 +8,7 @@ import {
   Graph1Icon,
   PuzzleIcon,
 } from '@fusion-icons/react/interface';
-import { useBalance, useExecuteContract, useQueryContract, useWallet } from '@wizard-ui/react';
-import { CONTRACT_ADDRESS } from 'src/constants';
+import { useWallet } from '@wizard-ui/react';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import NextLink from 'next/link';
 import { getSidebarLayout } from '../../components/Layout';
