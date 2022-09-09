@@ -36,8 +36,6 @@ const DcaInStep2: NextPageWithLayout = () => {
     address: CONTRACT_ADDRESS,
   });
 
-  console.log('rest', rest);
-
   const handleClick = () => {
     mutate(
       {
@@ -56,8 +54,6 @@ const DcaInStep2: NextPageWithLayout = () => {
       },
       {
         onSuccess: (data) => {
-          console.log('data', data);
-          // route to strategies page
           router.push('/strategies');
         },
       },

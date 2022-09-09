@@ -52,8 +52,6 @@ const DcaIn: NextPageWithLayout = () => {
   const { address } = useWallet();
   const { data: amount } = useBalance({ token: watchedQuoteDenom, address });
 
-  console.log(amount);
-
   return (
     <Modal isOpen onClose={() => {}}>
       {/* <ModalOverlay /> */}

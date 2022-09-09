@@ -1,0 +1,28 @@
+// import { useMutation, useQuery } from '@tanstack/react-query';
+
+// export default interface FormData {
+//   baseDenom: string;
+//   quoteDenom: string;
+//   initialDeposit: number;
+//   executionInterval: string;
+//   startDate: Date;
+//   swapAmount: number;
+// }
+
+// // use react-query to store formstate
+// const useFormState = (initialState: any) => {
+//   const { data } = useQuery('formState', () => initialState);
+
+//   const { mutate } = useMutation((newState: any) => newState);
+
+//   const setFormState = (newState: any) => {
+//     mutate(newState);
+//   };
+
+//   // clear state
+//   const clearFormState = () => {
+//     mutate(initialState);
+//   };
+
+//   return { data, setFormState, clearFormState };
+// };

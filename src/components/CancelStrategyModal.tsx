@@ -1,0 +1,72 @@
+import {
+  Button,
+  Heading,
+  Text,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Center,
+  Spacer,
+  useToast,
+} from '@chakra-ui/react';
+import React from 'react';
+import useCancelStrategy from 'src/hooks/useCancelStrategy';
+
+export default function CancelStrategyModal({ isOpen, onClose, strategy }: any) {
+  const { cancelStrategy, isLoading } = useCancelStrategy();
+
+  const toast = useToast();
+
+  const handleCancelStrategy = () =>
+    cancelStrategy(strategy.id, {
+      onSuccess: () => {
+        toast({
+          title: 'Strategy cancelled.',
+          description: "We've cancelled your strategy and refunded remaining funds.",
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        });
+        onClose();
+      },
+    });
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Cancel Strategy</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Center textStyle="body-xs">
+            By cancelling this strategy any assets held in the CALC vault will be returned. Once cancelled, this
+            strategy can not be started again. Please create a new strategy.
+          </Center>
+          <Center textStyle="body-xs">
+            For strategies involving fiat on ramps, any direct debits or recurring payments will also be cancelled.
+          </Center>
+          <Flex layerStyle="panel" borderRadius="2xl" p={4} mt={4}>
+            <Heading size="sm">Amount to be returned:</Heading>
+            <Spacer />
+            <Text as="span" color="blue.200">
+              {strategy.balance.current_balance.amount} {strategy.balance.current_balance.denom}
+            </Text>
+          </Flex>
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="ghost" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button colorScheme="red" onClick={handleCancelStrategy} isLoading={isLoading}>
+            Cancel Strategy
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}

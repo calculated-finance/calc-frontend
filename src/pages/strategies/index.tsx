@@ -1,76 +1,8 @@
-import { Badge, Box, Button, Grid, GridItem, Heading, Text, Image, Stack, Flex } from '@chakra-ui/react';
-import Icon from '@components/Icon';
-import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import Link from 'next/link';
+import { Box, Heading, Text, Stack, Flex } from '@chakra-ui/react';
+import Strategy from '@components/Strategy';
 import useStrategies from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '../../components/Layout';
 import { NextPageWithLayout } from '../_app';
-
-function Strategy({ strategy }: any) {
-  return (
-    <Grid
-      templateRows="repeat(1, 1fr)"
-      templateColumns="repeat(15, 1fr)"
-      gap={6}
-      bg="gray.900"
-      py={2}
-      px={4}
-      layerStyle="panel"
-      borderRadius="2xl"
-    >
-      <GridItem colSpan={{ base: 11, lg: 3 }} rowStart={{ sm: 1, lg: 'auto' }}>
-        <Heading size="md">DCA</Heading>
-        <Text textStyle="body-xs">DCA In ({strategy.id})</Text>
-      </GridItem>
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
-        <Text>Asset(s):</Text>
-        {/* <Image w={5} src="/images/kujira.svg" /> */}
-        <Text textStyle="body-xs">{strategy.configuration.pair.base_denom}</Text>
-      </GridItem>
-
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
-        <Text>Start date:</Text>
-
-        <Text textStyle="body-xs">
-          {new Date(strategy.tracking_information.target_execution_time_utc).toLocaleDateString()}
-        </Text>
-      </GridItem>
-
-      <GridItem colSpan={{ base: 3, lg: 2 }}>
-        <Text>Status:</Text>
-        <Badge fontSize="10px" colorScheme="green">
-          Active
-        </Badge>
-      </GridItem>
-
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
-        <Text>Cadence:</Text>
-        <Text textStyle="body-xs" textTransform="capitalize">
-          {strategy.execution_interval}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={{ base: 4, lg: 1 }} rowStart={{ sm: 1, lg: 'auto' }}>
-        <Flex justifyContent="end" alignItems="center" h="full">
-          <Button
-            variant="ghost"
-            colorScheme="red"
-            width={{ base: 'full', lg: 'initial' }}
-            leftIcon={<Icon as={CloseBoxedIcon} stroke="red.200" width={4} height={4} />}
-          >
-            Cancel
-          </Button>
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={{ base: 15, lg: 3 }}>
-        <Flex justifyContent="end" alignItems="center" h="full">
-          <Link href="/strategies/1">
-            <Button width={{ base: 'full', lg: 'initial' }}>View Performance</Button>
-          </Link>
-        </Flex>
-      </GridItem>
-    </Grid>
-  );
-}
 
 // eslint-disable-next-line react/function-component-definition
 const Strategies: NextPageWithLayout = () => {
@@ -91,14 +23,14 @@ const Strategies: NextPageWithLayout = () => {
             {/* eslint-disable-next-line no-nested-ternary */}
             {isLoading ? (
               <Text>Loading...</Text>
-            ) : data?.length === 0 ? (
+            ) : data.vaults?.length === 0 ? (
               <Stack spacing={4}>
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel" borderRadius="2xl">
                   <Text>No active strategies</Text>
                 </Flex>
               </Stack>
             ) : (
-              data?.map((strategy: any) => <Strategy key={strategy.id} strategy={strategy} />)
+              data.vaults?.map((strategy: any) => <Strategy key={strategy.id} strategy={strategy} />)
             )}
           </Stack>
         </Box>
