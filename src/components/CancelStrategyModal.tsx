@@ -27,6 +27,7 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: any) 
       onSuccess: () => {
         toast({
           title: 'Strategy cancelled.',
+          position: 'top-right',
           description: "We've cancelled your strategy and refunded remaining funds.",
           status: 'success',
           duration: 9000,

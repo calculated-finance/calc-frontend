@@ -1,4 +1,4 @@
-import { Badge, Button, Grid, GridItem, Heading, Text, Flex, Box } from '@chakra-ui/react';
+import { Badge, Button, Grid, GridItem, Heading, Text, Flex, Box, useDisclosure } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import Link from 'next/link';
@@ -6,9 +6,7 @@ import React from 'react';
 import CancelStrategyModal from './CancelStrategyModal';
 
 function CancelButton({ strategy }: any) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const onClose = () => setIsOpen(false);
-  const onOpen = () => setIsOpen(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>

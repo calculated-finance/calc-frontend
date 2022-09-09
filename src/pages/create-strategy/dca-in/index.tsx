@@ -9,28 +9,24 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalHeader,
   Select,
   Spacer,
   Stack,
   Text,
 } from '@chakra-ui/react';
-import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
-import { ArrowLeftIcon } from '@fusion-icons/react/interface';
-import { useStateMachine } from 'little-state-machine';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
 import { useBalance, useWallet } from '@wizard-ui/react';
-import updateAction from '../../../updateAction';
-import FormData from '../../../FormData';
+import DcaInFormData from 'src/types/DcaInFormData';
+import useDcaInForm from 'src/hooks/useDcaInForm';
+import NewStrategyModalHeader from '@components/NewStrategyModalHeader';
 
 // eslint-disable-next-line react/function-component-definition
 const DcaIn: NextPageWithLayout = () => {
   const router = useRouter();
-  const { actions, state } = useStateMachine({ updateAction });
+  const { actions, state } = useDcaInForm();
 
   const onSubmit = (data: any) => {
     actions.updateAction(data);
@@ -42,31 +38,24 @@ const DcaIn: NextPageWithLayout = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<DcaInFormData>({
     defaultValues: state,
   });
 
-  // watch quoteDenom form
   const watchedQuoteDenom = watch('quoteDenom');
 
   const { address } = useWallet();
-  const { data: amount } = useBalance({ token: watchedQuoteDenom, address });
+  const { data: amount } = useBalance({
+    // This is a hack to make sure quote denom is set
+    // TODO: validate form data from previous steps better
+    token: watchedQuoteDenom!,
+    address,
+  });
 
   return (
     <Modal isOpen onClose={() => {}}>
-      {/* <ModalOverlay /> */}
       <ModalContent>
-        <ModalHeader textAlign="center">
-          <Flex>
-            <Link passHref href="/create-strategy">
-              <Icon cursor="pointer" as={ArrowLeftIcon} />
-            </Link>
-            <Spacer />
-            <Text>DCA in</Text>
-            <Spacer />
-            <Button>Cancel</Button>
-          </Flex>
-        </ModalHeader>
+        <NewStrategyModalHeader backUrl="/create-strategy" resetForm={actions.resetAction} />
         <ModalBody p={4}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Stack direction="column" spacing={4}>

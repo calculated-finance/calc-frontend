@@ -16,7 +16,10 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"]
+      "@components/*": ["src/components/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/[id]"],

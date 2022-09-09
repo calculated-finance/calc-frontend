@@ -22,13 +22,12 @@ import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
-import { useStateMachine } from 'little-state-machine';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
 import { Controller, useController, useForm } from 'react-hook-form';
+import useDcaInForm from 'src/hooks/useDcaInForm';
 import { NextPageWithLayout } from 'src/pages/_app';
-import updateAction from 'src/updateAction';
 
 function RadioCard(props: any) {
   const { children } = props;
@@ -108,11 +107,11 @@ const Example = forwardRef(({ control, name, defaultValue, ...props }: any, ref)
 // eslint-disable-next-line react/function-component-definition
 const DcaIn: NextPageWithLayout = () => {
   const router = useRouter();
-  const { actions, state } = useStateMachine({ updateAction });
+  const { actions, state } = useDcaInForm();
 
   const onSubmit = (data: any) => {
     actions.updateAction(data);
-    router.push('/create-strategy/dca-in/confirmation');
+    router.push('/create-strategy/dca-in/confirm-purchase');
   };
 
   const {
@@ -164,7 +163,7 @@ const DcaIn: NextPageWithLayout = () => {
                   <Flex>
                     <Text>The amount you want swapped each purchase for KUJI.</Text>
                     <Spacer />
-                    Max: {new Intl.NumberFormat().format(state.initialDeposit) ?? '-'}
+                    Max: {new Intl.NumberFormat().format(state.initialDeposit!) ?? '-'}
                   </Flex>
                 </FormHelperText>
                 <Input
@@ -173,7 +172,7 @@ const DcaIn: NextPageWithLayout = () => {
                   {...register('swapAmount', {
                     required: true,
                     min: { value: 1, message: 'Must be more than 0.' },
-                    max: { value: state.initialDeposit, message: 'Must be less than initial deposit.' },
+                    max: { value: state.initialDeposit!, message: 'Must be less than initial deposit.' },
                   })}
                 />
                 <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
