@@ -1,4 +1,5 @@
 import { Box, Heading, Text, Stack, Flex } from '@chakra-ui/react';
+import Spinner from '@components/Spinner';
 import Strategy from '@components/Strategy';
 import useStrategies from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '../../components/Layout';
@@ -21,16 +22,12 @@ const Strategies: NextPageWithLayout = () => {
           </Text>
           <Stack spacing={4}>
             {/* eslint-disable-next-line no-nested-ternary */}
-            {isLoading ? (
-              <Text>Loading...</Text>
-            ) : data.vaults?.length === 0 ? (
-              <Stack spacing={4}>
-                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                  <Text>No active strategies</Text>
-                </Flex>
-              </Stack>
+            {!data?.vaults?.length ? (
+              <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
+              </Flex>
             ) : (
-              data.vaults?.map((strategy: any) => <Strategy key={strategy.id} strategy={strategy} />)
+              data?.vaults?.map((strategy: any) => <Strategy key={strategy.id} strategy={strategy} />)
             )}
           </Stack>
         </Box>

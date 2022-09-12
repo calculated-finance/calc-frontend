@@ -29,23 +29,21 @@ const useCreateVault = () => {
     }
 
     // TODO: note that we need to make sure pairAddress has been set by the time mutate is called (usePair might not have fetched yet)
-
-    mutate(
-      {
-        msg: {
-          create_vault: {
-            execution_interval: executionInterval,
-            pair_address: pairAddress,
-            position_type: 'enter',
-            swap_amount: swapAmount.toString(),
-            total_executions: totalExecutions(initialDeposit, swapAmount),
-            target_start_time_utc: new Date(startDate).toISOString(),
-          },
+    const payload = {
+      msg: {
+        create_vault: {
+          execution_interval: executionInterval,
+          pair_address: pairAddress,
+          position_type: 'enter',
+          swap_amount: swapAmount.toString(),
+          total_executions: totalExecutions(initialDeposit, swapAmount),
+          target_start_time_utc_seconds: new Date(startDate).valueOf().toString(),
         },
-        funds: [{ denom: quoteDenom, amount: initialDeposit.toString() }],
       },
-      options,
-    );
+      funds: [{ denom: quoteDenom, amount: initialDeposit.toString() }],
+    };
+
+    mutate(payload, options);
   };
 
   return {

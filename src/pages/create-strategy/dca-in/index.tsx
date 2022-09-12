@@ -18,11 +18,12 @@ import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { NextPageWithLayout } from 'src/pages/_app';
-import { useBalance, useWallet } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import DcaInFormData from 'src/types/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import NewStrategyModalHeader from '@components/NewStrategyModalHeader';
 import usePairs from '@hooks/usePairs';
+import useBalance from '@hooks/useBalance';
 
 // eslint-disable-next-line react/function-component-definition
 const DcaIn: NextPageWithLayout = () => {
