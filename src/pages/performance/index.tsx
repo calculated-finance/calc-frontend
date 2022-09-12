@@ -12,16 +12,7 @@ const Performance: NextPageWithLayout = () => (
         long-term investing and customisable tools to remove the emotion from trading.
       </Text>
     </Stack>
-    <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      w="full"
-      h="sm"
-      p={4}
-      rounded={5}
-      layerStyle="panel"
-    />
+    <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} layerStyle="panel" />
   </Stack>
 );
 

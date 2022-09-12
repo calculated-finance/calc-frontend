@@ -34,7 +34,6 @@ function Strategy({ strategy }: any) {
       py={2}
       px={4}
       layerStyle="panel"
-      borderRadius="2xl"
     >
       <GridItem colSpan={{ base: 11, lg: 3 }} rowStart={{ sm: 1, lg: 'auto' }}>
         <Heading size="md">DCA</Heading>

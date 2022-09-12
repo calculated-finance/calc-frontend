@@ -6,7 +6,7 @@ import { NextPageWithLayout } from './_app';
 
 function Setup() {
   return (
-    <Center rounded="2xl" borderWidth={2} borderColor="brand.200" h="full" minHeight={294} layerStyle="panel" p={8}>
+    <Center borderWidth={2} borderColor="brand.200" h="full" minHeight={294} layerStyle="panel" p={8}>
       <Stack spacing={6}>
         <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
         <Stack spacing={2}>
@@ -26,7 +26,7 @@ function Setup() {
 
 function FearAndGreed() {
   return (
-    <Center rounded="2xl" layerStyle="panel" p={8} h={294}>
+    <Center layerStyle="panel" p={8} h={294}>
       <Stack spacing={2}>
         <Heading size="md">The Fear and Greed Index</Heading>
         <Text fontSize="xs">Multifactorial Crypto Market Sentiment Analysis</Text>
@@ -91,7 +91,7 @@ function FearAndGreed() {
 
 function LearnMore() {
   return (
-    <Stack direction="row" rounded="2xl" layerStyle="panel" h="full" minHeight={294}>
+    <Stack direction="row" layerStyle="panel" h="full" minHeight={294}>
       <Center roundedLeft="2xl" bg="black" h="full" flexShrink={0} w={157}>
         <Image src="/images/layers.svg" w="200px" />
       </Center>
@@ -115,7 +115,7 @@ function LearnMore() {
 
 function InfoPanel() {
   return (
-    <Stack rounded="2xl" direction="row" layerStyle="panel" p={4} spacing={4}>
+    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
@@ -132,7 +132,7 @@ function InfoPanel() {
 
 function ActiveStrategies() {
   return (
-    <Flex rounded="2xl" h={294} layerStyle="panel" p={8} alignItems="center">
+    <Flex h={294} layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
         <Heading size="md">My Active CALC Strategies</Heading>
         <Heading fontSize="5xl">0</Heading>

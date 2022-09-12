@@ -18,7 +18,7 @@ import { NextPageWithLayout } from '../_app';
 
 function InfoPanel() {
   return (
-    <Stack rounded="2xl" direction="row" layerStyle="panel" p={4} spacing={4}>
+    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
@@ -35,14 +35,7 @@ function InfoPanel() {
 
 function StrategyCard({ name, description, advanced, icon, href, linkToInfo, enabled }: any) {
   return (
-    <Stack
-      direction={['row', null, null, 'column']}
-      p={4}
-      layerStyle="panel"
-      width={['full', null, null, 56]}
-      rounded="2xl"
-      gap={4}
-    >
+    <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
         <Flex mb={4}>
           <Icon stroke="brand.200" as={icon} width={8} height={8} />
@@ -177,16 +170,7 @@ const CreateStrategy: NextPageWithLayout = () => {
         <Strategies />
       ) : (
         <>
-          <Flex
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            w="full"
-            h="sm"
-            p={4}
-            rounded={5}
-            layerStyle="panel"
-          >
+          <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} layerStyle="panel">
             <Stack direction="column" spacing={4} alignItems="center" justifyContent="center" w="full" h="full">
               <Heading>No Wallet connected</Heading>
               <Center>Get started by connecting your wallet.</Center>

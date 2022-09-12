@@ -7,7 +7,7 @@ import { NextPageWithLayout } from '../../_app';
 
 function Panel({ children }: { children: ReactNode }) {
   return (
-    <WrapItem rounded={5} w="xs" layerStyle="panel" p={4}>
+    <WrapItem w="xs" layerStyle="panel" p={4}>
       <Flex flexDirection="column" w="full">
         <Stack spacing={4} w="full" alignItems="center">
           {children}

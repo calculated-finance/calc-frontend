@@ -51,7 +51,7 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: any) 
           <Center textStyle="body-xs">
             For strategies involving fiat on ramps, any direct debits or recurring payments will also be cancelled.
           </Center>
-          <Flex layerStyle="panel" borderRadius="2xl" p={4} mt={4}>
+          <Flex layerStyle="panel" p={4} mt={4}>
             <Heading size="sm">Amount to be returned:</Heading>
             <Spacer />
             <Text as="span" color="blue.200">

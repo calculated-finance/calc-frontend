@@ -25,7 +25,7 @@ const Strategies: NextPageWithLayout = () => {
               <Text>Loading...</Text>
             ) : data.vaults?.length === 0 ? (
               <Stack spacing={4}>
-                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel" borderRadius="2xl">
+                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                   <Text>No active strategies</Text>
                 </Flex>
               </Stack>
@@ -42,7 +42,7 @@ const Strategies: NextPageWithLayout = () => {
             View your past performance.
           </Text>
           <Stack spacing={4}>
-            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel" borderRadius="2xl">
+            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
               <Text>No completed strategies</Text>
             </Flex>
           </Stack>
