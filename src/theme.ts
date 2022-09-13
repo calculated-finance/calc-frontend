@@ -123,6 +123,32 @@ const components = {
       textTransform: 'none',
     },
   },
+  Select: {
+    baseStyle: {
+      field: {
+        borderRadius: '2xl',
+        borderColor: 'slateGrey',
+        borderWidth: 1,
+        bg: 'abyss',
+      },
+    },
+    defaultProps: {
+      variant: null, // null here
+    },
+  },
+  Input: {
+    baseStyle: {
+      field: {
+        borderRadius: '2xl',
+        borderColor: 'slateGrey',
+        borderWidth: 1,
+        bg: 'abyss',
+      },
+    },
+    defaultProps: {
+      variant: null, // null here
+    },
+  },
 };
 
 const shadows = {

@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
+import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import Link from 'next/link';
@@ -105,92 +106,81 @@ const Example = forwardRef(({ control, name, defaultValue, ...props }: any, ref)
 });
 
 // eslint-disable-next-line react/function-component-definition
-const DcaIn: NextPageWithLayout = () => {
+const DcaInStep2: NextPageWithLayout = () => {
   const router = useRouter();
   const { actions, state } = useDcaInForm();
 
-  const onSubmit = (data: any) => {
-    actions.updateAction(data);
-    router.push('/create-strategy/dca-in/confirm-purchase');
+  const onSubmit = async (data: any) => {
+    await actions.updateAction(data);
+    await router.push('/create-strategy/dca-in/confirm-purchase');
   };
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: state,
   });
 
   return (
-    <Modal isOpen onClose={() => {}}>
-      {/* <ModalOverlay /> */}
-      <ModalContent>
-        <ModalHeader textAlign="center">
-          <Flex>
-            <Link passHref href="/create-strategy/dca-in">
-              <Icon cursor="pointer" as={ArrowLeftIcon} />
-            </Link>
-            <Spacer />
-            <Text>DCA in</Text>
-            <Spacer />
-            <Button>Cancel</Button>
-          </Flex>
-        </ModalHeader>
-        <ModalBody p={4}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack direction="column" spacing={4}>
-              <FormControl>
-                <FormLabel>Strategy start date</FormLabel>
-                {/* todo: validate that date is in the future */}
-                <Controller
-                  control={control}
-                  name="startDate"
-                  render={({ field: { onChange, value, name } }) => (
-                    <SingleDatepicker name={name} date={value ? new Date(value) : undefined} onDateChange={onChange} />
-                  )}
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>How often would you like CALC to purchase for you?</FormLabel>
-                <Example name="executionInterval" defaultValue="daily" control={control} />
-              </FormControl>
+    <NewStrategyModal>
+      <NewStrategyModalHeader backUrl="/create-strategy/dca-in" resetForm={actions.resetAction}>
+        Customise Strategy
+      </NewStrategyModalHeader>
+      <NewStrategyModalBody>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack direction="column" spacing={4}>
+            <FormControl>
+              <FormLabel>Strategy start date</FormLabel>
+              {/* todo: validate that date is in the future */}
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field: { onChange, value, name } }) => (
+                  <SingleDatepicker name={name} date={value ? new Date(value) : undefined} onDateChange={onChange} />
+                )}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel>How often would you like CALC to purchase for you?</FormLabel>
+              <Example name="executionInterval" defaultValue="daily" control={control} />
+            </FormControl>
 
-              <FormControl isInvalid={Boolean(errors.swapAmount)}>
-                <FormLabel>How much {state.baseDenom} each purchase?</FormLabel>
-                <FormHelperText>
-                  <Flex>
-                    <Text>The amount you want swapped each purchase for KUJI.</Text>
-                    <Spacer />
-                    Max: {new Intl.NumberFormat().format(state.initialDeposit!) ?? '-'}
-                  </Flex>
-                </FormHelperText>
-                <Input
-                  type="number"
-                  placeholder="Enter amount"
-                  {...register('swapAmount', {
-                    required: true,
-                    min: { value: 1, message: 'Must be more than 0.' },
-                    max: { value: state.initialDeposit!, message: 'Must be less than initial deposit.' },
-                  })}
-                />
-                <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
-              </FormControl>
+            <FormControl isInvalid={Boolean(errors.swapAmount)}>
+              <FormLabel>How much {state.baseDenom} each purchase?</FormLabel>
+              <FormHelperText>
+                <Flex>
+                  <Text>The amount you want swapped each purchase for KUJI.</Text>
+                  <Spacer />
+                  Max: {new Intl.NumberFormat().format(state.initialDeposit!) ?? '-'}
+                </Flex>
+              </FormHelperText>
+              <Input
+                type="number"
+                placeholder="Enter amount"
+                {...register('swapAmount', {
+                  required: true,
+                  min: { value: 1, message: 'Must be more than 0.' },
+                  max: { value: state.initialDeposit!, message: 'Must be less than initial deposit.' },
+                })}
+              />
+              <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
+            </FormControl>
 
-              <FormControl>
-                <Button type="submit" w="full">
-                  Submit
-                </Button>
-              </FormControl>
-            </Stack>
-          </form>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+            <FormControl>
+              <Button type="submit" w="full" isLoading={isSubmitting}>
+                Submit
+              </Button>
+            </FormControl>
+          </Stack>
+        </form>
+      </NewStrategyModalBody>
+    </NewStrategyModal>
   );
 };
 
-DcaIn.getLayout = getFlowLayout;
+DcaInStep2.getLayout = getFlowLayout;
 
-export default DcaIn;
+export default DcaInStep2;

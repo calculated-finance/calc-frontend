@@ -1,5 +1,6 @@
-import { Button, Modal, ModalBody, ModalContent, ModalHeader } from '@chakra-ui/react';
+import { Button, Heading, Modal, ModalBody, ModalContent, ModalHeader, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
+import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'src/pages/_app';
 
@@ -8,18 +9,19 @@ const Success: NextPageWithLayout = () => (
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
 
-  <Modal isOpen onClose={() => {}}>
-    <ModalContent>
-      <ModalHeader textAlign="center">Congratulations! CALC is now working for you!</ModalHeader>
-      <ModalBody p={4}>
-        <Link passHref href="/strategies">
-          <Button as="a" w="full">
-            View my strategies
-          </Button>
-        </Link>
-      </ModalBody>
-    </ModalContent>
-  </Modal>
+  <NewStrategyModal>
+    <NewStrategyModalHeader backUrl="/" resetForm={() => {}}>
+      Strategy Set Successfully
+    </NewStrategyModalHeader>
+    <NewStrategyModalBody p={4}>
+      <Text>Congratulations! CALC is now working for you!</Text>
+      <Link passHref href="/strategies">
+        <Button as="a" w="full">
+          View my strategies
+        </Button>
+      </Link>
+    </NewStrategyModalBody>
+  </NewStrategyModal>
 );
 Success.getLayout = getFlowLayout;
 

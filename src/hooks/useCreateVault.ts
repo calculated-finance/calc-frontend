@@ -37,7 +37,7 @@ const useCreateVault = () => {
           position_type: 'enter',
           swap_amount: swapAmount.toString(),
           total_executions: totalExecutions(initialDeposit, swapAmount),
-          target_start_time_utc_seconds: new Date(startDate).valueOf().toString(),
+          target_start_time_utc_seconds: (new Date(startDate).valueOf() / 1000).toString(),
         },
       },
       funds: [{ denom: quoteDenom, amount: initialDeposit.toString() }],
