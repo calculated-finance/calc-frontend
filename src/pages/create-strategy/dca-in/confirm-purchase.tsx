@@ -62,7 +62,7 @@ const ConfirmPurchase: NextPageWithLayout = () => {
           <Text>
             I deposit{' '}
             <Badge>
-              {initialDeposit} {denoms[baseDenom].name}
+              {denoms[baseDenom].conversion(initialDeposit)} {denoms[baseDenom].name}
             </Badge>{' '}
             <DenomIcon denomName={baseDenom} /> into the CALC DCA In vault.
           </Text>
@@ -71,7 +71,7 @@ const ConfirmPurchase: NextPageWithLayout = () => {
             Starting <Badge>{new Date(startDate).toLocaleDateString()}</Badge> at{' '}
             <Badge>{new Date(startDate).toLocaleTimeString()}</Badge>, CALC will swap{' '}
             <Badge>
-              ~{swapAmount} {denoms[baseDenom].name}
+              ~{denoms[baseDenom].conversion(swapAmount)} {denoms[baseDenom].name}
             </Badge>{' '}
             <DenomIcon denomName={baseDenom} /> for <Badge>{denoms[quoteDenom].name}</Badge>{' '}
             <DenomIcon denomName={quoteDenom} /> for{' '}
