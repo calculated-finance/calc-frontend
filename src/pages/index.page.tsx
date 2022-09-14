@@ -2,7 +2,6 @@ import { Button, Box, Heading, Text, Stack, Center, Image, Flex, Link, Grid, Gri
 import Icon from '@components/Icon';
 import { ArrowToprightIcon, BarChartIcon } from '@fusion-icons/react/interface';
 import { getSidebarLayout } from '../components/Layout';
-import { NextPageWithLayout } from './_app';
 
 function Setup() {
   return (
@@ -160,40 +159,41 @@ function WorkflowInformation() {
   );
 }
 
-// eslint-disable-next-line react/function-component-definition
-const Home: NextPageWithLayout = () => (
-  <>
-    <Box pb={6}>
-      <Heading fontSize="3xl" mb={2}>
-        Welcome to CALC, you&apos;ve made a great choice!
-      </Heading>
-      <Text fontSize="sm">
-        CALC removes the hardest part of trading, emotion! Set &amp; forget, take back your time and forget about being
-        gluded to a computer screen 24/7.
-      </Text>
-    </Box>
-    <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
-      <GridItem colSpan={{ base: 5, xl: 2, '2xl': 2 }}>
-        <Setup />
-      </GridItem>
-      <GridItem colSpan={{ base: 5, xl: 3, '2xl': 2 }}>
-        <LearnMore />
-      </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 2, '2xl': 1 }} rowStart={{ lg: 3, xl: 3, '2xl': 1 }} colStart={{ '2xl': 5 }}>
-        <FearAndGreed />
-      </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
-        <InfoPanel />
-      </GridItem>
-      <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }} rowStart={{ lg: 3, '2xl': 3 }} colStart={{ lg: 3, '2xl': 1 }}>
-        <ActiveStrategies />
-      </GridItem>
-      <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
-        <WorkflowInformation />
-      </GridItem>
-    </Grid>
-  </>
-);
+function Home() {
+  return (
+    <>
+      <Box pb={6}>
+        <Heading fontSize="3xl" mb={2}>
+          Welcome to CALC, you&apos;ve made a great choice!
+        </Heading>
+        <Text fontSize="sm">
+          CALC removes the hardest part of trading, emotion! Set &amp; forget, take back your time and forget about
+          being gluded to a computer screen 24/7.
+        </Text>
+      </Box>
+      <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
+        <GridItem colSpan={{ base: 5, xl: 2, '2xl': 2 }}>
+          <Setup />
+        </GridItem>
+        <GridItem colSpan={{ base: 5, xl: 3, '2xl': 2 }}>
+          <LearnMore />
+        </GridItem>
+        <GridItem colSpan={{ base: 5, lg: 2, '2xl': 1 }} rowStart={{ lg: 3, xl: 3, '2xl': 1 }} colStart={{ '2xl': 5 }}>
+          <FearAndGreed />
+        </GridItem>
+        <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
+          <InfoPanel />
+        </GridItem>
+        <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }} rowStart={{ lg: 3, '2xl': 3 }} colStart={{ lg: 3, '2xl': 1 }}>
+          <ActiveStrategies />
+        </GridItem>
+        <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
+          <WorkflowInformation />
+        </GridItem>
+      </Grid>
+    </>
+  );
+}
 
 Home.getLayout = getSidebarLayout;
 

@@ -4,7 +4,7 @@ import type { Wallet } from '@wizard-ui/react';
 import { Center, Spacer, Image } from '@chakra-ui/react';
 
 export interface WalletListItemProps {
-  handleClick: any;
+  handleClick: () => void;
   wallet: Wallet;
 }
 

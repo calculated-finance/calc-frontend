@@ -1,6 +1,6 @@
 import { Link, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { TwitterIcon, PaperplaneIcon, DiscordIcon, NightIcon } from '@fusion-icons/react/interface';
+import { TwitterIcon, PaperplaneIcon, DiscordIcon } from '@fusion-icons/react/interface';
 
 function Footer() {
   return (
@@ -15,9 +15,6 @@ function Footer() {
         <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
           <Icon as={DiscordIcon} stroke="slateGrey" />
         </Link>
-        {/* <Link target="_blank" href="https://twitter.com/CALC_Finance">
-          <Icon as={NightIcon} stroke="slateGrey" />
-        </Link> */}
       </Stack>
       <Text fontSize="10px">Proudly built on the Kujira Blockchain.</Text>
     </>

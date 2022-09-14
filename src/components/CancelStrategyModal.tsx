@@ -13,11 +13,17 @@ import {
   Center,
   Spacer,
   useToast,
+  ModalProps,
 } from '@chakra-ui/react';
+import { Strategy } from '@hooks/useStrategies';
 import React from 'react';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 
-export default function CancelStrategyModal({ isOpen, onClose, strategy }: any) {
+type CancelStrategyModalProps = {
+  strategy: Strategy;
+} & Omit<ModalProps, 'children'>;
+
+export default function CancelStrategyModal({ isOpen, onClose, strategy }: CancelStrategyModalProps) {
   const { cancelStrategy, isLoading } = useCancelStrategy();
 
   const toast = useToast();

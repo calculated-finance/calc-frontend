@@ -1,11 +1,12 @@
-import { Badge, Button, Grid, GridItem, Heading, Text, Flex, Box, useDisclosure } from '@chakra-ui/react';
+import { Badge, Button, Grid, GridItem, Heading, Text, Flex, useDisclosure } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
 import CancelStrategyModal from './CancelStrategyModal';
 
-function CancelButton({ strategy }: any) {
+function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -24,7 +25,7 @@ function CancelButton({ strategy }: any) {
   );
 }
 
-function Strategy({ strategy }: any) {
+function StrategyRow({ strategy }: { strategy: Strategy }) {
   return (
     <Grid
       templateRows="repeat(1, 1fr)"
@@ -49,7 +50,7 @@ function Strategy({ strategy }: any) {
         <Text>Start date:</Text>
 
         <Text textStyle="body-xs">
-          {new Date(strategy.tracking_information.target_execution_time_utc).toLocaleDateString()}
+          {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()}
         </Text>
       </GridItem>
 
@@ -82,4 +83,4 @@ function Strategy({ strategy }: any) {
   );
 }
 
-export default Strategy;
+export default StrategyRow;

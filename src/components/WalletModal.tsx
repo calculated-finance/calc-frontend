@@ -7,9 +7,10 @@ import { Box, Center, Link, Modal, ModalBody, ModalContent, ModalHeader, ModalOv
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { useWalletModal } from '../hooks/useWalletModal';
 import { WalletListItem } from './WalletListItem';
+import Spinner from './Spinner';
 
 function WalletModal() {
-  const { wallets, select } = useWallet();
+  const { wallets, select, connecting } = useWallet();
   const { visible, setVisible } = useWalletModal();
 
   const [installedWallets] = useMemo(() => {
@@ -33,7 +34,7 @@ function WalletModal() {
 
   const handleClose = useCallback(() => {
     setVisible(false);
-  }, []);
+  }, [setVisible]);
 
   const handleWalletClick = useCallback(
     (walletName: WalletName) => {
@@ -44,24 +45,37 @@ function WalletModal() {
   );
 
   return (
-    <Modal isOpen={visible} onClose={handleClose}>
+    <Modal isOpen={visible || connecting} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader textAlign="center">Connect wallet</ModalHeader>
-        <ModalBody p={4}>
-          <Box pb={4}>
-            {installedWallets.map((wallet) => (
-              <WalletListItem
-                key={wallet.adapter.name}
-                handleClick={() => handleWalletClick(wallet.adapter.name)}
-                wallet={wallet}
-              />
-            ))}
-          </Box>
-          <Center>
-            <Link href="/">What&apos;s a Wallet?</Link>
-          </Center>
-        </ModalBody>
+        {connecting ? (
+          <>
+            <ModalHeader textAlign="center">Connecting to wallet</ModalHeader>
+            <ModalBody p={4}>
+              <Center>
+                <Spinner />
+              </Center>
+            </ModalBody>
+          </>
+        ) : (
+          <>
+            <ModalHeader textAlign="center">Connect wallet</ModalHeader>
+            <ModalBody p={4}>
+              <Box pb={4}>
+                {installedWallets.map((wallet) => (
+                  <WalletListItem
+                    key={wallet.adapter.name}
+                    handleClick={() => handleWalletClick(wallet.adapter.name)}
+                    wallet={wallet}
+                  />
+                ))}
+              </Box>
+              <Center>
+                <Link href="/">What&apos;s a Wallet?</Link>
+              </Center>
+            </ModalBody>
+          </>
+        )}
       </ModalContent>
     </Modal>
   );

@@ -146,7 +146,15 @@ const components = {
       },
     },
     defaultProps: {
-      variant: null, // null here
+      variant: null,
+    },
+  },
+  Form: {
+    baseStyle: {
+      helperText: {
+        pb: 2,
+        textStyle: 'body-xs',
+      },
     },
   },
 };

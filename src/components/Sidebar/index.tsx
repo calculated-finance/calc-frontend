@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactText } from 'react';
+import React, { ReactNode, SVGProps } from 'react';
 import {
   Box,
   CloseButton,
@@ -28,25 +28,34 @@ import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 
-interface LinkItemProps {
-  name: string;
-  icon: any;
-  active?: boolean;
-  href: string;
+// based on linkitems href values
+export enum Pages {
+  Home = '/',
+  Strategies = '/strategies',
+  CreateStrategy = '/create-strategy',
+  Settings = '/settings',
+  HowItWorks = '/how-it-works',
+  Performance = '/performance',
 }
-const LinkItems: Array<LinkItemProps> = [
-  {
-    name: 'Home',
-    icon: HomeIcon,
-    active: true,
-    href: '/',
-  },
-  { name: 'Create Strategy', icon: Add1Icon, href: '/create-strategy' },
-  { name: 'My strategies', icon: ToolkitIcon, href: '/strategies' },
-  { name: 'Performance', icon: BarChartIcon, href: '/performance' },
-  { name: 'How it works', icon: LifebeltIcon, href: '/how-it-works' },
-  { name: 'Settings', icon: SettingsIcon, href: '/settings' },
+
+interface LinkItem {
+  name: string;
+  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  active?: boolean;
+  href: Pages;
+}
+const LinkItems: Array<LinkItem> = [
+  { name: 'Home', icon: HomeIcon, href: Pages.Home },
+  { name: 'Create Strategy', icon: Add1Icon, href: Pages.CreateStrategy },
+  { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
+  { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
+  { name: 'How it works', icon: LifebeltIcon, href: Pages.HowItWorks },
+  { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
+
+export type ChildrenProp = {
+  children: ReactNode;
+};
 
 const SIDEBAR_WIDTH = 64;
 
@@ -55,10 +64,9 @@ interface SidebarProps extends BoxProps {
 }
 
 interface NavItemProps extends FlexProps {
-  icon: any;
-  children: ReactText;
+  icon: LinkItem['icon'];
   isActive: boolean | undefined;
-  href: string;
+  href: LinkItem['href'];
 }
 function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   return (

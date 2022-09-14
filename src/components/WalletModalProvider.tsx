@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { CalcWalletModalContext } from 'src/hooks/useWalletModal';
 import WalletModal from './WalletModal';

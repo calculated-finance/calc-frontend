@@ -1,27 +1,15 @@
-import {
-  Badge,
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  Spacer,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Badge, Button, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { ArrowLeftIcon, CheckedIcon } from '@fusion-icons/react/interface';
-import DenomIcon from '@hooks/DenomIcon';
-import { denoms } from '@hooks/usePairs';
-import Link from 'next/link';
+import { CheckedIcon } from '@fusion-icons/react/interface';
+import DenomIcon from '@components/DenomIcon';
+import getDenomInfo from '@utils/getDenomInfo';
 import { useRouter } from 'next/router';
-import useCreateVault from 'src/hooks/useCreateVault';
 import useDcaInForm from 'src/hooks/useDcaInForm';
-import { NextPageWithLayout } from 'src/pages/_app';
+import { NextPageWithLayout } from 'src/pages/_app.page';
 import totalExecutions from 'src/utils/totalExecutions';
+import useCreateVault from '@hooks/useCreateVault';
 
 // eslint-disable-next-line react/function-component-definition
 const ConfirmPurchase: NextPageWithLayout = () => {
@@ -29,40 +17,40 @@ const ConfirmPurchase: NextPageWithLayout = () => {
 
   const router = useRouter();
 
-  const { createVault, isLoading } = useCreateVault();
+  const { mutate, isError, isLoading } = useCreateVault(state);
 
   const handleClick = () => {
-    createVault(state, {
+    mutate(undefined, {
       onSuccess: async () => {
         actions.resetAction();
         router.push('success');
       },
-      onError: async (error: any) => {
-        console.log('something went wrong');
-        console.log(error.message);
-      },
     });
   };
 
-  const { startDate, initialDeposit, swapAmount, executionInterval, quoteDenom, baseDenom } = state;
+  const {
+    step2: { startDate, executionInterval, swapAmount },
+    step1: { initialDeposit, quoteDenom, baseDenom },
+  } = state;
 
   // TODO: proper validation
   if (!startDate || !initialDeposit || !swapAmount || !executionInterval || !quoteDenom || !baseDenom) {
     return <div> Invalid data</div>;
   }
 
+  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
+  const { name: baseDenomName } = getDenomInfo(baseDenom);
+
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader backUrl="/create-strategy/dca-in/step2" resetForm={actions.resetAction}>
-        Confirm &amp; Sign
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
       <NewStrategyModalBody>
         <Stack spacing={4}>
           <Text textStyle="body-xs">The deposit</Text>
           <Text>
             I deposit{' '}
             <Badge>
-              {denoms[baseDenom].conversion(initialDeposit)} {denoms[baseDenom].name}
+              {initialDeposit} {baseDenomName}
             </Badge>{' '}
             <DenomIcon denomName={baseDenom} /> into the CALC DCA In vault.
           </Text>
@@ -71,10 +59,10 @@ const ConfirmPurchase: NextPageWithLayout = () => {
             Starting <Badge>{new Date(startDate).toLocaleDateString()}</Badge> at{' '}
             <Badge>{new Date(startDate).toLocaleTimeString()}</Badge>, CALC will swap{' '}
             <Badge>
-              ~{denoms[baseDenom].conversion(swapAmount)} {denoms[baseDenom].name}
+              ~{swapAmount} {baseDenomName}
             </Badge>{' '}
-            <DenomIcon denomName={baseDenom} /> for <Badge>{denoms[quoteDenom].name}</Badge>{' '}
-            <DenomIcon denomName={quoteDenom} /> for{' '}
+            <DenomIcon denomName={baseDenom} /> for <Badge>{quoteDenomName}</Badge> <DenomIcon denomName={quoteDenom} />{' '}
+            for{' '}
             <Badge>
               {totalExecutions(initialDeposit, swapAmount)} {executionInterval}
             </Badge>{' '}
@@ -88,6 +76,7 @@ const ConfirmPurchase: NextPageWithLayout = () => {
           >
             Confirm
           </Button>
+          {isError && <Text color="red">Something went wrong</Text>}
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>

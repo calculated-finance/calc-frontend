@@ -1,6 +1,7 @@
 import { useStateMachine } from 'little-state-machine';
+import DcaInFormData from '../types/DcaInFormData';
 
-function updateAction(state: any, payload: any) {
+function updateAction(state: DcaInFormData, payload: DcaInFormData) {
   return {
     ...state,
     ...payload,
@@ -8,7 +9,7 @@ function updateAction(state: any, payload: any) {
 }
 
 function resetAction() {
-  return {};
+  return { step1: {}, step2: {} };
 }
 
 const useDcaInForm = () => {

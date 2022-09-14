@@ -7,7 +7,7 @@ import { useWalletModal } from 'src/hooks/useWalletModal';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
-  const { address, connected, disconnect, connecting } = useWallet();
+  const { address, disconnect } = useWallet();
 
   const handleClick = () => {
     setVisible(!visible);

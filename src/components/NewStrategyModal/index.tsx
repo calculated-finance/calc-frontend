@@ -12,6 +12,7 @@ import {
   BreadcrumbLink,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
+import { ChildrenProp } from '@components/Sidebar';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
 
@@ -70,18 +71,6 @@ const useSteps = () => {
   };
 };
 
-function Step({ children }: any) {
-  return (
-    <Flex w={6} h={6} borderRadius="full" bg="abyss" align="center" justify="center">
-      <Flex w={4} h={4} borderRadius="full" bg="green.200" align="center" justify="center">
-        <Text textStyle="body-xs" color="navy">
-          {children}
-        </Text>
-      </Flex>
-    </Flex>
-  );
-}
-
 // stepper with four circles representing the current step
 function Stepper() {
   // use steps
@@ -116,7 +105,7 @@ function Stepper() {
   );
 }
 
-export default function NewStrategyModal({ children }: any) {
+export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
     <Box maxWidth={451} mx="auto" mt={24}>
       {children}
@@ -124,7 +113,7 @@ export default function NewStrategyModal({ children }: any) {
   );
 }
 
-export function NewStrategyModalBody({ children }: any) {
+export function NewStrategyModalBody({ children }: ChildrenProp) {
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="md">
       {children}
@@ -132,21 +121,15 @@ export function NewStrategyModalBody({ children }: any) {
   );
 }
 
-export function NewStrategyModalHeader({
-  backUrl,
-  resetForm,
-  children,
-}: {
-  backUrl: string;
-  resetForm: () => void;
-  children: any;
-}) {
+export function NewStrategyModalHeader({ resetForm, children }: { resetForm?: () => void } & ChildrenProp) {
   // router
   const router = useRouter();
   const { hasPreviousStep, previousStep } = useSteps();
 
   const handleCancel = async () => {
-    resetForm();
+    if (resetForm) {
+      resetForm();
+    }
     router.push('/create-strategy');
   };
   return (
@@ -186,3 +169,7 @@ export function NewStrategyModalHeader({
     </Flex>
   );
 }
+
+NewStrategyModalHeader.defaultProps = {
+  resetForm: undefined,
+};

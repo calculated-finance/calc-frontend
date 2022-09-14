@@ -17,18 +17,10 @@ type AppPropsWithLayout = AppProps & {
 
 const queryClient = new QueryClient();
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-createStore({});
+createStore({ step1: {}, step2: {} });
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
-
-  // const endpoint = useMemo(() => 'http://localhost:26657', []);
-  // const chainId = useMemo(() => 'localkujira', []);
-
-  // const endpoint = useMemo(() => 'https://rpc.kaiyo.kujira.setten.io:443', []);
-  // const chainId = useMemo(() => 'kaiyo-1', []);
 
   const endpoint = useMemo(() => 'https://rpc.harpoon.kujira.setten.io', []);
   const chainId = useMemo(() => 'harpoon-4', []);

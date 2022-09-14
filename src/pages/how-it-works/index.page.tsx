@@ -1,6 +1,6 @@
 import { Heading, Stack, Text, Image } from '@chakra-ui/react';
 import { getSidebarLayout } from '../../components/Layout';
-import { NextPageWithLayout } from '../_app';
+import { NextPageWithLayout } from '../_app.page';
 
 // eslint-disable-next-line react/function-component-definition
 const HowItWorks: NextPageWithLayout = () => (

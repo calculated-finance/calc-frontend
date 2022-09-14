@@ -8,29 +8,23 @@ import {
   FormLabel,
   HStack,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
   Spacer,
   Stack,
   Text,
   useRadio,
   useRadioGroup,
+  UseRadioProps,
 } from '@chakra-ui/react';
-import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { ArrowLeftIcon } from '@fusion-icons/react/interface';
+import { ChildrenProp } from '@components/Sidebar';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { forwardRef } from 'react';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { Controller, FieldValues, useController, useForm } from 'react-hook-form';
 import useDcaInForm from 'src/hooks/useDcaInForm';
-import { NextPageWithLayout } from 'src/pages/_app';
 
-function RadioCard(props: any) {
+function RadioCard(props: UseRadioProps & ChildrenProp) {
   const { children } = props;
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
@@ -59,8 +53,7 @@ function RadioCard(props: any) {
   );
 }
 
-// Step 2: Use the `useRadioGroup` hook to control a group of custom radios.
-const Example = forwardRef(({ control, name, defaultValue, ...props }: any, ref) => {
+const Example = forwardRef(({ control, name, defaultValue }: FieldValues) => {
   const { field } = useController({
     name,
     control,
@@ -105,13 +98,18 @@ const Example = forwardRef(({ control, name, defaultValue, ...props }: any, ref)
   );
 });
 
-// eslint-disable-next-line react/function-component-definition
-const DcaInStep2: NextPageWithLayout = () => {
+type Step2FormData = {
+  executionInterval?: string;
+  startDate?: Date;
+  swapAmount?: number;
+};
+
+function DcaInStep2() {
   const router = useRouter();
   const { actions, state } = useDcaInForm();
 
-  const onSubmit = async (data: any) => {
-    await actions.updateAction(data);
+  const onSubmit = async (data: Step2FormData) => {
+    await actions.updateAction({ ...state, step2: data });
     await router.push('/create-strategy/dca-in/confirm-purchase');
   };
 
@@ -120,15 +118,17 @@ const DcaInStep2: NextPageWithLayout = () => {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm({
-    defaultValues: state,
+  } = useForm<Step2FormData>({
+    defaultValues: state.step2,
   });
+
+  if (!state.step1.initialDeposit || !state.step1.baseDenom) {
+    return null;
+  }
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader backUrl="/create-strategy/dca-in" resetForm={actions.resetAction}>
-        Customise Strategy
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
       <NewStrategyModalBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction="column" spacing={4}>
@@ -149,12 +149,12 @@ const DcaInStep2: NextPageWithLayout = () => {
             </FormControl>
 
             <FormControl isInvalid={Boolean(errors.swapAmount)}>
-              <FormLabel>How much {state.baseDenom} each purchase?</FormLabel>
+              <FormLabel>How much {state.step1.baseDenom} each purchase?</FormLabel>
               <FormHelperText>
                 <Flex>
                   <Text>The amount you want swapped each purchase for KUJI.</Text>
                   <Spacer />
-                  Max: {new Intl.NumberFormat().format(state.initialDeposit!) ?? '-'}
+                  Max: {new Intl.NumberFormat().format(state.step1.initialDeposit) ?? '-'}
                 </Flex>
               </FormHelperText>
               <Input
@@ -163,7 +163,7 @@ const DcaInStep2: NextPageWithLayout = () => {
                 {...register('swapAmount', {
                   required: true,
                   min: { value: 1, message: 'Must be more than 0.' },
-                  max: { value: state.initialDeposit!, message: 'Must be less than initial deposit.' },
+                  max: { value: state.step1.initialDeposit, message: 'Must be less than initial deposit.' },
                 })}
               />
               <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
@@ -179,7 +179,7 @@ const DcaInStep2: NextPageWithLayout = () => {
       </NewStrategyModalBody>
     </NewStrategyModal>
   );
-};
+}
 
 DcaInStep2.getLayout = getFlowLayout;
 
