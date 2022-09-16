@@ -101,6 +101,18 @@ const colors = {
 const semanticTokens = {};
 
 const components = {
+  // Button: {
+  //   baseStyle: ({ theme }: any) =>
+  //     // console.log(theme);
+  //     ({
+  //       borderRadius: 'lg',
+  //       fontSize: 'sm',
+  //     }),
+  //   defaultProps: {
+  //     colorScheme: 'brand',
+  //     size: 'sm',
+  //   },
+  // },
   Button: {
     baseStyle: {
       borderRadius: 'lg',
@@ -136,17 +148,27 @@ const components = {
       variant: null, // null here
     },
   },
+  // InputGroup: {
+  // baseStyle: {
+  //   borderRadius: '2xl',
+  //   borderColor: 'slateGrey',
+  //   borderWidth: 1,
+  //   bg: 'abyss',
+  // },
+  // },
   Input: {
-    baseStyle: {
-      field: {
-        borderRadius: '2xl',
-        borderColor: 'slateGrey',
-        borderWidth: 1,
-        bg: 'abyss',
+    variants: {
+      outline: {
+        field: {
+          borderRadius: '2xl',
+          borderColor: 'slateGrey',
+          borderWidth: 1,
+          bg: 'abyss',
+        },
       },
     },
     defaultProps: {
-      variant: null,
+      variant: 'outline',
     },
   },
   Form: {

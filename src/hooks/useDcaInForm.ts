@@ -8,8 +8,22 @@ function updateAction(state: DcaInFormData, payload: DcaInFormData) {
   };
 }
 
+export const initialValues = {
+  step1: {
+    baseDenom: '',
+    quoteDenom: '',
+    initialDeposit: 0,
+  },
+  step2: {
+    startImmediately: true,
+    startDate: undefined,
+    executionInterval: 'daily',
+    swapAmount: 0,
+  },
+};
+
 function resetAction() {
-  return { step1: {}, step2: {} };
+  return initialValues;
 }
 
 const useDcaInForm = () => {

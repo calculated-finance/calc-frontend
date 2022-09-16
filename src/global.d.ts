@@ -8,6 +8,7 @@ declare module 'little-state-machine' {
       initialDeposit?: number;
     };
     step2: {
+      startImmediately?: boolean;
       executionInterval?: string;
       startDate?: Date;
       swapAmount?: number;

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCWClient } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 
-enum Denom {
+export enum Denom {
   Demo = 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   Kuji = 'ukuji',
 }

@@ -8,8 +8,11 @@ import {
   FormLabel,
   HStack,
   Input,
+  InputGroup,
+  InputLeftElement,
   Spacer,
   Stack,
+  StackProps,
   Text,
   useRadio,
   useRadioGroup,
@@ -19,20 +22,33 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { ChildrenProp } from '@components/Sidebar';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
+import { Form, Formik, useField, useFormikContext } from 'formik';
 import { useRouter } from 'next/router';
-import { forwardRef } from 'react';
-import { Controller, FieldValues, useController, useForm } from 'react-hook-form';
+import { FiCalendar } from 'react-icons/fi';
 import useDcaInForm from 'src/hooks/useDcaInForm';
+import { DcaInFormDataStep2, stepOneValidationSchema } from '../../../../types/DcaInFormData';
+
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function Radio({ children, ...props }: ChildrenProp & StackProps) {
+  return (
+    <HStack bg="abyss" w="min-content" borderRadius="2xl" px={1} py={1} {...props}>
+      {children}
+    </HStack>
+  );
+}
 
 function RadioCard(props: UseRadioProps & ChildrenProp) {
   const { children } = props;
-  const { getInputProps, getCheckboxProps } = useRadio(props);
+  const { getInputProps, getCheckboxProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
 
   return (
-    <Box as="label">
+    <Box as="label" {...htmlProps}>
       <input {...input} />
       <Box
         {...checkbox}
@@ -47,80 +63,191 @@ function RadioCard(props: UseRadioProps & ChildrenProp) {
           boxShadow: 'outline',
         }}
       >
-        {children}
+        <Text {...getLabelProps()}>{children}</Text>
       </Box>
     </Box>
   );
 }
 
-const Example = forwardRef(({ control, name, defaultValue }: FieldValues) => {
-  const { field } = useController({
-    name,
-    control,
-    rules: { required: 'Toggle is required' },
-    defaultValue,
-  });
+enum ExecutionIntervals {
+  Hourly = 'hourly',
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Monthly = 'monthly',
+}
 
-  const options = [
-    {
-      value: 'hourly',
-      label: 'Hourly',
-    },
-    {
-      value: 'daily',
-      label: 'Daily',
-    },
-    {
-      value: 'weekly',
-      label: 'Weekly',
-    },
-    {
-      value: 'monthly',
-      label: 'Monthly',
-    },
-  ];
+// move to enum?
+const executionIntervalData: { value: ExecutionIntervals; label: string }[] = [
+  {
+    value: ExecutionIntervals.Hourly,
+    label: 'Hourly',
+  },
+  {
+    value: ExecutionIntervals.Daily,
+    label: 'Daily',
+  },
+  {
+    value: ExecutionIntervals.Weekly,
+    label: 'Weekly',
+  },
+  {
+    value: ExecutionIntervals.Monthly,
+    label: 'Monthly',
+  },
+];
+
+enum StartImmediatelyValues {
+  Yes = 'yes',
+  No = 'no',
+}
+
+const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = [
+  {
+    value: StartImmediatelyValues.Yes,
+    label: 'Yes',
+  },
+  {
+    value: StartImmediatelyValues.No,
+    label: 'No',
+  },
+];
+
+function StartImmediately() {
+  const [field, , helpers] = useField({ name: 'startImmediately' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
+    value: field.value ? StartImmediatelyValues.Yes : StartImmediatelyValues.No,
+    onChange: (value: StartImmediatelyValues) => {
+      helpers.setValue(value === StartImmediatelyValues.Yes);
+    },
   });
 
   return (
-    <HStack {...getRootProps} bg="abyss" borderRadius="2xl" px={2} py={1}>
-      {options.map((option) => {
-        const radio = getRadioProps({ value: option.value });
-        return (
-          <RadioCard key={option.value} {...radio}>
-            {option.label}
-          </RadioCard>
-        );
-      })}
-    </HStack>
+    <FormControl>
+      <FormLabel>Start Strategy immediately?</FormLabel>
+      <FormHelperText>Starting immediately means your first swap occurs straight after set-up.</FormHelperText>
+      <Radio {...getRootProps}>
+        {startImediatelyData.map((option) => {
+          const radio = getRadioProps({ value: option.value });
+          return (
+            <RadioCard key={option.label} {...radio}>
+              {option.label}
+            </RadioCard>
+          );
+        })}
+      </Radio>
+    </FormControl>
   );
-});
+}
 
-type Step2FormData = {
-  executionInterval?: string;
-  startDate?: Date;
-  swapAmount?: number;
-};
+function ExecutionInterval() {
+  const [field, , helpers] = useField({ name: 'executionInterval' });
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    ...field,
+    onChange: helpers.setValue,
+  });
+  return (
+    <FormControl>
+      <FormLabel>How often would you like CALC to purchase for you?</FormLabel>
+      <Radio {...getRootProps}>
+        {executionIntervalData.map((option) => {
+          const radio = getRadioProps({ value: option.value });
+          return (
+            <RadioCard key={option.label} {...radio}>
+              {option.label}
+            </RadioCard>
+          );
+        })}
+      </Radio>
+    </FormControl>
+  );
+}
+
+function StartDate() {
+  const [field, meta, helpers] = useField({ name: 'startDate' });
+
+  const date = field.value ? new Date(field.value) : undefined;
+
+  return (
+    <FormControl>
+      <FormLabel>Strategy start date</FormLabel>
+      <FormHelperText>This is when your first swap will be made</FormHelperText>
+      <InputGroup>
+        <InputLeftElement
+          // eslint-disable-next-line react/no-children-prop
+          children={
+            <HStack direction="row" ml={10}>
+              <FiCalendar /> <Text fontSize="sm">Date</Text>
+            </HStack>
+          }
+        />
+        <SingleDatepicker
+          name={field.name}
+          date={date}
+          onDateChange={helpers.setValue}
+          minDate={new Date()}
+          configs={{
+            monthNames,
+            dayNames,
+            dateFormat: 'dd MMM yyyy',
+          }}
+          propsConfigs={{
+            inputProps: {
+              placeholder: 'Select a date',
+              textAlign: 'right',
+            },
+          }}
+        />
+      </InputGroup>
+      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+    </FormControl>
+  );
+}
+
+function SwapAmount() {
+  const [field, meta] = useField({ name: 'swapAmount' });
+  const { state } = useDcaInForm();
+
+  return (
+    <FormControl isInvalid={Boolean(meta.error)}>
+      <FormLabel>How much {state.step1.baseDenom} each purchase?</FormLabel>
+      <FormHelperText>
+        <Flex>
+          <Text>The amount you want swapped each purchase for KUJI.</Text>
+          <Spacer />
+          Max: {new Intl.NumberFormat().format(state.step1.initialDeposit || 0) ?? '-'}
+        </Flex>
+      </FormHelperText>
+      <Input type="number" placeholder="Enter amount" {...field} />
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
+    </FormControl>
+  );
+}
+
+function Submit() {
+  const { isSubmitting, isValid } = useFormikContext<DcaInFormDataStep2>();
+
+  return (
+    <FormControl>
+      <Button type="submit" w="full" isLoading={isSubmitting} isDisabled={!isValid}>
+        Submit
+      </Button>
+    </FormControl>
+  );
+}
 
 function DcaInStep2() {
   const router = useRouter();
   const { actions, state } = useDcaInForm();
 
-  const onSubmit = async (data: Step2FormData) => {
+  const onSubmit = async (data: DcaInFormDataStep2) => {
     await actions.updateAction({ ...state, step2: data });
     await router.push('/create-strategy/dca-in/confirm-purchase');
   };
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-  } = useForm<Step2FormData>({
-    defaultValues: state.step2,
-  });
+  const initialValues = state.step2;
 
   if (!state.step1.initialDeposit || !state.step1.baseDenom) {
     return null;
@@ -130,52 +257,19 @@ function DcaInStep2() {
     <NewStrategyModal>
       <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
       <NewStrategyModalBody>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack direction="column" spacing={4}>
-            <FormControl>
-              <FormLabel>Strategy start date</FormLabel>
-              {/* todo: validate that date is in the future */}
-              <Controller
-                control={control}
-                name="startDate"
-                render={({ field: { onChange, value, name } }) => (
-                  <SingleDatepicker name={name} date={value ? new Date(value) : undefined} onDateChange={onChange} />
-                )}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>How often would you like CALC to purchase for you?</FormLabel>
-              <Example name="executionInterval" defaultValue="daily" control={control} />
-            </FormControl>
-
-            <FormControl isInvalid={Boolean(errors.swapAmount)}>
-              <FormLabel>How much {state.step1.baseDenom} each purchase?</FormLabel>
-              <FormHelperText>
-                <Flex>
-                  <Text>The amount you want swapped each purchase for KUJI.</Text>
-                  <Spacer />
-                  Max: {new Intl.NumberFormat().format(state.step1.initialDeposit) ?? '-'}
-                </Flex>
-              </FormHelperText>
-              <Input
-                type="number"
-                placeholder="Enter amount"
-                {...register('swapAmount', {
-                  required: true,
-                  min: { value: 1, message: 'Must be more than 0.' },
-                  max: { value: state.step1.initialDeposit, message: 'Must be less than initial deposit.' },
-                })}
-              />
-              <FormErrorMessage>{errors.swapAmount && errors.swapAmount?.message}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl>
-              <Button type="submit" w="full" isLoading={isSubmitting}>
-                Submit
-              </Button>
-            </FormControl>
-          </Stack>
-        </form>
+        <Formik initialValues={initialValues} validationSchema={stepOneValidationSchema} onSubmit={onSubmit}>
+          {({ values }) => (
+            <Form>
+              <Stack direction="column" spacing={4}>
+                <StartImmediately />
+                {!values.startImmediately && <StartDate />}
+                <ExecutionInterval />
+                <SwapAmount />
+                <Submit />
+              </Stack>
+            </Form>
+          )}
+        </Formik>
       </NewStrategyModalBody>
     </NewStrategyModal>
   );
@@ -184,3 +278,46 @@ function DcaInStep2() {
 DcaInStep2.getLayout = getFlowLayout;
 
 export default DcaInStep2;
+
+/* below is a solution for a checkbox */
+
+// function StartImmediately() {
+//   const [field] = useField({ name: 'startImmediately' });
+
+//   console.log(field);
+
+//   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox({
+//     ...field,
+//     isChecked: field.value,
+//   });
+
+//   console.log(getInputProps);
+
+//   return (
+//     <Radio>
+//       {/* <chakra.label {...htmlProps} /> */}
+//       <input {...getInputProps()} hidden />
+//       <CheckboxCard active={state.isChecked}>Yes</CheckboxCard>
+//       <CheckboxCard active={!state.isChecked}>No</CheckboxCard>
+//     </Radio>
+//   );
+// }
+
+// function CheckboxCard({ children, active }: ChildrenProp & { active: boolean }) {
+//   return (
+//     <Box as="label">
+//       <Box
+//         cursor="pointer"
+//         px={2}
+//         bg={active ? 'blue.200' : 'inherit'}
+//         color={active ? 'navy' : 'inherit'}
+//         borderRadius={active ? '2xl' : 'inherit'}
+//         _focus={{
+//           boxShadow: 'outline',
+//         }}
+//       >
+//         {children}
+//       </Box>
+//     </Box>
+//   );
+// }

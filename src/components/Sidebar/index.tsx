@@ -31,11 +31,11 @@ import Footer from '@components/Footer';
 // based on linkitems href values
 export enum Pages {
   Home = '/',
-  Strategies = '/strategies',
-  CreateStrategy = '/create-strategy',
-  Settings = '/settings',
-  HowItWorks = '/how-it-works',
-  Performance = '/performance',
+  Strategies = '/strategies/',
+  CreateStrategy = '/create-strategy/',
+  Settings = '/settings/',
+  HowItWorks = '/how-it-works/',
+  Performance = '/performance/',
 }
 
 interface LinkItem {

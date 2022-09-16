@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
+import { initialValues } from '@hooks/useDcaInForm';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -17,7 +18,7 @@ type AppPropsWithLayout = AppProps & {
 
 const queryClient = new QueryClient();
 
-createStore({ step1: {}, step2: {} });
+createStore(initialValues);
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
