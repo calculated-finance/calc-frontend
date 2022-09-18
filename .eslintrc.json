@@ -15,20 +15,8 @@
   "rules": {
     "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
-    // "@typescript-eslint/no-unused-vars": [
-    //   "error",
-    //   {
-    //     "varsIgnorePattern": "^_+$",
-    //     "argsIgnorePattern": "^_+$"
-    //   }
-    // ],
-    // "@typescript-eslint/naming-convention": [
-    //   "error",
-    //   {
-    //     "varsIgnorePattern": "^_+$",
-    //     "argsIgnorePattern": "^_+$"
-    //   }
-    // ],
+    "@typescript-eslint/no-unused-vars": "warn",
+    "react/require-default-props": "off",
     "max-len": [
       "warn",
       {

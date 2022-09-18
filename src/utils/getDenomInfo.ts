@@ -2,12 +2,14 @@ type Denom = {
   name: string;
   icon: string;
   conversion: (value: number) => number;
+  deconversion: (value: number) => number;
 };
 
 const defaultDenom = {
   name: '',
   icon: '',
   conversion: (value: number) => value,
+  deconversion: (value: number) => value,
 };
 
 const denoms: Record<string, Denom> = {
@@ -15,11 +17,20 @@ const denoms: Record<string, Denom> = {
     name: 'DEMO',
     icon: '/images/denoms/usk.svg',
     conversion: (value: number) => value / 1000000,
+    deconversion: (value: number) => value * 1000000,
   },
   ukuji: {
     name: 'KUJI',
     conversion: (value: number) => value / 1000000,
+    deconversion: (value: number) => value * 1000000,
+
     icon: '/images/denoms/kuji.svg',
+  },
+  fake: {
+    name: 'Fake',
+    conversion: (value: number) => value,
+    deconversion: (value: number) => value,
+    icon: '/images/denoms/atom.svg',
   },
 };
 

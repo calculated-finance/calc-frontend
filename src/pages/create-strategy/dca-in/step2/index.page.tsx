@@ -14,13 +14,16 @@ import {
   Stack,
   StackProps,
   Text,
+  Image,
   useRadio,
   useRadioGroup,
   UseRadioProps,
+  InputRightElement,
 } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { ChildrenProp } from '@components/Sidebar';
+import getDenomInfo from '@utils/getDenomInfo';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { Form, Formik, useField, useFormikContext } from 'formik';
 import { useRouter } from 'next/router';
@@ -210,17 +213,26 @@ function SwapAmount() {
   const [field, meta] = useField({ name: 'swapAmount' });
   const { state } = useDcaInForm();
 
+  const { icon, name } = getDenomInfo(state.step1.baseDenom);
   return (
     <FormControl isInvalid={Boolean(meta.error)}>
-      <FormLabel>How much {state.step1.baseDenom} each purchase?</FormLabel>
+      <FormLabel>How much {name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex>
           <Text>The amount you want swapped each purchase for KUJI.</Text>
           <Spacer />
-          Max: {new Intl.NumberFormat().format(state.step1.initialDeposit || 0) ?? '-'}
+          <Text>Max:&nbsp;{new Intl.NumberFormat().format(state.step1.initialDeposit || 0) ?? '-'}</Text>
         </Flex>
       </FormHelperText>
-      <Input type="number" placeholder="Enter amount" {...field} />
+      <InputGroup>
+        <InputLeftElement>
+          <Image src={icon} />
+        </InputLeftElement>
+        <Input type="number" placeholder="Enter amount" {...field} />
+        <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
+          <Text>{name}</Text>
+        </InputRightElement>
+      </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );

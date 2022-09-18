@@ -6,6 +6,7 @@ import totalExecutions from 'src/utils/totalExecutions';
 
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
+import getDenomInfo from '@utils/getDenomInfo';
 import usePairs, { Pair } from './usePairs';
 
 const useCreateVault = (formData: DcaInFormData) => {
@@ -30,17 +31,19 @@ const useCreateVault = (formData: DcaInFormData) => {
       (pair: Pair) => pair.base_denom === baseDenom && pair.quote_denom === quoteDenom,
     )?.address;
 
+    const { deconversion } = getDenomInfo(quoteDenom);
+
     const msg = {
       create_vault: {
         execution_interval: executionInterval,
         pair_address: pairAddress,
         position_type: 'enter',
-        swap_amount: swapAmount.toString(),
+        swap_amount: deconversion(swapAmount).toString(),
         total_executions: totalExecutions(initialDeposit, swapAmount),
         target_start_time_utc_seconds: (new Date(startDate).valueOf() / 1000).toString(),
       },
     };
-    const funds = [{ denom: quoteDenom, amount: initialDeposit.toString() }];
+    const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];
 
     if (!pairAddress || !client) {
       throw Error('Invalid form data');

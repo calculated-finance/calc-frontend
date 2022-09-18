@@ -1,4 +1,12 @@
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, type ThemeConfig, Popover, PopoverProps } from '@chakra-ui/react';
+
+// hack to get datepicker popup to not highlight input on close
+// highlighting caused radio inputs to be buggy until you unfocus
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore-next-line
+Popover.defaultProps = {
+  returnFocusOnClose: false,
+} as PopoverProps;
 
 const config: ThemeConfig = {
   initialColorMode: 'dark',
@@ -102,12 +110,13 @@ const semanticTokens = {};
 
 const components = {
   // Button: {
-  //   baseStyle: ({ theme }: any) =>
-  //     // console.log(theme);
-  //     ({
+  //   baseStyle: ({ theme }: any) => {
+  //     console.log(theme);
+  //     return {
   //       borderRadius: 'lg',
   //       fontSize: 'sm',
-  //     }),
+  //     };
+  //   },
   //   defaultProps: {
   //     colorScheme: 'brand',
   //     size: 'sm',
@@ -138,7 +147,7 @@ const components = {
   Select: {
     baseStyle: {
       field: {
-        borderRadius: '2xl',
+        borderRadius: 'xl',
         borderColor: 'slateGrey',
         borderWidth: 1,
         bg: 'abyss',
@@ -148,19 +157,12 @@ const components = {
       variant: null, // null here
     },
   },
-  // InputGroup: {
-  // baseStyle: {
-  //   borderRadius: '2xl',
-  //   borderColor: 'slateGrey',
-  //   borderWidth: 1,
-  //   bg: 'abyss',
-  // },
-  // },
+
   Input: {
     variants: {
       outline: {
         field: {
-          borderRadius: '2xl',
+          borderRadius: 'xl',
           borderColor: 'slateGrey',
           borderWidth: 1,
           bg: 'abyss',

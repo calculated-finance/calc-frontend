@@ -12,13 +12,13 @@ export const initialValues = {
   step1: {
     baseDenom: '',
     quoteDenom: '',
-    initialDeposit: 0,
+    initialDeposit: undefined,
   },
   step2: {
     startImmediately: true,
     startDate: undefined,
     executionInterval: 'daily',
-    swapAmount: 0,
+    swapAmount: undefined,
   },
 };
 
