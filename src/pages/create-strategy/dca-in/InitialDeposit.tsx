@@ -10,7 +10,7 @@ export default function InitialDeposit() {
   } = useFormikContext<DcaInFormDataStep1>();
 
   return (
-    <FormControl isInvalid={Boolean(meta.error)} isDisabled={!quoteDenom}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!quoteDenom}>
       <Input type="number" textAlign="right" placeholder="Choose amount" {...field} />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

@@ -10,6 +10,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Center,
+  Spinner,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ChildrenProp } from '@components/Sidebar';
@@ -113,10 +115,16 @@ export default function NewStrategyModal({ children }: ChildrenProp) {
   );
 }
 
-export function NewStrategyModalBody({ children }: ChildrenProp) {
+export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { isLoading?: boolean }) {
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="md">
-      {children}
+      {isLoading ? (
+        <Center h={56}>
+          <Spinner />
+        </Center>
+      ) : (
+        children
+      )}
     </Box>
   );
 }

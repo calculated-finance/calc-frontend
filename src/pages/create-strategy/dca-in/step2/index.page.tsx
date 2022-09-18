@@ -15,6 +15,7 @@ import {
   StackProps,
   Text,
   Image,
+  Collapse,
   useRadio,
   useRadioGroup,
   UseRadioProps,
@@ -23,6 +24,7 @@ import {
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { ChildrenProp } from '@components/Sidebar';
+import usePageLoad from '@hooks/usePageLoad';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { Form, Formik, useField, useFormikContext } from 'formik';
@@ -174,7 +176,7 @@ function StartDate() {
   const date = field.value ? new Date(field.value) : undefined;
 
   return (
-    <FormControl>
+    <FormControl mt={3}>
       <FormLabel>Strategy start date</FormLabel>
       <FormHelperText>This is when your first swap will be made</FormHelperText>
       <InputGroup>
@@ -187,6 +189,7 @@ function StartDate() {
           }
         />
         <SingleDatepicker
+          usePortal
           name={field.name}
           date={date}
           onDateChange={helpers.setValue}
@@ -215,7 +218,7 @@ function SwapAmount() {
 
   const { icon, name } = getDenomInfo(state.step1.baseDenom);
   return (
-    <FormControl isInvalid={Boolean(meta.error)}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How much {name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex>
@@ -254,6 +257,8 @@ function DcaInStep2() {
   const router = useRouter();
   const { actions, state } = useDcaInForm();
 
+  const { isPageLoading } = usePageLoad();
+
   const onSubmit = async (data: DcaInFormDataStep2) => {
     await actions.updateAction({ ...state, step2: data });
     await router.push('/create-strategy/dca-in/confirm-purchase');
@@ -266,24 +271,28 @@ function DcaInStep2() {
   }
 
   return (
-    <NewStrategyModal>
-      <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
-      <NewStrategyModalBody>
-        <Formik initialValues={initialValues} validationSchema={stepOneValidationSchema} onSubmit={onSubmit}>
-          {({ values }) => (
+    <Formik initialValues={initialValues} validationSchema={stepOneValidationSchema} onSubmit={onSubmit}>
+      {({ values, isSubmitting }) => (
+        <NewStrategyModal>
+          <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
+          <NewStrategyModalBody isLoading={isPageLoading && !isSubmitting}>
             <Form>
               <Stack direction="column" spacing={4}>
-                <StartImmediately />
-                {!values.startImmediately && <StartDate />}
+                <Box>
+                  <StartImmediately />
+                  <Collapse in={!values.startImmediately}>
+                    <StartDate />
+                  </Collapse>
+                </Box>
                 <ExecutionInterval />
                 <SwapAmount />
                 <Submit />
               </Stack>
             </Form>
-          )}
-        </Formik>
-      </NewStrategyModalBody>
-    </NewStrategyModal>
+          </NewStrategyModalBody>
+        </NewStrategyModal>
+      )}
+    </Formik>
   );
 }
 

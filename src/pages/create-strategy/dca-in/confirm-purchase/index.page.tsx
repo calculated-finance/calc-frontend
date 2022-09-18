@@ -10,10 +10,13 @@ import useDcaInForm from 'src/hooks/useDcaInForm';
 import { NextPageWithLayout } from 'src/pages/_app.page';
 import totalExecutions from 'src/utils/totalExecutions';
 import useCreateVault from '@hooks/useCreateVault';
+import usePageLoad from '@hooks/usePageLoad';
 
 // eslint-disable-next-line react/function-component-definition
 const ConfirmPurchase: NextPageWithLayout = () => {
   const { state, actions } = useDcaInForm();
+
+  const { isPageLoading } = usePageLoad();
 
   const router = useRouter();
 
@@ -44,7 +47,7 @@ const ConfirmPurchase: NextPageWithLayout = () => {
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
-      <NewStrategyModalBody>
+      <NewStrategyModalBody isLoading={isPageLoading}>
         <Stack spacing={4}>
           <Text textStyle="body-xs">The deposit</Text>
           <Text>

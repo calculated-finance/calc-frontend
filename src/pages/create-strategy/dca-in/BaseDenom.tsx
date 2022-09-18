@@ -38,7 +38,7 @@ export default function BaseDenom() {
   );
 
   return (
-    <FormControl isInvalid={Boolean(meta.error)} isDisabled={!quoteDenom}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!quoteDenom}>
       <FormLabel>What asset do you want to invest in?</FormLabel>
       <FormHelperText>
         <Text textStyle="body-xs">CALC will purchase this asset for you</Text>

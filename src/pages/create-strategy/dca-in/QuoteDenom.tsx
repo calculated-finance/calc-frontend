@@ -78,7 +78,7 @@ export default function QuoteDenom() {
   }));
 
   return (
-    <FormControl isInvalid={Boolean(meta.error)}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How will you fund your first investment?</FormLabel>
       <FormHelperText>
         <Center>
