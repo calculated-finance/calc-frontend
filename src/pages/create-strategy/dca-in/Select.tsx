@@ -32,13 +32,6 @@ export default function Select({ options, placeholder, onChange, value, customCo
         ...provided,
         bg: 'deepHorizon',
       }),
-      option: (provided, state) => ({
-        ...provided,
-        bg: state.isSelected ? 'blue.200' : undefined,
-        _hover: {
-          bg: state.isSelected ? 'blue.200' : 'darkGrey',
-        },
-      }),
     },
     components: customComponents,
   });

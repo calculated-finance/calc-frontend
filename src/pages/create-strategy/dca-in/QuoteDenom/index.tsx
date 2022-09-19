@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -17,9 +16,8 @@ import usePairs, { Denom, uniqueQuoteDenoms } from '@hooks/usePairs';
 import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import { useWallet } from '@wizard-ui/react';
-import InitialDeposit from './InitialDeposit';
-import Select from './Select';
+import InitialDeposit from '../InitialDeposit';
+import Select from '../Select';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (

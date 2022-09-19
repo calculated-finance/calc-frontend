@@ -1,13 +1,25 @@
 import { FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/types/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
+import useBalance from '@hooks/useBalance';
 
 export default function InitialDeposit() {
-  const [field, meta] = useField({ name: 'initialDeposit' });
-
   const {
     values: { quoteDenom },
   } = useFormikContext<DcaInFormDataStep1>();
+
+  const { displayAmount } = useBalance({
+    token: quoteDenom,
+  });
+
+  const validate = (value: number) => {
+    if (value > displayAmount) {
+      return `Insufficient funds.`;
+    }
+    return undefined;
+  };
+
+  const [field, meta] = useField({ name: 'initialDeposit', validate });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!quoteDenom}>

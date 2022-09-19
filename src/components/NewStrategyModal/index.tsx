@@ -92,7 +92,7 @@ function Stepper() {
         return (
           <BreadcrumbItem key={step.href} isCurrentPage={currentStep.href === step.href}>
             <BreadcrumbLink onClick={handleClick}>
-              <Flex cursor="pointer" w={6} h={6} borderRadius="full" bg="abyss" align="center" justify="center">
+              <Flex cursor="pointer" w={6} h={6} borderRadius="full" bg="abyss.200" align="center" justify="center">
                 <Flex w={4} h={4} borderRadius="full" bg="green.200" align="center" justify="center">
                   <Text textStyle="body-xs" color="navy">
                     {index + 1}
@@ -168,7 +168,7 @@ export function NewStrategyModalHeader({ resetForm, children }: { resetForm?: ()
           borderTopRightRadius="2xl"
           size="xs"
           variant="ghost"
-          bg="abyss"
+          bg="abyss.200"
           onClick={handleCancel}
         >
           Cancel

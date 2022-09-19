@@ -1,27 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import DcaInFormData from 'src/types/DcaInFormData';
+import DcaInFormData, { allValidationSchema } from 'src/types/DcaInFormData';
 import totalExecutions from 'src/utils/totalExecutions';
 
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
+import * as Yup from 'yup';
 import usePairs, { Pair } from './usePairs';
 
-const useCreateVault = (formData: DcaInFormData) => {
+const useCreateVault = () => {
   const { address: senderAddress, client } = useWallet();
   const { data } = usePairs();
 
-  const {
-    step1: { quoteDenom, baseDenom, initialDeposit },
-    step2: { startDate, swapAmount, executionInterval },
-  } = formData;
-
-  return useMutation<ExecuteResult>(() => {
-    if (!startDate || !initialDeposit || !swapAmount || !executionInterval || !quoteDenom || !baseDenom) {
-      throw new Error('Missing required data');
-    }
+  return useMutation<ExecuteResult, unknown, Yup.InferType<typeof allValidationSchema>>((values) => {
+    const { quoteDenom, baseDenom, initialDeposit, startDate, swapAmount, executionInterval } = values;
 
     // throw error if pair not found
     // TODO: note that we need to make sure pairAddress has been set by the time mutate is called
@@ -40,7 +34,7 @@ const useCreateVault = (formData: DcaInFormData) => {
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
         total_executions: totalExecutions(initialDeposit, swapAmount),
-        target_start_time_utc_seconds: (new Date(startDate).valueOf() / 1000).toString(),
+        target_start_time_utc_seconds: (new Date(startDate!).valueOf() / 1000).toString(),
       },
     };
     const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];

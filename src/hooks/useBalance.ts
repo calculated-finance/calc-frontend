@@ -7,7 +7,7 @@ export type BalanceResponse = {
 };
 
 interface UseBalanceArgs {
-  token: string;
+  token?: string;
 }
 
 const useBalance = ({ token }: UseBalanceArgs) => {

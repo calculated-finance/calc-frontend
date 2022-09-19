@@ -108,7 +108,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 
   return (
     <Flex
-      bg={useColorModeValue('white', 'abyss')}
+      bg={useColorModeValue('white', 'abyss.200')}
       w={{ base: 'full', md: SIDEBAR_WIDTH }}
       pos="fixed"
       h="full"

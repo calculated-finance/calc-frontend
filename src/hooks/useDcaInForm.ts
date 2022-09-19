@@ -1,5 +1,5 @@
 import { useStateMachine } from 'little-state-machine';
-import DcaInFormData from '../types/DcaInFormData';
+import DcaInFormData, { initialValues } from '../types/DcaInFormData';
 
 function updateAction(state: DcaInFormData, payload: DcaInFormData) {
   return {
@@ -7,20 +7,6 @@ function updateAction(state: DcaInFormData, payload: DcaInFormData) {
     ...payload,
   };
 }
-
-export const initialValues = {
-  step1: {
-    baseDenom: '',
-    quoteDenom: '',
-    initialDeposit: undefined,
-  },
-  step2: {
-    startImmediately: true,
-    startDate: undefined,
-    executionInterval: 'daily',
-    swapAmount: undefined,
-  },
-};
 
 function resetAction() {
   return initialValues;

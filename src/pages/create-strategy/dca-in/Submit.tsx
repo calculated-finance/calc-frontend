@@ -6,7 +6,7 @@ export default function Submit() {
   const { isSubmitting, isValid } = useFormikContext<DcaInFormDataStep1>();
   return (
     <Button isDisabled={!isValid} isLoading={isSubmitting} type="submit" w="full">
-      Submit
+      Next
     </Button>
   );
 }

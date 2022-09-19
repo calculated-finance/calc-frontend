@@ -1,27 +1,15 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
-import DcaInFormData from 'src/types/DcaInFormData';
+import DcaInFormData, { step1ValidationSchema } from 'src/types/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
-import * as Yup from 'yup';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
-import useBalance from '@hooks/useBalance';
 import BaseDenom from './BaseDenom';
 import Submit from './Submit';
 import QuoteDenom from './QuoteDenom';
-
-// const useValidationSchema = () => {
-//   const { displayAmount } = useBalance();
-
-//   return Yup.object({
-//     baseDenom: Yup.string().required(),
-//     quoteDenom: Yup.string().required(),
-//     initialDeposit: Yup.number().positive().required(),
-//   });
-// };
 
 function DcaIn() {
   const router = useRouter();
@@ -37,14 +25,8 @@ function DcaIn() {
 
   const initialValues = state.step1;
 
-  const validationSchema = Yup.object({
-    baseDenom: Yup.string().required(),
-    quoteDenom: Yup.string().required(),
-    initialDeposit: Yup.number().positive().required(),
-  });
-
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} validationSchema={step1ValidationSchema} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader resetForm={actions.resetAction}>Choose Funding &amp; Assets</NewStrategyModalHeader>
