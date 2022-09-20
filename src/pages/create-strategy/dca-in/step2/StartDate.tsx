@@ -53,7 +53,7 @@ export default function StartDate() {
           }}
         />
       </InputGroup>
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
+      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );
 }

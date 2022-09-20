@@ -1,12 +1,13 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
-import DcaInFormData, { step1ValidationSchema } from 'src/types/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import { DcaInFormDataStep1, step1ValidationSchema } from 'src/types/DcaInFormData';
+import useDcaInForm, { Steps } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
+import useValidation from '@hooks/useValidation';
 import BaseDenom from './BaseDenom';
 import Submit from './Submit';
 import QuoteDenom from './QuoteDenom';
@@ -17,21 +18,22 @@ function DcaIn() {
   const { isLoading } = usePairs();
 
   const { isPageLoading } = usePageLoad();
+  const { validate } = useValidation(step1ValidationSchema);
 
-  const onSubmit = async (formData: DcaInFormData['step1']) => {
-    await actions.updateAction({ ...state, step1: formData });
+  const onSubmit = async (formData: any) => {
+    await actions.updateAction(formData);
     await router.push('/create-strategy/dca-in/step2');
   };
 
   const initialValues = state.step1;
 
   return (
-    <Formik initialValues={initialValues} validationSchema={step1ValidationSchema} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader resetForm={actions.resetAction}>Choose Funding &amp; Assets</NewStrategyModalHeader>
           <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
-            <Form>
+            <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <QuoteDenom />
                 <BaseDenom />

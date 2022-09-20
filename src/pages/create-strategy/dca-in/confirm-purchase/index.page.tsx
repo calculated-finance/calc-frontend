@@ -6,11 +6,11 @@ import { ArrowRightIcon, CheckedIcon, Loop2Icon } from '@fusion-icons/react/inte
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useRouter } from 'next/router';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import useDcaInForm, { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import { allValidationSchema, DcaInFormDataAll } from '../../../../types/DcaInFormData';
+import { DcaInFormDataAll } from '../../../../types/DcaInFormData';
 import { ExecutionIntervals } from '../step2/ExecutionIntervals';
 
 function BadgeButton({ children, ...props }: BadgeProps) {
@@ -56,7 +56,7 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
     });
   };
 
-  const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval } = values;
+  const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval, startImmediately } = values;
 
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
   const { name: baseDenomName } = getDenomInfo(baseDenom);
@@ -93,13 +93,21 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
         Starting{' '}
-        <BadgeButton>
-          <Text>{formattedDate}</Text>
-        </BadgeButton>{' '}
-        at{' '}
-        <BadgeButton>
-          <Text>{formattedTime}</Text>
-        </BadgeButton>{' '}
+        {startImmediately ? (
+          <BadgeButton>
+            <Text>Immediately</Text>
+          </BadgeButton>
+        ) : (
+          <>
+            <BadgeButton>
+              <Text>{formattedDate}</Text>
+            </BadgeButton>{' '}
+            at{' '}
+            <BadgeButton>
+              <Text>{formattedTime}</Text>
+            </BadgeButton>{' '}
+          </>
+        )}
         , CALC will swap{' '}
         <BadgeButton>
           <Text>
@@ -129,19 +137,14 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
 }
 
 function ConfirmPurchase() {
-  const { state, actions } = useDcaInForm();
-
+  const { state, actions } = useConfirmForm();
   const { isPageLoading } = usePageLoad();
-
-  const flatState = { ...state.step1, ...state.step2 };
-
-  const values = allValidationSchema.validateSync(flatState);
 
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
       <NewStrategyModalBody isLoading={isPageLoading}>
-        {values ? <Confirm values={values} /> : <Center>Invalid Data</Center>}
+        {state ? <Confirm values={state} /> : <Center>Invalid Data</Center>}
       </NewStrategyModalBody>
     </NewStrategyModal>
   );

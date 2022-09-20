@@ -10,7 +10,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
-import { initialValues } from '../types/DcaInFormData';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -19,7 +18,8 @@ type AppPropsWithLayout = AppProps & {
 const queryClient = new QueryClient();
 
 // can make this more dumb because maybe we can set default values with yup schemas instead
-createStore(initialValues);
+
+createStore({});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);

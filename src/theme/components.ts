@@ -50,6 +50,21 @@ const components = {
       variant: 'outline',
     },
   },
+  NumberInput: {
+    variants: {
+      outline: {
+        field: {
+          borderRadius: 'xl',
+          borderColor: 'slateGrey',
+          borderWidth: 1,
+          bg: 'abyss.200',
+        },
+      },
+    },
+    defaultProps: {
+      variant: 'outline',
+    },
+  },
   Form: {
     baseStyle: {
       helperText: {

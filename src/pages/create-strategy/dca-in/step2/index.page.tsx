@@ -4,7 +4,8 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import { useStep2Form } from 'src/hooks/useDcaInForm';
+import useValidation from '@hooks/useValidation';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../types/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -15,23 +16,35 @@ import SwapAmount from './SwapAmount';
 
 function DcaInStep2() {
   const router = useRouter();
-  const { actions, state } = useDcaInForm();
+  const { actions, state } = useStep2Form();
 
   const { isPageLoading } = usePageLoad();
+  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
+
+  if (!state) {
+    return <Box>Invalid</Box>;
+  }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
-    await actions.updateAction({ ...state, step2: data });
+    await actions.updateAction(data);
     await router.push('/create-strategy/dca-in/confirm-purchase');
   };
 
   const initialValues = state.step2;
 
+  // fix this by including step1 data in the cast in useDcanInForm
   if (!state.step1.initialDeposit || !state.step1.baseDenom) {
     return null;
   }
 
   return (
-    <Formik initialValues={initialValues} validationSchema={step2ValidationSchema} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validate={validate}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      onSubmit={onSubmit}
+    >
       {({ values, isSubmitting }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>

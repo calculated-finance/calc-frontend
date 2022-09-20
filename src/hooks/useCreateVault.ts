@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import DcaInFormData, { allValidationSchema } from 'src/types/DcaInFormData';
+import { allValidationSchema } from 'src/types/DcaInFormData';
 import totalExecutions from 'src/utils/totalExecutions';
 
 import { useMutation } from '@tanstack/react-query';
