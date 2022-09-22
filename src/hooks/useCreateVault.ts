@@ -43,6 +43,8 @@ const useCreateVault = () => {
       throw Error('Invalid form data');
     }
 
+    console.log('got here');
+
     return client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
   });
 };

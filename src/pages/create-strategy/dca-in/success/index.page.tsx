@@ -8,7 +8,7 @@ function Success() {
   const { isPageLoading } = usePageLoad();
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader>Strategy Set Successfully</NewStrategyModalHeader>
+      <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
       <NewStrategyModalBody>
         <Text>Congratulations! CALC is now working for you!</Text>
         <Link passHref href="/strategies">

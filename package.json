@@ -10,6 +10,7 @@
     "export": "next export"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.2.9",
     "@cosmjs/cosmwasm-stargate": "^0.28.13",
     "@cosmjs/stargate": "^0.28.13",

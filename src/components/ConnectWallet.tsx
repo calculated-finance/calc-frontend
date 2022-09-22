@@ -8,16 +8,7 @@ function ConnectWallet(props: FlexProps) {
     setVisible(true);
   };
   return (
-    <Flex
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      w="full"
-      h="sm"
-      p={4}
-      layerStyle="panel"
-      {...props}
-    >
+    <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} {...props}>
       <Stack direction="column" spacing={4} alignItems="center" justifyContent="center" w="full" h="full">
         <Heading>No Wallet connected</Heading>
         <Center>Get started by connecting your wallet.</Center>

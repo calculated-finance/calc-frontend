@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Image } from '@chakra-ui/react';
+import { Box, Flex, Spacer, Image, BoxProps, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 import Footer from '@components/Footer';
 import CosmosWallet from '@components/CosmosWallet';
@@ -29,7 +29,7 @@ function AppHeaderForSidebar() {
 
 function AppHeader() {
   return (
-    <Flex h={16} w="full" p={8} alignItems="center">
+    <Flex position="fixed" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <Link href="/">
         <Image cursor="pointer" src="/images/logo.svg" />
       </Link>
@@ -39,13 +39,11 @@ function AppHeader() {
   );
 }
 
-function Content({ children }: { children: ReactElement }) {
+function Content({ children, ...props }: BoxProps) {
   return (
     <>
       <main>
-        <Box maxW="8xl" px={6} py={4}>
-          {children}
-        </Box>
+        <Box {...props}>{children}</Box>
       </main>
       <Flex display={{ base: 'flex', sm: 'flex', md: 'none' }} p={8}>
         <Footer />
@@ -60,14 +58,30 @@ function FlowLayout({ children }: { children: ReactElement }) {
   return (
     <>
       <AppHeader />
-      <Content>
+      <Content
+        bgImage="/images/background.svg"
+        backgroundPosition="bottom"
+        backgroundSize="center"
+        backgroundRepeat="no-repeat"
+        h="100vh"
+      >
+        <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
+          <Breadcrumb separator=">">
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/create-strategy">Set up a Strategy</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbItem isCurrentPage>
+              <BreadcrumbLink href="#">DCA In</BreadcrumbLink>
+            </BreadcrumbItem>
+          </Breadcrumb>
+        </Box>
         {address ? (
           children
         ) : (
           <NewStrategyModal>
             <NewStrategyModalHeader> Connect to a wallet </NewStrategyModalHeader>
             <NewStrategyModalBody>
-              <ConnectWallet bg="transparent" h={56} />
+              <ConnectWallet h={56} />
             </NewStrategyModalBody>
           </NewStrategyModal>
         )}
@@ -101,7 +115,9 @@ function SidebarLayout({ children }: { children: ReactElement }) {
             <Spinner />
           </Flex>
         )}
-        <Content>{children}</Content>
+        <Content maxW="8xl" px={6} py={4}>
+          {children}
+        </Content>
       </Box>
     </Sidebar>
   );

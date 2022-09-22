@@ -1,4 +1,4 @@
-import { Box, Stack, Collapse } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -22,7 +22,24 @@ function DcaInStep2() {
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
 
   if (!state) {
-    return <Box>Invalid</Box>;
+    const handleClick = async () => {
+      await router.push('/create-strategy/dca-in');
+      actions.resetAction();
+    };
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
+        <NewStrategyModalBody isLoading={isPageLoading}>
+          <Center>
+            {/* Better to link to start of specific strategy */}
+            Invalid Data, please&nbsp;
+            <Button onClick={handleClick} variant="link">
+              restart
+            </Button>
+          </Center>
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
   }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
@@ -31,11 +48,6 @@ function DcaInStep2() {
   };
 
   const initialValues = state.step2;
-
-  // fix this by including step1 data in the cast in useDcanInForm
-  if (!state.step1.initialDeposit || !state.step1.baseDenom) {
-    return null;
-  }
 
   return (
     <Formik

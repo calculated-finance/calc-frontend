@@ -3,9 +3,9 @@ import { DcaInFormDataStep1 } from 'src/types/DcaInFormData';
 import { useFormikContext } from 'formik';
 
 export default function Submit() {
-  const { isSubmitting, isValid } = useFormikContext<DcaInFormDataStep1>();
+  const { isSubmitting, isValid, submitCount } = useFormikContext<DcaInFormDataStep1>();
   return (
-    <Button isDisabled={!isValid} isLoading={isSubmitting} type="submit" w="full">
+    <Button type="submit" w="full" isLoading={isSubmitting} isDisabled={!isValid && Boolean(submitCount)}>
       Next
     </Button>
   );

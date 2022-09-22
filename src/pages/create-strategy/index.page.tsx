@@ -178,8 +178,6 @@ function Strategies() {
 function CreateStrategy() {
   const { address } = useWallet();
 
-  console.log('hi');
-
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
@@ -194,7 +192,7 @@ function CreateStrategy() {
         <Strategies />
       ) : (
         <>
-          <ConnectWallet />
+          <ConnectWallet layerStyle="panel" />
           <InfoPanel />
         </>
       )}

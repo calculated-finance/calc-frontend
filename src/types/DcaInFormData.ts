@@ -17,14 +17,14 @@ export const allValidationSchema = Yup.object({
   quoteDenom: Yup.string().label('Quote Denom').required(), // TODO: make these denom enums,
   initialDeposit: Yup.number().label('Initial Deposit').positive().required().nullable(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
-  startDate: Yup.date()
+  startDate: Yup.mixed()
     .label('Start Date')
-    .min(new Date(), ({ label }) => `${label} must be in the future.`)
     .nullable()
-    .default(null)
     .when('startImmediately', {
       is: StartImmediatelyValues.No,
-      then: Yup.date().required(),
+      then: Yup.date()
+        .min(new Date(), ({ label }) => `${label} must be in the future.`)
+        .required(),
     }),
   executionInterval: Yup.mixed<ExecutionIntervals>().oneOf(Object.values(ExecutionIntervals)).required(),
   swapAmount: Yup.number()

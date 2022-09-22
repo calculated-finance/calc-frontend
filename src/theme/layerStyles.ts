@@ -1,7 +1,7 @@
 const layerStyles = {
   panel: {
     bg: 'deepHorizon',
-    boxShadow: 'sm',
+    boxShadow: 'deepHorizon',
     borderRadius: '2xl',
   },
 };

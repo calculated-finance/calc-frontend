@@ -37,10 +37,10 @@ function AvailableFunds() {
     token: quoteDenom,
   });
 
-  const [, , meta] = useField('initialDeposit');
+  const [, , helpers] = useField('initialDeposit');
 
   const handleClick = () => {
-    meta.setValue(displayAmount);
+    helpers.setValue(displayAmount);
   };
 
   if (!quoteDenom) {
@@ -69,11 +69,19 @@ export default function QuoteDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'quoteDenom' });
+  const [, , initialDepositHelpers] = useField('initialDeposit');
 
   const pairsOptions = uniqueQuoteDenoms(pairs).map((denom) => ({
     value: denom,
     label: <DenomSelectLabel denom={denom} />,
   }));
+
+  const handleChange = (value: string | undefined) => {
+    helpers.setValue(value);
+    initialDepositHelpers.setTouched(false);
+    initialDepositHelpers.setError(undefined);
+    initialDepositHelpers.setValue('');
+  };
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -87,7 +95,7 @@ export default function QuoteDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
-          <Select options={pairsOptions} placeholder="Choose asset" value={field.value} onChange={helpers.setValue} />
+          <Select options={pairsOptions} placeholder="Choose asset" value={field.value} onChange={handleChange} />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>
         <InitialDeposit />

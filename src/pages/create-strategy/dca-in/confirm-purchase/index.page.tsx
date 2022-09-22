@@ -12,6 +12,7 @@ import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { DcaInFormDataAll } from '../../../../types/DcaInFormData';
 import { ExecutionIntervals } from '../step2/ExecutionIntervals';
+import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
 
 function BadgeButton({ children, ...props }: BadgeProps) {
   return (
@@ -33,7 +34,7 @@ function BadgeButton({ children, ...props }: BadgeProps) {
   );
 }
 
-const executionIntervalDisplay = {
+export const executionIntervalDisplay = {
   [ExecutionIntervals.Hourly]: ['hour', 'hours'],
   [ExecutionIntervals.Daily]: ['day', 'days'],
   [ExecutionIntervals.Weekly]: ['week', 'weeks'],
@@ -45,16 +46,18 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
 
   const router = useRouter();
 
-  const { mutate, isError, isLoading } = useCreateVault();
+  const { mutate, isError, error, isLoading } = useCreateVault();
 
   const handleClick = () => {
     mutate(values, {
       onSuccess: async () => {
+        await router.push('success');
         actions.resetAction();
-        router.push('success');
       },
     });
   };
+
+  console.log(values);
 
   const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval, startImmediately } = values;
 
@@ -93,7 +96,7 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
         Starting{' '}
-        {startImmediately ? (
+        {startImmediately === StartImmediatelyValues.Yes ? (
           <BadgeButton>
             <Text>Immediately</Text>
           </BadgeButton>
@@ -111,14 +114,14 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
         , CALC will swap{' '}
         <BadgeButton>
           <Text>
-            ~{swapAmount} {baseDenomName}
+            ~{swapAmount} {quoteDenomName}
           </Text>
-          <DenomIcon denomName={baseDenom} />
+          <DenomIcon denomName={quoteDenom} />
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton>
-          <Text>{quoteDenomName}</Text>
-          <DenomIcon denomName={quoteDenom} />
+          <Text>{baseDenomName}</Text>
+          <DenomIcon denomName={baseDenom} />
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton>
@@ -131,8 +134,32 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
       <Button w="full" isLoading={isLoading} rightIcon={<Icon as={CheckedIcon} stroke="navy" />} onClick={handleClick}>
         Confirm
       </Button>
-      {isError && <Text color="red">Something went wrong</Text>}
+      {isError && (
+        <>
+          <Text color="red">Something went wrong</Text>
+          <Text>{JSON.stringify(error)}</Text>
+        </>
+      )}
     </Stack>
+  );
+}
+
+function InvalidData() {
+  const router = useRouter();
+  const { actions } = useConfirmForm();
+
+  const handleClick = () => {
+    actions.resetAction();
+    router.push('/create-strategy/dca-in');
+  };
+  return (
+    <Center>
+      {/* Better to link to start of specific strategy */}
+      Invalid Data, please&nbsp;
+      <Button onClick={handleClick} variant="link">
+        restart
+      </Button>
+    </Center>
   );
 }
 
@@ -144,7 +171,7 @@ function ConfirmPurchase() {
     <NewStrategyModal>
       <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
       <NewStrategyModalBody isLoading={isPageLoading}>
-        {state ? <Confirm values={state} /> : <Center>Invalid Data</Center>}
+        {state ? <Confirm values={state} /> : <InvalidData />}
       </NewStrategyModalBody>
     </NewStrategyModal>
   );

@@ -14,7 +14,7 @@ function Page() {
     <>
       <Heading pb={12}>My CALC Strategies</Heading>
       {!connected || connecting ? (
-        <ConnectWallet />
+        <ConnectWallet layerStyle="panel" />
       ) : (
         <Stack spacing={8}>
           <Box>
