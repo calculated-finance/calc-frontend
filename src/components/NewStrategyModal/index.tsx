@@ -43,6 +43,7 @@ export default function NewStrategyModal({ children }: ChildrenProp) {
 }
 
 export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { isLoading?: boolean }) {
+  const router = useRouter();
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
       {isLoading ? (
@@ -52,12 +53,16 @@ export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { i
       ) : (
         children
       )}
-      <Divider my={6} />
-      <Center>
-        <Button variant="link" colorScheme="blue" rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}>
-          Can I set up reoccuring deposits?
-        </Button>
-      </Center>
+      {router.pathname !== steps[3].href && (
+        <>
+          <Divider my={6} />
+          <Center>
+            <Button variant="link" colorScheme="blue" rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}>
+              Can I set up reoccuring deposits?
+            </Button>
+          </Center>
+        </>
+      )}
     </Box>
   );
 }

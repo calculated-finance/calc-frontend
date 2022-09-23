@@ -16,7 +16,7 @@ import { ExecutionIntervals } from '../step2/ExecutionIntervals';
 import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
 import arrow from './arrow.json';
 
-function BadgeButton({ children, ...props }: BadgeProps) {
+export function BadgeButton({ children, ...props }: BadgeProps) {
   return (
     <Badge
       display="inline-flex"
