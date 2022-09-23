@@ -1,4 +1,4 @@
-import { Box, Stack, Collapse, Center, Button, Divider } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button, Divider, Flex, Switch, Text, HStack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -69,7 +69,12 @@ function DcaInStep2() {
                   baseDenom={state.step1.baseDenom}
                   initialDeposit={state.step1.initialDeposit}
                 />
-                <Divider />
+                <Flex justify="end">
+                  <Text mr={2} textStyle="body-xs">
+                    Advanced Settings
+                  </Text>
+                  <Switch size="sm" colorScheme="brand" />
+                </Flex>
                 <Box>
                   <StartImmediately />
                   <Collapse in={values.startImmediately === StartImmediatelyValues.No}>

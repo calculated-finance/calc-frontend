@@ -1,4 +1,4 @@
-import { Badge, BadgeProps, Button, Center, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react';
+import { Badge, BadgeProps, Box, Button, Center, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -103,44 +103,59 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
     <Stack spacing={4}>
       <DcaInDiagram quoteDenom={quoteDenom} baseDenom={baseDenom} initialDeposit={initialDeposit} />
       <Divider />
-      <Text textStyle="body-xs">The swap</Text>
-      <Text lineHeight={8}>
-        Starting{' '}
-        {startImmediately === StartImmediatelyValues.Yes ? (
+      <Box>
+        <Text textStyle="body-xs">Your deposit</Text>
+        <Text lineHeight={8}>
+          I deposit{' '}
           <BadgeButton>
-            <Text>Immediately</Text>
-          </BadgeButton>
-        ) : (
-          <>
+            <Text>
+              {initialDeposit} {quoteDenomName}
+            </Text>
+            <DenomIcon denomName={quoteDenom} />{' '}
+          </BadgeButton>{' '}
+          Into the CALC DCA In vault.
+        </Text>
+      </Box>
+      <Box>
+        <Text textStyle="body-xs">The swap</Text>
+        <Text lineHeight={8}>
+          Starting{' '}
+          {startImmediately === StartImmediatelyValues.Yes ? (
             <BadgeButton>
-              <Text>{formattedDate}</Text>
-            </BadgeButton>{' '}
-            at{' '}
-            <BadgeButton>
-              <Text>{formattedTime}</Text>
-            </BadgeButton>{' '}
-          </>
-        )}
-        , CALC will swap{' '}
-        <BadgeButton>
-          <Text>
-            ~{swapAmount} {quoteDenomName}
-          </Text>
-          <DenomIcon denomName={quoteDenom} />
-        </BadgeButton>{' '}
-        for{' '}
-        <BadgeButton>
-          <Text>{baseDenomName}</Text>
-          <DenomIcon denomName={baseDenom} />
-        </BadgeButton>{' '}
-        for{' '}
-        <BadgeButton>
-          <Text>
-            {executions} {displayExecutionInterval}
-          </Text>
-        </BadgeButton>{' '}
-        .
-      </Text>
+              <Text>Immediately</Text>
+            </BadgeButton>
+          ) : (
+            <>
+              <BadgeButton>
+                <Text>{formattedDate}</Text>
+              </BadgeButton>{' '}
+              at{' '}
+              <BadgeButton>
+                <Text>{formattedTime}</Text>
+              </BadgeButton>{' '}
+            </>
+          )}
+          , CALC will swap{' '}
+          <BadgeButton>
+            <Text>
+              ~{swapAmount} {quoteDenomName}
+            </Text>
+            <DenomIcon denomName={quoteDenom} />
+          </BadgeButton>{' '}
+          for{' '}
+          <BadgeButton>
+            <Text>{baseDenomName}</Text>
+            <DenomIcon denomName={baseDenom} />
+          </BadgeButton>{' '}
+          for{' '}
+          <BadgeButton>
+            <Text>
+              {executions} {displayExecutionInterval}
+            </Text>
+          </BadgeButton>{' '}
+          .
+        </Text>
+      </Box>
       <Button w="full" isLoading={isLoading} rightIcon={<Icon as={CheckedIcon} stroke="navy" />} onClick={handleClick}>
         Confirm
       </Button>

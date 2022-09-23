@@ -11,7 +11,7 @@ function Success() {
       <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
       <NewStrategyModalBody>
         <Stack spacing={6} alignItems="center">
-          <Heading>Congratulations!</Heading>
+          <Heading size="md">Congratulations!</Heading>
           <Text>CALC is now working for you!</Text>
           <Link passHref href="/strategies">
             <Button as="a" w="full" isLoading={isPageLoading}>
