@@ -1,0 +1,39 @@
+import { StepConfig } from '@components/NewStrategyModal/steps';
+import { useRouter } from 'next/router';
+
+export default function useSteps(steps: StepConfig[]) {
+  const router = useRouter();
+  const currentStepIndex = steps.findIndex((step) => step.href === router.pathname);
+  const currentStep = steps[currentStepIndex];
+
+  const nextStep = () => {
+    if (currentStepIndex < steps.length - 1) {
+      router.push(steps[currentStepIndex + 1].href);
+    }
+  };
+
+  // has previous step
+  const hasPreviousStep = currentStepIndex > 0 && !currentStep.noBackButton;
+
+  const previousStep = () => {
+    if (hasPreviousStep) {
+      router.push(steps[currentStepIndex - 1].href);
+    }
+  };
+
+  // go to step
+  const goToStep = (stepIndex: number) => {
+    if (stepIndex >= 0 && stepIndex < steps.length) {
+      router.push(steps[stepIndex].href);
+    }
+  };
+
+  return {
+    currentStep,
+    currentStepIndex,
+    nextStep,
+    hasPreviousStep,
+    previousStep,
+    goToStep,
+  };
+}

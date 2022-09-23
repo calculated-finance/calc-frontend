@@ -12,28 +12,21 @@ import {
   Image,
   InputRightElement,
   Button,
-  Center,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import { useStep2Form } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
+import { DcaInFormDataStep1 } from '../../../../types/DcaInFormData';
 import { executionIntervalDisplay } from '../confirm-purchase/index.page';
 import { ExecutionIntervals } from './ExecutionIntervals';
 
-export default function SwapAmount() {
-  const { state } = useStep2Form();
-
+export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
   const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
-  if (!state) {
-    return null;
-  }
-
-  const { icon: quoteDenomIcon, name: quoteDenomName } = getDenomInfo(state.step1.quoteDenom);
-  const { icon: baseDenomIcon, name: baseDenomName } = getDenomInfo(state.step1.baseDenom);
-  const { initialDeposit } = state!.step1;
+  const { icon: quoteDenomIcon, name: quoteDenomName } = getDenomInfo(step1State.quoteDenom);
+  const { name: baseDenomName } = getDenomInfo(step1State.baseDenom);
+  const { initialDeposit } = step1State;
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const numberValue = e.currentTarget.value;
@@ -44,7 +37,7 @@ export default function SwapAmount() {
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(state.step1.initialDeposit, value);
+  const executions = totalExecutions(step1State.initialDeposit, value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 

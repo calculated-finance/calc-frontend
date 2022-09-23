@@ -1,4 +1,4 @@
-import { Button, Text } from '@chakra-ui/react';
+import { Button, Stack, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -10,12 +10,14 @@ function Success() {
     <NewStrategyModal>
       <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
       <NewStrategyModalBody>
-        <Text>Congratulations! CALC is now working for you!</Text>
-        <Link passHref href="/strategies">
-          <Button as="a" w="full" isLoading={isPageLoading}>
-            View my strategies
-          </Button>
-        </Link>
+        <Stack spacing={8}>
+          <Text>Congratulations! CALC is now working for you!</Text>
+          <Link passHref href="/strategies">
+            <Button as="a" w="full" isLoading={isPageLoading}>
+              View my strategies
+            </Button>
+          </Link>
+        </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>
   );

@@ -70,7 +70,7 @@ function DcaInStep2() {
                   </Collapse>
                 </Box>
                 <ExecutionInterval />
-                <SwapAmount />
+                <SwapAmount step1State={state.step1} />
                 <Submit />
               </Stack>
             </Form>

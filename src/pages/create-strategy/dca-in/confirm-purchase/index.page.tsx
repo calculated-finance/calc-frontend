@@ -57,8 +57,6 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
     });
   };
 
-  console.log(values);
-
   const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval, startImmediately } = values;
 
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
