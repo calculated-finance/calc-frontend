@@ -1,4 +1,4 @@
-import { Badge, BadgeProps, Button, Center, Flex, HStack, Stack, Text } from '@chakra-ui/react';
+import { Badge, BadgeProps, Button, Center, Divider, Flex, HStack, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -10,9 +10,11 @@ import useDcaInForm, { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
+import Lottie from 'lottie-react';
 import { DcaInFormDataAll } from '../../../../types/DcaInFormData';
 import { ExecutionIntervals } from '../step2/ExecutionIntervals';
 import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
+import arrow from './arrow.json';
 
 function BadgeButton({ children, ...props }: BadgeProps) {
   return (
@@ -40,6 +42,26 @@ export const executionIntervalDisplay = {
   [ExecutionIntervals.Weekly]: ['week', 'weeks'],
   [ExecutionIntervals.Monthly]: ['month', 'months'],
 };
+
+export function DcaInDiagram({ quoteDenom, initialDeposit, baseDenom }: any) {
+  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
+  const { name: baseDenomName } = getDenomInfo(baseDenom);
+  return (
+    <Flex w="full" justifyContent="space-between">
+      <HStack>
+        <DenomIcon denomName={quoteDenom} />
+        <Text>
+          {initialDeposit} {quoteDenomName}
+        </Text>
+      </HStack>
+      <Lottie animationData={arrow} loop />
+      <HStack>
+        <DenomIcon denomName={baseDenom} />
+        <Text>{baseDenomName}</Text>
+      </HStack>
+    </Flex>
+  );
+}
 
 function Confirm({ values }: { values: DcaInFormDataAll }) {
   const { actions } = useDcaInForm();
@@ -79,18 +101,8 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
   return (
     <Stack spacing={4}>
-      <Flex w="full" justifyContent="space-between">
-        <DenomIcon denomName={quoteDenom} />
-        <Text>
-          {initialDeposit} {baseDenomName}
-        </Text>
-        <Icon as={ArrowRightIcon} />
-        <Text>{executions}</Text>
-        <Icon as={Loop2Icon} />
-        <Text>swaps</Text>
-        <Icon as={ArrowRightIcon} />
-        <DenomIcon denomName={baseDenom} />
-      </Flex>
+      <DcaInDiagram quoteDenom={quoteDenom} baseDenom={baseDenom} initialDeposit={initialDeposit} />
+      <Divider />
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
         Starting{' '}

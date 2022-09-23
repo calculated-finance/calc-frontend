@@ -29,7 +29,7 @@ function AppHeaderForSidebar() {
 
 function AppHeader() {
   return (
-    <Flex position="fixed" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
+    <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <Link href="/">
         <Image cursor="pointer" src="/images/logo.svg" />
       </Link>
@@ -45,9 +45,9 @@ function Content({ children, ...props }: BoxProps) {
       <main>
         <Box {...props}>{children}</Box>
       </main>
-      <Flex display={{ base: 'flex', sm: 'flex', md: 'none' }} p={8}>
+      {/* <Flex display={{ base: 'flex', sm: 'flex', md: 'none' }} p={8}>
         <Footer />
-      </Flex>
+      </Flex> */}
     </>
   );
 }

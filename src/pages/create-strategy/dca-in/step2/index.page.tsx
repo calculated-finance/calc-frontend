@@ -1,4 +1,4 @@
-import { Box, Stack, Collapse, Center, Button } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button, Divider } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -13,6 +13,7 @@ import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from './StartImmediatelyValues';
 import Submit from './Submit';
 import SwapAmount from './SwapAmount';
+import { DcaInDiagram } from '../confirm-purchase/index.page';
 
 function DcaInStep2() {
   const router = useRouter();
@@ -63,6 +64,12 @@ function DcaInStep2() {
           <NewStrategyModalBody isLoading={isPageLoading && !isSubmitting}>
             <Form>
               <Stack direction="column" spacing={4}>
+                <DcaInDiagram
+                  quoteDenom={state.step1.quoteDenom}
+                  baseDenom={state.step1.baseDenom}
+                  initialDeposit={state.step1.initialDeposit}
+                />
+                <Divider />
                 <Box>
                   <StartImmediately />
                   <Collapse in={values.startImmediately === StartImmediatelyValues.No}>
