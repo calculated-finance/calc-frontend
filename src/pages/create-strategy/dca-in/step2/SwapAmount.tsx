@@ -73,7 +73,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {value && !meta.error && (
-        <FormHelperText color="brand.200">
+        <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
       )}
