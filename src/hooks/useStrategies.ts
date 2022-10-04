@@ -54,3 +54,21 @@ export default function useStrategies() {
     },
   );
 }
+
+export function useCompletedStrategies() {
+  const { address } = useWallet();
+  const client = useCWClient();
+
+  return useQuery<Response>(
+    ['completed-vaults', address],
+    () =>
+      client!.queryContractSmart(CONTRACT_ADDRESS, {
+        get_all_inactive_vaults_by_address: {
+          address,
+        },
+      }),
+    {
+      enabled: !!address && !!client,
+    },
+  );
+}
