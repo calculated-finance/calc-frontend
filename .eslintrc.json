@@ -17,6 +17,7 @@
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "react/require-default-props": "off",
+    "react/no-children-prop": "off",
     "max-len": [
       "warn",
       {

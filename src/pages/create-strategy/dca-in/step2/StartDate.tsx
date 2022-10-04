@@ -27,7 +27,6 @@ export default function StartDate() {
       <FormHelperText>This is when your first swap will be made</FormHelperText>
       <InputGroup>
         <InputLeftElement
-          // eslint-disable-next-line react/no-children-prop
           children={
             <HStack direction="row" ml={10}>
               <FiCalendar /> <Text fontSize="sm">Date</Text>
@@ -39,7 +38,7 @@ export default function StartDate() {
           name={field.name}
           date={date}
           onDateChange={helpers.setValue}
-          minDate={new Date()}
+          minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
           configs={{
             monthNames,
             dayNames,

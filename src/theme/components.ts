@@ -1,5 +1,12 @@
 const components = {
   Button: {
+    // baseStyle: ({ theme }) => {
+    //   console.log(theme);
+    //   return {
+    //     borderRadius: 'lg',
+    //     fontSize: 'sm',
+    //   };
+    // },
     baseStyle: {
       borderRadius: 'lg',
       fontSize: 'sm',

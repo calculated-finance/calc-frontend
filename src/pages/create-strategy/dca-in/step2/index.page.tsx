@@ -1,8 +1,8 @@
-import { Box, Stack, Collapse, Center, Button, Divider, Flex, Switch, Text, HStack } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button, Flex, Switch, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useField } from 'formik';
 import { useRouter } from 'next/router';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
@@ -14,6 +14,20 @@ import { StartImmediatelyValues } from './StartImmediatelyValues';
 import Submit from './Submit';
 import SwapAmount from './SwapAmount';
 import { DcaInDiagram } from '../confirm-purchase/index.page';
+import PurchaseTime from './PurchaseTime';
+
+function AdvancedSettingsSwitch() {
+  const [field, , helpers] = useField('advancedSettings');
+
+  return (
+    <Flex justify="end">
+      <Text mr={2} textStyle="body-xs">
+        Advanced Settings
+      </Text>
+      <Switch size="sm" colorScheme="brand" isChecked={field.value} onChange={field.onChange} name={field.name} />
+    </Flex>
+  );
+}
 
 function DcaInStep2() {
   const router = useRouter();
@@ -62,23 +76,21 @@ function DcaInStep2() {
         <NewStrategyModal>
           <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
           <NewStrategyModalBody isLoading={isPageLoading && !isSubmitting}>
-            <Form>
+            <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaInDiagram
                   quoteDenom={state.step1.quoteDenom}
                   baseDenom={state.step1.baseDenom}
                   initialDeposit={state.step1.initialDeposit}
                 />
-                <Flex justify="end">
-                  <Text mr={2} textStyle="body-xs">
-                    Advanced Settings
-                  </Text>
-                  <Switch size="sm" colorScheme="brand" />
-                </Flex>
+                <AdvancedSettingsSwitch />
                 <Box>
                   <StartImmediately />
                   <Collapse in={values.startImmediately === StartImmediatelyValues.No}>
                     <StartDate />
+                    <Collapse in={values.advancedSettings}>
+                      <PurchaseTime />
+                    </Collapse>
                   </Collapse>
                 </Box>
                 <ExecutionInterval />

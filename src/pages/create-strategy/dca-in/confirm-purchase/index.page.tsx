@@ -79,23 +79,29 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
     });
   };
 
-  const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval, startImmediately } = values;
+  const {
+    quoteDenom,
+    baseDenom,
+    initialDeposit,
+    swapAmount,
+    startDate,
+    executionInterval,
+    startImmediately,
+    purchaseTime,
+  } = values;
 
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
   const { name: baseDenomName } = getDenomInfo(baseDenom);
 
-  const formattedDate = new Date(startDate!).toLocaleString('en-US', {
+  const formattedDate = startDate?.toLocaleString('en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
   });
 
-  const formattedTime = new Date(startDate!).toLocaleString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZoneName: 'short',
-    hour12: false,
-  });
+  const zone = new Date().toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2];
+
+  const formattedTime = purchaseTime || '00:00';
 
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
@@ -131,7 +137,9 @@ function Confirm({ values }: { values: DcaInFormDataAll }) {
               </BadgeButton>{' '}
               at{' '}
               <BadgeButton>
-                <Text>{formattedTime}</Text>
+                <Text>
+                  {formattedTime} {zone}
+                </Text>
               </BadgeButton>{' '}
             </>
           )}
