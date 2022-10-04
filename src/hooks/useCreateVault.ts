@@ -34,7 +34,7 @@ const useCreateVault = () => {
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
         total_executions: totalExecutions(initialDeposit, swapAmount),
-        target_start_time_utc_seconds: (new Date(startDate!).valueOf() / 1000).toString(),
+        target_start_time_utc_seconds: startDate ? (new Date(startDate).valueOf() / 1000).toString() : undefined,
       },
     };
     const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];
@@ -42,8 +42,6 @@ const useCreateVault = () => {
     if (!pairAddress || !client) {
       throw Error('Invalid form data');
     }
-
-    console.log('got here');
 
     return client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
   });
