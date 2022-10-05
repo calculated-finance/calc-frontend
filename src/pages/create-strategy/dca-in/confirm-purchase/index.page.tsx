@@ -1,35 +1,25 @@
-import { Button, Center, Checkbox, FormControl, FormErrorMessage, Stack, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Center,
+  chakra,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Stack,
+  Text,
+  useCheckbox,
+} from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
-import useDcaInForm, { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import * as Yup from 'yup';
-import { Form, Formik, useField } from 'formik';
-import { DcaInFormDataAll } from '../../../../types/DcaInFormData';
+import { Form, Formik, FormikHelpers, useField } from 'formik';
+import { FiCheck } from 'react-icons/fi';
 import Summary from './Summary';
-
-function Confirm({ values }: { values: DcaInFormDataAll }) {
-  const { actions } = useDcaInForm();
-
-  return (
-    <Stack spacing={4}>
-      <Summary />
-      <Button w="full" isLoading={isLoading} rightIcon={<Icon as={CheckedIcon} stroke="navy" />} onClick={handleClick}>
-        Confirm
-      </Button>
-      {isError && (
-        <>
-          <Text color="red">Something went wrong</Text>
-          <Text>{JSON.stringify(error)}</Text>
-        </>
-      )}
-    </Stack>
-  );
-}
 
 function InvalidData() {
   const router = useRouter();
@@ -51,23 +41,39 @@ function InvalidData() {
 }
 
 function AgreementCheckbox() {
-  const [field, meta, helpers] = useField('acceptedAgreement');
+  const [field, meta] = useField('acceptedAgreement');
+  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(field);
+
   return (
     <FormControl isInvalid={meta.touched && !!meta.error}>
-      <Checkbox
-        isChecked={field.value}
-        onChange={field.onChange}
-        name={field.name}
-        colorScheme="brand"
-        size="sm"
-        fontSize="xx-small"
-      >
-        I have read and agree to be bound by the CALC Terms & Conditions.
-      </Checkbox>
+      <chakra.label display="flex" flexDirection="row" alignItems="center" cursor="pointer" {...htmlProps}>
+        <Text textStyle="body-xs" {...getLabelProps()} mr={2}>
+          I have read and agree to be bound by the CALC Terms & Conditions.
+        </Text>
+
+        <input {...getInputProps()} hidden />
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          border="1px solid"
+          borderRadius="sm"
+          borderColor="white"
+          bg={state.isChecked ? 'brand.200' : 'none'}
+          w={4}
+          h={4}
+          {...getCheckboxProps()}
+        >
+          {state.isChecked && <Icon as={FiCheck} w={3} h={3} />}
+        </Flex>
+      </chakra.label>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );
 }
+
+type AgreementForm = {
+  acceptedAgreement: boolean;
+};
 
 function ConfirmPurchase() {
   const { state, actions } = useConfirmForm();
@@ -77,22 +83,23 @@ function ConfirmPurchase() {
 
   const { mutate, isError, error, isLoading } = useCreateVault();
 
-  const handleSubmit = (props) =>
+  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async () => {
         await router.push('success');
         actions.resetAction();
       },
+      onSettled: () => {
+        setSubmitting(false);
+      },
     });
 
-  const validate = (values) => {
-    const errors = {};
-
+  const validate = (values: AgreementForm) => {
     if (!values.acceptedAgreement) {
-      errors.acceptedAgreement = 'You must accept the agreement';
+      return { acceptedAgreement: 'You must accept the terms and conditions before continuing.' };
     }
 
-    return errors;
+    return {};
   };
 
   return (
@@ -106,21 +113,18 @@ function ConfirmPurchase() {
                 <Stack spacing={4}>
                   <Summary />
                   <AgreementCheckbox />
-                  <Button
-                    w="full"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    isDisabled={!isValid && Boolean(submitCount)}
-                    rightIcon={<Icon as={CheckedIcon} stroke="navy" />}
-                  >
-                    Confirm
-                  </Button>
-                  {isError && (
-                    <>
-                      <Text color="red">Something went wrong</Text>
-                      <Text>{JSON.stringify(error)}</Text>
-                    </>
-                  )}
+                  <FormControl isInvalid={isError}>
+                    <Button
+                      w="full"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      isDisabled={!isValid && Boolean(submitCount)}
+                      rightIcon={<Icon as={CheckedIcon} stroke="navy" />}
+                    >
+                      Confirm
+                    </Button>
+                    <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+                  </FormControl>
                 </Stack>
               </Form>
             ) : (

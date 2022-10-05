@@ -17,7 +17,7 @@ const useCreateVault = () => {
 
   const { state } = useConfirmForm();
 
-  return useMutation<ExecuteResult>(() => {
+  return useMutation<ExecuteResult, Error>(() => {
     if (!state) {
       throw new Error('No state');
     }
