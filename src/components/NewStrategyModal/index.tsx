@@ -86,7 +86,6 @@ export function NewStrategyModalHeader({
       <Stack direction="row" spacing={3} alignItems="center">
         {hasPreviousStep && finalStep && (
           <IconButton
-            as="a"
             variant="ghost"
             colorScheme="blue"
             icon={<Icon as={ArrowLeftIcon} />}

@@ -12,6 +12,7 @@ export const initialValues = {
   purchaseTime: '',
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
+  slippageTolerance: null,
 };
 
 export const allValidationSchema = Yup.object({
@@ -26,10 +27,7 @@ export const allValidationSchema = Yup.object({
     .when('startImmediately', {
       is: StartImmediatelyValues.No,
       then: Yup.date()
-        // TODO: be better at checking the future
-        // check if start time is set and then combine them.
-        // maybe we just combine these fields into one and have one data point?
-        // though that will be harder to save
+        // TODO: be better at checking the future. Check if start time is set and then combine them.
         .min(new Date(new Date().setDate(new Date().getDate() - 1)), ({ label }) => `${label} must be in the future.`)
         .required(),
       otherwise: (schema) => schema.transform(() => null),
@@ -64,6 +62,16 @@ export const allValidationSchema = Yup.object({
         return value <= initialDeposit;
       },
     }),
+  slippageTolerance: Yup.number()
+    .nullable()
+    .label('Slippage Tolerance')
+    .lessThan(100)
+    .moreThan(0)
+    .when('advancedSettings', {
+      is: true,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
 });
 export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 
@@ -77,6 +85,7 @@ export const step2ValidationSchema = allValidationSchema.pick([
   'purchaseTime',
   'executionInterval',
   'swapAmount',
+  'slippageTolerance',
 ]);
 
 export type DcaInFormDataStep2 = Yup.InferType<typeof step2ValidationSchema>;

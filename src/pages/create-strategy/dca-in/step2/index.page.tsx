@@ -15,6 +15,7 @@ import Submit from './Submit';
 import SwapAmount from './SwapAmount';
 import { DcaInDiagram } from '../confirm-purchase/index.page';
 import PurchaseTime from './PurchaseTime';
+import SlippageTolerance from './SlippageTolerance';
 
 function AdvancedSettingsSwitch() {
   const [field, , helpers] = useField('advancedSettings');
@@ -95,6 +96,9 @@ function DcaInStep2() {
                 </Box>
                 <ExecutionInterval />
                 <SwapAmount step1State={state.step1} />
+                <Collapse in={values.advancedSettings}>
+                  <SlippageTolerance />
+                </Collapse>
                 <Submit />
               </Stack>
             </Form>

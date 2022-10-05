@@ -15,7 +15,16 @@ const useCreateVault = () => {
   const { data } = usePairs();
 
   return useMutation<ExecuteResult, unknown, Yup.InferType<typeof allValidationSchema>>((values) => {
-    const { quoteDenom, baseDenom, initialDeposit, startDate, swapAmount, executionInterval, purchaseTime } = values;
+    const {
+      quoteDenom,
+      baseDenom,
+      initialDeposit,
+      startDate,
+      swapAmount,
+      executionInterval,
+      purchaseTime,
+      slippageTolerance,
+    } = values;
 
     // throw error if pair not found
     // TODO: note that we need to make sure pairAddress has been set by the time mutate is called
@@ -47,6 +56,7 @@ const useCreateVault = () => {
         swap_amount: deconversion(swapAmount).toString(),
         total_executions: totalExecutions(initialDeposit, swapAmount),
         target_start_time_utc_seconds: startTimeSeconds,
+        slippageTolerance,
       },
     };
     const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];
