@@ -50,7 +50,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Text>Start date:</Text>
 
         <Text textStyle="body-xs">
-          {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()}
+          {/* {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()} */}
         </Text>
       </GridItem>
 

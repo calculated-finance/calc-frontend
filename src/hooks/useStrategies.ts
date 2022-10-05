@@ -1,35 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { Denom } from '@hooks/usePairs';
+
+type StrategyBalance = {
+  current: {
+    amount: string;
+    denom: Denom;
+  };
+  starting: {
+    amount: string;
+    denom: Denom;
+  };
+};
+
+type PositionType = 'enter' | 'exit';
+type TriggerVariant = 'time' | 'price'; // confirm these values
 
 export type Strategy = {
   id: string;
   owner: string;
-  balance: {
-    starting_balance: {
-      denom: string;
-      amount: string;
-    };
-    current_balance: {
-      denom: string;
-      amount: string;
-    };
-  };
-  tracking_information: {
-    last_execution_block_height: string;
-    executions_remaining: number;
-    target_execution_time: string;
-  };
-  execution_interval: string;
+  balances: StrategyBalance[];
+  trigger_id: string;
+  trigger_variant: TriggerVariant;
   configuration: {
+    execution_interval: string;
     pair: {
       address: string;
       base_denom: string;
       quote_denom: string;
     };
-
     swap_amount: string;
-    position_type: string;
+    position_type: PositionType;
+    slippage_tolerance: number; // double check this type
   };
 };
 

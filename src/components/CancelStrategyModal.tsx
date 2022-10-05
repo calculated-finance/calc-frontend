@@ -61,7 +61,8 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: Cance
             <Heading size="sm">Amount to be returned:</Heading>
             <Spacer />
             <Text as="span" color="blue.200">
-              {strategy.balance.current_balance.amount} {strategy.balance.current_balance.denom}
+              {/* TODO: what happens for multiple denoms? */}
+              {strategy.balances[0].current.amount} {strategy.balances[0].current.denom}
             </Text>
           </Flex>
         </ModalBody>

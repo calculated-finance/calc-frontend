@@ -11,6 +11,8 @@ function Page() {
   const { data: completedData, isLoading: completedIsLoading } = useCompletedStrategies();
   const { connected, connecting } = useWallet();
 
+  console.log(data);
+
   return (
     <>
       <Heading pb={12}>My CALC Strategies</Heading>

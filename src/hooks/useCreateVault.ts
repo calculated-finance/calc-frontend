@@ -49,8 +49,8 @@ const useCreateVault = () => {
     }
 
     const msg = {
-      create_vault: {
-        execution_interval: executionInterval,
+      create_vault_with_time_trigger: {
+        time_interval: executionInterval,
         pair_address: pairAddress,
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
