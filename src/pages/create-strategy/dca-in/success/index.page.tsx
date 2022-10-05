@@ -3,7 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import Link from 'next/link';
-import { BadgeButton } from '../confirm-purchase/index.page';
+import BadgeButton from "../confirm-purchase/BadgeButton";
 
 function Success() {
   const { isPageLoading } = usePageLoad();

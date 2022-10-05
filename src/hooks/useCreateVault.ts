@@ -9,12 +9,19 @@ import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import usePairs, { Pair } from './usePairs';
+import { useConfirmForm } from './useDcaInForm';
 
 const useCreateVault = () => {
   const { address: senderAddress, client } = useWallet();
   const { data } = usePairs();
 
-  return useMutation<ExecuteResult, unknown, Yup.InferType<typeof allValidationSchema>>((values) => {
+  const { state } = useConfirmForm();
+
+  return useMutation<ExecuteResult>(() => {
+    if (!state) {
+      throw new Error('No state');
+    }
+
     const {
       quoteDenom,
       baseDenom,
@@ -24,7 +31,7 @@ const useCreateVault = () => {
       executionInterval,
       purchaseTime,
       slippageTolerance,
-    } = values;
+    } = state;
 
     // throw error if pair not found
     // TODO: note that we need to make sure pairAddress has been set by the time mutate is called

@@ -13,7 +13,7 @@ import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from './StartImmediatelyValues';
 import Submit from './Submit';
 import SwapAmount from './SwapAmount';
-import { DcaInDiagram } from '../confirm-purchase/index.page';
+import DcaInDiagram from "../confirm-purchase/DcaInDiagram";
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 

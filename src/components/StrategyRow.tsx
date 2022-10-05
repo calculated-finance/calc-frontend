@@ -64,7 +64,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Cadence:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
-          {strategy.execution_interval}
+          {/* {strategy.execution_interval} */}
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 1 }} rowStart={{ sm: 1, lg: 'auto' }}>

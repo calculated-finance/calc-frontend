@@ -17,7 +17,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import { DcaInFormDataStep1 } from '../../../../types/DcaInFormData';
-import { executionIntervalDisplay } from '../confirm-purchase/index.page';
+import executionIntervalDisplay from "../confirm-purchase/executionIntervalDisplay";
 import { ExecutionIntervals } from './ExecutionIntervals';
 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
