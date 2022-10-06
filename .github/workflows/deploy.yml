@@ -1,0 +1,77 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        type: string
+        required: true
+        description: Github environment to use
+
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_ACCOUNT_ID:
+        required: true
+      AWS_REGION:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Infrastructure
+    environment: ${{ inputs.ENVIRONMENT }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      PROJECT_NAME: calc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Copy Environment Config Files
+        working-directory: ./infrastructure
+        run: cp -r ./${{ inputs.ENVIRONMENT }}/* ./
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/deployment-role
+          role-session-name: events-deployment-${{ inputs.ENVIRONMENT }}
+          role-duration-seconds: 1200
+
+      - name: Build App
+        run: yarn build
+
+      - name: Export App
+        run: yarn export
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.6
+          terraform_wrapper: false
+
+      - name: Terraform Initialization
+        working-directory: ./infrastructure
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: ./infrastructure
+        env:
+        run: terraform apply -auto-approve
