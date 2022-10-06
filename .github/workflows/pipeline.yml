@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test-calc-fi-sandbox:
+  test-calc-fi-frontend-sandbox:
     name: Test (sandbox)
     uses: ./.github/workflows/test.yml
     with:
@@ -17,11 +17,11 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  deploy-calc-fi-sandbox:
+  deploy-calc-fi-frontend-sandbox:
     name: Deploy (sandbox)
     uses: ./.github/workflows/deploy.yml
     needs:
-      - test-calc-fi-sandbox
+      - test-calc-fi-frontend-sandbox
     with:
       ENVIRONMENT: test
     secrets:
