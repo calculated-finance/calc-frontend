@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = "${var.environment}.calculated.fi"
+  bucket = "${var.environment}${var.bucket_domain_name}"
 }
 
 resource "aws_s3_bucket_website_configuration" "example" {

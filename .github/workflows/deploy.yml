@@ -7,6 +7,10 @@ on:
         type: string
         required: true
         description: Github environment to use
+      BUCKET_DOMAIN_NAME:
+        type: string
+        required: true
+        description: Github environment to use
 
     secrets:
       AWS_ACCESS_KEY_ID:
@@ -74,3 +78,16 @@ jobs:
       - name: Terraform Apply
         working-directory: ./infrastructure
         run: terraform apply -auto-approve
+
+      - name: Deploy
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: out
+          bucket: ${{ inputs.ENVIRONMENT }}${{ inputs.S3_BUCKET_DOMAIN_NAME }}
+          bucket-region: ${{ secrets.AWS_REGION }}
+          # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          # invalidation: /
+          delete-removed: true
+          no-cache: true
+          private: false
+          filesToInclude: '.*/*,*/*,**'

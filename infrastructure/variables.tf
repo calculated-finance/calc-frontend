@@ -10,6 +10,12 @@ variable "environment" {
   type        = string
 }
 
+variable "bucket_domain_name" {
+  description = "the domain name used for the s3 bucket name"
+  type        = string
+  default     = ".calculated.fi"
+}
+
 variable "project_name" {
   description = "The project/component name"
   type        = string
