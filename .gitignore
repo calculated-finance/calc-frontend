@@ -3,3 +3,12 @@
 /out
 yarn-error.log
 .vscodecounter
+
+
+# Terraform artefacts
+.terraform/
+terraform.tfstate*
+infrastructure/**/*.zip
+
+# ignore auto tfvars
+*.auto.tfvars

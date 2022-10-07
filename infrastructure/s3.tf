@@ -1,10 +1,20 @@
-resource "aws_s3_bucket" "b" {
-  bucket = "staging.calculated.fi"
-  acl    = "public-read"
-  policy = file("policy.json")
+resource "aws_s3_bucket" "website_bucket" {
+  bucket = "${var.environment}.calculated.fi"
+}
 
-  website {
-    index_document = "index.html"
-    error_document = "error.html"
+resource "aws_s3_bucket_website_configuration" "example" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+
+  index_document {
+    suffix = "index.html"
   }
+
+  error_document {
+    key = "404.html"
+  }
+}
+
+resource "aws_s3_bucket_acl" "website_bucket_acl" {
+  bucket = aws_s3_bucket.website_bucket.id
+  acl    = "public-read"
 }
