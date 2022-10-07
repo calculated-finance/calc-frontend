@@ -24,6 +24,7 @@ jobs:
       - test-calc-fi-frontend-sandbox
     with:
       ENVIRONMENT: test
+      BUCKET_DOMAIN_NAME: .calculated.fi
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
