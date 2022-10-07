@@ -84,7 +84,6 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: out
-          bucket: ${{ inputs.ENVIRONMENT }}${{ inputs.S3_BUCKET_DOMAIN_NAME }}
           bucket: ${{ format('{1}{2}', inputs.ENVIRONMENT, inputs.S3_BUCKET_DOMAIN_NAME) }}
           bucket-region: ${{ secrets.AWS_REGION }}
           # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
