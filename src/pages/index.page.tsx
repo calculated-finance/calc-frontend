@@ -11,11 +11,12 @@ function Setup() {
         <Stack spacing={2}>
           <Heading size="md">Ready to set up a CALC Strategy?</Heading>
           <Text fontSize="sm">
-            Setting up a DCA strategy with CALC takes just 4 minutes. CALC, the ease of use offered by neobank apps
-            combined with the power of DeFi.
+            CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and
+            take back your time. In just 4 minutes, you can have CALC working for you with either take profit strategies
+            or accumulation strategies.
           </Text>
         </Stack>
-        <Button w="full" size="sm">
+        <Button maxWidth={402} size="sm">
           Get Started
         </Button>
       </Stack>
@@ -172,19 +173,13 @@ function Home() {
         </Text>
       </Box>
       <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
-        <GridItem colSpan={{ base: 5, xl: 2, '2xl': 2 }}>
+        <GridItem colSpan={{ base: 5 }}>
           <Setup />
-        </GridItem>
-        <GridItem colSpan={{ base: 5, xl: 3, '2xl': 2 }}>
-          <LearnMore />
-        </GridItem>
-        <GridItem colSpan={{ base: 5, lg: 2, '2xl': 1 }} rowStart={{ lg: 3, xl: 3, '2xl': 1 }} colStart={{ '2xl': 5 }}>
-          <FearAndGreed />
         </GridItem>
         <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
           <InfoPanel />
         </GridItem>
-        <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }} rowStart={{ lg: 3, '2xl': 3 }} colStart={{ lg: 3, '2xl': 1 }}>
+        <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }}>
           <ActiveStrategies />
         </GridItem>
         <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
