@@ -1,5 +1,6 @@
 import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
+import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
 import * as Yup from 'yup';
 
 export const initialValues = {
@@ -8,11 +9,12 @@ export const initialValues = {
   initialDeposit: null,
   advancedSettings: false,
   startImmediately: StartImmediatelyValues.Yes,
+  triggerType: TriggerTypes.Date,
   startDate: null,
   purchaseTime: '',
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
-  slippageTolerance: null,
+  slippageTolerance: 1,
 };
 
 export const allValidationSchema = Yup.object({
@@ -21,17 +23,30 @@ export const allValidationSchema = Yup.object({
   initialDeposit: Yup.number().label('Initial Deposit').positive().required().nullable(),
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
+  triggerType: Yup.mixed<TriggerTypes>().oneOf(Object.values(TriggerTypes)).required(),
   startDate: Yup.mixed()
     .label('Start Date')
     .nullable()
-    .when('startImmediately', {
-      is: StartImmediatelyValues.No,
+    .when(['startImmediately', 'triggerType'], {
+      is: (startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Date && startImmediately === StartImmediatelyValues.No,
       then: Yup.date()
         // TODO: be better at checking the future. Check if start time is set and then combine them.
         .min(new Date(new Date().setDate(new Date().getDate() - 1)), ({ label }) => `${label} must be in the future.`)
         .required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  startPrice: Yup.number()
+    .label('Start Price')
+    .positive()
+    .nullable()
+    .when(['startImmediately', 'triggerType'], {
+      is: (startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Price && startImmediately === StartImmediatelyValues.No,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+
   purchaseTime: Yup.string()
     .label('Purchase Time')
     .matches(/^([01][0-9]|2[0-3]):([0-5][0-9])$/, {
@@ -81,7 +96,9 @@ export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 export const step2ValidationSchema = allValidationSchema.pick([
   'advancedSettings',
   'startImmediately',
+  'triggerType',
   'startDate',
+  'startPrice',
   'purchaseTime',
   'executionInterval',
   'swapAmount',

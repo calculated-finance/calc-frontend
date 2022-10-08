@@ -1,8 +1,9 @@
-import { FormControl, FormHelperText, FormLabel, useRadioGroup } from '@chakra-ui/react';
+import { FormControl, FormHelperText, FormLabel, useRadioGroup, HStack } from '@chakra-ui/react';
 import { useField } from 'formik';
 import Radio from './Radio';
 import { StartImmediatelyValues } from './StartImmediatelyValues';
 import RadioCard from './RadioCard';
+import TriggerType from './TriggerType';
 
 const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = [
   {
@@ -28,16 +29,19 @@ export default function StartImmediately() {
     <FormControl>
       <FormLabel>Start Strategy immediately?</FormLabel>
       <FormHelperText>Starting immediately means your first swap occurs straight after set-up.</FormHelperText>
-      <Radio {...getRootProps}>
-        {startImediatelyData.map((option) => {
-          const radio = getRadioProps({ value: option.value });
-          return (
-            <RadioCard key={option.label} {...radio}>
-              {option.label}
-            </RadioCard>
-          );
-        })}
-      </Radio>
+      <HStack>
+        <Radio {...getRootProps}>
+          {startImediatelyData.map((option) => {
+            const radio = getRadioProps({ value: option.value });
+            return (
+              <RadioCard key={option.label} {...radio}>
+                {option.label}
+              </RadioCard>
+            );
+          })}
+        </Radio>
+        <TriggerType />
+      </HStack>
     </FormControl>
   );
 }

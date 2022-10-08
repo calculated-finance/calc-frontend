@@ -4,9 +4,10 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
-import DcaInDiagram from "./DcaInDiagram";
-import executionIntervalDisplay from "./executionIntervalDisplay";
-import BadgeButton from "./BadgeButton";
+import DcaInDiagram from './DcaInDiagram';
+import executionIntervalDisplay from './executionIntervalDisplay';
+import BadgeButton from './BadgeButton';
+import TriggerTypes from '../step2/TriggerTypes';
 
 export default function Summary() {
   const { state } = useConfirmForm();
@@ -26,6 +27,8 @@ export default function Summary() {
     executionInterval,
     purchaseTime,
     startImmediately,
+    triggerType,
+    startPrice,
   } = state;
 
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
@@ -40,6 +43,53 @@ export default function Summary() {
   const zone = new Date().toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2];
 
   const formattedTime = purchaseTime || '00:00';
+
+  let triggerInfo;
+  if (startImmediately === StartImmediatelyValues.Yes) {
+    triggerInfo = (
+      <>
+        Starting{' '}
+        <BadgeButton>
+          <Text>Immediately</Text>
+        </BadgeButton>
+      </>
+    );
+  } else if (triggerType === TriggerTypes.Date) {
+    triggerInfo = (
+      <>
+        Starting{' '}
+        <BadgeButton>
+          <Text>{formattedDate}</Text>
+        </BadgeButton>
+        {Boolean(purchaseTime) && (
+          <>
+            {' '}
+            at{' '}
+            <BadgeButton>
+              <Text>
+                {formattedTime} {zone}
+              </Text>
+            </BadgeButton>
+          </>
+        )}
+      </>
+    );
+  } else {
+    triggerInfo = (
+      <>
+        when{' '}
+        <BadgeButton>
+          <Text>{baseDenomName}</Text>
+          <DenomIcon denomName={baseDenom} />
+          <Text>=</Text>
+          <Text>
+            {startPrice} {quoteDenomName}
+          </Text>
+          <DenomIcon denomName={quoteDenom} />
+        </BadgeButton>
+      </>
+    );
+  }
 
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
@@ -63,25 +113,7 @@ export default function Summary() {
       <Box>
         <Text textStyle="body-xs">The swap</Text>
         <Text lineHeight={8}>
-          Starting{' '}
-          {startImmediately === StartImmediatelyValues.Yes ? (
-            <BadgeButton>
-              <Text>Immediately</Text>
-            </BadgeButton>
-          ) : (
-            <>
-              <BadgeButton>
-                <Text>{formattedDate}</Text>
-              </BadgeButton>{' '}
-              at{' '}
-              <BadgeButton>
-                <Text>
-                  {formattedTime} {zone}
-                </Text>
-              </BadgeButton>{' '}
-            </>
-          )}
-          , CALC will swap{' '}
+          {triggerInfo}, CALC will swap{' '}
           <BadgeButton>
             <Text>
               ~{swapAmount} {quoteDenomName}

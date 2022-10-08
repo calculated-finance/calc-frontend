@@ -13,12 +13,13 @@ import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from './StartImmediatelyValues';
 import Submit from './Submit';
 import SwapAmount from './SwapAmount';
-import DcaInDiagram from "../confirm-purchase/DcaInDiagram";
+import DcaInDiagram from '../confirm-purchase/DcaInDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
+import StartPrice from './StartPrice';
 
 function AdvancedSettingsSwitch() {
-  const [field, , helpers] = useField('advancedSettings');
+  const [field] = useField('advancedSettings');
 
   return (
     <Flex justify="end">
@@ -88,9 +89,14 @@ function DcaInStep2() {
                 <Box>
                   <StartImmediately />
                   <Collapse in={values.startImmediately === StartImmediatelyValues.No}>
-                    <StartDate />
-                    <Collapse in={values.advancedSettings}>
-                      <PurchaseTime />
+                    <Collapse animateOpacity in={values.triggerType === 'date'}>
+                      <StartDate />
+                      <Collapse in={values.advancedSettings}>
+                        <PurchaseTime />
+                      </Collapse>
+                    </Collapse>
+                    <Collapse animateOpacity in={values.triggerType === 'price'}>
+                      <StartPrice />
                     </Collapse>
                   </Collapse>
                 </Box>
@@ -112,46 +118,3 @@ function DcaInStep2() {
 DcaInStep2.getLayout = getFlowLayout;
 
 export default DcaInStep2;
-
-/* below is a solution for a checkbox */
-
-// function StartImmediately() {
-//   const [field] = useField({ name: 'startImmediately' });
-
-//   console.log(field);
-
-//   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox({
-//     ...field,
-//     isChecked: field.value,
-//   });
-
-//   console.log(getInputProps);
-
-//   return (
-//     <Radio>
-//       {/* <chakra.label {...htmlProps} /> */}
-//       <input {...getInputProps()} hidden />
-//       <CheckboxCard active={state.isChecked}>Yes</CheckboxCard>
-//       <CheckboxCard active={!state.isChecked}>No</CheckboxCard>
-//     </Radio>
-//   );
-// }
-
-// function CheckboxCard({ children, active }: ChildrenProp & { active: boolean }) {
-//   return (
-//     <Box as="label">
-//       <Box
-//         cursor="pointer"
-//         px={2}
-//         bg={active ? 'blue.200' : 'inherit'}
-//         color={active ? 'navy' : 'inherit'}
-//         borderRadius={active ? '2xl' : 'inherit'}
-//         _focus={{
-//           boxShadow: 'outline',
-//         }}
-//       >
-//         {children}
-//       </Box>
-//     </Box>
-//   );
-// }

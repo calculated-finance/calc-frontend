@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { allValidationSchema } from 'src/types/DcaInFormData';
 import totalExecutions from 'src/utils/totalExecutions';
 
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
-import * as Yup from 'yup';
+import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 
@@ -31,6 +30,8 @@ const useCreateVault = () => {
       executionInterval,
       purchaseTime,
       slippageTolerance,
+      triggerType,
+      startPrice,
     } = state;
 
     // throw error if pair not found
@@ -55,14 +56,20 @@ const useCreateVault = () => {
       startTimeSeconds = (startTime.valueOf() / 1000).toString();
     }
 
+    const contractEndpoint =
+      triggerType === TriggerTypes.Date
+        ? 'create_vault_with_time_trigger'
+        : 'create_vault_with_f_i_n_limit_order_trigger';
+
     const msg = {
-      create_vault_with_time_trigger: {
+      [contractEndpoint]: {
         time_interval: executionInterval,
         pair_address: pairAddress,
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
         total_executions: totalExecutions(initialDeposit, swapAmount),
         target_start_time_utc_seconds: startTimeSeconds,
+        target_price: startPrice || undefined,
         slippageTolerance,
       },
     };
