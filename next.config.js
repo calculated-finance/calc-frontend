@@ -7,6 +7,7 @@ const nextConfig = {
   pageExtensions: ['page.tsx'],
   reactStrictMode: false,
   trailingSlash: true,
+  exportTrailingSlash: true,
   experimental: {
     esmExternals: 'loose',
   },
