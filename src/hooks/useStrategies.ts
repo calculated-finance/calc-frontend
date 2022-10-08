@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
+import handleContractQueryError from './handleContractQueryError';
 
 type StrategyBalance = {
   current: {
@@ -44,7 +45,7 @@ export default function useStrategies() {
   const { address } = useWallet();
   const client = useCWClient();
 
-  return useQuery<Response>(
+  return useQuery<Response, Error>(
     ['active-vaults', address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
@@ -54,6 +55,7 @@ export default function useStrategies() {
       }),
     {
       enabled: !!address && !!client,
+      onError: handleContractQueryError,
     },
   );
 }
@@ -62,7 +64,7 @@ export function useCompletedStrategies() {
   const { address } = useWallet();
   const client = useCWClient();
 
-  return useQuery<Response>(
+  return useQuery<Response, Error>(
     ['completed-vaults', address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
@@ -72,6 +74,7 @@ export function useCompletedStrategies() {
       }),
     {
       enabled: !!address && !!client,
+      onError: handleContractQueryError,
     },
   );
 }

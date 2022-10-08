@@ -5,7 +5,7 @@ import type { NextPage } from 'next';
 import { KeplrWalletAdapter } from '@wizard-ui/core';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
@@ -20,6 +20,10 @@ const queryClient = new QueryClient();
 // can make this more dumb because maybe we can set default values with yup schemas instead
 
 createStore({});
+
+const { ToastContainer, toast } = createStandaloneToast(theme);
+
+export const appToast = toast;
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -45,7 +49,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
         <CalcWalletModalProvider>
           <QueryClientProvider client={queryClient}>
-            <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
+            <StateMachineProvider>
+              {getLayout(<Component {...pageProps} />)}
+              <ToastContainer />
+            </StateMachineProvider>
           </QueryClientProvider>
         </CalcWalletModalProvider>
       </WizardProvider>
