@@ -1,117 +1,6 @@
 import { Button, Box, Heading, Text, Stack, Center, Image, Flex, Link, Grid, GridItem } from '@chakra-ui/react';
-import Icon from '@components/Icon';
-import { ArrowToprightIcon, BarChartIcon } from '@fusion-icons/react/interface';
 import { getSidebarLayout } from '../components/Layout';
-
-function Setup() {
-  return (
-    <Center borderWidth={2} borderColor="brand.200" h="full" minHeight={294} layerStyle="panel" p={8}>
-      <Stack spacing={6}>
-        <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
-        <Stack spacing={2}>
-          <Heading size="md">Ready to set up a CALC Strategy?</Heading>
-          <Text fontSize="sm">
-            CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and
-            take back your time. In just 4 minutes, you can have CALC working for you with either take profit strategies
-            or accumulation strategies.
-          </Text>
-        </Stack>
-        <Button maxWidth={402} size="sm">
-          Get Started
-        </Button>
-      </Stack>
-    </Center>
-  );
-}
-
-function FearAndGreed() {
-  return (
-    <Center layerStyle="panel" p={8} h={294}>
-      <Stack spacing={2}>
-        <Heading size="md">The Fear and Greed Index</Heading>
-        <Text fontSize="xs">Multifactorial Crypto Market Sentiment Analysis</Text>
-        <Text>
-          <Text as="span">Now: </Text>
-          <Text as="span" color="red.200">
-            Extreme Fear
-          </Text>
-        </Text>
-        <Box h="full" py={2}>
-          <Box position="relative" height={16} overflow="hidden">
-            <Box
-              position="absolute"
-              left="calc(50% - 68px)"
-              width={32}
-              height={32}
-              borderRadius="50%"
-              boxSizing="border-box"
-              bgGradient="linear(to-l, #1AEFAF, #FFB636, #FF5858)"
-            >
-              <Box
-                height="90%"
-                width="90%"
-                position="absolute"
-                borderRadius="50%"
-                background="deepHorizon"
-                top="5%"
-                left="5%"
-              />
-              <Center
-                borderRadius="50%"
-                bg="red.500"
-                w={4}
-                h={4}
-                position="relative"
-                fontSize="xx-small"
-                left={3}
-                top={3}
-              >
-                24
-              </Center>
-              <Icon
-                as={ArrowToprightIcon}
-                stroke="red.500"
-                strokeWidth={1}
-                width={16}
-                height={16}
-                position="relative"
-                left="calc(50% - 48px)"
-                transform="rotate(-90deg)"
-              />
-            </Box>
-          </Box>
-        </Box>
-        <Link href="/" color="blue.200" fontSize="xs">
-          Is now a good time to invest?
-        </Link>
-      </Stack>
-    </Center>
-  );
-}
-
-function LearnMore() {
-  return (
-    <Stack direction="row" layerStyle="panel" h="full" minHeight={294}>
-      <Center roundedLeft="2xl" bg="black" h="full" flexShrink={0} w={157}>
-        <Image src="/images/layers.svg" w="200px" />
-      </Center>
-      <Center>
-        <Stack spacing={6} p={8}>
-          <Stack spacing={2}>
-            <Heading size="md">How does CALC&apos;s DCA Strategy work?</Heading>
-            <Text fontSize="sm">
-              Find out what all the hype is about and why DCA&apos;ing into an on-chain product can provide you 10x the
-              value you would get from a centralised exchange.
-            </Text>
-          </Stack>
-          <Button variant="outline" colorScheme="blue">
-            Read more
-          </Button>
-        </Stack>
-      </Center>
-    </Stack>
-  );
-}
+import TopPanel from '../components/TopPanel';
 
 function InfoPanel() {
   return (
@@ -168,14 +57,12 @@ function Home() {
           Welcome to CALC, you&apos;ve made a great choice!
         </Heading>
         <Text fontSize="sm">
-          CALC removes the hardest part of trading, emotion! Set &amp; forget, take back your time and forget about
-          being gluded to a computer screen 24/7.
+          CALC removes the hardest part of trading, emotions! Stop being glued to a computer screen 24/7, define your
+          strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
       <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
-        <GridItem colSpan={{ base: 5 }}>
-          <Setup />
-        </GridItem>
+        <TopPanel />
         <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
           <InfoPanel />
         </GridItem>

@@ -62,7 +62,7 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: Cance
             <Spacer />
             <Text as="span" color="blue.200">
               {/* TODO: what happens for multiple denoms? */}
-              {strategy.balances[0].current.amount} {strategy.balances[0].current.denom}
+              {strategy.balances[0].amount} {strategy.balances[0].denom}
             </Text>
           </Flex>
         </ModalBody>

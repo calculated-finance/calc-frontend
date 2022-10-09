@@ -57,7 +57,7 @@ const useCreateVault = () => {
     }
 
     const contractEndpoint =
-      triggerType === TriggerTypes.Date
+      triggerType === TriggerTypes.Date // needs to default to date maybe
         ? 'create_vault_with_time_trigger'
         : 'create_vault_with_f_i_n_limit_order_trigger';
 
@@ -67,12 +67,13 @@ const useCreateVault = () => {
         pair_address: pairAddress,
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
-        total_executions: totalExecutions(initialDeposit, swapAmount),
+        // total_executions: totalExecutions(initialDeposit, swapAmount),
         target_start_time_utc_seconds: startTimeSeconds,
-        target_price: startPrice || undefined,
-        slippageTolerance,
+        target_price: startPrice?.toString() || undefined,
+        // slippage_tolerance: slippageTolerance,
       },
     };
+
     const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];
 
     if (!pairAddress || !client) {

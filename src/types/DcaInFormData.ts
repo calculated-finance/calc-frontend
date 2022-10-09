@@ -23,7 +23,13 @@ export const allValidationSchema = Yup.object({
   initialDeposit: Yup.number().label('Initial Deposit').positive().required().nullable(),
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
-  triggerType: Yup.mixed<TriggerTypes>().oneOf(Object.values(TriggerTypes)).required(),
+  triggerType: Yup.mixed<TriggerTypes>()
+    .oneOf(Object.values(TriggerTypes))
+    .required()
+    .when('startImmediately', {
+      is: StartImmediatelyValues.Yes,
+      then: (schema) => schema.transform(() => TriggerTypes.Date),
+    }),
   startDate: Yup.mixed()
     .label('Start Date')
     .nullable()

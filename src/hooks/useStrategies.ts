@@ -5,14 +5,8 @@ import { Denom } from '@hooks/usePairs';
 import handleContractQueryError from './handleContractQueryError';
 
 type StrategyBalance = {
-  current: {
-    amount: string;
-    denom: Denom;
-  };
-  starting: {
-    amount: string;
-    denom: Denom;
-  };
+  amount: string;
+  denom: Denom;
 };
 
 type PositionType = 'enter' | 'exit';
@@ -24,6 +18,7 @@ export type Strategy = {
   balances: StrategyBalance[];
   trigger_id: string;
   trigger_variant: TriggerVariant;
+  status: 'active' | 'inactive';
   configuration: {
     execution_interval: string;
     pair: {
@@ -49,7 +44,7 @@ export default function useStrategies() {
     ['active-vaults', address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
-        get_all_active_vaults_by_address: {
+        get_all_vaults_by_address: {
           address,
         },
       }),
@@ -68,7 +63,7 @@ export function useCompletedStrategies() {
     ['completed-vaults', address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
-        get_all_inactive_vaults_by_address: {
+        get_all_vaults_by_address: {
           address,
         },
       }),

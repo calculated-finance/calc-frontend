@@ -18,6 +18,7 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "react/require-default-props": "off",
     "react/no-children-prop": "off",
+    "no-restricted-exports": "off",
     "max-len": [
       "warn",
       {

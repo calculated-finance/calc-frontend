@@ -74,7 +74,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={{ base: 15, lg: 3 }}>
         <Flex justifyContent="end" alignItems="center" h="full">
-          <Link href="/strategies/1">
+          <Link href={`/strategies/${strategy.id}`}>
             <Button width={{ base: 'full', lg: 'initial' }}>View Performance</Button>
           </Link>
         </Flex>

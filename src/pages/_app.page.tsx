@@ -21,7 +21,7 @@ const queryClient = new QueryClient();
 
 createStore({});
 
-const { ToastContainer, toast } = createStandaloneToast(theme);
+const { ToastContainer, toast } = createStandaloneToast({ theme });
 
 export const appToast = toast;
 

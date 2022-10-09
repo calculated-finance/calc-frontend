@@ -77,7 +77,6 @@ export const useConfirmForm = () => {
       actions,
     };
   } catch (e) {
-    console.log(e);
     return {
       actions,
       errors: e,
