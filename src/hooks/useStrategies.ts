@@ -50,26 +50,6 @@ export default function useStrategies() {
       }),
     {
       enabled: !!address && !!client,
-      onError: handleContractQueryError,
-    },
-  );
-}
-
-export function useCompletedStrategies() {
-  const { address } = useWallet();
-  const client = useCWClient();
-
-  return useQuery<Response, Error>(
-    ['completed-vaults', address],
-    () =>
-      client!.queryContractSmart(CONTRACT_ADDRESS, {
-        get_all_vaults_by_address: {
-          address,
-        },
-      }),
-    {
-      enabled: !!address && !!client,
-      onError: handleContractQueryError,
     },
   );
 }

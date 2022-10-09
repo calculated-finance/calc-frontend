@@ -22,6 +22,6 @@
       "@types/*": ["src/types/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/[id]"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/[id]", "__mocks__/styleMock.js"],
   "exclude": ["node_modules"]
 }

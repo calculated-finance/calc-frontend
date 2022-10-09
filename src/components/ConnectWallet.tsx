@@ -1,7 +1,10 @@
 import { Button, Center, Flex, FlexProps, Heading, Link, Stack, Text } from '@chakra-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { useWalletModal } from 'src/hooks/useWalletModal';
+import Spinner from './Spinner';
 
 function ConnectWallet(props: FlexProps) {
+  const { connecting } = useWallet();
   const { setVisible } = useWalletModal();
 
   const handleConnect = () => {
@@ -10,15 +13,21 @@ function ConnectWallet(props: FlexProps) {
   return (
     <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} {...props}>
       <Stack direction="column" spacing={4} alignItems="center" justifyContent="center" w="full" h="full">
-        <Heading>No Wallet connected</Heading>
-        <Center>Get started by connecting your wallet.</Center>
-        <Button onClick={handleConnect}>Connect to a wallet</Button>
-        <Text>
-          Don&apos;t have a wallet?{' '}
-          <Link href="https://www.keplr.app/" target="_blank" rel="noopener noreferrer">
-            Create one here
-          </Link>
-        </Text>
+        {connecting ? (
+          <Spinner />
+        ) : (
+          <>
+            <Heading>No Wallet connected</Heading>
+            <Center>Get started by connecting your wallet.</Center>
+            <Button onClick={handleConnect}>Connect to a wallet</Button>
+            <Text>
+              Don&apos;t have a wallet?{' '}
+              <Link href="https://www.keplr.app/" target="_blank" rel="noopener noreferrer">
+                Create one here
+              </Link>
+            </Text>
+          </>
+        )}
       </Stack>
     </Flex>
   );

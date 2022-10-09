@@ -1,4 +1,3 @@
-// jest.config.js
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
@@ -14,11 +13,13 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
   moduleNameMapper: {
+    '\\.css$': '<rootDir>/__mocks__/styleMock.js',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     '^d3-format(.*)$': `<rootDir>/node_modules/d3-format/dist/d3-format$1`,
+    '^@fontsource(.*)$': `<rootDir>/__mocks__/styleMock.js`,
   },
   testEnvironment: 'jest-environment-jsdom',
 };

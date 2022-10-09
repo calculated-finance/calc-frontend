@@ -15,15 +15,11 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 // can make this more dumb because maybe we can set default values with yup schemas instead
 
 createStore({});
-
-const { ToastContainer, toast } = createStandaloneToast({ theme });
-
-export const appToast = toast;
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -49,10 +45,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
         <CalcWalletModalProvider>
           <QueryClientProvider client={queryClient}>
-            <StateMachineProvider>
-              {getLayout(<Component {...pageProps} />)}
-              <ToastContainer />
-            </StateMachineProvider>
+            <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
           </QueryClientProvider>
         </CalcWalletModalProvider>
       </WizardProvider>
