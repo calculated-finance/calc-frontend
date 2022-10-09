@@ -1,4 +1,7 @@
 import { Button, Box, Heading, Text, Stack, Center, Image, Flex, Link, Grid, GridItem } from '@chakra-ui/react';
+import Spinner from '@components/Spinner';
+import useStrategies, { Strategy } from '@hooks/useStrategies';
+import { useWallet } from '@wizard-ui/react';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
 
@@ -20,15 +23,23 @@ function InfoPanel() {
 }
 
 function ActiveStrategies() {
+  const { data, isLoading } = useStrategies();
+  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   return (
     <Flex h={294} layerStyle="panel" p={8} alignItems="center">
-      <Stack spacing={4}>
-        <Heading size="md">My Active CALC Strategies</Heading>
-        <Heading fontSize="5xl">0</Heading>
-        <Button w={44} variant="outline" colorScheme="blue">
-          Setup a strategy
-        </Button>
-      </Stack>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Stack spacing={4}>
+          <Heading size="md">My Active CALC Strategies</Heading>
+          <Heading data-testid="active-strategy-count" fontSize="5xl">
+            {activeStrategies.length}
+          </Heading>
+          <Button w={44} variant="outline" colorScheme="blue">
+            Setup a strategy
+          </Button>
+        </Stack>
+      )}
     </Flex>
   );
 }
@@ -50,6 +61,7 @@ function WorkflowInformation() {
 }
 
 function Home() {
+  const { connected } = useWallet();
   return (
     <>
       <Box pb={6}>
@@ -66,9 +78,11 @@ function Home() {
         <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
           <InfoPanel />
         </GridItem>
-        <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }}>
-          <ActiveStrategies />
-        </GridItem>
+        {connected && (
+          <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }}>
+            <ActiveStrategies />
+          </GridItem>
+        )}
         <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
           <WorkflowInformation />
         </GridItem>
