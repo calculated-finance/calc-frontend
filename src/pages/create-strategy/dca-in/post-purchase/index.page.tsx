@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/types/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
@@ -12,6 +12,8 @@ import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import SendToWallet from './SendToWallet';
 import { AutoStake } from './AutoStake';
+import RecipientAccount from './RecipientAccount';
+import SendToWalletValues from './SendToWalletValues';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase();
@@ -30,13 +32,16 @@ function Page() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting }) => (
+      {({ values, isSubmitting }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader resetForm={actions.resetAction}>Post Purchase</NewStrategyModalHeader>
           <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <SendToWallet />
+                <Collapse in={values.sendToWallet === SendToWalletValues.No}>
+                  <RecipientAccount />
+                </Collapse>
                 <AutoStake />
                 <Submit>Next</Submit>
               </Stack>
