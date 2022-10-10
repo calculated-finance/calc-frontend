@@ -11,11 +11,11 @@ const nextConfig = {
   experimental: {
     esmExternals: 'loose',
   },
-  exportPathMap: async function () {
-    return {
-      '/': { page: '/' },
-    };
-  },
+  // exportPathMap: async function () {
+  //   return {
+  //     '/': { page: '/' },
+  //   };
+  // },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
