@@ -1,4 +1,4 @@
-import { Button, Heading, Text, Stack, Center } from '@chakra-ui/react';
+import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -28,6 +28,38 @@ function Onboarding() {
   );
 }
 
+function Returning() {
+  return (
+    <>
+      <HStack>
+        <Image src="/images/lightBulbOutline.svg" w={6} h={6} />
+        <Text color="grey.200" fontSize="sm">
+          No active strategies
+        </Text>
+      </HStack>
+      <Stack spacing={2}>
+        <Heading size="md">Ready to fire up CALC again?</Heading>
+        <Text fontSize="sm">
+          Match your investments to your goals, spread your &apos;eggs&apos; among multiple baskets, set up a purchase
+          plan–and stick with it and backtest your previous startegies.
+        </Text>
+      </Stack>
+      <ButtonGroup>
+        <Link href="/create-strategy">
+          <Button maxWidth={402} size="sm">
+            Create new strategy
+          </Button>
+        </Link>
+        <Link href="/performance">
+          <Button maxWidth={402} size="sm" variant="outline">
+            Review past performance
+          </Button>
+        </Link>
+      </ButtonGroup>
+    </>
+  );
+}
+
 function Active() {
   return (
     <>
@@ -35,8 +67,8 @@ function Active() {
       <Stack spacing={2}>
         <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
         <Text fontSize="sm">
-          Break free of FOMO, stop buying pico tops, it’s time to get calculated with your investment approach. CALC is
-          empowering investors with the tools to make investing emotionless.
+          Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
+          CALC is empowering investors with the tools to make investing emotionless.
         </Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
@@ -60,6 +92,7 @@ export default function TopPanel() {
 
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const completedStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'inactive') ?? [];
 
   return (
     <Center
@@ -74,7 +107,9 @@ export default function TopPanel() {
         isLoading ? (
           <Spinner />
         ) : (
-          <Stack spacing={6}>{activeStrategies.length ? <Active /> : <Onboarding />}</Stack>
+          <Stack spacing={6}>
+            {activeStrategies.length ? <Active /> : completedStrategies.length ? <Returning /> : <Onboarding />}
+          </Stack>
         )
       ) : (
         <ConnectWallet h={undefined} />

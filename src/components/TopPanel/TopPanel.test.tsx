@@ -55,6 +55,27 @@ describe('top panel', () => {
         expect(screen.getByText(/Get Started/)).toBeInTheDocument();
       });
     });
+    describe('when a user has only completed strategies', () => {
+      beforeEach(() => {
+        (useStrategies as jest.Mock).mockImplementation(() => ({
+          data: {
+            vaults: [{ id: 1, status: 'inactive' }],
+          },
+          isLoading: false,
+        }));
+      });
+      it('renders the connect wallet button', () => {
+        render(
+          <QueryClientProvider client={queryClient}>
+            <TopPanel />
+          </QueryClientProvider>,
+        );
+
+        expect(screen.getByText(/Ready to fire up CALC again?/)).toBeInTheDocument();
+        expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
+        expect(screen.getByText(/Review past performance/)).toBeInTheDocument();
+      });
+    });
     describe('when a strategy set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
