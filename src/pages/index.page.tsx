@@ -7,7 +7,6 @@ import {
   Center,
   Image,
   Flex,
-  Link,
   Grid,
   GridItem,
   HStack,
@@ -21,6 +20,7 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
+import Link from 'next/link';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
 
@@ -128,13 +128,17 @@ function ActiveStrategies() {
           <Heading data-testid="active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
-          <Button w={44} variant="outline" colorScheme="blue">
-            {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
-          </Button>
-          {Boolean(activeStrategies.length) && (
+          <Link href="/create-strategy">
             <Button w={44} variant="outline" colorScheme="blue">
-              Review My Strategies
+              {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
             </Button>
+          </Link>
+          {Boolean(activeStrategies.length) && (
+            <Link href="/strategies">
+              <Button w={44} variant="outline" colorScheme="blue">
+                Review My Strategies
+              </Button>
+            </Link>
           )}
         </Stack>
       )}

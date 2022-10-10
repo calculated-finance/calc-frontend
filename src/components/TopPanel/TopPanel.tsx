@@ -5,6 +5,7 @@ import Spinner from '@components/Spinner';
 import { BarChartIcon } from '@fusion-icons/react/interface';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
+import Link from 'next/link';
 
 function Onboarding() {
   return (
@@ -18,9 +19,11 @@ function Onboarding() {
           accumulation strategies.
         </Text>
       </Stack>
-      <Button maxWidth={402} size="sm">
-        Get Started
-      </Button>
+      <Link href="/create-strategy">
+        <Button maxWidth={402} size="sm">
+          Get Started
+        </Button>
+      </Link>
     </>
   );
 }
@@ -37,12 +40,16 @@ function Active() {
         </Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <Button w="full" size="sm" colorScheme="blue">
-          Top up my Strategy
-        </Button>
-        <Button w="full" size="sm" colorScheme="blue" variant="outline">
-          Review performance
-        </Button>
+        <Link href="/strategies">
+          <Button w="full" size="sm" colorScheme="blue">
+            Top up my Strategy
+          </Button>
+        </Link>
+        <Link href="/strategies">
+          <Button w="full" size="sm" colorScheme="blue" variant="outline">
+            Review performance
+          </Button>
+        </Link>
       </Stack>
     </>
   );
