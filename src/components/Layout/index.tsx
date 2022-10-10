@@ -67,10 +67,12 @@ function FlowLayout({ children }: { children: ReactElement }) {
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <Breadcrumb separator=">">
             <BreadcrumbItem>
-              <BreadcrumbLink href="/create-strategy">Set up a Strategy</BreadcrumbLink>
+              <Link href="/create-strategy">
+                <BreadcrumbLink>Set up a Strategy</BreadcrumbLink>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink href="#">DCA In</BreadcrumbLink>
+              <BreadcrumbLink>DCA In</BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Box>
