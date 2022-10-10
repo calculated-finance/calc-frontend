@@ -2,7 +2,7 @@ import { Image, Tooltip } from '@chakra-ui/react';
 import { Denom } from '@hooks/usePairs';
 import getDenomInfo from '@utils/getDenomInfo';
 
-function DenomIcon({ denomName, showTooltip = false }: { denomName: Denom; showTooltip: boolean }) {
+function DenomIcon({ denomName, showTooltip = false }: { denomName: Denom; showTooltip?: boolean }) {
   const { name } = getDenomInfo(denomName);
   return (
     <Tooltip label={name} isDisabled={!showTooltip}>

@@ -1,3 +1,4 @@
+import { Denom } from '@hooks/usePairs';
 import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
 import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
@@ -18,8 +19,8 @@ export const initialValues = {
 };
 
 export const allValidationSchema = Yup.object({
-  baseDenom: Yup.string().label('Base Denom').required(), // TODO: make these denom enums,
-  quoteDenom: Yup.string().label('Quote Denom').required(), // TODO: make these denom enums,
+  baseDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Base Denom').required(),
+  quoteDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Quote Denom').required(),
   initialDeposit: Yup.number().label('Initial Deposit').positive().required().nullable(),
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
