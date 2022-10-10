@@ -1,8 +1,7 @@
-import { FormControl, FormErrorMessage, Input, NumberInput, NumberInputField } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/types/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import useBalance from '@hooks/useBalance';
-import { ChangeEventHandler } from 'react';
 
 export default function InitialDeposit() {
   const {

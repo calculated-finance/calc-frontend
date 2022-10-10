@@ -1,4 +1,22 @@
-import { Button, Box, Heading, Text, Stack, Center, Image, Flex, Link, Grid, GridItem, HStack } from '@chakra-ui/react';
+import {
+  Button,
+  Box,
+  Heading,
+  Text,
+  Stack,
+  Center,
+  Image,
+  Flex,
+  Link,
+  Grid,
+  GridItem,
+  HStack,
+  Stat,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+  Divider,
+} from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
@@ -72,7 +90,7 @@ function InvestmentThesis() {
               <Text>Asset(s) accumulating:</Text>
               <HStack>
                 {acculumatingAssets.length ? (
-                  acculumatingAssets.map((asset) => <DenomIcon denomName={asset} />)
+                  acculumatingAssets.map((asset) => <DenomIcon key={asset} denomName={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}
@@ -124,6 +142,46 @@ function ActiveStrategies() {
   );
 }
 
+function TotalInvestment() {
+  const { data, isLoading } = useStrategies();
+  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const totalInvested = activeStrategies
+    .map((strategy) => Number(strategy.balances[0].amount))
+    .reduce((balance, acc) => acc + balance, 0);
+
+  const formattedTotalInvested = totalInvested.toLocaleString('en-US', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  });
+
+  return (
+    <Flex h={294} layerStyle="panel" p={8} alignItems="center">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Stack spacing={4}>
+          <Heading size="md">Total invested with CALC</Heading>
+          <Stat>
+            <StatLabel>Total capital invested</StatLabel>
+            <StatNumber data-testid="total-invested">{formattedTotalInvested}</StatNumber>
+          </Stat>
+          <Divider />
+          <HStack>
+            <Box>
+              <Heading size="xs">Fiat invested</Heading>
+              <Text textStyle="body-xs">-</Text>
+            </Box>
+            <Box>
+              <Heading size="xs">Stablecoin invested</Heading>
+              <Text textStyle="body-xs">{formattedTotalInvested}</Text>
+            </Box>
+          </HStack>
+        </Stack>
+      )}
+    </Flex>
+  );
+}
+
 function WorkflowInformation() {
   return (
     <Center h={308}>
@@ -155,21 +213,30 @@ function Home() {
           strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <Grid gap={6} mb={6} templateColumns="repeat(5, 1fr)" templateRows="1fr">
-        <TopPanel />
-        <GridItem colSpan={{ base: 5, lg: 2 }}>{activeStrategies.length && <InvestmentThesis />}</GridItem>
-
-        <GridItem colSpan={{ base: 5, lg: 5, '2xl': 5 }}>
-          {activeStrategies.length ? <WarningPanel /> : <InfoPanel />}
+      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr">
+        <GridItem colSpan={{ base: 6, lg: activeStrategies.length ? 4 : 6 }}>
+          <TopPanel />
         </GridItem>
+        <GridItem colSpan={{ base: 6, lg: 2 }}>{Boolean(activeStrategies.length) && <InvestmentThesis />}</GridItem>
+
+        <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
-          <GridItem colSpan={{ base: 5, lg: 3, '2xl': 2 }}>
+          <GridItem colSpan={{ base: 6, lg: 3, xl: 2 }}>
             <ActiveStrategies />
           </GridItem>
         )}
-        <GridItem colSpan={{ base: 5, sm: 5, lg: 5, '2xl': 3 }}>
+        <GridItem
+          colSpan={{ base: 6, xl: connected ? (activeStrategies.length ? 2 : 4) : 6 }}
+          rowStart={activeStrategies.length ? { base: 4, xl: 3 } : undefined}
+          colStart={activeStrategies.length ? { base: 0, xl: 3 } : undefined}
+        >
           <WorkflowInformation />
         </GridItem>
+        {Boolean(activeStrategies.length) && (
+          <GridItem colSpan={{ base: 6, lg: 3, xl: 2 }}>
+            <TotalInvestment />
+          </GridItem>
+        )}
       </Grid>
     </>
   );

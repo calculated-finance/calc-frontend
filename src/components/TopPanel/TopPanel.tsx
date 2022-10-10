@@ -1,4 +1,4 @@
-import { Button, Heading, Text, Stack, Center, GridItem, HStack } from '@chakra-ui/react';
+import { Button, Heading, Text, Stack, Center } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -55,25 +55,23 @@ export default function TopPanel() {
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
 
   return (
-    <GridItem colSpan={{ base: 5, lg: activeStrategies ? 3 : 5 }}>
-      <Center
-        borderWidth={2}
-        borderColor={activeStrategies.length ? 'blue.200' : 'brand.200'}
-        h="full"
-        minHeight={294}
-        layerStyle="panel"
-        p={8}
-      >
-        {connected ? (
-          isLoading ? (
-            <Spinner />
-          ) : (
-            <Stack spacing={6}>{activeStrategies.length ? <Active /> : <Onboarding />}</Stack>
-          )
+    <Center
+      borderWidth={2}
+      borderColor={activeStrategies.length ? 'blue.200' : 'brand.200'}
+      h="full"
+      minHeight={294}
+      layerStyle="panel"
+      p={8}
+    >
+      {connected ? (
+        isLoading ? (
+          <Spinner />
         ) : (
-          <ConnectWallet h={undefined} />
-        )}
-      </Center>
-    </GridItem>
+          <Stack spacing={6}>{activeStrategies.length ? <Active /> : <Onboarding />}</Stack>
+        )
+      ) : (
+        <ConnectWallet h={undefined} />
+      )}
+    </Center>
   );
 }
