@@ -1,4 +1,13 @@
-import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  HStack,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import { useField } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
 import { useQuery } from '@tanstack/react-query';
@@ -7,15 +16,21 @@ import Select from '../Select';
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
 
-  const { data, isLoading } = useQuery(['validators'], async () => {
-    const response = await fetch('https://kujira-api.polkachu.com/cosmos/staking/v1beta1/validators');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  });
+  const { data, isLoading } = useQuery(
+    ['validators'],
+    async () => {
+      const response = await fetch('https://kujira-api.polkachu.com/cosmos/staking/v1beta1/validators');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
+    {
+      keepPreviousData: true,
+    },
+  );
 
-  const validatorOptions = data?.validators.map(
+  const validatorOptions = data?.validators?.map(
     (validator: any) =>
       ({
         value: validator.operator_address,
@@ -37,13 +52,17 @@ export default function AutoStakeValidator() {
           voting power.
         </Text>
       </FormHelperText>
-      <Select
-        value={field.value}
-        options={validatorOptions}
-        placeholder="Choose validator"
-        onChange={helpers.setValue}
-        menuPortalTarget={document.body}
-      />
+      {isLoading ? (
+        <Spinner size="xs" />
+      ) : (
+        <Select
+          value={field.value}
+          options={validatorOptions}
+          placeholder="Choose validator"
+          onChange={helpers.setValue}
+          menuPortalTarget={document.body}
+        />
+      )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

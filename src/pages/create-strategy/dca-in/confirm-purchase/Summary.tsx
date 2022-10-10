@@ -1,16 +1,34 @@
-import { Box, Divider, Stack, Text } from '@chakra-ui/react';
+import { Box, Divider, Spinner, Stack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
+import { useQuery } from '@tanstack/react-query';
 import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
 import DcaInDiagram from './DcaInDiagram';
 import executionIntervalDisplay from './executionIntervalDisplay';
 import BadgeButton from './BadgeButton';
 import TriggerTypes from '../step2/TriggerTypes';
+import AutoStakeValues from '../post-purchase/AutoStakeValues';
 
 export default function Summary() {
   const { state } = useConfirmForm();
+
+  const { data, isLoading } = useQuery(
+    ['validator', state?.autoStakeValidator],
+    async () => {
+      const response = await fetch(
+        `https://kujira-api.polkachu.com/cosmos/staking/v1beta1/validators/${state?.autoStakeValidator}`,
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
+    {
+      enabled: !!state?.autoStakeValidator,
+    },
+  );
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -29,6 +47,8 @@ export default function Summary() {
     startImmediately,
     triggerType,
     startPrice,
+    autoStake,
+    autoStakeValidator,
   } = state;
 
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
@@ -134,6 +154,21 @@ export default function Summary() {
           .
         </Text>
       </Box>
+      {autoStake === AutoStakeValues.Yes && (
+        <Box>
+          <Text textStyle="body-xs">After each swap</Text>
+          <Text lineHeight={8}>
+            After each swap, CALC will automatically stake your tokens with:{' '}
+            {isLoading ? (
+              <Spinner size="xs" />
+            ) : (
+              <BadgeButton>
+                <Text>{data?.validator?.description?.moniker}</Text>
+              </BadgeButton>
+            )}
+          </Text>
+        </Box>
+      )}
     </Stack>
   );
 }
