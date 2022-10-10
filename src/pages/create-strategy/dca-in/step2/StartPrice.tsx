@@ -8,9 +8,9 @@ import {
   InputGroup,
   InputLeftElement,
   Text,
-  Image,
   InputRightElement,
 } from '@chakra-ui/react';
+import DenomIcon from '@components/DenomIcon';
 import { useStep2Form } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
@@ -36,7 +36,7 @@ export default function StartPrice() {
           pointerEvents="none"
           children={
             <HStack direction="row">
-              <Image src="/images/circleDollar.svg" /> <Text fontSize="sm">{baseDenomName} Price</Text>
+              <DenomIcon denomName={state.step1.baseDenom} /> <Text fontSize="sm">{baseDenomName} Price</Text>
             </HStack>
           }
         />

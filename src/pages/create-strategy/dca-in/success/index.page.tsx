@@ -1,12 +1,14 @@
-import { Button, Heading, Stack, Text, Image, Divider, Center, Flex } from '@chakra-ui/react';
+import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import Link from 'next/link';
-import BadgeButton from "../confirm-purchase/BadgeButton";
+import { useRouter } from 'next/router';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
+  const router = useRouter();
+  const timeSaved = router.query.time_saved;
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
@@ -15,16 +17,18 @@ function Success() {
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />
           <Text>CALC is now working for you!</Text>
-          <Divider />
-          <Text textAlign="center">
-            Plus, you have saved yourself an average of
-            <br />
-            <BadgeButton>
-              <Text>120 minutes</Text>
-            </BadgeButton>
-            <br />
-            and removed the emotions from your trades! 💪
-          </Text>
+          {Boolean(timeSaved) && (
+            <>
+              <Divider />
+              <Text textAlign="center">
+                Plus, you have saved yourself an average of
+                <Heading p={2} size="md">
+                  {timeSaved} minutes
+                </Heading>
+                and removed the emotions from your trades! 💪
+              </Text>
+            </>
+          )}
           <Link passHref href="/strategies">
             <Button as="a" isLoading={isPageLoading}>
               View my strategies

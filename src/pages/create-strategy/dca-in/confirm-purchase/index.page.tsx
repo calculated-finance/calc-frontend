@@ -19,6 +19,7 @@ import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers, useField } from 'formik';
 import { FiCheck } from 'react-icons/fi';
+import totalExecutions from '@utils/totalExecutions';
 import Summary from './Summary';
 
 function InvalidData() {
@@ -81,12 +82,15 @@ function ConfirmPurchase() {
 
   const router = useRouter();
 
-  const { mutate, isError, error, isLoading } = useCreateVault();
+  const { mutate, isError, error } = useCreateVault();
+
+  const timeSaved =
+    state?.initialDeposit && state.swapAmount ? totalExecutions(state?.initialDeposit, state.swapAmount) * 10 : 0;
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async () => {
-        await router.push('success');
+        await router.push(`success?time_saved=${timeSaved}`);
         actions.resetAction();
       },
       onSettled: () => {
