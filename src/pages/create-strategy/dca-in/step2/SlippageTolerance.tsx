@@ -17,7 +17,7 @@ import Icon from '@components/Icon';
 function SlippagePreset({ value }: { value: number }) {
   const [field, , helpers] = useField('slippageTolerance');
 
-  const enabled = field.value === value;
+  const enabled = (field.value || 1) === value;
 
   const handleClick = () => {
     helpers.setValue(value);
@@ -39,8 +39,8 @@ function SlippagePreset({ value }: { value: number }) {
 }
 
 export default function SlippageTolerance() {
-  const [field, meta] = useField({ name: 'slippageTolerance' });
-  const values = [0.01, 0.5, 0.1];
+  const [{ value, ...field }, meta] = useField({ name: 'slippageTolerance' });
+  const values = [0.01, 0.5, 1.0];
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
@@ -52,12 +52,12 @@ export default function SlippageTolerance() {
       <HStack spacing={2}>
         <InputGroup w={154} ml="px">
           <InputLeftElement pointerEvents="none" h="full" children={<Icon as={Swap2Icon} stroke="slateGrey" />} />
-          <Input placeholder="0.0" {...field} />
+          <Input placeholder="0.0" value={value || 1} {...field} />
           <InputRightElement pointerEvents="none" children="%" />
         </InputGroup>
         <HStack spacing={1}>
-          {values.map((value) => (
-            <SlippagePreset value={value} />
+          {values.map((presetValue) => (
+            <SlippagePreset value={presetValue} />
           ))}
         </HStack>
       </HStack>
