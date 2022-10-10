@@ -1,14 +1,15 @@
 import { StepConfig } from '@components/NewStrategyModal/steps';
 import { useRouter } from 'next/router';
+import { UrlObject } from 'url';
 
 export default function useSteps(steps: StepConfig[]) {
   const router = useRouter();
   const currentStepIndex = steps.findIndex((step) => step.href === router.pathname);
   const currentStep = steps[currentStepIndex];
 
-  const nextStep = () => {
+  const nextStep = (query?: UrlObject['query']) => {
     if (currentStepIndex < steps.length - 1) {
-      router.push(steps[currentStepIndex + 1].href);
+      router.push({ pathname: steps[currentStepIndex + 1].href, query });
     }
   };
 

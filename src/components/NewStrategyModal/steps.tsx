@@ -3,6 +3,7 @@ export type StepConfig = {
   title: string;
   noBackButton?: boolean;
   noJump?: boolean;
+  successPage?: boolean;
 };
 
 const steps: StepConfig[] = [
@@ -15,14 +16,20 @@ const steps: StepConfig[] = [
     title: 'Customise Strategy',
   },
   {
+    href: '/create-strategy/dca-in/post-purchase',
+    title: 'Post Purchase',
+  },
+  {
     href: '/create-strategy/dca-in/confirm-purchase',
     title: 'Confirm & Sign',
   },
+
   {
     href: '/create-strategy/dca-in/success',
     title: 'Strategy Set Successfully',
     noBackButton: true,
     noJump: true,
+    successPage: true,
   },
 ];
 

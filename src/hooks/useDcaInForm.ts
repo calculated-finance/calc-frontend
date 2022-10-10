@@ -2,6 +2,7 @@ import { useStateMachine } from 'little-state-machine';
 import {
   allValidationSchema,
   initialValues,
+  postPurchaseValidationSchema,
   step1ValidationSchema,
   step2ValidationSchema,
 } from '../types/DcaInFormData';
@@ -61,6 +62,22 @@ export const useStep2Form = () => {
     };
   } catch (e) {
     return {
+      actions,
+    };
+  }
+};
+
+export const useDcaInFormPostPurchase = () => {
+  const { state, actions } = useStateMachine({ updateAction, resetAction });
+
+  try {
+    return {
+      state: postPurchaseValidationSchema.validateSync(state, { stripUnknown: true }),
+      actions,
+    };
+  } catch (e) {
+    return {
+      state: postPurchaseValidationSchema.cast(initialValues, { stripUnknown: true }),
       actions,
     };
   }

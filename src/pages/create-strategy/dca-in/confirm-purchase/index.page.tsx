@@ -20,6 +20,9 @@ import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers, useField } from 'formik';
 import { FiCheck } from 'react-icons/fi';
 import totalExecutions from '@utils/totalExecutions';
+import Submit from '@components/Submit';
+import useSteps from '@hooks/useSteps';
+import steps from '@components/NewStrategyModal/steps';
 import Summary from './Summary';
 
 function InvalidData() {
@@ -79,6 +82,7 @@ type AgreementForm = {
 function ConfirmPurchase() {
   const { state, actions } = useConfirmForm();
   const { isPageLoading } = usePageLoad();
+  const { nextStep } = useSteps(steps);
 
   const router = useRouter();
 
@@ -90,7 +94,7 @@ function ConfirmPurchase() {
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async () => {
-        await router.push(`success?time_saved=${timeSaved}`);
+        await nextStep({ timeSaved });
         actions.resetAction();
       },
       onSettled: () => {
@@ -118,15 +122,9 @@ function ConfirmPurchase() {
                   <Summary />
                   <AgreementCheckbox />
                   <FormControl isInvalid={isError}>
-                    <Button
-                      w="full"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      isDisabled={!isValid && Boolean(submitCount)}
-                      rightIcon={<Icon as={CheckedIcon} stroke="navy" />}
-                    >
+                    <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
                       Confirm
-                    </Button>
+                    </Submit>
                     <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
                   </FormControl>
                 </Stack>

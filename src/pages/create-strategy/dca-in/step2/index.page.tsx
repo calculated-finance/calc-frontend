@@ -2,16 +2,18 @@ import { Box, Stack, Collapse, Center, Button, Flex, Switch, Text } from '@chakr
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
+import useSteps from '@hooks/useSteps';
 import { Form, Formik, useField } from 'formik';
 import { useRouter } from 'next/router';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
+import Submit from '@components/Submit';
+import steps from '@components/NewStrategyModal/steps';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../types/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
 import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from './StartImmediatelyValues';
-import Submit from './Submit';
 import SwapAmount from './SwapAmount';
 import DcaInDiagram from '../confirm-purchase/DcaInDiagram';
 import PurchaseTime from './PurchaseTime';
@@ -37,6 +39,7 @@ function DcaInStep2() {
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
+  const { nextStep } = useSteps(steps);
 
   if (!state) {
     const handleClick = async () => {
@@ -61,7 +64,7 @@ function DcaInStep2() {
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
     await actions.updateAction(data);
-    await router.push('/create-strategy/dca-in/confirm-purchase');
+    await nextStep();
   };
 
   const initialValues = state.step2;
@@ -105,7 +108,7 @@ function DcaInStep2() {
                 <Collapse in={values.advancedSettings}>
                   <SlippageTolerance />
                 </Collapse>
-                <Submit />
+                <Submit>Next</Submit>
               </Stack>
             </Form>
           </NewStrategyModalBody>

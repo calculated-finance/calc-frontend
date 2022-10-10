@@ -1,4 +1,6 @@
 import { Denom } from '@hooks/usePairs';
+import { AutoStakeValues } from "src/pages/create-strategy/dca-in/post-purchase/AutoStakeValues";
+import { SendToWalletValues } from "src/pages/create-strategy/dca-in/post-purchase/SendToWalletValues";
 import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
 import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
@@ -16,6 +18,8 @@ export const initialValues = {
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
   slippageTolerance: 1,
+  sendToWallet: SendToWalletValues.Yes,
+  autoStake: AutoStakeValues.No,
 };
 
 export const allValidationSchema = Yup.object({
@@ -94,11 +98,16 @@ export const allValidationSchema = Yup.object({
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  sendToWallet: Yup.mixed<SendToWalletValues>().oneOf(Object.values(SendToWalletValues)).required(),
+  autoStake: Yup.mixed<AutoStakeValues>().oneOf(Object.values(AutoStakeValues)).required(),
 });
 export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 
 export const step1ValidationSchema = allValidationSchema.pick(['baseDenom', 'quoteDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
+
+export const postPurchaseValidationSchema = allValidationSchema.pick(['sendToWallet', 'autoStake']);
+export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 
 export const step2ValidationSchema = allValidationSchema.pick([
   'advancedSettings',
