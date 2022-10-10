@@ -1,0 +1,8 @@
+terraform {
+  backend "s3" {
+    bucket         = "tf-state-ap-southeast-2-503097572706"
+    key            = "terraform/infrastructure/calc-frontend"
+    region         = "ap-southeast-2"
+    dynamodb_table = "terraform-state-locks"
+  }
+}
