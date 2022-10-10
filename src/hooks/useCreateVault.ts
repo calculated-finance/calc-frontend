@@ -79,7 +79,7 @@ const useCreateVault = () => {
     if (!pairAddress || !client) {
       throw Error('Invalid form data');
     }
-    const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds).then(console.log);
+    const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
     return result;
   });
 };
