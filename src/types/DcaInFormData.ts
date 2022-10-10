@@ -21,6 +21,7 @@ export const initialValues = {
   sendToWallet: SendToWalletValues.Yes,
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
+  autoStakeValidator: '',
 };
 
 export const allValidationSchema = Yup.object({
@@ -109,13 +110,26 @@ export const allValidationSchema = Yup.object({
       otherwise: (schema) => schema.transform(() => null),
     }),
   autoStake: Yup.mixed<AutoStakeValues>().oneOf(Object.values(AutoStakeValues)).required(),
+  autoStakeValidator: Yup.string()
+    .label('Validator')
+    .nullable()
+    .when('autoStake', {
+      is: AutoStakeValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
 });
 export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 
 export const step1ValidationSchema = allValidationSchema.pick(['baseDenom', 'quoteDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
-export const postPurchaseValidationSchema = allValidationSchema.pick(['sendToWallet', 'recipientAccount', 'autoStake']);
+export const postPurchaseValidationSchema = allValidationSchema.pick([
+  'sendToWallet',
+  'recipientAccount',
+  'autoStake',
+  'autoStakeValidator',
+]);
 export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 
 export const step2ValidationSchema = allValidationSchema.pick([

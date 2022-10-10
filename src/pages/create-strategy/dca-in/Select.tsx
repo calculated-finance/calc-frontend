@@ -11,10 +11,19 @@ type SelectProps = {
   options: OptionType[];
   customComponents?: Partial<SelectComponent>;
   onChange: (value?: string) => void;
+  menuPortalTarget?: HTMLElement;
 } & Omit<ChakraSelectProps, 'onChange'>;
 
-export default function Select({ options, placeholder, onChange, value, customComponents }: SelectProps) {
+export default function Select({
+  options,
+  placeholder,
+  onChange,
+  value,
+  customComponents,
+  menuPortalTarget,
+}: SelectProps) {
   const selectProps = useChakraSelectProps({
+    menuPortalTarget,
     useBasicStyles: true,
     onChange: (option) => {
       onChange(option?.value);

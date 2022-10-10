@@ -25,7 +25,7 @@ export default function Stepper({ steps }: { steps: StepConfig[] }) {
 
           const cursor = past ? 'pointer' : 'default';
           return (
-            <Flex>
+            <Flex key={step.title}>
               <Tooltip label={step.title}>
                 <Box cursor={cursor} key={step.href} onClick={handleClick}>
                   <Flex

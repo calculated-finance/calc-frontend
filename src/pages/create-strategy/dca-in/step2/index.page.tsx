@@ -93,13 +93,19 @@ function DcaInStep2() {
                   <StartImmediately />
                   <Collapse in={values.startImmediately === StartImmediatelyValues.No}>
                     <Collapse animateOpacity in={values.triggerType === 'date'}>
-                      <StartDate />
-                      <Collapse in={values.advancedSettings}>
-                        <PurchaseTime />
-                      </Collapse>
+                      <Box m="px">
+                        <StartDate />
+                        <Collapse in={values.advancedSettings}>
+                          <Box m="px">
+                            <PurchaseTime />
+                          </Box>
+                        </Collapse>
+                      </Box>
                     </Collapse>
                     <Collapse animateOpacity in={values.triggerType === 'price'}>
-                      <StartPrice />
+                      <Box m="px">
+                        <StartPrice />
+                      </Box>
                     </Collapse>
                   </Collapse>
                 </Box>

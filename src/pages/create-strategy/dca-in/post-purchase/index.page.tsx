@@ -1,4 +1,4 @@
-import { Collapse, Stack } from '@chakra-ui/react';
+import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/types/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
@@ -14,6 +14,8 @@ import SendToWallet from './SendToWallet';
 import { AutoStake } from './AutoStake';
 import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from './SendToWalletValues';
+import AutoStakeValidator from './AutoStakeValidator';
+import AutoStakeValues from './AutoStakeValues';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase();
@@ -40,9 +42,16 @@ function Page() {
               <Stack direction="column" spacing={6}>
                 <SendToWallet />
                 <Collapse in={values.sendToWallet === SendToWalletValues.No}>
-                  <RecipientAccount />
+                  <Box m="px">
+                    <RecipientAccount />
+                  </Box>
                 </Collapse>
                 <AutoStake />
+                <Collapse in={values.autoStake === AutoStakeValues.Yes}>
+                  <Box m="px">
+                    <AutoStakeValidator />
+                  </Box>
+                </Collapse>
                 <Submit>Next</Submit>
               </Stack>
             </Form>
