@@ -1,6 +1,6 @@
 import { Denom } from '@hooks/usePairs';
-import { AutoStakeValues } from "src/pages/create-strategy/dca-in/post-purchase/AutoStakeValues";
-import { SendToWalletValues } from "src/pages/create-strategy/dca-in/post-purchase/SendToWalletValues";
+import AutoStakeValues from "src/pages/create-strategy/dca-in/post-purchase/AutoStakeValues";
+import SendToWalletValues from "src/pages/create-strategy/dca-in/post-purchase/SendToWalletValues";
 import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
 import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';

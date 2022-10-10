@@ -1,0 +1,45 @@
+import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
+import { useField } from 'formik';
+import RadioCard from '../step2/RadioCard';
+import Radio from '../step2/Radio';
+import SendToWalletValues from './SendToWalletValues';
+
+const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
+  {
+    value: SendToWalletValues.Yes,
+    label: 'Yes',
+  },
+  {
+    value: SendToWalletValues.No,
+    label: 'No',
+  },
+];
+
+export default function SendToWallet() {
+  const [field, , helpers] = useField({ name: 'sendToWallet' });
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    ...field,
+    value: field.value,
+    onChange: helpers.setValue,
+  });
+
+  return (
+    <FormControl>
+      <FormLabel>Send KUJI from CALC to my wallet after each swap?</FormLabel>
+      <FormHelperText>If you don&apos;t tick yes, you will need to claim them from the protocol. </FormHelperText>
+      <HStack>
+        <Radio {...getRootProps}>
+          {sendToWalletData.map((option) => {
+            const radio = getRadioProps({ value: option.value });
+            return (
+              <RadioCard key={option.label} {...radio}>
+                {option.label}
+              </RadioCard>
+            );
+          })}
+        </Radio>
+      </HStack>
+    </FormControl>
+  );
+}

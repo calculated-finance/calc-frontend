@@ -1,5 +1,5 @@
-
-export enum AutoStakeValues {
+enum AutoStakeValues {
   Yes = 'yes',
-  No = 'no'
+  No = 'no',
 }
+export default AutoStakeValues;

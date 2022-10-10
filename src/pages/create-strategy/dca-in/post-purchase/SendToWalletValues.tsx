@@ -1,5 +1,5 @@
-
-export enum SendToWalletValues {
+enum SendToWalletValues {
   Yes = 'yes',
-  No = 'no'
+  No = 'no',
 }
+export default SendToWalletValues;
