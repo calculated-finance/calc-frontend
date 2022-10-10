@@ -54,7 +54,7 @@ describe('Home', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
-          data: { vaults: [{ status: 'active' }] },
+          data: { vaults: [{ status: 'active' }, { status: 'inactive' }] },
         }));
       });
       it('show active strategies count', () => {

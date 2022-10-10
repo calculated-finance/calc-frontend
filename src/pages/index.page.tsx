@@ -11,7 +11,7 @@ function InfoPanel() {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
-          <Text as="span" color="blue.500">
+          <Text as="span" fontWeight="bold">
             Dollar-cost averaging
           </Text>{' '}
           is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great

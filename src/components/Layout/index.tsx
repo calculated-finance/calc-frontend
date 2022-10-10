@@ -114,7 +114,7 @@ function SidebarLayout({ children }: { children: ReactElement }) {
             <Spinner />
           </Flex>
         )}
-        <Content maxW="8xl" px={6} py={4}>
+        <Content maxW="8xl" px={6} pt={4} pb={8}>
           {children}
         </Content>
       </Box>

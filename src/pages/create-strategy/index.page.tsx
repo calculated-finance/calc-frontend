@@ -1,6 +1,7 @@
 import { Button, Flex, Heading, Link, Stack, Text, Image, Box, Badge, Spacer } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
+import NextLink from 'next/link';
 import {
   Code3Icon,
   DonateIcon,
@@ -10,7 +11,6 @@ import {
   PuzzleIcon,
 } from '@fusion-icons/react/interface';
 import { useWallet } from '@wizard-ui/react';
-import NextLink from 'next/link';
 import { SVGProps } from 'react';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
@@ -35,7 +35,7 @@ const accumulationStratgies: StrategyCardProps[] = [
   },
   {
     name: 'Advanced DCA+',
-    description: 'Invest into an asset with advanced DCA algorithms.',
+    description: 'Let our advanced DCA algorithms invest for you.',
     advanced: true,
     icon: Code3Icon,
   },
@@ -74,7 +74,7 @@ function InfoPanel(): JSX.Element {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text fontSize="sm">
-          <Text as="span" color="blue.500">
+          <Text as="span" fontWeight="bold">
             Dollar-cost averaging
           </Text>{' '}
           is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
@@ -93,7 +93,7 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
           <Icon stroke="brand.200" as={icon} width={8} height={8} />
           <Spacer />
           <Box>
-            <Badge size="xs" colorScheme="blue">
+            <Badge size="xs" colorScheme={advanced ? 'orange' : 'blue'}>
               {advanced ? 'Advanced Strategy' : 'Basic Strategy'}
             </Badge>
           </Box>
@@ -145,14 +145,17 @@ function Strategies() {
       <Box>
         <Heading mb={2} size="md">
           Accumulation strategies
+          <Badge ml={6} colorScheme="green">
+            According to the{' '}
+            <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+              <Text as="a" textDecoration="underline" target="_blank">
+                Fear &amp; Greed index score
+              </Text>
+            </NextLink>
+            {/* TODO: make this value based on the api */}: 22, it&apos;s a good time to use accumulation strategies
+          </Badge>
         </Heading>
-        <Text color="grey.200">
-          You want to build a position in an asset.{' '}
-          <Text as="span" color="green.200">
-            The current Fear and Greed Score of 34 (Fear) indicates it&apos;s likely a good time to employee these
-            strategies.
-          </Text>
-        </Text>
+        <Text color="grey.200">You want to build a position in an asset. </Text>
       </Box>
       <Flex gap={8} flexDirection="row" wrap="wrap">
         {accumulationStratgies.map((strategy) => (
@@ -171,6 +174,15 @@ function Strategies() {
           <StrategyCard key={strategy.name} {...strategy} />
         ))}
       </Flex>
+      <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
+        <Image src="/images/moneyBag.svg" />
+        <Flex alignItems="center">
+          <Text fontSize="sm" fontWeight="bold">
+            If you can learn anything from the Luna crash, it&apos;s don&apos;t marry your bags. Always be objective and
+            if you don&apos;t take your profits, then someone else will.
+          </Text>
+        </Flex>
+      </Stack>
     </Stack>
   );
 }
