@@ -11,7 +11,6 @@ import {
   GridItem,
   HStack,
   Stat,
-  StatHelpText,
   StatLabel,
   StatNumber,
   Divider,
@@ -90,7 +89,7 @@ function InvestmentThesis() {
               <Text>Asset(s) accumulating:</Text>
               <HStack>
                 {acculumatingAssets.length ? (
-                  acculumatingAssets.map((asset) => <DenomIcon key={asset} denomName={asset} />)
+                  acculumatingAssets.map((asset) => <DenomIcon showTooltip key={asset} denomName={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}
@@ -102,7 +101,7 @@ function InvestmentThesis() {
               <Text>Asset(s) taking profit on:</Text>
               <HStack spacing={6}>
                 {profitTakingAssets.length ? (
-                  profitTakingAssets.map((asset) => <DenomIcon denomName={asset} />)
+                  profitTakingAssets.map((asset) => <DenomIcon showTooltip denomName={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}

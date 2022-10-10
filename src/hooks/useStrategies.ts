@@ -23,8 +23,8 @@ export type Strategy = {
     execution_interval: string;
     pair: {
       address: string;
-      base_denom: string;
-      quote_denom: string;
+      base_denom: Denom;
+      quote_denom: Denom;
     };
     swap_amount: string;
     position_type: PositionType;
