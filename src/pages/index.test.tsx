@@ -1,13 +1,21 @@
 import { render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
-import useStrategies from '@hooks/useStrategies';
+import useStrategies, { Strategy } from '@hooks/useStrategies';
+import mockStrategyData from 'src/fixtures/strategy';
 import Home from './index.page';
 import '@testing-library/jest-dom';
 import { queryClient } from './_app.page';
 
 jest.mock('@hooks/useStrategies');
 jest.mock('@wizard-ui/react');
+
+function mockStrategy(data?: Partial<Strategy>) {
+  return {
+    ...mockStrategyData,
+    ...data,
+  };
+}
 
 function renderTarget() {
   render(
@@ -44,23 +52,51 @@ describe('Home', () => {
   });
   describe('when wallet is connected', () => {
     describe('when no active strategies exist', () => {
+      it('shows info panel', () => {
+        renderTarget();
+        expect(screen.getByText(/Dollar-cost averaging/)).toBeInTheDocument();
+      });
+      it('does not show warning panel', () => {
+        renderTarget();
+        expect(screen.queryByText(/Be Aware/)).toBeNull();
+      });
       it('show active strategies count', () => {
         renderTarget();
         expect(screen.getByText(/My Active CALC Strategies/)).toBeInTheDocument();
+        expect(screen.getByText(/Set up a strategy/)).toBeInTheDocument();
         expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('0');
+      });
+      it('does not show investment thesis', () => {
+        renderTarget();
+        expect(screen.queryByText(/My Investment Thesis/)).toBeNull();
       });
     });
     describe('when active strategies exist', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
-          data: { vaults: [{ status: 'active' }, { status: 'inactive' }] },
+          data: { vaults: [mockStrategy(), mockStrategy({ status: 'inactive' })] },
         }));
       });
       it('show active strategies count', () => {
         renderTarget();
         expect(screen.getByText(/My Active CALC Strategies/)).toBeInTheDocument();
         expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('1');
+        expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
+        expect(screen.getByText(/Review My Strategies/)).toBeInTheDocument();
+      });
+      it('does not show info panel', () => {
+        renderTarget();
+        expect(screen.queryByText(/Dollar-cost averaging/)).toBeNull();
+      });
+      it('shows warning panel', () => {
+        renderTarget();
+        expect(screen.getByText(/Be Aware/)).toBeInTheDocument();
+      });
+      it('shows investment thesis', () => {
+        renderTarget();
+        expect(screen.getByText(/My Investment Thesis/)).toBeInTheDocument();
+        expect(screen.queryAllByTestId('denom-icon-ukuji').length).toEqual(1);
       });
     });
   });

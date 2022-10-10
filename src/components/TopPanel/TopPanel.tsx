@@ -55,7 +55,7 @@ export default function TopPanel() {
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
 
   return (
-    <GridItem colSpan={{ base: 5 }}>
+    <GridItem colSpan={{ base: 5, lg: activeStrategies ? 3 : 5 }}>
       <Center
         borderWidth={2}
         borderColor={activeStrategies.length ? 'blue.200' : 'brand.200'}

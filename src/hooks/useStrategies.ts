@@ -28,7 +28,7 @@ export type Strategy = {
     };
     swap_amount: string;
     position_type: PositionType;
-    slippage_tolerance: number; // double check this type
+    slippage_tolerance: number | null; // double check this type
   };
 };
 
