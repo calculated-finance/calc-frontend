@@ -1,113 +1,92 @@
-import { Badge, Button, Divider, Heading, Icon, Stack, Wrap, WrapItem, Flex } from '@chakra-ui/react';
+import { ArrowLeftIcon } from '@chakra-ui/icons';
+import { Heading, Grid, GridItem, Box, Text, HStack, IconButton, Icon } from '@chakra-ui/react';
+import DenomIcon from '@components/DenomIcon';
+import { ArrowLeft2Icon, ArrowLeft3Icon, ArrowRight2Icon } from '@fusion-icons/react/interface';
+import { StrategyBalance } from '@hooks/useStrategies';
+import useStrategy from '@hooks/useStrategy';
+import getDenomInfo from '@utils/getDenomInfo';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { getSidebarLayout } from '../../../components/Layout';
 
-function Panel({ children }: { children: ReactNode }) {
-  return (
-    <WrapItem w="xs" layerStyle="panel" p={4}>
-      <Flex flexDirection="column" w="full">
-        <Stack spacing={4} w="full" alignItems="center">
-          {children}
-        </Stack>
-      </Flex>
-    </WrapItem>
-  );
-}
+function Page() {
+  const router = useRouter();
+  const { id } = router.query;
 
-function CreateStrategy() {
+  const { data, isLoading } = useStrategy(id as string);
+
+  console.log(data);
+
+  const { status, configuration, balances } = data?.vault || {};
+  const { position_type, execution_interval, swap_amount, pair } = configuration || {};
+  const { quote_denom, base_denom } = pair || {};
+
+  const currentAmount = balances
+    ?.map((balance: StrategyBalance) => Number(balance.amount))
+    .reduce((amount: number, total: number) => amount + total, 0);
+
   return (
     <>
-      <Stack direction="row" spacing={4} alignItems="center" pb={12}>
+      <HStack spacing={6} pb={6}>
         <Link href="/strategies">
-          <Icon cursor="pointer" as={FiArrowLeft} boxSize={8} />
+          <IconButton aria-label="back" variant="outline">
+            <Icon as={FiArrowLeft} stroke="brand.200" />
+          </IconButton>
         </Link>
-        <Heading>DCA In</Heading>
-      </Stack>
-      <Heading size="md" pb={6}>
-        Strategy details
-      </Heading>
-      <Wrap spacing={8} pb={8}>
-        <Panel>
-          <Heading size="md">Strategy status</Heading>
-          <Divider />
-          <Stack direction="row" spacing={4}>
-            <Badge colorScheme="green" p={2}>
-              Active
-            </Badge>
-            <Button variant="ghost" colorScheme="red">
-              Cancel
-            </Button>
-          </Stack>
-        </Panel>
-        <Panel>
-          <Heading size="md">Strategy status</Heading>
-          <Divider />
-          <Heading size="md">DCA In</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Strategy type</Heading>
-          <Divider />
-          <Heading size="md">DCA In</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Strategy start date</Heading>
-          <Divider />
-          <Heading size="md">Sept 22 2022</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Strategy end date</Heading>
-          <Divider />
-          <Heading size="md">Dec 22 2022</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Current amount in vault</Heading>
-          <Divider />
-          <Heading size="md">200 USK</Heading>
-        </Panel>
-      </Wrap>
-      <Heading size="md" pb={6}>
-        Strategy performance
-      </Heading>
-      <Wrap spacing={8}>
-        <Panel>
-          <Heading size="md">Asset</Heading>
-          <Divider />
-          <Stack direction="row" spacing={4}>
-            KUJI
-          </Stack>
-        </Panel>
-        <Panel>
-          <Heading size="md">Market value of holdings</Heading>
-          <Divider />
-          <Heading size="md">$7246.42</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Total accumulated</Heading>
-          <Divider />
-          <Heading size="md">3,920.1 KUJI</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Net asset cost</Heading>
-          <Divider />
-          <Heading size="md">$1,746.42</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">Profit/Loss</Heading>
-          <Divider />
-          <Heading size="md">$2,212.07</Heading>
-        </Panel>
-        <Panel>
-          <Heading size="md">% Change</Heading>
-          <Divider />
-          <Heading size="md">515.21%</Heading>
-        </Panel>
-      </Wrap>
+        <Heading>DCA In {id}</Heading>
+      </HStack>
+      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr">
+        <GridItem colSpan={3}>
+          <Heading pb={4} size="md">
+            Strategy details
+          </Heading>
+          <Box p={4} layerStyle="panel" h={328}>
+            <Heading size="sm">Strategy status</Heading>
+            <Heading size="sm">{status}</Heading>
+            <Heading size="sm">Strategy name</Heading>
+            <Heading size="sm">DCA In {id}</Heading>
+            <Heading size="sm">Strategy type</Heading>
+            <Heading size="sm">{position_type}</Heading>
+            <Heading size="sm">Strategy start date</Heading>
+            <Heading size="sm">-</Heading>
+
+            <Heading size="sm">Strategy end date</Heading>
+            <Heading size="sm">-</Heading>
+            <Heading size="sm">Investment cycle</Heading>
+            <Heading size="sm">{execution_interval || '-'}</Heading>
+            <Heading size="sm">Purchase each cycle</Heading>
+            <Heading size="sm">{swap_amount || '-'}</Heading>
+            <Heading size="sm">Current amount in vault</Heading>
+            <Heading size="sm">
+              {currentAmount} {getDenomInfo(quote_denom).name}
+            </Heading>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={3}>
+          <Heading pb={4} size="md">
+            Strategy performance
+          </Heading>
+          <Box p={4} layerStyle="panel" h={328}>
+            <Heading size="sm">Asset</Heading>
+            <Text>
+              <Text>{getDenomInfo(base_denom).name}</Text>
+              <DenomIcon denomName={base_denom!} />
+            </Text>
+          </Box>
+        </GridItem>
+        <GridItem colSpan={6}>
+          <Box p={4} layerStyle="panel" h={328}>
+            <Heading pb={4} size="md">
+              Portfolio accumulated with this strategy
+            </Heading>
+          </Box>
+        </GridItem>
+      </Grid>
     </>
   );
 }
 
-CreateStrategy.getLayout = getSidebarLayout;
+Page.getLayout = getSidebarLayout;
 
-export default CreateStrategy;
+export default Page;

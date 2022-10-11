@@ -20,6 +20,7 @@
     "react/no-children-prop": "off",
     "no-restricted-exports": "off",
     "no-nested-ternary": "off",
+    "@typescript-eslint/naming-convention": "off",
     "max-len": [
       "warn",
       {

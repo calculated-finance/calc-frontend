@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
 import handleContractQueryError from './handleContractQueryError';
 
-type StrategyBalance = {
+export type StrategyBalance = {
   amount: string;
   denom: Denom;
 };

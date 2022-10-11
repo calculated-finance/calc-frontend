@@ -16,6 +16,7 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 import { Strategy } from '@hooks/useStrategies';
+import getDenomInfo from '@utils/getDenomInfo';
 import React from 'react';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 
@@ -62,7 +63,7 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: Cance
             <Spacer />
             <Text as="span" color="blue.200">
               {/* TODO: what happens for multiple denoms? */}
-              {strategy.balances[0].amount} {strategy.balances[0].denom}
+              {strategy.balances[0].amount} {getDenomInfo(strategy.balances[0].denom).name}
             </Text>
           </Flex>
         </ModalBody>

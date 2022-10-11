@@ -106,9 +106,7 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
           <NextLink href={href ?? '/'}>
-            <Button as="a" mb={2} href={href}>
-              Get started
-            </Button>
+            <Button mb={2}>Get started</Button>
           </NextLink>
         ) : (
           <Button mb={2} cursor="unset" color="navy" colorScheme="grey">

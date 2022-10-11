@@ -10,8 +10,10 @@ function Page() {
   const { data, isLoading } = useStrategies();
   const { connected, connecting } = useWallet();
 
-  const activeStrategies = data?.vaults.filter((strategy) => strategy.status === 'active') ?? [];
-  const completedStrategies = data?.vaults.filter((strategy) => strategy.status === 'inactive') ?? [];
+  const activeStrategies =
+    data?.vaults.filter((strategy) => strategy.status === 'active').sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies =
+    data?.vaults.filter((strategy) => strategy.status === 'inactive').sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <>
