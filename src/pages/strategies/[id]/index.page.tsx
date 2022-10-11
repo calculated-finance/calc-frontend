@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from '@chakra-ui/icons';
-import { Heading, Grid, GridItem, Box, Text, HStack, IconButton, Icon } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, HStack, IconButton, Icon, Divider } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { ArrowLeft2Icon, ArrowLeft3Icon, ArrowRight2Icon } from '@fusion-icons/react/interface';
 import { StrategyBalance } from '@hooks/useStrategies';
@@ -42,31 +42,69 @@ function Page() {
             Strategy details
           </Heading>
           <Box p={4} layerStyle="panel" h={328}>
-            <Heading size="sm">Strategy status</Heading>
-            <Heading size="sm">{status}</Heading>
-            <Heading size="sm">Strategy name</Heading>
-            <Heading size="sm">DCA In {id}</Heading>
-            <Heading size="sm">Strategy type</Heading>
-            <Heading size="sm">{position_type}</Heading>
-            <Heading size="sm">Strategy start date</Heading>
-            <Heading size="sm">-</Heading>
-
-            <Heading size="sm">Strategy end date</Heading>
-            <Heading size="sm">-</Heading>
-            <Heading size="sm">Investment cycle</Heading>
-            <Heading size="sm">{execution_interval || '-'}</Heading>
-            <Heading size="sm">Purchase each cycle</Heading>
-            <Heading size="sm">{swap_amount || '-'}</Heading>
-            <Heading size="sm">Current amount in vault</Heading>
-            <Heading size="sm">
-              {currentAmount} {getDenomInfo(quote_denom).name}
-            </Heading>
+            <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Strategy status</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">{status}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Strategy name</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">DCA In {id}</Text>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Divider />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Strategy type</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">{position_type}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Strategy start date</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Strategy end date</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Investment cycle</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">{execution_interval || '-'}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Purchase each cycle</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">{swap_amount || '-'}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="sm">Current amount in vault</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text size="sm">
+                  {currentAmount} {getDenomInfo(quote_denom).name}
+                </Text>
+              </GridItem>
+            </Grid>
           </Box>
         </GridItem>
         <GridItem colSpan={3}>
-          <Heading pb={4} size="md">
-            Strategy performance
-          </Heading>
+          <GridItem>
+            <Heading pb={4} size="md">
+              Strategy performance
+            </Heading>
+          </GridItem>
           <Box p={4} layerStyle="panel" h={328}>
             <Heading size="sm">Asset</Heading>
             <Text>
