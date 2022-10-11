@@ -5,6 +5,7 @@ import { Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
 import CancelStrategyModal from './CancelStrategyModal';
+import DenomIcon from './DenomIcon';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -12,6 +13,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
   return (
     <>
       <Button
+        size="xs"
         variant="ghost"
         colorScheme="red"
         width={{ base: 'full', lg: 'initial' }}
@@ -42,8 +44,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Asset(s):</Text>
-        {/* <Image w={5} src="/images/kujira.svg" /> */}
-        <Text textStyle="body-xs">{strategy.configuration.pair.base_denom}</Text>
+        <DenomIcon denomName={strategy.configuration.pair.base_denom} />
       </GridItem>
 
       <GridItem colSpan={{ base: 4, lg: 2 }}>

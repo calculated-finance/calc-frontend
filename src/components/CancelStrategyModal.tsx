@@ -14,6 +14,7 @@ import {
   Spacer,
   useToast,
   ModalProps,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import { Strategy } from '@hooks/useStrategies';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -63,17 +64,20 @@ export default function CancelStrategyModal({ isOpen, onClose, strategy }: Cance
             <Spacer />
             <Text as="span" color="blue.200">
               {/* TODO: what happens for multiple denoms? */}
-              {strategy.balances[0].amount} {getDenomInfo(strategy.balances[0].denom).name}
+              {getDenomInfo(strategy.balances[0].denom).conversion(Number(strategy.balances[0].amount))}{' '}
+              {getDenomInfo(strategy.balances[0].denom).name}
             </Text>
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button colorScheme="red" onClick={handleCancelStrategy} isLoading={isLoading}>
-            Cancel Strategy
-          </Button>
+          <ButtonGroup>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme="red" onClick={handleCancelStrategy} isLoading={isLoading}>
+              Cancel Strategy
+            </Button>
+          </ButtonGroup>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Link, Stack, Text, Image, Box, Badge, Spacer, HStack } from '@chakra-ui/react';
+import { Button, Flex, Heading, Link, Stack, Text, Image, Box, Badge, Spacer, HStack, Wrap } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
@@ -141,9 +141,9 @@ function Strategies() {
   return (
     <Stack direction="column" spacing={8}>
       <Box>
-        <Flex flexDirection="row" mb={2} gap={2} justifyContent="start" alignItems="center">
+        <Wrap spacing={2} pb={1} shouldWrapChildren>
           <Heading size="md">Accumulation strategies</Heading>
-          <Badge h="fit-content" colorScheme="green" whiteSpace="normal" textAlign="center">
+          <Badge colorScheme="green" whiteSpace="normal" textAlign="center">
             According to the{' '}
             <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
               <Text as="a" textDecoration="underline" target="_blank">
@@ -152,7 +152,7 @@ function Strategies() {
             </NextLink>
             {/* TODO: make this value based on the api */}: 22, it&apos;s a good time to use accumulation strategies
           </Badge>
-        </Flex>
+        </Wrap>
         <Text color="grey.200">You want to build a position in an asset. </Text>
       </Box>
       <Flex gap={8} flexDirection="row" wrap="wrap">
