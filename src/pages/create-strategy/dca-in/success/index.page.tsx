@@ -7,8 +7,9 @@ import { useRouter } from 'next/router';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
-  const router = useRouter();
-  const timeSaved = router.query.time_saved;
+  const { query } = useRouter();
+  console.log(query);
+  const timeSaved = query.time_saved;
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
