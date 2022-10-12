@@ -98,7 +98,6 @@ export const allValidationSchema = Yup.object({
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
     }),
   sendToWallet: Yup.mixed<SendToWalletValues>().oneOf(Object.values(SendToWalletValues)).required(),
   recipientAccount: Yup.string()

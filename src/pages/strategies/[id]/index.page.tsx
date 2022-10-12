@@ -48,7 +48,6 @@ export function CancelButton({ strategy }: { strategy: Strategy }) {
         size="xs"
         variant="ghost"
         colorScheme="red"
-        width={{ base: 'full', lg: 'initial' }}
         leftIcon={<CalcIcon as={CloseBoxedIcon} stroke="red.200" width={4} height={4} />}
         onClick={onOpen}
       >
@@ -172,7 +171,6 @@ function Page() {
                       size="xs"
                       variant="ghost"
                       colorScheme="brand"
-                      width={{ base: 'full', lg: 'initial' }}
                       leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
                     >
                       Add more funds

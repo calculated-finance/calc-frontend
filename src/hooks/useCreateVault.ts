@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import totalExecutions from 'src/utils/totalExecutions';
 
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
@@ -32,6 +31,7 @@ const useCreateVault = () => {
       slippageTolerance,
       triggerType,
       startPrice,
+      advancedSettings,
     } = state;
 
     // throw error if pair not found
@@ -67,10 +67,9 @@ const useCreateVault = () => {
         pair_address: pairAddress,
         position_type: 'enter',
         swap_amount: deconversion(swapAmount).toString(),
-        // total_executions: totalExecutions(initialDeposit, swapAmount),
         target_start_time_utc_seconds: startTimeSeconds,
         target_price: startPrice?.toString() || undefined,
-        // slippage_tolerance: slippageTolerance,
+        slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
       },
     };
 
