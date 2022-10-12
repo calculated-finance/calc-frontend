@@ -7,6 +7,8 @@ export default function useSteps(steps: StepConfig[]) {
   const currentStepIndex = steps.findIndex((step) => step.href === router.pathname);
   const currentStep = steps[currentStepIndex];
 
+  console.log(router.pathname);
+
   const nextStep = (query?: UrlObject['query']) => {
     if (currentStepIndex < steps.length - 1) {
       router.push({ pathname: steps[currentStepIndex + 1].href, query });

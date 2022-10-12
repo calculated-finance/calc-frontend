@@ -80,6 +80,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
           children
         ) : (
           <NewStrategyModal>
+            {/* TODO: we should do something around the way the stepper works here */}
             <NewStrategyModalHeader> Connect to a wallet </NewStrategyModalHeader>
             <NewStrategyModalBody>
               <ConnectWallet h={56} />

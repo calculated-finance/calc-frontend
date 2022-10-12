@@ -1,4 +1,4 @@
-import { Badge, Button, Grid, GridItem, Heading, Text, Flex, useDisclosure } from '@chakra-ui/react';
+import { Badge, Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
@@ -70,13 +70,20 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 1 }} rowStart={{ sm: 1, lg: 'auto' }}>
         <Flex justifyContent="end" alignItems="center" h="full">
-          <CancelButton strategy={strategy} />
+          <ButtonGroup>
+            <CancelButton strategy={strategy} />
+            <Link href={`/strategies/${strategy.id}/top-up`}>
+              <Button size="xs" variant="outline">
+                Top up
+              </Button>
+            </Link>
+          </ButtonGroup>
         </Flex>
       </GridItem>
       <GridItem colSpan={{ base: 15, lg: 3 }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <Link href={`/strategies/${strategy.id}`}>
-            <Button width={{ base: 'full', lg: 'initial' }}>View Performance</Button>
+            <Button width={{ base: 'full', lg: 'initial' }}>View performance</Button>
           </Link>
         </Flex>
       </GridItem>

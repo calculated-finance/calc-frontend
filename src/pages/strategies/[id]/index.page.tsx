@@ -72,6 +72,7 @@ function Page() {
 
   const strategyType = position_type === 'enter' ? 'DCA In' : 'DCA Out';
 
+  // TODO, make this a find
   const currentAmount = balances
     ?.map((balance: StrategyBalance) => Number(balance.amount))
     .reduce((amount: number, total: number) => amount + total, 0);
@@ -167,14 +168,16 @@ function Page() {
                 </GridItem>
                 <GridItem>
                   <Flex justify="end">
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="brand"
-                      leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                    >
-                      Add more funds
-                    </Button>
+                    <Link href={`${id}/top-up`}>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        colorScheme="brand"
+                        leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                      >
+                        Add more funds
+                      </Button>
+                    </Link>
                   </Flex>
                 </GridItem>
               </Grid>

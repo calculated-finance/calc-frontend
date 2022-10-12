@@ -18,7 +18,7 @@ import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
 import Stepper from './Stepper';
-import steps from './steps';
+import steps, { StepConfig } from './steps';
 
 // Actual Modal version
 
@@ -71,9 +71,12 @@ export function NewStrategyModalHeader({
   resetForm,
   children,
   finalStep = true,
-}: { resetForm?: () => void; finalStep?: boolean } & ChildrenProp) {
+  stepsConfig = steps,
+}: { resetForm?: () => void; finalStep?: boolean; stepsConfig?: StepConfig[] } & ChildrenProp) {
   const router = useRouter();
-  const { currentStep, hasPreviousStep, previousStep } = useSteps(steps);
+  const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
+
+  console.log(stepsConfig);
 
   const handleCancel = async () => {
     await router.push('/create-strategy');
@@ -94,10 +97,10 @@ export function NewStrategyModalHeader({
           />
         )}
 
-        <Heading size="sm">{currentStep.title}</Heading>
+        <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />
-      <Stepper steps={steps} />
+      <Stepper steps={stepsConfig} />
       {finalStep && (
         <Box position="relative">
           <Button
