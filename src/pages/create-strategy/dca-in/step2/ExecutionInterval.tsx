@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { ExecutionIntervals } from './ExecutionIntervals';
-import Radio from './Radio';
-import RadioCard from './RadioCard';
+import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
+import Radio from '../../../../components/Radio';
+import RadioCard from '../../../../components/RadioCard';
 
 const executionIntervalData: { value: ExecutionIntervals; label: string }[] = [
   {

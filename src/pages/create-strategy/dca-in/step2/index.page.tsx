@@ -1,37 +1,25 @@
-import { Box, Stack, Collapse, Center, Button, Flex, Switch, Text } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
-import { Form, Formik, useField } from 'formik';
+import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
-import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../types/DcaInFormData';
+import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
 import StartImmediately from './StartImmediately';
-import { StartImmediatelyValues } from './StartImmediatelyValues';
+import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import SwapAmount from './SwapAmount';
 import DcaInDiagram from '../confirm-purchase/DcaInDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
-
-function AdvancedSettingsSwitch() {
-  const [field] = useField('advancedSettings');
-
-  return (
-    <Flex justify="end">
-      <Text mr={2} textStyle="body-xs">
-        Advanced Settings
-      </Text>
-      <Switch size="sm" colorScheme="brand" isChecked={field.value} onChange={field.onChange} name={field.name} />
-    </Flex>
-  );
-}
+import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
 
 function DcaInStep2() {
   const router = useRouter();
@@ -112,7 +100,9 @@ function DcaInStep2() {
                 <ExecutionInterval />
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
-                  <SlippageTolerance />
+                  <Box m="px">
+                    <SlippageTolerance />
+                  </Box>
                 </Collapse>
                 <Submit>Next</Submit>
               </Stack>

@@ -1,4 +1,4 @@
-import { ExecutionIntervals } from '../step2/ExecutionIntervals';
+import { ExecutionIntervals } from '../models/ExecutionIntervals';
 
 export default {
   [ExecutionIntervals.Hourly]: ['hour', 'hours'],

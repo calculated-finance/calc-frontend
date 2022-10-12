@@ -5,7 +5,7 @@ import {
   postPurchaseValidationSchema,
   step1ValidationSchema,
   step2ValidationSchema,
-} from '../types/DcaInFormData';
+} from '../models/DcaInFormData';
 
 function updateAction(state: any, payload: any) {
   return {

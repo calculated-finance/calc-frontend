@@ -1,10 +1,10 @@
 import { Denom } from '@hooks/usePairs';
 import getDenomInfo from '@utils/getDenomInfo';
-import AutoStakeValues from 'src/pages/create-strategy/dca-in/post-purchase/AutoStakeValues';
-import SendToWalletValues from 'src/pages/create-strategy/dca-in/post-purchase/SendToWalletValues';
-import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
-import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
-import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
+import AutoStakeValues from 'src/models/AutoStakeValues';
+import SendToWalletValues from 'src/models/SendToWalletValues';
+import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
+import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
+import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
 
 export const initialValues = {

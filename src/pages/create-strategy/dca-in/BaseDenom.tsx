@@ -1,10 +1,9 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
-import { DcaInFormDataStep1 } from 'src/types/DcaInFormData';
+import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
-import getDenomInfo from '@utils/getDenomInfo';
-import Select from './Select';
+import Select from '../../../components/Select';
 import { DenomSelectLabel } from './QuoteDenom';
 
 const customComponents = {

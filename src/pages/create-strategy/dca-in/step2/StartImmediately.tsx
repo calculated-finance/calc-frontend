@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, useRadioGroup, HStack } from '@chakra-ui/react';
 import { useField } from 'formik';
-import Radio from './Radio';
-import { StartImmediatelyValues } from './StartImmediatelyValues';
-import RadioCard from './RadioCard';
+import Radio from '../../../../components/Radio';
+import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
+import RadioCard from '../../../../components/RadioCard';
 import TriggerType from './TriggerType';
 
 const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = [

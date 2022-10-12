@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import RadioCard from '../step2/RadioCard';
-import Radio from '../step2/Radio';
-import SendToWalletValues from './SendToWalletValues';
+import RadioCard from '../../../../components/RadioCard';
+import Radio from '../../../../components/Radio';
+import SendToWalletValues from '../../../../models/SendToWalletValues';
 
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   {

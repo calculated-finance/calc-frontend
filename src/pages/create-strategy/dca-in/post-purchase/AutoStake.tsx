@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import RadioCard from '../step2/RadioCard';
-import Radio from '../step2/Radio';
-import AutoStakeValues from './AutoStakeValues';
+import RadioCard from '../../../../components/RadioCard';
+import Radio from '../../../../components/Radio';
+import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   {

@@ -1,6 +1,6 @@
 import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/types/DcaInFormData';
+import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
@@ -13,9 +13,9 @@ import steps from '@components/NewStrategyModal/steps';
 import SendToWallet from './SendToWallet';
 import { AutoStake } from './AutoStake';
 import RecipientAccount from './RecipientAccount';
-import SendToWalletValues from './SendToWalletValues';
+import SendToWalletValues from '../../../../models/SendToWalletValues';
 import AutoStakeValidator from './AutoStakeValidator';
-import AutoStakeValues from './AutoStakeValues';
+import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase();

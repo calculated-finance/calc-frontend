@@ -7,8 +7,6 @@ import {
   Text,
   Button,
   Center,
-  Input,
-  InputProps,
   InputGroup,
   InputLeftElement,
   InputRightElement,
@@ -18,19 +16,7 @@ import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
-
-type NumberInputProps = {
-  onChange: (value: number | null) => void;
-} & Omit<InputProps, 'onChange'>;
-
-function NumberInput({ value, onChange, ...props }: NumberInputProps) {
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const numberValue = e.currentTarget.value;
-    onChange(numberValue === '' ? null : Number(numberValue));
-  };
-
-  return <Input type="number" onChange={handleChange} value={value === null ? undefined : value} {...props} />;
-}
+import NumberInput from '../../../../../components/NumberInput';
 
 function AvailableFunds({ quoteDenom }: { quoteDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({

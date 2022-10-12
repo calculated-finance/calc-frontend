@@ -1,7 +1,6 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { useRouter } from 'next/router';
-import { DcaInFormDataStep1, step1ValidationSchema } from 'src/types/DcaInFormData';
+import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';

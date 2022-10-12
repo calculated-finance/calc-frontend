@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  Input,
   InputGroup,
   InputLeftElement,
   Spacer,
@@ -16,9 +15,10 @@ import {
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '../../../../types/DcaInFormData';
-import executionIntervalDisplay from "../confirm-purchase/executionIntervalDisplay";
-import { ExecutionIntervals } from './ExecutionIntervals';
+import NumberInput from '@components/NumberInput';
+import { DcaInFormDataStep1 } from '../../../../models/DcaInFormData';
+import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
+import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
   const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
@@ -27,11 +27,6 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
   const { icon: quoteDenomIcon, name: quoteDenomName } = getDenomInfo(step1State.quoteDenom);
   const { name: baseDenomName } = getDenomInfo(step1State.baseDenom);
   const { initialDeposit } = step1State;
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const numberValue = e.currentTarget.value;
-    helpers.setValue(numberValue === '' ? null : numberValue);
-  };
 
   const handleClick = () => {
     helpers.setValue(initialDeposit);
@@ -60,19 +55,13 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
         <InputLeftElement>
           <Image src={quoteDenomIcon} />
         </InputLeftElement>
-        <Input
-          type="number"
-          onChange={handleChange}
-          placeholder="Enter amount"
-          value={value === null ? undefined : value}
-          {...field}
-        />
+        <NumberInput pl={10} onChange={helpers.setValue} placeholder="Enter amount" value={value} {...field} />
         <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
           <Text>{quoteDenomName}</Text>
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {value && !meta.error && (
+      {Boolean(value) && !meta.error && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>

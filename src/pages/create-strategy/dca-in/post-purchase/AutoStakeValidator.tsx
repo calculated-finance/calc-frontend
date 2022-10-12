@@ -11,7 +11,7 @@ import {
 import { useField } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
 import { useQuery } from '@tanstack/react-query';
-import Select from '../Select';
+import Select from '../../../../components/Select';
 
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });

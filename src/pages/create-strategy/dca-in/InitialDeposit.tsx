@@ -1,34 +1,18 @@
-import { FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
-import { DcaInFormDataStep1 } from 'src/types/DcaInFormData';
+import { FormControl, FormErrorMessage } from '@chakra-ui/react';
+import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
-import useBalance from '@hooks/useBalance';
+import NumberInput from '@components/NumberInput';
 
 export default function InitialDeposit() {
   const {
     values: { quoteDenom },
   } = useFormikContext<DcaInFormDataStep1>();
 
-  const { displayAmount } = useBalance({
-    token: quoteDenom,
-  });
-
-  const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
-
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const numberValue = e.currentTarget.value;
-    helpers.setValue(numberValue === '' ? null : numberValue);
-  };
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!quoteDenom}>
-      <Input
-        type="number"
-        onChange={handleChange}
-        textAlign="right"
-        placeholder="Choose amount"
-        value={value === null ? undefined : value}
-        {...field}
-      />
+      <NumberInput onChange={helpers.setValue} textAlign="right" placeholder="Choose amount" {...field} />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

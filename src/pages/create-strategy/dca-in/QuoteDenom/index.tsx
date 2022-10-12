@@ -17,7 +17,7 @@ import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import InitialDeposit from '../InitialDeposit';
-import Select from '../Select';
+import Select from '../../../../components/Select';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (

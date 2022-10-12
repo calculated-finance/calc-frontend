@@ -5,7 +5,7 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
-import TriggerTypes from 'src/pages/create-strategy/dca-in/step2/TriggerTypes';
+import TriggerTypes from 'src/models/TriggerTypes';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 

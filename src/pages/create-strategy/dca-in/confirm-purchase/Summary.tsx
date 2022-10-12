@@ -4,12 +4,12 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
-import { StartImmediatelyValues } from '../step2/StartImmediatelyValues';
+import BadgeButton from '@components/BadgeButton';
+import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaInDiagram from './DcaInDiagram';
-import executionIntervalDisplay from './executionIntervalDisplay';
-import BadgeButton from './BadgeButton';
-import TriggerTypes from '../step2/TriggerTypes';
-import AutoStakeValues from '../post-purchase/AutoStakeValues';
+import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
+import TriggerTypes from '../../../../models/TriggerTypes';
+import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 export default function Summary() {
   const { state } = useConfirmForm();
