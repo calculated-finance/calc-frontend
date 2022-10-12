@@ -12,14 +12,7 @@ export default function InitialDeposit() {
     token: quoteDenom,
   });
 
-  const validate = (value: number) => {
-    if (value > displayAmount) {
-      return `Insufficient funds.`;
-    }
-    return undefined;
-  };
-
-  const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'initialDeposit', validate });
+  const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const numberValue = e.currentTarget.value;

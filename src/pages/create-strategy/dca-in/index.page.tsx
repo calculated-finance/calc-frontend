@@ -11,17 +11,20 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
+import useBalances from '@hooks/useBalances';
 import BaseDenom from './BaseDenom';
 import QuoteDenom from './QuoteDenom';
 
 function DcaIn() {
-  const router = useRouter();
   const { actions, state } = useDcaInForm();
   const { isLoading } = usePairs();
   const { nextStep } = useSteps(steps);
 
+  const { data } = useBalances();
+
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step1ValidationSchema);
+
+  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

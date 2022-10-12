@@ -1,4 +1,5 @@
 import { Denom } from '@hooks/usePairs';
+import getDenomInfo from '@utils/getDenomInfo';
 import AutoStakeValues from 'src/pages/create-strategy/dca-in/post-purchase/AutoStakeValues';
 import SendToWalletValues from 'src/pages/create-strategy/dca-in/post-purchase/SendToWalletValues';
 import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
@@ -27,7 +28,26 @@ export const initialValues = {
 export const allValidationSchema = Yup.object({
   baseDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Base Denom').required(),
   quoteDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Quote Denom').required(),
-  initialDeposit: Yup.number().label('Initial Deposit').positive().required().nullable(),
+  initialDeposit: Yup.number()
+    .label('Initial Deposit')
+    .positive()
+    .required()
+    .nullable()
+    .test({
+      name: 'less-than-deposit',
+      message: ({ label }) => `${label} must be less than or equal to than your current balance`,
+      test(value, context) {
+        const { balances } = context?.options?.context || {};
+        if (!balances) {
+          return true;
+        }
+        const amount = balances.find((balance: any) => balance.denom === context.parent.quoteDenom)?.amount;
+        if (!amount || !value) {
+          return false;
+        }
+        return value <= getDenomInfo(context.parent.quoteDenom).conversion(Number(amount));
+      },
+    }),
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
   triggerType: Yup.mixed<TriggerTypes>()

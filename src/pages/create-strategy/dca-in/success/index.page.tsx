@@ -18,18 +18,16 @@ function Success() {
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />
           <Text>CALC is now working for you!</Text>
-          {Boolean(timeSaved) && (
-            <>
-              <Divider />
-              <Text textAlign="center">
-                Plus, you have saved yourself an average of
-                <Heading p={2} size="md">
-                  {timeSaved} minutes
-                </Heading>
-                and removed the emotions from your trades! 💪
-              </Text>
-            </>
-          )}
+          <>
+            <Divider />
+            <Text textAlign="center">
+              Plus, you have saved yourself an average of
+              <Heading p={2} size="md">
+                {timeSaved || '20'} minutes
+              </Heading>
+              and removed the emotions from your trades! 💪
+            </Text>
+          </>
           <Link passHref href="/strategies">
             <Button as="a" isLoading={isPageLoading}>
               View my strategies

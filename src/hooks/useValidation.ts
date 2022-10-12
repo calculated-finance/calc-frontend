@@ -9,6 +9,7 @@ const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
         context,
       });
     } catch (error: any) {
+      console.log(error);
       if (error.name !== 'ValidationError') {
         throw error;
       }
@@ -16,6 +17,7 @@ const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
       return error.inner.reduce((errors: Yup.ValidationError[], currentError: Yup.ValidationError) => {
         // eslint-disable-next-line no-param-reassign
         errors = set(errors, currentError.path as string, currentError.message);
+        console.log(errors);
         return errors;
       }, {});
     }
