@@ -13,7 +13,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 import * as Yup from 'yup';
-// import useTopUpStrategy from '@hooks/useTopUpStrategy';
+import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import TopUpAmount from './TopUpAmount';
 
@@ -53,8 +53,7 @@ function Page() {
   const { nextStep } = useSteps(topUpSteps);
   const { query } = useRouter();
   const { data, isLoading } = useStrategy(query?.id as string);
-  // const { mutate, error, isError } = undefined; // useTopUpStrategy();
-  const isError = false;
+  const { mutate, error, isError } = useTopUpStrategy();
 
   const { quote_denom, base_denom } = data?.vault.configuration.pair || {};
 
@@ -75,15 +74,18 @@ function Page() {
   const onSubmit = (
     values: Yup.InferType<typeof validationSchema>,
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
-  ) => nextStep();
-  // mutate([values, quote_denom, query.id], {
-  //   onSuccess: async () => {
-  //     await nextStep();
-  //   },
-  //   onSettled: () => {
-  //     setSubmitting(false);
-  //   },
-  // });
+  ) =>
+    mutate(
+      { values, quoteDenom: quote_denom, id: query.id },
+      {
+        onSuccess: async () => {
+          await nextStep();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
+      },
+    );
 
   const initialValues = {
     topUpAmount: '',
@@ -110,7 +112,7 @@ function Page() {
                 <TopUpAmount quoteDenom={quote_denom!} />
                 <FormControl isInvalid={isError}>
                   <Submit>Confirm</Submit>
-                  {/* <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage> */}
+                  <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>
                 </FormControl>
               </Stack>
             </Form>
