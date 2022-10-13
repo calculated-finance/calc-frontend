@@ -8,8 +8,9 @@ import getDenomInfo from '@utils/getDenomInfo';
 import TriggerTypes from 'src/models/TriggerTypes';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
+import { PositionType } from './useStrategies';
 
-const useCreateVault = () => {
+const useCreateVault = (positionType: PositionType) => {
   const { address: senderAddress, client } = useWallet();
   const { data } = usePairs();
 
@@ -38,9 +39,10 @@ const useCreateVault = () => {
     // TODO: note that we need to make sure pairAddress has been set by the time mutate is called
     // (usePair might not have fetched yet)
 
-    const pairAddress = data?.pairs?.find(
-      (pair: Pair) => pair.base_denom === baseDenom && pair.quote_denom === quoteDenom,
-    )?.address;
+    const pairAddress =
+      positionType === 'enter'
+        ? data?.pairs?.find((pair: Pair) => pair.base_denom === baseDenom && pair.quote_denom === quoteDenom)?.address
+        : data?.pairs?.find((pair: Pair) => pair.base_denom === quoteDenom && pair.quote_denom === baseDenom)?.address;
 
     const { deconversion } = getDenomInfo(quoteDenom);
 
@@ -65,7 +67,7 @@ const useCreateVault = () => {
       [contractEndpoint]: {
         time_interval: executionInterval,
         pair_address: pairAddress,
-        position_type: 'enter',
+        position_type: positionType,
         swap_amount: deconversion(swapAmount).toString(),
         target_start_time_utc_seconds: startTimeSeconds,
         target_price: startPrice?.toString() || undefined,
@@ -73,7 +75,9 @@ const useCreateVault = () => {
       },
     };
 
-    const funds = [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }];
+    const funds = true
+      ? [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }]
+      : [{ denom: baseDenom, amount: deconversion(initialDeposit).toString() }];
 
     if (!pairAddress || !client) {
       throw Error('Invalid form data');

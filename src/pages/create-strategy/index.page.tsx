@@ -45,11 +45,6 @@ const accumulationStratgies: StrategyCardProps[] = [
     advanced: true,
     icon: Graph1Icon,
   },
-  {
-    name: 'Auto Rebalance',
-    description: 'Automatically rebalance your portfolio after price movements.',
-    icon: PuzzleIcon,
-  },
 ];
 
 const takeProfitStrategies: StrategyCardProps[] = [
@@ -58,6 +53,7 @@ const takeProfitStrategies: StrategyCardProps[] = [
     description: 'Dollar-cost Average out of an asset with ease.',
     icon: Fullscreen1Icon,
     enabled: true,
+    href: StrategyUrls.DCAOut,
   },
   {
     name: 'Auto-take profit',

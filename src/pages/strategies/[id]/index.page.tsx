@@ -25,13 +25,26 @@ import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { Strategy, StrategyBalance } from '@hooks/useStrategies';
+import { PositionType, Strategy, StrategyBalance } from '@hooks/useStrategies';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
+import { Pair } from '@hooks/usePairs';
 import { getSidebarLayout } from '../../../components/Layout';
+
+export function getStrategyType(position_type: string | undefined) {
+  return position_type === 'enter' ? 'DCA In' : 'DCA Out';
+}
+
+export function getInitialDenom(positionType?: PositionType, pair?: Pair) {
+  return positionType === 'enter' ? pair?.quote_denom : pair?.base_denom;
+}
+
+export function getResultingDenom(positionType?: PositionType, pair?: Pair) {
+  return positionType === 'enter' ? pair?.base_denom : pair?.quote_denom;
+}
 
 export function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,13 +77,12 @@ function Page() {
 
   const { data, isLoading } = useStrategy(id as string);
 
-  console.log(data);
-
   const { status, configuration, balances } = data?.vault || {};
   const { position_type, execution_interval, swap_amount, pair } = configuration || {};
-  const { quote_denom, base_denom } = pair || {};
+  const initialDenom = getInitialDenom(position_type, pair);
+  const resultingDenom = getResultingDenom(position_type, pair);
 
-  const strategyType = position_type === 'enter' ? 'DCA In' : 'DCA Out';
+  const strategyType = getStrategyType(position_type);
 
   // TODO, make this a find
   const currentAmount = balances
@@ -155,7 +167,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={2}>
                   <Text fontSize="sm">
-                    {getDenomInfo(quote_denom).conversion(Number(swap_amount))} {getDenomInfo(quote_denom).name}{' '}
+                    {getDenomInfo(initialDenom).conversion(Number(swap_amount))} {getDenomInfo(initialDenom).name}{' '}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
@@ -163,7 +175,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {getDenomInfo(quote_denom).conversion(currentAmount!)} {getDenomInfo(quote_denom).name}
+                    {getDenomInfo(initialDenom).conversion(currentAmount!)} {getDenomInfo(initialDenom).name}
                   </Text>
                 </GridItem>
                 <GridItem>
@@ -203,7 +215,7 @@ function Page() {
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
                     <Flex align="center" gap={2}>
-                      {getDenomInfo(base_denom).name} <DenomIcon denomName={base_denom!} />
+                      {getDenomInfo(resultingDenom).name} <DenomIcon denomName={resultingDenom!} />
                     </Flex>
                   </Text>
                 </GridItem>
@@ -260,7 +272,7 @@ function Page() {
             </Heading>
             <Stat>
               <StatNumber>
-                {getDenomInfo(quote_denom).conversion(Number(currentAmount))} {getDenomInfo(quote_denom).name}
+                {getDenomInfo(resultingDenom).conversion(Number(123420000))} {getDenomInfo(resultingDenom).name}
               </StatNumber>
               <StatHelpText>
                 <StatArrow type="increase" />

@@ -4,6 +4,7 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
+import { getStrategyType } from 'src/pages/strategies/[id]/index.page';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 
@@ -40,7 +41,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
     >
       <GridItem colSpan={{ base: 11, lg: 3 }} rowStart={{ sm: 1, lg: 'auto' }}>
         <Heading size="md">DCA</Heading>
-        <Text textStyle="body-xs">DCA In ({strategy.id})</Text>
+        <Text textStyle="body-xs">
+          {' '}
+          {getStrategyType(strategy.configuration.position_type)} ({strategy.id})
+        </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, lg: 2 }}>
         <Text>Asset(s):</Text>

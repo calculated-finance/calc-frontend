@@ -2,14 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
-import handleContractQueryError from './handleContractQueryError';
 
 export type StrategyBalance = {
   amount: string;
   denom: Denom;
 };
 
-type PositionType = 'enter' | 'exit';
+export type PositionType = 'enter' | 'exit';
 type TriggerVariant = 'time' | 'price'; // confirm these values
 
 export type Strategy = {

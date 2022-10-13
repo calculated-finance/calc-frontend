@@ -24,6 +24,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import Summary from './Summary';
+import dcaOutSteps from '../dcaOutSteps';
 
 function InvalidData() {
   const router = useRouter();
@@ -82,11 +83,11 @@ type AgreementForm = {
 function ConfirmPurchase() {
   const { state, actions } = useConfirmForm();
   const { isPageLoading } = usePageLoad();
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(dcaOutSteps);
 
   const router = useRouter();
 
-  const { mutate, isError, error } = useCreateVault('enter');
+  const { mutate, isError, error } = useCreateVault('exit');
 
   const timeSaved =
     state?.initialDeposit && state.swapAmount ? totalExecutions(state?.initialDeposit, state.swapAmount) * 10 : 0;
@@ -114,7 +115,9 @@ function ConfirmPurchase() {
     <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
       {({ isSubmitting, isValid, submitCount }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+            Confirm &amp; Sign
+          </NewStrategyModalHeader>
           <NewStrategyModalBody isLoading={isPageLoading}>
             {state ? (
               <Form>

@@ -16,6 +16,7 @@ import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import TopUpAmount from './TopUpAmount';
+import { getInitialDenom, getResultingDenom, getStrategyType } from '../index.page';
 
 function TopUpDiagram({ quoteDenom, baseDenom }: any) {
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
@@ -55,16 +56,19 @@ function Page() {
   const { data, isLoading } = useStrategy(query?.id as string);
   const { mutate, error, isError } = useTopUpStrategy();
 
-  const { quote_denom, base_denom } = data?.vault.configuration.pair || {};
+  const { position_type, pair } = data?.vault.configuration || {};
+
+  const initialDenom = getInitialDenom(position_type, pair);
+  const resultingDenom = getResultingDenom(position_type, pair);
 
   const { isPageLoading } = usePageLoad();
 
   const { displayAmount } = useBalance({
-    token: quote_denom,
+    token: initialDenom,
   });
 
-  const remaining = getDenomInfo(quote_denom).conversion(
-    Number(data?.vault.balances.find((balance) => balance.denom === quote_denom)?.amount),
+  const remaining = getDenomInfo(initialDenom).conversion(
+    Number(data?.vault.balances.find((balance) => balance.denom === initialDenom)?.amount),
   );
 
   const validationSchema = Yup.object({
@@ -76,7 +80,7 @@ function Page() {
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
   ) =>
     mutate(
-      { values, quoteDenom: quote_denom, id: query.id },
+      { values, quoteDenom: initialDenom, id: query.id },
       {
         onSuccess: async () => {
           await nextStep();
@@ -102,14 +106,16 @@ function Page() {
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <Stack spacing={2}>
-                  <Heading size="sm">Your DCA In {query?.id} Strategy</Heading>
+                  <Heading size="sm">
+                    Your {getStrategyType(data?.vault.configuration.position_type)} {query?.id} Strategy
+                  </Heading>
                   <Text textStyle="body-xs">
-                    Remaining balance: {remaining} {getDenomInfo(quote_denom).name}
+                    Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
                   </Text>
-                  <TopUpDiagram quoteDenom={quote_denom} baseDenom={base_denom} />
+                  <TopUpDiagram quoteDenom={initialDenom} baseDenom={resultingDenom} />
                 </Stack>
                 <Divider />
-                <TopUpAmount quoteDenom={quote_denom!} />
+                <TopUpAmount quoteDenom={initialDenom!} />
                 <FormControl isInvalid={isError}>
                   <Submit>Confirm</Submit>
                   <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>
