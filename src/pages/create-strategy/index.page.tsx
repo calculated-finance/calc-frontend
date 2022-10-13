@@ -60,7 +60,7 @@ const takeProfitStrategies: StrategyCardProps[] = [
     description: 'Sell a certain % of an asset after it pumps a certain %',
     advanced: true,
     icon: DonateIcon,
-    enabled: true,
+    enabled: false,
   },
 ];
 
