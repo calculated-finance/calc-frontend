@@ -9,7 +9,6 @@ function StepperSeparator({ past }: { past: boolean }) {
 export default function Stepper({ steps }: { steps: StepConfig[] }) {
   const { currentStepIndex, goToStep } = useSteps(steps);
 
-  console.log(steps);
   return (
     <Flex flexDirection="row" alignItems="center">
       {steps

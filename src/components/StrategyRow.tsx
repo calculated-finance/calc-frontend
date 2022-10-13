@@ -39,19 +39,19 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       px={4}
       layerStyle="panel"
     >
-      <GridItem colSpan={{ base: 11, lg: 3 }} rowStart={{ sm: 1, lg: 'auto' }}>
+      <GridItem colSpan={{ base: 11, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">DCA</Heading>
         <Text textStyle="body-xs">
           {' '}
           {getStrategyType(strategy.configuration.position_type)} ({strategy.id})
         </Text>
       </GridItem>
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
+      <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text>Asset(s):</Text>
-        <DenomIcon denomName={strategy.configuration.pair.base_denom} />
+        <DenomIcon showTooltip denomName={strategy.configuration.pair.base_denom} />
       </GridItem>
 
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
+      <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text>Start date:</Text>
 
         <Text textStyle="body-xs">
@@ -59,20 +59,20 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </Text>
       </GridItem>
 
-      <GridItem colSpan={{ base: 3, lg: 2 }}>
+      <GridItem colSpan={{ base: 3, xl: 2 }}>
         <Text>Status:</Text>
         <Badge fontSize="10px" colorScheme="green">
           Active
         </Badge>
       </GridItem>
 
-      <GridItem colSpan={{ base: 4, lg: 2 }}>
+      <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text>Cadence:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
           {/* {strategy.execution_interval} */}
         </Text>
       </GridItem>
-      <GridItem colSpan={{ base: 4, lg: 1 }} rowStart={{ sm: 1, lg: 'auto' }}>
+      <GridItem colSpan={{ base: 4, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <ButtonGroup>
             <CancelButton strategy={strategy} />
@@ -84,10 +84,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
           </ButtonGroup>
         </Flex>
       </GridItem>
-      <GridItem colSpan={{ base: 15, lg: 3 }}>
+      <GridItem colSpan={{ base: 15, xl: 3 }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <Link href={`/strategies/${strategy.id}`}>
-            <Button width={{ base: 'full', lg: 'initial' }}>View performance</Button>
+            <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
           </Link>
         </Flex>
       </GridItem>

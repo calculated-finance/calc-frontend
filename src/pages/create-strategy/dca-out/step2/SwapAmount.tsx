@@ -16,6 +16,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import NumberInput from '@components/NumberInput';
+import DenomIcon from '@components/DenomIcon';
 import { DcaInFormDataStep1 } from '../../../../models/DcaInFormData';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
@@ -24,7 +25,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
   const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
-  const { icon: quoteDenomIcon, name: quoteDenomName } = getDenomInfo(step1State.quoteDenom);
+  const { name: quoteDenomName } = getDenomInfo(step1State.quoteDenom);
   const { name: baseDenomName } = getDenomInfo(step1State.baseDenom);
   const { initialDeposit } = step1State;
 
@@ -53,7 +54,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
       </FormHelperText>
       <InputGroup>
         <InputLeftElement>
-          <Image src={quoteDenomIcon} />
+          <DenomIcon denomName={step1State.quoteDenom} />
         </InputLeftElement>
         <NumberInput pl={10} onChange={helpers.setValue} placeholder="Enter amount" value={value} {...field} />
         <InputRightElement textAlign="right" mr={3} textStyle="body-xs">

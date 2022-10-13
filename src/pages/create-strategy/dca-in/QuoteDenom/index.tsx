@@ -16,13 +16,14 @@ import usePairs, { Denom, uniqueQuoteDenoms } from '@hooks/usePairs';
 import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
+import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
 import Select from '../../../../components/Select';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (
     <HStack spacing={2} w="full">
-      <Image src={getDenomInfo(denom).icon} alt={getDenomInfo(denom).name} />
+      <DenomIcon denomName={denom} />
       <Text>{getDenomInfo(denom).name}</Text>
     </HStack>
   );

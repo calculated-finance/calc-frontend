@@ -18,6 +18,7 @@ import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
+import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
 import Select from '../../../../components/Select';
 
@@ -36,7 +37,7 @@ const customComponents = {
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (
     <HStack>
-      <Image src={getDenomInfo(denom).icon} alt={getDenomInfo(denom).name} />
+      <DenomIcon denomName={denom} />
       <Text>{getDenomInfo(denom).name}</Text>
     </HStack>
   );

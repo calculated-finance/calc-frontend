@@ -26,6 +26,7 @@ export default function SendToWallet() {
 
   return (
     <FormControl>
+      {/* Make this the actual denom */}
       <FormLabel>Send KUJI from CALC to my wallet after each swap?</FormLabel>
       <FormHelperText>If you don&apos;t tick yes, you will need to claim them from the protocol. </FormHelperText>
       <HStack>

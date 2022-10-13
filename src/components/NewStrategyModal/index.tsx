@@ -76,8 +76,6 @@ export function NewStrategyModalHeader({
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
 
-  console.log('header', stepsConfig);
-
   const handleCancel = async () => {
     await router.push('/create-strategy');
     if (resetForm) {

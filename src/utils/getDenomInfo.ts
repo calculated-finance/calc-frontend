@@ -1,6 +1,8 @@
-type Denom = {
+import { Denom } from '@hooks/usePairs';
+
+type DenomInfo = {
   name: string;
-  icon: string;
+  icon?: string;
   conversion: (value: number) => number;
   deconversion: (value: number) => number;
 };
@@ -12,25 +14,47 @@ const defaultDenom = {
   deconversion: (value: number) => value,
 };
 
-const denoms: Record<string, Denom> = {
-  'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo': {
+const denoms: Record<string, DenomInfo> = {
+  [Denom.Demo]: {
     name: 'DEMO',
+    conversion: (value: number) => value / 1000000,
+    deconversion: (value: number) => value * 1000000,
+  },
+  [Denom.USK]: {
+    name: 'USK',
     icon: '/images/denoms/usk.svg',
     conversion: (value: number) => value / 1000000,
     deconversion: (value: number) => value * 1000000,
   },
-  ukuji: {
+  [Denom.Kuji]: {
     name: 'KUJI',
     conversion: (value: number) => value / 1000000,
     deconversion: (value: number) => value * 1000000,
 
     icon: '/images/denoms/kuji.svg',
   },
-  fake: {
-    name: 'Fake',
+  [Denom.AXL]: {
+    name: 'axlUSDC',
     conversion: (value: number) => value,
     deconversion: (value: number) => value,
-    icon: '/images/denoms/atom.svg',
+    icon: '/images/denoms/axl.svg',
+  },
+  [Denom.LUNA]: {
+    name: 'LUNA',
+    conversion: (value: number) => value,
+    deconversion: (value: number) => value,
+    icon: '/images/denoms/luna.svg',
+  },
+  [Denom.OSMO]: {
+    name: 'OSMO',
+    conversion: (value: number) => value,
+    deconversion: (value: number) => value,
+    icon: '/images/denoms/osmo.svg',
+  },
+  [Denom.NBTC]: {
+    name: 'NBTC',
+    conversion: (value: number) => value,
+    deconversion: (value: number) => value,
   },
 };
 

@@ -99,7 +99,7 @@ function InvestmentThesis() {
           <Heading size="xs">
             <HStack spacing={6}>
               <Text>Asset(s) taking profit on:</Text>
-              <HStack spacing={6}>
+              <HStack>
                 {profitTakingAssets.length ? (
                   profitTakingAssets.map((asset) => <DenomIcon showTooltip denomName={asset} />)
                 ) : (

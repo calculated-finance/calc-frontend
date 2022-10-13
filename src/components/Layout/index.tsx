@@ -7,6 +7,7 @@ import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
+import { useRouter } from 'next/router';
 import Sidebar from '../Sidebar';
 
 const HEADER_HEIGHT = '64px';
@@ -51,6 +52,23 @@ function Content({ children, ...props }: BoxProps) {
   );
 }
 
+function FlowBreadcrumbs() {
+  const router = useRouter();
+  console.log(router);
+  return (
+    <Breadcrumb separator=">">
+      <BreadcrumbItem>
+        <Link href="/create-strategy">
+          <BreadcrumbLink>Set up a Strategy</BreadcrumbLink>
+        </Link>
+      </BreadcrumbItem>
+      <BreadcrumbItem isCurrentPage>
+        <BreadcrumbLink>DCA In</BreadcrumbLink>
+      </BreadcrumbItem>
+    </Breadcrumb>
+  );
+}
+
 function FlowLayout({ children }: { children: ReactElement }) {
   const { address } = useWallet();
 
@@ -65,16 +83,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
         h="100vh"
       >
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
-          <Breadcrumb separator=">">
-            <BreadcrumbItem>
-              <Link href="/create-strategy">
-                <BreadcrumbLink>Set up a Strategy</BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>DCA In</BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+          <FlowBreadcrumbs />
         </Box>
         {address ? (
           children

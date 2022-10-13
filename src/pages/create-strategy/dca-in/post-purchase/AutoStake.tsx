@@ -26,6 +26,7 @@ export function AutoStake() {
 
   return (
     <FormControl>
+      {/* Make this the actual denom */}
       <FormLabel>Auto stake KUJI after each swap?</FormLabel>
       <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
       <HStack>
