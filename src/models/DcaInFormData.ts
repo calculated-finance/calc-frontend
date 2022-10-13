@@ -86,9 +86,11 @@ export const allValidationSchema = Yup.object({
       excludeEmptyString: true,
       message: ({ label }) => `${label} must be in the format HH:MM (24 hour time)`,
     })
-    .when(['advancedSettings', 'startImmediately'], {
-      is: (advancedSettings: boolean, startImmediately: StartImmediatelyValues) =>
-        advancedSettings === true && startImmediately === StartImmediatelyValues.No,
+    .when(['advancedSettings', 'startImmediately', 'triggerType'], {
+      is: (advancedSettings: boolean, startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Date &&
+        advancedSettings === true &&
+        startImmediately === StartImmediatelyValues.No,
       then: Yup.string().required(),
       otherwise: (schema) => schema.transform(() => ''),
     }),

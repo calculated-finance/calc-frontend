@@ -19,6 +19,7 @@ function DenomIcon({ denomName, showTooltip = false }: { denomName: Denom; showT
           height={4}
           textAlign="center"
           lineHeight={4}
+          cursor="default"
         >
           {name.charAt(0)}
         </Box>
