@@ -10,6 +10,9 @@ import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType } from './useStrategies';
 import { AuthorizationType, StakeAuthorization, StakeAuthorization_Validators } from 'cosmjs-types/cosmos/staking/v1beta1/authz'
+import {Coin} from 'cosmjs-types/cosmos/base/v1beta1/coin'
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+
 const useCreateVault = (positionType: PositionType) => {
   const { address: senderAddress, client } = useWallet();
   const { data } = usePairs();
@@ -87,6 +90,21 @@ const useCreateVault = (positionType: PositionType) => {
     
     // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
     // https://www.npmjs.com/package/cosmjs-types
+
+    let raw = JSON.stringify(msg)
+    let enc = new TextEncoder()
+    let encoded_msg = enc.encode(raw)
+
+    const contractMsg = MsgExecuteContract.fromPartial({
+      contract: CONTRACT_ADDRESS,
+      funds: [ Coin.fromPartial({
+        amount: funds[0].amount,
+        denom: funds[0].denom
+      })],
+      msg: encoded_msg,
+      sender: senderAddress
+    })
+
     const grantMsg = {
       typeUrl: "/cosmos.authz.v1beta1.MsgGrant",
       value: {
@@ -110,14 +128,18 @@ const useCreateVault = (positionType: PositionType) => {
       },
     };
 
+    console.log(msg)
 
     const result = client.signAndBroadcast(
       senderAddress,
-      [grantMsg],
+      [grantMsg, {
+        typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+        value: contractMsg
+      }],
       'auto',
-      undefined
+      'memo'
     )
-    //const result = client.execute(senderAddress, CONTRACT_ADDRESS, grantMsg, 'auto', undefined, []);
+    //const result2 = client.execute(senderAddress, CONTRACT_ADDRESS, grantMsg, 'auto', undefined, []);
     return result;
   });
 };
