@@ -1,0 +1,35 @@
+{
+    "id": "2",
+    "owner": "kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt",
+    "balance": {
+        "starting_balance": {
+            "denom": "ukuji",
+            "amount": "1000"
+        },
+        "current_balance": {
+            "denom": "ukuji",
+            "amount": "1000"
+        }
+    },
+    "tracking_information": {
+        "activation_time": null,
+        "creation_block_height": 3212976,
+        "last_execution_block_height": null,
+        "last_execution_time": null,
+        "executions_remaining": 10,
+        "executions_skipped": 0,
+        "target_execution_time_utc": "2022-09-22 05:48:31.056 +00:00"
+    },
+    "execution_interval": "hourly",
+    "configuration": {
+        "pair": {
+            "address": "kujira1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3sl8nek6",
+            "base_denom": "DEMO",
+            "quote_denom": "ukuji"
+        },
+        "belief_price": "0",
+        "max_spread": "0",
+        "swap_amount": "100",
+        "position_type": "enter"
+    }
+}

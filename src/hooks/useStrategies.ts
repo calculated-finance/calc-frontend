@@ -2,11 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
-
-export type StrategyBalance = {
-  amount: string;
-  denom: Denom;
-};
+import DenomAmount from '../models/DenomAmount';
 
 export type PositionType = 'enter' | 'exit';
 type TriggerVariant = 'time' | 'price'; // confirm these values
@@ -14,7 +10,7 @@ type TriggerVariant = 'time' | 'price'; // confirm these values
 export type Strategy = {
   id: string;
   owner: string;
-  balances: StrategyBalance[];
+  balances: DenomAmount[];
   trigger_id: string;
   trigger_variant: TriggerVariant;
   status: 'active' | 'inactive';

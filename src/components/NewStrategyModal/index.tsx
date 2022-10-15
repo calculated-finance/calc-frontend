@@ -69,10 +69,10 @@ export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { i
 
 export function NewStrategyModalHeader({
   resetForm,
-  children,
   finalStep = true,
   stepsConfig = steps,
-}: { resetForm?: () => void; finalStep?: boolean; stepsConfig?: StepConfig[] } & ChildrenProp) {
+  showStepper = true,
+}: { resetForm?: () => void; finalStep?: boolean; stepsConfig?: StepConfig[]; showStepper?: boolean } & ChildrenProp) {
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
 
@@ -98,7 +98,7 @@ export function NewStrategyModalHeader({
         <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />
-      <Stepper steps={stepsConfig} />
+      {showStepper && <Stepper steps={stepsConfig} />}
       {finalStep && (
         <Box position="relative">
           <Button

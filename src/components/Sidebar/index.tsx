@@ -33,9 +33,9 @@ export enum Pages {
   Home = '/',
   Strategies = '/strategies/',
   CreateStrategy = '/create-strategy/',
-  Settings = '/settings/',
+  // Settings = '/settings/',
   HowItWorks = '/how-it-works/',
-  Performance = '/performance/',
+  // Performance = '/performance/',
 }
 
 interface LinkItem {
@@ -48,9 +48,9 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create Strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
-  { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
+  // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
   { name: 'How it works', icon: LifebeltIcon, href: Pages.HowItWorks },
-  { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
+  // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
 export type ChildrenProp = {

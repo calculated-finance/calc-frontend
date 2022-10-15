@@ -9,11 +9,10 @@ import { topUpSteps } from './index.page';
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  console.log(query);
   const timeSaved = query.time_saved;
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader finalStep={false} stepsConfig={topUpSteps}>
+      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
         Strategy Set Successfully
       </NewStrategyModalHeader>
       <NewStrategyModalBody>

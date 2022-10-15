@@ -1,6 +1,6 @@
 import { Link, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { TwitterIcon, PaperplaneIcon, DiscordIcon } from '@fusion-icons/react/interface';
+import { TwitterIcon, PaperplaneIcon, DiscordIcon, TelegramIcon } from '@fusion-icons/react/interface';
 
 function Footer() {
   return (
@@ -9,8 +9,8 @@ function Footer() {
         <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
           <Icon as={TwitterIcon} stroke="slateGrey" />
         </Link>
-        <Link target="_blank" href="https://twitter.com/CALC_Finance" rel="noopener noreferrer">
-          <Icon as={PaperplaneIcon} stroke="slateGrey" />
+        <Link target="_blank" href="https://t.me/CALC_Finance" rel="noopener noreferrer">
+          <Icon as={TelegramIcon} stroke="slateGrey" />
         </Link>
         <Link
           target="_blank"

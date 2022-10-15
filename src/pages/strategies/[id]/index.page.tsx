@@ -25,9 +25,10 @@ import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { PositionType, Strategy, StrategyBalance } from '@hooks/useStrategies';
+import { PositionType, Strategy } from '@hooks/useStrategies';
+import DenomAmount from 'src/models/DenomAmount';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
@@ -77,16 +78,26 @@ function Page() {
 
   const { data, isLoading } = useStrategy(id as string);
 
+  if (!data) {
+    return (
+      <Center h="100vh">
+        <Spinner />;
+      </Center>
+    );
+  }
+
   const { status, configuration, balances } = data?.vault || {};
   const { position_type, execution_interval, swap_amount, pair } = configuration || {};
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
+  const initialDenomBalance = new DenomValue(balances?.find((balance) => balance.denom === initialDenom)!);
+
   const strategyType = getStrategyType(position_type);
 
   // TODO, make this a find
   const currentAmount = balances
-    ?.map((balance: StrategyBalance) => Number(balance.amount))
+    ?.map((balance: DenomAmount) => Number(balance.amount))
     .reduce((amount: number, total: number) => amount + total, 0);
 
   return (
@@ -175,7 +186,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {getDenomInfo(initialDenom).conversion(currentAmount!)} {getDenomInfo(initialDenom).name}
+                    {initialDenomBalance.toConverted()} {getDenomInfo(initialDenom).name}
                   </Text>
                 </GridItem>
                 <GridItem>

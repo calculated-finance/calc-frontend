@@ -74,7 +74,7 @@ function InvestmentThesis() {
     new Set(
       activeStrategies
         .filter((strategy) => strategy.configuration.position_type === 'exit')
-        .map((strategy) => strategy.configuration.pair.quote_denom),
+        .map((strategy) => strategy.configuration.pair.base_denom),
     ),
   );
   return (
@@ -166,7 +166,7 @@ function TotalInvestment() {
           <Heading size="md">Total invested with CALC</Heading>
           <Stat>
             <StatLabel>Total capital invested</StatLabel>
-            <StatNumber data-testid="total-invested">{formattedTotalInvested}</StatNumber>
+            <StatNumber data-testid="total-invested">(Coming Soon)</StatNumber>
           </Stat>
           <Divider />
           <HStack>
@@ -176,7 +176,7 @@ function TotalInvestment() {
             </Box>
             <Box>
               <Heading size="xs">Stablecoin invested</Heading>
-              <Text textStyle="body-xs">{formattedTotalInvested}</Text>
+              <Text textStyle="body-xs">(Coming Soon)</Text>
             </Box>
           </HStack>
         </Stack>

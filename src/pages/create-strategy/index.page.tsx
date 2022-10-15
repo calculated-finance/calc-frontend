@@ -118,6 +118,7 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
           href={linkToInfo}
           target="_blank"
           rel="noopener noreferrer"
+          visibility={enabled ? 'visible' : 'hidden'}
         >
           Learn more
         </Link>

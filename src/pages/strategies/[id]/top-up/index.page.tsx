@@ -101,7 +101,9 @@ function Page() {
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={topUpSteps}>Choose Funding &amp; Assets</NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false}>
+            Choose Funding &amp; Assets
+          </NewStrategyModalHeader>
           <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
