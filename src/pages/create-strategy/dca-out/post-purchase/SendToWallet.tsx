@@ -4,13 +4,14 @@ import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 
+// TODO: fix massive hack and actually set default vaule differently (use different schema)
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   {
-    value: SendToWalletValues.Yes,
+    value: SendToWalletValues.No,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.No,
+    value: SendToWalletValues.Yes,
     label: 'No',
   },
 ];
