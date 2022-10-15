@@ -110,7 +110,14 @@ const useCreateVault = (positionType: PositionType) => {
       },
     };
 
-    const result = client.execute(senderAddress, CONTRACT_ADDRESS, grantMsg, 'auto', undefined, []);
+
+    const result = client.signAndBroadcast(
+      senderAddress,
+      [grantMsg],
+      'auto',
+      undefined
+    )
+    //const result = client.execute(senderAddress, CONTRACT_ADDRESS, grantMsg, 'auto', undefined, []);
     return result;
   });
 };
