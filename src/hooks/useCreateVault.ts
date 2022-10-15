@@ -9,7 +9,7 @@ import TriggerTypes from 'src/models/TriggerTypes';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType } from './useStrategies';
-
+import { AuthorizationType, StakeAuthorization, StakeAuthorization_Validators } from 'cosmjs-types/cosmos/staking/v1beta1/authz'
 const useCreateVault = (positionType: PositionType) => {
   const { address: senderAddress, client } = useWallet();
   const { data } = usePairs();
@@ -82,7 +82,35 @@ const useCreateVault = (positionType: PositionType) => {
     if (!pairAddress || !client) {
       throw Error('Invalid form data');
     }
-    const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
+
+    const compounderContractAddress = 'kujira1zkjdvs80vrnq9rp2n6lzunelfnyt0hauwlpph70hls7cdq6u86tsxknl4c'
+    
+    // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
+    // https://www.npmjs.com/package/cosmjs-types
+    const grantMsg = {
+      typeUrl: "/cosmos.authz.v1beta1.MsgGrant",
+      value: {
+        granter: senderAddress,
+        grantee: compounderContractAddress,
+        grant: {
+          authorization: {
+            typeUrl: "/cosmos.staking.v1beta1.StakeAuthorization",
+            value: StakeAuthorization.encode(
+              StakeAuthorization.fromPartial({
+                authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE,
+                allowList: StakeAuthorization_Validators.fromPartial({
+                  address: [
+                    "kujiravaloper1dgpzk55f7jg0s40act0salwewmzeprgqh2c2hh"
+                  ]
+                })
+              }),
+            ).finish(),
+          },
+        },
+      },
+    };
+
+    const result = client.execute(senderAddress, CONTRACT_ADDRESS, grantMsg, 'auto', undefined, []);
     return result;
   });
 };
