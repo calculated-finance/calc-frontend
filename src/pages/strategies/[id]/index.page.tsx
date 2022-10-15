@@ -91,14 +91,15 @@ function Page() {
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
-  const initialDenomBalance = new DenomValue(balances?.find((balance) => balance.denom === initialDenom)!);
+  const initialDenomBalance = balances?.find((balance) => balance.denom === initialDenom);
+  if (!initialDenomBalance) {
+    return null; // theres a better way to handle this
+  }
+
+  const initialDenomValue = new DenomValue(initialDenomBalance);
+  const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
 
   const strategyType = getStrategyType(position_type);
-
-  // TODO, make this a find
-  const currentAmount = balances
-    ?.map((balance: DenomAmount) => Number(balance.amount))
-    .reduce((amount: number, total: number) => amount + total, 0);
 
   return (
     <>
@@ -178,7 +179,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={2}>
                   <Text fontSize="sm">
-                    {getDenomInfo(initialDenom).conversion(Number(swap_amount))} {getDenomInfo(initialDenom).name}{' '}
+                    {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}{' '}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
@@ -186,7 +187,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {initialDenomBalance.toConverted()} {getDenomInfo(initialDenom).name}
+                    {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
                   </Text>
                 </GridItem>
                 <GridItem>

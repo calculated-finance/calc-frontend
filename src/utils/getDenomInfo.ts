@@ -53,8 +53,9 @@ export class DenomValue {
   readonly iconUrl?: string;
 
   constructor(denomAmount: DenomAmount) {
-    this.denomId = denomAmount.denom;
-    this.amount = Number(denomAmount.amount);
+    // make this not option and handle code when loading
+    this.denomId = denomAmount?.denom;
+    this.amount = Number(denomAmount?.amount);
     this.iconUrl = denoms[this.denomId].icon;
   }
 
