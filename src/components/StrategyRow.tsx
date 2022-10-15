@@ -1,7 +1,7 @@
 import { Badge, Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { Strategy } from '@hooks/useStrategies';
+import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
 import { getStrategyType } from 'src/pages/strategies/[id]/index.page';
@@ -17,13 +17,12 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
         size="xs"
         variant="ghost"
         colorScheme="red"
-        width={{ base: 'full', lg: 'initial' }}
         leftIcon={<Icon as={CloseBoxedIcon} stroke="red.200" width={4} height={4} />}
         onClick={onOpen}
       >
         Cancel
       </Button>
-      <CancelStrategyModal isOpen={isOpen} onClose={onClose} strategy={strategy} />
+      <CancelStrategyModal isOpen={isOpen} onClose={onClose} onCancel={invalidateStrategies} strategy={strategy} />
     </>
   );
 }
@@ -39,7 +38,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       px={4}
       layerStyle="panel"
     >
-      <GridItem colSpan={{ base: 11, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
+      <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">DCA</Heading>
         <Text textStyle="body-xs">
           {' '}
@@ -72,7 +71,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
           {/* {strategy.execution_interval} */}
         </Text>
       </GridItem>
-      <GridItem colSpan={{ base: 4, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>
+      <GridItem colSpan={{ base: 7, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <ButtonGroup>
             <CancelButton strategy={strategy} />

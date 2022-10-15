@@ -53,6 +53,9 @@ export function CancelButton({ strategy }: { strategy: Strategy }) {
   const router = useRouter();
   const handleClose = () => {
     onClose();
+  };
+
+  const handleCancel = () => {
     router.push('/strategies');
   };
 
@@ -67,7 +70,7 @@ export function CancelButton({ strategy }: { strategy: Strategy }) {
       >
         Cancel
       </Button>
-      <CancelStrategyModal isOpen={isOpen} onClose={handleClose} strategy={strategy} />
+      <CancelStrategyModal isOpen={isOpen} onClose={handleClose} onCancel={handleCancel} strategy={strategy} />
     </>
   );
 }

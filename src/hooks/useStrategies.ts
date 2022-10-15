@@ -2,10 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
+import { queryClient } from 'src/pages/_app.page';
 import DenomAmount from '../models/DenomAmount';
 
 export type PositionType = 'enter' | 'exit';
 type TriggerVariant = 'time' | 'price'; // confirm these values
+const QUERY_KEY = 'active-vaults';
+
+export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
 
 export type Strategy = {
   id: string;
@@ -36,7 +40,7 @@ export default function useStrategies() {
   const client = useCWClient();
 
   return useQuery<Response, Error>(
-    ['active-vaults', address],
+    [QUERY_KEY, address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_all_vaults_by_address: {
