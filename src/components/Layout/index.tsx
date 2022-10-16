@@ -51,20 +51,31 @@ function Content({ children, ...props }: BoxProps) {
     </>
   );
 }
+const breadcrumbData: Record<string, string> = {
+  '/': 'Dashboard',
+  'create-strategy': 'Create Strategy',
+  'dca-in': 'DCA In',
+  'dca-out': 'DCA Out',
+  strategies: 'My strategies',
+  'top-up': 'Top Up Strategy',
+};
 
 function FlowBreadcrumbs() {
   const router = useRouter();
-  console.log(router);
+  const pathParts = router.asPath.split('/').filter((part) => part?.trim() !== '');
   return (
     <Breadcrumb separator=">">
-      <BreadcrumbItem>
-        <Link href="/create-strategy">
-          <BreadcrumbLink>Set up a Strategy</BreadcrumbLink>
-        </Link>
-      </BreadcrumbItem>
-      <BreadcrumbItem isCurrentPage>
-        <BreadcrumbLink>DCA In</BreadcrumbLink>
-      </BreadcrumbItem>
+      {pathParts.map((part, index) => {
+        const previousParts = pathParts.slice(0, index);
+        const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
+        return breadcrumbData[part] ? (
+          <BreadcrumbItem>
+            <Link href={href}>
+              <BreadcrumbLink>{breadcrumbData[part]}</BreadcrumbLink>
+            </Link>
+          </BreadcrumbItem>
+        ) : null;
+      })}
     </Breadcrumb>
   );
 }

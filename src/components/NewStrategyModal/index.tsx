@@ -20,20 +20,6 @@ import { useRouter } from 'next/router';
 import Stepper from './Stepper';
 import steps, { StepConfig } from './steps';
 
-// Actual Modal version
-
-// export default function NewStrategyModal({ children }: ChildrenProp) {
-//   return (
-//     <Modal isOpen onClose={() => {}}>
-//       <ModalContent bg="transparent" boxShadow="none" pt={24} zIndex={1}>
-//         <Box maxWidth={451} zIndex={1}>
-//           {children}
-//         </Box>
-//       </ModalContent>
-//     </Modal>
-//   );
-// }
-
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
     <Box maxWidth={451} mx="auto" py={8}>
