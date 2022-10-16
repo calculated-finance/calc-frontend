@@ -99,6 +99,8 @@ function Page() {
     return null; // theres a better way to handle this
   }
 
+  const resultingDenomBalance = balances?.find((balance) => balance.denom === resultingDenom) || 0;
+
   const initialDenomValue = new DenomValue(initialDenomBalance);
   const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
 
@@ -287,12 +289,9 @@ function Page() {
             </Heading>
             <Stat>
               <StatNumber>
-                {getDenomInfo(resultingDenom).conversion(Number(123420000))} {getDenomInfo(resultingDenom).name}
+                {getDenomInfo(resultingDenom).conversion(Number(resultingDenomBalance))}{' '}
+                {getDenomInfo(resultingDenom).name}
               </StatNumber>
-              <StatHelpText>
-                <StatArrow type="increase" />
-                23.36%
-              </StatHelpText>
             </Stat>
             <Box position="relative">
               <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="2px">
