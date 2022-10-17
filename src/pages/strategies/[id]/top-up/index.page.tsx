@@ -16,7 +16,9 @@ import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import TopUpAmount from './TopUpAmount';
-import { getInitialDenom, getResultingDenom, getStrategyType } from '../index.page';
+import { getResultingDenom } from '../getResultingDenom';
+import { getInitialDenom } from '../getInitialDenom';
+import { getStrategyType } from '../getStrategyType';
 
 function TopUpDiagram({ quoteDenom, baseDenom }: any) {
   const { name: quoteDenomName } = getDenomInfo(quoteDenom);
@@ -83,7 +85,7 @@ function Page() {
       { values, quoteDenom: initialDenom, id: query.id },
       {
         onSuccess: async () => {
-          await nextStep();
+          await nextStep({ strategyId: query.id });
         },
         onSettled: () => {
           setSubmitting(false);

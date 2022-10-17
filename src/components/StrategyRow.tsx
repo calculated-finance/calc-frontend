@@ -4,7 +4,7 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
-import { getStrategyType } from 'src/pages/strategies/[id]/index.page';
+import { getStrategyType } from "src/pages/strategies/[id]/getStrategyType";
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 

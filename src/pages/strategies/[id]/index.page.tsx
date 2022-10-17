@@ -25,27 +25,17 @@ import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { PositionType, Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@hooks/useStrategies';
 import DenomAmount from 'src/models/DenomAmount';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Pair } from '@hooks/usePairs';
 import { getSidebarLayout } from '../../../components/Layout';
-
-export function getStrategyType(position_type: string | undefined) {
-  return position_type === 'enter' ? 'DCA In' : 'DCA Out';
-}
-
-export function getInitialDenom(positionType?: PositionType, pair?: Pair) {
-  return positionType === 'enter' ? pair?.quote_denom : pair?.base_denom;
-}
-
-export function getResultingDenom(positionType?: PositionType, pair?: Pair) {
-  return positionType === 'enter' ? pair?.base_denom : pair?.quote_denom;
-}
+import { getStrategyType } from './getStrategyType';
+import { getInitialDenom } from './getInitialDenom';
+import { getResultingDenom } from './getResultingDenom';
 
 export function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();

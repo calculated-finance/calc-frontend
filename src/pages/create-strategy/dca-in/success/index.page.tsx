@@ -3,13 +3,26 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import steps from '@components/NewStrategyModal/steps';
 import usePageLoad from '@hooks/usePageLoad';
+import useStrategy from '@hooks/useStrategy';
+import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import getInitialDenomBalance from './getInitialDenomBalance';
+import getSwapAmount from './getSwapAmount';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { timeSaved } = query;
+  const { strategyId } = query;
+
+  const { data: strategy } = useStrategy(strategyId as string);
+
+  if (!strategy) {
+    return null;
+  }
+
+  const timeSaved = totalExecutions(getInitialDenomBalance(strategy.vault), getSwapAmount(strategy.vault)) * 10;
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} finalStep={false}>
@@ -25,7 +38,7 @@ function Success() {
             <Text textAlign="center">
               Plus, you have saved yourself an average of
               <Heading p={2} size="md">
-                {timeSaved || '20'} minutes
+                {timeSaved} minutes
               </Heading>
               and removed the emotions from your trades! 💪
             </Text>

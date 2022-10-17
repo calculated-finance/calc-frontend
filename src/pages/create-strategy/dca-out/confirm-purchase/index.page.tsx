@@ -85,17 +85,16 @@ function ConfirmPurchase() {
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(dcaOutSteps);
 
-  const router = useRouter();
-
   const { mutate, isError, error } = useCreateVault('exit');
-
-  const timeSaved =
-    state?.initialDeposit && state.swapAmount ? totalExecutions(state?.initialDeposit, state.swapAmount) * 10 : 0;
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
-      onSuccess: async () => {
-        await nextStep({ timeSaved });
+      onSuccess: async (data) => {
+        await nextStep({
+          strategyId: data.logs[0].events
+            .find((event) => event.type === 'wasm')
+            ?.attributes.find((attribute) => attribute.key === 'vault_id')?.value,
+        });
         actions.resetAction();
       },
       onSettled: () => {

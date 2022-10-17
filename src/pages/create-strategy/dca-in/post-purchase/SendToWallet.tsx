@@ -30,7 +30,9 @@ export default function SendToWallet() {
   return (
     <FormControl>
       <FormLabel>Send {getDenomInfo(context?.baseDenom).name} from CALC to my wallet after each swap?</FormLabel>
-      <FormHelperText>If you don&apos;t tick yes, you will need to claim them from the protocol. </FormHelperText>
+      <FormHelperText>
+        This wallet address will be the one the funds are sent to or autostaked to on your behalf.
+      </FormHelperText>
       <HStack>
         <Radio {...getRootProps}>
           {sendToWalletData.map((option) => {
