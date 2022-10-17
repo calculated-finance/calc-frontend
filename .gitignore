@@ -12,3 +12,5 @@ infrastructure/**/*.zip
 
 # ignore auto tfvars
 *.auto.tfvars
+
+tsconfig.tsbuildinfo
