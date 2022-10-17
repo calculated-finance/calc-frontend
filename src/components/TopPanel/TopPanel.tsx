@@ -19,7 +19,7 @@ function Onboarding() {
           accumulation strategies.
         </Text>
       </Stack>
-      <Link href="/create-strategy">
+      <Link passHref href="/create-strategy">
         <Button maxWidth={402} size="sm">
           Get Started
         </Button>
@@ -45,14 +45,14 @@ function Returning() {
         </Text>
       </Stack>
       <ButtonGroup>
-        <Link href="/create-strategy">
+        <Link passHref href="/create-strategy">
           <Button maxWidth={402} size="sm">
             Create new strategy
           </Button>
         </Link>
-        <Link href="/performance">
+        <Link passHref href="/strategies">
           <Button maxWidth={402} size="sm" variant="outline">
-            Review past performance
+            Review past strategies
           </Button>
         </Link>
       </ButtonGroup>
@@ -60,7 +60,9 @@ function Returning() {
   );
 }
 
-function Active() {
+function ActiveWithOne() {
+  const { data } = useStrategies();
+  const activeStrategy = data?.vaults[0];
   return (
     <>
       <Icon as={BarChartIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
@@ -72,16 +74,50 @@ function Active() {
         </Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <Link href="/strategies">
+        <Link passHref href={`/strategies/${activeStrategy?.id}/top-up/`}>
           <Button w="full" size="sm" colorScheme="blue">
             Top up my Strategy
           </Button>
         </Link>
-        <Link href="/strategies">
+        <Link passHref href={`/strategies/${activeStrategy?.id}/`}>
           <Button w="full" size="sm" colorScheme="blue" variant="outline">
             Review performance
           </Button>
         </Link>
+      </Stack>
+    </>
+  );
+}
+
+function ActiveWithMany() {
+  return (
+    <>
+      <Icon as={BarChartIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
+      <Stack spacing={2}>
+        <Heading size="md">Wow - you&apos;re a CALC pro.</Heading>
+        <Text fontSize="sm">
+          You should be proud, you&apos;ve surpassed the basic stage of just running a single strategy and you&apos;re
+          managing multiple. Be sure to share your backtesting results to spread the CALC love.
+        </Text>
+      </Stack>
+      <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
+        <Link passHref href="/strategies">
+          <Button w="full" size="sm" colorScheme="green">
+            See my strategies
+          </Button>
+        </Link>
+        <Button
+          as="a"
+          w="full"
+          size="sm"
+          colorScheme="green"
+          variant="outline"
+          rel="noopener noreferrer"
+          target="_blank"
+          href="https://twitter.com/intent/tweet?text=I%27ve%20got%20a%20few%20strategies%20running%20on%20%40CALC_FINANCE%20-%20come%20check%20them%20out!%20App.calculated.fi"
+        >
+          Share with others
+        </Button>
       </Stack>
     </>
   );
@@ -94,22 +130,59 @@ export default function TopPanel() {
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   const completedStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'inactive') ?? [];
 
+  const getConfig = () => {
+    if (!activeStrategies.length) {
+      if (!completedStrategies.length) {
+        return {
+          background: '/images/backgrounds/twist.svg',
+          border: 'brand.200',
+          Content: Onboarding,
+        };
+      }
+      return {
+        background: '/images/backgrounds/twist.svg',
+        border: 'brand.200',
+        Content: Returning,
+      };
+    }
+    if (activeStrategies.length === 1) {
+      return {
+        background: '/images/backgrounds/twist.svg',
+        border: 'blue.200',
+        Content: ActiveWithOne,
+      };
+    }
+    return {
+      background: '/images/backgrounds/star.svg',
+      border: 'green.200',
+      Content: ActiveWithMany,
+    };
+  };
+
+  const { background, border, Content } = getConfig();
+
   return (
-    <Center
-      borderWidth={2}
-      borderColor={activeStrategies.length ? 'blue.200' : 'brand.200'}
-      h="full"
-      minHeight={294}
-      layerStyle="panel"
-      p={8}
-    >
+    <Center position="relative" borderWidth={2} borderColor={border} h="full" minHeight={294} layerStyle="panel" p={8}>
       {connected ? (
         isLoading ? (
           <Spinner />
         ) : (
-          <Stack spacing={6}>
-            {activeStrategies.length ? <Active /> : completedStrategies.length ? <Returning /> : <Onboarding />}
-          </Stack>
+          <>
+            {/* <Box
+              layerStyle="panel"
+              backgroundImage={background}
+              backgroundPosition="center"
+              backgroundSize="cover"
+              backgroundRepeat="no-repeat"
+              position="absolute"
+              filter="auto"
+              h="full"
+              w="full"
+            /> */}
+            <Stack zIndex={10} spacing={6} backdropBlur="2px" backdropFilter="auto">
+              <Content />
+            </Stack>
+          </>
         )
       ) : (
         <ConnectWallet h={undefined} />

@@ -16,6 +16,8 @@ export const initialValues = {
   triggerType: TriggerTypes.Date,
   startDate: null,
   purchaseTime: '',
+  startPrice: null,
+
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
   slippageTolerance: 1,

@@ -87,7 +87,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
     <>
       <AppHeader />
       <Content
-        bgImage="/images/background.svg"
+        bgImage="/images/backgrounds/twist.svg"
         backgroundPosition="bottom"
         backgroundSize="center"
         backgroundRepeat="no-repeat"

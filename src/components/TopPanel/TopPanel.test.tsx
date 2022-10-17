@@ -52,7 +52,7 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Ready to set up a CALC Strategy?/)).toBeInTheDocument();
-        expect(screen.getByText(/Get Started/)).toBeInTheDocument();
+        expect(screen.getByText(/Get Started/)).toHaveAttribute('href', '/create-strategy');
       });
     });
     describe('when a user has only completed strategies', () => {
@@ -72,11 +72,11 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Ready to fire up CALC again?/)).toBeInTheDocument();
-        expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
-        expect(screen.getByText(/Review past performance/)).toBeInTheDocument();
+        expect(screen.getByText(/Create new strategy/)).toHaveAttribute('href', '/create-strategy');
+        expect(screen.getByText(/Review past strategies/)).toHaveAttribute('href', '/strategies');
       });
     });
-    describe('when a strategy set', () => {
+    describe('when a single strategy is set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
           data: {
@@ -93,8 +93,35 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Awesome - you have a DCA strategy active!/)).toBeInTheDocument();
-        expect(screen.getByText(/Top up my Strategy/)).toBeInTheDocument();
-        expect(screen.getByText(/Review performance/)).toBeInTheDocument();
+        expect(screen.getByText(/Top up my Strategy/)).toHaveAttribute('href', '/strategies/1/top-up');
+        expect(screen.getByText(/Review performance/)).toHaveAttribute('href', '/strategies/1');
+      });
+    });
+    describe('when multiple strategies are set', () => {
+      beforeEach(() => {
+        (useStrategies as jest.Mock).mockImplementation(() => ({
+          data: {
+            vaults: [
+              { id: 1, status: 'active' },
+              { id: 2, status: 'active' },
+            ],
+          },
+          isLoading: false,
+        }));
+      });
+      it('renders the connect wallet button', () => {
+        render(
+          <QueryClientProvider client={queryClient}>
+            <TopPanel />
+          </QueryClientProvider>,
+        );
+
+        expect(screen.getByText(/Wow - you're a CALC pro./)).toBeInTheDocument();
+        expect(screen.getByText(/See my strategies/)).toHaveAttribute('href', '/strategies');
+        expect(screen.getByText(/Share with others/)).toHaveAttribute(
+          'href',
+          'https://twitter.com/intent/tweet?text=I%27ve%20got%20a%20few%20strategies%20running%20on%20%40CALC_FINANCE%20-%20come%20check%20them%20out!%20App.calculated.fi',
+        );
       });
     });
   });
