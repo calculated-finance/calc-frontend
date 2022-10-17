@@ -1,6 +1,7 @@
 import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
+import steps from '@components/NewStrategyModal/steps';
 import usePageLoad from '@hooks/usePageLoad';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -8,11 +9,13 @@ import { useRouter } from 'next/router';
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const timeSaved = query.time_saved;
+  const { timeSaved } = query;
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader finalStep={false}>Strategy Set Successfully</NewStrategyModalHeader>
-      <NewStrategyModalBody>
+      <NewStrategyModalHeader stepsConfig={steps} finalStep={false}>
+        Strategy Set Successfully
+      </NewStrategyModalHeader>
+      <NewStrategyModalBody stepsConfig={steps}>
         <Stack spacing={6} alignItems="center">
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />

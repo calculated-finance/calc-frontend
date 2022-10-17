@@ -47,7 +47,6 @@ export default function usePairs() {
       const result = await client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_all_pairs: {},
       });
-      console.log(result);
       return result;
     },
     {

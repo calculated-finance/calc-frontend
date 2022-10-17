@@ -101,8 +101,8 @@ function FlowLayout({ children }: { children: ReactElement }) {
         ) : (
           <NewStrategyModal>
             {/* TODO: we should do something around the way the stepper works here */}
-            <NewStrategyModalHeader> Connect to a wallet </NewStrategyModalHeader>
-            <NewStrategyModalBody>
+            <NewStrategyModalHeader stepsConfig={[]}> Connect to a wallet </NewStrategyModalHeader>
+            <NewStrategyModalBody stepsConfig={[]}>
               <ConnectWallet h={56} />
             </NewStrategyModalBody>
           </NewStrategyModal>

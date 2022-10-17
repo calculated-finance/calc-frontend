@@ -9,13 +9,13 @@ import { topUpSteps } from './index.page';
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const timeSaved = query.time_saved;
+  const { timeSaved } = query;
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
         Strategy Set Successfully
       </NewStrategyModalHeader>
-      <NewStrategyModalBody>
+      <NewStrategyModalBody stepsConfig={topUpSteps}>
         <Stack spacing={6} alignItems="center">
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />

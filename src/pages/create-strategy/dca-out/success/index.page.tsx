@@ -9,14 +9,13 @@ import dcaOutSteps from '../dcaOutSteps';
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  console.log(query);
-  const timeSaved = query.time_saved;
+  const { timeSaved } = query;
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} finalStep={false}>
         Strategy Set Successfully
       </NewStrategyModalHeader>
-      <NewStrategyModalBody>
+      <NewStrategyModalBody stepsConfig={dcaOutSteps}>
         <Stack spacing={6} alignItems="center">
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />

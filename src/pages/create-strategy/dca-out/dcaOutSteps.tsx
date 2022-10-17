@@ -1,10 +1,4 @@
-export type StepConfig = {
-  href: string;
-  title: string;
-  noBackButton?: boolean;
-  noJump?: boolean;
-  successPage?: boolean;
-};
+import { StepConfig } from '@components/NewStrategyModal/steps';
 
 const dcaOutSteps: StepConfig[] = [
   {
@@ -18,6 +12,7 @@ const dcaOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-out/post-purchase',
     title: 'Post Purchase',
+    footerText: 'How to use CALC’s DCA out strategy to mange cashflow',
   },
   {
     href: '/create-strategy/dca-out/confirm-purchase',

@@ -118,7 +118,7 @@ function ConfirmPurchase() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Confirm &amp; Sign
           </NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isPageLoading}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
             {state ? (
               <Form>
                 <Stack spacing={4}>

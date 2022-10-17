@@ -36,8 +36,10 @@ function Page() {
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {({ values, isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader resetForm={actions.resetAction}>Post Purchase</NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+            Post Purchase
+          </NewStrategyModalHeader>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <SendToWallet />

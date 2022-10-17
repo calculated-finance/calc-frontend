@@ -41,7 +41,7 @@ function Page() {
         <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
           Customise Strategy
         </NewStrategyModalHeader>
-        <NewStrategyModalBody isLoading={isPageLoading}>
+        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
           <Center>
             {/* Better to link to start of specific strategy */}
             Invalid Data, please&nbsp;
@@ -74,7 +74,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Customise Strategy
           </NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isPageLoading && !isSubmitting}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaInDiagram

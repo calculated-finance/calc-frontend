@@ -115,13 +115,15 @@ function ConfirmPurchase() {
     <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
       {({ isSubmitting, isValid, submitCount }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader resetForm={actions.resetAction}>Confirm &amp; Sign</NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isPageLoading}>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+            Confirm &amp; Sign
+          </NewStrategyModalHeader>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
             {state ? (
               <Form>
                 <Stack spacing={4}>
                   <Summary />
-                  <Fees />
+                  {/* <Fees /> */}
                   <AgreementCheckbox />
                   <FormControl isInvalid={isError}>
                     <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>

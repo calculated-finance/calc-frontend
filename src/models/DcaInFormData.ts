@@ -28,8 +28,14 @@ export const initialValues = {
 };
 
 export const allValidationSchema = Yup.object({
-  baseDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Base Denom').required(),
-  quoteDenom: Yup.mixed<Denom>().oneOf(Object.values(Denom)).label('Quote Denom').required(),
+  baseDenom: Yup.mixed<Denom>()
+    .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
+    .label('Base Denom')
+    .required(),
+  quoteDenom: Yup.mixed<Denom>()
+    .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
+    .label('Quote Denom')
+    .required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()

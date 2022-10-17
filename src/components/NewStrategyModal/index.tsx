@@ -18,7 +18,7 @@ import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
 import Stepper from './Stepper';
-import steps, { StepConfig } from './steps';
+import { findStep, StepConfig } from './steps';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
@@ -28,8 +28,13 @@ export default function NewStrategyModal({ children }: ChildrenProp) {
   );
 }
 
-export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { isLoading?: boolean }) {
+export function NewStrategyModalBody({
+  children,
+  isLoading,
+  stepsConfig,
+}: ChildrenProp & { isLoading?: boolean; stepsConfig: StepConfig[] }) {
   const router = useRouter();
+  const step = findStep(router.pathname, stepsConfig);
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
       {isLoading ? (
@@ -37,16 +42,23 @@ export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { i
           <Spinner />
         </Center>
       ) : (
-        children
-      )}
-      {router.pathname !== steps[3].href && (
         <>
-          <Divider my={6} />
-          <Center>
-            <Button variant="link" colorScheme="blue" rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}>
-              Can I set up reoccuring deposits?
-            </Button>
-          </Center>
+          {children}
+          {Boolean(step?.footerText) && (
+            <>
+              <Divider my={6} />
+              <Center>
+                <Button
+                  variant="link"
+                  colorScheme="blue"
+                  fontWeight="normal"
+                  rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}
+                >
+                  {step?.footerText}
+                </Button>
+              </Center>
+            </>
+          )}
         </>
       )}
     </Box>
@@ -56,9 +68,9 @@ export function NewStrategyModalBody({ children, isLoading }: ChildrenProp & { i
 export function NewStrategyModalHeader({
   resetForm,
   finalStep = true,
-  stepsConfig = steps,
+  stepsConfig,
   showStepper = true,
-}: { resetForm?: () => void; finalStep?: boolean; stepsConfig?: StepConfig[]; showStepper?: boolean } & ChildrenProp) {
+}: { resetForm?: () => void; finalStep?: boolean; stepsConfig: StepConfig[]; showStepper?: boolean } & ChildrenProp) {
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
 

@@ -4,20 +4,28 @@ export type StepConfig = {
   noBackButton?: boolean;
   noJump?: boolean;
   successPage?: boolean;
+  footerText?: string;
 };
+
+export function findStep(path: string, stepsConfig: StepConfig[]) {
+  return stepsConfig.find((step) => step.href === path);
+}
 
 const steps: StepConfig[] = [
   {
     href: '/create-strategy/dca-in',
     title: 'Choose Funding & Assets',
+    footerText: 'Can I set up reoccuring deposits?',
   },
   {
     href: '/create-strategy/dca-in/step2',
     title: 'Customise Strategy',
+    footerText: 'How do reoccuring investments work?',
   },
   {
     href: '/create-strategy/dca-in/post-purchase',
     title: 'Post Purchase',
+    footerText: 'What is auto staking and auto compounding?',
   },
   {
     href: '/create-strategy/dca-in/confirm-purchase',

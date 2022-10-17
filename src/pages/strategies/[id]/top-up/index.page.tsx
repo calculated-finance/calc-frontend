@@ -104,7 +104,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false}>
             Choose Funding &amp; Assets
           </NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={topUpSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <Stack spacing={2}>

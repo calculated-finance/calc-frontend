@@ -12,6 +12,7 @@ const useBalances = () => {
     },
     {
       enabled: !!address,
+      cacheTime: 0,
     },
   );
 };

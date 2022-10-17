@@ -38,8 +38,10 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader resetForm={actions.resetAction}>Choose Funding &amp; Assets</NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+            Choose Funding &amp; Assets
+          </NewStrategyModalHeader>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <QuoteDenom />

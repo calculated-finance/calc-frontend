@@ -36,8 +36,10 @@ function DcaInStep2() {
     };
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
-        <NewStrategyModalBody isLoading={isPageLoading}>
+        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+          Customise Strategy
+        </NewStrategyModalHeader>
+        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
           <Center>
             {/* Better to link to start of specific strategy */}
             Invalid Data, please&nbsp;
@@ -67,8 +69,10 @@ function DcaInStep2() {
     >
       {({ values, isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader resetForm={actions.resetAction}>Customise Strategy</NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isPageLoading && !isSubmitting}>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+            Customise Strategy
+          </NewStrategyModalHeader>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaInDiagram

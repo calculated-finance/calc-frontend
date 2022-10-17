@@ -36,7 +36,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Post Purchase
           </NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <FormControl>
                 <Stack direction="column" spacing={6}>

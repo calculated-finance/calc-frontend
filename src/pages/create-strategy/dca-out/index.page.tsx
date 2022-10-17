@@ -41,7 +41,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Choose Funding &amp; Assets
           </NewStrategyModalHeader>
-          <NewStrategyModalBody isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <QuoteDenom />
