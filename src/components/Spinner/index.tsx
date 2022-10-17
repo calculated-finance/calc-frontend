@@ -4,4 +4,8 @@ function Spinner() {
   return <ChakraSpinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />;
 }
 
+// function Spinner() {
+//   return <Lottie animationData={spinner} loop width="32px" height="32px" />;
+// }
+
 export default Spinner;

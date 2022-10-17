@@ -24,6 +24,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import Summary from './Summary';
+import Fees from './Fees';
 
 function InvalidData() {
   const router = useRouter();
@@ -120,6 +121,7 @@ function ConfirmPurchase() {
               <Form>
                 <Stack spacing={4}>
                   <Summary />
+                  <Fees />
                   <AgreementCheckbox />
                   <FormControl isInvalid={isError}>
                     <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>

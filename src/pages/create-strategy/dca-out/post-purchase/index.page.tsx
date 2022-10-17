@@ -43,8 +43,8 @@ function Page() {
                   <SendToWallet />
                   <FormHelperText>
                     <HStack>
-                      <Text>Multiple transactions suported by</Text>
-                      <Image src="/images/kujiraLogo.svg" />{' '}
+                      <Text>Multiple transactions supported by</Text>
+                      <Image src="/images/kujiraLogo.svg" /> <Text>(Coming soon)</Text>
                     </HStack>
                   </FormHelperText>
                   <Collapse in={values.sendToWallet === SendToWalletValues.No}>

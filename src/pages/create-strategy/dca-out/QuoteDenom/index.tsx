@@ -102,7 +102,7 @@ export default function QuoteDenom() {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>What position do you want to DCA out of? </FormLabel>
+      <FormLabel>What position do you want to take profit on? </FormLabel>
       <FormHelperText>
         <Center>
           <Text textStyle="body-xs">CALC currently supports pairs trading on FIN.</Text>
