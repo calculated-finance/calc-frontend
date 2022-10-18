@@ -1,5 +1,5 @@
-import { ExecutionIntervals } from 'src/pages/create-strategy/dca-in/step2/ExecutionIntervals';
-import { StartImmediatelyValues } from 'src/pages/create-strategy/dca-in/step2/StartImmediatelyValues';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import * as Yup from 'yup';
 
 export const initialValues = {
