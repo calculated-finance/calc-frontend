@@ -60,13 +60,8 @@ const useCreateVault = (positionType: PositionType) => {
       startTimeSeconds = (startTime.valueOf() / 1000).toString();
     }
 
-    const contractEndpoint =
-      triggerType === TriggerTypes.Date // needs to default to date maybe
-        ? 'create_vault_with_time_trigger'
-        : 'create_vault_with_f_i_n_limit_order_trigger';
-
     const msg = {
-      [contractEndpoint]: {
+      create_vault: {
         time_interval: executionInterval,
         pair_address: pairAddress,
         position_type: positionType,
@@ -74,6 +69,7 @@ const useCreateVault = (positionType: PositionType) => {
         target_start_time_utc_seconds: startTimeSeconds,
         target_price: startPrice?.toString() || undefined,
         slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
+        destinations: [],
       },
     };
 

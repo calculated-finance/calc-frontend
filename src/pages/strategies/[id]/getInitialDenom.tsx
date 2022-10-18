@@ -1,6 +1,5 @@
 import { PositionType, Strategy } from '@hooks/useStrategies';
 import { Denom, Pair } from '@hooks/usePairs';
-import DenomAmount from '@models/DenomAmount';
 import getDenomInfo from '@utils/getDenomInfo';
 
 export function getInitialDenom(positionType?: PositionType, pair?: Pair) {
@@ -8,8 +7,7 @@ export function getInitialDenom(positionType?: PositionType, pair?: Pair) {
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): Denom {
-  const { status, configuration, balances } = strategy;
-  const { position_type, execution_interval, swap_amount, pair } = configuration || {};
+  const { pair, position_type } = strategy;
   return position_type === 'enter' ? pair?.quote_denom : pair?.base_denom;
 }
 

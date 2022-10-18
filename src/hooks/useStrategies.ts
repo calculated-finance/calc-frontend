@@ -13,22 +13,22 @@ export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_K
 
 export type Strategy = {
   id: string;
+  created_at: string;
   owner: string;
-  balances: DenomAmount[];
+  destinations: any;
+  balance: DenomAmount;
   trigger_id: string;
   trigger_variant: TriggerVariant;
   status: 'active' | 'inactive';
-  configuration: {
-    execution_interval: string;
-    pair: {
-      address: string;
-      base_denom: Denom;
-      quote_denom: Denom;
-    };
-    swap_amount: string;
-    position_type: PositionType;
-    slippage_tolerance: number | null; // double check this type
+  time_interval: string;
+  pair: {
+    address: string;
+    base_denom: Denom;
+    quote_denom: Denom;
   };
+  swap_amount: string;
+  position_type: PositionType;
+  slippage_tolerance: number | null; // double check this type
 };
 
 type Response = {
@@ -43,7 +43,7 @@ export default function useStrategies() {
     [QUERY_KEY, address],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
-        get_all_vaults_by_address: {
+        get_vaults_by_address: {
           address,
         },
       }),

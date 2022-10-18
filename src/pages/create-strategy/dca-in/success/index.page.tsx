@@ -4,24 +4,22 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import steps from '@components/NewStrategyModal/steps';
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
-import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getInitialDenomBalance from './getInitialDenomBalance';
-import getSwapAmount from './getSwapAmount';
+import { getStrategyTimeSaved } from './getStrategyTimeSaved';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
   const { strategyId } = query;
 
-  const { data: strategy } = useStrategy(strategyId as string);
+  const { data } = useStrategy(strategyId as string);
 
-  if (!strategy) {
+  if (!data) {
     return null;
   }
 
-  const timeSaved = totalExecutions(getInitialDenomBalance(strategy.vault), getSwapAmount(strategy.vault)) * 10;
+  const timeSaved = getStrategyTimeSaved(data.vault);
 
   return (
     <NewStrategyModal>

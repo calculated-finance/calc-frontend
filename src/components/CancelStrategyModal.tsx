@@ -5,7 +5,6 @@ import {
   Flex,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -13,7 +12,6 @@ import {
   Spacer,
   useToast,
   ModalProps,
-  ButtonGroup,
   Stack,
 } from '@chakra-ui/react';
 import { Strategy } from '@hooks/useStrategies';
@@ -78,8 +76,8 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
               <Spacer />
               <Text as="span" fontSize="lg" color="blue.200">
                 {/* TODO: what happens for multiple denoms? */}
-                {getDenomInfo(strategy.balances[0].denom).conversion(Number(strategy.balances[0].amount))}{' '}
-                {getDenomInfo(strategy.balances[0].denom).name}
+                {getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount))}{' '}
+                {getDenomInfo(strategy.balance.denom).name}
               </Text>
             </Flex>
             <Text textAlign="center" textStyle="body-xs">

@@ -14,7 +14,7 @@ const useCancelStrategy = () => {
     mutate(
       {
         msg: {
-          cancel_vault_by_address_and_id: {
+          cancel_vault: {
             address,
             vault_id: strategyId,
           },

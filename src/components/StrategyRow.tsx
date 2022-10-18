@@ -4,7 +4,7 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
-import { getStrategyType } from "src/pages/strategies/[id]/getStrategyType";
+import { getStrategyType } from 'src/pages/strategies/[id]/getStrategyType';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 
@@ -42,12 +42,12 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Heading size="md">DCA</Heading>
         <Text textStyle="body-xs">
           {' '}
-          {getStrategyType(strategy.configuration.position_type)} ({strategy.id})
+          {getStrategyType(strategy)} ({strategy.id})
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text>Asset(s):</Text>
-        <DenomIcon showTooltip denomName={strategy.configuration.pair.base_denom} />
+        <DenomIcon showTooltip denomName={strategy.pair.base_denom} />
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>

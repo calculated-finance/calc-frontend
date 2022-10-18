@@ -65,16 +65,16 @@ function InvestmentThesis() {
   const acculumatingAssets = Array.from(
     new Set(
       activeStrategies
-        .filter((strategy) => strategy.configuration.position_type === 'enter')
-        .map((strategy) => strategy.configuration.pair.base_denom),
+        .filter((strategy) => strategy.position_type === 'enter')
+        .map((strategy) => strategy.pair.base_denom),
     ),
   );
 
   const profitTakingAssets = Array.from(
     new Set(
       activeStrategies
-        .filter((strategy) => strategy.configuration.position_type === 'exit')
-        .map((strategy) => strategy.configuration.pair.base_denom),
+        .filter((strategy) => strategy.position_type === 'exit')
+        .map((strategy) => strategy.pair.base_denom),
     ),
   );
   return (
@@ -149,7 +149,7 @@ function TotalInvestment() {
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   const totalInvested = activeStrategies
-    .map((strategy) => Number(strategy.balances[0].amount))
+    .map((strategy) => Number(strategy.balance.amount))
     .reduce((balance, acc) => acc + balance, 0);
 
   const formattedTotalInvested = totalInvested.toLocaleString('en-US', {

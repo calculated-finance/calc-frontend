@@ -15,6 +15,7 @@ import arrow from 'src/animations/arrow.json';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
+import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
 import TopUpAmount from './TopUpAmount';
 import { getResultingDenom } from '../getResultingDenom';
 import { getInitialDenom } from '../getInitialDenom';
@@ -57,21 +58,22 @@ function Page() {
   const { query } = useRouter();
   const { data, isLoading } = useStrategy(query?.id as string);
   const { mutate, error, isError } = useTopUpStrategy();
+  const { isPageLoading } = usePageLoad();
 
-  const { position_type, pair } = data?.vault.configuration || {};
+  const { position_type, pair } = data?.vault || {};
 
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
-
-  const { isPageLoading } = usePageLoad();
 
   const { displayAmount } = useBalance({
     token: initialDenom,
   });
 
-  const remaining = getDenomInfo(initialDenom).conversion(
-    Number(data?.vault.balances.find((balance) => balance.denom === initialDenom)?.amount),
-  );
+  if (!data) {
+    return 'strategy not found';
+  }
+
+  const remaining = getDenomInfo(initialDenom).conversion(getStrategyBalance(data.vault));
 
   const validationSchema = Yup.object({
     topUpAmount: Yup.number().label('Top up amount').positive().max(displayAmount).required(),
@@ -82,7 +84,7 @@ function Page() {
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
   ) =>
     mutate(
-      { values, initialDenom: initialDenom, id: query.id },
+      { values, initialDenom, id: query.id },
       {
         onSuccess: async () => {
           await nextStep({ strategyId: query.id });
@@ -111,7 +113,7 @@ function Page() {
               <Stack direction="column" spacing={6}>
                 <Stack spacing={2}>
                   <Heading size="sm">
-                    Your {getStrategyType(data?.vault.configuration.position_type)} {query?.id} Strategy
+                    Your {getStrategyType(data?.vault)} {query?.id} Strategy
                   </Heading>
                   <Text textStyle="body-xs">
                     Remaining balance: {remaining} {getDenomInfo(initialDenom).name}

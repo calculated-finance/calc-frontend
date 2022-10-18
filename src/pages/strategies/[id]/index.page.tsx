@@ -32,6 +32,7 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
+import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from './getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -79,22 +80,14 @@ function Page() {
     );
   }
 
-  const { status, configuration, balances } = data?.vault || {};
-  const { position_type, execution_interval, swap_amount, pair } = configuration || {};
+  const { status, position_type, time_interval, swap_amount, balance, pair } = data?.vault || {};
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
-  const initialDenomBalance = balances?.find((balance) => balance.denom === initialDenom);
-  if (!initialDenomBalance) {
-    return null; // theres a better way to handle this
-  }
-
-  const resultingDenomBalance = balances?.find((balance) => balance.denom === resultingDenom) || 0;
-
-  const initialDenomValue = new DenomValue(initialDenomBalance);
+  const initialDenomValue = new DenomValue(balance);
   const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
 
-  const strategyType = getStrategyType(position_type);
+  const strategyType = getStrategyType(data.vault);
 
   return (
     <>
@@ -167,7 +160,7 @@ function Page() {
                   <Heading size="xs">Investment cycle</Heading>
                 </GridItem>
                 <GridItem colSpan={2}>
-                  <Text fontSize="sm">{execution_interval || '-'}</Text>
+                  <Text fontSize="sm">{time_interval || '-'}</Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Purchase each cycle</Heading>
@@ -273,21 +266,20 @@ function Page() {
           </Box>
         </GridItem>
         <GridItem colSpan={6}>
-          <Box p={4} layerStyle="panel" h={328}>
-            <Heading pb={4} size="md">
+          <Box layerStyle="panel">
+            <Heading p={4} size="md">
               Portfolio accumulated with this strategy
             </Heading>
-            <Stat>
+            {/* <Stat>
               <StatNumber>
-                {getDenomInfo(resultingDenom).conversion(Number(resultingDenomBalance))}{' '}
-                {getDenomInfo(resultingDenom).name}
+                {getDenomInfo(resultingDenom).conversion(Number(0))} {getDenomInfo(resultingDenom).name}
               </StatNumber>
-            </Stat>
+            </Stat> */}
             <Box position="relative">
               <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="2px">
                 <Heading>Coming Soon</Heading>
               </Center>
-              <Image src="/images/dummyChart.svg" />
+              <Image borderBottomRadius="2xl" w="full" h="full" src="/images/dummyChart.svg" />
             </Box>
           </Box>
         </GridItem>

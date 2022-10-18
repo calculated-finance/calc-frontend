@@ -6,7 +6,8 @@ import useStrategy from '@hooks/useStrategy';
 import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getInitialDenomBalance from '../../dca-in/success/getInitialDenomBalance';
+import getStrategyBalance from '../../dca-in/success/getInitialDenomBalance';
+import { getStrategyTimeSaved } from '../../dca-in/success/getStrategyTimeSaved';
 import getSwapAmount from '../../dca-in/success/getSwapAmount';
 import dcaOutSteps from '../dcaOutSteps';
 
@@ -15,13 +16,13 @@ function Success() {
   const { query } = useRouter();
   const { strategyId } = query;
 
-  const { data: strategy } = useStrategy(strategyId as string);
+  const { data } = useStrategy(strategyId as string);
 
-  if (!strategy) {
+  if (!data) {
     return null;
   }
 
-  const timeSaved = totalExecutions(getInitialDenomBalance(strategy.vault), getSwapAmount(strategy.vault)) * 10;
+  const timeSaved = getStrategyTimeSaved(data.vault);
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} finalStep={false}>
