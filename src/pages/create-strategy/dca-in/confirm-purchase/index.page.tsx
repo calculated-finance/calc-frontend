@@ -1,14 +1,4 @@
-import {
-  Button,
-  Center,
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  Stack,
-  Text,
-  useCheckbox,
-} from '@chakra-ui/react';
+import { Button, Center, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -17,14 +7,14 @@ import { useRouter } from 'next/router';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import { Form, Formik, FormikHelpers, useField } from 'formik';
-import { FiCheck } from 'react-icons/fi';
+import { Form, Formik, FormikHelpers } from 'formik';
 import totalExecutions from '@utils/totalExecutions';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import Summary from './Summary';
 import Fees from './Fees';
+import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 
 function InvalidData() {
   const router = useRouter();
@@ -42,37 +32,6 @@ function InvalidData() {
         restart
       </Button>
     </Center>
-  );
-}
-
-function AgreementCheckbox() {
-  const [field, meta] = useField('acceptedAgreement');
-  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(field);
-
-  return (
-    <FormControl isInvalid={meta.touched && !!meta.error}>
-      <chakra.label display="flex" flexDirection="row" alignItems="center" cursor="pointer" {...htmlProps}>
-        <Text textStyle="body-xs" {...getLabelProps()} mr={2}>
-          I have read and agree to be bound by the CALC Terms & Conditions.
-        </Text>
-
-        <input {...getInputProps()} hidden />
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          border="1px solid"
-          borderRadius="sm"
-          borderColor="white"
-          bg={state.isChecked ? 'brand.200' : 'none'}
-          w={4}
-          h={4}
-          {...getCheckboxProps()}
-        >
-          {state.isChecked && <Icon as={FiCheck} w={3} h={3} />}
-        </Flex>
-      </chakra.label>
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-    </FormControl>
   );
 }
 
@@ -112,32 +71,30 @@ function ConfirmPurchase() {
 
   return (
     <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
-      {({ isSubmitting, isValid, submitCount }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-            Confirm &amp; Sign
-          </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
-            {state ? (
-              <Form>
-                <Stack spacing={4}>
-                  <Summary />
-                  {/* <Fees /> */}
-                  <AgreementCheckbox />
-                  <FormControl isInvalid={isError}>
-                    <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
-                      Confirm
-                    </Submit>
-                    <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
-                  </FormControl>
-                </Stack>
-              </Form>
-            ) : (
-              <InvalidData />
-            )}
-          </NewStrategyModalBody>
-        </NewStrategyModal>
-      )}
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+          Confirm &amp; Sign
+        </NewStrategyModalHeader>
+        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
+          {state ? (
+            <Form>
+              <Stack spacing={4}>
+                <Summary />
+                <Fees />
+                <AgreementCheckbox />
+                <FormControl isInvalid={isError}>
+                  <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
+                    Confirm
+                  </Submit>
+                  <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+                </FormControl>
+              </Stack>
+            </Form>
+          ) : (
+            <InvalidData />
+          )}
+        </NewStrategyModalBody>
+      </NewStrategyModal>
     </Formik>
   );
 }

@@ -1,41 +1,17 @@
-import {
-  Box,
-  Button,
-  Collapse,
-  Divider,
-  Fade,
-  Flex,
-  FormHelperText,
-  Heading,
-  Icon,
-  Spacer,
-  Spinner,
-  Stack,
-  Text,
-  useBoolean,
-} from '@chakra-ui/react';
-import DenomIcon from '@components/DenomIcon';
+import { Box, Button, Collapse, Fade, Flex, Heading, Icon, Spacer, Stack, Text, useBoolean } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
-import totalExecutions from 'src/utils/totalExecutions';
-import { useQuery } from '@tanstack/react-query';
-import BadgeButton from '@components/BadgeButton';
-import { ArrowDownIcon, ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
-import DcaInDiagram from './DcaInDiagram';
-import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
-import TriggerTypes from '../../../../models/TriggerTypes';
-import AutoStakeValues from '../../../../models/AutoStakeValues';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
     <Stack position="relative" spacing={1}>
-      <Box position="relative" w="min-content" zIndex={10} pl={isOpen ? 2 : 0}>
+      <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
         <Box position="absolute" w="full" h="full" bg="darkGrey" />
         <Button
           rightIcon={<Icon as={isOpen ? ChevronUpIcon : ChevronDownIcon} />}
-          variant="ghost"
+          variant={isOpen ? 'ghost' : 'link'}
           size="xs"
           onClick={toggle}
           w="min-content"
@@ -72,6 +48,11 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
                   <Text textStyle="body-xs">Transaction fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs">Kado on-ramp fees:</Text>
+                  <Spacer />
+                  <Text textStyle="body-xs">-</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs" textColor="white">
@@ -131,7 +112,7 @@ export default function Fees() {
     return null;
   }
 
-  const { initialDenom, resultingDenom, initialDeposit, swapAmount } = state;
+  const { initialDenom, initialDeposit, swapAmount } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
 
@@ -140,12 +121,11 @@ export default function Fees() {
       <Text textStyle="body-xs">
         Deposit fee{' '}
         <Text as="span" textColor="white">
-          {initialDeposit * 0.02}
-          {initialDenomName}
-        </Text>
+          {initialDeposit * 0.02} {initialDenomName}
+        </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~{swapAmount * 0.01}
+          ~{swapAmount * 0.01} {initialDenomName}
         </Text>{' '}
         per swap
       </Text>
