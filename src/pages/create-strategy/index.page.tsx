@@ -138,7 +138,7 @@ function Strategies() {
   return (
     <Stack direction="column" spacing={8}>
       <Box>
-        <Wrap spacing={2} pb={1} shouldWrapChildren>
+        <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
           <Badge colorScheme="green" whiteSpace="normal" textAlign="center">
             According to the{' '}
@@ -160,7 +160,7 @@ function Strategies() {
       <InfoPanel />
       <Box>
         <Heading mb={2} size="md">
-          Take profit strategies
+          Take Profit strategies
         </Heading>
         <Text color="grey.200">You want to start selling assets because you have a good return on them already.</Text>
       </Box>
