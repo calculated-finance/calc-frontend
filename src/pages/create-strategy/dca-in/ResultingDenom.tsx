@@ -2,20 +2,7 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } 
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
-import { chakraComponents, OptionProps } from 'chakra-react-select';
-import Select from '../../../components/Select';
-import { DenomSelectLabel } from './InitialDenom';
-
-const customComponents = {
-  Option: ({ children, ...props }: OptionProps) => (
-    <chakraComponents.Option {...props}>
-      {children}
-      <Flex flexShrink={0}>
-        <Text fontSize="xs">Swapped on FIN</Text>
-      </Flex>
-    </chakraComponents.Option>
-  ),
-};
+import { DenomSelect } from '../../../components/DenomSelect';
 
 export default function ResultingDenom() {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
@@ -28,26 +15,18 @@ export default function ResultingDenom() {
 
   const [initialDenomField] = useField({ name: 'initialDenom' });
 
-  const filteredPairsOptions = uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs).map(
-    (denom) =>
-      ({
-        value: denom,
-        label: <DenomSelectLabel denom={denom} />,
-      } || []),
-  );
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <FormLabel>What asset do you want to invest in?</FormLabel>
       <FormHelperText>
         <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
       </FormHelperText>
-      <Select
-        options={filteredPairsOptions}
+      <DenomSelect
+        denoms={uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs)}
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        customComponents={customComponents}
+        optionLabel="Swapped on FIN"
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

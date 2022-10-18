@@ -7,41 +7,14 @@ import {
   SimpleGrid,
   Spacer,
   Text,
-  Image,
-  HStack,
   Button,
   Center,
-  Flex,
 } from '@chakra-ui/react';
-import usePairs, { Denom, uniqueBaseDenoms } from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenoms } from '@hooks/usePairs';
 import useBalance from '@hooks/useBalance';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import { chakraComponents, OptionProps } from 'chakra-react-select';
-import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
-import Select from '../../../../components/Select';
-
-const customComponents = {
-  Option: ({ children, ...props }: OptionProps) => (
-    <chakraComponents.Option {...props}>
-      {children}
-      {/* TODO: make this styling better, dont hard code margin */}
-      <Text w="full" ml={28} fontSize="xs">
-        FIN
-      </Text>
-    </chakraComponents.Option>
-  ),
-};
-
-export function DenomSelectLabel({ denom }: { denom: Denom }) {
-  return (
-    <HStack>
-      <DenomIcon denomName={denom} />
-      <Text>{getDenomInfo(denom).name}</Text>
-    </HStack>
-  );
-}
+import { DenomSelect } from '../../../../components/DenomSelect';
 
 // TODO: make this generic
 function AvailableFunds() {
@@ -88,11 +61,6 @@ export default function InitialDenom() {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [, , initialDepositHelpers] = useField('initialDeposit');
 
-  const pairsOptions = uniqueBaseDenoms(pairs).map((denom) => ({
-    value: denom,
-    label: <DenomSelectLabel denom={denom} />,
-  }));
-
   const handleChange = (value: string | undefined) => {
     helpers.setValue(value);
     initialDepositHelpers.setTouched(false);
@@ -112,12 +80,12 @@ export default function InitialDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
-          <Select
-            options={pairsOptions}
+          <DenomSelect
+            denoms={uniqueBaseDenoms(pairs)}
             placeholder="Choose asset"
             value={field.value}
             onChange={handleChange}
-            customComponents={customComponents}
+            optionLabel="FIN"
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>

@@ -4,6 +4,7 @@ const dcaOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-out',
     title: 'Choose Funding & Assets',
+    footerText: 'How does taking profit work?',
   },
   {
     href: '/create-strategy/dca-out/step2',

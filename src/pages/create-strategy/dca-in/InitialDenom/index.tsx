@@ -7,7 +7,6 @@ import {
   SimpleGrid,
   Spacer,
   Text,
-  Image,
   HStack,
   Button,
   Center,
@@ -19,6 +18,7 @@ import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
 import Select from '../../../../components/Select';
+import { DenomSelect } from '../../../../components/DenomSelect';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (
@@ -72,11 +72,6 @@ export default function InitialDenom() {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [, , initialDepositHelpers] = useField('initialDeposit');
 
-  const pairsOptions = uniqueQuoteDenoms(pairs).map((denom) => ({
-    value: denom,
-    label: <DenomSelectLabel denom={denom} />,
-  }));
-
   const handleChange = (value: string | undefined) => {
     helpers.setValue(value);
     initialDepositHelpers.setTouched(false);
@@ -96,7 +91,12 @@ export default function InitialDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
-          <Select options={pairsOptions} placeholder="Choose asset" value={field.value} onChange={handleChange} />
+          <DenomSelect
+            denoms={uniqueQuoteDenoms(pairs)}
+            placeholder="Choose asset"
+            value={field.value}
+            onChange={handleChange}
+          />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>
         <InitialDeposit />

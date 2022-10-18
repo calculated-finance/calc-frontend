@@ -7,7 +7,7 @@ export type OptionType = {
   label: ReactNode | string;
 };
 
-type SelectProps = {
+export type SelectProps = {
   options: OptionType[];
   customComponents?: Partial<SelectComponent>;
   onChange: (value?: string) => void;
@@ -39,6 +39,7 @@ export default function Select({
       }),
       menuList: (provided) => ({
         ...provided,
+        minW: 0,
         bg: 'deepHorizon',
       }),
     },
