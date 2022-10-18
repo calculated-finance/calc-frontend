@@ -17,10 +17,19 @@ function Success() {
   const { query } = useRouter();
   const { strategyId } = query;
 
-  const { data } = useStrategy(strategyId as string);
+  const { data, isLoading } = useStrategy(strategyId as string);
 
   if (!data) {
-    return null;
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
+          Top Up Successful
+        </NewStrategyModalHeader>
+        <NewStrategyModalBody isLoading={isLoading} stepsConfig={topUpSteps}>
+          loading
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
   }
 
   const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));

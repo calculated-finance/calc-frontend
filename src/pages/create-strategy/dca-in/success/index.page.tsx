@@ -13,10 +13,19 @@ function Success() {
   const { query } = useRouter();
   const { strategyId } = query;
 
-  const { data } = useStrategy(strategyId as string);
+  const { data, isLoading } = useStrategy(strategyId as string);
 
   if (!data) {
-    return null;
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={steps} finalStep={false}>
+          Strategy Set Successfully
+        </NewStrategyModalHeader>
+        <NewStrategyModalBody isLoading={isLoading} stepsConfig={steps}>
+          loading
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
   }
 
   const timeSaved = getStrategyTimeSaved(data.vault);

@@ -57,7 +57,7 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   'dca-in': { label: 'DCA In', enabled: false },
   'dca-out': { label: 'DCA Out', enabled: false },
   strategies: { label: 'My strategies', enabled: true },
-  'top-up': { label: 'Top Up Strategy', enabled: true },
+  'top-up': { label: 'Top Up Strategy', enabled: false },
 };
 
 function FlowBreadcrumbs() {
@@ -70,7 +70,7 @@ function FlowBreadcrumbs() {
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
           <BreadcrumbItem>
-            <Link href={breadcrumbData[part].enabled ? href : ''}>
+            <Link href={breadcrumbData[part].enabled ? href : '#'}>
               <BreadcrumbLink>{breadcrumbData[part].label}</BreadcrumbLink>
             </Link>
           </BreadcrumbItem>

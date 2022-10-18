@@ -53,7 +53,16 @@ function Page() {
   });
 
   if (!data) {
-    return 'strategy not found';
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false}>
+          Choose Funding &amp; Assets
+        </NewStrategyModalHeader>
+        <NewStrategyModalBody stepsConfig={topUpSteps} isLoading={isLoading || isPageLoading}>
+          loading
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
   }
 
   const remaining = getDenomInfo(initialDenom).conversion(getStrategyBalance(data.vault));
