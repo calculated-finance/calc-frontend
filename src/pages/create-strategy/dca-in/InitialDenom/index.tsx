@@ -30,12 +30,12 @@ export function DenomSelectLabel({ denom }: { denom: Denom }) {
 }
 
 function AvailableFunds() {
-  const [field] = useField({ name: 'quoteDenom' });
+  const [field] = useField({ name: 'initialDenom' });
 
-  const quoteDenom = field.value;
+  const initialDenom = field.value;
 
   const { displayAmount, isLoading } = useBalance({
-    token: quoteDenom,
+    token: initialDenom,
   });
 
   const [, , helpers] = useField('initialDeposit');
@@ -44,7 +44,7 @@ function AvailableFunds() {
     helpers.setValue(displayAmount);
   };
 
-  if (!quoteDenom) {
+  if (!initialDenom) {
     return null;
   }
 
@@ -66,10 +66,10 @@ function AvailableFunds() {
   );
 }
 
-export default function QuoteDenom() {
+export default function InitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
-  const [field, meta, helpers] = useField({ name: 'quoteDenom' });
+  const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [, , initialDepositHelpers] = useField('initialDeposit');
 
   const pairsOptions = uniqueQuoteDenoms(pairs).map((denom) => ({

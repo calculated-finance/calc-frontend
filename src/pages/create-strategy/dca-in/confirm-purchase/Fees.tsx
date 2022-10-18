@@ -27,7 +27,7 @@ import executionIntervalDisplay from '../../../../helpers/executionIntervalDispl
 import TriggerTypes from '../../../../models/TriggerTypes';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
 
-function FeeBreakdown({ quoteDenomName }: { quoteDenomName: string }) {
+function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
     <Stack position="relative" spacing={1}>
@@ -66,12 +66,12 @@ function FeeBreakdown({ quoteDenomName }: { quoteDenomName: string }) {
                 <Flex>
                   <Text textStyle="body-xs">Gas:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {quoteDenomName}</Text>
+                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {quoteDenomName}</Text>
+                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs" textColor="white">
@@ -79,7 +79,7 @@ function FeeBreakdown({ quoteDenomName }: { quoteDenomName: string }) {
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    0.0 {quoteDenomName}
+                    0.0 {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -92,17 +92,17 @@ function FeeBreakdown({ quoteDenomName }: { quoteDenomName: string }) {
                 <Flex>
                   <Text textStyle="body-xs">CALC sustainability tax:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {quoteDenomName}</Text>
+                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {quoteDenomName}</Text>
+                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">FIN transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {quoteDenomName}</Text>
+                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs" textColor="white">
@@ -110,7 +110,7 @@ function FeeBreakdown({ quoteDenomName }: { quoteDenomName: string }) {
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    0.0 {quoteDenomName}
+                    0.0 {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -131,9 +131,9 @@ export default function Fees() {
     return null;
   }
 
-  const { quoteDenom, baseDenom, initialDeposit, swapAmount, startDate, executionInterval, purchaseTime } = state;
+  const { initialDenom, resultingDenom, initialDeposit, swapAmount } = state;
 
-  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
 
   return (
     <Stack spacing={0}>
@@ -141,7 +141,7 @@ export default function Fees() {
         Deposit fee{' '}
         <Text as="span" textColor="white">
           {initialDeposit * 0.02}
-          {quoteDenomName}
+          {initialDenomName}
         </Text>
         +{' '}
         <Text as="span" textColor="white">
@@ -149,7 +149,7 @@ export default function Fees() {
         </Text>{' '}
         per swap
       </Text>
-      <FeeBreakdown quoteDenomName={quoteDenomName} />
+      <FeeBreakdown initialDenomName={initialDenomName} />
     </Stack>
   );
 }

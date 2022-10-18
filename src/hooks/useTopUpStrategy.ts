@@ -9,15 +9,15 @@ import getDenomInfo from '@utils/getDenomInfo';
 const useTopUpStrategy = () => {
   const { address: senderAddress, client } = useWallet();
 
-  return useMutation<ExecuteResult, Error, any, any>(({ values, quoteDenom, id }) => {
-    const { deconversion } = getDenomInfo(quoteDenom);
+  return useMutation<ExecuteResult, Error, any, any>(({ values, initialDenom, id }) => {
+    const { deconversion } = getDenomInfo(initialDenom);
     const msg = {
       deposit: {
         vault_id: id,
       },
     };
 
-    const funds = [{ denom: quoteDenom, amount: deconversion(values.topUpAmount).toString() }];
+    const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
 
     const result = client!.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
     return result;

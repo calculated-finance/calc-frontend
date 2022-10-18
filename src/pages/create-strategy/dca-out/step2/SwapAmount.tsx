@@ -25,8 +25,8 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
   const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
-  const { name: quoteDenomName } = getDenomInfo(step1State.quoteDenom);
-  const { name: baseDenomName } = getDenomInfo(step1State.baseDenom);
+  const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(step1State.resultingDenom);
   const { initialDeposit } = step1State;
 
   const handleClick = () => {
@@ -39,10 +39,10 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>How much {quoteDenomName} each swap?</FormLabel>
+      <FormLabel>How much {initialDenomName} each swap?</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
-          <Text>The amount you want swapped each purchase for {baseDenomName}.</Text>
+          <Text>The amount you want swapped each purchase for {resultingDenomName}.</Text>
           <Spacer />
           <Flex flexDirection="row">
             <Text mr={1}>Max: </Text>
@@ -54,11 +54,11 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
       </FormHelperText>
       <InputGroup>
         <InputLeftElement>
-          <DenomIcon denomName={step1State.quoteDenom} />
+          <DenomIcon denomName={step1State.initialDenom} />
         </InputLeftElement>
         <NumberInput pl={10} onChange={helpers.setValue} placeholder="Enter amount" value={value} {...field} />
         <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
-          <Text>{quoteDenomName}</Text>
+          <Text>{initialDenomName}</Text>
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>

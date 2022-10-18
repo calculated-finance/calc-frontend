@@ -20,8 +20,8 @@ export default function Summary() {
   }
 
   const {
-    quoteDenom,
-    baseDenom,
+    initialDenom,
+    resultingDenom,
     initialDeposit,
     swapAmount,
     startDate,
@@ -32,8 +32,8 @@ export default function Summary() {
     startPrice,
   } = state;
 
-  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
-  const { name: baseDenomName } = getDenomInfo(baseDenom);
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
   const formattedDate = startDate?.toLocaleString('en-US', {
     day: '2-digit',
@@ -80,13 +80,13 @@ export default function Summary() {
       <>
         when{' '}
         <BadgeButton>
-          <Text>{baseDenomName}</Text>
-          <DenomIcon denomName={baseDenom} />
+          <Text>{resultingDenomName}</Text>
+          <DenomIcon denomName={resultingDenom} />
           <Text>=</Text>
           <Text>
-            {startPrice} {quoteDenomName}
+            {startPrice} {initialDenomName}
           </Text>
-          <DenomIcon denomName={quoteDenom} />
+          <DenomIcon denomName={initialDenom} />
         </BadgeButton>
       </>
     );
@@ -96,7 +96,7 @@ export default function Summary() {
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
   return (
     <Stack spacing={4}>
-      <DcaInDiagram quoteDenom={quoteDenom} baseDenom={baseDenom} initialDeposit={initialDeposit} />
+      <DcaInDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
       <Divider />
       <Box>
         <Text textStyle="body-xs">The swap</Text>
@@ -104,14 +104,14 @@ export default function Summary() {
           {triggerInfo}, CALC will swap{' '}
           <BadgeButton>
             <Text>
-              ~{swapAmount} {quoteDenomName}
+              ~{swapAmount} {initialDenomName}
             </Text>
-            <DenomIcon denomName={quoteDenom} />
+            <DenomIcon denomName={initialDenom} />
           </BadgeButton>{' '}
           for{' '}
           <BadgeButton>
-            <Text>{baseDenomName}</Text>
-            <DenomIcon denomName={baseDenom} />
+            <Text>{resultingDenomName}</Text>
+            <DenomIcon denomName={resultingDenom} />
           </BadgeButton>{' '}
           for{' '}
           <BadgeButton>

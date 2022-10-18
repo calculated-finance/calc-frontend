@@ -78,8 +78,8 @@ function Page() {
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaInDiagram
-                  quoteDenom={state.step1.quoteDenom}
-                  baseDenom={state.step1.baseDenom}
+                  initialDenom={state.step1.initialDenom}
+                  resultingDenom={state.step1.resultingDenom}
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />

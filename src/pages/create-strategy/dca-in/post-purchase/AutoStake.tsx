@@ -30,7 +30,7 @@ export function AutoStake() {
   return (
     <FormControl>
       {/* Make this the actual denom */}
-      <FormLabel>Auto stake {getDenomInfo(context?.baseDenom).name} after each swap?</FormLabel>
+      <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
       <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
       <HStack>
         <Radio {...getRootProps}>

@@ -29,7 +29,7 @@ export default function SendToWallet() {
 
   return (
     <FormControl>
-      <FormLabel>Send {getDenomInfo(context?.baseDenom).name} from CALC to my wallet after each swap?</FormLabel>
+      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} from CALC to my wallet after each swap?</FormLabel>
       <FormHelperText>
         This wallet address will be the one the funds are sent to or autostaked to on your behalf.
       </FormHelperText>

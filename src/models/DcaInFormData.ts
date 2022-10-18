@@ -8,8 +8,8 @@ import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
 
 export const initialValues = {
-  baseDenom: '',
-  quoteDenom: '',
+  resultingDenom: '',
+  initialDenom: '',
   initialDeposit: null,
   advancedSettings: false,
   startImmediately: StartImmediatelyValues.Yes,
@@ -28,13 +28,13 @@ export const initialValues = {
 };
 
 export const allValidationSchema = Yup.object({
-  baseDenom: Yup.mixed<Denom>()
+  resultingDenom: Yup.mixed<Denom>()
     .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
-    .label('Base Denom')
+    .label('Resulting Denom')
     .required(),
-  quoteDenom: Yup.mixed<Denom>()
+  initialDenom: Yup.mixed<Denom>()
     .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
-    .label('Quote Denom')
+    .label('Initial Denom')
     .required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
@@ -49,11 +49,11 @@ export const allValidationSchema = Yup.object({
         if (!balances) {
           return true;
         }
-        const amount = balances.find((balance: any) => balance.denom === context.parent.quoteDenom)?.amount;
+        const amount = balances.find((balance: any) => balance.denom === context.parent.initialDenom)?.amount;
         if (!amount || !value) {
           return false;
         }
-        return value <= getDenomInfo(context.parent.quoteDenom).conversion(Number(amount));
+        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
       },
     }),
   advancedSettings: Yup.boolean(),
@@ -150,7 +150,7 @@ export const allValidationSchema = Yup.object({
 });
 export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 
-export const step1ValidationSchema = allValidationSchema.pick(['baseDenom', 'quoteDenom', 'initialDeposit']);
+export const step1ValidationSchema = allValidationSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
 export const postPurchaseValidationSchema = allValidationSchema.pick([

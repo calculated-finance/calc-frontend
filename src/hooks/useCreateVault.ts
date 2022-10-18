@@ -22,8 +22,8 @@ const useCreateVault = (positionType: PositionType) => {
     }
 
     const {
-      quoteDenom,
-      baseDenom,
+      initialDenom,
+      resultingDenom,
       initialDeposit,
       startDate,
       swapAmount,
@@ -41,10 +41,12 @@ const useCreateVault = (positionType: PositionType) => {
 
     const pairAddress =
       positionType === 'enter'
-        ? data?.pairs?.find((pair: Pair) => pair.base_denom === baseDenom && pair.quote_denom === quoteDenom)?.address
-        : data?.pairs?.find((pair: Pair) => pair.base_denom === quoteDenom && pair.quote_denom === baseDenom)?.address;
+        ? data?.pairs?.find((pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom)
+            ?.address
+        : data?.pairs?.find((pair: Pair) => pair.base_denom === initialDenom && pair.quote_denom === resultingDenom)
+            ?.address;
 
-    const { deconversion } = getDenomInfo(quoteDenom);
+    const { deconversion } = getDenomInfo(initialDenom);
 
     let startTimeSeconds;
 
@@ -76,8 +78,8 @@ const useCreateVault = (positionType: PositionType) => {
     };
 
     const funds = true
-      ? [{ denom: quoteDenom, amount: deconversion(initialDeposit).toString() }]
-      : [{ denom: baseDenom, amount: deconversion(initialDeposit).toString() }];
+      ? [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }]
+      : [{ denom: resultingDenom, amount: deconversion(initialDeposit).toString() }];
 
     if (!pairAddress || !client) {
       throw Error('Invalid form data');

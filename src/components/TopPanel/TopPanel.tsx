@@ -179,7 +179,7 @@ export default function TopPanel() {
               h="full"
               w="full"
             /> */}
-            <Stack zIndex={10} spacing={6} backdropBlur="2px" backdropFilter="auto">
+            <Stack spacing={6} backdropBlur="2px" backdropFilter="auto">
               <Content />
             </Stack>
           </>

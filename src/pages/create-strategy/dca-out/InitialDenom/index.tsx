@@ -13,7 +13,7 @@ import {
   Center,
   Flex,
 } from '@chakra-ui/react';
-import usePairs, { Denom, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePairs, { Denom, uniqueBaseDenoms } from '@hooks/usePairs';
 import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
@@ -45,12 +45,12 @@ export function DenomSelectLabel({ denom }: { denom: Denom }) {
 
 // TODO: make this generic
 function AvailableFunds() {
-  const [field] = useField({ name: 'quoteDenom' });
+  const [field] = useField({ name: 'initialDenom' });
 
-  const quoteDenom = field.value;
+  const initialDenom = field.value;
 
   const { displayAmount, isLoading } = useBalance({
-    token: quoteDenom,
+    token: initialDenom,
   });
 
   const [, , helpers] = useField('initialDeposit');
@@ -59,7 +59,7 @@ function AvailableFunds() {
     helpers.setValue(displayAmount);
   };
 
-  if (!quoteDenom) {
+  if (!initialDenom) {
     return null;
   }
 
@@ -82,10 +82,10 @@ function AvailableFunds() {
 }
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
-export default function QuoteDenom() {
+export default function InitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
-  const [field, meta, helpers] = useField({ name: 'quoteDenom' });
+  const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [, , initialDepositHelpers] = useField('initialDeposit');
 
   const pairsOptions = uniqueBaseDenoms(pairs).map((denom) => ({

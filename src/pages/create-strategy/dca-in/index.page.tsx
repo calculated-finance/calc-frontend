@@ -11,8 +11,8 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import useBalances from '@hooks/useBalances';
-import BaseDenom from './BaseDenom';
-import QuoteDenom from './QuoteDenom';
+import ResultingDenom from './ResultingDenom';
+import InitialDenom from './InitialDenom';
 
 function DcaIn() {
   const { actions, state } = useDcaInForm();
@@ -44,8 +44,8 @@ function DcaIn() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
-                <QuoteDenom />
-                <BaseDenom />
+                <InitialDenom />
+                <ResultingDenom />
                 <Submit>Next</Submit>
               </Stack>
             </Form>

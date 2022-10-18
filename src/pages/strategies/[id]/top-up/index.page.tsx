@@ -20,19 +20,19 @@ import { getResultingDenom } from '../getResultingDenom';
 import { getInitialDenom } from '../getInitialDenom';
 import { getStrategyType } from '../getStrategyType';
 
-function TopUpDiagram({ quoteDenom, baseDenom }: any) {
-  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
-  const { name: baseDenomName } = getDenomInfo(baseDenom);
+function TopUpDiagram({ initialDenom, resultingDenom }: any) {
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
     <Flex w="full" justifyContent="space-between">
       <HStack>
-        <DenomIcon denomName={quoteDenom} />
-        <Text>{quoteDenomName}</Text>
+        <DenomIcon denomName={initialDenom} />
+        <Text>{initialDenomName}</Text>
       </HStack>
       <Lottie animationData={arrow} loop />
       <HStack>
-        <DenomIcon denomName={baseDenom} />
-        <Text>{baseDenomName}</Text>
+        <DenomIcon denomName={resultingDenom} />
+        <Text>{resultingDenomName}</Text>
       </HStack>
     </Flex>
   );
@@ -82,7 +82,7 @@ function Page() {
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
   ) =>
     mutate(
-      { values, quoteDenom: initialDenom, id: query.id },
+      { values, initialDenom: initialDenom, id: query.id },
       {
         onSuccess: async () => {
           await nextStep({ strategyId: query.id });
@@ -116,10 +116,10 @@ function Page() {
                   <Text textStyle="body-xs">
                     Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
                   </Text>
-                  <TopUpDiagram quoteDenom={initialDenom} baseDenom={resultingDenom} />
+                  <TopUpDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
                 </Stack>
                 <Divider />
-                <TopUpAmount quoteDenom={initialDenom!} />
+                <TopUpAmount initialDenom={initialDenom!} />
                 <FormControl isInvalid={isError}>
                   <Submit>Confirm</Submit>
                   <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>

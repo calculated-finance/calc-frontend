@@ -10,8 +10,8 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import BaseDenom from './BaseDenom';
-import QuoteDenom from './QuoteDenom';
+import ResultingDenom from './ResultingDenom';
+import InitialDenom from './InitialDenom';
 import dcaOutSteps from './dcaOutSteps';
 
 function Page() {
@@ -44,8 +44,8 @@ function Page() {
           <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
-                <QuoteDenom />
-                <BaseDenom />
+                <InitialDenom />
+                <ResultingDenom />
                 <Submit>Next</Submit>
               </Stack>
             </Form>

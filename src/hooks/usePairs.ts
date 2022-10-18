@@ -30,12 +30,14 @@ export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.base_denom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(quoteDenom: Denom, pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.filter((pair) => pair.quote_denom === quoteDenom).map((pair) => pair.base_denom)));
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[] | undefined) {
+  return Array.from(new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)));
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(baseDenom: Denom, pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.filter((pair) => pair.base_denom === baseDenom).map((pair) => pair.quote_denom)));
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pair[] | undefined) {
+  return Array.from(
+    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
+  );
 }
 
 export default function usePairs() {

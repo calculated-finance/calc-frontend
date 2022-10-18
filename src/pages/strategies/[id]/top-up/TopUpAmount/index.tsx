@@ -18,9 +18,9 @@ import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '../../../../../components/NumberInput';
 
-function AvailableFunds({ quoteDenom }: { quoteDenom: Denom }) {
+function AvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
-    token: quoteDenom,
+    token: initialDenom,
   });
 
   const [, , helpers] = useField('topUpAmount');
@@ -47,10 +47,10 @@ function AvailableFunds({ quoteDenom }: { quoteDenom: Denom }) {
   );
 }
 
-export default function TopUpAmount({ quoteDenom }: { quoteDenom: Denom }) {
+export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'topUpAmount' });
 
-  const { name } = getDenomInfo(quoteDenom);
+  const { name } = getDenomInfo(initialDenom);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -59,12 +59,12 @@ export default function TopUpAmount({ quoteDenom }: { quoteDenom: Denom }) {
         <Center>
           <Text textStyle="body-xs">You must deposit the same asset.</Text>
           <Spacer />
-          <AvailableFunds quoteDenom={quoteDenom} />
+          <AvailableFunds initialDenom={initialDenom} />
         </Center>
       </FormHelperText>
       <InputGroup>
         <InputLeftElement>
-          <DenomIcon denomName={quoteDenom} />
+          <DenomIcon denomName={initialDenom} />
         </InputLeftElement>
         <NumberInput pl={10} onChange={helpers.setValue} placeholder="Choose amount" {...field} />
 

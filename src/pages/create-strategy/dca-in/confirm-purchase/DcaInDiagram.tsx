@@ -4,21 +4,21 @@ import getDenomInfo from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
 import arrow from './arrow.json';
 
-export default function DcaInDiagram({ quoteDenom, initialDeposit, baseDenom }: any) {
-  const { name: quoteDenomName } = getDenomInfo(quoteDenom);
-  const { name: baseDenomName } = getDenomInfo(baseDenom);
+export default function DcaInDiagram({ initialDenom, initialDeposit, resultingDenom }: any) {
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
     <Flex w="full" justifyContent="space-between">
       <HStack>
-        <DenomIcon denomName={quoteDenom} />
+        <DenomIcon denomName={initialDenom} />
         <Text>
-          {initialDeposit} {quoteDenomName}
+          {initialDeposit} {initialDenomName}
         </Text>
       </HStack>
       <Lottie animationData={arrow} loop />
       <HStack>
-        <DenomIcon denomName={baseDenom} />
-        <Text>{baseDenomName}</Text>
+        <DenomIcon denomName={resultingDenom} />
+        <Text>{resultingDenomName}</Text>
       </HStack>
     </Flex>
   );

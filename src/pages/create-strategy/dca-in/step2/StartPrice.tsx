@@ -24,8 +24,8 @@ export default function StartPrice() {
     return null;
   }
 
-  const { name: baseDenomName } = getDenomInfo(state.step1.baseDenom);
-  const { name: quoteDenomName } = getDenomInfo(state.step1.quoteDenom);
+  const { name: resultingDenomName } = getDenomInfo(state.step1.resultingDenom);
+  const { name: initialDenomName } = getDenomInfo(state.step1.initialDenom);
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
@@ -37,12 +37,12 @@ export default function StartPrice() {
           pointerEvents="none"
           children={
             <HStack direction="row">
-              <DenomIcon denomName={state.step1.baseDenom} /> <Text fontSize="sm">{baseDenomName} Price</Text>
+              <DenomIcon denomName={state.step1.resultingDenom} /> <Text fontSize="sm">{resultingDenomName} Price</Text>
             </HStack>
           }
         />
         <NumberInput textAlign="right" pr={16} placeholder="0.00" onChange={helpers.setValue} {...field} />
-        <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{quoteDenomName}</Text>} />
+        <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
       </InputGroup>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

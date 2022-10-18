@@ -4,7 +4,7 @@ import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
 import Select from '../../../components/Select';
-import { DenomSelectLabel } from './QuoteDenom';
+import { DenomSelectLabel } from './InitialDenom';
 
 const customComponents = {
   Option: ({ children, ...props }: OptionProps) => (
@@ -17,18 +17,18 @@ const customComponents = {
   ),
 };
 
-export default function BaseDenom() {
-  const [field, meta, helpers] = useField({ name: 'baseDenom' });
+export default function ResultingDenom() {
+  const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { data } = usePairs();
   const { pairs } = data || {};
 
   const {
-    values: { quoteDenom },
+    values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
 
-  const [quoteDenomField] = useField({ name: 'quoteDenom' });
+  const [initialDenomField] = useField({ name: 'initialDenom' });
 
-  const filteredPairsOptions = uniqueBaseDenomsFromQuoteDenom(quoteDenomField.value, pairs).map(
+  const filteredPairsOptions = uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs).map(
     (denom) =>
       ({
         value: denom,
@@ -37,7 +37,7 @@ export default function BaseDenom() {
   );
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!quoteDenom}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <FormLabel>What asset do you want to invest in?</FormLabel>
       <FormHelperText>
         <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
