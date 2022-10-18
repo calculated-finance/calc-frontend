@@ -1,20 +1,19 @@
-import {
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage, Text,
-  useCheckbox
-} from '@chakra-ui/react';
+import { chakra, Flex, FormControl, FormErrorMessage, Text, useCheckbox } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import { FiCheck } from 'react-icons/fi';
 
 export function AgreementCheckbox() {
   const [field, meta] = useField('acceptedAgreement');
-  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(field);
+  const { isSubmitting } = useFormikContext();
+
+  const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox({
+    ...field,
+    isDisabled: isSubmitting,
+  });
 
   return (
-    <FormControl isInvalid={meta.touched && !!meta.error}>
+    <FormControl isInvalid={meta.touched && !!meta.error} isDisabled={isSubmitting}>
       <chakra.label display="flex" flexDirection="row" alignItems="center" cursor="pointer" {...htmlProps}>
         <Text textStyle="body-xs" {...getLabelProps()} mr={2}>
           I have read and agree to be bound by the CALC Terms & Conditions.
