@@ -56,7 +56,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm">Start date:</Text>
 
         <Text textStyle="body-xs">
-          {/* {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()} */}
+          -{/* {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()} */}
         </Text>
       </GridItem>
 
@@ -70,7 +70,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm">Cadence:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
-          {/* {strategy.execution_interval} */}
+          {strategy.time_interval}
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 7, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>

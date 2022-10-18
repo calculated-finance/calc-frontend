@@ -156,7 +156,9 @@ function Page() {
                   <Heading size="xs">Investment cycle</Heading>
                 </GridItem>
                 <GridItem colSpan={2}>
-                  <Text fontSize="sm">{time_interval || '-'}</Text>
+                  <Text fontSize="sm" textTransform="capitalize">
+                    {time_interval || '-'}
+                  </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Purchase each cycle</Heading>
