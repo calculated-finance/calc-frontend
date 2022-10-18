@@ -6,7 +6,7 @@ import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
-import DcaInDiagram from './DcaInDiagram';
+import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import TriggerTypes from '../../../../models/TriggerTypes';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
@@ -115,7 +115,7 @@ export default function Summary() {
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
   return (
     <Stack spacing={4}>
-      <DcaInDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
+      <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
       <Divider />
       <Box>
         <Text textStyle="body-xs">Your deposit</Text>

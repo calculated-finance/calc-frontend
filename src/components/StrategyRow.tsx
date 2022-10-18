@@ -39,10 +39,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       layerStyle="panel"
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
-        <Heading size="md">DCA</Heading>
+        <Heading size="md">{getStrategyType(strategy)}</Heading>
         <Text textStyle="body-xs">
           {' '}
-          {getStrategyType(strategy)} ({strategy.id})
+          {getStrategyType(strategy)} {strategy.id}
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>

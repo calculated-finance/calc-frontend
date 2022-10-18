@@ -9,13 +9,13 @@ import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
+import DcaDiagram from '@components/DcaDiagram';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
 import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import SwapAmount from './SwapAmount';
-import DcaInDiagram from '../confirm-purchase/DcaInDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
@@ -77,7 +77,7 @@ function Page() {
           <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
-                <DcaInDiagram
+                <DcaDiagram
                   initialDenom={state.step1.initialDenom}
                   resultingDenom={state.step1.resultingDenom}
                   initialDeposit={state.step1.initialDeposit}

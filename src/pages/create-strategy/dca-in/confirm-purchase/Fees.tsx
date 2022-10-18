@@ -121,11 +121,11 @@ export default function Fees() {
       <Text textStyle="body-xs">
         Deposit fee{' '}
         <Text as="span" textColor="white">
-          {initialDeposit * 0.02} {initialDenomName}
+          {initialDeposit * 0.001} {initialDenomName}
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~{swapAmount * 0.01} {initialDenomName}
+          ~{swapAmount * 0.015} {initialDenomName}
         </Text>{' '}
         per swap
       </Text>

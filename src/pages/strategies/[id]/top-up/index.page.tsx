@@ -16,28 +16,11 @@ import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
+import DcaDiagram from '@components/DcaDiagram';
 import TopUpAmount from './TopUpAmount';
 import { getResultingDenom } from '../getResultingDenom';
 import { getInitialDenom } from '../getInitialDenom';
 import { getStrategyType } from '../getStrategyType';
-
-function TopUpDiagram({ initialDenom, resultingDenom }: any) {
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
-  return (
-    <Flex w="full" justifyContent="space-between">
-      <HStack>
-        <DenomIcon denomName={initialDenom} />
-        <Text>{initialDenomName}</Text>
-      </HStack>
-      <Lottie animationData={arrow} loop />
-      <HStack>
-        <DenomIcon denomName={resultingDenom} />
-        <Text>{resultingDenomName}</Text>
-      </HStack>
-    </Flex>
-  );
-}
 
 export const topUpSteps: StepConfig[] = [
   {
@@ -118,7 +101,7 @@ function Page() {
                   <Text textStyle="body-xs">
                     Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
                   </Text>
-                  <TopUpDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                  <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
                 </Stack>
                 <Divider />
                 <TopUpAmount initialDenom={initialDenom!} />

@@ -15,7 +15,7 @@ import StartDate from './StartDate';
 import StartImmediately from './StartImmediately';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import SwapAmount from './SwapAmount';
-import DcaInDiagram from '../confirm-purchase/DcaInDiagram';
+import DcaDiagram from '../../../../components/DcaDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
@@ -75,7 +75,7 @@ function DcaInStep2() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
-                <DcaInDiagram
+                <DcaDiagram
                   initialDenom={state.step1.initialDenom}
                   resultingDenom={state.step1.resultingDenom}
                   initialDeposit={state.step1.initialDeposit}
