@@ -224,19 +224,15 @@ function Home() {
 
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
-          <GridItem colSpan={{ base: 6, lg: 3, xl: 2 }}>
+          <GridItem colSpan={{ base: 6, lg: 3 }}>
             <ActiveStrategies />
           </GridItem>
         )}
-        <GridItem
-          colSpan={{ base: 6, xl: connected ? (activeStrategies.length ? 2 : 4) : 6 }}
-          rowStart={activeStrategies.length ? { base: 4, xl: 3 } : undefined}
-          colStart={activeStrategies.length ? { base: 0, xl: 3 } : undefined}
-        >
+        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 4 : 6 }}>
           <WorkflowInformation />
         </GridItem>
         {Boolean(activeStrategies.length) && (
-          <GridItem colSpan={{ base: 6, lg: 3, xl: 2 }}>
+          <GridItem colSpan={{ base: 6, lg: 3 }}>
             <TotalInvestment />
           </GridItem>
         )}

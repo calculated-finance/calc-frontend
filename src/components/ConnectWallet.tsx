@@ -17,10 +17,14 @@ function ConnectWallet(props: FlexProps) {
           <Spinner />
         ) : (
           <>
-            <Heading>No Wallet connected</Heading>
-            <Center>Get started by connecting your wallet.</Center>
+            <Stack>
+              <Heading textAlign="center">No Wallet Connected</Heading>
+              <Text color="grey.200" textAlign="center">
+                Get started by connecting your wallet.
+              </Text>
+            </Stack>
             <Button onClick={handleConnect}>Connect to a wallet</Button>
-            <Text>
+            <Text color="grey.200" textAlign="center">
               Don&apos;t have a wallet?{' '}
               <Link href="https://www.keplr.app/" target="_blank" rel="noopener noreferrer">
                 Create one here

@@ -131,12 +131,18 @@ export default function TopPanel() {
   const completedStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'inactive') ?? [];
 
   const getConfig = () => {
+    if (!connected) {
+      return {
+        background: '/images/backgrounds/twist.svg',
+        border: 'transparent',
+        Content: Onboarding,
+      };
+    }
     if (!activeStrategies.length) {
       if (!completedStrategies.length) {
         return {
           background: '/images/backgrounds/twist.svg',
           border: 'brand.200',
-          Content: Onboarding,
         };
       }
       return {
