@@ -34,7 +34,7 @@ const accumulationStratgies: StrategyCardProps[] = [
     href: StrategyUrls.DCAIn,
   },
   {
-    name: 'Advanced DCA+',
+    name: 'ML DCA+ In',
     description: 'Let our advanced DCA algorithms invest for you.',
     advanced: true,
     icon: Code3Icon,
@@ -69,8 +69,8 @@ function InfoPanel(): JSX.Element {
     <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
-        <Text fontSize="sm">
-          <Text as="span" fontWeight="bold">
+        <Text textStyle="body">
+          <Text as="span" fontWeight="bold" color="white">
             Dollar-cost averaging
           </Text>{' '}
           is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
@@ -97,7 +97,7 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
         <Heading size="md" mb={2}>
           {name}
         </Heading>
-        <Text fontSize="xs">{description}</Text>
+        <Text textStyle="body-xs">{description}</Text>
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
@@ -150,7 +150,7 @@ function Strategies() {
             {/* TODO: make this value based on the api */}: 22, it&apos;s a good time to use accumulation strategies
           </Badge>
         </Wrap>
-        <Text color="grey.200">You want to build a position in an asset. </Text>
+        <Text textStyle="body">You want to build a position in an asset. </Text>
       </Box>
       <Flex gap={8} flexDirection="row" wrap="wrap">
         {accumulationStratgies.map((strategy) => (
@@ -162,7 +162,7 @@ function Strategies() {
         <Heading mb={2} size="md">
           Take Profit strategies
         </Heading>
-        <Text color="grey.200">You want to start selling assets because you have a good return on them already.</Text>
+        <Text textStyle="body">You want to start selling assets because you have a good return on them already.</Text>
       </Box>
       <Flex gap={8} flexDirection="row" wrap="wrap">
         {takeProfitStrategies.map((strategy) => (
@@ -189,7 +189,7 @@ function CreateStrategy() {
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
         <Heading>Set up an investment strategy</Heading>
-        <Text color="grey.200">
+        <Text textStyle="body">
           The first complete fiat-to-crypto decentralised DCA (dollar-cost averaging) protocol that provides advanced
           algorithms for long-term investing.
         </Text>

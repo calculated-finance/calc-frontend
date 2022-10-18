@@ -14,10 +14,6 @@ import {
   Flex,
   useDisclosure,
   Button,
-  Stat,
-  StatArrow,
-  StatHelpText,
-  StatNumber,
   Image,
 } from '@chakra-ui/react';
 import CancelStrategyModal from '@components/CancelStrategyModal';
@@ -26,13 +22,11 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
-import DenomAmount from 'src/models/DenomAmount';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
-import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from './getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -71,6 +65,8 @@ function Page() {
   const { id } = router.query;
 
   const { data, isLoading } = useStrategy(id as string);
+
+  console.log(data);
 
   if (!data) {
     return (

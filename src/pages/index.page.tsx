@@ -14,6 +14,7 @@ import {
   StatLabel,
   StatNumber,
   Divider,
+  Wrap,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -28,8 +29,8 @@ function InfoPanel() {
     <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
-        <Text fontSize="sm">
-          <Text as="span" fontWeight="bold">
+        <Text textStyle="body">
+          <Text as="span" fontWeight="bold" color="white">
             Dollar-cost averaging
           </Text>{' '}
           is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
@@ -45,8 +46,8 @@ function WarningPanel() {
     <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
       <Image src="/images/warning.svg" />
       <Flex alignItems="center">
-        <Text fontSize="sm">
-          <Text as="span" fontWeight="bold">
+        <Text textStyle="body">
+          <Text as="span" fontWeight="bold" color="white">
             Be Aware:
           </Text>{' '}
           Crypto markets often experience similar behavioral herding. Most investors blindly mimic the behavior of other
@@ -85,7 +86,7 @@ function InvestmentThesis() {
         <Stack spacing={8}>
           <Heading size="md">My Investment Thesis:</Heading>
           <Heading size="xs">
-            <HStack spacing={6}>
+            <Wrap spacingX={6} spacingY={2} align="center">
               <Text>Asset(s) accumulating:</Text>
               <HStack>
                 {acculumatingAssets.length ? (
@@ -94,10 +95,10 @@ function InvestmentThesis() {
                   <Text>-</Text>
                 )}
               </HStack>
-            </HStack>
+            </Wrap>
           </Heading>
           <Heading size="xs">
-            <HStack spacing={6}>
+            <Wrap spacingX={6} spacingY={2} align="center">
               <Text>Asset(s) taking profit on:</Text>
               <HStack>
                 {profitTakingAssets.length ? (
@@ -106,7 +107,7 @@ function InvestmentThesis() {
                   <Text>-</Text>
                 )}
               </HStack>
-            </HStack>
+            </Wrap>
           </Heading>
         </Stack>
       )}
@@ -211,7 +212,7 @@ function Home() {
         <Heading fontSize="3xl" mb={2}>
           Welcome to CALC, you&apos;ve made a great choice!
         </Heading>
-        <Text fontSize="sm">
+        <Text textStyle="body">
           CALC removes the hardest part of trading, emotions! Stop being glued to a computer screen 24/7, define your
           strategy up front, and leave the rest to CALC.
         </Text>

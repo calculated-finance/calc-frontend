@@ -13,7 +13,7 @@ function Onboarding() {
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={2}>
         <Heading size="md">Ready to set up a CALC Strategy?</Heading>
-        <Text fontSize="sm">
+        <Text textStyle="body">
           CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and take
           back your time. In just 4 minutes, you can have CALC working for you with either take profit strategies or
           accumulation strategies.
@@ -33,13 +33,13 @@ function Returning() {
     <>
       <HStack>
         <Image src="/images/lightBulbOutline.svg" w={6} h={6} />
-        <Text color="grey.200" fontSize="sm">
+        <Text color="grey.200" textStyle="body">
           No active strategies
         </Text>
       </HStack>
       <Stack spacing={2}>
         <Heading size="md">Ready to fire up CALC again?</Heading>
-        <Text fontSize="sm">
+        <Text textStyle="body">
           Match your investments to your goals, spread your &apos;eggs&apos; among multiple baskets, set up a purchase
           plan–and stick with it and backtest your previous startegies.
         </Text>
@@ -68,7 +68,7 @@ function ActiveWithOne() {
       <Icon as={BarChartIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={2}>
         <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
-        <Text fontSize="sm">
+        <Text textStyle="body">
           Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
           CALC is empowering investors with the tools to make investing emotionless.
         </Text>
@@ -95,7 +95,7 @@ function ActiveWithMany() {
       <Icon as={BarChartIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={2}>
         <Heading size="md">Wow - you&apos;re a CALC pro.</Heading>
-        <Text fontSize="sm">
+        <Text textStyle="body">
           You should be proud, you&apos;ve surpassed the basic stage of just running a single strategy and you&apos;re
           managing multiple. Be sure to share your backtesting results to spread the CALC love.
         </Text>

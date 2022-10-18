@@ -17,6 +17,7 @@ export default function useStrategy(id?: Strategy['id']) {
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vault: {
           vault_id: id,
+          address,
         },
       }),
     {

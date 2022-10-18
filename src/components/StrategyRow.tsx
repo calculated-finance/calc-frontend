@@ -46,12 +46,14 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text>Asset(s):</Text>
+        <Text fontSize="sm" pb={1}>
+          Asset(s):
+        </Text>
         <DenomIcon showTooltip denomName={strategy.pair.base_denom} />
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text>Start date:</Text>
+        <Text fontSize="sm">Start date:</Text>
 
         <Text textStyle="body-xs">
           {/* {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()} */}
@@ -59,14 +61,14 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={{ base: 3, xl: 2 }}>
-        <Text>Status:</Text>
+        <Text fontSize="sm">Status:</Text>
         <Badge fontSize="10px" colorScheme="green">
           Active
         </Badge>
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text>Cadence:</Text>
+        <Text fontSize="sm">Cadence:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
           {/* {strategy.execution_interval} */}
         </Text>
