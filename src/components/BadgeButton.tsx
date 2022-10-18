@@ -1,6 +1,11 @@
 import { Badge, BadgeProps, HStack } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
-export default function BadgeButton({ children, ...props }: BadgeProps) {
+export default function BadgeButton({ url, children, ...props }: { url: string } & BadgeProps) {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push(url);
+  };
   return (
     <Badge
       display="inline-flex"
@@ -8,6 +13,7 @@ export default function BadgeButton({ children, ...props }: BadgeProps) {
       flexDirection="row"
       borderRadius="2xl"
       as="button"
+      onClick={handleClick}
       fontSize="sm"
       _hover={{ bg: 'blue.200', color: 'navy' }}
       size="large"

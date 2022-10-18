@@ -32,7 +32,7 @@ function Page() {
 
   if (!state) {
     const handleClick = async () => {
-      await router.push('/create-strategy/dca-out');
+      await router.push('/create-strategy/assets');
       actions.resetAction();
     };
     // TODO: clean this up so we dont need two modal codes

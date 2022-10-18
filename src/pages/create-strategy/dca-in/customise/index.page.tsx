@@ -31,7 +31,7 @@ function DcaInStep2() {
 
   if (!state) {
     const handleClick = async () => {
-      await router.push('/create-strategy/dca-in');
+      await router.push('/create-strategy/dca-in/assets');
       actions.resetAction();
     };
     return (

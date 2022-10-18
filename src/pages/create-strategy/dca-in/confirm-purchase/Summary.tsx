@@ -69,7 +69,7 @@ export default function Summary() {
     triggerInfo = (
       <>
         Starting{' '}
-        <BadgeButton>
+        <BadgeButton url="customise">
           <Text>Immediately</Text>
         </BadgeButton>
       </>
@@ -78,14 +78,14 @@ export default function Summary() {
     triggerInfo = (
       <>
         Starting{' '}
-        <BadgeButton>
+        <BadgeButton url="customise">
           <Text>{formattedDate}</Text>
         </BadgeButton>
         {Boolean(purchaseTime) && (
           <>
             {' '}
             at{' '}
-            <BadgeButton>
+            <BadgeButton url="customise">
               <Text>
                 {formattedTime} {zone}
               </Text>
@@ -98,7 +98,7 @@ export default function Summary() {
     triggerInfo = (
       <>
         when{' '}
-        <BadgeButton>
+        <BadgeButton url="customise">
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />
           <Text>=</Text>
@@ -121,7 +121,7 @@ export default function Summary() {
         <Text textStyle="body-xs">Your deposit</Text>
         <Text lineHeight={8}>
           I deposit{' '}
-          <BadgeButton>
+          <BadgeButton url="assets">
             <Text>
               {initialDeposit} {initialDenomName}
             </Text>
@@ -134,19 +134,19 @@ export default function Summary() {
         <Text textStyle="body-xs">The swap</Text>
         <Text lineHeight={8}>
           {triggerInfo}, CALC will swap{' '}
-          <BadgeButton>
+          <BadgeButton url="customise">
             <Text>
               ~{swapAmount} {initialDenomName}
             </Text>
             <DenomIcon denomName={initialDenom} />
           </BadgeButton>{' '}
           for{' '}
-          <BadgeButton>
+          <BadgeButton url="assets">
             <Text>{resultingDenomName}</Text>
             <DenomIcon denomName={resultingDenom} />
           </BadgeButton>{' '}
           for{' '}
-          <BadgeButton>
+          <BadgeButton url="customise">
             <Text>
               {executions} {displayExecutionInterval}
             </Text>
@@ -162,7 +162,7 @@ export default function Summary() {
             {isLoading ? (
               <Spinner size="xs" />
             ) : (
-              <BadgeButton>
+              <BadgeButton url="post-purchase">
                 <Text>{data?.validator?.description?.moniker}</Text>
               </BadgeButton>
             )}

@@ -51,13 +51,13 @@ function Content({ children, ...props }: BoxProps) {
     </>
   );
 }
-const breadcrumbData: Record<string, string> = {
-  '/': 'Dashboard',
-  'create-strategy': 'Create Strategy',
-  'dca-in': 'DCA In',
-  'dca-out': 'DCA Out',
-  strategies: 'My strategies',
-  'top-up': 'Top Up Strategy',
+const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
+  '/': { label: 'Dashboard', enabled: true },
+  'create-strategy': { label: 'Create Strategy', enabled: true },
+  'dca-in': { label: 'DCA In', enabled: false },
+  'dca-out': { label: 'DCA Out', enabled: false },
+  strategies: { label: 'My strategies', enabled: true },
+  'top-up': { label: 'Top Up Strategy', enabled: true },
 };
 
 function FlowBreadcrumbs() {
@@ -70,8 +70,8 @@ function FlowBreadcrumbs() {
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
           <BreadcrumbItem>
-            <Link href={href}>
-              <BreadcrumbLink>{breadcrumbData[part]}</BreadcrumbLink>
+            <Link href={breadcrumbData[part].enabled ? href : ''}>
+              <BreadcrumbLink>{breadcrumbData[part].label}</BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
         ) : null;

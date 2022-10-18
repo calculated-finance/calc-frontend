@@ -13,12 +13,12 @@ export function findStep(path: string, stepsConfig: StepConfig[]) {
 
 const steps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-in',
+    href: '/create-strategy/dca-in/assets',
     title: 'Choose Funding & Assets',
     footerText: 'Can I set up reoccuring deposits?',
   },
   {
-    href: '/create-strategy/dca-in/step2',
+    href: '/create-strategy/dca-in/customise',
     title: 'Customise Strategy',
     footerText: 'How do reoccuring investments work?',
   },

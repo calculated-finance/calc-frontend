@@ -2,12 +2,12 @@ import { StepConfig } from '@components/NewStrategyModal/steps';
 
 const dcaOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-out',
+    href: '/create-strategy/dca-out/assets',
     title: 'Choose Funding & Assets',
     footerText: 'How does taking profit work?',
   },
   {
-    href: '/create-strategy/dca-out/step2',
+    href: '/create-strategy/dca-out/customise',
     title: 'Customise Strategy',
   },
   {
