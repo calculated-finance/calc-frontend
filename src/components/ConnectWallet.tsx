@@ -17,7 +17,7 @@ function ConnectWallet(props: FlexProps) {
           <Spinner />
         ) : (
           <>
-            <Stack>
+            <Stack spacing={1}>
               <Heading textAlign="center">No Wallet Connected</Heading>
               <Text color="grey.200" textAlign="center">
                 Get started by connecting your wallet.
