@@ -1,4 +1,4 @@
-import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack } from '@chakra-ui/react';
+import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack, Box } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -135,7 +135,7 @@ export default function TopPanel() {
       return {
         background: '/images/backgrounds/twist.svg',
         border: 'transparent',
-        Content: Onboarding,
+        Content: Box,
       };
     }
     if (!activeStrategies.length) {
@@ -143,6 +143,7 @@ export default function TopPanel() {
         return {
           background: '/images/backgrounds/twist.svg',
           border: 'brand.200',
+          Content: Onboarding,
         };
       }
       return {
