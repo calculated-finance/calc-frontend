@@ -66,8 +66,6 @@ function Page() {
 
   const { data, isLoading } = useStrategy(id as string);
 
-  console.log(data);
-
   if (!data) {
     return (
       <Center h="100vh">
@@ -76,7 +74,7 @@ function Page() {
     );
   }
 
-  const { status, position_type, time_interval, swap_amount, balance, pair } = data?.vault || {};
+  const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data?.vault || {};
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
@@ -103,7 +101,7 @@ function Page() {
           <Heading pb={4} size="md">
             Strategy details
           </Heading>
-          <Box p={6} layerStyle="panel" h={328}>
+          <Box p={6} layerStyle="panel" minHeight={328}>
             {isLoading || !data?.vault ? (
               <Center h="full">
                 <Spinner />
@@ -114,8 +112,8 @@ function Page() {
                   <Heading size="xs">Strategy status</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Badge colorScheme={status === 'active' ? 'green' : undefined} textTransform="capitalize">
-                    {status}
+                  <Badge colorScheme={status === 'active' ? 'green' : 'blue'}>
+                    {status === 'active' ? 'Active' : 'Completed'}
                   </Badge>
                 </GridItem>
                 <GridItem colSpan={1}>
@@ -190,6 +188,32 @@ function Page() {
                     </Link>
                   </Flex>
                 </GridItem>
+                {Boolean(destinations.length) &&
+                  (destinations[0].address.startsWith('kujiravaloper') ? (
+                    <>
+                      <GridItem colSpan={1}>
+                        <Heading size="xs">Auto staking status</Heading>
+                      </GridItem>
+                      <GridItem colSpan={2}>
+                        <Badge colorScheme="green">Active</Badge>
+                      </GridItem>
+                      <GridItem colSpan={1}>
+                        <Heading size="xs">Auto staking wallet address</Heading>
+                      </GridItem>
+                      <GridItem colSpan={2}>
+                        <Text fontSize="sm">{destinations[0].address}</Text>
+                      </GridItem>
+                    </>
+                  ) : (
+                    <>
+                      <GridItem colSpan={1}>
+                        <Heading size="xs">Sending to </Heading>
+                      </GridItem>
+                      <GridItem colSpan={2}>
+                        <Text fontSize="sm">{destinations[0].address} </Text>
+                      </GridItem>
+                    </>
+                  ))}
               </Grid>
             )}
           </Box>
@@ -200,7 +224,7 @@ function Page() {
               Strategy performance
             </Heading>
           </GridItem>
-          <Box p={6} layerStyle="panel" h={328}>
+          <Box p={6} layerStyle="panel" minHeight={328}>
             {isLoading || !data?.vault ? (
               <Center h="full">
                 <Spinner />

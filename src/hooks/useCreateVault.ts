@@ -30,9 +30,10 @@ const useCreateVault = (positionType: PositionType) => {
       executionInterval,
       purchaseTime,
       slippageTolerance,
-      triggerType,
       startPrice,
       advancedSettings,
+      recipientAccount,
+      autoStakeValidator,
     } = state;
 
     // throw error if pair not found
@@ -60,6 +61,16 @@ const useCreateVault = (positionType: PositionType) => {
       startTimeSeconds = (startTime.valueOf() / 1000).toString();
     }
 
+    const destinations = [];
+
+    if (autoStakeValidator) {
+      destinations.push({ address: autoStakeValidator, allocation: '1' });
+    }
+
+    if (recipientAccount) {
+      destinations.push({ address: recipientAccount, allocation: '1' });
+    }
+
     const msg = {
       create_vault: {
         time_interval: executionInterval,
@@ -67,15 +78,13 @@ const useCreateVault = (positionType: PositionType) => {
         position_type: positionType,
         swap_amount: deconversion(swapAmount).toString(),
         target_start_time_utc_seconds: startTimeSeconds,
-        target_price: startPrice?.toString() || undefined,
+        target_price: startPrice || undefined,
         slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
-        destinations: [],
+        destinations: destinations.length ? destinations : undefined,
       },
     };
 
-    const funds = true
-      ? [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }]
-      : [{ denom: resultingDenom, amount: deconversion(initialDeposit).toString() }];
+    const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
     if (!pairAddress || !client) {
       throw Error('Invalid form data');

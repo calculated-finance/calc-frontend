@@ -5,11 +5,13 @@ import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
+import SendToWalletValues from '@models/SendToWalletValues';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import TriggerTypes from '../../../../models/TriggerTypes';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
+import SendToWallet from '../post-purchase/SendToWallet';
 
 export default function Summary() {
   const { state } = useConfirmForm();
@@ -47,8 +49,8 @@ export default function Summary() {
     startImmediately,
     triggerType,
     startPrice,
-    autoStake,
     autoStakeValidator,
+    recipientAccount,
   } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -154,7 +156,7 @@ export default function Summary() {
           .
         </Text>
       </Box>
-      {autoStake === AutoStakeValues.Yes && (
+      {autoStakeValidator && (
         <Box>
           <Text textStyle="body-xs">After each swap</Text>
           <Text lineHeight={8}>
@@ -166,6 +168,17 @@ export default function Summary() {
                 <Text>{data?.validator?.description?.moniker}</Text>
               </BadgeButton>
             )}
+          </Text>
+        </Box>
+      )}
+      {recipientAccount && (
+        <Box>
+          <Text textStyle="body-xs">After each swap</Text>
+          <Text lineHeight={8}>
+            After each swap, CALC will send the funds to{' '}
+            <BadgeButton url="post-purchase">
+              <Text>{recipientAccount}</Text>
+            </BadgeButton>
           </Text>
         </Box>
       )}

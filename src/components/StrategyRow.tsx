@@ -62,8 +62,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
 
       <GridItem colSpan={{ base: 3, xl: 2 }}>
         <Text fontSize="sm">Status:</Text>
-        <Badge fontSize="10px" colorScheme="green">
-          Active
+        <Badge fontSize="10px" colorScheme={strategy.status === 'active' ? 'green' : 'blue'}>
+          {strategy.status === 'active' ? 'Active' : 'Completed'}
         </Badge>
       </GridItem>
 

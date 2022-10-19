@@ -11,10 +11,12 @@ import {
 import { useField } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
 import { useQuery } from '@tanstack/react-query';
+import SendToWalletValues from '@models/SendToWalletValues';
 import Select from '../../../../components/Select';
 
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
+  const [sendToWalletfield, , sendToWalletHelpers] = useField({ name: 'sendToWallet' });
 
   const { data, isLoading } = useQuery(
     ['validators'],
@@ -39,7 +41,10 @@ export default function AutoStakeValidator() {
   );
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+    <FormControl
+      isInvalid={Boolean(meta.touched && meta.error)}
+      isDisabled={sendToWalletfield.value === SendToWalletValues.No}
+    >
       <FormHelperText>
         <Text textStyle="body-xs" color="blue.200">
           Auto compounding coming soon.

@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 
 const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
   const validate = (values: Yup.InferType<typeof validationSchema>) => {
-    console.log(values);
     try {
       validationSchema.validateSync(values, {
         abortEarly: false,

@@ -30,6 +30,7 @@ export default function Summary() {
     startImmediately,
     triggerType,
     startPrice,
+    recipientAccount,
   } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -122,6 +123,17 @@ export default function Summary() {
           .
         </Text>
       </Box>
+      {recipientAccount && (
+        <Box>
+          <Text textStyle="body-xs">After each swap</Text>
+          <Text lineHeight={8}>
+            After each swap, CALC will send the funds to{' '}
+            <BadgeButton url="post-purchase">
+              <Text>{recipientAccount}</Text>
+            </BadgeButton>
+          </Text>
+        </Box>
+      )}
     </Stack>
   );
 }

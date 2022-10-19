@@ -112,7 +112,7 @@ export default function Fees() {
     return null;
   }
 
-  const { initialDenom, initialDeposit, swapAmount } = state;
+  const { initialDenom, initialDeposit, swapAmount, autoStakeValidator } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
 
@@ -128,7 +128,9 @@ export default function Fees() {
           ~{swapAmount * 0.015} {initialDenomName}
         </Text>{' '}
         per swap
+        {autoStakeValidator && <Text as="span"> &amp; 1.5% auto staking fee</Text>}
       </Text>
+
       <FeeBreakdown initialDenomName={initialDenomName} />
     </Stack>
   );
