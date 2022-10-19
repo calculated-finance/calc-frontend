@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from './getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -67,6 +68,9 @@ function Page() {
 
   const { data, isLoading } = useStrategy(id as string);
   const { address } = useWallet();
+
+  // const { data: eventsData, isLoading: eventsIsLoading } = useStrategyEvents();
+
 
   if (!data) {
     return (

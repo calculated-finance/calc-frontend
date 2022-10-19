@@ -78,7 +78,7 @@ const useCreateVault = (positionType: PositionType) => {
         position_type: positionType,
         swap_amount: deconversion(swapAmount).toString(),
         target_start_time_utc_seconds: startTimeSeconds,
-        target_price: startPrice || undefined,
+        target_price: startPrice?.toString() || undefined,
         slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
         destinations: destinations.length ? destinations : undefined,
       },

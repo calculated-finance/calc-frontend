@@ -23,10 +23,11 @@ function HowItWorks() {
         <Heading fontSize="xl">Dollar Cost averaging from your bank account with CALC</Heading>
       </Stack>
       <Image src="/images/dca.svg" alt="Dollar Cost Averaging" />
+      <Stack>
+        <Heading fontSize="xl">CALC&apos;s mission</Heading>
 
-      <Heading fontSize="xl">CALC&apos;s mission</Heading>
-
-      <Text textStyle="body">CALC is a tool build for DeFi users, by DeFi users.</Text>
+        <Text textStyle="body">CALC is a tool build for DeFi users, by DeFi users.</Text>
+      </Stack>
       <Stack>
         <Heading as="i" fontSize="xl">
           CALC is all about saving you time and removing the emotion from the hardest part of Crypto, trading.

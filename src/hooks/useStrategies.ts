@@ -41,12 +41,14 @@ export default function useStrategies() {
 
   return useQuery<Response, Error>(
     [QUERY_KEY, address],
-    () =>
-      client!.queryContractSmart(CONTRACT_ADDRESS, {
+    () => {
+      const result = client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vaults_by_address: {
           address,
         },
-      }),
+      });
+      return result;
+    },
     {
       enabled: !!address && !!client,
     },
