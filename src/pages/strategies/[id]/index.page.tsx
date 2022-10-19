@@ -27,6 +27,7 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
+import { useWallet } from '@wizard-ui/react';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from './getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -65,6 +66,7 @@ function Page() {
   const { id } = router.query;
 
   const { data, isLoading } = useStrategy(id as string);
+  const { address } = useWallet();
 
   if (!data) {
     return (
@@ -205,14 +207,16 @@ function Page() {
                       </GridItem>
                     </>
                   ) : (
-                    <>
-                      <GridItem colSpan={1}>
-                        <Heading size="xs">Sending to </Heading>
-                      </GridItem>
-                      <GridItem colSpan={2}>
-                        <Text fontSize="sm">{destinations[0].address} </Text>
-                      </GridItem>
-                    </>
+                    destinations[0].address !== address && (
+                      <>
+                        <GridItem colSpan={1}>
+                          <Heading size="xs">Sending to </Heading>
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                          <Text fontSize="sm">{destinations[0].address} </Text>
+                        </GridItem>
+                      </>
+                    )
                   ))}
               </Grid>
             )}
