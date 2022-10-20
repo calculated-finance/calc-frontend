@@ -69,8 +69,9 @@ function Page() {
   const { data, isLoading } = useStrategy(id as string);
   const { address } = useWallet();
 
-  // const { data: eventsData, isLoading: eventsIsLoading } = useStrategyEvents();
+  const { data: eventsData, isLoading: eventsIsLoading } = useStrategyEvents();
 
+  console.log(eventsData);
 
   if (!data) {
     return (
