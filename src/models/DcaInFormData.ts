@@ -6,6 +6,7 @@ import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
+import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 
 export const initialValues = {
   resultingDenom: '',
@@ -27,6 +28,7 @@ export const initialValues = {
   autoStakeValidator: '',
 };
 
+const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
   resultingDenom: Yup.mixed<Denom>()
     .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
@@ -90,7 +92,7 @@ export const allValidationSchema = Yup.object({
 
   purchaseTime: Yup.string()
     .label('Purchase Time')
-    .matches(/^([01][0-9]|2[0-3]):([0-5][0-9])$/, {
+    .matches(timeFormat, {
       excludeEmptyString: true,
       message: ({ label }) => `${label} must be in the format HH:MM (24 hour time)`,
     })
@@ -101,6 +103,20 @@ export const allValidationSchema = Yup.object({
         startImmediately === StartImmediatelyValues.No,
       then: Yup.string().required(),
       otherwise: (schema) => schema.transform(() => ''),
+    })
+    .test({
+      name: 'time-is-in-past',
+      message: 'Date and time must be in the future',
+      test(value, context) {
+        if (!value?.match(timeFormat)) {
+          return true;
+        }
+        const { startDate = new Date() } = { ...context.parent };
+        if (!value || !startDate) {
+          return false;
+        }
+        return new Date() <= combineDateAndTime(startDate, value);
+      },
     }),
   executionInterval: Yup.mixed<ExecutionIntervals>().oneOf(Object.values(ExecutionIntervals)).required(),
   swapAmount: Yup.number()

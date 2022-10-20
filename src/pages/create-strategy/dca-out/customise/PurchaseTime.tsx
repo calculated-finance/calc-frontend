@@ -19,11 +19,12 @@ import { FiClock } from 'react-icons/fi';
 
 export default function PurchaseTime() {
   const [field, meta] = useField({ name: 'purchaseTime' });
+  const [startDateField] = useField({ name: 'startDate' });
 
   const zone = new Date().toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2];
 
   return (
-    <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
+    <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)} isDisabled={!startDateField.value}>
       <FormLabel>Sell time</FormLabel>
       <InputGroup>
         <InputLeftElement

@@ -5,10 +5,10 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
-import TriggerTypes from 'src/models/TriggerTypes';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType } from './useStrategies';
+import { combineDateAndTime } from '../helpers/combineDateAndTime';
 
 const useCreateVault = (positionType: PositionType) => {
   const { address: senderAddress, client } = useWallet();
@@ -52,12 +52,7 @@ const useCreateVault = (positionType: PositionType) => {
     let startTimeSeconds;
 
     if (startDate) {
-      const startTime = new Date(startDate);
-      if (purchaseTime) {
-        const [hours, minutes] = purchaseTime.split(':');
-        startTime.setHours(parseInt(hours, 10));
-        startTime.setMinutes(parseInt(minutes, 10));
-      }
+      const startTime = combineDateAndTime(startDate, purchaseTime);
       startTimeSeconds = (startTime.valueOf() / 1000).toString();
     }
 
