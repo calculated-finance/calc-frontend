@@ -61,13 +61,6 @@ export default function InitialDenom() {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [, , initialDepositHelpers] = useField('initialDeposit');
 
-  const handleChange = (value: string | undefined) => {
-    helpers.setValue(value);
-    initialDepositHelpers.setTouched(false);
-    initialDepositHelpers.setError(undefined);
-    initialDepositHelpers.setValue('');
-  };
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>What position do you want to take profit on? </FormLabel>
@@ -84,7 +77,7 @@ export default function InitialDenom() {
             denoms={uniqueBaseDenoms(pairs)}
             placeholder="Choose asset"
             value={field.value}
-            onChange={handleChange}
+            onChange={helpers.setValue}
             optionLabel="FIN"
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>

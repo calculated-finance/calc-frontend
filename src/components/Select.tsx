@@ -30,7 +30,7 @@ export default function Select({
     },
     options,
     placeholder,
-    value: options?.find((option: OptionType) => value === option.value),
+    value: options?.find((option: OptionType) => value === option.value) || null,
     chakraStyles: {
       control: (provided) => ({
         ...provided,
