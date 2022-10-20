@@ -48,11 +48,11 @@ export const allValidationSchema = Yup.object({
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const { balances } = context?.options?.context || {};
-        if (!balances) {
+        if (!balances || !value || value <= 0) {
           return true;
         }
         const amount = balances.find((balance: any) => balance.denom === context.parent.initialDenom)?.amount;
-        if (!amount || !value) {
+        if (!amount) {
           return false;
         }
         return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
@@ -131,7 +131,7 @@ export const allValidationSchema = Yup.object({
       test(value, context) {
         const { initialDeposit = 0 } = { ...context.parent, ...context.options.context };
         if (!value) {
-          return false;
+          return true;
         }
         return value <= initialDeposit;
       },
@@ -140,7 +140,7 @@ export const allValidationSchema = Yup.object({
     .nullable()
     .label('Slippage Tolerance')
     .lessThan(100)
-    .moreThan(0)
+    .positive()
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),

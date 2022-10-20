@@ -13,6 +13,7 @@ import {
 import { useField } from 'formik';
 import { Swap2Icon } from '@fusion-icons/react/web3';
 import Icon from '@components/Icon';
+import NumberInput from '@components/NumberInput';
 
 function SlippagePreset({ value }: { value: number }) {
   const [field, , helpers] = useField('slippageTolerance');
@@ -39,7 +40,7 @@ function SlippagePreset({ value }: { value: number }) {
 }
 
 export default function SlippageTolerance() {
-  const [field, meta] = useField({ name: 'slippageTolerance' });
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'slippageTolerance' });
   const values = [0.01, 0.5, 1.0];
 
   return (
@@ -52,7 +53,7 @@ export default function SlippageTolerance() {
       <HStack spacing={2}>
         <InputGroup w={154} ml="px">
           <InputLeftElement pointerEvents="none" h="full" children={<Icon as={Swap2Icon} stroke="slateGrey" />} />
-          <Input placeholder="0.0" {...field} />
+          <NumberInput pl={8} placeholder="0.0" onChange={helpers.setValue} {...field} />
           <InputRightElement pointerEvents="none" children="%" />
         </InputGroup>
         <HStack spacing={1}>

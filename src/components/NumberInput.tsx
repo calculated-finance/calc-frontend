@@ -10,5 +10,5 @@ export default function NumberInput({ value, onChange, ...props }: NumberInputPr
     onChange(numberValue === '' ? null : Number(numberValue));
   };
 
-  return <Input type="number" onChange={handleChange} value={value === null ? undefined : value} {...props} />;
+  return <Input type="number" onChange={handleChange} value={value === null ? '' : value} {...props} />;
 }
