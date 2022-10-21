@@ -21,6 +21,7 @@ export type Strategy = {
   trigger_variant: TriggerVariant;
   status: 'active' | 'inactive';
   time_interval: string;
+  started_at: string;
   pair: {
     address: string;
     base_denom: Denom;

@@ -4,9 +4,10 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
-import { getStrategyType } from 'src/pages/strategies/details/getStrategyType';
+import { getStrategyType } from 'src/helpers/getStrategyType';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
+import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
 
@@ -64,9 +65,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
 
       <GridItem colSpan={{ base: 3, xl: 2 }}>
         <Text fontSize="sm">Status:</Text>
-        <Badge fontSize="10px" colorScheme={strategy.status === 'active' ? 'green' : 'blue'}>
-          {strategy.status === 'active' ? 'Active' : 'Completed'}
-        </Badge>
+        <StrategyStatusBadge strategy={strategy} />
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>

@@ -17,7 +17,7 @@ import DcaDiagram from '@components/DcaDiagram';
 import TopUpAmount from './TopUpAmount';
 import { getResultingDenom } from '../details/getResultingDenom';
 import { getInitialDenom } from '../details/getInitialDenom';
-import { getStrategyType } from '../details/getStrategyType';
+import { getStrategyType } from '../../../helpers/getStrategyType';
 
 export const topUpSteps: StepConfig[] = [
   {

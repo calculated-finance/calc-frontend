@@ -28,6 +28,18 @@ const colors = {
   darkGrey: '#2C2D3A',
   navy: '#1B202B',
   deepHorizon: '#171922',
+  yellow: {
+    50: '#FFDF36',
+    100: '#FFDF36',
+    200: '#FFDF36',
+    300: '#FFDF36',
+    400: '#FFDF36',
+    500: '#FFDF36',
+    600: '#FFDF36',
+    700: '#FFDF36',
+    800: '#FFDF36',
+    900: '#FFDF36',
+  },
   abyss: {
     50: '#191C25',
     100: '#191C25',

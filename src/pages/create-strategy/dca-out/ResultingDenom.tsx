@@ -19,7 +19,7 @@ export default function ResultingDenom() {
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <FormLabel>How do you want to hold your profits?</FormLabel>
       <FormHelperText>
-        <Text textStyle="body-xs">Each asset comes with it&apos;s own risk</Text>
+        <Text textStyle="body-xs">You will have the choice to move these funds into another strategy at the end.</Text>
       </FormHelperText>
       <DenomSelect
         denoms={uniqueQuoteDenomsFromBaseDenom(initialDenomField.value, pairs)}

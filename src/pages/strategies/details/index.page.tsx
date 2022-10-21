@@ -31,9 +31,11 @@ import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { getSidebarLayout } from '../../../components/Layout';
-import { getStrategyType } from './getStrategyType';
+import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
 import { getResultingDenom } from './getResultingDenom';
+import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
+import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 
 export function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -73,6 +75,7 @@ function Page() {
   const { data: eventsData, isLoading: eventsIsLoading } = useStrategyEvents();
 
   console.log(eventsData);
+  console.log(data);
 
   if (!data) {
     return (
@@ -82,7 +85,8 @@ function Page() {
     );
   }
 
-  const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data?.vault || {};
+  const { status, position_type, time_interval, swap_amount, balance, pair, destinations, started_at } =
+    data?.vault || {};
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
@@ -90,6 +94,10 @@ function Page() {
   const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
 
   const strategyType = getStrategyType(data.vault);
+
+  const startDate = getStrategyStartDate(data.vault);
+
+  console.log(Number(started_at));
 
   return (
     <>
@@ -115,14 +123,12 @@ function Page() {
                 <Spinner />
               </Center>
             ) : (
-              <Grid templateColumns="repeat(3, 1fr)" gap={3}>
+              <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
                 <GridItem colSpan={1}>
                   <Heading size="xs">Strategy status</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Badge colorScheme={status === 'active' ? 'green' : 'blue'}>
-                    {status === 'active' ? 'Active' : 'Completed'}
-                  </Badge>
+                  <StrategyStatusBadge strategy={data.vault} />
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Flex justifyContent="end">
@@ -150,7 +156,7 @@ function Page() {
                   <Heading size="xs">Strategy start date</Heading>
                 </GridItem>
                 <GridItem colSpan={2}>
-                  <Text fontSize="sm">-</Text>
+                  <Text fontSize="sm">{startDate}</Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Strategy end date</Heading>
