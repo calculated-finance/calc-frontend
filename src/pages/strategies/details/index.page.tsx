@@ -20,7 +20,7 @@ import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -65,6 +65,24 @@ export function CancelButton({ strategy }: { strategy: Strategy }) {
   );
 }
 
+function Diagram({ initialDenom, resultingDenom }: any) {
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  return (
+    <HStack spacing={5}>
+      <HStack>
+        <DenomIcon size={5} denomName={initialDenom} />
+        <Text>{initialDenomName}</Text>
+      </HStack>
+      <CalcIcon as={ArrowRightIcon} stroke="grey" />
+      <HStack>
+        <DenomIcon size={5} denomName={resultingDenom} />
+        <Text>{resultingDenomName}</Text>
+      </HStack>
+    </HStack>
+  );
+}
+
 function Page() {
   const router = useRouter();
   const { id } = router.query;
@@ -96,8 +114,6 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
-  console.log(Number(started_at));
-
   return (
     <>
       <HStack spacing={6} pb={6}>
@@ -106,16 +122,20 @@ function Page() {
             <Icon as={FiArrowLeft} stroke="brand.200" />
           </IconButton>
         </Link>
-        <Heading>
-          {strategyType} {id}
-        </Heading>
+
+        <HStack spacing={8} alignItems="center">
+          <Heading>
+            {strategyType} {id}
+          </Heading>
+          <Flex w={200}>
+            <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+          </Flex>
+        </HStack>
       </HStack>
 
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr">
         <GridItem colSpan={[6, null, null, null, 3]}>
-          <Heading pb={4} size="md">
-            Strategy details
-          </Heading>
+          <Heading size="md">Strategy details</Heading>
           <Box p={6} layerStyle="panel" minHeight={328}>
             {isLoading || !data?.vault ? (
               <Center h="full">
