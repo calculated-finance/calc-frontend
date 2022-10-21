@@ -20,7 +20,13 @@ import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import {
+  ArrowRight2Icon,
+  ArrowRight3Icon,
+  ArrowRight5Icon,
+  ArrowRightIcon,
+  CloseBoxedIcon,
+} from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -93,6 +99,7 @@ function Page() {
   const { data: eventsData } = useStrategyEvents(id as string);
 
   console.log(eventsData);
+  console.log(data);
 
   if (!data) {
     return (
@@ -114,6 +121,40 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
+  const targetTime = data?.trigger?.configuration?.time?.target_time;
+  const targetPrice = data?.trigger?.configuration?.f_i_n_limit_order?.target_price;
+
+  let nextSwapInfo;
+  if (targetTime) {
+    const nextSwapDate = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleDateString(
+      'en-US',
+      {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      },
+    );
+
+    const nextSwapTime = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleTimeString(
+      'en-US',
+      {
+        minute: 'numeric',
+        hour: 'numeric',
+      },
+    );
+    nextSwapInfo = (
+      <>
+        {nextSwapDate} at {nextSwapTime}
+      </>
+    );
+  } else if (targetPrice) {
+    nextSwapInfo = (
+      <>
+        When 1 {getDenomInfo(resultingDenom).name} &ge; {targetPrice} {getDenomInfo(initialDenom).name}
+      </>
+    );
+  }
+
   return (
     <>
       <HStack spacing={6} pb={6}>
@@ -133,126 +174,130 @@ function Page() {
         </HStack>
       </HStack>
 
+      {Boolean(nextSwapInfo) && (
+        <HStack mb={8} py={4} px={8} layerStyle="panel" spacing={4}>
+          <CalcIcon as={ArrowRight5Icon} stroke="blue.200" />
+          <Text fontSize="sm" color="blue.200">
+            Next swap:
+          </Text>
+          <Text fontSize="sm">{nextSwapInfo}</Text>
+        </HStack>
+      )}
+
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr">
         <GridItem colSpan={[6, null, null, null, 3]}>
           <Heading pb={4} size="md">
             Strategy details
           </Heading>
-          <Box p={6} layerStyle="panel" minHeight={328}>
-            {isLoading || !data?.vault ? (
-              <Center h="full">
-                <Spinner />
-              </Center>
-            ) : (
-              <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Strategy status</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <StrategyStatusBadge strategy={data.vault} />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Flex justifyContent="end">
-                    <CancelButton strategy={data.vault} />
-                  </Flex>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Strategy name</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm">
-                    {strategyType} {id}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={3}>
-                  <Divider />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Strategy type</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm">{strategyType}</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Strategy start date</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm">{startDate}</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Strategy end date</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Investment cycle</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm" textTransform="capitalize">
-                    {time_interval || '-'}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Purchase each cycle</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm">
-                    {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}{' '}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Current amount in vault</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">
-                    {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
-                  </Text>
-                </GridItem>
-                <GridItem>
-                  <Flex justify="end">
-                    <Link href={generateStrategyTopUpUrl(id as string)}>
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        colorScheme="brand"
-                        leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                      >
-                        Add more funds
-                      </Button>
-                    </Link>
-                  </Flex>
-                </GridItem>
-                {Boolean(destinations.length) &&
-                  (destinations[0].address.startsWith('kujiravaloper') ? (
+          <Box px={8} py={6} layerStyle="panel" minHeight={328}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy status</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <StrategyStatusBadge strategy={data.vault} />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Flex justifyContent="end">
+                  <CancelButton strategy={data.vault} />
+                </Flex>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy name</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm">
+                  {strategyType} {id}
+                </Text>
+              </GridItem>
+              <GridItem colSpan={3}>
+                <Divider />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy type</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm">{strategyType}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy start date</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm">{startDate}</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy end date</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Investment cycle</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" textTransform="capitalize">
+                  {time_interval || '-'}
+                </Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Purchase each cycle</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm">
+                  {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}{' '}
+                </Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Current amount in vault</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">
+                  {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+                </Text>
+              </GridItem>
+              <GridItem>
+                <Flex justify="end">
+                  <Link href={generateStrategyTopUpUrl(id as string)}>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="brand"
+                      leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                    >
+                      Add more funds
+                    </Button>
+                  </Link>
+                </Flex>
+              </GridItem>
+              {Boolean(destinations.length) &&
+                (destinations[0].address.startsWith('kujiravaloper') ? (
+                  <>
+                    <GridItem colSpan={1}>
+                      <Heading size="xs">Auto staking status</Heading>
+                    </GridItem>
+                    <GridItem colSpan={2}>
+                      <Badge colorScheme="green">Active</Badge>
+                    </GridItem>
+                    <GridItem colSpan={1}>
+                      <Heading size="xs">Auto staking wallet address</Heading>
+                    </GridItem>
+                    <GridItem colSpan={2}>
+                      <Text fontSize="sm">{destinations[0].address}</Text>
+                    </GridItem>
+                  </>
+                ) : (
+                  destinations[0].address !== address && (
                     <>
                       <GridItem colSpan={1}>
-                        <Heading size="xs">Auto staking status</Heading>
+                        <Heading size="xs">Sending to </Heading>
                       </GridItem>
                       <GridItem colSpan={2}>
-                        <Badge colorScheme="green">Active</Badge>
-                      </GridItem>
-                      <GridItem colSpan={1}>
-                        <Heading size="xs">Auto staking wallet address</Heading>
-                      </GridItem>
-                      <GridItem colSpan={2}>
-                        <Text fontSize="sm">{destinations[0].address}</Text>
+                        <Text fontSize="sm">{destinations[0].address} </Text>
                       </GridItem>
                     </>
-                  ) : (
-                    destinations[0].address !== address && (
-                      <>
-                        <GridItem colSpan={1}>
-                          <Heading size="xs">Sending to </Heading>
-                        </GridItem>
-                        <GridItem colSpan={2}>
-                          <Text fontSize="sm">{destinations[0].address} </Text>
-                        </GridItem>
-                      </>
-                    )
-                  ))}
-              </Grid>
-            )}
+                  )
+                ))}
+            </Grid>
           </Box>
         </GridItem>
         <GridItem colSpan={[6, null, null, null, 3]}>
@@ -261,72 +306,66 @@ function Page() {
               Strategy performance
             </Heading>
           </GridItem>
-          <Box p={6} layerStyle="panel" minHeight={328}>
-            {isLoading || !data?.vault ? (
-              <Center h="full">
-                <Spinner />
-              </Center>
-            ) : (
-              <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Asset</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">
-                    <Flex align="center" gap={2}>
-                      {getDenomInfo(resultingDenom).name} <DenomIcon denomName={resultingDenom!} />
-                    </Flex>
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Divider />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Market value of holdings</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Total accumulated</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Net asset cost</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Average token cost</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Divider />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Profit/ Loss</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">% change</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-              </Grid>
-            )}
+          <Box px={8} py={6} layerStyle="panel" minHeight={328}>
+            <Grid templateColumns="repeat(2, 1fr)" gap={3}>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Asset</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">
+                  <Flex align="center" gap={2}>
+                    {getDenomInfo(resultingDenom).name} <DenomIcon denomName={resultingDenom!} />
+                  </Flex>
+                </Text>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Divider />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Market value of holdings</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Total accumulated</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Net asset cost</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Average token cost</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Divider />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Profit/ Loss</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">% change</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm">-</Text>
+              </GridItem>
+            </Grid>
           </Box>
         </GridItem>
         <GridItem colSpan={6}>
           <Box layerStyle="panel">
-            <Heading p={4} size="md">
+            <Heading p={6} size="md">
               Portfolio accumulated with this strategy
             </Heading>
             {/* <Stat>

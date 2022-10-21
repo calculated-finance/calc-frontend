@@ -38,8 +38,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       templateColumns="repeat(15, 1fr)"
       gap={6}
       bg="gray.900"
-      py={2}
-      px={4}
+      py={4}
+      px={8}
       layerStyle="panel"
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>

@@ -3,8 +3,20 @@ import { useCWClient, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Strategy } from './useStrategies';
 
+type Trigger = {
+  configuration: {
+    time: {
+      target_time: string;
+    };
+    f_i_n_limit_order: {
+      target_price: string;
+    };
+  };
+};
+
 type Response = {
   vault: Strategy;
+  trigger: Trigger;
 };
 
 export default function useStrategy(id?: Strategy['id']) {
