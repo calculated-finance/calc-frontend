@@ -4,6 +4,7 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
+import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
@@ -58,9 +59,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm">Start date:</Text>
 
-        <Text textStyle="body-xs">
-          -{/* {new Date(strategy.tracking_information.target_execution_time).toLocaleDateString()} */}
-        </Text>
+        <Text textStyle="body-xs">{getStrategyStartDate(strategy)}</Text>
       </GridItem>
 
       <GridItem colSpan={{ base: 3, xl: 2 }}>
