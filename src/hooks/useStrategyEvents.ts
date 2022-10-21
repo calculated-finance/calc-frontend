@@ -7,7 +7,7 @@ type Response = {
   vault: Strategy;
 };
 
-export default function useStrategyEvents(id?: Strategy['id']) {
+export default function useStrategyEvents(id: Strategy['id'] | undefined) {
   const { address } = useWallet();
   const client = useCWClient();
 
