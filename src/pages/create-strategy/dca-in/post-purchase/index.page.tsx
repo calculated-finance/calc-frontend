@@ -48,11 +48,13 @@ function Page() {
                     <RecipientAccount />
                   </Box>
                 </Collapse>
-                <AutoStake />
-                <Collapse in={values.autoStake === AutoStakeValues.Yes}>
-                  <Box m="px">
-                    <AutoStakeValidator />
-                  </Box>
+                <Collapse in={values.sendToWallet === SendToWalletValues.Yes}>
+                  <AutoStake />
+                  <Collapse in={values.autoStake === AutoStakeValues.Yes}>
+                    <Box m="px">
+                      <AutoStakeValidator />
+                    </Box>
+                  </Collapse>
                 </Collapse>
                 <Submit>Next</Submit>
               </Stack>

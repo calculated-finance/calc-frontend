@@ -154,7 +154,13 @@ export const allValidationSchema = Yup.object({
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-  autoStake: Yup.mixed<AutoStakeValues>().oneOf(Object.values(AutoStakeValues)).required(),
+  autoStake: Yup.mixed<AutoStakeValues>()
+    .oneOf(Object.values(AutoStakeValues))
+    .required()
+    .when('sendToWallet', {
+      is: SendToWalletValues.No,
+      then: (schema) => schema.transform(() => AutoStakeValues.No),
+    }),
   autoStakeValidator: Yup.string()
     .label('Validator')
     .nullable()
