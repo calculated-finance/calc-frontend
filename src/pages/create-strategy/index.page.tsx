@@ -56,7 +56,7 @@ const takeProfitStrategies: StrategyCardProps[] = [
     href: StrategyUrls.DCAOut,
   },
   {
-    name: 'Auto-take profit',
+    name: 'Auto-take Profit',
     description: 'Sell a certain % of an asset after it pumps a certain %',
     advanced: true,
     icon: DonateIcon,

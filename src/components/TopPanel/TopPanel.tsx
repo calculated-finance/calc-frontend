@@ -133,13 +133,6 @@ export default function TopPanel() {
   const completedStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'inactive') ?? [];
 
   const getConfig = () => {
-    if (!connected) {
-      return {
-        background: '/images/backgrounds/twist.svg',
-        border: 'transparent',
-        Content: Box,
-      };
-    }
     if (isLoading) {
       return {
         background: '/images/backgrounds/twist.svg',
@@ -177,14 +170,13 @@ export default function TopPanel() {
 
   const { background, border, Content } = getConfig();
 
-  return (
+  return connected ? (
     <Center position="relative" borderWidth={2} borderColor={border} h="full" minHeight={294} layerStyle="panel" p={8}>
-      {connected ? (
-        isLoading ? (
-          <Spinner />
-        ) : (
-          <>
-            {/* <Box
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {/* <Box
               layerStyle="panel"
               backgroundImage={background}
               backgroundPosition="center"
@@ -195,14 +187,13 @@ export default function TopPanel() {
               h="full"
               w="full"
             /> */}
-            <Stack spacing={6} backdropBlur="2px" backdropFilter="auto">
-              <Content />
-            </Stack>
-          </>
-        )
-      ) : (
-        <ConnectWallet h={undefined} />
+          <Stack spacing={6} backdropBlur="2px" backdropFilter="auto">
+            <Content />
+          </Stack>
+        </>
       )}
     </Center>
+  ) : (
+    <ConnectWallet layerStyle="panel" />
   );
 }
