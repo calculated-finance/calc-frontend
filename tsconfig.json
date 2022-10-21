@@ -22,6 +22,6 @@
       "@models/*": ["src/models/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/[id]", "__mocks__/styleMock.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/details", "__mocks__/styleMock.js"],
   "exclude": ["node_modules"]
 }

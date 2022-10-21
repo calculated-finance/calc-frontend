@@ -6,6 +6,8 @@ import { BarChartIcon } from '@fusion-icons/react/interface';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
+import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
 function Onboarding() {
   return (
@@ -74,12 +76,12 @@ function ActiveWithOne() {
         </Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <Link passHref href={`/strategies/${activeStrategy?.id}/top-up/`}>
+        <Link passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>
           <Button w="full" size="sm" colorScheme="blue">
             Top up my Strategy
           </Button>
         </Link>
-        <Link passHref href={`/strategies/${activeStrategy?.id}/`}>
+        <Link passHref href={generateStrategyDetailUrl(activeStrategy?.id)}>
           <Button w="full" size="sm" colorScheme="blue" variant="outline">
             Review performance
           </Button>
@@ -132,6 +134,13 @@ export default function TopPanel() {
 
   const getConfig = () => {
     if (!connected) {
+      return {
+        background: '/images/backgrounds/twist.svg',
+        border: 'transparent',
+        Content: Box,
+      };
+    }
+    if (isLoading) {
       return {
         background: '/images/backgrounds/twist.svg',
         border: 'transparent',

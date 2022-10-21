@@ -19,19 +19,21 @@ resource "aws_s3_bucket_acl" "website_bucket_acl" {
   acl    = "public-read"
 }
 
-locals {
-  s3_origin_id = "myS3Origin"
-}
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id   = "${var.environment}${var.bucket_domain_name}"
 
-    # s3_origin_config {
-    #   origin_access_identity = "origin-access-identity/cloudfront/ABCDEFG1234567"
-    # }
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 80
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
   }
+
+
 
   enabled             = true
   is_ipv6_enabled     = true
@@ -110,7 +112,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   #   viewer_protocol_policy = "redirect-to-https"
   # }
 
-  # price_class = "PriceClass_200"
+  price_class = "PriceClass_All"
 
   restrictions {
     geo_restriction {
@@ -120,6 +122,21 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # tags = {
   #   Environment = "production"
+  # }
+
+
+  # custom_error_response {
+  #   error_caching_min_ttl = 300
+  #   error_code            = 403
+  #   response_code         = 200
+  #   response_page_path    = "/index.html"
+  # }
+
+  # custom_error_response {
+  #   error_caching_min_ttl = 300
+  #   error_code            = 404
+  #   response_code         = 200
+  #   response_page_path    = "/index.html"
   # }
 
   viewer_certificate {

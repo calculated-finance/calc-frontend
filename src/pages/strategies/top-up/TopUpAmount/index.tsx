@@ -16,7 +16,7 @@ import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
-import NumberInput from '../../../../../components/NumberInput';
+import NumberInput from '../../../../components/NumberInput';
 
 function AvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({

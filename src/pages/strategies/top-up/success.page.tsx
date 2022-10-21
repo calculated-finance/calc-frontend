@@ -1,6 +1,7 @@
 import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import totalExecutions from '@utils/totalExecutions';
@@ -9,7 +10,7 @@ import { useRouter } from 'next/router';
 import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
 import { getStrategyTimeSaved } from 'src/pages/create-strategy/dca-in/success/getStrategyTimeSaved';
 import getSwapAmount from 'src/pages/create-strategy/dca-in/success/getSwapAmount';
-import { getDenomName, getInitialDenom, getStrategyInitialDenom } from '../getInitialDenom';
+import { getDenomName, getInitialDenom, getStrategyInitialDenom } from '../details/getInitialDenom';
 import { topUpSteps } from './index.page';
 
 function Success() {
@@ -57,7 +58,7 @@ function Success() {
               and removed the emotions from your trades! 💪
             </Text>
           </>
-          <Link passHref href={`/strategies/${query.strategyId}/`}>
+          <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
           </Link>
         </Stack>

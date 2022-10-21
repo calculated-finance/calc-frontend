@@ -4,9 +4,11 @@ import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
-import { getStrategyType } from 'src/pages/strategies/[id]/getStrategyType';
+import { getStrategyType } from 'src/pages/strategies/details/getStrategyType';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
+import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
+import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,7 +79,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Flex justifyContent="end" alignItems="center" h="full">
           <ButtonGroup>
             <CancelButton strategy={strategy} />
-            <Link href={`/strategies/${strategy.id}/top-up`}>
+            <Link href={generateStrategyTopUpUrl(strategy.id)}>
               <Button size="xs" variant="outline">
                 Top up
               </Button>
@@ -87,7 +89,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={{ base: 15, xl: 3 }}>
         <Flex justifyContent="end" alignItems="center" h="full">
-          <Link href={`/strategies/${strategy.id}`}>
+          <Link href={generateStrategyDetailUrl(strategy.id)}>
             <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
           </Link>
         </Flex>

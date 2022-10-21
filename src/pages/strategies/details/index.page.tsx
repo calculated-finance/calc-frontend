@@ -29,6 +29,7 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents from '@hooks/useStrategyEvents';
+import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from './getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -183,7 +184,7 @@ function Page() {
                 </GridItem>
                 <GridItem>
                   <Flex justify="end">
-                    <Link href={`${id}/top-up`}>
+                    <Link href={generateStrategyTopUpUrl(id as string)}>
                       <Button
                         size="xs"
                         variant="ghost"

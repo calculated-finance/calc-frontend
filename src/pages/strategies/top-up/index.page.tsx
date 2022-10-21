@@ -8,27 +8,24 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from '@components/NewStrategyModal/steps';
 import useStrategy from '@hooks/useStrategy';
-import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
-import Lottie from 'lottie-react';
-import arrow from 'src/animations/arrow.json';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import TopUpAmount from './TopUpAmount';
-import { getResultingDenom } from '../getResultingDenom';
-import { getInitialDenom } from '../getInitialDenom';
-import { getStrategyType } from '../getStrategyType';
+import { getResultingDenom } from '../details/getResultingDenom';
+import { getInitialDenom } from '../details/getInitialDenom';
+import { getStrategyType } from '../details/getStrategyType';
 
 export const topUpSteps: StepConfig[] = [
   {
-    href: '/strategies/[id]/top-up',
+    href: '/strategies/top-up',
     title: 'Top Up Strategy',
   },
   {
-    href: '/strategies/[id]/top-up/success',
+    href: '/strategies/top-up/success',
     title: 'Top Up Successful',
     noBackButton: true,
     noJump: true,
