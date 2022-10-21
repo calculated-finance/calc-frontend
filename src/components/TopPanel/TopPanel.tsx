@@ -4,6 +4,7 @@ import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon } from '@fusion-icons/react/interface';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
+import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
@@ -64,10 +65,23 @@ function Returning() {
 
 function ActiveWithOne() {
   const { data } = useStrategies();
-  const activeStrategy = data?.vaults[0];
+  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategy = activeStrategies[0];
+  const { balance } = activeStrategy;
+  const balanceValue = new DenomValue(balance);
+
+  const displayBalance = balanceValue.toConverted().toLocaleString('en-US', {
+    maximumFractionDigits: 6,
+    minimumFractionDigits: 2,
+  });
   return (
     <>
-      <Icon as={BarChartIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+      <HStack align="center">
+        <Icon as={BarChartIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+        <Text textStyle="body">
+          {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
+        </Text>
+      </HStack>
       <Stack spacing={2}>
         <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
         <Text textStyle="body">
@@ -92,10 +106,15 @@ function ActiveWithOne() {
 }
 
 function ActiveWithMany() {
+  const { data } = useStrategies();
+  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   return (
     <>
-      <Icon as={BarChartIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
-      <Stack spacing={2}>
+      <HStack align="center">
+        <Icon as={BarChartIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
+        <Text textStyle="body">You have {activeStrategies.length} strategies running</Text>
+      </HStack>
+      <Stack spacing={1}>
         <Heading size="md">Wow - you&apos;re a CALC pro.</Heading>
         <Text textStyle="body">
           You should be proud, you&apos;ve surpassed the basic stage of just running a single strategy and you&apos;re
@@ -187,7 +206,7 @@ export default function TopPanel() {
               h="full"
               w="full"
             /> */}
-          <Stack spacing={6} backdropBlur="2px" backdropFilter="auto">
+          <Stack spacing={4} backdropBlur="2px" backdropFilter="auto">
             <Content />
           </Stack>
         </>
