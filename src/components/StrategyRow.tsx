@@ -1,11 +1,23 @@
-import { Badge, Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup } from '@chakra-ui/react';
+import {
+  Badge,
+  Button,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+  Flex,
+  useDisclosure,
+  ButtonGroup,
+  HStack,
+} from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
+import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/pages/strategies/details/getInitialDenom';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -32,6 +44,8 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
 }
 
 function StrategyRow({ strategy }: { strategy: Strategy }) {
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
   return (
     <Grid
       templateRows="repeat(1, 1fr)"
@@ -53,7 +67,11 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" pb={1}>
           Asset(s):
         </Text>
-        <DenomIcon showTooltip denomName={strategy.pair.base_denom} />
+        <HStack spacing={1}>
+          <DenomIcon showTooltip denomName={initialDenom} />
+          <Icon as={ArrowRightIcon} stroke="grey" />
+          <DenomIcon showTooltip denomName={resultingDenom} />
+        </HStack>
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>

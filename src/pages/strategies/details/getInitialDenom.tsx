@@ -11,6 +11,11 @@ export function getStrategyInitialDenom(strategy: Strategy): Denom {
   return position_type === 'enter' ? pair?.quote_denom : pair?.base_denom;
 }
 
+export function getStrategyResultingDenom(strategy: Strategy): Denom {
+  const { pair, position_type } = strategy;
+  return position_type === 'enter' ? pair?.base_denom : pair?.quote_denom;
+}
+
 export function getDenomName(denom: Denom): string {
   const { name } = getDenomInfo(denom);
   return name;
