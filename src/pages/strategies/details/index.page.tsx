@@ -97,7 +97,7 @@ function Page() {
   if (!data) {
     return (
       <Center h="100vh">
-        <Spinner />;
+        <Spinner />
       </Center>
     );
   }
@@ -135,7 +135,9 @@ function Page() {
 
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr">
         <GridItem colSpan={[6, null, null, null, 3]}>
-          <Heading size="md">Strategy details</Heading>
+          <Heading pb={4} size="md">
+            Strategy details
+          </Heading>
           <Box p={6} layerStyle="panel" minHeight={328}>
             {isLoading || !data?.vault ? (
               <Center h="full">
