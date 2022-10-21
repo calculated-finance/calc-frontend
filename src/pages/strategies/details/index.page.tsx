@@ -178,7 +178,16 @@ function Page() {
       </HStack>
 
       {Boolean(nextSwapInfo) && (
-        <HStack mb={8} py={4} px={8} layerStyle="panel" spacing={4}>
+        <HStack
+          mb={8}
+          py={4}
+          px={8}
+          layerStyle="panel"
+          spacing={4}
+          backgroundImage="/images/backgrounds/thin.svg"
+          backgroundPosition="center"
+          backgroundSize="cover"
+        >
           <CalcIcon as={ArrowRight5Icon} stroke="blue.200" />
           <Text fontSize="sm" color="blue.200">
             Next swap:
