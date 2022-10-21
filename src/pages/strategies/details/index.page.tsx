@@ -36,6 +36,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
+import { getStrategyStatus } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getInitialDenom } from './getInitialDenom';
@@ -125,34 +126,36 @@ function Page() {
   const targetPrice = data?.trigger?.configuration?.f_i_n_limit_order?.target_price;
 
   let nextSwapInfo;
-  if (targetTime) {
-    const nextSwapDate = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleDateString(
-      'en-US',
-      {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      },
-    );
+  if (getStrategyStatus(data.vault) === 'active' || getStrategyStatus(data.vault) === 'scheduled') {
+    if (targetTime) {
+      const nextSwapDate = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleDateString(
+        'en-US',
+        {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        },
+      );
 
-    const nextSwapTime = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleTimeString(
-      'en-US',
-      {
-        minute: 'numeric',
-        hour: 'numeric',
-      },
-    );
-    nextSwapInfo = (
-      <>
-        {nextSwapDate} at {nextSwapTime}
-      </>
-    );
-  } else if (targetPrice) {
-    nextSwapInfo = (
-      <>
-        When 1 {getDenomInfo(resultingDenom).name} &ge; {targetPrice} {getDenomInfo(initialDenom).name}
-      </>
-    );
+      const nextSwapTime = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleTimeString(
+        'en-US',
+        {
+          minute: 'numeric',
+          hour: 'numeric',
+        },
+      );
+      nextSwapInfo = (
+        <>
+          {nextSwapDate} at {nextSwapTime}
+        </>
+      );
+    } else if (targetPrice) {
+      nextSwapInfo = (
+        <>
+          When 1 {getDenomInfo(resultingDenom).name} &ge; {targetPrice} {getDenomInfo(initialDenom).name}
+        </>
+      );
+    }
   }
 
   return (
