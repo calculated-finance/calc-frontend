@@ -114,6 +114,10 @@ export default function Summary() {
             <Text>{resultingDenomName}</Text>
             <DenomIcon denomName={resultingDenom} />
           </BadgeButton>{' '}
+          every{' '}
+          <BadgeButton url="customise">
+            <Text textTransform="capitalize">{executionIntervalDisplay[executionInterval][0]}</Text>
+          </BadgeButton>{' '}
           for{' '}
           <BadgeButton url="customise">
             <Text>

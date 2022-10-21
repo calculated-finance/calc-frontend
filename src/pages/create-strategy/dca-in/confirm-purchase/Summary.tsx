@@ -6,6 +6,7 @@ import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
 import SendToWalletValues from '@models/SendToWalletValues';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
@@ -146,6 +147,10 @@ export default function Summary() {
           <BadgeButton url="assets">
             <Text>{resultingDenomName}</Text>
             <DenomIcon denomName={resultingDenom} />
+          </BadgeButton>{' '}
+          every{' '}
+          <BadgeButton url="customise">
+            <Text textTransform="capitalize">{executionIntervalDisplay[executionInterval][0]}</Text>
           </BadgeButton>{' '}
           for{' '}
           <BadgeButton url="customise">
