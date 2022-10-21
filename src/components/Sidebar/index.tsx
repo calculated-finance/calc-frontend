@@ -46,7 +46,7 @@ interface LinkItem {
 }
 const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
-  { name: 'Create Strategy', icon: Add1Icon, href: Pages.CreateStrategy },
+  { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
   { name: 'How it works', icon: LifebeltIcon, href: Pages.HowItWorks },

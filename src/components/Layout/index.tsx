@@ -53,11 +53,11 @@ function Content({ children, ...props }: BoxProps) {
 }
 const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   '/': { label: 'Dashboard', enabled: true },
-  'create-strategy': { label: 'Create Strategy', enabled: true },
+  'create-strategy': { label: 'Create strategy', enabled: true },
   'dca-in': { label: 'DCA In', enabled: false },
   'dca-out': { label: 'DCA Out', enabled: false },
   strategies: { label: 'My strategies', enabled: true },
-  'top-up': { label: 'Top Up Strategy', enabled: false },
+  'top-up': { label: 'Top up strategy', enabled: false },
 };
 
 function FlowBreadcrumbs() {

@@ -57,7 +57,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text fontSize="sm">Start date:</Text>
+        <Text fontSize="sm">Start Date:</Text>
 
         <Text textStyle="body-xs">{getStrategyStartDate(strategy)}</Text>
       </GridItem>
