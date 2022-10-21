@@ -13,7 +13,7 @@ const dcaOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-out/post-purchase',
     title: 'Post Purchase',
-    footerText: 'How to use CALC’s DCA out strategy to mange cashflow',
+    footerText: 'How to use CALC’s DCA out strategy to manage cashflow',
   },
   {
     href: '/create-strategy/dca-out/confirm-purchase',
