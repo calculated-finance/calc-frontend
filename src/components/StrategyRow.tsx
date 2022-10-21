@@ -65,7 +65,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm" pb={1}>
-          Asset(s):
+          Assets:
         </Text>
         <HStack spacing={1}>
           <DenomIcon showTooltip denomName={initialDenom} />
