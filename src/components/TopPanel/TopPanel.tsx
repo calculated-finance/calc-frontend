@@ -190,7 +190,7 @@ export default function TopPanel() {
   const { background, border, Content } = getConfig();
 
   return connected ? (
-    <Center position="relative" borderWidth={2} borderColor={border} layerStyle="panel" p={8}>
+    <Center position="relative" borderWidth={2} borderColor={border} layerStyle="panel" p={8} h="full">
       {isLoading ? (
         <Spinner />
       ) : (

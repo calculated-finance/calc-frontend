@@ -30,11 +30,8 @@ function InfoPanel() {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text textStyle="body">
-          <Text as="span" fontWeight="bold" color="white">
-            Dollar-cost averaging
-          </Text>{' '}
-          is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
-          way to practice buy-and-hold investing over a few cycles.
+          Dollar-cost averaging is one of the easiest techniques to reduce the volatility risk of investing in crypto,
+          and it&apos;s a great way to practice buy-and-hold investing over a few cycles.
         </Text>
       </Flex>
     </Stack>
@@ -79,7 +76,7 @@ function InvestmentThesis() {
     ),
   );
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
       {isLoading ? (
         <Spinner />
       ) : (
@@ -159,7 +156,7 @@ function TotalInvestment() {
   });
 
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
       {isLoading ? (
         <Spinner />
       ) : (
@@ -188,7 +185,7 @@ function TotalInvestment() {
 
 function WorkflowInformation() {
   return (
-    <Center h={308}>
+    <Center p={8}>
       <Flex direction="column">
         <Stack spacing={2} pb={8} textAlign="center" px={{ lg: 20 }}>
           <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
@@ -217,19 +214,21 @@ function Home() {
           strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr">
+      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
         <GridItem colSpan={{ base: 6, lg: activeStrategies.length ? 4 : 6 }}>
           <TopPanel />
         </GridItem>
-        <GridItem colSpan={{ base: 6, lg: 2 }}>{Boolean(activeStrategies.length) && <InvestmentThesis />}</GridItem>
+        <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
+          {Boolean(activeStrategies.length) && <InvestmentThesis />}
+        </GridItem>
 
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
-          <GridItem colSpan={{ base: 6, lg: 3 }}>
+          <GridItem colSpan={{ base: 6, lg: activeStrategies.length ? 3 : 6, xl: 3 }}>
             <ActiveStrategies />
           </GridItem>
         )}
-        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 4 : 6 }}>
+        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 3 : 6 }}>
           <WorkflowInformation />
         </GridItem>
         {Boolean(activeStrategies.length) && (
