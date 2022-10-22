@@ -22,7 +22,7 @@ import { findStep, StepConfig } from './steps';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
-    <Box maxWidth={451} mx="auto" py={8}>
+    <Box maxWidth={451} mx="auto" py={8} pb={200}>
       {children}
     </Box>
   );

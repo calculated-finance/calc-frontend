@@ -43,7 +43,7 @@ function InfoPanel() {
 
 function WarningPanel() {
   return (
-    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
+    <Stack direction="row" layerStyle="panel" px={8} py={4} spacing={4}>
       <Image src="/images/warning.svg" />
       <Flex alignItems="center">
         <Text textStyle="body">

@@ -33,11 +33,9 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
         </Fade>
 
         <Collapse in={isOpen}>
-          <Flex flexDirection="row" px={2} pb={2} mt={0} gap={6}>
+          <Flex flexDirection="row" px={2} pb={4} mt={0} gap={6}>
             <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs" color="blue.200">
-                Once off
-              </Heading>
+              <Heading size="xs">Once off</Heading>
               <Stack spacing={0}>
                 <Flex>
                   <Text textStyle="body-xs">Gas:</Text>
@@ -66,9 +64,7 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
               </Stack>
             </Flex>
             <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs" color="blue.200">
-                Per swap
-              </Heading>
+              <Heading size="xs">Per swap</Heading>
               <Stack spacing={0}>
                 <Flex>
                   <Text textStyle="body-xs">CALC sustainability tax:</Text>

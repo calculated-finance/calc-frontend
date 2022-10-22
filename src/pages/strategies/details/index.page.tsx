@@ -181,10 +181,7 @@ function Page() {
           backgroundPosition="center"
           backgroundSize="cover"
         >
-          <CalcIcon as={ArrowRight5Icon} stroke="blue.200" />
-          <Text fontSize="sm" color="blue.200">
-            Next swap:
-          </Text>
+          <Heading size="xs">Next swap:</Heading>
           <Text fontSize="sm" data-testid="next-swap-info">
             {nextSwapInfo}
           </Text>

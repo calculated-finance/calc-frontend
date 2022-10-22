@@ -28,14 +28,14 @@ type StrategyCardProps = {
 const accumulationStratgies: StrategyCardProps[] = [
   {
     name: 'Standard DCA In',
-    description: 'Dollar-cost Average into an asset with ease.',
+    description: 'Customise your own dollar-cost average buying strategy.',
     icon: Fullscreen2Icon,
     enabled: true,
     href: StrategyUrls.DCAIn,
   },
   {
-    name: 'ML DCA+ In',
-    description: 'Let our advanced DCA algorithms invest for you.',
+    name: 'Algorithm DCA+ In',
+    description: 'Let our machine learning DCA algorithms invest for you.',
     advanced: true,
     icon: Code3Icon,
   },
@@ -50,14 +50,20 @@ const accumulationStratgies: StrategyCardProps[] = [
 const takeProfitStrategies: StrategyCardProps[] = [
   {
     name: 'Standard DCA Out',
-    description: 'Dollar-cost Average out of an asset with ease.',
+    description: 'Dollar-cost average out of an asset with ease.',
     icon: Fullscreen1Icon,
     enabled: true,
     href: StrategyUrls.DCAOut,
   },
   {
+    name: 'Algorithm DCA+ Out',
+    description: 'Let our machine learning DCA algorithms sell for you.',
+    advanced: true,
+    icon: Code3Icon,
+  },
+  {
     name: 'Auto-take Profit',
-    description: 'Sell a certain % of an asset after it pumps a certain %',
+    description: 'Sell a certain % of an asset after it pumps a certain %.',
     advanced: true,
     icon: DonateIcon,
     enabled: false,
@@ -70,11 +76,8 @@ function InfoPanel(): JSX.Element {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text textStyle="body">
-          <Text as="span" fontWeight="bold" color="white">
-            Dollar-cost averaging
-          </Text>{' '}
-          is one of the easiest techniques to reduce the volatility risk of investing in crypto, and it&apos;s a great
-          way to practice buy-and-hold investing over a few cycles.
+          Dollar-cost averaging is one of the easiest techniques to reduce the volatility risk of investing in crypto,
+          and it&apos;s a great way to practice buy-and-hold investing over a few cycles.
         </Text>
       </Flex>
     </Stack>
@@ -86,10 +89,10 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
         <Flex mb={4}>
-          <Icon stroke="brand.200" as={icon} width={8} height={8} />
+          <Icon stroke="white" as={icon} width={8} height={8} />
           <Spacer />
           <Box>
-            <Badge size="xs" colorScheme={advanced ? 'orange' : 'blue'}>
+            <Badge size="xs" colorScheme={advanced ? 'blue' : undefined}>
               {advanced ? 'Advanced Strategy' : 'Basic Strategy'}
             </Badge>
           </Box>
@@ -115,10 +118,8 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
           textAlign="center"
           variant="ghost"
           colorScheme="gray"
-          href={linkToInfo}
           target="_blank"
           rel="noopener noreferrer"
-          visibility={enabled ? 'visible' : 'hidden'}
         >
           Learn more
         </Link>
@@ -140,7 +141,16 @@ function Strategies() {
       <Box>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
-          <Badge colorScheme="green" whiteSpace="normal" textAlign="center">
+          {/* TODO: not really a badge anymore */}
+          <Badge
+            colorScheme="green"
+            px={4}
+            py={1}
+            layerStyle="panel"
+            whiteSpace="normal"
+            bg="deepHorizon"
+            textAlign="center"
+          >
             According to the{' '}
             <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
               <Text as="a" textDecoration="underline" target="_blank">
@@ -150,29 +160,34 @@ function Strategies() {
             {/* TODO: make this value based on the api */}: 22, it&apos;s a good time to use accumulation strategies
           </Badge>
         </Wrap>
-        <Text textStyle="body">You want to build a position in an asset. </Text>
+        <Text pb={4} textStyle="body">
+          You want to build a position in an asset.{' '}
+        </Text>
+        <Flex gap={8} flexDirection="row" wrap="wrap">
+          {accumulationStratgies.map((strategy) => (
+            <StrategyCard key={strategy.name} {...strategy} />
+          ))}
+        </Flex>
       </Box>
-      <Flex gap={8} flexDirection="row" wrap="wrap">
-        {accumulationStratgies.map((strategy) => (
-          <StrategyCard key={strategy.name} {...strategy} />
-        ))}
-      </Flex>
+
       <InfoPanel />
       <Box>
-        <Heading mb={2} size="md">
+        <Heading mb={1} size="md">
           Take Profit strategies
         </Heading>
-        <Text textStyle="body">You want to start selling assets because you have a good return on them already.</Text>
+        <Text pb={4} textStyle="body">
+          You want to start selling assets because you have a good return on them already.
+        </Text>
+        <Flex gap={8} flexDirection="row" wrap="wrap">
+          {takeProfitStrategies.map((strategy) => (
+            <StrategyCard key={strategy.name} {...strategy} />
+          ))}
+        </Flex>
       </Box>
-      <Flex gap={8} flexDirection="row" wrap="wrap">
-        {takeProfitStrategies.map((strategy) => (
-          <StrategyCard key={strategy.name} {...strategy} />
-        ))}
-      </Flex>
       <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
         <Image src="/images/moneyBag.svg" />
         <Flex alignItems="center">
-          <Text fontSize="sm" fontWeight="bold">
+          <Text textStyle="body">
             If you can learn anything from the Luna crash, it&apos;s don&apos;t marry your bags. Always be objective and
             if you don&apos;t take your profits, then someone else will.
           </Text>
