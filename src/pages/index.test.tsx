@@ -47,7 +47,7 @@ describe('Home', () => {
     });
     it('does not show active strategies count', () => {
       renderTarget();
-      expect(screen.queryByText(/My Active CALC Strategies/)).toBeNull();
+      expect(screen.queryByText(/My active CALC strategies/)).toBeNull();
     });
   });
   describe('when wallet is connected', () => {
@@ -62,7 +62,7 @@ describe('Home', () => {
       });
       it('show active strategies count', () => {
         renderTarget();
-        expect(screen.getByText(/My Active CALC Strategies/)).toBeInTheDocument();
+        expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
         expect(screen.getByText(/Set up a strategy/)).toBeInTheDocument();
         expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('0');
       });
@@ -80,7 +80,7 @@ describe('Home', () => {
       });
       it('show active strategies count', () => {
         renderTarget();
-        expect(screen.getByText(/My Active CALC Strategies/)).toBeInTheDocument();
+        expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
         expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('1');
         expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
         expect(screen.getByText(/Review My Strategies/)).toBeInTheDocument();
