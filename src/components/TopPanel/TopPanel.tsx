@@ -190,7 +190,7 @@ export default function TopPanel() {
   const { background, border, Content } = getConfig();
 
   return connected ? (
-    <Center position="relative" borderWidth={2} borderColor={border} layerStyle="panel" p={8} h="full">
+    <Center position="relative" h="full">
       {isLoading ? (
         <Spinner />
       ) : (
@@ -201,11 +201,10 @@ export default function TopPanel() {
             backgroundPosition="top"
             backgroundRepeat="no-repeat"
             position="absolute"
-            filter="auto"
             h="full"
             w="full"
           />
-          <Stack zIndex={1} spacing={4} backdropBlur="2px" backdropFilter="auto">
+          <Stack layerStyle="panel" bg="transparent" zIndex={1} p={8} borderWidth={2} borderColor={border} spacing={4}>
             <Content />
           </Stack>
         </>

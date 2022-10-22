@@ -20,7 +20,7 @@ import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRight5Icon, ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -28,7 +28,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
-import useStrategyEvents from '@hooks/useStrategyEvents';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { getStrategyStatus } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../../../components/Layout';
@@ -188,12 +187,12 @@ function Page() {
         </HStack>
       )}
 
-      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr">
+      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
         <GridItem colSpan={[6, null, null, null, 3]}>
           <Heading pb={4} size="md">
             Strategy details
           </Heading>
-          <Box px={8} py={6} layerStyle="panel" minHeight={328}>
+          <Box px={8} py={6} layerStyle="panel">
             <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
               <GridItem colSpan={1}>
                 <Heading size="xs">Strategy status</Heading>
@@ -305,66 +304,66 @@ function Page() {
           </Box>
         </GridItem>
         <GridItem colSpan={[6, null, null, null, 3]}>
-          <GridItem>
+          <Flex h="full" flexDirection="column">
             <Heading pb={4} size="md">
               Strategy performance
             </Heading>
-          </GridItem>
-          <Box px={8} py={6} layerStyle="panel" minHeight={328}>
-            <Grid templateColumns="repeat(2, 1fr)" gap={3}>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Asset</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Flex align="center" gap={2}>
-                  <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
-                  <DenomIcon denomName={resultingDenom!} />
-                </Flex>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Divider />
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Market value of holdings</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Total accumulated</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Net asset cost</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Average token cost</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Divider />
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Profit/ Loss</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">% change</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm">-</Text>
-              </GridItem>
-            </Grid>
-          </Box>
+            <Flex layerStyle="panel" flexGrow={1} alignItems="start">
+              <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Asset</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Flex align="center" gap={2}>
+                    <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
+                    <DenomIcon denomName={resultingDenom!} />
+                  </Flex>
+                </GridItem>
+                <GridItem colSpan={2}>
+                  <Divider />
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Market value of holdings</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Total accumulated</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Net asset cost</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Average token cost</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+                <GridItem colSpan={2}>
+                  <Divider />
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Profit/ Loss</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">% change</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text fontSize="sm">-</Text>
+                </GridItem>
+              </Grid>
+            </Flex>
+          </Flex>
         </GridItem>
         <GridItem colSpan={6}>
           <Box layerStyle="panel">

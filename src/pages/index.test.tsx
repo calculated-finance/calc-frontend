@@ -68,7 +68,7 @@ describe('Home', () => {
       });
       it('does not show investment thesis', () => {
         renderTarget();
-        expect(screen.queryByText(/My Investment Thesis/)).toBeNull();
+        expect(screen.queryByText(/My investment thesis/)).toBeNull();
       });
     });
     describe('when active strategies exist', () => {
@@ -95,7 +95,7 @@ describe('Home', () => {
       });
       it('shows investment thesis', () => {
         renderTarget();
-        expect(screen.getByText(/My Investment Thesis/)).toBeInTheDocument();
+        expect(screen.getByText(/My investment thesis/)).toBeInTheDocument();
         expect(screen.queryAllByTestId('denom-icon-ukuji').length).toEqual(1);
         // expect(screen.getByTestId('total-invested').innerHTML).toBe('10,000.00');
         expect(screen.getByTestId('total-invested').innerHTML).toBe('(Coming Soon)');
