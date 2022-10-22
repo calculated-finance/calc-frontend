@@ -60,11 +60,9 @@ function ConfirmPurchase() {
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
-      onSuccess: async (data) => {
+      onSuccess: async (strategyId) => {
         await nextStep({
-          strategyId: data.logs[0].events
-            .find((event) => event.type === 'wasm')
-            ?.attributes.find((attribute) => attribute.key === 'vault_id')?.value,
+          strategyId,
         });
         actions.resetAction();
       },

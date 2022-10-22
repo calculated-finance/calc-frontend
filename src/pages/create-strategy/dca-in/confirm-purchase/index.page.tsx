@@ -12,6 +12,7 @@ import totalExecutions from '@utils/totalExecutions';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
+import { DeliverTxResponse } from '@cosmjs/stargate';
 import Summary from './Summary';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
@@ -48,11 +49,9 @@ function ConfirmPurchase() {
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
-      onSuccess: async (data) => {
+      onSuccess: async (strategyId) => {
         await nextStep({
-          strategyId: data.logs[0].events
-            .find((event) => event.type === 'wasm')
-            ?.attributes.find((attribute) => attribute.key === 'vault_id')?.value,
+          strategyId,
         });
         actions.resetAction();
       },
