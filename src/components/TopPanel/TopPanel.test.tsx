@@ -52,7 +52,7 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Ready to set up a CALC Strategy?/)).toBeInTheDocument();
-        expect(screen.getByText(/Get Started/)).toHaveAttribute('href', '/create-strategy');
+        expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy');
       });
     });
     describe('when a user has only completed strategies', () => {
@@ -93,7 +93,7 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Awesome - you have a DCA strategy active!/)).toBeInTheDocument();
-        expect(screen.getByText(/Top up my Strategy/)).toHaveAttribute('href', '/strategies/top-up?id=1');
+        expect(screen.getByText(/Top up my strategy/)).toHaveAttribute('href', '/strategies/top-up?id=1');
         expect(screen.getByText(/Review performance/)).toHaveAttribute('href', '/strategies/details?id=1');
       });
     });

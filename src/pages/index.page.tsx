@@ -79,12 +79,12 @@ function InvestmentThesis() {
     ),
   );
   return (
-    <Flex h={294} layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" p={8} alignItems="center">
       {isLoading ? (
         <Spinner />
       ) : (
         <Stack spacing={8}>
-          <Heading size="md">My Investment Thesis:</Heading>
+          <Heading size="md">My investment thesis:</Heading>
           <Heading size="xs">
             <Wrap spacingX={6} spacingY={2} align="center">
               <Text>Asset(s) accumulating:</Text>
@@ -119,12 +119,12 @@ function ActiveStrategies() {
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   return (
-    <Flex h={294} layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" p={8} alignItems="center">
       {isLoading ? (
         <Spinner />
       ) : (
         <Stack spacing={4}>
-          <Heading size="md">My Active CALC Strategies</Heading>
+          <Heading size="md">My active CALC strategies</Heading>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
@@ -136,7 +136,7 @@ function ActiveStrategies() {
           {Boolean(activeStrategies.length) && (
             <Link href="/strategies">
               <Button w={44} variant="outline" colorScheme="blue">
-                Review My Strategies
+                Review my strategies
               </Button>
             </Link>
           )}
@@ -159,7 +159,7 @@ function TotalInvestment() {
   });
 
   return (
-    <Flex h={294} layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" p={8} alignItems="center">
       {isLoading ? (
         <Spinner />
       ) : (

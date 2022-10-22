@@ -11,7 +11,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, ArrowUpBoxedIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 import React from 'react';
@@ -94,12 +94,16 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 7, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <ButtonGroup>
-            <CancelButton strategy={strategy} />
             <Link href={generateStrategyTopUpUrl(strategy.id)}>
-              <Button size="xs" variant="outline">
+              <Button
+                size="xs"
+                variant="ghost"
+                leftIcon={<Icon as={ArrowUpBoxedIcon} stroke="brand.200" width={4} height={4} />}
+              >
                 Top up
               </Button>
             </Link>
+            <CancelButton strategy={strategy} />
           </ButtonGroup>
         </Flex>
       </GridItem>

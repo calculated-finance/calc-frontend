@@ -16,7 +16,7 @@ function Onboarding() {
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={2}>
         <Heading size="md">Ready to set up a CALC Strategy?</Heading>
-        <Text textStyle="body">
+        <Text fontSize="sm">
           CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and take
           back your time. In just 4 minutes, you can have CALC working for you with either take profit strategies or
           accumulation strategies.
@@ -24,7 +24,7 @@ function Onboarding() {
       </Stack>
       <Link passHref href="/create-strategy">
         <Button maxWidth={402} size="sm">
-          Get Started
+          Get started
         </Button>
       </Link>
     </>
@@ -42,7 +42,7 @@ function Returning() {
       </HStack>
       <Stack spacing={2}>
         <Heading size="md">Ready to fire up CALC again?</Heading>
-        <Text textStyle="body">
+        <Text fontSize="sm">
           Match your investments to your goals, spread your &apos;eggs&apos; among multiple baskets, set up a purchase
           plan–and stick with it and backtest your previous startegies.
         </Text>
@@ -84,7 +84,7 @@ function ActiveWithOne() {
       </HStack>
       <Stack spacing={2}>
         <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
-        <Text textStyle="body">
+        <Text fontSize="sm">
           Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
           CALC is empowering investors with the tools to make investing emotionless.
         </Text>
@@ -92,7 +92,7 @@ function ActiveWithOne() {
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
         <Link passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>
           <Button w="full" size="sm" colorScheme="blue">
-            Top up my Strategy
+            Top up my strategy
           </Button>
         </Link>
         <Link passHref href={generateStrategyDetailUrl(activeStrategy?.id)}>
@@ -116,7 +116,7 @@ function ActiveWithMany() {
       </HStack>
       <Stack spacing={1}>
         <Heading size="md">Wow - you&apos;re a CALC pro.</Heading>
-        <Text textStyle="body">
+        <Text fontSize="sm">
           You should be proud, you&apos;ve surpassed the basic stage of just running a single strategy and you&apos;re
           managing multiple. Be sure to share your backtesting results to spread the CALC love.
         </Text>
@@ -181,7 +181,7 @@ export default function TopPanel() {
       };
     }
     return {
-      background: '/images/backgrounds/star.svg',
+      background: '/images/backgrounds/spiral.svg',
       border: 'green.200',
       Content: ActiveWithMany,
     };
@@ -190,23 +190,22 @@ export default function TopPanel() {
   const { background, border, Content } = getConfig();
 
   return connected ? (
-    <Center position="relative" borderWidth={2} borderColor={border} h="full" minHeight={294} layerStyle="panel" p={8}>
+    <Center position="relative" borderWidth={2} borderColor={border} layerStyle="panel" p={8}>
       {isLoading ? (
         <Spinner />
       ) : (
         <>
-          {/* <Box
-              layerStyle="panel"
-              backgroundImage={background}
-              backgroundPosition="center"
-              backgroundSize="cover"
-              backgroundRepeat="no-repeat"
-              position="absolute"
-              filter="auto"
-              h="full"
-              w="full"
-            /> */}
-          <Stack spacing={4} backdropBlur="2px" backdropFilter="auto">
+          <Box
+            layerStyle="panel"
+            backgroundImage={background}
+            backgroundPosition="top"
+            backgroundRepeat="no-repeat"
+            position="absolute"
+            filter="auto"
+            h="full"
+            w="full"
+          />
+          <Stack zIndex={1} spacing={4} backdropBlur="2px" backdropFilter="auto">
             <Content />
           </Stack>
         </>
