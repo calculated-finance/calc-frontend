@@ -1,8 +1,7 @@
 import { Strategy } from '@hooks/useStrategies';
 import totalExecutions from '@utils/totalExecutions';
-import getStrategyBalance from './getInitialDenomBalance';
+import getStrategyBalance from './getStrategyBalance';
 import getSwapAmount from './getSwapAmount';
-
 
 export function getStrategyTotalExecutions(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);

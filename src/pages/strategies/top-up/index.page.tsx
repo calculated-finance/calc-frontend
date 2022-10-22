@@ -12,11 +12,11 @@ import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
-import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
+import getStrategyBalance from 'src/helpers/getStrategyBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import TopUpAmount from './TopUpAmount';
-import { getResultingDenom } from '../details/getResultingDenom';
-import { getInitialDenom } from '../details/getInitialDenom';
+import { getResultingDenom } from '../../../helpers/getResultingDenom';
+import { getInitialDenom } from '../../../helpers/getInitialDenom';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 
 export const topUpSteps: StepConfig[] = [

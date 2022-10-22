@@ -39,8 +39,8 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { getStrategyStatus } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
-import { getInitialDenom } from './getInitialDenom';
-import { getResultingDenom } from './getResultingDenom';
+import { getInitialDenom } from '../../../helpers/getInitialDenom';
+import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 

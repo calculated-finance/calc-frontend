@@ -6,9 +6,9 @@ import useStrategy from '@hooks/useStrategy';
 import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getStrategyBalance from '../../dca-in/success/getInitialDenomBalance';
-import { getStrategyTimeSaved } from '../../dca-in/success/getStrategyTimeSaved';
-import getSwapAmount from '../../dca-in/success/getSwapAmount';
+import getStrategyBalance from '../../../../helpers/getStrategyBalance';
+import { getStrategyTimeSaved } from '../../../../helpers/getStrategyTimeSaved';
+import getSwapAmount from '../../../../helpers/getSwapAmount';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Success() {

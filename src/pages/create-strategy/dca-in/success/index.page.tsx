@@ -6,7 +6,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getStrategyTimeSaved } from './getStrategyTimeSaved';
+import { getStrategyTimeSaved } from '../../../../helpers/getStrategyTimeSaved';
 
 function Success() {
   const { isPageLoading } = usePageLoad();

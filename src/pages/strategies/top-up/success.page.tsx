@@ -7,10 +7,10 @@ import useStrategy from '@hooks/useStrategy';
 import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getStrategyBalance from 'src/pages/create-strategy/dca-in/success/getInitialDenomBalance';
-import { getStrategyTimeSaved } from 'src/pages/create-strategy/dca-in/success/getStrategyTimeSaved';
-import getSwapAmount from 'src/pages/create-strategy/dca-in/success/getSwapAmount';
-import { getDenomName, getInitialDenom, getStrategyInitialDenom } from '../details/getInitialDenom';
+import getStrategyBalance from 'src/helpers/getStrategyBalance';
+import { getStrategyTimeSaved } from 'src/helpers/getStrategyTimeSaved';
+import getSwapAmount from 'src/helpers/getSwapAmount';
+import { getDenomName, getInitialDenom, getStrategyInitialDenom } from '../../../helpers/getInitialDenom';
 import { topUpSteps } from './index.page';
 
 function Success() {

@@ -17,7 +17,7 @@ import Link from 'next/link';
 import React from 'react';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
-import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/pages/strategies/details/getInitialDenom';
+import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/helpers/getInitialDenom';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';

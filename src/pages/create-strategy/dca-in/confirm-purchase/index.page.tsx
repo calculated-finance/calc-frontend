@@ -13,7 +13,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import Summary from './Summary';
-import Fees from './Fees';
+import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 
 function InvalidData() {

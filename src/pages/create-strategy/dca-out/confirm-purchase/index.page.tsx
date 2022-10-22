@@ -26,7 +26,7 @@ import steps from '@components/NewStrategyModal/steps';
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import Summary from './Summary';
 import dcaOutSteps from '../dcaOutSteps';
-import Fees from '../../dca-in/confirm-purchase/Fees';
+import Fees from '../../../../components/Fees';
 
 function InvalidData() {
   const router = useRouter();
