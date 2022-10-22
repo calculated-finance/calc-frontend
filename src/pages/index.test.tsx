@@ -83,7 +83,7 @@ describe('Home', () => {
         expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
         expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('1');
         expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
-        expect(screen.getByText(/Review My Strategies/)).toBeInTheDocument();
+        expect(screen.getByText(/Review my strategies/)).toBeInTheDocument();
       });
       it('does not show info panel', () => {
         renderTarget();
