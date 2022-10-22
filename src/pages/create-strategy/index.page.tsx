@@ -113,16 +113,9 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
           </Button>
         )}
 
-        <Link
-          fontSize="sm"
-          textAlign="center"
-          variant="ghost"
-          colorScheme="gray"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <Button colorScheme="blue" variant="ghost">
           Learn more
-        </Link>
+        </Button>
       </Flex>
     </Stack>
   );
