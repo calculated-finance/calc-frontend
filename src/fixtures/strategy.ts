@@ -6,7 +6,7 @@ export default {
   owner: 'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt',
   balance: {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '10000',
+    amount: '10000000', // 10 DEMO
   },
 
   time_interval: 'weekly',
@@ -15,7 +15,7 @@ export default {
     base_denom: 'ukuji',
     quote_denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   },
-  swap_amount: '10000',
+  swap_amount: '1000000', // 1 DEMO
   position_type: 'enter',
   slippage_tolerance: null,
   status: 'active',

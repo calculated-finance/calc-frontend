@@ -91,10 +91,7 @@ function Page() {
   const { data, isLoading } = useStrategy(id as string);
   const { address } = useWallet();
 
-  const { data: eventsData } = useStrategyEvents(id as string);
-
-  console.log(eventsData);
-  console.log(data);
+  // const { data: eventsData } = useStrategyEvents(id as string);
 
   if (!data) {
     return (
@@ -117,12 +114,13 @@ function Page() {
   const startDate = getStrategyStartDate(data.vault);
 
   const targetTime = data?.trigger?.configuration?.time?.target_time;
-  const targetPrice = data?.trigger?.configuration?.f_i_n_limit_order?.target_price;
+
+  const targetPrice = data?.trigger.configuration.f_i_n_limit_order?.target_price;
 
   let nextSwapInfo;
   if (getStrategyStatus(data.vault) === 'active' || getStrategyStatus(data.vault) === 'scheduled') {
     if (targetTime) {
-      const nextSwapDate = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleDateString(
+      const nextSwapDate = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleDateString(
         'en-US',
         {
           year: 'numeric',
@@ -131,7 +129,7 @@ function Page() {
         },
       );
 
-      const nextSwapTime = new Date(Number(data.trigger.configuration.time.target_time) / 1000000).toLocaleTimeString(
+      const nextSwapTime = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleTimeString(
         'en-US',
         {
           minute: 'numeric',
@@ -146,7 +144,8 @@ function Page() {
     } else if (targetPrice) {
       nextSwapInfo = (
         <>
-          When 1 {getDenomInfo(resultingDenom).name} &ge; {targetPrice} {getDenomInfo(initialDenom).name}
+          When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
+          {getDenomInfo(initialDenom).name}
         </>
       );
     }
@@ -186,7 +185,9 @@ function Page() {
           <Text fontSize="sm" color="blue.200">
             Next swap:
           </Text>
-          <Text fontSize="sm">{nextSwapInfo}</Text>
+          <Text fontSize="sm" data-testid="next-swap-info">
+            {nextSwapInfo}
+          </Text>
         </HStack>
       )}
 
@@ -318,11 +319,10 @@ function Page() {
                 <Heading size="xs">Asset</Heading>
               </GridItem>
               <GridItem colSpan={1}>
-                <Text fontSize="sm">
-                  <Flex align="center" gap={2}>
-                    {getDenomInfo(resultingDenom).name} <DenomIcon denomName={resultingDenom!} />
-                  </Flex>
-                </Text>
+                <Flex align="center" gap={2}>
+                  <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
+                  <DenomIcon denomName={resultingDenom!} />
+                </Flex>
               </GridItem>
               <GridItem colSpan={2}>
                 <Divider />

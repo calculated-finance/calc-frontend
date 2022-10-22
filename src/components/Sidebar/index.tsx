@@ -13,6 +13,7 @@ import {
   Image,
   Stack,
   Spacer,
+  IconButton,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -159,19 +160,23 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
       <Flex w="full" justifyContent="space-between">
         {LinkItems.map((link) => (
           <Link href={link.href} key={link.name}>
-            <Icon
-              as={link.icon}
-              p={3}
+            <IconButton
+              aria-label={link.name}
+              variant="link"
               width={12}
               height={12}
+              p={0}
               borderBottomWidth={2}
               borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
-              cursor="pointer"
-              stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+              borderRadius="none"
               _hover={{
                 bg: 'darkGrey',
                 stroke: link.href === router.asPath ? 'brand.200' : 'white',
               }}
+              icon={
+                <Icon as={link.icon} cursor="pointer" stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'} />
+              }
+              colorScheme="brand"
             />
           </Link>
         ))}
