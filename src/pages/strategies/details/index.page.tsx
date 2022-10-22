@@ -20,13 +20,7 @@ import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import {
-  ArrowRight2Icon,
-  ArrowRight3Icon,
-  ArrowRight5Icon,
-  ArrowRightIcon,
-  CloseBoxedIcon,
-} from '@fusion-icons/react/interface';
+import { ArrowRight5Icon, ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { Strategy } from '@hooks/useStrategies';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -168,7 +162,7 @@ function Page() {
         </Link>
 
         <HStack spacing={8} alignItems="center">
-          <Heading>
+          <Heading data-testid="details-heading">
             {strategyType} {id}
           </Heading>
           <Flex w={200}>

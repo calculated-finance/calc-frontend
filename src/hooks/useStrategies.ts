@@ -9,13 +9,18 @@ export type PositionType = 'enter' | 'exit';
 type TriggerVariant = 'time' | 'price'; // confirm these values
 const QUERY_KEY = 'active-vaults';
 
+type StrategyDestination = {
+  address: string;
+  allocation: string;
+};
+
 export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
 
 export type Strategy = {
   id: string;
   created_at: string;
   owner: string;
-  destinations: any;
+  destinations: StrategyDestination[];
   balance: DenomAmount;
   trigger_id: string;
   trigger_variant: TriggerVariant;

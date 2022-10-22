@@ -21,4 +21,10 @@ export default {
   status: 'active',
   trigger_id: '1',
   trigger_variant: 'time',
+  destinations: [
+    {
+      address: 'kujitestwallet',
+      allocation: '1',
+    },
+  ],
 } as Strategy;
