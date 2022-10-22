@@ -215,12 +215,12 @@ function Home() {
         </Text>
       </Box>
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
-        <GridItem colSpan={{ base: 6, lg: activeStrategies.length ? 4 : 6 }}>
-          <TopPanel />
-        </GridItem>
-        <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
-          {Boolean(activeStrategies.length) && <InvestmentThesis />}
-        </GridItem>
+        <TopPanel />
+        {Boolean(activeStrategies.length) && (
+          <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
+            <InvestmentThesis />
+          </GridItem>
+        )}
 
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (

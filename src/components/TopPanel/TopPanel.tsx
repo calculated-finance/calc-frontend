@@ -1,4 +1,4 @@
-import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack, Box } from '@chakra-ui/react';
+import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack, Box, GridItem } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -14,7 +14,7 @@ function Onboarding() {
   return (
     <>
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         <Heading size="md">Ready to set up a CALC Strategy?</Heading>
         <Text fontSize="sm">
           CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and take
@@ -40,7 +40,7 @@ function Returning() {
           No active strategies
         </Text>
       </HStack>
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         <Heading size="md">Ready to fire up CALC again?</Heading>
         <Text fontSize="sm">
           Match your investments to your goals, spread your &apos;eggs&apos; among multiple baskets, set up a purchase
@@ -82,7 +82,7 @@ function ActiveWithOne() {
           {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
         </Text>
       </HStack>
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
         <Text fontSize="sm">
           Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
@@ -188,29 +188,34 @@ export default function TopPanel() {
   };
 
   const { background, border, Content } = getConfig();
+  const colSpan = { base: 6, lg: activeStrategies.length ? 4 : 6 };
 
   return connected ? (
-    <Center position="relative" h="full">
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          <Box
-            layerStyle="panel"
-            backgroundImage={background}
-            backgroundPosition="top"
-            backgroundRepeat="no-repeat"
-            position="absolute"
-            h="full"
-            w="full"
-          />
-          <Stack layerStyle="panel" bg="transparent" zIndex={1} p={8} borderWidth={2} borderColor={border} spacing={4}>
-            <Content />
-          </Stack>
-        </>
-      )}
-    </Center>
+    <GridItem position="relative" borderWidth={2} layerStyle="panel" borderColor={border} colSpan={colSpan}>
+      <Center h="full">
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Box
+              backgroundImage={background}
+              backgroundPosition="top"
+              backgroundRepeat="no-repeat"
+              position="absolute"
+              h="full"
+              w="full"
+              borderRadius="2xl"
+            />
+            <Stack zIndex={1} m={0} p={8} spacing={4}>
+              <Content />
+            </Stack>
+          </>
+        )}
+      </Center>
+    </GridItem>
   ) : (
-    <ConnectWallet layerStyle="panel" />
+    <GridItem layerStyle="panel" colSpan={colSpan}>
+      <ConnectWallet layerStyle="panel" />
+    </GridItem>
   );
 }
