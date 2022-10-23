@@ -1,6 +1,5 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
-import { MutateOptions, useMutation } from '@tanstack/react-query';
-import { useExecuteContract, useWallet } from '@wizard-ui/react';
+import { useMutation } from '@tanstack/react-query';
+import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Strategy } from './useStrategies';
 
