@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, FormControl, FormErrorMessage, Heading, HStack, Stack, Text } from '@chakra-ui/react';
+import { Divider, FormControl, FormErrorMessage, Heading, Stack, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';

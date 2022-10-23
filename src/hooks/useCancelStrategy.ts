@@ -1,34 +1,30 @@
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
-import { MutateOptions } from '@tanstack/react-query';
+import { MutateOptions, useMutation } from '@tanstack/react-query';
 import { useExecuteContract, useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { Strategy } from './useStrategies';
 
 const useCancelStrategy = () => {
-  const { address } = useWallet();
+  const { address, client } = useWallet();
 
-  const { mutate, ...others } = useExecuteContract({
-    address: CONTRACT_ADDRESS,
-  });
+  return useMutation((strategyId: Strategy['id']) => {
+    if (client == null) {
+      throw new Error('no client');
+    }
 
-  const cancelStrategy = (strategyId: string, options: MutateOptions<ExecuteResult>) =>
-    mutate(
-      {
-        msg: {
-          cancel_vault: {
-            address,
-            vault_id: strategyId,
-          },
-        },
+    if (address == null) {
+      throw new Error('no address');
+    }
+
+    const msg = {
+      cancel_vault: {
+        address,
+        vault_id: strategyId,
       },
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      options,
-    );
+    };
 
-  return {
-    cancelStrategy,
-    ...others,
-  };
+    return client.execute(address, CONTRACT_ADDRESS, msg, 'auto');
+  });
 };
 
 export default useCancelStrategy;

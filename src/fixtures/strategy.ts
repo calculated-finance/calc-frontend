@@ -1,5 +1,7 @@
 import { Strategy } from '@hooks/useStrategies';
 
+const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
+
 export default {
   id: '1',
   created_at: '0',
@@ -21,6 +23,7 @@ export default {
   status: 'active',
   trigger_id: '1',
   trigger_variant: 'time',
+  started_at: (startedAt * 1000000).toString(),
   destinations: [
     {
       address: 'kujitestwallet',

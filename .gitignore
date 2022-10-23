@@ -5,6 +5,9 @@
 yarn-error.log
 .vscodecounter
 
+tsconfig.tsbuildinfo
+
+
 
 # Terraform artefacts
 .terraform/
@@ -14,4 +17,3 @@ infrastructure/**/*.zip
 # ignore auto tfvars
 *.auto.tfvars
 
-tsconfig.tsbuildinfo

@@ -12,16 +12,13 @@ import {
   Badge,
   Center,
   Flex,
-  useDisclosure,
   Button,
   Image,
 } from '@chakra-ui/react';
-import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { Strategy } from '@hooks/useStrategies';
+import { ArrowRightIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
@@ -36,34 +33,7 @@ import { getInitialDenom } from '../../../helpers/getInitialDenom';
 import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
-
-export function CancelButton({ strategy }: { strategy: Strategy }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const router = useRouter();
-  const handleClose = () => {
-    onClose();
-  };
-
-  const handleCancel = () => {
-    router.push('/strategies');
-  };
-
-  return (
-    <>
-      <Button
-        size="xs"
-        variant="ghost"
-        colorScheme="red"
-        leftIcon={<CalcIcon as={CloseBoxedIcon} stroke="red.200" width={4} height={4} />}
-        onClick={onOpen}
-      >
-        Cancel
-      </Button>
-      <CancelStrategyModal isOpen={isOpen} onClose={handleClose} onCancel={handleCancel} strategy={strategy} />
-    </>
-  );
-}
+import { CancelButton } from './CancelButton';
 
 function Diagram({ initialDenom, resultingDenom }: any) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -87,7 +57,7 @@ function Page() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data, isLoading } = useStrategy(id as string);
+  const { data } = useStrategy(id as string);
   const { address } = useWallet();
 
   // const { data: eventsData } = useStrategyEvents(id as string);
@@ -100,8 +70,7 @@ function Page() {
     );
   }
 
-  const { status, position_type, time_interval, swap_amount, balance, pair, destinations, started_at } =
-    data?.vault || {};
+  const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
@@ -197,7 +166,7 @@ function Page() {
               <GridItem colSpan={1}>
                 <Heading size="xs">Strategy status</Heading>
               </GridItem>
-              <GridItem colSpan={1}>
+              <GridItem colSpan={1} data-testid="strategy-status">
                 <StrategyStatusBadge strategy={data.vault} />
               </GridItem>
               <GridItem colSpan={1}>
@@ -209,7 +178,7 @@ function Page() {
                 <Heading size="xs">Strategy name</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm">
+                <Text fontSize="sm" data-testid="strategy-name">
                   {strategyType} {id}
                 </Text>
               </GridItem>
@@ -220,41 +189,47 @@ function Page() {
                 <Heading size="xs">Strategy type</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm">{strategyType}</Text>
+                <Text fontSize="sm" data-testid="strategy-type">
+                  {strategyType}
+                </Text>
               </GridItem>
               <GridItem colSpan={1}>
                 <Heading size="xs">Strategy start date</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm">{startDate}</Text>
+                <Text fontSize="sm" data-testid="strategy-start-date">
+                  {startDate}
+                </Text>
               </GridItem>
               <GridItem colSpan={1}>
                 <Heading size="xs">Strategy end date</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm">-</Text>
+                <Text fontSize="sm" data-testid="strategy-end-date">
+                  -
+                </Text>
               </GridItem>
               <GridItem colSpan={1}>
                 <Heading size="xs">Investment cycle</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm" textTransform="capitalize">
-                  {time_interval || '-'}
+                <Text fontSize="sm" textTransform="capitalize" data-testid="strategy-investment-cycle">
+                  {time_interval}
                 </Text>
               </GridItem>
               <GridItem colSpan={1}>
                 <Heading size="xs">Purchase each cycle</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm">
-                  {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}{' '}
+                <Text fontSize="sm" data-testid="strategy-swap-amount">
+                  {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
                 </Text>
               </GridItem>
               <GridItem colSpan={1}>
                 <Heading size="xs">Current amount in vault</Heading>
               </GridItem>
               <GridItem colSpan={1}>
-                <Text fontSize="sm">
+                <Text fontSize="sm" data-testid="strategy-current-balance">
                   {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
                 </Text>
               </GridItem>
@@ -278,14 +253,16 @@ function Page() {
                     <GridItem colSpan={1}>
                       <Heading size="xs">Auto staking status</Heading>
                     </GridItem>
-                    <GridItem colSpan={2}>
+                    <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
                       <Badge colorScheme="green">Active</Badge>
                     </GridItem>
                     <GridItem colSpan={1}>
                       <Heading size="xs">Auto staking wallet address</Heading>
                     </GridItem>
                     <GridItem colSpan={2}>
-                      <Text fontSize="sm">{destinations[0].address}</Text>
+                      <Text fontSize="sm" data-testid="strategy-auto-staking-wallet-address">
+                        {destinations[0].address}
+                      </Text>
                     </GridItem>
                   </>
                 ) : (
@@ -295,7 +272,9 @@ function Page() {
                         <Heading size="xs">Sending to </Heading>
                       </GridItem>
                       <GridItem colSpan={2}>
-                        <Text fontSize="sm">{destinations[0].address} </Text>
+                        <Text fontSize="sm" data-testid="strategy-receiving-address">
+                          {destinations[0].address}
+                        </Text>
                       </GridItem>
                     </>
                   )
@@ -314,7 +293,7 @@ function Page() {
                   <Heading size="xs">Asset</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Flex align="center" gap={2}>
+                  <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
                     <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
                     <DenomIcon denomName={resultingDenom!} />
                   </Flex>

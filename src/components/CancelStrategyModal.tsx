@@ -21,11 +21,11 @@ import useCancelStrategy from 'src/hooks/useCancelStrategy';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;
-  onCancel?: () => void;
+  onCancel: () => void;
 } & Omit<ModalProps, 'children'>;
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
-  const { cancelStrategy, isLoading } = useCancelStrategy();
+  const { mutate: cancelStrategy, isLoading } = useCancelStrategy();
 
   const toast = useToast();
 
@@ -40,9 +40,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
           duration: 9000,
           isClosable: true,
         });
-        if (onCancel) {
-          onCancel();
-        }
+        onCancel();
       },
       onError: (error: any) => {
         toast({
@@ -60,7 +58,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent bg="darkGrey" p={4}>
+      <ModalContent bg="darkGrey" p={4} data-testid="cancel-strategy-modal">
         <ModalHeader textAlign="center">Cancel Strategy?</ModalHeader>
         <ModalBody>
           <Stack spacing={4}>
@@ -88,10 +86,14 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
         <ModalFooter>
           <Flex justify="center" w="full">
             <Stack direction="column" spacing={3}>
-              <Button onClick={handleCancelStrategy} isLoading={isLoading}>
+              <Button
+                onClick={handleCancelStrategy}
+                isLoading={isLoading}
+                data-testid="cancel-strategy-modal-cancel-button"
+              >
                 Cancel Strategy
               </Button>
-              <Button variant="ghost" onClick={onClose}>
+              <Button variant="ghost" onClick={onClose} data-testid="cancel-strategy-modal-close-button">
                 Back
               </Button>
             </Stack>
