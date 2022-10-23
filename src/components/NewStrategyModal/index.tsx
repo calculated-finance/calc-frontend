@@ -81,7 +81,16 @@ export function NewStrategyModalHeader({
     }
   };
   return (
-    <Flex bg="darkGrey" h={20} px={6} alignItems="center" borderRadius="2xl" mb={2} boxShadow="deepHorizon">
+    <Flex
+      bg="darkGrey"
+      h={20}
+      px={6}
+      alignItems="center"
+      borderRadius="2xl"
+      mb={2}
+      boxShadow="deepHorizon"
+      data-testid="strategy-modal-header"
+    >
       <Stack direction="row" spacing={3} alignItems="center">
         {hasPreviousStep && finalStep && (
           <IconButton

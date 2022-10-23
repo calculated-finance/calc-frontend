@@ -66,7 +66,13 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
         <InputLeftElement>
           <DenomIcon denomName={initialDenom} />
         </InputLeftElement>
-        <NumberInput pl={10} onChange={helpers.setValue} placeholder="Choose amount" {...field} />
+        <NumberInput
+          data-testid="top-up-input"
+          pl={10}
+          onChange={helpers.setValue}
+          placeholder="Choose amount"
+          {...field}
+        />
 
         <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
           <Text>{name}</Text>
