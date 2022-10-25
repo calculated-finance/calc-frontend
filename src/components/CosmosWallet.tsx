@@ -4,15 +4,9 @@ import { truncate } from '@wizard-ui/core';
 import {
   HStack,
   Box,
-  IconButton,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Text,
   Popover,
-  ButtonGroup,
   Icon,
   PopoverContent,
   PopoverTrigger,
@@ -21,12 +15,15 @@ import {
   Divider,
   GridItem,
   Grid,
+  useToast,
+  useClipboard,
+  useOutsideClick,
 } from '@chakra-ui/react';
-import { FiBell, FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import useBalances from '@hooks/useBalances';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
+import { CopytoclipboardIcon, Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
 import CalcIcon from './Icon';
 
 function SpendableBalances() {
@@ -67,7 +64,15 @@ function SpendableBalances() {
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
   const { address, disconnect } = useWallet();
-  const { isOpen, onToggle, onClose, onOpen } = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const { onCopy } = useClipboard(address);
+  const ref = React.createRef<HTMLElement>();
+  useOutsideClick({
+    ref,
+    handler: onClose,
+  });
+
+  const toast = useToast();
 
   const handleClick = () => {
     setVisible(!visible);
@@ -83,28 +88,49 @@ function CosmosWallet() {
     onClose();
   };
 
+  const handleCopy = () => {
+    onCopy();
+    toast({
+      title: 'Wallet address copied to clipboard',
+      position: 'top',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+      variant: 'subtle',
+    });
+    onClose();
+  };
+
   if (address != null) {
     return (
       <Box>
         <HStack spacing="3">
-          <IconButton aria-label="notifications" variant="ghost" icon={<Icon as={FiBell} />} />
           <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
                 {truncate(address)}
               </Button>
             </PopoverTrigger>
-            <PopoverContent bg="deepHorizon" boxShadow="deepHorizon" p={6} borderWidth={0}>
+            <PopoverContent bg="deepHorizon" boxShadow="deepHorizon" p={6} borderWidth={0} w={270}>
               <Stack spacing={4}>
-                <Text textStyle="body-xs" noOfLines={1}>
-                  {address}
-                </Text>
+                <Button
+                  size="xs"
+                  onClick={handleCopy}
+                  variant="ghost"
+                  colorScheme="white"
+                  leftIcon={<CalcIcon as={CopytoclipboardIcon} stroke="brand.200" />}
+                >
+                  <Box as="span" noOfLines={1}>
+                    {address}
+                  </Box>
+                  <Box as="span">...</Box>
+                </Button>
                 <SpendableBalances />
                 <Stack>
                   <Button
-                    textAlign="left"
+                    w="min-content"
                     size="xs"
-                    variant="ghost"
+                    variant="link"
                     onClick={handleChangeWallet}
                     leftIcon={<CalcIcon as={SwitchIcon} stroke="brand.200" />}
                   >
@@ -112,7 +138,8 @@ function CosmosWallet() {
                   </Button>
                   <Button
                     size="xs"
-                    variant="ghost"
+                    w="min-content"
+                    variant="link"
                     onClick={handleDisconnect}
                     leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                   >
