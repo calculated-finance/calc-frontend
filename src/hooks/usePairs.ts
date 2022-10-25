@@ -10,6 +10,7 @@ export enum Denom {
   OSMO = 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
   USK = 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
   NBTC = 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+  LOCAL = 'factory/kujira12w0ua4eqnkk0aahtnjlt6h3dhxael6x25s507w/local',
 }
 
 export type Pair = {

@@ -48,6 +48,10 @@ const denoms: Record<string, DenomInfo> = {
     name: 'NBTC',
     stakeable: false,
   },
+  [Denom.LOCAL]: {
+    name: 'Local',
+    stakeable: false,
+  },
 };
 
 export class DenomValue {
