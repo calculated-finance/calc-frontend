@@ -87,6 +87,13 @@ const components = {
       },
     },
   },
+  List: {
+    baseStyle: {
+      item: {
+        textStyle: 'body',
+      },
+    },
+  },
 };
 
 export default components;
