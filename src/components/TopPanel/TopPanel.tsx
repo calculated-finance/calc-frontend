@@ -1,8 +1,20 @@
-import { Button, Heading, Text, Stack, Center, ButtonGroup, Image, HStack, Box, GridItem } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  Text,
+  Stack,
+  Center,
+  ButtonGroup,
+  Image,
+  HStack,
+  Box,
+  GridItem,
+  Flex,
+} from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
-import { BarChartIcon } from '@fusion-icons/react/interface';
+import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
@@ -77,7 +89,7 @@ function ActiveWithOne() {
   return (
     <>
       <HStack align="center">
-        <Icon as={BarChartIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+        <Icon as={Block3DIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">
           {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
         </Text>
@@ -111,7 +123,7 @@ function ActiveWithMany() {
   return (
     <>
       <HStack align="center">
-        <Icon as={BarChartIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
+        <Icon as={KnowledgeIcon} stroke="green.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">You have {activeStrategies.length} strategies running</Text>
       </HStack>
       <Stack spacing={1}>
@@ -154,7 +166,7 @@ export default function TopPanel() {
   const getConfig = () => {
     if (isLoading) {
       return {
-        background: '/images/backgrounds/twist.svg',
+        background: '/images/backgrounds/twist-thin.svg',
         border: 'transparent',
         Content: Box,
       };
@@ -162,26 +174,26 @@ export default function TopPanel() {
     if (!activeStrategies.length) {
       if (!completedStrategies.length) {
         return {
-          background: '/images/backgrounds/twist.svg',
+          background: '/images/backgrounds/twist-thin.svg',
           border: 'brand.200',
           Content: Onboarding,
         };
       }
       return {
-        background: '/images/backgrounds/twist.svg',
+        background: '/images/backgrounds/twist-thin.svg',
         border: 'brand.200',
         Content: Returning,
       };
     }
     if (activeStrategies.length === 1) {
       return {
-        background: '/images/backgrounds/twist.svg',
+        background: '/images/backgrounds/spiral-thin.svg',
         border: 'blue.200',
         Content: ActiveWithOne,
       };
     }
     return {
-      background: '/images/backgrounds/spiral.svg',
+      background: '/images/backgrounds/star-thin.svg',
       border: 'green.200',
       Content: ActiveWithMany,
     };
@@ -191,27 +203,35 @@ export default function TopPanel() {
   const colSpan = { base: 6, lg: activeStrategies.length ? 4 : 6 };
 
   return connected ? (
-    <GridItem position="relative" borderWidth={2} layerStyle="panel" borderColor={border} colSpan={colSpan}>
-      <Center h="full">
-        {isLoading ? (
+    <GridItem
+      position="relative"
+      borderWidth={2}
+      layerStyle="panel"
+      borderColor={border}
+      colSpan={colSpan}
+      minHeight={222}
+    >
+      {isLoading ? (
+        <Center h="full">
           <Spinner />
-        ) : (
-          <>
-            <Box
-              backgroundImage={background}
-              backgroundPosition="top"
-              backgroundRepeat="no-repeat"
-              position="absolute"
-              h="full"
-              w="full"
-              borderRadius="2xl"
-            />
-            <Stack zIndex={1} m={0} p={8} spacing={4}>
-              <Content />
-            </Stack>
-          </>
-        )}
-      </Center>
+        </Center>
+      ) : (
+        <Flex>
+          <Box
+            backgroundImage={background}
+            backgroundPosition="right"
+            backgroundSize="cover"
+            backgroundRepeat="no-repeat"
+            position="absolute"
+            h="full"
+            w="full"
+            borderRadius="2xl"
+          />
+          <Stack zIndex={1} spacing={4} m={0} p={8} bg="transparent">
+            <Content />
+          </Stack>
+        </Flex>
+      )}
     </GridItem>
   ) : (
     <GridItem layerStyle="panel" colSpan={colSpan}>
