@@ -31,10 +31,6 @@ function AppHeaderForSidebar() {
 function AppHeader() {
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
-      <Head>
-        <title>CALC - Calculated Finance</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
       <Link href="/">
         <Image cursor="pointer" src="/images/logo.svg" />
       </Link>
