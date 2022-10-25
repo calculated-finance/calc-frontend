@@ -8,6 +8,7 @@ import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Sidebar from '../Sidebar';
 
 const HEADER_HEIGHT = '64px';
@@ -30,6 +31,10 @@ function AppHeaderForSidebar() {
 function AppHeader() {
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
+      <Head>
+        <title>CALC - Calculated Finance</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Link href="/">
         <Image cursor="pointer" src="/images/logo.svg" />
       </Link>

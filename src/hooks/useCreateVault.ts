@@ -66,6 +66,7 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
 
   const msg = {
     create_vault: {
+      label: undefined,
       time_interval: executionInterval,
       pair_address: pairAddress,
       position_type: positionType,
