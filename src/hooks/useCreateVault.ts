@@ -12,6 +12,7 @@ import {
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
+import { Destination, ExecuteMsg } from 'execute';
 import usePairs, { Denom, Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
@@ -54,14 +55,14 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
     startTimeSeconds = (startTime.valueOf() / 1000).toString();
   }
 
-  const destinations = [];
+  const destinations = [] as Destination[];
 
   if (autoStakeValidator) {
-    destinations.push({ address: autoStakeValidator, allocation: '1' });
+    destinations.push({ address: autoStakeValidator, allocation: '1', action: 'z_delegate' });
   }
 
   if (recipientAccount) {
-    destinations.push({ address: recipientAccount, allocation: '1' });
+    destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
   const msg = {
@@ -76,7 +77,7 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
       slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
       destinations: destinations.length ? destinations : undefined,
     },
-  };
+  } as ExecuteMsg;
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
   return { msg, funds };

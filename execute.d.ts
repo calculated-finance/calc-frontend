@@ -60,6 +60,7 @@ export type ExecuteMsg =
         [k: string]: unknown;
       };
     };
+export type PostExecutionAction = 'send' | 'z_delegate';
 /**
  * A human readable address.
  *
@@ -76,7 +77,7 @@ export type Addr = string;
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
-export type PositionType = "enter" | "exit";
+export type PositionType = 'enter' | 'exit';
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0
  *
@@ -109,9 +110,10 @@ export type Uint128 = string;
  * let b = Uint64::from(70u32); assert_eq!(b.u64(), 70); ```
  */
 export type Uint64 = string;
-export type TimeInterval = "hourly" | "daily" | "weekly" | "monthly";
+export type TimeInterval = 'hourly' | 'daily' | 'weekly' | 'monthly';
 
 export interface Destination {
+  action: PostExecutionAction;
   address: Addr;
   allocation: Decimal;
   [k: string]: unknown;
