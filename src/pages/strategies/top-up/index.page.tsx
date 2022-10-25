@@ -39,8 +39,6 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
 
   const { mutate, error, isError } = useTopUpStrategy();
 
-  console.log(error);
-
   const { position_type, pair } = strategy;
 
   const initialDenom = getInitialDenom(position_type, pair);

@@ -72,6 +72,7 @@ export const useDcaInFormPostPurchase = () => {
 
   try {
     return {
+      context: step1ValidationSchema.validateSync(state, { stripUnknown: true }),
       state: postPurchaseValidationSchema.validateSync(state, { stripUnknown: true }),
       actions,
     };

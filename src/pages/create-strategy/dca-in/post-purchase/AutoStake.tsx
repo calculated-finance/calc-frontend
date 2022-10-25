@@ -18,9 +18,43 @@ export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   },
 ];
 
+export function DummyAutoStake({
+  value,
+  onChange,
+}: {
+  value: AutoStakeValues;
+  onChange: (value: AutoStakeValues) => void;
+}) {
+  const { context } = useDcaInFormPostPurchase() || {};
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    value,
+    onChange,
+  });
+
+  return (
+    <FormControl>
+      <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
+      <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
+      <HStack>
+        <Radio {...getRootProps}>
+          {autoStakeData.map((option) => {
+            const radio = getRadioProps({ value: option.value });
+            return (
+              <RadioCard key={option.label} {...radio}>
+                {option.label}
+              </RadioCard>
+            );
+          })}
+        </Radio>
+      </HStack>
+    </FormControl>
+  );
+}
+
 export function AutoStake() {
   const [field, , helpers] = useField({ name: 'autoStake' });
-  const [sendToWalletField, , sendToWalletHelpers] = useField({ name: 'sendToWallet' });
+  const [sendToWalletField] = useField({ name: 'sendToWallet' });
 
   const { context } = useDcaInFormPostPurchase();
 
@@ -32,7 +66,6 @@ export function AutoStake() {
 
   return (
     <FormControl isDisabled={sendToWalletField.value === SendToWalletValues.No}>
-      {/* Make this the actual denom */}
       <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
       <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
       <HStack>

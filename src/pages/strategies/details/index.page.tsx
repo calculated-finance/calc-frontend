@@ -356,7 +356,7 @@ function Page() {
             </Stat> */}
             <Box position="relative">
               <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="2px">
-                <Heading>Coming Soon</Heading>
+                <Heading>Coming soon</Heading>
               </Center>
               <Image borderBottomRadius="2xl" w="full" h="full" src="/images/dummyChart.svg" />
             </Box>

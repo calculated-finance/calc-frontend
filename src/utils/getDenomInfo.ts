@@ -6,6 +6,7 @@ type DenomInfo = {
   icon?: string;
   conversion?: (value: number) => number;
   deconversion?: (value: number) => number;
+  stakeable?: boolean;
 };
 
 const defaultDenom = {
@@ -13,6 +14,7 @@ const defaultDenom = {
   icon: '',
   conversion: (value: number) => value / 1000000,
   deconversion: (value: number) => value * 1000000,
+  stakeable: true,
 };
 
 const denoms: Record<string, DenomInfo> = {
@@ -22,6 +24,7 @@ const denoms: Record<string, DenomInfo> = {
   [Denom.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
+    stakeable: false,
   },
   [Denom.Kuji]: {
     name: 'KUJI',
@@ -31,6 +34,7 @@ const denoms: Record<string, DenomInfo> = {
   [Denom.AXL]: {
     name: 'axlUSDC',
     icon: '/images/denoms/axl.svg',
+    stakeable: false,
   },
   [Denom.LUNA]: {
     name: 'LUNA',
@@ -42,6 +46,7 @@ const denoms: Record<string, DenomInfo> = {
   },
   [Denom.NBTC]: {
     name: 'NBTC',
+    stakeable: false,
   },
 };
 

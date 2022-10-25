@@ -1,9 +1,12 @@
 import {
+  Box,
+  Center,
   Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  Heading,
   HStack,
   Spinner,
   Text,
@@ -12,11 +15,38 @@ import { useField } from 'formik';
 import { chakraComponents, OptionProps } from 'chakra-react-select';
 import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
+import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { Denom } from '@hooks/usePairs';
 import Select from '../../../../components/Select';
+
+export function DummyAutoStakeValidator() {
+  return (
+    <Box w="full" h="full" position="relative">
+      <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="1px">
+        <Heading size="xs">Cross chain staking coming soon</Heading>
+      </Center>
+      <FormControl isDisabled>
+        <FormHelperText>
+          <Text textStyle="body-xs" color="blue.200">
+            Auto compounding coming soon.
+          </Text>
+        </FormHelperText>
+        <FormLabel>Choose Validator</FormLabel>
+        <FormHelperText>
+          <Text textStyle="body-xs">
+            CALC supports diversification of voting power, please don&apos;t just choose the validators with the most
+            voting power.
+          </Text>
+        </FormHelperText>
+        <Select value="" onChange={() => null} options={[]} placeholder="Choose validator" />
+      </FormControl>
+    </Box>
+  );
+}
 
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
-  const [sendToWalletfield, , sendToWalletHelpers] = useField({ name: 'sendToWallet' });
+  const [sendToWalletfield] = useField({ name: 'sendToWallet' });
 
   const { data, isLoading } = useQuery(
     ['validators'],
@@ -39,7 +69,6 @@ export default function AutoStakeValidator() {
         label: validator.description.moniker,
       } || []),
   );
-
   return (
     <FormControl
       isInvalid={Boolean(meta.touched && meta.error)}
