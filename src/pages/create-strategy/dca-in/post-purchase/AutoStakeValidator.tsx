@@ -12,11 +12,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { chakraComponents, OptionProps } from 'chakra-react-select';
 import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
-import { Denom } from '@hooks/usePairs';
 import Select from '../../../../components/Select';
 
 export function DummyAutoStakeValidator() {

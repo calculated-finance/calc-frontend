@@ -25,6 +25,7 @@ import useBalances from '@hooks/useBalances';
 import getDenomInfo from '@utils/getDenomInfo';
 import { CopytoclipboardIcon, Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
 import CalcIcon from './Icon';
+import TokenBox from './TokenBox';
 
 function SpendableBalances() {
   const { data } = useBalances();
@@ -101,10 +102,11 @@ function CosmosWallet() {
     onClose();
   };
 
-  if (address != null) {
-    return (
-      <Box>
-        <HStack spacing="3">
+  return (
+    <Box>
+      <HStack spacing="3">
+        <TokenBox />
+        {address != null ? (
           <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
@@ -149,15 +151,13 @@ function CosmosWallet() {
               </Stack>
             </PopoverContent>
           </Popover>
-        </HStack>
-      </Box>
-    );
-  }
-
-  return (
-    <Button variant="outline" onClick={handleClick}>
-      Connect to a wallet
-    </Button>
+        ) : (
+          <Button variant="outline" onClick={handleClick}>
+            Connect to a wallet
+          </Button>
+        )}
+      </HStack>
+    </Box>
   );
 }
 

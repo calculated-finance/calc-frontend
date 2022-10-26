@@ -1,4 +1,14 @@
-import { Box, Flex, Spacer, Image, BoxProps, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Spacer,
+  Image,
+  BoxProps,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  ButtonGroup,
+} from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 import CosmosWallet from '@components/CosmosWallet';
 import Link from 'next/link';
@@ -8,7 +18,6 @@ import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import Sidebar from '../Sidebar';
 
 const HEADER_HEIGHT = '64px';
