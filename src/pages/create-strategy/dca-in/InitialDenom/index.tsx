@@ -70,7 +70,6 @@ export default function InitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
-  const [, , initialDepositHelpers] = useField('initialDeposit');
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>

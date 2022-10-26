@@ -4,21 +4,25 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
-  Input,
   InputGroup,
   InputLeftElement,
   Text,
   InputRightElement,
+  Button,
+  Link,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '@components/NumberInput';
 import { useStep2Form } from '@hooks/useDcaInForm';
+import usePrice from '@hooks/usePrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 
 export default function StartPrice() {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
   const { state } = useStep2Form();
+
+  const { price, pairAddress, isLoading } = usePrice('enter', state?.step1.resultingDenom, state?.step1.initialDenom);
 
   if (!state) {
     return null;
@@ -44,6 +48,14 @@ export default function StartPrice() {
         <NumberInput textAlign="right" pr={16} placeholder="0.00" onChange={helpers.setValue} {...field} />
         <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
       </InputGroup>
+      <FormHelperText>
+        <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
+          <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
+            Current price: 1 {resultingDenomName} = {price} {initialDenomName}
+          </Button>
+        </Link>
+      </FormHelperText>
+
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

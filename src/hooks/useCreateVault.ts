@@ -13,16 +13,11 @@ import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Destination, ExecuteMsg } from 'execute';
-import usePairs, { Denom, Pair } from './usePairs';
+import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
-
-function findPair(positionType: string, pairs: Pair[], resultingDenom: Denom, initialDenom: Denom) {
-  return positionType === 'enter'
-    ? pairs?.find((pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom)?.address
-    : pairs?.find((pair: Pair) => pair.base_denom === initialDenom && pair.quote_denom === resultingDenom)?.address;
-}
+import { findPair } from './findPair';
 
 function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[]) {
   const {
