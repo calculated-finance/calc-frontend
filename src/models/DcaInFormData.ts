@@ -149,10 +149,22 @@ export const allValidationSchema = Yup.object({
   recipientAccount: Yup.string()
     .label('Recipient Account')
     .nullable()
+    .min(45)
+    .max(45)
     .when('sendToWallet', {
       is: SendToWalletValues.No,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
+    })
+    .test({
+      name: 'starts-with-kujira',
+      message: ({ label }) => `${label} must start with "kujira"`,
+      test(value) {
+        if (!value) {
+          return true;
+        }
+        return value?.startsWith('kujira');
+      },
     }),
   autoStake: Yup.mixed<AutoStakeValues>()
     .oneOf(Object.values(AutoStakeValues))
