@@ -48,13 +48,15 @@ export default function StartPrice() {
         <NumberInput textAlign="right" pr={16} placeholder="0.00" onChange={helpers.setValue} {...field} />
         <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
       </InputGroup>
-      <FormHelperText>
-        <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
-          <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-            Current price: 1 {resultingDenomName} = {price} {initialDenomName}
-          </Button>
-        </Link>
-      </FormHelperText>
+      {Boolean(price) && (
+        <FormHelperText>
+          <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
+            <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
+              Current price: 1 {resultingDenomName} = {price} {initialDenomName}
+            </Button>
+          </Link>
+        </FormHelperText>
+      )}
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

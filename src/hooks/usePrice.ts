@@ -1,9 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCWClient } from '@wizard-ui/react';
+import { isNumber } from 'lodash';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { findPair } from './findPair';
 import usePairs, { Denom } from './usePairs';
 import { PositionType } from './useStrategies';
+
+function safeInvert(value: number) {
+  if (!value) {
+    return 0;
+  }
+
+  if (!isNumber(value)) {
+    return 0;
+  }
+
+  return 1 / value;
+}
 
 export default function usePrice(
   positionType: PositionType,
@@ -32,10 +45,22 @@ export default function usePrice(
     },
   );
 
-  const price = positionType === 'enter' ? data?.quote[0].quote_price : data?.base[0].quote_price;
+  const price =
+    positionType === 'enter' ? Number(data?.quote[0].quote_price) : safeInvert(Number(data?.base[0].quote_price));
 
+  const formattedPrice = price
+    ? price.toLocaleString('en-US', {
+        maximumFractionDigits: 6,
+        minimumFractionDigits: 2,
+      })
+    : undefined;
+
+  console.log(data);
+  console.log(pairAddress);
+  console.log(formattedPrice);
+  console.log(price);
   return {
-    price,
+    price: formattedPrice,
     pairAddress,
     ...helpers,
   };
