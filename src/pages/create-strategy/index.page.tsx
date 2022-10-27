@@ -196,7 +196,7 @@ function CreateStrategy() {
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
-        <Heading>Set up an investment strategy</Heading>
+        <Heading size="lg">Set up an investment strategy</Heading>
         <Text textStyle="body">
           The first complete fiat-to-crypto decentralised DCA (dollar-cost averaging) protocol that provides advanced
           algorithms for long-term investing.

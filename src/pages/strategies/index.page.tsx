@@ -17,7 +17,9 @@ function Page() {
 
   return (
     <>
-      <Heading pb={12}>My CALC Strategies</Heading>
+      <Heading size="lg" pb={12}>
+        My CALC Strategies
+      </Heading>
       {!connected || connecting ? (
         <ConnectWallet layerStyle="panel" />
       ) : (

@@ -21,7 +21,7 @@ function HowItWorks() {
   return (
     <Stack spacing={8}>
       <Stack>
-        <Heading fontSize="4xl">CALC Finance</Heading>
+        <Heading size="lg">CALC Finance</Heading>
         <Text textStyle="body">
           CALC is a powerful, decentralized suite of financial tools that give you access to set-and-forget investment
           strategies, so you can spend more time on the things you love.

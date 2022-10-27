@@ -205,8 +205,8 @@ function Home() {
   const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
   return (
     <>
-      <Box pb={6}>
-        <Heading fontSize="3xl" mb={2}>
+      <Box pb={8}>
+        <Heading size="lg" mb={2}>
           Welcome to CALC, you&apos;ve made a great choice!
         </Heading>
         <Text textStyle="body">
