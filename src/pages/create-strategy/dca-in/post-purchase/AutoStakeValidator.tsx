@@ -48,7 +48,7 @@ export default function AutoStakeValidator() {
   const { data, isLoading } = useQuery(
     ['validators'],
     async () => {
-      const response = await fetch('https://kujira-api.polkachu.com/cosmos/staking/v1beta1/validators');
+      const response = await fetch('https://lcd.harpoon.kujira.setten.io/cosmos/staking/v1beta1/validators');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
