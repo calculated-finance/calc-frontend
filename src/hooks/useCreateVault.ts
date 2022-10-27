@@ -4,15 +4,13 @@ import { STAKING_ROUTER_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from 'src/constants
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import {
-  AuthorizationType,
-  StakeAuthorization,
-  StakeAuthorization_Validators,
-} from 'cosmjs-types/cosmos/staking/v1beta1/authz';
+import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Destination, ExecuteMsg } from 'execute';
+import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
@@ -127,6 +125,8 @@ const useCreateVault = (positionType: PositionType) => {
         sender: senderAddress,
       });
 
+      const secondsInOneYear = 31536000;
+
       const grantMsg = {
         typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
         value: {
@@ -134,18 +134,19 @@ const useCreateVault = (positionType: PositionType) => {
           grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
           grant: {
             authorization: {
-              typeUrl: '/cosmos.staking.v1beta1.StakeAuthorization',
-              value: StakeAuthorization.encode(
-                StakeAuthorization.fromPartial({
-                  authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE,
-                  allowList: StakeAuthorization_Validators.fromPartial({
-                    address: [autoStakeValidator],
-                  }),
+              typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
+              value: GenericAuthorization.encode(
+                GenericAuthorization.fromPartial({
+                  msg: '/cosmos.staking.v1beta1.MsgDelegate',
                 }),
               ).finish(),
             },
+            expiration: Timestamp.fromPartial({
+              seconds: new Date().getTime() / 1000 + secondsInOneYear,
+              nanos: 0,
+            }),
           },
-        },
+        } as MsgGrant,
       };
 
       const result = client.signAndBroadcast(
