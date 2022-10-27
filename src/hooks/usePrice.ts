@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCWClient } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { isNumber } from 'lodash';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { findPair } from './findPair';
 import usePairs, { Denom } from './usePairs';
 import { PositionType } from './useStrategies';
@@ -23,7 +22,7 @@ export default function usePrice(
   resultingDenom: Denom | undefined,
   initialDenom: Denom | undefined,
 ) {
-  const client = useCWClient();
+  const { client } = useWallet();
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
@@ -31,7 +30,7 @@ export default function usePrice(
     pairs && resultingDenom && initialDenom ? findPair(positionType, pairs, resultingDenom, initialDenom) : null;
 
   const { data, ...helpers } = useQuery<any>(
-    ['price', pairAddress],
+    ['price', pairAddress, client],
     async () => {
       const result = await client!.queryContractSmart(pairAddress!, {
         book: {

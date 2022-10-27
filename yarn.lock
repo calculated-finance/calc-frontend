@@ -2200,10 +2200,10 @@
   resolved "https://registry.yarnpkg.com/@fusion-icons/react/-/react-0.0.0.tgz#061c12b4edae01d823dd1dfea686effd86ef0098"
   integrity sha512-UiQzPbuYlIeWlHPLYlJwG7gDcPzCwTSS4ZKN6/edy9aEhH3MuBDP3RjxNkaTSPCqhmawMbyoHZXZBFHyEQ22hQ==
 
-"@headlessui/react@^1.6.6":
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.6.6.tgz#3073c066b85535c9d28783da0a4d9288b5354d0c"
-  integrity sha512-MFJtmj9Xh/hhBMhLccGbBoSk+sk61BlP6sJe4uQcVMtXZhCgGqd2GyIQzzmsdPdTEWGSF434CBi8mnhR6um46Q==
+"@headlessui/react@^1.7.3":
+  version "1.7.3"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.3.tgz#853c598ff47b37cdd192c5cbee890d9b610c3ec0"
+  integrity sha512-LGp06SrGv7BMaIQlTs8s2G06moqkI0cb0b8stgq7KZ3xcHdH3qMP+cRyV7qe5x4XEW/IGY48BW4fLesD6NQLng==
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
@@ -3374,24 +3374,24 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@wizard-ui/core@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.2.0.tgz#6b214964b84fbfc4bd21cfffbcd83f74ea6b0e8b"
-  integrity sha512-3CIrjEdJoBvgmLPYhTzwFVrGYMwkF3q+dWth5UphPfRExv1DqAKhTJj1LCCtPdrqmk4RB9CDUPhdGQfip3flBg==
+"@wizard-ui/core@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.4.0.tgz#f41ae751e2c5e54bd2441188015774d242ebb976"
+  integrity sha512-h4o4uUNRnSBlmIH6FjROFfF0pMHXb6UCS+o6E6H1pFkUQY16W2Ft6/vGA04unXvOFragFDq2KFu2mZTKM/hCAg==
   dependencies:
     bignumber.js "^9.1.0"
     d3-format "^3.1.0"
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@wizard-ui/react@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.2.0.tgz#6a4a5716b5c9576aefc21c50b31ccd77665dd6b5"
-  integrity sha512-OWoNjT2TTYWTJvTwnfrOPb3U+9V/Y4deXHjlQHznKAI5Gi8xvEHTbExjTuTMhBCwyElcYu8pgFm8aSprVk0q/Q==
+"@wizard-ui/react@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.4.0.tgz#dc80cd47fe2bb2e0cba79927d328ec752bd16d4a"
+  integrity sha512-o89rFsmquqa+F3uTI6zbR4tqPg4+iLhLzT4eNv8W3njFYr3ODca2B4riNdM5JcES/jq5O6vW1cSwRdNnEoOh0g==
   dependencies:
-    "@headlessui/react" "^1.6.6"
+    "@headlessui/react" "^1.7.3"
     "@wizard-ui/core" "*"
-    ahooks "^3.7.0"
+    ahooks "^3.7.2"
     rifm "^0.12.1"
 
 "@zag-js/element-size@0.1.0":
@@ -3449,10 +3449,10 @@ ahooks-v3-count@^1.0.0:
   resolved "https://registry.yarnpkg.com/ahooks-v3-count/-/ahooks-v3-count-1.0.0.tgz#ddeb392e009ad6e748905b3cbf63a9fd8262ca80"
   integrity sha512-V7uUvAwnimu6eh/PED4mCDjE7tokeZQLKlxg9lCTMPhN+NjsSbtdacByVlR1oluXQzD3MOw55wylDmQo4+S9ZQ==
 
-ahooks@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/ahooks/-/ahooks-3.7.0.tgz#e143ad3f1f1a05387c30031bf5634c9e9fa05d87"
-  integrity sha512-IOZ6IpVeAd7aWtV2O+dBmCQc0aHt+WPG3B5tPHnVVcPnEq9FDJxx8IIA5hLxN4lRa1m1ZMx6pOE2rrYW7bjU6A==
+ahooks@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/ahooks/-/ahooks-3.7.2.tgz#0afa42625e77ae1cc4b60b19c45cf12a8cf29b56"
+  integrity sha512-nJPsQJcmJnGaNXiqgZdfO7UMs+o926LQg6VyDYt2vzKhXU8Ze/U87NsA/FeIvlIZB0rQr/j7uotFb1bGPp627A==
   dependencies:
     "@types/js-cookie" "^2.x.x"
     ahooks-v3-count "^1.0.0"

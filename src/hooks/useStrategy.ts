@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCWClient, useWallet } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Trigger } from '../models/Trigger';
 import { Strategy } from './useStrategies';
@@ -10,11 +10,10 @@ export type UseStrategyResponse = {
 };
 
 export default function useStrategy(id?: Strategy['id']) {
-  const { address } = useWallet();
-  const client = useCWClient();
+  const { address, client } = useWallet();
 
   return useQuery<UseStrategyResponse, Error>(
-    ['strategy', address, id],
+    ['strategy', address, id, client],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vault: {

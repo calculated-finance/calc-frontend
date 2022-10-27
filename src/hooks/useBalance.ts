@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useCWClient, useWallet } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 
 export type BalanceResponse = {
   amount: number;
@@ -11,11 +11,10 @@ interface UseBalanceArgs {
 }
 
 const useBalance = ({ token }: UseBalanceArgs) => {
-  const { address } = useWallet();
-  const client = useCWClient();
+  const { address, client } = useWallet();
 
   const result = useQuery(
-    ['balance', token, address],
+    ['balance', token, address, client],
     () => {
       if (!client) {
         throw new Error('Client not initialized');

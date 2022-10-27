@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useCWClient, useExecuteContract, useWallet } from '@wizard-ui/react';
+import { useExecuteContract, useWallet } from '@wizard-ui/react';
 import { Strategy } from '@hooks/useStrategies';
 import mockStrategyData from 'src/fixtures/strategy';
 import '@testing-library/jest-dom';
@@ -42,7 +42,22 @@ function mockStrategy(data?: Partial<Strategy>) {
 }
 
 function mockUseStrategy(data: Partial<UseStrategyResponse> = {}) {
-  (useCWClient as jest.Mock).mockImplementation(() => {
+  (useWallet as jest.Mock).mockImplementation(() => {
+    const execute = jest.fn();
+    when(execute)
+      .calledWith(
+        'kujitestwallet',
+        CONTRACT_ADDRESS,
+        {
+          cancel_vault: {
+            address: 'kujitestwallet',
+            vault_id: '1',
+          },
+        },
+        'auto',
+      )
+      .mockResolvedValueOnce('');
+
     const queryContractSmart = jest.fn();
     when(queryContractSmart)
       .calledWith(CONTRACT_ADDRESS, {
@@ -52,9 +67,13 @@ function mockUseStrategy(data: Partial<UseStrategyResponse> = {}) {
         },
       })
       .mockResolvedValueOnce({ vault: mockStrategy(), trigger: mockTimeTrigger, ...data });
-
     return {
-      queryContractSmart,
+      address: 'kujitestwallet',
+      connected: true,
+      client: {
+        execute,
+        queryContractSmart,
+      },
     };
   });
 }
@@ -70,30 +89,6 @@ function renderTarget() {
 describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-
-    (useWallet as jest.Mock).mockImplementation(() => {
-      const execute = jest.fn();
-      when(execute)
-        .calledWith(
-          'kujitestwallet',
-          CONTRACT_ADDRESS,
-          {
-            cancel_vault: {
-              address: 'kujitestwallet',
-              vault_id: '1',
-            },
-          },
-          'auto',
-        )
-        .mockResolvedValueOnce('');
-      return {
-        address: 'kujitestwallet',
-        connected: true,
-        client: {
-          execute,
-        },
-      };
-    });
 
     (useExecuteContract as jest.Mock).mockImplementation(() => {
       const mutate = jest.fn();

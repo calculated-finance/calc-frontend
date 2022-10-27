@@ -7,7 +7,7 @@ import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
 
 const useTopUpStrategy = () => {
-  const { address, client } = useWallet();
+  const { address, signingClient: client } = useWallet();
 
   return useMutation<ExecuteResult, Error, any, any>(({ values, initialDenom, id }) => {
     const { deconversion } = getDenomInfo(initialDenom);
