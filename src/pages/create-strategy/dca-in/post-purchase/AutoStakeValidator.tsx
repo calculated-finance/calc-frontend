@@ -15,6 +15,7 @@ import { useField } from 'formik';
 import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
 import Select from '../../../../components/Select';
+import { REST_ENDPOINT } from 'src/constants';
 
 export function DummyAutoStakeValidator() {
   return (
@@ -48,7 +49,7 @@ export default function AutoStakeValidator() {
   const { data, isLoading } = useQuery(
     ['validators'],
     async () => {
-      const response = await fetch('https://lcd.harpoon.kujira.setten.io/cosmos/staking/v1beta1/validators');
+      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
