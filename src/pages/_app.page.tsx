@@ -11,6 +11,7 @@ import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
+import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -25,8 +26,8 @@ createStore({});
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const endpoint = useMemo(() => 'https://rpc.harpoon.kujira.setten.io', []);
-  const chainId = useMemo(() => 'harpoon-4', []);
+  const endpoint = useMemo(() => RPC_ENDPOINT, []);
+  const chainId = useMemo(() => CHAIN_ID, []);
 
   const wallets = useMemo(
     () => [
