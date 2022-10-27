@@ -1,3 +1,3 @@
 // eslint-disable-next-line import/prefer-default-export
 export const CONTRACT_ADDRESS = 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c';
-export const COMPOUNDER_CONTRACT_ADDRESS = 'kujira1zkjdvs80vrnq9rp2n6lzunelfnyt0hauwlpph70hls7cdq6u86tsxknl4c';
+export const STAKING_ROUTER_CONTRACT_ADDRESS = 'kujira1n2jm3jrjzztjvdljwh549m8zx6w5v59svvta5kkysf5znr40af8qu0vpca';
