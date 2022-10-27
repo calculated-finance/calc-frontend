@@ -14,8 +14,8 @@ import {
 import { useField } from 'formik';
 import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
-import Select from '../../../../components/Select';
 import { REST_ENDPOINT } from 'src/constants';
+import Select from '../../../../components/Select';
 
 export function DummyAutoStakeValidator() {
   return (
