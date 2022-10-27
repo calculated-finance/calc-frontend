@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
-import { COMPOUNDER_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from 'src/constants';
+import { STAKING_ROUTER_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -131,7 +131,7 @@ const useCreateVault = (positionType: PositionType) => {
         typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
         value: {
           granter: senderAddress,
-          grantee: COMPOUNDER_CONTRACT_ADDRESS,
+          grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
           grant: {
             authorization: {
               typeUrl: '/cosmos.staking.v1beta1.StakeAuthorization',
