@@ -36,7 +36,7 @@ export function DummyAutoStakeValidator() {
             voting power.
           </Text>
         </FormHelperText>
-        <Select value="" onChange={() => null} options={[]} placeholder="Choose validator" />
+        <Select value="" onChange={() => null} options={[]} placeholder="Select or search for validator" />
       </FormControl>
     </Box>
   );
