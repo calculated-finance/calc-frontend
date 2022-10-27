@@ -4,18 +4,18 @@ import { COMPOUNDER_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz'
-import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx'
+import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
+import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Destination, ExecuteMsg } from 'execute';
+import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import usePairs, { Pair } from './usePairs';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from './findPair';
-import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 
 function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[]) {
   const {
@@ -125,7 +125,7 @@ const useCreateVault = (positionType: PositionType) => {
         sender: senderAddress,
       });
 
-      const secondsInOneYear = 31536000
+      const secondsInOneYear = 31536000;
 
       const grantMsg = {
         typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
@@ -138,13 +138,13 @@ const useCreateVault = (positionType: PositionType) => {
               value: GenericAuthorization.encode(
                 GenericAuthorization.fromPartial({
                   msg: '/cosmos.staking.v1beta1.MsgDelegate',
-                })
+                }),
               ).finish(),
             },
             expiration: Timestamp.fromPartial({
-              seconds: (new Date().getTime() / 1000) + secondsInOneYear,
-              nanos: 0
-            })
+              seconds: new Date().getTime() / 1000 + secondsInOneYear,
+              nanos: 0,
+            }),
           },
         } as MsgGrant,
       };
