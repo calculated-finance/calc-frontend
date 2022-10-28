@@ -8,6 +8,11 @@ export default class Document extends NextDocument {
       <Html lang="en">
         <Head>
           <meta property="og:image" content="/images/calc-image.png" />
+          <meta
+            property="og:description"
+            content=" CALC removes the hardest part of trading, emotions! Stop being glued to a computer screen 24/7, define your
+          strategy up front, and leave the rest to CALC."
+          />
 
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <link rel="shortcut icon" href="/favicon.ico" />
