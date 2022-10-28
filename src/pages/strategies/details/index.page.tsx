@@ -173,7 +173,7 @@ function Page() {
       {Boolean(lastSwapSlippageError) && isVisible && (
         <Alert status="warning" mb={8}>
           <Image mr={4} src="/images/warningIcon.svg" />
-          <Text fontSize="sm">
+          <Text fontSize="sm" mr={4}>
             The previous swap failed due to slippage being exceeded - your funds are safe, and the next swap is
             scheduled.
           </Text>

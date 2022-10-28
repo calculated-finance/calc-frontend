@@ -55,10 +55,6 @@ export default function usePrice(
       })
     : undefined;
 
-  console.log(data);
-  console.log(pairAddress);
-  console.log(formattedPrice);
-  console.log(price);
   return {
     price: formattedPrice,
     pairAddress,
