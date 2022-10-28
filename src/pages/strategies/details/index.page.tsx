@@ -1,4 +1,4 @@
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { PlusSquareIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -14,11 +14,17 @@ import {
   Flex,
   Button,
   Image,
+  Alert,
+  AlertIcon,
+  Stack,
+  useDisclosure,
+  CloseButton,
+  Spacer,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRightIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
@@ -27,6 +33,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { getStrategyStatus } from 'src/helpers/getStrategyStatus';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getInitialDenom } from '../../../helpers/getInitialDenom';
@@ -58,9 +65,30 @@ function Page() {
   const { id } = router.query;
 
   const { data } = useStrategy(id as string);
+  const { data: eventsData } = useStrategyEvents(id as string);
+
   const { address } = useWallet();
 
-  // const { data: eventsData } = useStrategyEvents(id as string);
+  const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
+
+  // console.log(data);
+  // console.log(eventsData);
+
+  // stats
+  // const completedEvents = eventsData?.events
+  //   .filter((event) => event.data.d_c_a_vault_execution_completed !== undefined)
+  //   .map((event) => event.data.d_c_a_vault_execution_completed);
+
+  // const marketValueAmount = completedEvents
+  //   ?.map((event) => event?.received.amount)
+  //   .reduce((total, amount) => Number(amount) + Number(total), 0);
+
+  // const costAmount = completedEvents
+  //   ?.map((event) => event?.sent.amount)
+  //   .reduce((total, amount) => Number(amount) + Number(total), 0);
+
+  const lastSwapSlippageError =
+    eventsData?.events?.slice(-1)[0]?.data.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
 
   if (!data) {
     return (
@@ -73,6 +101,10 @@ function Page() {
   const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
+
+  // const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom! });
+  // const costValue = new DenomValue({ amount: costAmount, denom: initialDenom! });
+  // console.log(marketValueAmount);
 
   const initialDenomValue = new DenomValue(balance);
   const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
@@ -137,6 +169,19 @@ function Page() {
           </Flex>
         </HStack>
       </HStack>
+
+      {Boolean(lastSwapSlippageError) && isVisible && (
+        <Alert status="warning" mb={8}>
+          <Image mr={4} src="/images/warningIcon.svg" />
+          <Text fontSize="sm">
+            The previous swap failed due to slippage being exceeded - your funds are safe, and the next swap is
+            scheduled.
+          </Text>
+          <Spacer />
+
+          <CalcIcon as={CloseBoxedIcon} stroke="white" onClick={onClose} />
+        </Alert>
+      )}
 
       {Boolean(nextSwapInfo) && (
         <HStack
@@ -311,13 +356,15 @@ function Page() {
                   <Heading size="xs">Total accumulated</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
+                  <Text fontSize="sm">
+                    {/* {marketValueValue.toConverted()} {getDenomInfo(marketValueValue.denomId).name} */}-
+                  </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Net asset cost</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
+                  <Text fontSize="sm">{/* {costValue.toConverted()} {getDenomInfo(costValue.denomId).name} */}-</Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Average token cost</Heading>

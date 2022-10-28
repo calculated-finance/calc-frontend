@@ -16,6 +16,24 @@ const components = {
       size: 'sm',
     },
   },
+  Alert: {
+    baseStyle: {
+      container: {
+        borderRadius: '2xl',
+        borderWidth: 1,
+        borderColor: 'yellow.200',
+        px: 6,
+        py: 4,
+      },
+    },
+    variants: {
+      subtle: {
+        container: {
+          bg: 'deepHorizon',
+        },
+      },
+    },
+  },
   Link: {
     baseStyle: {
       color: 'blue.200',

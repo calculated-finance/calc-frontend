@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { Strategy } from './useStrategies';
 
 type Response = {
-  vault: Strategy;
+  events: any;
 };
 
 export default function useStrategyEvents(id: Strategy['id'] | undefined) {
