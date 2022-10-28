@@ -24,6 +24,7 @@ const components = {
         borderColor: 'yellow.200',
         px: 6,
         py: 4,
+        boxShadow: 'deepHorizon',
       },
     },
     variants: {
