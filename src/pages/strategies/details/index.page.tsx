@@ -378,7 +378,7 @@ function Page() {
                   <Divider />
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Profit/ Loss</Heading>
+                  <Heading size="xs">Profit / Loss</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">-</Text>
