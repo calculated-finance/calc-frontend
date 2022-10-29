@@ -161,7 +161,7 @@ describe('Detail page', () => {
       });
       describe('when scheduled', () => {
         it('renders scheduled', async () => {
-          mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) });
+          mockUseStrategy({ vault: mockStrategy({ status: 'scheduled' }) });
 
           renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('scheduled'));

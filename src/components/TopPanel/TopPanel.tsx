@@ -19,6 +19,7 @@ import useStrategies, { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -77,7 +78,7 @@ function Returning() {
 
 function ActiveWithOne() {
   const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
   const balanceValue = new DenomValue(balance);
@@ -119,7 +120,7 @@ function ActiveWithOne() {
 
 function ActiveWithMany() {
   const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
     <>
       <HStack align="center">
@@ -160,8 +161,8 @@ export default function TopPanel() {
   const { connected } = useWallet();
 
   const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
-  const completedStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'inactive') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+  const completedStrategies = data?.vaults.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
     if (isLoading) {

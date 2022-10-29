@@ -3,6 +3,7 @@ import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@wizard-ui/react';
+import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategies, { Strategy } from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '../../components/Layout';
 
@@ -10,10 +11,9 @@ function Page() {
   const { data, isLoading } = useStrategies();
   const { connected, connecting } = useWallet();
 
-  const activeStrategies =
-    data?.vaults.filter((strategy) => strategy.status === 'active').sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
   const completedStrategies =
-    data?.vaults.filter((strategy) => strategy.status === 'inactive').sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+    data?.vaults.filter((strategy) => !isStrategyOperating(strategy)).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <>

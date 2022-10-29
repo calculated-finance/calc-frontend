@@ -24,7 +24,7 @@ export type Strategy = {
   balance: DenomAmount;
   trigger_id: string;
   trigger_variant: TriggerVariant;
-  status: 'active' | 'inactive';
+  status: 'active' | 'inactive' | 'scheduled';
   time_interval: string;
   started_at: string;
   pair: {

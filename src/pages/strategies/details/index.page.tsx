@@ -32,7 +32,7 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-import { getStrategyStatus } from 'src/helpers/getStrategyStatus';
+import { getStrategyStatus, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
@@ -66,6 +66,8 @@ function Page() {
 
   const { data } = useStrategy(id as string);
   const { data: eventsData } = useStrategyEvents(id as string);
+
+  console.log(eventsData);
 
   const { address } = useWallet();
 
@@ -118,7 +120,7 @@ function Page() {
   const targetPrice = data?.trigger.configuration.f_i_n_limit_order?.target_price;
 
   let nextSwapInfo;
-  if (getStrategyStatus(data.vault) === 'active' || getStrategyStatus(data.vault) === 'scheduled') {
+  if (isStrategyOperating(data.vault)) {
     if (targetTime) {
       const nextSwapDate = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleDateString(
         'en-US',

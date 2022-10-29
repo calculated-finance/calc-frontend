@@ -21,6 +21,7 @@ import Spinner from '@components/Spinner';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
 
@@ -59,7 +60,7 @@ function WarningPanel() {
 
 function InvestmentThesis() {
   const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const acculumatingAssets = Array.from(
     new Set(
       activeStrategies
@@ -114,7 +115,7 @@ function InvestmentThesis() {
 
 function ActiveStrategies() {
   const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
       {isLoading ? (
@@ -145,7 +146,7 @@ function ActiveStrategies() {
 
 function TotalInvestment() {
   const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const totalInvested = activeStrategies
     .map((strategy) => Number(strategy.balance.amount))
     .reduce((balance, acc) => acc + balance, 0);
@@ -202,7 +203,7 @@ function WorkflowInformation() {
 function Home() {
   const { connected } = useWallet();
   const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter((strategy: Strategy) => strategy.status === 'active') ?? [];
+  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
     <>
       <Box pb={8}>
