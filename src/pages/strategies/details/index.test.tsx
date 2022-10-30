@@ -119,7 +119,7 @@ describe('Detail page', () => {
     mockUseStrategy();
 
     renderTarget();
-    await waitFor(() => expect(screen.getByTestId('details-heading').textContent).toBe('DCA In 1'));
+    await waitFor(() => expect(screen.getByTestId('details-heading').textContent).toBe('DEMO to KUJI - Weekly'));
   });
   describe('next swap', () => {
     describe('when strategy is completed', () => {
@@ -182,7 +182,7 @@ describe('Detail page', () => {
           mockUseStrategy();
 
           renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DCA In 1'));
+          await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
         });
       });
       describe('when dca out', () => {
@@ -190,7 +190,7 @@ describe('Detail page', () => {
           mockUseStrategy({ vault: mockStrategy({ position_type: 'exit' }) });
 
           renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DCA Out 1'));
+          await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
         });
       });
     });
