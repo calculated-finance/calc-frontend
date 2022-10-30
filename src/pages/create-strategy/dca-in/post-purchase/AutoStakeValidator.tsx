@@ -64,8 +64,7 @@ export default function AutoStakeValidator() {
     (validator: any) =>
       ({
         value: validator.operator_address,
-        label: validator.description.moniker,
-        jailed: validator.jailed
+        label: validator.description.moniker
       } || []),
   );
   return (
