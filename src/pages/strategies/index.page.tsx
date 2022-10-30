@@ -18,7 +18,6 @@ function Page() {
   const cancelledStrategies =
     data?.vaults.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  console.log(data);
   return (
     <>
       <Heading size="lg" pb={12}>

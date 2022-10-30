@@ -20,12 +20,12 @@ import { getStrategyType } from 'src/helpers/getStrategyType';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/helpers/getInitialDenom';
 import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
 import { PlusSquareIcon } from '@chakra-ui/icons';
+import { getStrategyName } from 'src/helpers/getStrategyName';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
-import { getStrategyName } from 'src/helpers/getStrategyName';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();

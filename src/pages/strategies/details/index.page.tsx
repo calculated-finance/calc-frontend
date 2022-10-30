@@ -34,6 +34,7 @@ import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { getStrategyStatus, isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents from '@hooks/useStrategyEvents';
+import { getStrategyName } from 'src/helpers/getStrategyName';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getInitialDenom } from '../../../helpers/getInitialDenom';
@@ -41,7 +42,6 @@ import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 import { CancelButton } from './CancelButton';
-import { getStrategyName } from 'src/helpers/getStrategyName';
 
 function Diagram({ initialDenom, resultingDenom }: any) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -68,8 +68,6 @@ function Page() {
   const { data } = useStrategy(id as string);
   const { data: eventsData } = useStrategyEvents(id as string);
 
-  console.log(eventsData);
-
   const { address } = useWallet();
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
@@ -78,20 +76,20 @@ function Page() {
   // console.log(eventsData);
 
   // stats
-  // const completedEvents = eventsData?.events
-  //   .filter((event) => event.data.d_c_a_vault_execution_completed !== undefined)
-  //   .map((event) => event.data.d_c_a_vault_execution_completed);
+  const completedEvents = eventsData?.events
+    .filter((event: any) => event.data?.d_c_a_vault_execution_completed !== undefined)
+    .map((event: any) => event.data?.d_c_a_vault_execution_completed);
 
-  // const marketValueAmount = completedEvents
-  //   ?.map((event) => event?.received.amount)
-  //   .reduce((total, amount) => Number(amount) + Number(total), 0);
+  const marketValueAmount = completedEvents
+    ?.map((event: any) => event?.received.amount)
+    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
 
-  // const costAmount = completedEvents
-  //   ?.map((event) => event?.sent.amount)
-  //   .reduce((total, amount) => Number(amount) + Number(total), 0);
+  const costAmount = completedEvents
+    ?.map((event: any) => event?.sent.amount)
+    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
 
   const lastSwapSlippageError =
-    eventsData?.events?.slice(-1)[0]?.data.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
+    eventsData?.events?.slice(-1)[0]?.data?.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
 
   if (!data) {
     return (
@@ -105,9 +103,8 @@ function Page() {
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
-  // const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom! });
-  // const costValue = new DenomValue({ amount: costAmount, denom: initialDenom! });
-  // console.log(marketValueAmount);
+  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom! });
+  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom! });
 
   const initialDenomValue = new DenomValue(balance);
   const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
@@ -164,9 +161,7 @@ function Page() {
         </Link>
 
         <HStack spacing={8} alignItems="center">
-          <Heading data-testid="details-heading">
-            {getStrategyName(data.vault)}
-          </Heading>
+          <Heading data-testid="details-heading">{getStrategyName(data.vault)}</Heading>
           <Flex w={200}>
             <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
           </Flex>
@@ -368,14 +363,16 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {/* {marketValueValue.toConverted()} {getDenomInfo(marketValueValue.denomId).name} */}-
+                    {marketValueValue.toConverted()} {getDenomInfo(marketValueValue.denomId).name}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Net asset cost</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Text fontSize="sm">{/* {costValue.toConverted()} {getDenomInfo(costValue.denomId).name} */}-</Text>
+                  <Text fontSize="sm">
+                    {costValue.toConverted()} {getDenomInfo(costValue.denomId).name}
+                  </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Average token cost</Heading>
