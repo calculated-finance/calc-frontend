@@ -7,6 +7,10 @@ import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
 import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
+import { SchemaDescription } from 'yup/lib/schema';
+import { ConditionBuilder } from 'yup/lib/Condition';
+import { AnyObject } from 'yup/lib/types';
+import { MixedSchema } from 'yup/lib/mixed';
 
 export const initialValues = {
   resultingDenom: '',
@@ -70,15 +74,23 @@ export const allValidationSchema = Yup.object({
   startDate: Yup.mixed()
     .label('Start Date')
     .nullable()
-    .when(['startImmediately', 'triggerType'], {
-      is: (startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
-        triggerType === TriggerTypes.Date && startImmediately === StartImmediatelyValues.No,
-      then: Yup.date()
-        // TODO: be better at checking the future. Check if start time is set and then combine them.
-        .min(new Date(new Date().setDate(new Date().getDate() - 1)), ({ label }) => `${label} must be in the future.`)
-        .required(),
-      otherwise: (schema) => schema.transform(() => null),
-    }),
+    .when(['startImmediately', 'triggerType', 'advancedSettings'], ((
+      startImmediately,
+      triggerType,
+      advancedSettings,
+      schema,
+    ) => {
+      if (triggerType === TriggerTypes.Date && startImmediately === StartImmediatelyValues.No) {
+        const minDate = advancedSettings ? new Date(new Date().setDate(new Date().getDate() - 1)) : new Date();
+        return Yup.date()
+          .label('Start Date')
+          .nullable()
+          .min(minDate, ({ label }) => `${label} must be in the future.`)
+          .required();
+      }
+
+      return schema.transform(() => null);
+    }) as ConditionBuilder<MixedSchema>),
   startPrice: Yup.number()
     .label('Start Price')
     .positive()

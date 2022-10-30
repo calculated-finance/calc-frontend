@@ -18,8 +18,11 @@ const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function StartDate() {
   const [field, meta, helpers] = useField({ name: 'startDate' });
+  const [advancedSettingsField] = useField({ name: 'advancedSettings' });
 
   const date = field.value ? new Date(field.value) : undefined;
+
+  const minDate = advancedSettingsField.value ? new Date(new Date().setDate(new Date().getDate() - 1)) : new Date();
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
@@ -38,7 +41,7 @@ export default function StartDate() {
           name={field.name}
           date={date}
           onDateChange={helpers.setValue}
-          minDate={new Date(new Date().setDate(new Date().getDate() - 1))}
+          minDate={minDate}
           configs={{
             monthNames,
             dayNames,
