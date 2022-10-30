@@ -60,13 +60,15 @@ export default function AutoStakeValidator() {
     },
   );
 
-  const validatorOptions = data?.validators?.filter((v: any) => v.jailed == false).map(
-    (validator: any) =>
-      ({
-        value: validator.operator_address,
-        label: validator.description.moniker
-      } || []),
-  );
+  const validatorOptions = data?.validators
+    ?.filter((v: any) => v.jailed === false)
+    .map(
+      (validator: any) =>
+        ({
+          value: validator.operator_address,
+          label: validator.description.moniker,
+        } || []),
+    );
   return (
     <FormControl
       isInvalid={Boolean(meta.touched && meta.error)}
