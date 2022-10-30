@@ -28,6 +28,7 @@ import {
 import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 // based on linkitems href values
 export enum Pages {
@@ -41,7 +42,9 @@ export enum Pages {
 
 interface LinkItem {
   name: string;
-  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  icon: (
+    props: SVGProps<SVGSVGElement>,
+  ) => JSX.Element | _chakra_ui_system.ComponentWithAs<'svg', _chakra_ui_icon.IconProps>;
   active?: boolean;
   href: Pages;
 }
@@ -50,7 +53,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
-  { name: 'How it works', icon: LifebeltIcon, href: Pages.HowItWorks },
+  { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
@@ -90,7 +93,8 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         {icon && (
           <Icon
             mr="5"
-            fontSize="16"
+            width="16px"
+            height="16px"
             stroke={isActive ? 'brand.200' : '#D5F8F9'}
             _groupHover={{
               stroke: isActive ? 'brand.200' : 'white',

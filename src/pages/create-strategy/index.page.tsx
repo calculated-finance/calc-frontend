@@ -1,4 +1,18 @@
-import { Button, Flex, Heading, Link, Stack, Text, Image, Box, Badge, Spacer, HStack, Wrap } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Stack,
+  Text,
+  Image,
+  Box,
+  Badge,
+  Spacer,
+  HStack,
+  Wrap,
+  Spinner,
+} from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
@@ -12,6 +26,7 @@ import {
 } from '@fusion-icons/react/interface';
 import { useWallet } from '@wizard-ui/react';
 import { ReactElement, SVGProps } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
 
@@ -130,6 +145,16 @@ StrategyCard.defaultProps = {
 };
 
 function Strategies() {
+  const { data, isLoading } = useQuery(['fear-and-greed-index'], async () => {
+    const response = await fetch(`https://api.alternative.me/fng/`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  });
+
+  const fearAndGreedIndex = data?.data[0].value;
+  const fearAndGreedClassification = data?.data[0].value_classification;
   return (
     <Stack direction="column" spacing={8}>
       <Box>
@@ -145,13 +170,20 @@ function Strategies() {
             bg="deepHorizon"
             textAlign="center"
           >
-            According to the{' '}
-            <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
-              <Text as="a" textDecoration="underline" target="_blank">
-                Fear &amp; Greed index score
-              </Text>
-            </NextLink>
-            {/* TODO: make this value based on the api */}: 22, it&apos;s a good time to use accumulation strategies
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                According to the{' '}
+                <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+                  <Text as="a" textDecoration="underline" target="_blank">
+                    Fear &amp; Greed index score
+                  </Text>
+                </NextLink>
+                : {fearAndGreedIndex} ({fearAndGreedClassification}), it&apos;s a good time to use accumulation
+                strategies
+              </>
+            )}
           </Badge>
         </Wrap>
         <Text pb={4} textStyle="body">
