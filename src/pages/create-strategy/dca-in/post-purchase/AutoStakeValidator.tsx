@@ -68,7 +68,6 @@ export default function AutoStakeValidator() {
         jailed: validator.jailed
       } || []),
   );
-  console.log(validatorOptions)
   return (
     <FormControl
       isInvalid={Boolean(meta.touched && meta.error)}
