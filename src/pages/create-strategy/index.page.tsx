@@ -11,14 +11,14 @@ import {
   PuzzleIcon,
 } from '@fusion-icons/react/interface';
 import { useWallet } from '@wizard-ui/react';
-import { SVGProps } from 'react';
+import { ReactElement, SVGProps } from 'react';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
 
 type StrategyCardProps = {
   name: string;
   description: string;
-  icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  icon: ReactElement;
   enabled?: boolean;
   href?: StrategyUrls;
   advanced?: boolean;
@@ -29,7 +29,7 @@ const accumulationStratgies: StrategyCardProps[] = [
   {
     name: 'Standard DCA In',
     description: 'Customise your own dollar-cost average buying strategy.',
-    icon: Fullscreen2Icon,
+    icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
     enabled: true,
     href: StrategyUrls.DCAIn,
   },
@@ -37,13 +37,13 @@ const accumulationStratgies: StrategyCardProps[] = [
     name: 'Algorithm DCA+ In',
     description: 'Let our machine learning DCA algorithms invest for you.',
     advanced: true,
-    icon: Code3Icon,
+    icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
   },
   {
     name: 'Buy the Dip',
     description: 'Auto-buy after a specified % dip in your favourite asset.',
     advanced: true,
-    icon: Graph1Icon,
+    icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
   },
 ];
 
@@ -51,7 +51,7 @@ const takeProfitStrategies: StrategyCardProps[] = [
   {
     name: 'Standard DCA Out',
     description: 'Dollar-cost average out of an asset with ease.',
-    icon: Fullscreen1Icon,
+    icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
     enabled: true,
     href: StrategyUrls.DCAOut,
   },
@@ -59,13 +59,14 @@ const takeProfitStrategies: StrategyCardProps[] = [
     name: 'Algorithm DCA+ Out',
     description: 'Let our machine learning DCA algorithms sell for you.',
     advanced: true,
-    icon: Code3Icon,
+    icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
   },
   {
     name: 'Auto-take Profit',
     description: 'Sell a certain % of an asset after it pumps a certain %.',
     advanced: true,
-    icon: DonateIcon,
+
+    icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
     enabled: false,
   },
 ];
@@ -89,7 +90,7 @@ function StrategyCard({ name, description, advanced, icon, href, linkToInfo, ena
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
         <Flex mb={4}>
-          <Icon stroke="white" as={icon} width={8} height={8} />
+          {icon}
           <Spacer />
           <Box>
             <Badge size="xs" colorScheme={advanced ? 'blue' : undefined}>
