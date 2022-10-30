@@ -14,6 +14,8 @@ import {
   Stack,
   Spacer,
   IconButton,
+  ComponentWithAs,
+  IconProps,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -42,9 +44,7 @@ export enum Pages {
 
 interface LinkItem {
   name: string;
-  icon: (
-    props: SVGProps<SVGSVGElement>,
-  ) => JSX.Element | _chakra_ui_system.ComponentWithAs<'svg', _chakra_ui_icon.IconProps>;
+  icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
   href: Pages;
 }
