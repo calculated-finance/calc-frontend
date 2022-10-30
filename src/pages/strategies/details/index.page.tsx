@@ -41,6 +41,7 @@ import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 import { CancelButton } from './CancelButton';
+import { getStrategyName } from 'src/helpers/getStrategyName';
 
 function Diagram({ initialDenom, resultingDenom }: any) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -164,7 +165,7 @@ function Page() {
 
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">
-            {strategyType} {id}
+            {getStrategyName(data.vault)}
           </Heading>
           <Flex w={200}>
             <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
@@ -226,7 +227,7 @@ function Page() {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="strategy-name">
-                  {strategyType} {id}
+                  {getStrategyName(data.vault)}
                 </Text>
               </GridItem>
               <GridItem colSpan={3}>

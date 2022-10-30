@@ -25,6 +25,7 @@ import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
+import { getStrategyName } from 'src/helpers/getStrategyName';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -62,7 +63,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Heading size="md">{getStrategyType(strategy)}</Heading>
         <Text textStyle="body-xs">
           {' '}
-          {getStrategyType(strategy)} {strategy.id}
+          {getStrategyName(strategy)}
         </Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>
