@@ -353,29 +353,41 @@ function Page() {
                   <Divider />
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Market value of holdings</Heading>
+                  <Heading size="xs">
+                    {data.vault.position_type === 'enter' ? 'Market value of holdings' : 'Market value of profits'}
+                  </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">-</Text>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Total accumulated</Heading>
+                  <Heading size="xs">
+                    {data.vault.position_type === 'enter' ? 'Total accumulated' : 'Total sold'}
+                  </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {marketValueValue.toConverted()} {getDenomInfo(marketValueValue.denomId).name}
+                    {data.vault.position_type === 'enter'
+                      ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
+                      : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Net asset cost</Heading>
+                  <Heading size="xs">
+                    {data.vault.position_type === 'enter' ? 'Net asset cost' : 'Net asset profit'}
+                  </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {costValue.toConverted()} {getDenomInfo(costValue.denomId).name}
+                    {data.vault.position_type === 'enter'
+                      ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
+                      : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Average token cost</Heading>
+                  <Heading size="xs">
+                    {data.vault.position_type === 'enter' ? 'Average token cost' : 'Average token sell price'}
+                  </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">-</Text>
