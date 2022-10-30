@@ -3,7 +3,7 @@ import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@wizard-ui/react';
-import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
+import { isStrategyCancelled, isStrategyCompleted, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategies, { Strategy } from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '../../components/Layout';
 
@@ -13,8 +13,12 @@ function Page() {
 
   const activeStrategies = data?.vaults.filter(isStrategyOperating).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
   const completedStrategies =
-    data?.vaults.filter((strategy) => !isStrategyOperating(strategy)).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+    data?.vaults.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
+  const cancelledStrategies =
+    data?.vaults.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+
+  console.log(data);
   return (
     <>
       <Heading size="lg" pb={12}>
@@ -56,6 +60,23 @@ function Page() {
                 </Flex>
               ) : (
                 completedStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
+              )}
+            </Stack>
+          </Box>
+          <Box>
+            <Heading size="md" pb={2}>
+              Cancelled Strategies ({cancelledStrategies.length})
+            </Heading>
+            <Text pb={4} textStyle="body">
+              View cancelled strategies.
+            </Text>
+            <Stack spacing={4}>
+              {!cancelledStrategies.length ? (
+                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                  {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
+                </Flex>
+              ) : (
+                cancelledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
               )}
             </Stack>
           </Box>

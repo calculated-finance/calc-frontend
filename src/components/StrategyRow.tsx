@@ -18,6 +18,8 @@ import React from 'react';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/helpers/getInitialDenom';
+import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
+import { PlusSquareIcon } from '@chakra-ui/icons';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -91,14 +93,18 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
           {strategy.time_interval}
         </Text>
       </GridItem>
-      <GridItem colSpan={{ base: 7, xl: 1 }} rowStart={{ sm: 1, xl: 'auto' }}>
+      <GridItem
+        visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}
+        colSpan={{ base: 7, xl: 1 }}
+        rowStart={{ sm: 1, xl: 'auto' }}
+      >
         <Flex justifyContent="end" alignItems="center" h="full">
           <ButtonGroup>
             <Link href={generateStrategyTopUpUrl(strategy.id)}>
               <Button
                 size="xs"
                 variant="ghost"
-                leftIcon={<Icon as={ArrowUpBoxedIcon} stroke="brand.200" width={4} height={4} />}
+                leftIcon={<Icon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
               >
                 Top up
               </Button>

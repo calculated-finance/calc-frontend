@@ -32,7 +32,7 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-import { getStrategyStatus, isStrategyOperating } from 'src/helpers/getStrategyStatus';
+import { getStrategyStatus, isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
@@ -117,7 +117,7 @@ function Page() {
 
   const targetTime = data?.trigger?.configuration?.time?.target_time;
 
-  const targetPrice = data?.trigger.configuration.f_i_n_limit_order?.target_price;
+  const targetPrice = data?.trigger?.configuration.f_i_n_limit_order?.target_price;
 
   let nextSwapInfo;
   if (isStrategyOperating(data.vault)) {
@@ -216,7 +216,7 @@ function Page() {
               <GridItem colSpan={1} data-testid="strategy-status">
                 <StrategyStatusBadge strategy={data.vault} />
               </GridItem>
-              <GridItem colSpan={1}>
+              <GridItem colSpan={1} visibility={isStrategyCancelled(data.vault) ? 'hidden' : 'visible'}>
                 <Flex justifyContent="end">
                   <CancelButton strategy={data.vault} />
                 </Flex>
@@ -280,7 +280,7 @@ function Page() {
                   {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
                 </Text>
               </GridItem>
-              <GridItem>
+              <GridItem visibility={isStrategyCancelled(data.vault) ? 'hidden' : 'visible'}>
                 <Flex justify="end">
                   <Link href={generateStrategyTopUpUrl(id as string)}>
                     <Button
@@ -337,7 +337,15 @@ function Page() {
             <Flex layerStyle="panel" flexGrow={1} alignItems="start">
               <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Asset</Heading>
+                  <Heading size="xs">Asset in</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
+                    <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom!} />
+                  </Flex>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Asset out</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
@@ -378,7 +386,7 @@ function Page() {
                   <Divider />
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <Heading size="xs">Profit / Loss</Heading>
+                  <Heading size="xs">Profit/Loss</Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">-</Text>
