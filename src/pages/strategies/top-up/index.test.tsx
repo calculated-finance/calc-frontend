@@ -1,15 +1,12 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useWallet } from '@wizard-ui/react';
-import { Strategy } from '@hooks/useStrategies';
-import mockStrategyData from 'src/fixtures/strategy';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { mockPriceTrigger, mockTimeTrigger } from 'src/fixtures/trigger';
-import { UseStrategyResponse } from '@hooks/useStrategy';
 import { act } from 'react-dom/test-utils';
+import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
+import { mockUseStrategy } from 'src/helpers/test/mockUseStrategy';
 import Page from './index.page';
 
 const mockRouter = {
@@ -35,65 +32,36 @@ jest.mock('next/router', () => ({
   },
 }));
 
-function mockStrategy(data?: Partial<Strategy>) {
-  return {
-    ...mockStrategyData,
-    ...data,
-  };
+function mockGetBalance() {
+  const getBalance = jest.fn();
+  when(getBalance)
+    .calledWith('kujitestwallet', 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo')
+    .mockResolvedValue({ amount: (88.12 * 1000000).toString() });
+
+  return getBalance;
 }
 
-function mockUseStrategy(data: Partial<UseStrategyResponse> = {}) {
-  (useCWClient as jest.Mock).mockImplementation(() => {
-    const queryContractSmart = jest.fn();
-    when(queryContractSmart)
-      .calledWith(CONTRACT_ADDRESS, {
-        get_vault: {
-          vault_id: '1',
-          address: 'kujitestwallet',
-        },
-      })
-      .mockResolvedValue({ vault: mockStrategy(), trigger: mockTimeTrigger, ...data });
-
-    const getBalance = jest.fn();
-    when(getBalance)
-      .calledWith('kujitestwallet', 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo')
-      .mockResolvedValue({ amount: (88.12 * 1000000).toString() });
-
-    return {
-      queryContractSmart,
-      getBalance,
-    };
-  });
-}
-
-const execute = jest.fn();
-
-function mockWallet() {
-  (useWallet as jest.Mock).mockImplementation(() => {
-    when(execute)
-      .calledWith(
-        'kujitestwallet',
-        CONTRACT_ADDRESS,
-        {
-          deposit: {
-            vault_id: '1',
-            address: 'kujitestwallet',
-          },
-        },
-        'auto',
-        undefined,
-        [{ amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' }],
-      )
-      .mockResolvedValue('');
-
-    return {
+function mockDeposit(execute = jest.fn(), success = true) {
+  const msg = {
+    deposit: {
+      vault_id: '1',
       address: 'kujitestwallet',
-      connected: true,
-      client: {
-        execute,
-      },
-    };
-  });
+    },
+  };
+  if (success) {
+    when(execute)
+      .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+        { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
+      ])
+      .mockResolvedValueOnce('');
+  } else {
+    when(execute)
+      .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+        { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
+      ])
+      .mockRejectedValueOnce(new Error('test error'));
+  }
+  return execute;
 }
 
 function renderTarget() {
@@ -109,34 +77,26 @@ describe('Top up page', () => {
     jest.clearAllMocks();
   });
   it('renders the heading', async () => {
-    mockWallet();
-
-    mockUseStrategy();
+    mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
     renderTarget();
+
     expect(within(screen.getByTestId('strategy-modal-header')).getByText('Top Up Strategy')).toBeInTheDocument();
   });
   it('renders remaining balance', async () => {
-    mockWallet();
-
-    mockUseStrategy();
-
+    mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
     renderTarget();
     screen.getByText('Remaining balance: 10 DEMO');
   });
   it('shows available funds', async () => {
-    mockWallet();
-
-    mockUseStrategy();
+    mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
     renderTarget();
     await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
   });
   describe('when available funds is clicked', () => {
     it('fills the input with available funds', async () => {
-      mockWallet();
-
-      mockUseStrategy();
+      mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
       renderTarget();
       await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
@@ -148,9 +108,8 @@ describe('Top up page', () => {
   });
   describe('when valid top up amount is submitted', () => {
     it('should successfully top up', async () => {
-      mockWallet();
-
-      mockUseStrategy();
+      const execute = jest.fn();
+      mockUseWallet(mockUseStrategy(), mockDeposit(execute), mockGetBalance());
 
       renderTarget();
       act(() => {
@@ -165,55 +124,35 @@ describe('Top up page', () => {
         }),
       );
     });
-    describe('when submit fails', () => {
-      it('should show form error message', async () => {
-        (useWallet as jest.Mock).mockImplementation(() => {
-          when(execute)
-            .calledWith(
-              'kujitestwallet',
-              CONTRACT_ADDRESS,
-              {
-                deposit: {
-                  vault_id: '1',
-                  address: 'kujitestwallet',
-                },
-              },
-              'auto',
-              undefined,
-              [{ amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' }],
-            )
-            .mockRejectedValue(new Error('test error'));
+  });
+  describe('when submit fails', () => {
+    it('should show form error message', async () => {
+      const execute = jest.fn();
+      mockUseWallet(mockUseStrategy(), mockDeposit(execute, false), mockGetBalance());
 
-          return {
-            address: 'kujitestwallet',
-            connected: true,
-            client: {
-              execute,
-            },
-          };
-        });
-
-        mockUseStrategy();
-
-        renderTarget();
-        act(() => {
-          fireEvent.change(screen.getByTestId('top-up-input'), { target: { value: '1' } });
-          fireEvent.click(screen.getByTestId('submit-button'));
-        });
-        await waitFor(() => expect(execute).toHaveBeenCalled());
-        await waitFor(() => screen.getByText('Failed to top up strategy (Reason: test error)'));
+      renderTarget();
+      const input = await waitFor(() => screen.getByTestId('top-up-input'));
+      const button = await waitFor(() => screen.getByTestId('submit-button'));
+      await act(async () => {
+        await fireEvent.change(input, { target: { value: '1' } });
+        await fireEvent.click(button);
       });
+      await waitFor(() => expect(execute).toHaveBeenCalled());
+      await waitFor(() => screen.getByText('Failed to top up strategy (Reason: test error)'));
     });
   });
 
   describe('when invalid top up amount is submitted', () => {
+    const execute = jest.fn();
     it('should show validation message', async () => {
-      mockUseStrategy();
+      mockUseWallet(mockUseStrategy(), mockDeposit(execute), mockGetBalance());
 
       renderTarget();
-      act(() => {
-        fireEvent.change(screen.getByTestId('top-up-input'), { target: { value: '100' } });
-        fireEvent.click(screen.getByTestId('submit-button'));
+      const input = await waitFor(() => screen.getByTestId('top-up-input'));
+      const button = await waitFor(() => screen.getByTestId('submit-button'));
+      await act(async () => {
+        await fireEvent.change(input, { target: { value: '100' } });
+        await fireEvent.click(button);
       });
       await waitFor(() => expect(execute).not.toHaveBeenCalled());
       await waitFor(() => screen.getByText('Top up amount must be less than or equal to 88.12'));

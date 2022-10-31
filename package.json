@@ -14,9 +14,9 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.2.9",
-    "@cosmjs/cosmwasm-stargate": "^0.28.13",
-    "@cosmjs/stargate": "^0.28.13",
+    "@cosmjs/cosmwasm-stargate": "^0.29.3",
     "@cosmostation/cosmos-client": "^0.0.1",
+    "@cosmjs/stargate": "^0.29.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/karla": "^4.5.9",

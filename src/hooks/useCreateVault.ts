@@ -87,101 +87,88 @@ const useCreateVault = (positionType: PositionType) => {
 
   const { state } = useConfirmForm();
 
-  return useMutation<Strategy['id'], Error>(
-    () => {
-      if (!state) {
-        throw new Error('No state');
-      }
+  return useMutation<Strategy['id'], Error>(() => {
+    if (!state) {
+      throw new Error('No state');
+    }
 
-      if (!client) {
-        throw Error('Invalid client');
-      }
+    if (!client) {
+      throw Error('Invalid client');
+    }
 
-      const { pairs } = pairsData || {};
+    const { pairs } = pairsData || {};
 
-      if (!pairs) {
-        throw Error('No pairs found');
-      }
+    if (!pairs) {
+      throw Error('No pairs found');
+    }
 
-      const { msg, funds } = getMessageAndFunds(state, positionType, pairs);
-      const { autoStakeValidator } = state;
+    const { msg, funds } = getMessageAndFunds(state, positionType, pairs);
+    const { autoStakeValidator } = state;
 
-      if (autoStakeValidator) {
-        // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
-        // https://www.npmjs.com/package/cosmjs-types
+    if (autoStakeValidator) {
+      // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
+      // https://www.npmjs.com/package/cosmjs-types
 
-        const raw = JSON.stringify(msg);
-        const enc = new TextEncoder();
-        const encoded_msg = enc.encode(raw);
+      const raw = JSON.stringify(msg);
+      const enc = new TextEncoder();
+      const encoded_msg = enc.encode(raw);
 
-        const contractMsg = MsgExecuteContract.fromPartial({
-          contract: CONTRACT_ADDRESS,
-          funds: [
-            Coin.fromPartial({
-              amount: funds[0].amount,
-              denom: funds[0].denom,
+      const contractMsg = MsgExecuteContract.fromPartial({
+        contract: CONTRACT_ADDRESS,
+        funds: [
+          Coin.fromPartial({
+            amount: funds[0].amount,
+            denom: funds[0].denom,
+          }),
+        ],
+        msg: encoded_msg,
+        sender: senderAddress,
+      });
+
+      const secondsInOneYear = 31536000;
+
+      const grantMsg = {
+        typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+        value: {
+          granter: senderAddress,
+          grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
+          grant: {
+            authorization: {
+              typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
+              value: GenericAuthorization.encode(
+                GenericAuthorization.fromPartial({
+                  msg: '/cosmos.staking.v1beta1.MsgDelegate',
+                }),
+              ).finish(),
+            },
+            expiration: Timestamp.fromPartial({
+              seconds: new Date().getTime() / 1000 + secondsInOneYear,
+              nanos: 0,
             }),
-          ],
-          msg: encoded_msg,
-          sender: senderAddress,
-        });
+          },
+        } as MsgGrant,
+      };
 
-        const secondsInOneYear = 31536000;
-
-        const grantMsg = {
-          typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-          value: {
-            granter: senderAddress,
-            grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
-            grant: {
-              authorization: {
-                typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
-                value: GenericAuthorization.encode(
-                  GenericAuthorization.fromPartial({
-                    msg: '/cosmos.staking.v1beta1.MsgDelegate',
-                  }),
-                ).finish(),
-              },
-              expiration: Timestamp.fromPartial({
-                seconds: new Date().getTime() / 1000 + secondsInOneYear,
-                nanos: 0,
-              }),
-            },
-          } as MsgGrant,
-        };
-
-        const result = client.signAndBroadcast(
-          senderAddress,
-          [
-            grantMsg,
-            {
-              typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-              value: contractMsg,
-            },
-          ],
-          'auto',
-          'memo',
-        );
-        return result.then((data) => {
-          const { rawLog } = data;
-          if (!rawLog) {
-            throw new Error('No raw log');
-          }
-
-          const parsedLogs = JSON.parse(rawLog);
-          const [, log] = parsedLogs as Log[];
-          const id = getStrategyIdFromLog(log);
-
-          if (!id) {
-            throw new Error('No id found');
-          }
-          return id;
-        });
-      }
-      console.log(msg);
-      const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
+      const result = client.signAndBroadcast(
+        senderAddress,
+        [
+          grantMsg,
+          {
+            typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+            value: contractMsg,
+          },
+        ],
+        'auto',
+        'memo',
+      );
       return result.then((data) => {
-        const [log] = data.logs;
+        const { rawLog } = data;
+        if (!rawLog) {
+          throw new Error('No raw log');
+        }
+
+        const parsedLogs = JSON.parse(rawLog);
+        const [, log] = parsedLogs as Log[];
         const id = getStrategyIdFromLog(log);
 
         if (!id) {
@@ -189,13 +176,18 @@ const useCreateVault = (positionType: PositionType) => {
         }
         return id;
       });
-    },
-    {
-      onError: (e) => {
-        console.log(e);
-      },
-    },
-  );
+    }
+    const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
+    return result.then((data) => {
+      const [log] = data.logs;
+      const id = getStrategyIdFromLog(log);
+
+      if (!id) {
+        throw new Error('No id found');
+      }
+      return id;
+    });
+  });
 };
 
 export default useCreateVault;
