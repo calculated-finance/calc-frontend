@@ -171,8 +171,8 @@ function Strategies() {
             textAlign="center"
           >
             {isLoading ? (
-              <Spinner />
-            ) : (
+              <Spinner w={3} h={3} />
+            ) : fearAndGreedIndex ? (
               <>
                 According to the{' '}
                 <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
@@ -183,7 +183,7 @@ function Strategies() {
                 : {fearAndGreedIndex} ({fearAndGreedClassification}), it&apos;s a good time to use accumulation
                 strategies
               </>
-            )}
+            ) : null}
           </Badge>
         </Wrap>
         <Text pb={4} textStyle="body">
