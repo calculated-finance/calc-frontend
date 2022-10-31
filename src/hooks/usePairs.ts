@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCWClient } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 
 export enum Denom {
@@ -42,10 +42,10 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pai
 }
 
 export default function usePairs() {
-  const client = useCWClient();
+  const { client } = useWallet();
 
   return useQuery<Response>(
-    ['pairs'],
+    ['pairs', client],
     async () => {
       const result = await client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_pairs: {},

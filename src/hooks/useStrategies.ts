@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCWClient, useWallet } from '@wizard-ui/react';
+import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Denom } from '@hooks/usePairs';
 import { queryClient } from 'src/pages/_app.page';
@@ -42,11 +42,10 @@ type Response = {
 };
 
 export default function useStrategies() {
-  const { address } = useWallet();
-  const client = useCWClient();
+  const { address, client } = useWallet();
 
   return useQuery<Response, Error>(
-    [QUERY_KEY, address],
+    [QUERY_KEY, address, client],
     () => {
       const result = client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vaults_by_address: {

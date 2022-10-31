@@ -32,7 +32,7 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-import { getStrategyStatus, isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
+import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import { getSidebarLayout } from '../../../components/Layout';

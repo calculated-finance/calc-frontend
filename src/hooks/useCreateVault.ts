@@ -82,7 +82,7 @@ function getStrategyIdFromLog(log: Log) {
 }
 
 const useCreateVault = (positionType: PositionType) => {
-  const { address: senderAddress, client } = useWallet();
+  const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
   const { state } = useConfirmForm();

@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { Strategy } from './useStrategies';
 
 const useCancelStrategy = () => {
-  const { address, client } = useWallet();
+  const { address, signingClient: client } = useWallet();
 
   return useMutation((strategyId: Strategy['id']) => {
     if (client == null) {
