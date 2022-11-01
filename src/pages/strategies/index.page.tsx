@@ -72,7 +72,7 @@ function Page() {
             <Stack spacing={4}>
               {!cancelledStrategies.length ? (
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                  {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
+                  {isLoading ? <Spinner /> : <Text>No cancelled strategies</Text>}
                 </Flex>
               ) : (
                 cancelledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
