@@ -35,6 +35,8 @@ jest.mock('next/router', () => ({
   },
 }));
 
+jest.mock('../../../hooks/useValidators', () => jest.fn().mockReturnValue({validators: [{'value': 'kujiravalopertestvalidator', 'label': 'test'}]}))
+
 function mockCancelVault(success = true) {
   const execute = jest.fn();
   const msg = {
@@ -67,7 +69,6 @@ describe('Detail page', () => {
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockCancelVault());
-
     renderTarget();
     await waitFor(() => expect(screen.getByTestId('details-heading').textContent).toBe('DEMO to KUJI - Weekly'));
   });
@@ -234,6 +235,17 @@ describe('Detail page', () => {
 
           renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-auto-staking-status').textContent).toBe('Active'));
+        });
+        it('renders name', async () => {
+          mockUseWallet(
+            mockUseStrategy({
+              vault: mockStrategy({ destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1' }] }),
+            }),
+            mockCancelVault(),
+          );
+
+          renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-validator-name').textContent).toBe('test'));
         });
       });
       describe('when auto staker is not set', () => {

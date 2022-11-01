@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { REST_ENDPOINT } from 'src/constants';
 
-type Response = {
+type ValidatorsResponse = {
   validators: {
     value: string,
     label: string
   }[]
 }
 
-const useValidators = (): Response => {
+const useValidators = (): ValidatorsResponse => {
 
   const { data } = useQuery(
     ['validators'],
