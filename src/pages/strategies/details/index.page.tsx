@@ -72,9 +72,6 @@ function Page() {
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
-  // console.log(data);
-  // console.log(eventsData);
-
   // stats
   const completedEvents = eventsData?.events
     .filter((event: any) => event.data?.d_c_a_vault_execution_completed !== undefined)

@@ -1,20 +1,17 @@
 import {
   Box,
   Center,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
-  HStack,
   Spinner,
   Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
-import { REST_ENDPOINT } from 'src/constants';
+import useValidators from '@hooks/useValidators';
 import Select from '../../../../components/Select';
 
 export function DummyAutoStakeValidator() {
@@ -45,30 +42,8 @@ export function DummyAutoStakeValidator() {
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
   const [sendToWalletfield] = useField({ name: 'sendToWallet' });
+  const { validators } = useValidators()
 
-  const { data, isLoading } = useQuery(
-    ['validators'],
-    async () => {
-      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
-
-  const validatorOptions = data?.validators
-    ?.filter((v: any) => v.jailed === false)
-    .map(
-      (validator: any) =>
-        ({
-          value: validator.operator_address,
-          label: validator.description.moniker,
-        } || []),
-    );
   return (
     <FormControl
       isInvalid={Boolean(meta.touched && meta.error)}
@@ -86,12 +61,12 @@ export default function AutoStakeValidator() {
           voting power.
         </Text>
       </FormHelperText>
-      {isLoading ? (
+      {!validators ? (
         <Spinner size="xs" />
       ) : (
         <Select
           value={field.value}
-          options={validatorOptions}
+          options={validators}
           placeholder="Choose validator"
           onChange={helpers.setValue}
           menuPortalTarget={document.body}
