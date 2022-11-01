@@ -3,7 +3,6 @@ import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik, FormikHelpers } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from '@components/NewStrategyModal/steps';
@@ -15,10 +14,10 @@ import useBalance from '@hooks/useBalance';
 import getStrategyBalance from 'src/helpers/getStrategyBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import { Strategy } from '@hooks/useStrategies';
+import { getStrategyName } from 'src/helpers/getStrategyName';
 import TopUpAmount from './TopUpAmount';
 import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { getInitialDenom } from '../../../helpers/getInitialDenom';
-import { getStrategyType } from '../../../helpers/getStrategyType';
 
 export const topUpSteps: StepConfig[] = [
   {
@@ -81,7 +80,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
         <Stack direction="column" spacing={6}>
           <Stack spacing={2}>
             <Heading size="sm">
-              Your {getStrategyType(strategy)} {strategy.id} Strategy
+              {getStrategyName(strategy)}
             </Heading>
             <Text textStyle="body-xs">
               Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
