@@ -2,6 +2,7 @@ import { Box, Button, Collapse, Fade, Flex, Heading, Icon, Spacer, Stack, Text, 
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { getPrettyFee } from 'src/helpers/getPrettyFee';
 
 function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
   const [isOpen, { toggle }] = useBoolean(false);
@@ -117,11 +118,11 @@ export default function Fees() {
       <Text textStyle="body-xs">
         Deposit fee{' '}
         <Text as="span" textColor="white">
-          {initialDeposit * 0.001} {initialDenomName}
+          {getPrettyFee(initialDeposit, 0.001)} {initialDenomName}
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~{swapAmount * 0.015} {initialDenomName}
+          ~{getPrettyFee(swapAmount, 0.015)} {initialDenomName}
         </Text>{' '}
         per swap
         {autoStakeValidator && <Text as="span"> &amp; 1.5% auto staking fee</Text>}
