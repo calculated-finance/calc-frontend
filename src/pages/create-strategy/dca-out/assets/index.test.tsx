@@ -12,7 +12,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-in/assets',
+  pathname: '/create-strategy/dca-out/assets',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -52,7 +52,7 @@ function renderTarget() {
   );
 }
 
-describe('DCA In Assets page', () => {
+describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -75,26 +75,29 @@ describe('DCA In Assets page', () => {
       renderTarget();
 
       // select initial denom
-      await waitFor(() => screen.getByText(/How will you fund your first investment?/));
-      await selectEvent.select(screen.getByLabelText(/How will you fund your first investment?/), ['USK']);
+      await waitFor(() => screen.getByText(/What position do you want to take profit on?/));
+      await selectEvent.select(screen.getByLabelText(/What position do you want to take profit on?/), ['KUJI']);
 
       // enter initial deposit
       const input = await waitFor(() => screen.getByPlaceholderText(/Choose amount/));
       await waitFor(() => userEvent.type(input, '1'));
 
       // select resulting denom
-      await selectEvent.select(screen.getByLabelText(/What asset do you want to invest in?/), ['NBTC']);
+      await selectEvent.select(screen.getByLabelText(/How do you want to hold your profits?/), ['OSMO']);
 
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+        initialDenom: 'ukuji',
         initialDeposit: 1,
-        resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+        resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       });
 
-      expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/create-strategy/dca-in/customise', query: undefined });
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-out/customise',
+        query: undefined,
+      });
     });
   });
 });
