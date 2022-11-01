@@ -70,7 +70,7 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
           data-testid="top-up-input"
           pl={10}
           onChange={helpers.setValue}
-          placeholder="Choose amount"
+          placeholder="Enter amount"
           {...field}
         />
 

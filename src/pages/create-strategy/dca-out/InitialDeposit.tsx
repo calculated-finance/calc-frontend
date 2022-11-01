@@ -12,7 +12,7 @@ export default function InitialDeposit() {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <NumberInput onChange={helpers.setValue} textAlign="right" placeholder="Choose amount" {...field} />
+      <NumberInput onChange={helpers.setValue} textAlign="right" placeholder="Enter amount" {...field} />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

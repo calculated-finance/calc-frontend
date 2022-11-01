@@ -12,7 +12,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-in/assets',
+  pathname: '/create-strategy/dca-out/customise',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -28,7 +28,11 @@ jest.mock('next/router', () => ({
 }));
 
 const mockStateMachine = {
-  state: {},
+  state: {
+    initialDenom: 'ukuji',
+    initialDeposit: 1,
+    resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
+  },
   actions: {
     updateAction: jest.fn(),
     resetAction: jest.fn(),
@@ -52,19 +56,17 @@ function renderTarget() {
   );
 }
 
-describe('DCA In Assets page', () => {
+describe('DCA In customise page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
-      mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
 
       renderTarget();
 
-      expect(
-        within(screen.getByTestId('strategy-modal-header')).getByText('Choose Funding & Assets'),
-      ).toBeInTheDocument();
+      expect(within(screen.getByTestId('strategy-modal-header')).getByText('Customise Strategy')).toBeInTheDocument();
     });
   });
 
@@ -74,27 +76,29 @@ describe('DCA In Assets page', () => {
 
       renderTarget();
 
-      // select initial denom
-      await waitFor(() => screen.getByText(/How will you fund your first investment?/));
-      await selectEvent.select(screen.getByLabelText(/How will you fund your first investment?/), ['USK']);
-
-      // enter initial deposit
-      const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
+      // enter swap amount
+      const input = await waitFor(() => screen.getByLabelText(/How much KUJI each swap?/));
       await waitFor(() => userEvent.type(input, '1'));
-
-      // select resulting denom
-      await selectEvent.select(screen.getByLabelText(/What asset do you want to invest in?/), ['NBTC']);
 
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
-        initialDeposit: 1,
-        resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+        advancedSettings: false,
+        executionInterval: 'daily',
+        purchaseTime: '',
+        slippageTolerance: 1,
+        startDate: null,
+        startImmediately: 'yes',
+        startPrice: null,
+        swapAmount: 1,
+        triggerType: 'date',
       });
 
-      expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/create-strategy/dca-in/customise', query: undefined });
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-out/post-purchase',
+        query: undefined,
+      });
     });
   });
 });

@@ -79,7 +79,7 @@ describe('DCA Out Assets page', () => {
       await selectEvent.select(screen.getByLabelText(/What position do you want to take profit on?/), ['KUJI']);
 
       // enter initial deposit
-      const input = await waitFor(() => screen.getByPlaceholderText(/Choose amount/));
+      const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
       await waitFor(() => userEvent.type(input, '1'));
 
       // select resulting denom
