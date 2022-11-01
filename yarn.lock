@@ -3431,10 +3431,10 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@wizard-ui/core@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.4.0.tgz#f41ae751e2c5e54bd2441188015774d242ebb976"
-  integrity sha512-h4o4uUNRnSBlmIH6FjROFfF0pMHXb6UCS+o6E6H1pFkUQY16W2Ft6/vGA04unXvOFragFDq2KFu2mZTKM/hCAg==
+"@wizard-ui/core@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.5.0.tgz#6ee81dce58858589811274ab9f4b71f1c149132c"
+  integrity sha512-Kie2slhyOt2htQmIzoJEHCV127xKFxnXASk/iZhweaAW35yIB+cB5AGwSwL8FFp6ZIEJomwRww0OgvAYpr8Q4g==
   dependencies:
     bignumber.js "^9.1.0"
     d3-format "^3.1.0"
