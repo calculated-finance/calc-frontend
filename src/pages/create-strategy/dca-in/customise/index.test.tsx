@@ -78,7 +78,7 @@ describe('DCA In customise page', () => {
 
       // enter swap amount
       const input = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
-      await waitFor(() => userEvent.type(input, '1'));
+      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
 
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));

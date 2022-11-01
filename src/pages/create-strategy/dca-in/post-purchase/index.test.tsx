@@ -75,7 +75,7 @@ describe('DCA In post-purchase page', () => {
       renderTarget();
 
       // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)));
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStake: 'no',

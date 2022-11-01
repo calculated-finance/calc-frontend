@@ -5,13 +5,6 @@ import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import pairs from 'src/fixtures/pairs';
 
-export function mockPairs(data?: Partial<Strategy>) {
-  return {
-    ...mockStrategyData,
-    ...data,
-  };
-}
-
 export function mockGetPairs() {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
