@@ -3465,6 +3465,10 @@
   "integrity" "sha512-vDkbxiB8zfnPdNK9Rajcey5C0w+QJugEglN0of+kmO8l7lDb77AnlKYQF7aarZuCrv+l0UvqL+68gSDr3k9LPQ=="
   "resolved" "https://registry.npmjs.org/@webassemblyjs/helper-numbers/-/helper-numbers-1.11.1.tgz"
   "version" "1.11.1"
+"@wizard-ui/core@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.5.0.tgz#6ee81dce58858589811274ab9f4b71f1c149132c"
+  integrity sha512-Kie2slhyOt2htQmIzoJEHCV127xKFxnXASk/iZhweaAW35yIB+cB5AGwSwL8FFp6ZIEJomwRww0OgvAYpr8Q4g==
   dependencies:
     "@webassemblyjs/floating-point-hex-parser" "1.11.1"
     "@webassemblyjs/helper-api-error" "1.11.1"
