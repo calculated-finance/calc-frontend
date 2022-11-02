@@ -7,5 +7,9 @@ export function mockGetBalance() {
     .calledWith('kujitestwallet', 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo')
     .mockResolvedValue({ amount: (88.12 * 1000000).toString() });
 
+  when(getBalance)
+    .calledWith('kujitestwallet', 'ukuji')
+    .mockResolvedValue({ amount: (12.12 * 1000000).toString() });
+
   return getBalance;
 }

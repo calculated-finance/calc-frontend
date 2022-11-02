@@ -15,6 +15,10 @@ export function mockBalances() {
           denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
           amount: (50 * 1000000).toString(),
         },
+        {
+          denom: 'ukuji',
+          amount: (50 * 1000000).toString(),
+        },
       ],
     });
 }
