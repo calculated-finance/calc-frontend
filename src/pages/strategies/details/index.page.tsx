@@ -35,6 +35,8 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
+import useValidators from '@hooks/useValidators';
+import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getInitialDenom } from '../../../helpers/getInitialDenom';
@@ -72,8 +74,7 @@ function Page() {
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
-  // console.log(data);
-  // console.log(eventsData);
+  const validators = useValidators()
 
   // stats
   const completedEvents = eventsData?.events
@@ -91,7 +92,7 @@ function Page() {
   const lastSwapSlippageError =
     eventsData?.events?.slice(-1)[0]?.data?.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
 
-  if (!data) {
+  if (!data || !validators) {
     return (
       <Center h="100vh">
         <Spinner />
@@ -99,7 +100,7 @@ function Page() {
     );
   }
 
-  const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
+  const { position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 
@@ -300,11 +301,11 @@ function Page() {
                       <Badge colorScheme="green">Active</Badge>
                     </GridItem>
                     <GridItem colSpan={1}>
-                      <Heading size="xs">Auto staking wallet address</Heading>
+                      <Heading size="xs">Validator name</Heading>
                     </GridItem>
                     <GridItem colSpan={2}>
-                      <Text fontSize="sm" data-testid="strategy-auto-staking-wallet-address">
-                        {destinations[0].address}
+                      <Text fontSize="sm" data-testid="strategy-validator-name">
+                        {getValidatorNameFromValidators(validators, destinations[0].address)}
                       </Text>
                     </GridItem>
                   </>
