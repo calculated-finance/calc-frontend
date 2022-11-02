@@ -11,7 +11,7 @@ import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { useToast } from '@chakra-ui/react';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
-import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockUseStrategy';
+import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
 
 const mockRouter = {
   push: jest.fn(),

@@ -6,7 +6,7 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { act } from 'react-dom/test-utils';
 import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
-import { mockUseStrategy } from 'src/helpers/test/mockUseStrategy';
+import { mockUseStrategy } from 'src/helpers/test/mockGetVault';
 import Page from './index.page';
 
 const mockRouter = {

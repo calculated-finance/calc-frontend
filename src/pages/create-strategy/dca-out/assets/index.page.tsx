@@ -10,9 +10,9 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import ResultingDenom from './ResultingDenom';
-import InitialDenom from './InitialDenom';
-import dcaOutSteps from './dcaOutSteps';
+import ResultingDenom from '../ResultingDenom';
+import InitialDenom from '../InitialDenom';
+import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
   const { actions, state } = useDcaInForm();
