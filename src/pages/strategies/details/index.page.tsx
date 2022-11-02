@@ -74,7 +74,7 @@ function Page() {
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
-  const { validators } = useValidators()
+  const validators = useValidators()
 
   // stats
   const completedEvents = eventsData?.events
@@ -100,7 +100,7 @@ function Page() {
     );
   }
 
-  const { status, position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
+  const { position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
   const initialDenom = getInitialDenom(position_type, pair);
   const resultingDenom = getResultingDenom(position_type, pair);
 

@@ -1,19 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { REST_ENDPOINT } from 'src/constants';
 
-type ValidatorsResponse = {
-  validators: {
-    value: string,
-    label: string
-  }[]
+export type Validator = {
+  operator_address: string,
+  description: {
+    moniker: string
+  },
+  jailed: boolean
 }
 
-const useValidators = (): ValidatorsResponse => {
+const useValidators = (): Validator[] | undefined => {
 
-  const { data } = useQuery(
+  const pageSize = 1000
+
+  const { data } = useQuery<{page: any, validators: Validator[]}>(
     ['validators'],
     async () => {
-      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators`);
+      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators?pagination.limit=${pageSize}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -24,19 +27,7 @@ const useValidators = (): ValidatorsResponse => {
     },
   );
 
-  const validators = data?.validators
-    ?.filter((v: any) => v.jailed === false)
-    .map(
-      (validator: any) =>
-        ({
-          value: validator.operator_address,
-          label: validator.description.moniker,
-        }),
-    );
-
-  return {
-    validators
-  };
+  return data?.validators.filter(v => !v.jailed)
 };
 
 export default useValidators;
