@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor, within, act } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
@@ -8,7 +8,10 @@ import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
+import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
+
 import Page from './index.page';
+import { mockBalances } from '../../../../helpers/test/mockBalances';
 
 const mockRouter = {
   push: jest.fn(),
@@ -42,25 +45,28 @@ jest.mock('little-state-machine', () => ({
   createStore: jest.fn(),
 }));
 
-function renderTarget() {
-  render(
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>
-    </ThemeProvider>,
-  );
+async function renderTarget() {
+  await act(() => {
+    render(
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </ThemeProvider>,
+    );
+  });
 }
 
 describe('DCA In Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockBalances();
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
       expect(
         within(screen.getByTestId('strategy-modal-header')).getByText('Choose Funding & Assets'),
@@ -68,11 +74,80 @@ describe('DCA In Assets page', () => {
     });
   });
 
+  describe('when initial denom is selected', () => {
+    describe('and there are available funds', () => {
+      it('should show available funds', async () => {
+        mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
+
+        await renderTarget();
+
+        const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
+        selectEvent.select(select, ['DEMO']);
+
+        await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
+      });
+    });
+  });
+  describe('when initial denom is selected', () => {
+    describe('and there are not available funds', () => {
+      it('should show an amount of none', async () => {
+        mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
+
+        await renderTarget();
+
+        const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
+        await selectEvent.select(select, ['USK']);
+
+        await waitFor(() => expect(screen.getByText('None')).toBeInTheDocument());
+      });
+    });
+  });
+
+  describe('when initial deposit is entered', () => {
+    describe('and the amount is greater than the available funds', () => {
+      it('should show an error', async () => {
+        mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
+
+        await renderTarget();
+
+        const initalDenomSelect = await waitFor(() =>
+          screen.getByLabelText(/How will you fund your first investment?/),
+        );
+        await selectEvent.select(initalDenomSelect, ['DEMO']);
+
+        await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
+        const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
+
+        // enter initial deposit
+        await act(async () => {
+          await waitFor(() => userEvent.type(input, '100'), { timeout: 5000 });
+        });
+
+        // select resulting denom
+        const select = await waitFor(() => screen.getByLabelText(/What asset do you want to invest in?/));
+        await selectEvent.select(select, ['KUJI']);
+
+        // submit
+        await act(async () => {
+          await waitFor(() => userEvent.click(screen.getByText(/Next/)));
+        });
+
+        await waitFor(() =>
+          expect(
+            screen.getByText('Initial Deposit must be less than or equal to than your current balance'),
+          ).toBeInTheDocument(),
+        );
+
+        expect(screen.getByText('Next')).toBeDisabled();
+      });
+    });
+  });
+
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
       // select initial denom
       await waitFor(() => screen.getByText(/How will you fund your first investment?/));

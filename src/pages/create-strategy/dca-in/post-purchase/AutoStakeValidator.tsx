@@ -13,6 +13,7 @@ import { useField } from 'formik';
 import SendToWalletValues from '@models/SendToWalletValues';
 import useValidators, { Validator } from '@hooks/useValidators';
 import Select from '../../../../components/Select';
+import 'isomorphic-fetch';
 
 export function DummyAutoStakeValidator() {
   return (
