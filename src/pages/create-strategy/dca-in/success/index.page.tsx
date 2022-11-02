@@ -11,7 +11,7 @@ import { getStrategyTimeSaved } from '../../../../helpers/getStrategyTimeSaved';
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId } = query;
+  const { strategyId, deposit, swapAmount } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -28,7 +28,7 @@ function Success() {
     );
   }
 
-  const timeSaved = getStrategyTimeSaved(data.vault);
+  const timeSaved = getStrategyTimeSaved(parseFloat(deposit as string), parseFloat(swapAmount as string));
 
   return (
     <NewStrategyModal>

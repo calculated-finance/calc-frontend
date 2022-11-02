@@ -4,19 +4,16 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
-import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getStrategyBalance from 'src/helpers/getStrategyBalance';
 import { getStrategyTimeSaved } from 'src/helpers/getStrategyTimeSaved';
-import getSwapAmount from 'src/helpers/getSwapAmount';
-import { getDenomName, getInitialDenom, getStrategyInitialDenom } from '../../../helpers/getInitialDenom';
+import { getDenomName, getStrategyInitialDenom } from '../../../helpers/getInitialDenom';
 import { topUpSteps } from './index.page';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId } = query;
+  const { strategyId, deposit, swapAmount } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -35,7 +32,7 @@ function Success() {
 
   const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));
 
-  const timeSaved = getStrategyTimeSaved(data.vault);
+  const timeSaved = getStrategyTimeSaved(parseFloat(deposit as string), parseFloat(swapAmount as string));
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>

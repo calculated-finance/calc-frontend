@@ -63,6 +63,8 @@ function ConfirmPurchase() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
+          deposit: state?.initialDeposit,
+          swapAmount: state?.swapAmount
         });
         actions.resetAction();
       },

@@ -61,7 +61,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
       { values, initialDenom, id: strategy.id },
       {
         onSuccess: async () => {
-          await nextStep({ strategyId: strategy.id });
+          await nextStep({ strategyId: strategy.id, deposit: values.topUpAmount, swapAmount: strategy.swap_amount  });
         },
         onSettled: () => {
           setSubmitting(false);
