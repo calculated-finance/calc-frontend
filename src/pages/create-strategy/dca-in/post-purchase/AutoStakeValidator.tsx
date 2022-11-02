@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import SendToWalletValues from '@models/SendToWalletValues';
 import { REST_ENDPOINT } from 'src/constants';
 import Select from '../../../../components/Select';
+import 'isomorphic-fetch';
 
 export function DummyAutoStakeValidator() {
   return (
