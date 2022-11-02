@@ -35,7 +35,17 @@ jest.mock('next/router', () => ({
   },
 }));
 
-jest.mock('../../../hooks/useValidators', () => jest.fn().mockReturnValue({validators: [{'value': 'kujiravalopertestvalidator', 'label': 'test'}]}))
+jest.mock('../../../hooks/useValidators', () => jest.fn()
+.mockReturnValue([
+    {
+      operator_address: 'kujiravalopertestvalidator',
+      description: {
+        moniker: 'test'
+      },
+      jailed: false
+    }
+  ]
+))
 
 function mockCancelVault(success = true) {
   const execute = jest.fn();
