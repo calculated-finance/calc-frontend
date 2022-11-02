@@ -11,8 +11,8 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import useBalances from '@hooks/useBalances';
-import ResultingDenom from './ResultingDenom';
-import InitialDenom from './InitialDenom';
+import ResultingDenom from '../ResultingDenom';
+import InitialDenom from '../InitialDenom';
 
 function DcaIn() {
   const { actions, state } = useDcaInForm();

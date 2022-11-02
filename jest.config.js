@@ -16,6 +16,7 @@ const customJestConfig = {
     '\\.css$': '<rootDir>/__mocks__/styleMock.js',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
+    '^@models/(.*)$': '<rootDir>/src/models/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
     '^d3-format(.*)$': `<rootDir>/node_modules/d3-format/dist/d3-format$1`,
