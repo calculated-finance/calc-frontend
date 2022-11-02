@@ -80,7 +80,7 @@ describe('DCA In Assets page', () => {
 
       // enter initial deposit
       const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
-      await waitFor(() => userEvent.type(input, '1'));
+      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
 
       // select resulting denom
       await selectEvent.select(screen.getByLabelText(/What asset do you want to invest in?/), ['NBTC']);
