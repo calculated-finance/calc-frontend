@@ -99,7 +99,7 @@ describe('DCA In customise page', () => {
       await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
 
       // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)));
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
@@ -130,14 +130,14 @@ describe('DCA In customise page', () => {
       // Unlock Time
       timekeeper.reset();
     });
-    it.only('submits form successfully', async () => {
+    it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
       renderTarget();
 
       // enable advanced settings
       const advancedSettings = await waitFor(() => screen.getByRole('checkbox'));
-      await waitFor(() => userEvent.click(advancedSettings));
+      await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
 
       // uncheck start immediately
       await waitFor(() => userEvent.click(screen.getByLabelText('No')));
@@ -160,7 +160,7 @@ describe('DCA In customise page', () => {
       await waitFor(() => fireEvent.change(slippageToleranceInput, { target: { value: '5' } }), { timeout: 5000 });
 
       // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)));
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: true,
@@ -192,7 +192,7 @@ describe('DCA In customise page', () => {
       await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
 
       // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)));
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,

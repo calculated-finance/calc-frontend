@@ -6,6 +6,7 @@ import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
+import { mockValidators } from 'src/helpers/test/mockValidators';
 import Page from './index.page';
 
 const mockRouter = {
@@ -59,6 +60,7 @@ async function renderTarget() {
 describe('DCA In post-purchase page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockValidators();
   });
   describe('on page load', () => {
     it('renders the heading', async () => {

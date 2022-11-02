@@ -9,6 +9,7 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { useToast } from '@chakra-ui/react';
+import { mockValidators } from 'src/helpers/test/mockValidators';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -34,18 +35,6 @@ jest.mock('next/router', () => ({
     return mockRouter;
   },
 }));
-
-jest.mock('../../../hooks/useValidators', () => jest.fn()
-.mockReturnValue([
-    {
-      operator_address: 'kujiravalopertestvalidator',
-      description: {
-        moniker: 'test'
-      },
-      jailed: false
-    }
-  ]
-))
 
 function mockCancelVault(success = true) {
   const execute = jest.fn();
@@ -76,6 +65,7 @@ function renderTarget() {
 describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockValidators();
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockCancelVault());
