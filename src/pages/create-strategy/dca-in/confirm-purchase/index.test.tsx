@@ -35,7 +35,7 @@ const mockStateMachine = {
     advancedSettings: false,
     executionInterval: 'daily',
     purchaseTime: '',
-    slippageTolerance: 1,
+    slippageTolerance: 2,
     startDate: null,
     startImmediately: 'yes',
     startPrice: null,
