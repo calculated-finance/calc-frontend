@@ -11,6 +11,14 @@ export function isStrategyOperating(strategy: Strategy) {
   return ['active', 'scheduled'].includes(strategy.status);
 }
 
+export function isStrategyActive(strategy: Strategy) {
+  return ['active'].includes(strategy.status)
+}
+
+export function isStrategyScheduled(strategy: Strategy) {
+  return ['scheduled'].includes(strategy.status)
+}
+
 export function isStrategyCompleted(strategy: Strategy) {
   return ['inactive'].includes(strategy.status);
 }
