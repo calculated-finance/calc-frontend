@@ -16,7 +16,7 @@ import { Pair } from '../models/Pair';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
-import { findPair } from './findPair';
+import { findPair } from '../helpers/findPair';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -42,7 +42,7 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
   // TODO: note that we need to make sure pairAddress has been set by the time mutate is called
   // (usePair might not have fetched yet)
 
-  const pairAddress = findPair(positionType, pairs, resultingDenom, initialDenom);
+  const pairAddress = findPair(pairs, resultingDenom, initialDenom);
 
   const { deconversion } = getDenomInfo(initialDenom);
 

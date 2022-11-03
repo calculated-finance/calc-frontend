@@ -10,9 +10,10 @@ import {
   Button,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { uniqueBaseDenoms } from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
+import { isDenomVolatile } from '@utils/getDenomInfo';
 import InitialDeposit from '../InitialDeposit';
 import { DenomSelect } from '../../../../components/DenomSelect';
 
@@ -60,6 +61,8 @@ export default function InitialDenom() {
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
+  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile);
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>What position do you want to take profit on? </FormLabel>
@@ -73,7 +76,7 @@ export default function InitialDenom() {
       <SimpleGrid columns={2} spacing={2}>
         <Box>
           <DenomSelect
-            denoms={uniqueBaseDenoms(pairs)}
+            denoms={denoms}
             placeholder="Choose asset"
             value={field.value}
             onChange={helpers.setValue}

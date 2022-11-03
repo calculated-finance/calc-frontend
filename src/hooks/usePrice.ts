@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { isNumber } from 'lodash';
-import { findPair } from './findPair';
+import { findPair } from '../helpers/findPair';
 import usePairs from './usePairs';
 import { Denom } from '../models/Denom';
 import { PositionType } from './useStrategies';
@@ -27,8 +27,7 @@ export default function usePrice(
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
-  const pairAddress =
-    pairs && resultingDenom && initialDenom ? findPair(positionType, pairs, resultingDenom, initialDenom) : null;
+  const pairAddress = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const { data, ...helpers } = useQuery<any>(
     ['price', pairAddress, client],
