@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
@@ -23,12 +23,14 @@ jest.mock('next/router', () => ({
   },
 }));
 
-function renderTarget() {
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Page />
-    </QueryClientProvider>,
-  );
+async function renderTarget() {
+  act(() => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>,
+    );
+  });
 }
 
 describe('DCA In success page', () => {
@@ -38,7 +40,7 @@ describe('DCA In success page', () => {
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
 
-    renderTarget();
+    await renderTarget();
     screen.debug();
 
     await waitFor(() =>
@@ -49,13 +51,13 @@ describe('DCA In success page', () => {
   });
   it('renders time saved', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
-    renderTarget();
+    await renderTarget();
     screen.getByText('100 minutes');
   });
   it('shows link to my strategies page', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
 
-    renderTarget();
+    await renderTarget();
 
     await waitFor(() => expect(screen.getByText(/View my strategies/)).toHaveAttribute('href', '/strategies'));
   });

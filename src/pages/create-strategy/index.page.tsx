@@ -29,6 +29,7 @@ import { ReactElement, SVGProps } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
+import 'isomorphic-fetch';
 
 type StrategyCardProps = {
   name: string;

@@ -16,7 +16,6 @@ import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase();
-  const { isLoading } = usePairs();
   const { nextStep } = useSteps(dcaOutSteps);
 
   const { isPageLoading } = usePageLoad();
@@ -36,7 +35,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Post Purchase
           </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <FormControl>
                 <Stack direction="column" spacing={6}>
