@@ -1,4 +1,4 @@
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 
 type DenomAmount = {
   amount: string;

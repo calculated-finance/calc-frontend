@@ -1,5 +1,6 @@
 import { PositionType, Strategy } from '@hooks/useStrategies';
-import { Denom, Pair } from '@hooks/usePairs';
+import { Pair } from '@models/Pair';
+import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 
 export function getInitialDenom(positionType?: PositionType, pair?: Pair) {

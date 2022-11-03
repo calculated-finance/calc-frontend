@@ -1,4 +1,4 @@
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import DenomAmount from 'src/models/DenomAmount';
 
 type DenomInfo = {

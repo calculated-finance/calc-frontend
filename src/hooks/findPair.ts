@@ -1,4 +1,5 @@
-import { Denom, Pair } from './usePairs';
+import { Pair } from '../models/Pair';
+import { Denom } from '../models/Denom';
 
 export function findPair(positionType: string, pairs: Pair[], resultingDenom: Denom, initialDenom: Denom) {
   return positionType === 'enter'

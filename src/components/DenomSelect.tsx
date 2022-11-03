@@ -1,6 +1,6 @@
 import { Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 import { OptionProps, chakraComponents } from 'chakra-react-select';
 import Select, { SelectProps } from './Select';

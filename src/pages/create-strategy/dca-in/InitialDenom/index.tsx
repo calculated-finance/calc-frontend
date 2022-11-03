@@ -11,7 +11,8 @@ import {
   Button,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { Denom, uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
