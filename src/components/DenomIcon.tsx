@@ -1,5 +1,5 @@
 import { Box, Image, Tooltip } from '@chakra-ui/react';
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 
 function DenomIcon({

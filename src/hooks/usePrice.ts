@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { isNumber } from 'lodash';
 import { findPair } from './findPair';
-import usePairs, { Denom } from './usePairs';
+import usePairs from './usePairs';
+import { Denom } from '../models/Denom';
 import { PositionType } from './useStrategies';
 
 function safeInvert(value: number) {

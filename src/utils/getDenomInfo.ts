@@ -1,4 +1,4 @@
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import DenomAmount from 'src/models/DenomAmount';
 
 type DenomInfo = {
@@ -7,6 +7,7 @@ type DenomInfo = {
   conversion?: (value: number) => number;
   deconversion?: (value: number) => number;
   stakeable?: boolean;
+  stable?: boolean;
 };
 
 const defaultDenom = {
@@ -15,16 +16,19 @@ const defaultDenom = {
   conversion: (value: number) => value / 1000000,
   deconversion: (value: number) => value * 1000000,
   stakeable: true,
+  stable: false,
 };
 
 const denoms: Record<string, DenomInfo> = {
   [Denom.Demo]: {
     name: 'DEMO',
+    stable: true,
   },
   [Denom.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
     stakeable: false,
+    stable: true,
   },
   [Denom.Kuji]: {
     name: 'KUJI',
@@ -35,6 +39,7 @@ const denoms: Record<string, DenomInfo> = {
     name: 'axlUSDC',
     icon: '/images/denoms/axl.svg',
     stakeable: false,
+    stable: true,
   },
   [Denom.LUNA]: {
     name: 'LUNA',
@@ -79,5 +84,9 @@ const getDenomInfo = (denom?: string) => {
     ...denoms[denom],
   };
 };
+
+export function isDenomStable(denom: Denom) {
+  return getDenomInfo(denom).stable;
+}
 
 export default getDenomInfo;

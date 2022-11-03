@@ -11,9 +11,10 @@ import {
   Button,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { Denom, uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
@@ -70,6 +71,12 @@ export default function InitialDenom() {
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
+  if (!pairs) {
+    return null;
+  }
+
+  const denoms = uniqueQuoteDenoms(pairs).filter(isDenomStable);
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How will you fund your first investment?</FormLabel>
@@ -82,12 +89,7 @@ export default function InitialDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
-          <DenomSelect
-            denoms={uniqueQuoteDenoms(pairs)}
-            placeholder="Choose asset"
-            value={field.value}
-            onChange={helpers.setValue}
-          />
+          <DenomSelect denoms={denoms} placeholder="Choose asset" value={field.value} onChange={helpers.setValue} />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>
         <InitialDeposit />

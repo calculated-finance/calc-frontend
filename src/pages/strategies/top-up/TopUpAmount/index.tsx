@@ -11,7 +11,7 @@ import {
   InputLeftElement,
   InputRightElement,
 } from '@chakra-ui/react';
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import { queryClient } from 'src/pages/_app.page';
 import DenomAmount from '../models/DenomAmount';
 

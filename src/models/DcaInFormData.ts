@@ -1,4 +1,4 @@
-import { Denom } from '@hooks/usePairs';
+import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 import AutoStakeValues from 'src/models/AutoStakeValues';
 import SendToWalletValues from 'src/models/SendToWalletValues';

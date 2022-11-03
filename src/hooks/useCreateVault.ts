@@ -11,14 +11,15 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Destination, ExecuteMsg } from 'execute';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
-import usePairs, { Pair } from './usePairs';
+import usePairs from './usePairs';
+import { Pair } from '../models/Pair';
 import { useConfirmForm } from './useDcaInForm';
 import { PositionType, Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from './findPair';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
-  return parseFloat((slippage / 100).toFixed(4)).toString()
+  return parseFloat((slippage / 100).toFixed(4)).toString();
 }
 
 function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[]) {
@@ -71,8 +72,8 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
       target_price: startPrice ? deconversion(startPrice).toString() : undefined,
-      slippage_tolerance: (advancedSettings && slippageTolerance) ? 
-      getSlippageWithoutTrailingZeros(slippageTolerance) : undefined,
+      slippage_tolerance:
+        advancedSettings && slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : undefined,
       destinations: destinations.length ? destinations : undefined,
     },
   } as ExecuteMsg;
