@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
@@ -29,7 +29,7 @@ jest.mock('next/router', () => ({
 
 jest.mock('chakra-dayzed-datepicker', () => ({
   SingleDatepicker: ({ onDateChange, date, ...props }: any) => {
-    const handleChange = (event) => {
+    const handleChange = (event: any) => {
       onDateChange(event.target.value);
     };
 
@@ -58,14 +58,16 @@ jest.mock('little-state-machine', () => ({
   createStore: jest.fn(),
 }));
 
-function renderTarget() {
-  render(
-    <ThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>
-    </ThemeProvider>,
-  );
+async function renderTarget() {
+  act(() => {
+    render(
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </ThemeProvider>,
+    );
+  });
 }
 
 describe('DCA In customise page', () => {
@@ -76,7 +78,7 @@ describe('DCA In customise page', () => {
     it('renders the heading', async () => {
       mockUseWallet(jest.fn(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
       expect(within(screen.getByTestId('strategy-modal-header')).getByText('Customise Strategy')).toBeInTheDocument();
     });
@@ -86,9 +88,9 @@ describe('DCA In customise page', () => {
     it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getByLabelText('No')));
+      await waitFor(() => userEvent.click(screen.getByLabelText('No')), { timeout: 10000 });
       await waitFor(() => userEvent.click(screen.getByLabelText('Start based on asset price')));
 
       const input = await waitFor(() => screen.getByLabelText(/Strategy start price/));
@@ -133,14 +135,14 @@ describe('DCA In customise page', () => {
     it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
       // enable advanced settings
       const advancedSettings = await waitFor(() => screen.getByRole('checkbox'));
       await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
 
       // uncheck start immediately
-      await waitFor(() => userEvent.click(screen.getByLabelText('No')));
+      await waitFor(() => userEvent.click(screen.getByLabelText('No')), { timeout: 5000 });
 
       // set start date
       const dateInput = screen.getByTestId('mock-datepicker');
@@ -157,7 +159,7 @@ describe('DCA In customise page', () => {
 
       // enter swap amount
       const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set Slippage Tolerance/));
-      await waitFor(() => fireEvent.change(slippageToleranceInput, { target: { value: '5' } }), { timeout: 5000 });
+      await waitFor(() => userEvent.type(slippageToleranceInput, '1'), { timeout: 5000 });
 
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
@@ -166,7 +168,7 @@ describe('DCA In customise page', () => {
         advancedSettings: true,
         executionInterval: 'daily',
         purchaseTime: '14:55',
-        slippageTolerance: 5,
+        slippageTolerance: 11,
         startDate: 'Thu Nov 03 2022 00:00:00 GMT+0800 (Central Indonesia Time)',
         startImmediately: 'no',
         startPrice: null,
@@ -185,7 +187,7 @@ describe('DCA In customise page', () => {
     it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-      renderTarget();
+      await renderTarget();
 
       // enter swap amount
       const input = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
