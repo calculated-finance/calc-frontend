@@ -73,6 +73,36 @@ describe('DCA Out post-purchase page', () => {
     });
   });
 
+  describe('when user wanted to send to another address', () => {
+    it('submits form successfully', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      await waitFor(() => userEvent.click(screen.getByText(/Yes/)), { timeout: 10000 });
+
+      await waitFor(
+        () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
+        { timeout: 10000 },
+      );
+
+      // submit
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
+
+      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        autoStake: 'no',
+        autoStakeValidator: null,
+        sendToWallet: 'no',
+        recipientAccount: 'kujira000000000000000000000000000000000000000',
+      });
+
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-out/confirm-purchase',
+        query: undefined,
+      });
+    });
+  });
+
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       mockValidators();

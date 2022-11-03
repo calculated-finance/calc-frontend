@@ -98,7 +98,20 @@ export default function Summary() {
     <Stack spacing={4}>
       <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
       <Divider />
-      <Box>
+      <Box data-testid="summary-your-deposit">
+        <Text textStyle="body-xs">Your deposit</Text>
+        <Text lineHeight={8}>
+          I deposit{' '}
+          <BadgeButton url="assets">
+            <Text>
+              {initialDeposit} {initialDenomName}
+            </Text>
+            <DenomIcon denomName={initialDenom} />{' '}
+          </BadgeButton>{' '}
+          Into the CALC DCA Out vault.
+        </Text>
+      </Box>
+      <Box data-testid="summary-the-swap">
         <Text textStyle="body-xs">The swap</Text>
         <Text lineHeight={8}>
           {triggerInfo}, CALC will swap{' '}

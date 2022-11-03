@@ -85,6 +85,25 @@ describe('DCA Out confirm page', () => {
     });
   });
 
+  describe('on page load', () => {
+    it('renders the summary links', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      const yourDeposit = screen.getByTestId('summary-your-deposit');
+
+      within(yourDeposit).getByText('1 KUJI');
+
+      const theSwap = screen.getByTestId('summary-the-swap');
+
+      within(theSwap).getByText('Immediately');
+      within(theSwap).getByText('OSMO');
+      within(theSwap).getByText('day');
+      within(theSwap).getByText('1 day');
+    });
+  });
+
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       const mockCreateStrategy = mockCreateVault(
@@ -122,7 +141,7 @@ describe('DCA Out confirm page', () => {
         pathname: '/create-strategy/dca-out/success',
         query: {
           strategyId: '59',
-          timeSaved: 10
+          timeSaved: 10,
         },
       });
     });
