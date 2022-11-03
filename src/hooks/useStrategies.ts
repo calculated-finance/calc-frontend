@@ -5,7 +5,6 @@ import { Denom } from '@models/Denom';
 import { queryClient } from 'src/pages/_app.page';
 import DenomAmount from '../models/DenomAmount';
 
-export type PositionType = 'enter' | 'exit';
 type TriggerVariant = 'time' | 'price'; // confirm these values
 const QUERY_KEY = 'active-vaults';
 
@@ -33,7 +32,6 @@ export type Strategy = {
     quote_denom: Denom;
   };
   swap_amount: string;
-  position_type: PositionType;
   slippage_tolerance: number | null; // double check this type
 };
 

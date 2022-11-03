@@ -112,7 +112,6 @@ describe('DCA Out confirm page', () => {
             destinations: undefined,
             label: '',
             pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
-            position_type: 'exit',
             slippage_tolerance: undefined,
             swap_amount: '1000000',
             target_price: undefined,

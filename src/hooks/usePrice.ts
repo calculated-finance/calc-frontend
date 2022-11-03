@@ -4,7 +4,19 @@ import { isNumber } from 'lodash';
 import { findPair } from '../helpers/findPair';
 import usePairs from './usePairs';
 import { Denom } from '../models/Denom';
-import { PositionType } from './useStrategies';
+
+type PriceAndOffer = {
+  quote_price: string;
+  offer_denom: {
+    native: string;
+  };
+  total_offer_amount: string;
+};
+
+type BookResult = {
+  base: PriceAndOffer[];
+  quote: PriceAndOffer[];
+};
 
 function safeInvert(value: number) {
   if (!value) {
@@ -18,18 +30,21 @@ function safeInvert(value: number) {
   return 1 / value;
 }
 
-export default function usePrice(
-  positionType: PositionType,
-  resultingDenom: Denom | undefined,
-  initialDenom: Denom | undefined,
-) {
+function calculatePrice(result: BookResult, initialDenom: Denom) {
+  if (result.quote[0].offer_denom.native === initialDenom) {
+    return Number(result.quote[0].quote_price);
+  }
+  return safeInvert(Number(result.base[0].quote_price));
+}
+
+export default function usePrice(resultingDenom: Denom | undefined, initialDenom: Denom | undefined) {
   const { client } = useWallet();
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
   const pairAddress = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-  const { data, ...helpers } = useQuery<any>(
+  const { data, ...helpers } = useQuery<BookResult>(
     ['price', pairAddress, client],
     async () => {
       const result = await client!.queryContractSmart(pairAddress!, {
@@ -43,9 +58,7 @@ export default function usePrice(
       enabled: !!client && !!pairAddress,
     },
   );
-
-  const price =
-    positionType === 'enter' ? Number(data?.quote[0].quote_price) : safeInvert(Number(data?.base[0].quote_price));
+  const price = data && calculatePrice(data, initialDenom!);
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {

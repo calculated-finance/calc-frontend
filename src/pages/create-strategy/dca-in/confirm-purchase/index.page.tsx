@@ -44,15 +44,15 @@ function ConfirmPurchase() {
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(steps);
 
-  const { mutate, isError, error } = useCreateVault('enter');
+  const { mutate, isError, error } = useCreateVault();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          timeSaved: state?.initialDeposit && state.swapAmount ? 
-          getTimeSaved(state.initialDeposit, state.swapAmount) : 0
+          timeSaved:
+            state?.initialDeposit && state.swapAmount ? getTimeSaved(state.initialDeposit, state.swapAmount) : 0,
         });
         actions.resetAction();
       },

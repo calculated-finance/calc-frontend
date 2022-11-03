@@ -8,59 +8,63 @@
 export type ExecuteMsg =
   | {
       create_pair: {
-        address: string;
+        address: Addr;
         base_denom: string;
         quote_denom: string;
-        [k: string]: unknown;
       };
     }
   | {
       delete_pair: {
-        address: string;
-        [k: string]: unknown;
+        address: Addr;
       };
     }
   | {
       create_vault: {
         destinations?: Destination[] | null;
-        pair_address: string;
-        position_type: PositionType;
+        label?: string | null;
+        owner?: Addr | null;
+        pair_address: Addr;
+        position_type?: PositionType | null;
+        price_threshold?: Decimal256 | null;
         slippage_tolerance?: Decimal256 | null;
         swap_amount: Uint128;
         target_price?: Decimal256 | null;
         target_start_time_utc_seconds?: Uint64 | null;
         time_interval: TimeInterval;
-        [k: string]: unknown;
       };
     }
   | {
       deposit: {
-        address: string;
+        address: Addr;
         vault_id: Uint128;
-        [k: string]: unknown;
       };
     }
   | {
       cancel_vault: {
-        address: string;
+        address: Addr;
         vault_id: Uint128;
-        [k: string]: unknown;
       };
     }
   | {
       execute_trigger: {
         trigger_id: Uint128;
-        [k: string]: unknown;
       };
     }
   | {
       update_config: {
-        fee_collector?: string | null;
-        fee_percent?: Uint128 | null;
-        [k: string]: unknown;
+        fee_collector?: Addr | null;
+        fee_percent?: Decimal | null;
+        page_limit?: number | null;
+        staking_router_address?: Addr | null;
+      };
+    }
+  | {
+      update_vault: {
+        address: Addr;
+        label?: string | null;
+        vault_id: Uint128;
       };
     };
-export type PostExecutionAction = 'send' | 'z_delegate';
 /**
  * A human readable address.
  *
@@ -71,13 +75,14 @@ export type PostExecutionAction = 'send' | 'z_delegate';
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
+export type PostExecutionAction = "send" | "z_delegate";
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
  *
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
-export type PositionType = 'enter' | 'exit';
+export type PositionType = "enter" | "exit";
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0
  *
@@ -110,11 +115,10 @@ export type Uint128 = string;
  * let b = Uint64::from(70u32); assert_eq!(b.u64(), 70); ```
  */
 export type Uint64 = string;
-export type TimeInterval = 'hourly' | 'daily' | 'weekly' | 'monthly';
+export type TimeInterval = "hourly" | "daily" | "weekly" | "monthly";
 
 export interface Destination {
   action: PostExecutionAction;
   address: Addr;
   allocation: Decimal;
-  [k: string]: unknown;
 }
