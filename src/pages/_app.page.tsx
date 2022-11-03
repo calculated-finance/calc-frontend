@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         endpoint,
         chainId,
         options: {
-          gasPrice: GasPrice.fromString('0.015uosmo'),
+          gasPrice: GasPrice.fromString('0.015ukuji'),
         },
       }),
     ],
