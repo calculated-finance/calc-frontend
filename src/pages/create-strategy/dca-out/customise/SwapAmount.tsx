@@ -8,7 +8,6 @@ import {
   InputLeftElement,
   Spacer,
   Text,
-  Image,
   InputRightElement,
   Button,
 } from '@chakra-ui/react';

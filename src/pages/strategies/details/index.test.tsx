@@ -1,14 +1,10 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useExecuteContract } from '@wizard-ui/react';
-import { Strategy } from '@hooks/useStrategies';
-import mockStrategyData from 'src/fixtures/strategy';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { useToast } from '@chakra-ui/react';
 import { mockValidators } from 'src/helpers/test/mockValidators';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';

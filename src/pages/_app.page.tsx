@@ -5,7 +5,7 @@ import type { NextPage } from 'next';
 import { KeplrWalletAdapter } from '@wizard-ui/core';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';

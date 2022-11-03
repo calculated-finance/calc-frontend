@@ -3,7 +3,6 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
-import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
 import DcaDiagram from '@components/DcaDiagram';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';

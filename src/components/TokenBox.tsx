@@ -4,7 +4,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   useDisclosure,
-  IconButton,
   Button,
   useOutsideClick,
   Text,
@@ -12,7 +11,6 @@ import {
   Stack,
   Box,
   Center,
-  Heading,
 } from '@chakra-ui/react';
 import { KeyIcon, KeypairIcon } from '@fusion-icons/react/interface';
 import Icon from './Icon';

@@ -7,9 +7,7 @@ import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
 import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
-import { SchemaDescription } from 'yup/lib/schema';
 import { ConditionBuilder } from 'yup/lib/Condition';
-import { AnyObject } from 'yup/lib/types';
 import { MixedSchema } from 'yup/lib/mixed';
 
 export const initialValues = {

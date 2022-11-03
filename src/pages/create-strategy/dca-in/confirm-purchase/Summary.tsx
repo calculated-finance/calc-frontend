@@ -5,15 +5,11 @@ import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
-import SendToWalletValues from '@models/SendToWalletValues';
-import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { REST_ENDPOINT } from 'src/constants';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import TriggerTypes from '../../../../models/TriggerTypes';
-import AutoStakeValues from '../../../../models/AutoStakeValues';
-import SendToWallet from '../post-purchase/SendToWallet';
 import 'isomorphic-fetch';
 
 export default function Summary() {

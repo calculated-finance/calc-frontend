@@ -1,4 +1,4 @@
-import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';

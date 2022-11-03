@@ -1,20 +1,8 @@
-import {
-  Badge,
-  Button,
-  Grid,
-  GridItem,
-  Heading,
-  Text,
-  Flex,
-  useDisclosure,
-  ButtonGroup,
-  HStack,
-} from '@chakra-ui/react';
+import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup, HStack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { ArrowRightIcon, ArrowUpBoxedIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
-import React from 'react';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from 'src/helpers/getInitialDenom';
@@ -61,10 +49,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">{getStrategyType(strategy)}</Heading>
-        <Text textStyle="body-xs">
-          {' '}
-          {getStrategyName(strategy)}
-        </Text>
+        <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
       </GridItem>
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm" pb={1}>

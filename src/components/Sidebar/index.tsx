@@ -1,4 +1,4 @@
-import React, { ReactNode, SVGProps } from 'react';
+import { ReactNode, SVGProps } from 'react';
 import {
   Box,
   CloseButton,
@@ -19,14 +19,7 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  BarChartIcon,
-  HomeIcon,
-  SettingsIcon,
-  Add1Icon,
-  LifebeltIcon,
-  ToolkitIcon,
-} from '@fusion-icons/react/interface';
+import { HomeIcon, Add1Icon, ToolkitIcon } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';

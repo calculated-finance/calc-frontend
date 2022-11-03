@@ -1,6 +1,6 @@
 import { Link, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { TwitterIcon, PaperplaneIcon, DiscordIcon, TelegramIcon } from '@fusion-icons/react/interface';
+import { TwitterIcon, DiscordIcon, TelegramIcon } from '@fusion-icons/react/interface';
 
 function Footer() {
   return (

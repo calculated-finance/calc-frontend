@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import steps from '@components/NewStrategyModal/steps';
 import DcaDiagram from '@components/DcaDiagram';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';

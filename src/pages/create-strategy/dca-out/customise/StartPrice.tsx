@@ -4,7 +4,6 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
-  Input,
   InputGroup,
   InputLeftElement,
   Text,

@@ -1,5 +1,3 @@
-import { Denom } from '@hooks/usePairs';
-
 export default [
   {
     address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',

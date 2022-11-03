@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import useStrategies, { Strategy } from '@hooks/useStrategies';
+import useStrategies from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
@@ -145,41 +145,26 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
-  const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
-  const totalInvested = activeStrategies
-    .map((strategy) => Number(strategy.balance.amount))
-    .reduce((balance, acc) => acc + balance, 0);
-
-  const formattedTotalInvested = totalInvested.toLocaleString('en-US', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  });
-
   return (
     <Flex layerStyle="panel" p={8} alignItems="center" h="full">
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Stack spacing={4}>
-          <Heading size="md">Total invested with CALC</Heading>
-          <Stat>
-            <StatLabel>Total capital invested</StatLabel>
-            <StatNumber data-testid="total-invested">(Coming Soon)</StatNumber>
-          </Stat>
-          <Divider />
-          <HStack>
-            <Box>
-              <Heading size="xs">Fiat invested</Heading>
-              <Text textStyle="body-xs">-</Text>
-            </Box>
-            <Box>
-              <Heading size="xs">Stablecoin invested</Heading>
-              <Text textStyle="body-xs">(Coming Soon)</Text>
-            </Box>
-          </HStack>
-        </Stack>
-      )}
+      <Stack spacing={4}>
+        <Heading size="md">Total invested with CALC</Heading>
+        <Stat>
+          <StatLabel>Total capital invested</StatLabel>
+          <StatNumber data-testid="total-invested">(Coming Soon)</StatNumber>
+        </Stat>
+        <Divider />
+        <HStack>
+          <Box>
+            <Heading size="xs">Fiat invested</Heading>
+            <Text textStyle="body-xs">-</Text>
+          </Box>
+          <Box>
+            <Heading size="xs">Stablecoin invested</Heading>
+            <Text textStyle="body-xs">(Coming Soon)</Text>
+          </Box>
+        </HStack>
+      </Stack>
     </Flex>
   );
 }
@@ -202,7 +187,7 @@ function WorkflowInformation() {
 
 function Home() {
   const { connected } = useWallet();
-  const { data, isLoading } = useStrategies();
+  const { data } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
     <>

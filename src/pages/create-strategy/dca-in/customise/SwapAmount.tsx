@@ -8,7 +8,6 @@ import {
   InputLeftElement,
   Spacer,
   Text,
-  Image,
   InputRightElement,
   Button,
 } from '@chakra-ui/react';
@@ -25,7 +24,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
   const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
-  const { icon: initialDenomIcon, name: initialDenomName } = getDenomInfo(step1State.initialDenom);
+  const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
   const { name: resultingDenomName } = getDenomInfo(step1State.resultingDenom);
   const { initialDeposit } = step1State;
 

@@ -6,7 +6,6 @@ import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
-import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import timekeeper from 'timekeeper';
 import Page from './index.page';

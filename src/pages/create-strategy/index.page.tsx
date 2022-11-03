@@ -1,31 +1,10 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  Image,
-  Box,
-  Badge,
-  Spacer,
-  HStack,
-  Wrap,
-  Spinner,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
-import {
-  Code3Icon,
-  DonateIcon,
-  Fullscreen1Icon,
-  Fullscreen2Icon,
-  Graph1Icon,
-  PuzzleIcon,
-} from '@fusion-icons/react/interface';
+import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { useWallet } from '@wizard-ui/react';
-import { ReactElement, SVGProps } from 'react';
+import { ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
@@ -38,7 +17,6 @@ type StrategyCardProps = {
   enabled?: boolean;
   href?: StrategyUrls;
   advanced?: boolean;
-  linkToInfo?: string;
 };
 
 const accumulationStratgies: StrategyCardProps[] = [
@@ -101,7 +79,7 @@ function InfoPanel(): JSX.Element {
   );
 }
 
-function StrategyCard({ name, description, advanced, icon, href, linkToInfo, enabled }: StrategyCardProps) {
+function StrategyCard({ name, description, advanced, icon, href, enabled }: StrategyCardProps) {
   return (
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
@@ -142,7 +120,6 @@ StrategyCard.defaultProps = {
   enabled: false,
   href: undefined,
   advanced: false,
-  linkToInfo: undefined,
 };
 
 function Strategies() {

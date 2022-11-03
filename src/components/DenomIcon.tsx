@@ -1,4 +1,4 @@
-import { Box, Image, Tooltip, Text, Flex, Center, BoxProps } from '@chakra-ui/react';
+import { Box, Image, Tooltip } from '@chakra-ui/react';
 import { Denom } from '@hooks/usePairs';
 import getDenomInfo from '@utils/getDenomInfo';
 
