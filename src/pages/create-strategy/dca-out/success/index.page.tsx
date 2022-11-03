@@ -3,18 +3,14 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
-import totalExecutions from '@utils/totalExecutions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import getStrategyBalance from '../../../../helpers/getStrategyBalance';
-import { getStrategyTimeSaved } from '../../../../helpers/getStrategyTimeSaved';
-import getSwapAmount from '../../../../helpers/getSwapAmount';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId } = query;
+  const { strategyId, timeSaved } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -31,7 +27,6 @@ function Success() {
     );
   }
 
-  const timeSaved = getStrategyTimeSaved(data.vault);
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} finalStep={false}>

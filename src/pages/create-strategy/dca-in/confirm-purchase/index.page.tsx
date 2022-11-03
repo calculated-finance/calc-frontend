@@ -8,14 +8,13 @@ import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
-import totalExecutions from '@utils/totalExecutions';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
-import { DeliverTxResponse } from '@cosmjs/stargate';
 import Summary from './Summary';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
+import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 
 function InvalidData() {
   const router = useRouter();
@@ -52,6 +51,8 @@ function ConfirmPurchase() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
+          timeSaved: state?.initialDeposit && state.swapAmount ? 
+          getTimeSaved(state.initialDeposit, state.swapAmount) : 0
         });
         actions.resetAction();
       },

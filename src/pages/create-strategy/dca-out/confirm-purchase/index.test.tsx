@@ -122,6 +122,7 @@ describe('DCA Out confirm page', () => {
         pathname: '/create-strategy/dca-out/success',
         query: {
           strategyId: '59',
+          timeSaved: 10
         },
       });
     });
