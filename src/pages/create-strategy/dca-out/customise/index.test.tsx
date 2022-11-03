@@ -71,7 +71,7 @@ async function renderTarget() {
   });
 }
 
-describe('DCA In customise page', () => {
+describe('DCA Out customise page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -126,7 +126,7 @@ describe('DCA In customise page', () => {
   describe('when strategy with date trigger and advanced settings is filled and submitted', () => {
     beforeAll(() => {
       // Lock Time
-      timekeeper.freeze(new Date('2022-11-2'));
+      timekeeper.freeze(new Date('2022-11-02T00:00:00.000+00:00'));
     });
 
     afterAll(() => {
@@ -148,7 +148,7 @@ describe('DCA In customise page', () => {
       // set start date
       const dateInput = screen.getByTestId('mock-datepicker');
       const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
-      fireEvent.change(dateInput, { target: { value: tomorrow } });
+      fireEvent.change(dateInput, { target: { value: tomorrow.toISOString() } });
 
       // enter swap amount
       const purchaseTimeInput = await waitFor(() => screen.getByLabelText(/Sell time/));
@@ -170,7 +170,7 @@ describe('DCA In customise page', () => {
         executionInterval: 'daily',
         purchaseTime: '14:55',
         slippageTolerance: 5,
-        startDate: 'Thu Nov 03 2022 00:00:00 GMT+0800 (Central Indonesia Time)',
+        startDate: '2022-11-03T00:00:00.000Z',
         startImmediately: 'no',
         startPrice: null,
         swapAmount: 1,
