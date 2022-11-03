@@ -73,7 +73,7 @@ function InvestmentThesis() {
   );
 
   const profitTakingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyProfitTaking).map(getStrategyResultingDenom)),
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map(getStrategyInitialDenom)),
   );
   return (
     <Flex layerStyle="panel" p={8} alignItems="center" h="full">
