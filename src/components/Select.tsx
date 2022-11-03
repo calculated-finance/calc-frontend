@@ -46,5 +46,5 @@ export default function Select({
     components: customComponents,
   });
 
-  return <ChakraSelect data-testid="react-select-input" {...selectProps} />;
+  return <ChakraSelect {...selectProps} />;
 }

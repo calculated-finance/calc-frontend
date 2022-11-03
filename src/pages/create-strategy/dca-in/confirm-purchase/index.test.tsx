@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, getByText, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
@@ -8,6 +8,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
+import { mockValidators } from 'src/helpers/test/mockValidators';
 import Page from './index.page';
 
 const mockRouter = {
@@ -85,6 +86,25 @@ describe('DCA In confirm page', () => {
     });
   });
 
+  describe('on page load', () => {
+    it('renders the summary links', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      const yourDeposit = screen.getByTestId('summary-your-deposit');
+
+      within(yourDeposit).getByText('1 USK');
+
+      const theSwap = screen.getByTestId('summary-the-swap');
+
+      within(theSwap).getByText('Immediately');
+      within(theSwap).getByText('NBTC');
+      within(theSwap).getByText('day');
+      within(theSwap).getByText('1 day');
+    });
+  });
+
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       const mockCreateStrategy = mockCreateVault();
@@ -106,7 +126,7 @@ describe('DCA In confirm page', () => {
         pathname: '/create-strategy/dca-in/success',
         query: {
           strategyId: '59',
-          timeSaved: 10
+          timeSaved: 10,
         },
       });
     });

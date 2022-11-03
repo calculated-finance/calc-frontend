@@ -45,8 +45,6 @@ export default function AutoStakeValidator() {
   const [sendToWalletfield] = useField({ name: 'sendToWallet' });
   const validators = useValidators();
 
-  console.log(validators);
-
   const options = validators?.map((validator: Validator) => ({
     value: validator.operator_address,
     label:
