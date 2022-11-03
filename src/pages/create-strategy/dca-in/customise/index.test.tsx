@@ -91,7 +91,7 @@ describe('DCA In customise page', () => {
       await renderTarget();
 
       await waitFor(() => userEvent.click(screen.getByLabelText('No')), { timeout: 10000 });
-      await waitFor(() => userEvent.click(screen.getByLabelText('Start based on asset price')));
+      await waitFor(() => userEvent.click(screen.getByLabelText('Start based on asset price')), { timeout: 10000 });
 
       const input = await waitFor(() => screen.getByLabelText(/Strategy start price/));
       await waitFor(() => userEvent.type(input, '10.00'), { timeout: 5000 });
