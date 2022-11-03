@@ -6,7 +6,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getStrategyTimeSaved } from 'src/helpers/getStrategyTimeSaved';
+import { getTimeSaved } from '../../../helpers/getTimeSaved';
 import { getDenomName, getStrategyInitialDenom } from '../../../helpers/getInitialDenom';
 import { topUpSteps } from './index.page';
 
@@ -32,7 +32,8 @@ function Success() {
 
   const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));
 
-  const timeSaved = getStrategyTimeSaved(parseFloat(deposit as string), parseFloat(swapAmount as string));
+  const timeSaved = getTimeSaved(
+    parseFloat(deposit as string), parseFloat(swapAmount as string));
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>

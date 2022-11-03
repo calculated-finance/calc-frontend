@@ -5,13 +5,12 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getStrategyTimeSaved } from '../../../../helpers/getStrategyTimeSaved';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId, deposit, swapAmount } = query;
+  const { strategyId, timeSaved } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -28,7 +27,6 @@ function Success() {
     );
   }
 
-  const timeSaved = getStrategyTimeSaved(parseFloat(deposit as string), parseFloat(swapAmount as string));
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} finalStep={false}>

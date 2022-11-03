@@ -120,8 +120,7 @@ describe('DCA Out confirm page', () => {
         pathname: '/create-strategy/dca-out/success',
         query: {
           strategyId: '59',
-          deposit: 1,
-          swapAmount: 1
+          timeSaved: 10
         },
       });
     });

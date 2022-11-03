@@ -9,7 +9,7 @@ import Page from './index.page';
 const mockRouter = {
   push: jest.fn(),
   pathname: '/create-strategy/dca-out/success',
-  query: { strategyId: '1', deposit: 10, swapAmount: 1 },
+  query: { strategyId: '1', timeSaved: 100 },
   events: {
     on: jest.fn(),
   },

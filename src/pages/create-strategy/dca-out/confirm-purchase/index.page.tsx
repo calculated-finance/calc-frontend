@@ -27,6 +27,7 @@ import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import Summary from './Summary';
 import dcaOutSteps from '../dcaOutSteps';
 import Fees from '../../../../components/Fees';
+import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 
 function InvalidData() {
   const router = useRouter();
@@ -63,8 +64,8 @@ function ConfirmPurchase() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          deposit: state?.initialDeposit,
-          swapAmount: state?.swapAmount
+          timeSaved: state?.initialDeposit && state.swapAmount ? 
+          getTimeSaved(state.initialDeposit, state.swapAmount) : 0
         });
         actions.resetAction();
       },

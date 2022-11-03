@@ -120,7 +120,7 @@ describe('Top up page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/top-up/success',
-          query: { strategyId: '1', deposit: 1, swapAmount: "1000000" },
+          query: { strategyId: '1', timeSaved: 10 },
         }),
       );
     });
