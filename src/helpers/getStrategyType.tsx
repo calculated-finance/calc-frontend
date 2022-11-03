@@ -1,6 +1,8 @@
 import { Strategy } from '@hooks/useStrategies';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { isDenomStable } from '@utils/getDenomInfo';
+import { getStrategyInitialDenom } from "./getStrategyInitialDenom";
 
 export function getStrategyType(strategy: Strategy) {
-  const { position_type } = strategy;
-  return position_type === 'enter' ? 'DCA In' : 'DCA Out';
+  return isDenomStable(getStrategyInitialDenom(strategy)) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }

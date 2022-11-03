@@ -44,7 +44,7 @@ function ConfirmPurchase() {
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(dcaOutSteps);
 
-  const { mutate, isError, error } = useCreateVault('exit');
+  const { mutate, isError, error } = useCreateVault();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {

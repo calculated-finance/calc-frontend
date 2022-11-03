@@ -22,7 +22,7 @@ export default function StartPrice() {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
   const { state } = useStep2Form();
 
-  const { price, pairAddress, isLoading } = usePrice('enter', state?.step1.resultingDenom, state?.step1.initialDenom);
+  const { price, pairAddress, isLoading } = usePrice(state?.step1.resultingDenom, state?.step1.initialDenom);
 
   if (!state) {
     return null;

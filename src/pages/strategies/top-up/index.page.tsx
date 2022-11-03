@@ -16,8 +16,8 @@ import DcaDiagram from '@components/DcaDiagram';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import TopUpAmount from './TopUpAmount';
-import { getResultingDenom } from '../../../helpers/getResultingDenom';
-import { getInitialDenom } from '../../../helpers/getInitialDenom';
+import { getStrategyResultingDenom } from "../../../helpers/getStrategyResultingDenom";
+import { getStrategyInitialDenom } from "../../../helpers/getStrategyInitialDenom";
 import { getTimeSaved } from '../../../helpers/getTimeSaved';
 
 export const topUpSteps: StepConfig[] = [
@@ -39,10 +39,8 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
 
   const { mutate, error, isError } = useTopUpStrategy();
 
-  const { position_type, pair } = strategy;
-
-  const initialDenom = getInitialDenom(position_type, pair);
-  const resultingDenom = getResultingDenom(position_type, pair);
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
 
   const { displayAmount } = useBalance({
     token: initialDenom,
@@ -62,8 +60,9 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
       { values, initialDenom, id: strategy.id },
       {
         onSuccess: async () => {
-          await nextStep({ strategyId: strategy.id, 
-            timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.swap_amount)) 
+          await nextStep({
+            strategyId: strategy.id,
+            timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.swap_amount)),
           });
         },
         onSettled: () => {
@@ -82,16 +81,14 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
       <Form autoComplete="off">
         <Stack direction="column" spacing={6}>
           <Stack spacing={2}>
-            <Heading size="sm">
-              {getStrategyName(strategy)}
-            </Heading>
+            <Heading size="sm">{getStrategyName(strategy)}</Heading>
             <Text textStyle="body-xs">
               Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
             </Text>
             <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
           </Stack>
           <Divider />
-          <TopUpAmount initialDenom={initialDenom!} />
+          <TopUpAmount initialDenom={initialDenom} />
           <FormControl isInvalid={isError}>
             <Submit>Confirm</Submit>
             <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>

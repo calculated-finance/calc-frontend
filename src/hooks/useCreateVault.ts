@@ -9,12 +9,12 @@ import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
-import { Destination, ExecuteMsg } from 'execute';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
+import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { useConfirmForm } from './useDcaInForm';
-import { PositionType, Strategy } from './useStrategies';
+import { Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from '../helpers/findPair';
 
@@ -22,7 +22,7 @@ function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
 }
 
-function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[]) {
+function getMessageAndFunds(state: any, pairs: Pair[]) {
   const {
     initialDenom,
     resultingDenom,
@@ -68,7 +68,6 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
       label: '',
       time_interval: executionInterval,
       pair_address: pairAddress,
-      position_type: positionType,
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
       target_price: startPrice ? deconversion(startPrice).toString() : undefined,
@@ -87,7 +86,7 @@ function getStrategyIdFromLog(log: Log) {
     ?.value;
 }
 
-const useCreateVault = (positionType: PositionType) => {
+const useCreateVault = () => {
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
@@ -108,7 +107,7 @@ const useCreateVault = (positionType: PositionType) => {
       throw Error('No pairs found');
     }
 
-    const { msg, funds } = getMessageAndFunds(state, positionType, pairs);
+    const { msg, funds } = getMessageAndFunds(state, pairs);
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {

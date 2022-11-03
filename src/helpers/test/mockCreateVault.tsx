@@ -16,7 +16,6 @@ const defaultMsg = {
     destinations: undefined,
     label: '',
     pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
-    position_type: 'enter',
     slippage_tolerance: undefined,
     swap_amount: '1000000',
     target_price: undefined,

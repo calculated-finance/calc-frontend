@@ -6,6 +6,7 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { mockValidators } from 'src/helpers/test/mockValidators';
+import { dcaOutStrategy } from 'src/fixtures/strategy';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -134,17 +135,9 @@ describe('Detail page', () => {
           await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
         });
       });
-      describe('when dca out', () => {
-        it('renders name', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ position_type: 'exit' }) }), mockCancelVault());
-
-          await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
-        });
-      });
     });
     describe('strategy type', () => {
-      describe('when enter', () => {
+      describe('when DCA In', () => {
         it('renders type', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
@@ -152,9 +145,9 @@ describe('Detail page', () => {
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA In'));
         });
       });
-      describe('when exit', () => {
+      describe('when DCA Out', () => {
         it('renders type', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ position_type: 'exit' }) }), mockCancelVault());
+          mockUseWallet(mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA Out'));

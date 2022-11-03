@@ -34,10 +34,12 @@ import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import useValidators from '@hooks/useValidators';
 import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
+import strategy from 'src/fixtures/strategy';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
-import { getInitialDenom } from '../../../helpers/getInitialDenom';
-import { getResultingDenom } from '../../../helpers/getResultingDenom';
+import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 import { CancelButton } from './CancelButton';
@@ -97,15 +99,15 @@ function Page() {
     );
   }
 
-  const { position_type, time_interval, swap_amount, balance, pair, destinations } = data.vault;
-  const initialDenom = getInitialDenom(position_type, pair);
-  const resultingDenom = getResultingDenom(position_type, pair);
+  const { time_interval, swap_amount, balance, destinations } = data.vault;
+  const initialDenom = getStrategyInitialDenom(data.vault);
+  const resultingDenom = getStrategyResultingDenom(data.vault);
 
-  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom! });
-  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom! });
+  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
+  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
 
   const initialDenomValue = new DenomValue(balance);
-  const swapAmountValue = new DenomValue({ denom: initialDenom!, amount: swap_amount });
+  const swapAmountValue = new DenomValue({ denom: initialDenom, amount: swap_amount });
 
   const strategyType = getStrategyType(data.vault);
 
@@ -335,7 +337,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-                    <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom!} />
+                    <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
                   </Flex>
                 </GridItem>
                 <GridItem colSpan={1}>
@@ -344,7 +346,7 @@ function Page() {
                 <GridItem colSpan={1}>
                   <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
                     <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
-                    <DenomIcon denomName={resultingDenom!} />
+                    <DenomIcon denomName={resultingDenom} />
                   </Flex>
                 </GridItem>
                 <GridItem colSpan={2}>
@@ -352,7 +354,9 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {data.vault.position_type === 'enter' ? 'Market value of holdings' : 'Market value of profits'}
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                      ? 'Market value of holdings'
+                      : 'Market value of profits'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
@@ -360,31 +364,33 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {data.vault.position_type === 'enter' ? 'Total accumulated' : 'Total sold'}
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {data.vault.position_type === 'enter'
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn
                       ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
                       : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {data.vault.position_type === 'enter' ? 'Net asset cost' : 'Net asset profit'}
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {data.vault.position_type === 'enter'
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn
                       ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
                       : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {data.vault.position_type === 'enter' ? 'Average token cost' : 'Average token sell price'}
+                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                      ? 'Average token cost'
+                      : 'Average token sell price'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>

@@ -18,9 +18,12 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import useStrategies from '@hooks/useStrategies';
+import useStrategies, { Strategy } from '@hooks/useStrategies';
+import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
+import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
@@ -58,23 +61,19 @@ function WarningPanel() {
   );
 }
 
+const isStrategyAcculumating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
+
+const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
+
 function InvestmentThesis() {
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const acculumatingAssets = Array.from(
-    new Set(
-      activeStrategies
-        .filter((strategy) => strategy.position_type === 'enter')
-        .map((strategy) => strategy.pair.base_denom),
-    ),
+    new Set(activeStrategies.filter(isStrategyAcculumating).map(getStrategyResultingDenom)),
   );
 
   const profitTakingAssets = Array.from(
-    new Set(
-      activeStrategies
-        .filter((strategy) => strategy.position_type === 'exit')
-        .map((strategy) => strategy.pair.base_denom),
-    ),
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map(getStrategyInitialDenom)),
   );
   return (
     <Flex layerStyle="panel" p={8} alignItems="center" h="full">
