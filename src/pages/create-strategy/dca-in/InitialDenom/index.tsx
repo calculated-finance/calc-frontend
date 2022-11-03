@@ -17,7 +17,6 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import InitialDeposit from '../InitialDeposit';
-import Select from '../../../../components/Select';
 import { DenomSelect } from '../../../../components/DenomSelect';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {

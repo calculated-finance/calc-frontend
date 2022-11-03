@@ -1,12 +1,12 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within, act } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { act } from 'react-dom/test-utils';
 import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
 import { mockUseStrategy } from 'src/helpers/test/mockGetVault';
+import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
 import Page from './index.page';
 
 const mockRouter = {
@@ -32,15 +32,6 @@ jest.mock('next/router', () => ({
   },
 }));
 
-function mockGetBalance() {
-  const getBalance = jest.fn();
-  when(getBalance)
-    .calledWith('kujitestwallet', 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo')
-    .mockResolvedValue({ amount: (88.12 * 1000000).toString() });
-
-  return getBalance;
-}
-
 function mockDeposit(execute = jest.fn(), success = true) {
   const msg = {
     deposit: {
@@ -64,12 +55,14 @@ function mockDeposit(execute = jest.fn(), success = true) {
   return execute;
 }
 
-function renderTarget() {
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Page />
-    </QueryClientProvider>,
-  );
+async function renderTarget() {
+  act(() => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>,
+    );
+  });
 }
 
 describe('Top up page', () => {
@@ -79,26 +72,26 @@ describe('Top up page', () => {
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
-    renderTarget();
+    await renderTarget();
 
     expect(within(screen.getByTestId('strategy-modal-header')).getByText('Top Up Strategy')).toBeInTheDocument();
   });
   it('renders remaining balance', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
-    renderTarget();
+    await renderTarget();
     screen.getByText('Remaining balance: 10 DEMO');
   });
   it('shows available funds', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
-    renderTarget();
+    await renderTarget();
     await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
   });
   describe('when available funds is clicked', () => {
     it('fills the input with available funds', async () => {
       mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
 
-      renderTarget();
+      await renderTarget();
       await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
       act(() => {
         fireEvent.click(screen.getByText('88.12'));
@@ -111,7 +104,7 @@ describe('Top up page', () => {
       const execute = jest.fn();
       mockUseWallet(mockUseStrategy(), mockDeposit(execute), mockGetBalance());
 
-      renderTarget();
+      await renderTarget();
       act(() => {
         fireEvent.change(screen.getByTestId('top-up-input'), { target: { value: '1' } });
         fireEvent.click(screen.getByTestId('submit-button'));
@@ -120,7 +113,7 @@ describe('Top up page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/top-up/success',
-          query: { strategyId: '1' },
+          query: { strategyId: '1', timeSaved: 10 },
         }),
       );
     });
@@ -130,7 +123,7 @@ describe('Top up page', () => {
       const execute = jest.fn();
       mockUseWallet(mockUseStrategy(), mockDeposit(execute, false), mockGetBalance());
 
-      renderTarget();
+      await renderTarget();
       const input = await waitFor(() => screen.getByTestId('top-up-input'));
       const button = await waitFor(() => screen.getByTestId('submit-button'));
       await act(async () => {
@@ -147,7 +140,7 @@ describe('Top up page', () => {
     it('should show validation message', async () => {
       mockUseWallet(mockUseStrategy(), mockDeposit(execute), mockGetBalance());
 
-      renderTarget();
+      await renderTarget();
       const input = await waitFor(() => screen.getByTestId('top-up-input'));
       const button = await waitFor(() => screen.getByTestId('submit-button'));
       await act(async () => {

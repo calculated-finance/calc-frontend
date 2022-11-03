@@ -3,7 +3,6 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -16,7 +15,6 @@ import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase();
-  const { isLoading } = usePairs();
   const { nextStep } = useSteps(dcaOutSteps);
 
   const { isPageLoading } = usePageLoad();
@@ -36,7 +34,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
             Post Purchase
           </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <FormControl>
                 <Stack direction="column" spacing={6}>

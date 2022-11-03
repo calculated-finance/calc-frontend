@@ -18,6 +18,7 @@ import { getStrategyName } from 'src/helpers/getStrategyName';
 import TopUpAmount from './TopUpAmount';
 import { getResultingDenom } from '../../../helpers/getResultingDenom';
 import { getInitialDenom } from '../../../helpers/getInitialDenom';
+import { getTimeSaved } from '../../../helpers/getTimeSaved';
 
 export const topUpSteps: StepConfig[] = [
   {
@@ -61,7 +62,9 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
       { values, initialDenom, id: strategy.id },
       {
         onSuccess: async () => {
-          await nextStep({ strategyId: strategy.id });
+          await nextStep({ strategyId: strategy.id, 
+            timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.swap_amount)) 
+          });
         },
         onSettled: () => {
           setSubmitting(false);

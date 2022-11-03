@@ -1,4 +1,4 @@
-import { Button, Center, Flex, FlexProps, Heading, Link, Stack, Text } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { useWallet } from '@wizard-ui/react';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import Spinner from './Spinner';

@@ -1,14 +1,4 @@
-import {
-  Button,
-  Center,
-  chakra,
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  Stack,
-  Text,
-  useCheckbox,
-} from '@chakra-ui/react';
+import { Button, Center, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -17,16 +7,14 @@ import { useRouter } from 'next/router';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import { Form, Formik, FormikHelpers, useField } from 'formik';
-import { FiCheck } from 'react-icons/fi';
-import totalExecutions from '@utils/totalExecutions';
+import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import Summary from './Summary';
 import dcaOutSteps from '../dcaOutSteps';
 import Fees from '../../../../components/Fees';
+import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 
 function InvalidData() {
   const router = useRouter();
@@ -63,6 +51,8 @@ function ConfirmPurchase() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
+          timeSaved:
+            state?.initialDeposit && state.swapAmount ? getTimeSaved(state.initialDeposit, state.swapAmount) : 0,
         });
         actions.resetAction();
       },

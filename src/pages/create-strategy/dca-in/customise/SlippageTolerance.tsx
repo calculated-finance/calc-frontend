@@ -5,7 +5,6 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
-  Input,
   InputGroup,
   InputLeftElement,
   InputRightElement,
@@ -41,7 +40,7 @@ function SlippagePreset({ value }: { value: number }) {
 
 export default function SlippageTolerance() {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'slippageTolerance' });
-  const values = [0.01, 0.5, 2.0];
+  const values = [0.5, 1.0, 2.0];
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>

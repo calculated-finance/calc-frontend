@@ -1,4 +1,4 @@
-import { PlusSquareIcon, WarningIcon, WarningTwoIcon } from '@chakra-ui/icons';
+import { PlusSquareIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -15,10 +15,7 @@ import {
   Button,
   Image,
   Alert,
-  AlertIcon,
-  Stack,
   useDisclosure,
-  CloseButton,
   Spacer,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
@@ -74,7 +71,7 @@ function Page() {
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
-  const validators = useValidators()
+  const validators = useValidators();
 
   // stats
   const completedEvents = eventsData?.events

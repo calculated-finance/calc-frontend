@@ -1,9 +1,6 @@
 import {
-  Box,
-  Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   HStack,
   Icon,
@@ -11,7 +8,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Stack,
   Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';

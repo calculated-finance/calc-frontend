@@ -1,15 +1,5 @@
-import {
-  Box,
-  Flex,
-  Spacer,
-  Image,
-  BoxProps,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  ButtonGroup,
-} from '@chakra-ui/react';
-import React, { ReactElement } from 'react';
+import { Box, Flex, Spacer, Image, BoxProps, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import { ReactElement } from 'react';
 import CosmosWallet from '@components/CosmosWallet';
 import Link from 'next/link';
 import { useWallet } from '@wizard-ui/react';

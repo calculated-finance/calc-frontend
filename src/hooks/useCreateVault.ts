@@ -17,6 +17,10 @@ import { PositionType, Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from './findPair';
 
+function getSlippageWithoutTrailingZeros(slippage: number) {
+  return parseFloat((slippage / 100).toFixed(4)).toString()
+}
+
 function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[]) {
   const {
     initialDenom,
@@ -67,7 +71,8 @@ function getMessageAndFunds(state: any, positionType: PositionType, pairs: Pair[
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
       target_price: startPrice ? deconversion(startPrice).toString() : undefined,
-      slippage_tolerance: advancedSettings ? slippageTolerance?.toString() : undefined,
+      slippage_tolerance: (advancedSettings && slippageTolerance) ? 
+      getSlippageWithoutTrailingZeros(slippageTolerance) : undefined,
       destinations: destinations.length ? destinations : undefined,
     },
   } as ExecuteMsg;
