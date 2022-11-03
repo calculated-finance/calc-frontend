@@ -104,6 +104,8 @@ describe('DCA In confirm page', () => {
         pathname: '/create-strategy/dca-in/success',
         query: {
           strategyId: '59',
+          deposit: 1,
+          swapAmount: 1
         },
       });
     });
