@@ -7,6 +7,7 @@ import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockValidators } from 'src/helpers/test/mockValidators';
+import selectEvent from 'react-select-event';
 import Page from './index.page';
 
 const mockRouter = {
@@ -28,9 +29,9 @@ jest.mock('next/router', () => ({
 
 const mockStateMachine = {
   state: {
-    initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+    initialDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     initialDeposit: '1',
-    resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+    resultingDenom: 'ukuji',
   },
   actions: {
     updateAction: jest.fn(),
@@ -53,6 +54,7 @@ async function renderTarget() {
           <Page />
         </QueryClientProvider>
       </ThemeProvider>,
+      { container: document.body },
     );
   });
 }
@@ -69,6 +71,70 @@ describe('DCA In post-purchase page', () => {
       await renderTarget();
 
       expect(within(screen.getByTestId('strategy-modal-header')).getByText('Post Purchase')).toBeInTheDocument();
+    });
+  });
+
+  describe('when user wanted to send to another address', () => {
+    it('submits form successfully', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      await waitFor(() => userEvent.click(screen.getAllByText(/No/)[0]), { timeout: 10000 });
+
+      await waitFor(
+        () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
+        { timeout: 10000 },
+      );
+
+      // submit
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
+
+      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        autoStake: 'no',
+        autoStakeValidator: null,
+        sendToWallet: 'no',
+        recipientAccount: 'kujira000000000000000000000000000000000000000',
+      });
+
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-in/confirm-purchase',
+        query: undefined,
+      });
+    });
+  });
+  describe('when user wanted to autostake', () => {
+    it('submits form successfully', async () => {
+      process.env.PORTAL_SELECT_DISABLED = 'true';
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      await waitFor(() => userEvent.click(screen.getAllByText(/Yes/)[1]), { timeout: 10000 });
+
+      const select = await waitFor(() => screen.getByLabelText('Choose Validator'), { timeout: 10000 });
+      selectEvent.select(select, ['test']);
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 100));
+
+      await act(async () => {
+        await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
+      });
+
+      screen.debug(undefined, 100000);
+
+      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        autoStake: 'yes',
+        autoStakeValidator: 'kujiravalopertestvalidator',
+        recipientAccount: null,
+        sendToWallet: 'yes',
+      });
+
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-in/confirm-purchase',
+        query: undefined,
+      });
     });
   });
 

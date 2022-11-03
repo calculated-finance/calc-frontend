@@ -43,16 +43,17 @@ export function DummyAutoStakeValidator() {
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
   const [sendToWalletfield] = useField({ name: 'sendToWallet' });
-  const validators = useValidators()
-  
-  const options = validators?.map(
-    (validator: Validator) =>
-      ({
-        value: validator.operator_address,
-        label: validator.description && validator.description.moniker 
-        ? validator.description.moniker : validator.operator_address,
-      }),
-  );
+  const validators = useValidators();
+
+  console.log(validators);
+
+  const options = validators?.map((validator: Validator) => ({
+    value: validator.operator_address,
+    label:
+      validator.description && validator.description.moniker
+        ? validator.description.moniker
+        : validator.operator_address,
+  }));
 
   return (
     <FormControl
@@ -77,9 +78,9 @@ export default function AutoStakeValidator() {
         <Select
           value={field.value}
           options={options}
-          placeholder="Choose validator"
+          placeholder="Select or type validator name"
           onChange={helpers.setValue}
-          menuPortalTarget={document.body}
+          menuPortalTarget={!process.env.PORTAL_SELECT_DISABLED ? document.body : undefined}
         />
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
