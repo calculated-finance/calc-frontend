@@ -23,7 +23,7 @@ export const initialValues = {
 
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
-  slippageTolerance: 1,
+  slippageTolerance: 2,
   sendToWallet: SendToWalletValues.Yes,
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
