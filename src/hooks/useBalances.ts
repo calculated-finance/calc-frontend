@@ -1,3 +1,4 @@
+import 'isomorphic-fetch';
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { REST_ENDPOINT } from 'src/constants';

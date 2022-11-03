@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useExecuteContract } from '@wizard-ui/react';
 import { Strategy } from '@hooks/useStrategies';
@@ -9,6 +9,7 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { useToast } from '@chakra-ui/react';
+import { mockValidators } from 'src/helpers/test/mockValidators';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -35,18 +36,6 @@ jest.mock('next/router', () => ({
   },
 }));
 
-jest.mock('../../../hooks/useValidators', () => jest.fn()
-.mockReturnValue([
-    {
-      operator_address: 'kujiravalopertestvalidator',
-      description: {
-        moniker: 'test'
-      },
-      jailed: false
-    }
-  ]
-))
-
 function mockCancelVault(success = true) {
   const execute = jest.fn();
   const msg = {
@@ -65,21 +54,24 @@ function mockCancelVault(success = true) {
   return execute;
 }
 
-function renderTarget() {
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Page />
-    </QueryClientProvider>,
-  );
+async function renderTarget() {
+  act(() => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>,
+    );
+  });
 }
 
 describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockValidators();
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockCancelVault());
-    renderTarget();
+    await renderTarget();
     await waitFor(() => expect(screen.getByTestId('details-heading').textContent).toBe('DEMO to KUJI - Weekly'));
   });
   describe('next swap', () => {
@@ -87,7 +79,7 @@ describe('Detail page', () => {
       it('does not render next swap', async () => {
         mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => expect(screen.queryAllByTestId('next-swap-info')).toEqual([]));
       });
     });
@@ -96,7 +88,7 @@ describe('Detail page', () => {
         it('renders next swap', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('May 22, 2022 at 5:00 PM'));
         });
       });
@@ -104,7 +96,7 @@ describe('Detail page', () => {
         it('renders next swap', async () => {
           mockUseWallet(mockUseStrategy({ trigger: mockPriceTrigger }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('When 1 KUJI ≤ 0.5 DEMO'));
         });
       });
@@ -116,7 +108,7 @@ describe('Detail page', () => {
         it('renders active', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('active'));
         });
       });
@@ -124,7 +116,7 @@ describe('Detail page', () => {
         it('renders scheduled', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'scheduled' }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('scheduled'));
         });
       });
@@ -132,7 +124,7 @@ describe('Detail page', () => {
         it('renders completed', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('completed'));
         });
       });
@@ -142,7 +134,7 @@ describe('Detail page', () => {
         it('renders name', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
         });
       });
@@ -150,7 +142,7 @@ describe('Detail page', () => {
         it('renders name', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ position_type: 'exit' }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
         });
       });
@@ -160,7 +152,7 @@ describe('Detail page', () => {
         it('renders type', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA In'));
         });
       });
@@ -168,7 +160,7 @@ describe('Detail page', () => {
         it('renders type', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ position_type: 'exit' }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA Out'));
         });
       });
@@ -178,7 +170,7 @@ describe('Detail page', () => {
         it('renders start date', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('-'));
         });
       });
@@ -186,7 +178,7 @@ describe('Detail page', () => {
         it('renders start date', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('May 21, 2022'));
         });
       });
@@ -196,7 +188,7 @@ describe('Detail page', () => {
         it('renders end date', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-end-date').textContent).toBe('-'));
         });
       });
@@ -204,7 +196,7 @@ describe('Detail page', () => {
         it('renders end date', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-end-date').textContent).toBe('-'));
         });
       });
@@ -213,7 +205,7 @@ describe('Detail page', () => {
       it('renders cycle', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-investment-cycle').textContent).toBe('weekly'));
       });
     });
@@ -221,7 +213,7 @@ describe('Detail page', () => {
       it('renders swap amount', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-swap-amount').textContent).toBe('1 DEMO'));
       });
     });
@@ -229,7 +221,7 @@ describe('Detail page', () => {
       it('renders amount', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-current-balance').textContent).toBe('10 DEMO'));
       });
     });
@@ -243,7 +235,7 @@ describe('Detail page', () => {
             mockCancelVault(),
           );
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-auto-staking-status').textContent).toBe('Active'));
         });
         it('renders name', async () => {
@@ -254,14 +246,14 @@ describe('Detail page', () => {
             mockCancelVault(),
           );
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-validator-name').textContent).toBe('test'));
         });
       });
       describe('when auto staker is not set', () => {
         it('does not render status', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.queryByTestId('strategy-auto-staking-status')).toBeNull());
         });
       });
@@ -271,7 +263,7 @@ describe('Detail page', () => {
         it('does not render address', async () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() => expect(screen.queryByTestId('strategy-receiving-address')).toBeNull());
         });
       });
@@ -284,7 +276,7 @@ describe('Detail page', () => {
             mockCancelVault(),
           );
 
-          renderTarget();
+          await renderTarget();
           await waitFor(() =>
             expect(screen.getByTestId('strategy-receiving-address').textContent).toBe('kujiraotheraddress'),
           );
@@ -298,7 +290,7 @@ describe('Detail page', () => {
       it('opens cancel modal', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
@@ -309,7 +301,7 @@ describe('Detail page', () => {
       it('closes cancel modal', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
@@ -322,7 +314,7 @@ describe('Detail page', () => {
       it('cancels strategy, redirects and shows toast', async () => {
         mockUseWallet(mockUseStrategy(), mockCancelVault());
 
-        renderTarget();
+        await renderTarget();
         await waitFor(() => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
@@ -347,7 +339,7 @@ describe('Detail page', () => {
     it('closes and shows toast', async () => {
       mockUseWallet(mockUseStrategy(), mockCancelVault(false));
 
-      renderTarget();
+      await renderTarget();
       await waitFor(() => {
         fireEvent.click(screen.getByTestId('cancel-strategy-button'));
       });

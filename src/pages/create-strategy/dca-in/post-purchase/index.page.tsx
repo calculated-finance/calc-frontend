@@ -21,7 +21,6 @@ import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();
-  const { isLoading } = usePairs();
   const { nextStep } = useSteps(steps);
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
 
@@ -46,7 +45,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
             Post Purchase
           </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
                 <SendToWallet />

@@ -14,6 +14,7 @@ import executionIntervalDisplay from '../../../../helpers/executionIntervalDispl
 import TriggerTypes from '../../../../models/TriggerTypes';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
 import SendToWallet from '../post-purchase/SendToWallet';
+import 'isomorphic-fetch';
 
 export default function Summary() {
   const { state } = useConfirmForm();
@@ -21,9 +22,7 @@ export default function Summary() {
   const { data, isLoading } = useQuery(
     ['validator', state?.autoStakeValidator],
     async () => {
-      const response = await fetch(
-        `${REST_ENDPOINT}/cosmos/staking/v1beta1/validators/${state?.autoStakeValidator}`,
-      );
+      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators/${state?.autoStakeValidator}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

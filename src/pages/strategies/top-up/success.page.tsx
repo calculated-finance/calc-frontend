@@ -6,14 +6,13 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getTimeSaved } from '../../../helpers/getTimeSaved';
 import { getDenomName, getStrategyInitialDenom } from '../../../helpers/getInitialDenom';
 import { topUpSteps } from './index.page';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId, deposit, swapAmount } = query;
+  const { strategyId, timeSaved } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -32,8 +31,6 @@ function Success() {
 
   const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));
 
-  const timeSaved = getTimeSaved(
-    parseFloat(deposit as string), parseFloat(swapAmount as string));
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
