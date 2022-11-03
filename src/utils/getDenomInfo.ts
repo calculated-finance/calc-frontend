@@ -88,5 +88,8 @@ const getDenomInfo = (denom?: string) => {
 export function isDenomStable(denom: Denom) {
   return getDenomInfo(denom).stable;
 }
+export function isDenomVolatile(denom: Denom) {
+  return !isDenomStable(denom);
+}
 
 export default getDenomInfo;
