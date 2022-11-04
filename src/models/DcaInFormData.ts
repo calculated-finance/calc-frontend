@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
+import { Coin } from '@cosmjs/stargate';
 
 export const initialValues = {
   resultingDenom: '',
@@ -53,7 +54,7 @@ export const allValidationSchema = Yup.object({
         if (!balances || !value || value <= 0) {
           return true;
         }
-        const amount = balances.find((balance: any) => balance.denom === context.parent.initialDenom)?.amount;
+        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
         if (!amount) {
           return false;
         }

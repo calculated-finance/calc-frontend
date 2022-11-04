@@ -36,6 +36,7 @@ import useValidators from '@hooks/useValidators';
 import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
 import strategy from 'src/fixtures/strategy';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { Denom } from '@models/Denom';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
@@ -44,7 +45,7 @@ import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
 import { CancelButton } from './CancelButton';
 
-function Diagram({ initialDenom, resultingDenom }: any) {
+function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (

@@ -24,11 +24,13 @@ import { useWalletModal } from 'src/hooks/useWalletModal';
 import useBalances from '@hooks/useBalances';
 import getDenomInfo from '@utils/getDenomInfo';
 import { CopytoclipboardIcon, Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
+import { Coin } from '@cosmjs/stargate';
 import CalcIcon from './Icon';
 import TokenBox from './TokenBox';
 
 function SpendableBalances() {
   const { data } = useBalances();
+
   return (
     <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
       <GridItem colSpan={1}>
@@ -42,14 +44,13 @@ function SpendableBalances() {
       <GridItem colSpan={3}>
         <Divider />
       </GridItem>
-
-      {data?.balances.map((balance: any) => {
+      {data?.balances.map((balance: Coin) => {
         const { name, conversion } = getDenomInfo(balance.denom);
         return (
           <>
             <GridItem colSpan={1}>
               <Text fontSize="xs" noOfLines={1}>
-                {conversion(balance.amount)}
+                {conversion(Number(balance.amount))}
               </Text>
             </GridItem>
             <GridItem colSpan={2}>

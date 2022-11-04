@@ -7,7 +7,7 @@ import {
   step2ValidationSchema,
 } from '../models/DcaInFormData';
 
-function updateAction(state: any, payload: any) {
+function updateAction(state: object, payload: object) {
   return {
     ...state,
     ...payload,
