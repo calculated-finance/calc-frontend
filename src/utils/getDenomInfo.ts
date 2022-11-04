@@ -1,6 +1,5 @@
 import { Denom, Denoms } from '@models/Denom';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
-import DenomAmount from 'src/models/DenomAmount';
 
 type DenomInfo = {
   name: string;
