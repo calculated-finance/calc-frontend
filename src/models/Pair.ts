@@ -1,8 +1,3 @@
-import { Addr } from 'src/interfaces/generated/execute';
-import { Denom } from './Denom';
+import { Pair as GeneratedPair } from 'src/interfaces/generated/response/get_pairs';
 
-export type Pair = {
-  address: Addr;
-  base_denom: Denom;
-  quote_denom: Denom;
-};
+export type Pair = GeneratedPair;

@@ -3,8 +3,9 @@ import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import getDenomInfo from '@utils/getDenomInfo';
+import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 
 const useTopUpStrategy = () => {
   const { address, signingClient: client } = useWallet();
@@ -16,7 +17,7 @@ const useTopUpStrategy = () => {
         vault_id: id,
         address,
       },
-    };
+    } as ExecuteMsg;
 
     const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
 

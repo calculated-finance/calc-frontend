@@ -8,7 +8,10 @@ export function mockValidators() {
     .get('/cosmos/staking/v1beta1/validators')
     .query({ 'pagination.limit': '1000' })
     .reply(200, {
-      page: '1',
+      pagination: {
+        next_key: '',
+        total: '',
+      },
       validators: [
         {
           operator_address: 'kujiravalopertestvalidator',

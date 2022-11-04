@@ -30,7 +30,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
-import useStrategyEvents from '@hooks/useStrategyEvents';
+import useStrategyEvents, { Event, EventData } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import useValidators from '@hooks/useValidators';
 import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
@@ -62,6 +62,26 @@ function Diagram({ initialDenom, resultingDenom }: any) {
   );
 }
 
+function didLastSwapHaveSlippageError(events: Event[] | undefined) {
+  const lastEventData = events?.slice(-1)[0]?.data;
+
+  if (!events) {
+    return false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (lastEventData.d_c_a_vault_execution_skipped) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (lastEventData.d_c_a_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function Page() {
   const router = useRouter();
   const { id } = router.query;
@@ -75,21 +95,9 @@ function Page() {
 
   const validators = useValidators();
 
-  // stats
-  const completedEvents = eventsData?.events
-    .filter((event: any) => event.data?.d_c_a_vault_execution_completed !== undefined)
-    .map((event: any) => event.data?.d_c_a_vault_execution_completed);
+  const events = eventsData?.events;
 
-  const marketValueAmount = completedEvents
-    ?.map((event: any) => event?.received.amount)
-    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
-
-  const costAmount = completedEvents
-    ?.map((event: any) => event?.sent.amount)
-    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
-
-  const lastSwapSlippageError =
-    eventsData?.events?.slice(-1)[0]?.data?.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
+  const lastSwapSlippageError = didLastSwapHaveSlippageError(events);
 
   if (!data || !validators) {
     return (
@@ -98,6 +106,10 @@ function Page() {
       </Center>
     );
   }
+
+  const marketValueAmount = data.vault.swapped_amount.amount;
+
+  const costAmount = data.vault.received_amount.amount;
 
   const { time_interval, swap_amount, balance, destinations } = data.vault;
   const initialDenom = getStrategyInitialDenom(data.vault);

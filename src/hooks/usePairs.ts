@@ -1,12 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
 import { Denom } from '../models/Denom';
 import { Pair } from '../models/Pair';
-
-type Response = {
-  pairs: Pair[];
-};
 
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom)));
@@ -29,7 +26,7 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pai
 export default function usePairs() {
   const { client } = useWallet();
 
-  return useQuery<Response>(
+  return useQuery<PairsResponse>(
     ['pairs', client],
     async () => {
       const result = await client!.queryContractSmart(CONTRACT_ADDRESS, {
