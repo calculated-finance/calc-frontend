@@ -42,7 +42,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
         });
         onCancel();
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         toast({
           title: 'Something went wrong',
           position: 'top-right',

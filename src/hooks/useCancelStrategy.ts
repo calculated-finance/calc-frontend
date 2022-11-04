@@ -1,3 +1,4 @@
+import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { useMutation } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
@@ -7,7 +8,7 @@ import { Strategy } from './useStrategies';
 const useCancelStrategy = () => {
   const { address, signingClient: client } = useWallet();
 
-  return useMutation((strategyId: Strategy['id']) => {
+  return useMutation<ExecuteResult, Error, Strategy['id']>((strategyId: Strategy['id']) => {
     if (client == null) {
       throw new Error('no client');
     }

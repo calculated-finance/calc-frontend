@@ -4,7 +4,13 @@ import getDenomInfo from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
 import arrow from '../pages/create-strategy/dca-in/confirm-purchase/arrow.json';
 
-export default function DcaDiagram({ initialDenom, initialDeposit, resultingDenom }: any) {
+type DcaDiagramProps = {
+  initialDenom: string;
+  initialDeposit?: string | number;
+  resultingDenom: string;
+};
+
+export default function DcaDiagram({ initialDenom, initialDeposit, resultingDenom }: DcaDiagramProps) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
@@ -12,7 +18,8 @@ export default function DcaDiagram({ initialDenom, initialDeposit, resultingDeno
       <HStack>
         <DenomIcon denomName={initialDenom} />
         <Text>
-          {initialDeposit}&nbsp;{initialDenomName}
+          {Boolean(initialDeposit) && <>{initialDeposit}&nbsp;</>}
+          {initialDenomName}
         </Text>
       </HStack>
       <Lottie animationData={arrow} loop />

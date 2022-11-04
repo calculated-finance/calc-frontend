@@ -1,6 +1,11 @@
 import { set } from 'lodash';
 import * as Yup from 'yup';
 
+function getErrorName(error: unknown) {
+  if (error instanceof Error) return error.name;
+  return String(error);
+}
+
 const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
   const validate = (values: Yup.InferType<typeof validationSchema>) => {
     try {
@@ -8,16 +13,19 @@ const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
         abortEarly: false,
         context,
       });
-    } catch (error: any) {
-      if (error.name !== 'ValidationError') {
+    } catch (error) {
+      if (getErrorName(error) !== 'ValidationError') {
         throw error;
       }
-
-      return error.inner.reduce((errors: Yup.ValidationError[], currentError: Yup.ValidationError) => {
-        // eslint-disable-next-line no-param-reassign
-        errors = set(errors, currentError.path as string, currentError.message);
-        return errors;
-      }, {});
+      if (error instanceof Yup.ValidationError) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return error.inner.reduce((errors: Yup.ValidationError[], currentError) => {
+          // eslint-disable-next-line no-param-reassign
+          errors = set(errors, currentError.path as string, currentError.message);
+          return errors;
+        }, {});
+      }
     }
     return {};
   };

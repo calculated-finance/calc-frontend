@@ -6,11 +6,21 @@ import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
+import { Denom } from '@models/Denom';
+import { Strategy } from './useStrategies';
+
+type TopUpVariables = {
+  values: {
+    topUpAmount: number;
+  };
+  initialDenom: Denom;
+  id: Strategy['id'];
+};
 
 const useTopUpStrategy = () => {
   const { address, signingClient: client } = useWallet();
 
-  return useMutation<ExecuteResult, Error, any, any>(({ values, initialDenom, id }) => {
+  return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, id }) => {
     const { deconversion } = getDenomInfo(initialDenom);
     const msg = {
       deposit: {
