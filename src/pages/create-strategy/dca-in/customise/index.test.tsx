@@ -9,7 +9,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import timekeeper from 'timekeeper';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
-import { ChangeEvent, ChangeEventHandler } from 'react';
+import { ChangeEvent } from 'react';
 import Page from './index.page';
 
 const mockRouter = {
@@ -35,10 +35,10 @@ jest.mock('chakra-dayzed-datepicker', () => ({
     date,
     ...props
   }: {
-    onDateChange: ChangeEventHandler<HTMLInputElement>;
+    onDateChange: (value: string) => void;
   } & Omit<SingleDatepickerProps, 'onDateChange'>) => {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      onDateChange(event);
+      onDateChange(event.target.value);
     };
 
     return (
