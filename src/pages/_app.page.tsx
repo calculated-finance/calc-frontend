@@ -2,7 +2,6 @@ import type { AppProps } from 'next/app';
 import '@fontsource/karla';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import type { NextPage } from 'next';
-import { KeplrWalletAdapter } from '@wizard-ui/core';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -12,6 +11,7 @@ import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
 import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
