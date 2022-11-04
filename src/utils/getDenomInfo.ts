@@ -1,4 +1,5 @@
-import { Denom } from '@models/Denom';
+import { Denom, Denoms } from '@models/Denom';
+import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 import DenomAmount from 'src/models/DenomAmount';
 
 type DenomInfo = {
@@ -20,40 +21,40 @@ const defaultDenom = {
 };
 
 const denoms: Record<string, DenomInfo> = {
-  [Denom.Demo]: {
+  [Denoms.Demo]: {
     name: 'DEMO',
     stable: true,
   },
-  [Denom.USK]: {
+  [Denoms.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
     stakeable: false,
     stable: true,
   },
-  [Denom.Kuji]: {
+  [Denoms.Kuji]: {
     name: 'KUJI',
 
     icon: '/images/denoms/kuji.svg',
   },
-  [Denom.AXL]: {
+  [Denoms.AXL]: {
     name: 'axlUSDC',
     icon: '/images/denoms/axl.svg',
     stakeable: false,
     stable: true,
   },
-  [Denom.LUNA]: {
+  [Denoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
   },
-  [Denom.OSMO]: {
+  [Denoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
   },
-  [Denom.NBTC]: {
+  [Denoms.NBTC]: {
     name: 'NBTC',
     stakeable: false,
   },
-  [Denom.LOCAL]: {
+  [Denoms.LOCAL]: {
     name: 'Local',
     stakeable: false,
   },
@@ -64,9 +65,9 @@ export class DenomValue {
 
   readonly amount: number;
 
-  constructor(denomAmount: DenomAmount) {
+  constructor(denomAmount: Coin) {
     // make this not option and handle code when loading
-    this.denomId = denomAmount?.denom;
+    this.denomId = denomAmount.denom;
     this.amount = Number(denomAmount?.amount);
   }
 

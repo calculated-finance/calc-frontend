@@ -11,6 +11,7 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { useConfirmForm } from './useDcaInForm';
@@ -22,7 +23,7 @@ function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
 }
 
-function getMessageAndFunds(state: any, pairs: Pair[]) {
+function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: ExecuteMsg; funds: Coin[] } {
   const {
     initialDenom,
     resultingDenom,
@@ -43,6 +44,10 @@ function getMessageAndFunds(state: any, pairs: Pair[]) {
   // (usePair might not have fetched yet)
 
   const pairAddress = findPair(pairs, resultingDenom, initialDenom);
+
+  if (!pairAddress) {
+    throw new Error('Pair not found');
+  }
 
   const { deconversion } = getDenomInfo(initialDenom);
 
@@ -75,7 +80,7 @@ function getMessageAndFunds(state: any, pairs: Pair[]) {
         advancedSettings && slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : undefined,
       destinations: destinations.length ? destinations : undefined,
     },
-  } as ExecuteMsg;
+  };
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
   return { msg, funds };

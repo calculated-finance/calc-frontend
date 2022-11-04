@@ -1,4 +1,4 @@
-import { Denom } from '@models/Denom';
+import { Denom, Denoms } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 import AutoStakeValues from 'src/models/AutoStakeValues';
 import SendToWalletValues from 'src/models/SendToWalletValues';
@@ -33,11 +33,11 @@ export const initialValues = {
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
   resultingDenom: Yup.mixed<Denom>()
-    .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
+    .oneOf(Object.values(Denoms), ({ label }) => `${label} is required.`)
     .label('Resulting Denom')
     .required(),
   initialDenom: Yup.mixed<Denom>()
-    .oneOf(Object.values(Denom), ({ label }) => `${label} is required.`)
+    .oneOf(Object.values(Denoms), ({ label }) => `${label} is required.`)
     .label('Initial Denom')
     .required(),
   initialDeposit: Yup.number()

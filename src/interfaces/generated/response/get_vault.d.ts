@@ -61,7 +61,7 @@ export type Uint128 = string;
  * The greatest possible value that can be represented is 115792089237316195423570985008687907853269984665640564039457.584007913129639935 (which is (2^256 - 1) / 10^18)
  */
 export type Decimal256 = string;
-export type PostExecutionAction = "send" | "z_delegate";
+export type PostExecutionAction = 'send' | 'z_delegate';
 /**
  * A human readable address.
  *
@@ -78,9 +78,9 @@ export type Addr = string;
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
-export type PositionType = "enter" | "exit";
-export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
-export type TimeInterval = "hourly" | "daily" | "weekly" | "monthly";
+export type PositionType = 'enter' | 'exit';
+export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
+export type TimeInterval = 'hourly' | 'daily' | 'weekly' | 'monthly';
 
 export interface VaultResponse {
   trigger?: Trigger | null;
