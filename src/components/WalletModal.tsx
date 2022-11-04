@@ -3,7 +3,7 @@ import type { WalletName } from '@wizard-ui/core';
 import { WalletReadyState } from '@wizard-ui/core';
 
 // import { Collapse } from "./Collapse";
-import { Box, Center, Link, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
+import { Box, Center, Link, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { useWalletModal } from '../hooks/useWalletModal';
 import { WalletListItem } from './WalletListItem';
@@ -61,15 +61,21 @@ function WalletModal() {
           <>
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
             <ModalBody p={4}>
-              <Box pb={4}>
-                {installedWallets.map((wallet) => (
-                  <WalletListItem
-                    key={wallet.adapter.name}
-                    handleClick={() => handleWalletClick(wallet.adapter.name)}
-                    wallet={wallet}
-                  />
-                ))}
-              </Box>
+              {installedWallets.length ? (
+                installedWallets.map((wallet) => (
+                  <Box pb={4}>
+                    <WalletListItem
+                      key={wallet.adapter.name}
+                      handleClick={() => handleWalletClick(wallet.adapter.name)}
+                      wallet={wallet}
+                    />
+                  </Box>
+                ))
+              ) : (
+                <Center pb={8}>
+                  <Text textStyle="body">No wallet extensions found</Text>
+                </Center>
+              )}
               <Center>
                 <Link href="/">What&apos;s a Wallet?</Link>
               </Center>
