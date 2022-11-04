@@ -9,12 +9,14 @@ export function StrategyStatusBadge({ strategy }: { strategy: Strategy }) {
     active: 'green',
     scheduled: 'yellow',
     completed: 'blue',
+    cancelled: 'grey',
   };
 
   const statusTooltips = {
     active: 'Your strategy has started',
     scheduled: 'Your strategy is scheduled to start',
     completed: 'Your strategy has completed',
+    cancelled: 'Your strategy has been cancelled',
   };
 
   return (

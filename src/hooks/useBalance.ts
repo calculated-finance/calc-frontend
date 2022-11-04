@@ -1,3 +1,4 @@
+import { Coin } from '@cosmjs/stargate';
 import { useQuery } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
@@ -13,7 +14,7 @@ interface UseBalanceArgs {
 const useBalance = ({ token }: UseBalanceArgs) => {
   const { address, client } = useWallet();
 
-  const result = useQuery(
+  const result = useQuery<Coin>(
     ['balance', token, address, client],
     () => {
       if (!client) {

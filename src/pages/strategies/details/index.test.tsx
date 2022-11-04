@@ -219,7 +219,9 @@ describe('Detail page', () => {
         it('renders status', async () => {
           mockUseWallet(
             mockUseStrategy({
-              vault: mockStrategy({ destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1' }] }),
+              vault: mockStrategy({
+                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
+              }),
             }),
             mockCancelVault(),
           );
@@ -230,7 +232,9 @@ describe('Detail page', () => {
         it('renders name', async () => {
           mockUseWallet(
             mockUseStrategy({
-              vault: mockStrategy({ destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1' }] }),
+              vault: mockStrategy({
+                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
+              }),
             }),
             mockCancelVault(),
           );
@@ -260,7 +264,9 @@ describe('Detail page', () => {
         it('renders address', async () => {
           mockUseWallet(
             mockUseStrategy({
-              vault: mockStrategy({ destinations: [{ address: 'kujiraotheraddress', allocation: '1' }] }),
+              vault: mockStrategy({
+                destinations: [{ address: 'kujiraotheraddress', allocation: '1', action: 'send' }],
+              }),
             }),
             mockCancelVault(),
           );

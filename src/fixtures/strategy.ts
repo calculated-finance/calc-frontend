@@ -23,10 +23,19 @@ export default {
   trigger_id: '1',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
+  received_amount: {
+    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+    amount: '1000000', // 1 DEMO
+  },
+  swapped_amount: {
+    denom: 'ukuji',
+    amount: '1000000', // 1 UKUJI
+  },
   destinations: [
     {
       address: 'kujitestwallet',
       allocation: '1',
+      action: 'send',
     },
   ],
 } as Strategy;
@@ -52,10 +61,19 @@ export const dcaOutStrategy = {
   trigger_id: '1',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
+  swapped_amount: {
+    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+    amount: '1000000', // 1 DEMO
+  },
+  received_amount: {
+    denom: 'ukuji',
+    amount: '1000000', // 1 UKUJI
+  },
   destinations: [
     {
       address: 'kujitestwallet',
       allocation: '1',
+      action: 'send',
     },
   ],
 } as Strategy;

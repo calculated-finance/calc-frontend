@@ -3,7 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { Denom } from '@models/Denom';
+import { Denoms } from '@models/Denom';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -26,7 +26,7 @@ function Page() {
 
   const stakeingPossible = getDenomInfo(context.resultingDenom).stakeable;
 
-  const stakeingUnsupported = context.resultingDenom !== Denom.Kuji;
+  const stakeingUnsupported = context.resultingDenom !== Denoms.Kuji;
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchema, { context });

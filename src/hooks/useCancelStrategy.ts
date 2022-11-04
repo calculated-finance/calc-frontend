@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { ExecuteMsg } from 'src/interfaces/generated/execute';
 import { Strategy } from './useStrategies';
 
 const useCancelStrategy = () => {
@@ -20,7 +21,7 @@ const useCancelStrategy = () => {
         address,
         vault_id: strategyId,
       },
-    };
+    } as ExecuteMsg;
 
     return client.execute(address, CONTRACT_ADDRESS, msg, 'auto');
   });

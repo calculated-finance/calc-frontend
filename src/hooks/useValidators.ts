@@ -9,7 +9,13 @@ export type Validator = {
   jailed: boolean;
 };
 
-export type ValidatorsResponse = { page: any; validators: Validator[] };
+export type ValidatorsResponse = {
+  pagination: {
+    next_key: string;
+    total: string;
+  };
+  validators: Validator[];
+};
 
 const useValidators = (): Validator[] | undefined => {
   const pageSize = 1000;

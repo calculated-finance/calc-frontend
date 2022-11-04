@@ -1,18 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { Trigger } from '../models/Trigger';
+import { QueryMsg } from 'src/interfaces/generated/query';
+import { VaultResponse } from 'src/interfaces/generated/response/get_vault';
 import { Strategy } from './useStrategies';
-
-export type UseStrategyResponse = {
-  vault: Strategy;
-  trigger: Trigger;
-};
 
 export default function useStrategy(id?: Strategy['id']) {
   const { address, client } = useWallet();
 
-  return useQuery<UseStrategyResponse, Error>(
+  return useQuery<VaultResponse, Error>(
     ['strategy', address, id, client],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
@@ -20,7 +16,7 @@ export default function useStrategy(id?: Strategy['id']) {
           vault_id: id,
           address,
         },
-      }),
+      } as QueryMsg),
     {
       enabled: !!address && !!client && !!id,
     },

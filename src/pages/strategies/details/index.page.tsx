@@ -30,7 +30,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
-import useStrategyEvents from '@hooks/useStrategyEvents';
+import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import useValidators from '@hooks/useValidators';
 import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
@@ -62,6 +62,26 @@ function Diagram({ initialDenom, resultingDenom }: any) {
   );
 }
 
+function didLastSwapHaveSlippageError(events: Event[] | undefined) {
+  const lastEventData = events?.slice(-1)[0]?.data;
+
+  if (!events) {
+    return false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (lastEventData.d_c_a_vault_execution_skipped) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (lastEventData.d_c_a_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function Page() {
   const router = useRouter();
   const { id } = router.query;
@@ -75,21 +95,9 @@ function Page() {
 
   const validators = useValidators();
 
-  // stats
-  const completedEvents = eventsData?.events
-    .filter((event: any) => event.data?.d_c_a_vault_execution_completed !== undefined)
-    .map((event: any) => event.data?.d_c_a_vault_execution_completed);
+  const events = eventsData?.events;
 
-  const marketValueAmount = completedEvents
-    ?.map((event: any) => event?.received.amount)
-    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
-
-  const costAmount = completedEvents
-    ?.map((event: any) => event?.sent.amount)
-    .reduce((total: number, amount: number) => Number(amount) + Number(total), 0);
-
-  const lastSwapSlippageError =
-    eventsData?.events?.slice(-1)[0]?.data?.d_c_a_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded';
+  const lastSwapSlippageError = didLastSwapHaveSlippageError(events);
 
   if (!data || !validators) {
     return (
@@ -98,6 +106,10 @@ function Page() {
       </Center>
     );
   }
+
+  const marketValueAmount = data.vault.swapped_amount.amount;
+
+  const costAmount = data.vault.received_amount.amount;
 
   const { time_interval, swap_amount, balance, destinations } = data.vault;
   const initialDenom = getStrategyInitialDenom(data.vault);
@@ -113,41 +125,43 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
-  const targetTime = data?.trigger?.configuration?.time?.target_time;
-
-  const targetPrice = data?.trigger?.configuration.f_i_n_limit_order?.target_price;
-
+  const trigger = data?.trigger;
   let nextSwapInfo;
-  if (isStrategyOperating(data.vault)) {
-    if (targetTime) {
-      const nextSwapDate = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleDateString(
-        'en-US',
-        {
+
+  if (trigger) {
+    const { configuration } = trigger;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { time, f_i_n_limit_order } = configuration;
+    const targetTime = time?.target_time;
+
+    const targetPrice = f_i_n_limit_order?.target_price;
+
+    if (isStrategyOperating(data.vault)) {
+      if (targetTime) {
+        const nextSwapDate = new Date(Number(time?.target_time) / 1000000).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
-        },
-      );
+        });
 
-      const nextSwapTime = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleTimeString(
-        'en-US',
-        {
+        const nextSwapTime = new Date(Number(time?.target_time) / 1000000).toLocaleTimeString('en-US', {
           minute: 'numeric',
           hour: 'numeric',
-        },
-      );
-      nextSwapInfo = (
-        <>
-          {nextSwapDate} at {nextSwapTime}
-        </>
-      );
-    } else if (targetPrice) {
-      nextSwapInfo = (
-        <>
-          When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
-          {getDenomInfo(initialDenom).name}
-        </>
-      );
+        });
+        nextSwapInfo = (
+          <>
+            {nextSwapDate} at {nextSwapTime}
+          </>
+        );
+      } else if (targetPrice) {
+        nextSwapInfo = (
+          <>
+            When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
+            {getDenomInfo(initialDenom).name}
+          </>
+        );
+      }
     }
   }
 
