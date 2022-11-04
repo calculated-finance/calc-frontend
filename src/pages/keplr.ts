@@ -3,7 +3,7 @@ import { Keplr as WindowKeplr } from '@keplr-wallet/types';
 import { SigningCosmWasmClient, SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { StdFee } from '@cosmjs/stargate';
-import { CHAIN_INFO, TESTNET } from 'kujira.js';
+import { CHAIN_INFO } from 'kujira.js';
 
 import {
   WalletName,
@@ -21,6 +21,7 @@ import {
   WalletSignTransactionError,
   WalletDisconnectedError,
 } from '@wizard-ui/core';
+import { CHAIN_ID } from 'src/constants';
 
 interface KeplrWallet extends SigningCosmWasmClient {
   address?: any;
@@ -136,7 +137,7 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
       let wallet = null;
       let accounts = null;
 
-      const config = CHAIN_INFO[TESTNET];
+      const config = CHAIN_INFO[CHAIN_ID];
 
       try {
         await window.keplr!.experimentalSuggestChain({
@@ -155,7 +156,7 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
       } catch (error: any) {
         throw new WalletConnectionError(error?.message, error);
       }
-      if (accounts.length == 0) throw new WalletAccountError();
+      if (accounts.length === 0) throw new WalletAccountError();
 
       let address: any;
       try {
