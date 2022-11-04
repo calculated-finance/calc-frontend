@@ -6,7 +6,7 @@
  */
 
 export type EventData =
-  | ("d_c_a_vault_created" | "d_c_a_vault_cancelled" | "d_c_a_vault_delegation_failed")
+  | ('d_c_a_vault_created' | 'd_c_a_vault_cancelled' | 'd_c_a_vault_delegation_failed')
   | {
       d_c_a_vault_funds_deposited: {
         amount: Coin;
@@ -58,7 +58,7 @@ export type Uint128 = string;
  */
 export type Decimal256 = string;
 export type ExecutionSkippedReason =
-  | ("slippage_tolerance_exceeded" | "insufficient_funds" | "unknown_failure")
+  | ('slippage_tolerance_exceeded' | 'insufficient_funds' | 'unknown_failure')
   | {
       price_threshold_exceeded: {
         price: Decimal256;

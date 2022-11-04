@@ -2,9 +2,9 @@
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockTimeTrigger } from 'src/fixtures/trigger';
-import { UseStrategyResponse } from '@hooks/useStrategy';
 import strategy from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
+import { VaultResponse } from 'src/interfaces/generated/response/get_vault';
 
 export function mockStrategy(data?: Partial<Strategy>) {
   return {
@@ -13,7 +13,7 @@ export function mockStrategy(data?: Partial<Strategy>) {
   };
 }
 
-export function mockUseStrategy(data: Partial<UseStrategyResponse> = {}) {
+export function mockUseStrategy(data: Partial<VaultResponse> = {}) {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
     .calledWith(CONTRACT_ADDRESS, {

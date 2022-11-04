@@ -67,8 +67,8 @@ export class DenomValue {
 
   constructor(denomAmount: Coin) {
     // make this not option and handle code when loading
-    this.denomId = denomAmount.denom;
-    this.amount = Number(denomAmount?.amount);
+    this.denomId = denomAmount?.denom || '';
+    this.amount = Number(denomAmount?.amount || 0);
   }
 
   toConverted() {

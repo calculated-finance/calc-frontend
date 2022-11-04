@@ -30,7 +30,7 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
-import useStrategyEvents, { Event, EventData } from '@hooks/useStrategyEvents';
+import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import useValidators from '@hooks/useValidators';
 import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
@@ -125,41 +125,43 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
-  const targetTime = data?.trigger?.configuration?.time?.target_time;
-
-  const targetPrice = data?.trigger?.configuration.f_i_n_limit_order?.target_price;
-
+  const trigger = data?.trigger;
   let nextSwapInfo;
-  if (isStrategyOperating(data.vault)) {
-    if (targetTime) {
-      const nextSwapDate = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleDateString(
-        'en-US',
-        {
+
+  if (trigger) {
+    const { configuration } = trigger;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { time, f_i_n_limit_order } = configuration;
+    const targetTime = time?.target_time;
+
+    const targetPrice = f_i_n_limit_order?.target_price;
+
+    if (isStrategyOperating(data.vault)) {
+      if (targetTime) {
+        const nextSwapDate = new Date(Number(time?.target_time) / 1000000).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
-        },
-      );
+        });
 
-      const nextSwapTime = new Date(Number(data.trigger.configuration.time?.target_time) / 1000000).toLocaleTimeString(
-        'en-US',
-        {
+        const nextSwapTime = new Date(Number(time?.target_time) / 1000000).toLocaleTimeString('en-US', {
           minute: 'numeric',
           hour: 'numeric',
-        },
-      );
-      nextSwapInfo = (
-        <>
-          {nextSwapDate} at {nextSwapTime}
-        </>
-      );
-    } else if (targetPrice) {
-      nextSwapInfo = (
-        <>
-          When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
-          {getDenomInfo(initialDenom).name}
-        </>
-      );
+        });
+        nextSwapInfo = (
+          <>
+            {nextSwapDate} at {nextSwapTime}
+          </>
+        );
+      } else if (targetPrice) {
+        nextSwapInfo = (
+          <>
+            When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
+            {getDenomInfo(initialDenom).name}
+          </>
+        );
+      }
     }
   }
 
