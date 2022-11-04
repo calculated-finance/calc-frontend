@@ -37,6 +37,7 @@ import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFrom
 import strategy from 'src/fixtures/strategy';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';
+import ConnectWallet from '@components/ConnectWallet';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
@@ -95,6 +96,12 @@ function Page() {
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
   const validators = useValidators();
+
+  const { connected } = useWallet();
+
+  if (!connected) {
+    return <ConnectWallet layerStyle="panel" />;
+  }
 
   const events = eventsData?.events;
 
