@@ -2557,7 +2557,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@keplr-wallet/types@^0.11.12":
+"@keplr-wallet/types@^0.11.12", "@keplr-wallet/types@^0.11.16":
   version "0.11.16"
   resolved "https://registry.yarnpkg.com/@keplr-wallet/types/-/types-0.11.16.tgz#5080c3f01f89b607ee7167c32d2e59a6d0f614ea"
   integrity sha512-jkBWj6bcw6BZqPavLms3EcaK6YG4suoTPA9PuO6+eFjj7TomUrzzYdhXyc7Mm0K/KVEz5CjPxjmx7LsPuWYKgg==
