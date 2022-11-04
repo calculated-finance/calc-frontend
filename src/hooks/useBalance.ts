@@ -20,7 +20,10 @@ const useBalance = ({ token }: UseBalanceArgs) => {
       if (!client) {
         throw new Error('Client not initialized');
       }
-      return client.getBalance(address!, token ?? '');
+      if (!address) {
+        throw new Error('No address provided');
+      }
+      return client.getBalance(address, token ?? '');
     },
     {
       enabled: !!token && !!address && !!client,

@@ -30,7 +30,6 @@ import TokenBox from './TokenBox';
 
 function SpendableBalances() {
   const { data } = useBalances();
-  console.log(data);
 
   return (
     <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
