@@ -75,7 +75,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text fontSize="sm">Cadence:</Text>
+        <Text fontSize="sm">Interval:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
           {strategy.time_interval}
         </Text>
