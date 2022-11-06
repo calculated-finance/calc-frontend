@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { FormNames, useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
@@ -19,7 +19,7 @@ const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
 
 export default function SendToWallet() {
   const [field, , helpers] = useField({ name: 'sendToWallet' });
-  const { context } = useDcaInFormPostPurchase();
+  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,

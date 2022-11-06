@@ -28,7 +28,7 @@ function getUpdateAction(formName: FormNames) {
 }
 
 function getResetAction(formName: FormNames) {
-  function resetAction(state: any, payload: any) {
+  function resetAction(state: any) {
     return {
       ...state,
       [formName]: allValidationSchema.cast(initialValues, { stripUnknown: true }),

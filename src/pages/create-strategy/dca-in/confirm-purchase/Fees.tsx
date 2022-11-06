@@ -1,6 +1,6 @@
 import { Box, Button, Collapse, Fade, Flex, Heading, Icon, Spacer, Stack, Text, useBoolean } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
@@ -104,7 +104,7 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
 }
 
 export default function Fees() {
-  const { state } = useConfirmForm();
+  const { state } = useConfirmForm(FormNames.DcaIn);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.

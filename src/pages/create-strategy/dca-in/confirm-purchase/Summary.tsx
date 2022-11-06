@@ -1,7 +1,7 @@
 import { Box, Divider, Spinner, Stack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
@@ -13,7 +13,7 @@ import TriggerTypes from '../../../../models/TriggerTypes';
 import 'isomorphic-fetch';
 
 export default function Summary() {
-  const { state } = useConfirmForm();
+  const { state } = useConfirmForm(FormNames.DcaIn);
 
   const { data, isLoading } = useQuery(
     ['validator', state?.autoStakeValidator],

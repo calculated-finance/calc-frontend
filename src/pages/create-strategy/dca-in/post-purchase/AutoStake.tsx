@@ -1,6 +1,6 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { FormNames, useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
 import SendToWalletValues from '@models/SendToWalletValues';
 import RadioCard from '../../../../components/RadioCard';
@@ -25,7 +25,7 @@ export function DummyAutoStake({
   value: AutoStakeValues;
   onChange: (value: AutoStakeValues) => void;
 }) {
-  const { context } = useDcaInFormPostPurchase() || {};
+  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn) || {};
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     value,
@@ -56,7 +56,7 @@ export function AutoStake() {
   const [field, , helpers] = useField({ name: 'autoStake' });
   const [sendToWalletField] = useField({ name: 'sendToWallet' });
 
-  const { context } = useDcaInFormPostPurchase();
+  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
