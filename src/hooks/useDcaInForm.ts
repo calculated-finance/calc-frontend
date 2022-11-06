@@ -7,15 +7,34 @@ import {
   step2ValidationSchema,
 } from '../models/DcaInFormData';
 
-function updateAction(state: object, payload: object) {
-  return {
-    ...state,
-    ...payload,
-  };
+export enum FormNames {
+  DcaIn = 'dcaIn',
+  DcaOut = 'dcaOut',
 }
 
-function resetAction() {
-  return allValidationSchema.cast(initialValues, { stripUnknown: true });
+const getFormState = (state: any, formName: FormNames) => state[formName] || {};
+
+function getUpdateAction(formName: FormNames) {
+  function updateAction(state: any, payload: any) {
+    return {
+      ...state,
+      [formName]: {
+        ...state[formName],
+        ...payload,
+      },
+    };
+  }
+  return updateAction;
+}
+
+function getResetAction(formName: FormNames) {
+  function resetAction(state: any, payload: any) {
+    return {
+      ...state,
+      [formName]: allValidationSchema.cast(initialValues, { stripUnknown: true }),
+    };
+  }
+  return resetAction;
 }
 
 export enum Steps {
@@ -23,13 +42,16 @@ export enum Steps {
   Step2 = 'step2',
 }
 
-const useDcaInForm = () => {
-  const { state, actions } = useStateMachine({ updateAction, resetAction });
+const useDcaInForm = (formName: FormNames) => {
+  const { state, actions } = useStateMachine({
+    updateAction: getUpdateAction(formName),
+    resetAction: getResetAction(formName),
+  });
 
   try {
     return {
       state: {
-        step1: step1ValidationSchema.validateSync(state, { stripUnknown: true }),
+        step1: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       },
       actions,
     };
@@ -43,11 +65,14 @@ const useDcaInForm = () => {
   }
 };
 
-export const useStep2Form = () => {
-  const { state, actions } = useStateMachine({ updateAction, resetAction });
+export const useStep2Form = (formName: FormNames) => {
+  const { state, actions } = useStateMachine({
+    updateAction: getUpdateAction(formName),
+    resetAction: getResetAction(formName),
+  });
 
   try {
-    const step1 = step1ValidationSchema.validateSync(state, { stripUnknown: true });
+    const step1 = step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
     const step2 = {
       ...step2ValidationSchema.cast(initialValues, { stripUnknown: true }),
       ...step2ValidationSchema.cast(state, { stripUnknown: true }),
@@ -67,32 +92,38 @@ export const useStep2Form = () => {
   }
 };
 
-export const useDcaInFormPostPurchase = () => {
-  const { state, actions } = useStateMachine({ updateAction, resetAction });
+export const useDcaInFormPostPurchase = (formName: FormNames) => {
+  const { state, actions } = useStateMachine({
+    updateAction: getUpdateAction(formName),
+    resetAction: getResetAction(formName),
+  });
 
   try {
     return {
-      context: step1ValidationSchema.validateSync(state, { stripUnknown: true }),
-      state: postPurchaseValidationSchema.validateSync(state, { stripUnknown: true }),
+      context: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      state: postPurchaseValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions,
     };
   } catch (e) {
     return {
-      context: step1ValidationSchema.validateSync(state, { stripUnknown: true }),
+      context: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       state: postPurchaseValidationSchema.cast(initialValues, { stripUnknown: true }),
       actions,
     };
   }
 };
 
-export const useConfirmForm = () => {
-  const { state, actions } = useStateMachine({ updateAction, resetAction });
+export const useConfirmForm = (formName: FormNames) => {
+  const { state, actions } = useStateMachine({
+    updateAction: getUpdateAction(formName),
+    resetAction: getResetAction(formName),
+  });
 
   try {
-    allValidationSchema.validateSync(state, { stripUnknown: true });
+    allValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
 
     return {
-      state: allValidationSchema.validateSync(state, { stripUnknown: true }),
+      state: allValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions,
     };
   } catch (e) {

@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
@@ -15,7 +15,7 @@ import ResultingDenom from '../ResultingDenom';
 import InitialDenom from '../InitialDenom';
 
 function DcaIn() {
-  const { actions, state } = useDcaInForm();
+  const { actions, state } = useDcaInForm(FormNames.DcaIn);
   const { isLoading } = usePairs();
   const { nextStep } = useSteps(steps);
 
