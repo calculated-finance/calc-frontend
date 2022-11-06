@@ -1,5 +1,15 @@
-import { Box, Flex, Spacer, Image, BoxProps, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
-import { ReactElement } from 'react';
+import {
+  Box,
+  Flex,
+  Spacer,
+  Image,
+  BoxProps,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { ReactElement, useEffect } from 'react';
 import CosmosWallet from '@components/CosmosWallet';
 import Link from 'next/link';
 import { useWallet } from '@wizard-ui/react';
@@ -8,7 +18,9 @@ import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
+import { useCookieState } from 'ahooks';
 import Sidebar from '../Sidebar';
+import { TermsModal } from '../TermsModal';
 
 const HEADER_HEIGHT = '64px';
 
@@ -119,6 +131,22 @@ export function getFlowLayout(page: ReactElement) {
 function SidebarLayout({ children }: { children: ReactElement }) {
   const { isPageLoading } = usePageLoad();
 
+  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement');
+
+  const agreementPreviouslyAccepted = acceptedAgreementState === 'true';
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  useEffect(() => {
+    if (!agreementPreviouslyAccepted) {
+      onOpen();
+    }
+  }, [agreementPreviouslyAccepted, onOpen]);
+
+  const onSubmit = () => {
+    setAcceptedAgreementState('true');
+  };
+
   return (
     <Sidebar>
       <AppHeaderForSidebar />
@@ -141,6 +169,7 @@ function SidebarLayout({ children }: { children: ReactElement }) {
           {children}
         </Content>
       </Box>
+      <TermsModal isOpen={isOpen} onClose={onClose} showCheckbox onSubmit={onSubmit} />
     </Sidebar>
   );
 }
