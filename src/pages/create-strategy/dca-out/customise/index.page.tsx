@@ -107,11 +107,11 @@ function Page() {
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
-                    <SlippageTolerance />
                     <PriceThreshold
                       title="Set sell price floor?"
                       description="CALC won't sell if the asset price drops below this set value."
                     />
+                    <SlippageTolerance />
                   </Box>
                 </Collapse>
                 <Submit>Next</Submit>

@@ -43,7 +43,7 @@ export default function SlippageTolerance() {
   const values = [0.5, 1.0, 2.0];
 
   return (
-    <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
+    <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>Set Slippage Tolerance</FormLabel>
       <FormHelperText>
         If the slippage exceeds your tolerance, the swap will fail, be skipped for that increment and your strategy

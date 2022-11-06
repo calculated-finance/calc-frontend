@@ -73,7 +73,7 @@ export default function PriceThreshold({ title, description }: PriceThresholdPro
   const { name: initialDenomName } = getDenomInfo(state.step1.initialDenom);
 
   return (
-    <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
+    <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>{title}</FormLabel>
       <FormHelperText>{description}</FormHelperText>
       <PriceThresholdToggle />

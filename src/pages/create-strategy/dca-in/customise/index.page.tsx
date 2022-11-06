@@ -106,11 +106,11 @@ function DcaInStep2() {
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
-                    <SlippageTolerance />
                     <PriceThreshold
                       title="Set buy price ceiling?"
                       description="CALC won't buy if the asset price exceeds this set value."
                     />
+                    <SlippageTolerance />
                   </Box>
                 </Collapse>
                 <Submit>Next</Submit>
