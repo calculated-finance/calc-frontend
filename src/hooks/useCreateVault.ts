@@ -37,6 +37,7 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
     advancedSettings,
     recipientAccount,
     autoStakeValidator,
+    priceThresholdValue,
   } = state;
 
   // throw error if pair not found
@@ -77,11 +78,15 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
       target_start_time_utc_seconds: startTimeSeconds,
       target_price: startPrice ? deconversion(startPrice).toString() : undefined,
       slippage_tolerance:
-        advancedSettings && slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : 
-        getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
+        advancedSettings && slippageTolerance
+          ? getSlippageWithoutTrailingZeros(slippageTolerance)
+          : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
       destinations: destinations.length ? destinations : undefined,
+      price_threshold: priceThresholdValue ? deconversion(priceThresholdValue).toString() : undefined,
     },
-  };
+  } as ExecuteMsg;
+
+  console.log('msg', msg);
 
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 

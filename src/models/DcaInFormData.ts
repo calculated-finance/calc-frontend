@@ -10,6 +10,7 @@ import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
+import YesNoValues from './YesNoValues';
 
 export const initialValues = {
   resultingDenom: '',
@@ -25,6 +26,8 @@ export const initialValues = {
   executionInterval: ExecutionIntervals.Daily,
   swapAmount: null,
   slippageTolerance: 2,
+  priceThresholdEnabled: YesNoValues.No,
+  priceThresholdValue: null,
   sendToWallet: SendToWalletValues.Yes,
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
@@ -156,6 +159,23 @@ export const allValidationSchema = Yup.object({
       is: true,
       then: (schema) => schema.required(),
     }),
+  priceThresholdEnabled: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .required()
+    .when('advancedSettings', {
+      is: false,
+      then: (schema) => schema.transform(() => YesNoValues.No),
+    }),
+  priceThresholdValue: Yup.number()
+    .nullable()
+    .label('Price threshold')
+    .positive()
+    .when(['advancedSettings', 'priceThresholdEnabled'], {
+      is: (advancedSettings: boolean, priceThresholdEnabled: YesNoValues) =>
+        advancedSettings === true && priceThresholdEnabled === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
   sendToWallet: Yup.mixed<SendToWalletValues>().oneOf(Object.values(SendToWalletValues)).required(),
   recipientAccount: Yup.string()
     .label('Recipient Account')
@@ -217,6 +237,8 @@ export const step2ValidationSchema = allValidationSchema.pick([
   'executionInterval',
   'swapAmount',
   'slippageTolerance',
+  'priceThresholdEnabled',
+  'priceThresholdValue',
 ]);
 
 export type DcaInFormDataStep2 = Yup.InferType<typeof step2ValidationSchema>;

@@ -8,6 +8,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
+import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
 
 const mockRouter = {
@@ -34,6 +35,8 @@ const mockStateMachine = {
     resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
     advancedSettings: false,
     executionInterval: 'daily',
+    priceThresholdEnabled: YesNoValues.No,
+    priceThresholdValue: null,
     purchaseTime: '',
     slippageTolerance: 2,
     startDate: null,
