@@ -110,7 +110,7 @@ function Page() {
                     <SlippageTolerance />
                     <PriceThreshold
                       title="Set sell price floor?"
-                      description="CALC won't sell if the asset price drops below this set value"
+                      description="CALC won't sell if the asset price drops below this set value."
                     />
                   </Box>
                 </Collapse>
