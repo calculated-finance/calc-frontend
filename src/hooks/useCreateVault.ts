@@ -11,7 +11,7 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { Log } from '@cosmjs/stargate/build/logs';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
-import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { useConfirmForm } from './useDcaInForm';
@@ -77,10 +77,12 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
       target_start_time_utc_seconds: startTimeSeconds,
       target_price: startPrice ? deconversion(startPrice).toString() : undefined,
       slippage_tolerance:
-        advancedSettings && slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : undefined,
+        advancedSettings && slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : 
+        getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
       destinations: destinations.length ? destinations : undefined,
     },
   };
+
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
   return { msg, funds };
