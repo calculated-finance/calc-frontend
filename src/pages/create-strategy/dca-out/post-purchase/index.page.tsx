@@ -1,7 +1,7 @@
 import { Box, Collapse, FormControl, FormHelperText, HStack, Image, Stack, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -14,7 +14,7 @@ import SendToWalletValues from '../../../../models/SendToWalletValues';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
-  const { actions, state } = useDcaInFormPostPurchase();
+  const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaOut);
   const { nextStep } = useSteps(dcaOutSteps);
 
   const { isPageLoading } = usePageLoad();

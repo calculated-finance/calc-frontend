@@ -14,7 +14,7 @@ import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
-import { useConfirmForm } from './useDcaInForm';
+import { FormNames, useConfirmForm } from './useDcaInForm';
 import { Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from '../helpers/findPair';
@@ -86,8 +86,6 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
     },
   } as ExecuteMsg;
 
-  console.log('msg', msg);
-
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
   return { msg, funds };
@@ -98,11 +96,11 @@ function getStrategyIdFromLog(log: Log) {
     ?.value;
 }
 
-const useCreateVault = () => {
+const useCreateVault = (formName: FormNames) => {
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
-  const { state } = useConfirmForm();
+  const { state } = useConfirmForm(formName);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {

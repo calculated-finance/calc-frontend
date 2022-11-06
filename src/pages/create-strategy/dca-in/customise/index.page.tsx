@@ -5,7 +5,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
@@ -24,7 +24,7 @@ import PriceThreshold from '../../../../components/PriceThreshold';
 
 function DcaInStep2() {
   const router = useRouter();
-  const { actions, state } = useStep2Form();
+  const { actions, state } = useStep2Form(FormNames.DcaIn);
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
@@ -107,6 +107,7 @@ function DcaInStep2() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
+                      formName={FormNames.DcaIn}
                       title="Set buy price ceiling?"
                       description="CALC won't buy if the asset price exceeds this set value."
                     />

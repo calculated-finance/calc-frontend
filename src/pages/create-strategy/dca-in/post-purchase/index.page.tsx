@@ -1,7 +1,7 @@
 import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Denoms } from '@models/Denom';
 import { Form, Formik } from 'formik';
@@ -20,7 +20,7 @@ import AutoStakeValidator, { DummyAutoStakeValidator } from './AutoStakeValidato
 import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase();
+  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
   const { nextStep } = useSteps(steps);
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
 

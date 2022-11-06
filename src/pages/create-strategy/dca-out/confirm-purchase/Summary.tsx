@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import BadgeButton from '@components/BadgeButton';
 import DcaDiagram from '@components/DcaDiagram';
@@ -10,7 +10,7 @@ import executionIntervalDisplay from '../../../../helpers/executionIntervalDispl
 import TriggerTypes from '../../../../models/TriggerTypes';
 
 export default function Summary() {
-  const { state } = useConfirmForm();
+  const { state } = useConfirmForm(FormNames.DcaOut);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.

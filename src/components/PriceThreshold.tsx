@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '@components/NumberInput';
-import { useStep2Form } from '@hooks/useDcaInForm';
+import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
 import usePrice from '@hooks/usePrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
@@ -56,11 +56,12 @@ function PriceThresholdToggle() {
 type PriceThresholdProps = {
   title: string;
   description: string;
+  formName: FormNames;
 };
 
-export default function PriceThreshold({ title, description }: PriceThresholdProps) {
+export default function PriceThreshold({ title, description, formName }: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
-  const { state } = useStep2Form();
+  const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
 
   const { price, pairAddress, isLoading } = usePrice(state?.step1.resultingDenom, state?.step1.initialDenom);

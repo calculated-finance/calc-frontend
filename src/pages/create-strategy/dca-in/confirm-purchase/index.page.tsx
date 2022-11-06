@@ -4,7 +4,7 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -18,7 +18,7 @@ import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 
 function InvalidData() {
   const router = useRouter();
-  const { actions } = useConfirmForm();
+  const { actions } = useConfirmForm(FormNames.DcaIn);
 
   const handleClick = () => {
     actions.resetAction();
@@ -40,11 +40,11 @@ type AgreementForm = {
 };
 
 function ConfirmPurchase() {
-  const { state, actions } = useConfirmForm();
+  const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(steps);
 
-  const { mutate, isError, error } = useCreateVault();
+  const { mutate, isError, error } = useCreateVault(FormNames.DcaIn);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
@@ -80,7 +80,7 @@ function ConfirmPurchase() {
             <Form>
               <Stack spacing={4}>
                 <Summary />
-                <Fees />
+                <Fees formName={FormNames.DcaIn} />
                 <AgreementCheckbox />
                 <FormControl isInvalid={isError}>
                   <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>

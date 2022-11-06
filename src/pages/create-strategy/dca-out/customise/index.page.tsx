@@ -5,7 +5,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
@@ -24,7 +24,7 @@ import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
   const router = useRouter();
-  const { actions, state } = useStep2Form();
+  const { actions, state } = useStep2Form(FormNames.DcaOut);
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
@@ -108,6 +108,7 @@ function Page() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
+                      formName={FormNames.DcaOut}
                       title="Set sell price floor?"
                       description="CALC won't sell if the asset price drops below this set value."
                     />
