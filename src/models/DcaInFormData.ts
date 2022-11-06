@@ -168,7 +168,7 @@ export const allValidationSchema = Yup.object({
     }),
   priceThresholdValue: Yup.number()
     .nullable()
-    .label('Price threshold')
+    .label('Price Threshold')
     .positive()
     .when(['advancedSettings', 'priceThresholdEnabled'], {
       is: (advancedSettings: boolean, priceThresholdEnabled: YesNoValues) =>
