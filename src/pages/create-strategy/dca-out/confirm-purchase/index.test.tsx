@@ -8,6 +8,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
+import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
 
 const mockRouter = {
@@ -34,6 +35,8 @@ const mockStateMachine = {
     resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
     advancedSettings: false,
     executionInterval: 'daily',
+    priceThresholdEnabled: YesNoValues.No,
+    priceThresholdValue: null,
     purchaseTime: '',
     slippageTolerance: 2,
     startDate: null,
@@ -112,11 +115,12 @@ describe('DCA Out confirm page', () => {
             destinations: undefined,
             label: '',
             pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
-            slippage_tolerance: "0.02",
+            slippage_tolerance: '0.02',
             swap_amount: '1000000',
             target_price: undefined,
             target_start_time_utc_seconds: undefined,
             time_interval: 'daily',
+            price_threshold: undefined,
           },
         },
         [{ amount: '1000000', denom: 'ukuji' }],

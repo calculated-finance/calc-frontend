@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event';
 import timekeeper from 'timekeeper';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
 import { ChangeEvent } from 'react';
+import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
 
 const mockRouter = {
@@ -98,7 +99,7 @@ describe('DCA In customise page', () => {
 
       await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getByLabelText('No')), { timeout: 10000 });
+      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[0]), { timeout: 10000 });
       await waitFor(() => userEvent.click(screen.getByLabelText('Start based on asset price')), { timeout: 10000 });
 
       const input = await waitFor(() => screen.getByLabelText(/Strategy start price/));
@@ -114,6 +115,8 @@ describe('DCA In customise page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
         executionInterval: 'daily',
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: null,
         purchaseTime: '',
         slippageTolerance: 2,
         startDate: null,
@@ -121,6 +124,51 @@ describe('DCA In customise page', () => {
         startPrice: 10,
         swapAmount: 1,
         triggerType: 'price',
+      });
+
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        pathname: '/create-strategy/dca-in/post-purchase',
+        query: undefined,
+      });
+    });
+  });
+
+  describe('when strategy price threshold is filled and submitted', () => {
+    it('submits form successfully', async () => {
+      mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
+
+      await renderTarget();
+
+      // enable advanced settings
+      const advancedSettings = await waitFor(() => screen.getByRole('checkbox'));
+      await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
+
+      // enter swap amount
+      const swapAmountInput = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
+      await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
+
+      // enable price threshold
+      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[1]), { timeout: 5000 });
+
+      // set price threshold
+      const input = await waitFor(() => screen.getByLabelText(/Set buy price ceiling?/));
+      await waitFor(() => userEvent.type(input, '10.00'), { timeout: 5000 });
+
+      // submit
+      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
+
+      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        advancedSettings: true,
+        executionInterval: 'daily',
+        startPrice: null,
+        swapAmount: 1,
+        triggerType: 'date',
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: 10,
+        purchaseTime: '',
+        slippageTolerance: 2,
+        startDate: null,
+        startImmediately: 'yes',
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
@@ -150,14 +198,14 @@ describe('DCA In customise page', () => {
       await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
 
       // uncheck start immediately
-      await waitFor(() => userEvent.click(screen.getByLabelText('No')), { timeout: 5000 });
+      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[0]), { timeout: 5000 });
 
       // set start date
       const dateInput = screen.getByTestId('mock-datepicker');
       const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
       fireEvent.change(dateInput, { target: { value: tomorrow.toISOString() } });
 
-      // enter swap amount
+      // enter purchase time
       const purchaseTimeInput = await waitFor(() => screen.getByLabelText(/Purchase time/));
       await waitFor(() => userEvent.type(purchaseTimeInput, '14:55'), { timeout: 5000 });
 
@@ -165,7 +213,7 @@ describe('DCA In customise page', () => {
       const swapAmountInput = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
       await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
 
-      // enter swap amount
+      // enter slippage tolerance
       const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set Slippage Tolerance/));
       await waitFor(() => userEvent.type(slippageToleranceInput, '1'), { timeout: 5000 });
 
@@ -182,6 +230,8 @@ describe('DCA In customise page', () => {
         startPrice: null,
         swapAmount: 1,
         triggerType: 'date',
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: null,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
@@ -214,6 +264,8 @@ describe('DCA In customise page', () => {
         startPrice: null,
         swapAmount: 1,
         triggerType: 'date',
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: null,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({

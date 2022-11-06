@@ -20,6 +20,7 @@ import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
 import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
+import PriceThreshold from '../../../../components/PriceThreshold';
 
 function DcaInStep2() {
   const router = useRouter();
@@ -106,6 +107,10 @@ function DcaInStep2() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <SlippageTolerance />
+                    <PriceThreshold
+                      title="Set buy price ceiling?"
+                      description="CALC won't buy if the asset price exceeds this set value."
+                    />
                   </Box>
                 </Collapse>
                 <Submit>Next</Submit>

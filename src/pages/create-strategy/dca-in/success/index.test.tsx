@@ -41,7 +41,6 @@ describe('DCA In success page', () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
 
     await renderTarget();
-    screen.debug();
 
     await waitFor(() =>
       expect(
