@@ -1,4 +1,4 @@
-import { Button, Center, FormControl, FormErrorMessage, Stack } from '@chakra-ui/react';
+import { Button, Center, FormControl, FormErrorMessage, Stack, Text, useDisclosure } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -11,6 +11,7 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
+import { TermsModal } from '@components/TermsModal';
 import Summary from './Summary';
 import dcaOutSteps from '../dcaOutSteps';
 import Fees from '../../../../components/Fees';
@@ -43,6 +44,7 @@ function ConfirmPurchase() {
   const { state, actions } = useConfirmForm(FormNames.DcaOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(dcaOutSteps);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { mutate, isError, error } = useCreateVault(FormNames.DcaOut);
 
@@ -70,32 +72,50 @@ function ConfirmPurchase() {
   };
 
   return (
-    <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
-      <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
-          Confirm &amp; Sign
-        </NewStrategyModalHeader>
-        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
-          {state ? (
-            <Form>
-              <Stack spacing={4}>
-                <Summary />
-                <Fees formName={FormNames.DcaOut} />
-                <AgreementCheckbox />
-                <FormControl isInvalid={isError}>
-                  <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
-                    Confirm
-                  </Submit>
-                  <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </Form>
-          ) : (
-            <InvalidData />
-          )}
-        </NewStrategyModalBody>
-      </NewStrategyModal>
-    </Formik>
+    <>
+      <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
+        <NewStrategyModal>
+          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+            Confirm &amp; Sign
+          </NewStrategyModalHeader>
+          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
+            {state ? (
+              <Form>
+                <Stack spacing={4}>
+                  <Summary />
+                  <Fees formName={FormNames.DcaOut} />
+                  <AgreementCheckbox>
+                    <Text textStyle="body-xs">
+                      I have read and agree to be bound by the{' '}
+                      <Button
+                        textDecoration="underline"
+                        fontWeight="normal"
+                        size="xs"
+                        display="inline-flex"
+                        colorScheme="blue"
+                        variant="unstyled"
+                        onClick={onOpen}
+                      >
+                        CALC Terms & Conditions.
+                      </Button>
+                    </Text>
+                  </AgreementCheckbox>
+                  <FormControl isInvalid={isError}>
+                    <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
+                      Confirm
+                    </Submit>
+                    <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Form>
+            ) : (
+              <InvalidData />
+            )}
+          </NewStrategyModalBody>
+        </NewStrategyModal>
+      </Formik>
+      <TermsModal showCheckbox={false} isOpen={isOpen} onClose={onClose} />
+    </>
   );
 }
 ConfirmPurchase.getLayout = getFlowLayout;
