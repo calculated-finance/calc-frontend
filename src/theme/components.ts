@@ -1,7 +1,7 @@
 const components = {
   Button: {
     // baseStyle: ({ theme }) => {
-    //   console.log(theme);
+    //   console.log(theme.components.Modal);
     //   return {
     //     borderRadius: 'lg',
     //     fontSize: 'sm',
@@ -111,6 +111,26 @@ const components = {
       item: {
         textStyle: 'body',
       },
+    },
+  },
+  Modal: {
+    baseStyle: {
+      dialog: {
+        bg: 'darkGrey',
+        borderRadius: '2xl',
+      },
+      body: {
+        pt: 0,
+        pb: 6,
+      },
+      header: {
+        textAlign: 'center',
+        p: 6,
+      },
+    },
+    defaultProps: {
+      size: 'lg',
+      isCentered: true,
     },
   },
 };

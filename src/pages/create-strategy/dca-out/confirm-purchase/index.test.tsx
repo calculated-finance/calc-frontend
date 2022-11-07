@@ -133,7 +133,7 @@ describe('DCA Out confirm page', () => {
       await renderTarget();
 
       // tick checkbox
-      userEvent.click(screen.getByLabelText('I have read and agree to be bound by the CALC Terms & Conditions.'));
+      userEvent.click(screen.getByTestId('agreement-checkbox'));
 
       // submit
       await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Confirm' })), { timeout: 50000 });

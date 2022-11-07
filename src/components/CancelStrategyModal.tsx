@@ -58,7 +58,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent bg="darkGrey" p={4} data-testid="cancel-strategy-modal">
+      <ModalContent data-testid="cancel-strategy-modal">
         <ModalHeader textAlign="center">Cancel Strategy?</ModalHeader>
         <ModalBody>
           <Stack spacing={4}>

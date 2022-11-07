@@ -19,7 +19,7 @@ export function WalletListItem({ handleClick, wallet }: WalletListItemProps) {
       borderRadius="xl"
       borderColor="slateGrey"
       borderWidth={1}
-      _hover={{ bg: 'slateGrey', borderColor: 'deepHorizon' }}
+      _hover={{ bg: 'abyss.200' }}
       cursor="pointer"
     >
       <Image w={4} mr={2} src={wallet.adapter.icon} alt={`${wallet.adapter.name} icon`} />

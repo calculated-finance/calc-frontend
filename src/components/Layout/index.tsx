@@ -131,6 +131,8 @@ export function getFlowLayout(page: ReactElement) {
 function SidebarLayout({ children }: { children: ReactElement }) {
   const { isPageLoading } = usePageLoad();
 
+  const { connected } = useWallet();
+
   const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement');
 
   const agreementPreviouslyAccepted = acceptedAgreementState === 'true';
@@ -138,10 +140,10 @@ function SidebarLayout({ children }: { children: ReactElement }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
-    if (!agreementPreviouslyAccepted) {
+    if (!agreementPreviouslyAccepted && connected) {
       onOpen();
     }
-  }, [agreementPreviouslyAccepted, onOpen]);
+  }, [agreementPreviouslyAccepted, onOpen, connected]);
 
   const onSubmit = () => {
     setAcceptedAgreementState('true');

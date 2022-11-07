@@ -3,7 +3,18 @@ import type { WalletName } from '@wizard-ui/core';
 import { WalletReadyState } from '@wizard-ui/core';
 
 // import { Collapse } from "./Collapse";
-import { Box, Center, Link, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { useWalletModal } from '../hooks/useWalletModal';
 import { WalletListItem } from './WalletListItem';
@@ -45,13 +56,13 @@ function WalletModal() {
   );
 
   return (
-    <Modal isOpen={visible || connecting} onClose={handleClose}>
+    <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
       <ModalOverlay />
       <ModalContent>
         {connecting ? (
           <>
             <ModalHeader textAlign="center">Connecting to wallet</ModalHeader>
-            <ModalBody p={4}>
+            <ModalBody>
               <Center>
                 <Spinner />
               </Center>
@@ -60,25 +71,27 @@ function WalletModal() {
         ) : (
           <>
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
-            <ModalBody p={4}>
-              {installedWallets.length ? (
-                installedWallets.map((wallet) => (
-                  <Box pb={4}>
-                    <WalletListItem
-                      key={wallet.adapter.name}
-                      handleClick={() => handleWalletClick(wallet.adapter.name)}
-                      wallet={wallet}
-                    />
-                  </Box>
-                ))
-              ) : (
-                <Center pb={8}>
-                  <Text textStyle="body">No wallet extensions found</Text>
+            <ModalBody>
+              <Stack spacing={6}>
+                {installedWallets.length ? (
+                  installedWallets.map((wallet) => (
+                    <Box>
+                      <WalletListItem
+                        key={wallet.adapter.name}
+                        handleClick={() => handleWalletClick(wallet.adapter.name)}
+                        wallet={wallet}
+                      />
+                    </Box>
+                  ))
+                ) : (
+                  <Center>
+                    <Text textStyle="body">No wallet extensions found</Text>
+                  </Center>
+                )}
+                <Center>
+                  <Link href="/">What&apos;s a Wallet?</Link>
                 </Center>
-              )}
-              <Center>
-                <Link href="/">What&apos;s a Wallet?</Link>
-              </Center>
+              </Stack>
             </ModalBody>
           </>
         )}
