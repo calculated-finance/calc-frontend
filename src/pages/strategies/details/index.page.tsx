@@ -267,10 +267,10 @@ function Page() {
                 </Text>
               </GridItem>
               <GridItem colSpan={1}>
-                <Heading size="xs">Strategy end date</Heading>
+                <Heading size="xs">Estimated strategy end date</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-end-date">
+                <Text fontSize="sm" data-testid="estimated-strategy-end-date">
                   -
                 </Text>
               </GridItem>
