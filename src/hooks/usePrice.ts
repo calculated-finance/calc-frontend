@@ -32,9 +32,10 @@ function safeInvert(value: number) {
 
 function calculatePrice(result: BookResult, initialDenom: Denom) {
   if (result.quote[0].offer_denom.native === initialDenom) {
-    return Number(result.quote[0].quote_price);
+    return safeInvert(Number(result.base[0].quote_price));
   }
-  return safeInvert(Number(result.base[0].quote_price));
+
+  return Number(result.quote[0].quote_price);
 }
 
 export default function usePrice(resultingDenom: Denom | undefined, initialDenom: Denom | undefined) {
@@ -52,6 +53,7 @@ export default function usePrice(resultingDenom: Denom | undefined, initialDenom
           limit: 1,
         },
       });
+      console.log(result);
       return result;
     },
     {
