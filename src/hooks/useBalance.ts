@@ -1,7 +1,7 @@
 import { Coin } from '@cosmjs/stargate';
-import { useQuery } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
+import useQueryWithNotification from './useQueryWithNotification';
 
 export type BalanceResponse = {
   amount: number;
@@ -14,7 +14,7 @@ interface UseBalanceArgs {
 const useBalance = ({ token }: UseBalanceArgs) => {
   const { address, client } = useWallet();
 
-  const result = useQuery<Coin>(
+  const result = useQueryWithNotification<Coin>(
     ['balance', token, address, client],
     () => {
       if (!client) {

@@ -20,8 +20,6 @@ const components = {
     baseStyle: {
       container: {
         borderRadius: '2xl',
-        borderWidth: 1,
-        borderColor: 'yellow.200',
         px: 6,
         py: 4,
         boxShadow: 'deepHorizon',

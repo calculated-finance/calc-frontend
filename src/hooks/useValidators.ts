@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { REST_ENDPOINT } from 'src/constants';
+import useQueryWithNotification from './useQueryWithNotification';
 
 export type Validator = {
   operator_address: string;
@@ -20,7 +20,7 @@ export type ValidatorsResponse = {
 const useValidators = (): Validator[] | undefined => {
   const pageSize = 1000;
 
-  const { data } = useQuery<ValidatorsResponse>(
+  const { data } = useQueryWithNotification<ValidatorsResponse>(
     ['validators'],
     async () => {
       const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators?pagination.limit=${pageSize}`);

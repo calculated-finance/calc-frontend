@@ -191,7 +191,7 @@ function Page() {
       </HStack>
 
       {Boolean(lastSwapSlippageError) && isVisible && (
-        <Alert status="warning" mb={8}>
+        <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
           <Image mr={4} src="/images/warningIcon.svg" />
           <Text fontSize="sm" mr={4}>
             The previous swap failed due to slippage being exceeded - your funds are safe, and the next swap is
