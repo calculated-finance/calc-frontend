@@ -63,20 +63,31 @@ export function TermsModal({ isOpen, onClose, onSubmit, showCheckbox }: TermsMod
                   borderWidth={1}
                   borderColor="slateGrey"
                 >
-                  lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget aliquam tincidunt,
-                  mauris nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam
-                  tincidunt, mauris nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget
-                  aliquam tincidunt, mauris nisl aliquam nisl, <br />
-                  eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam tincidunt, mauris nisl aliquam
-                  nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam tincidunt, mauris nisl
-                  <br />
-                  aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam tincidunt, mauris
-                  nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam tincidunt,
-                  mauris nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget aliquam
-                  tincidunt, mauris nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl eget
-                  <br />
-                  aliquam tincidunt, mauris nisl aliquam nisl, eget aliquam nisl nisl sit amet lorem. Donec auctor, nisl
-                  eget aliquam tincidunt, mauris nisl aliquam nisl, eget aliquam nisl
+                  <Stack spacing={2}>
+                    <Text as="i">Last Updated: September 15th, 2022</Text>
+                    <Text>
+                      Please read these terms carefully and click the button at the bottom to acknowledge that you have
+                      read and accepted the terms and conditions.
+                    </Text>
+                    <Text>
+                      CALC is a decentralized peer-to-peer app built on the Kujira blockchain that people can use to
+                      participate in decentralized financial products.
+                    </Text>
+                    <Text>
+                      AS DESCRIBED IN THE CALC LICENSES, THE CALC PROTOCOL IS PROVIDED &ldquo;AS IS&rdquo;, AT YOUR OWN
+                      RISK, AND WITHOUT WARRANTIES OF ANY KIND.
+                    </Text>
+                    <Text>
+                      Although Future Chain Labs developed much of the initial code for the CALC protocol, it does not
+                      provide, own, or control the CALC protocol, which is run by a decentralized validator set.
+                      Upgrades and modifications to the protocol are managed in a community-driven way by holders of the
+                      KUJI governance token. No developer or entity involved in creating the CALC protocol will be
+                      liable for any claims or damages whatsoever associated with your use, inability to use, or your
+                      interaction with other users of the CALC protocol, including any direct, indirect, incidental,
+                      special, exemplary, punitive or consequential damages, or loss of profits, cryptocurrencies,
+                      tokens, or anything else of value.
+                    </Text>
+                  </Stack>
                 </Box>
                 {showCheckbox ? (
                   <>

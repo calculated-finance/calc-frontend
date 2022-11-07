@@ -57,9 +57,10 @@ type PriceThresholdProps = {
   title: string;
   description: string;
   formName: FormNames;
+  transactionType: 'buy' | 'sell';
 };
 
-export default function PriceThreshold({ title, description, formName }: PriceThresholdProps) {
+export default function PriceThreshold({ title, description, formName, transactionType }: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
   const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
@@ -72,6 +73,12 @@ export default function PriceThreshold({ title, description, formName }: PriceTh
 
   const { name: resultingDenomName } = getDenomInfo(state.step1.resultingDenom);
   const { name: initialDenomName } = getDenomInfo(state.step1.initialDenom);
+
+  const priceOfDenom = transactionType === 'buy' ? state?.step1.resultingDenom : state?.step1.initialDenom;
+  const priceInDenom = transactionType === 'buy' ? state?.step1.initialDenom : state?.step1.resultingDenom;
+
+  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
+  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
@@ -86,13 +93,12 @@ export default function PriceThreshold({ title, description, formName }: PriceTh
               pointerEvents="none"
               children={
                 <HStack direction="row">
-                  <DenomIcon denomName={state.step1.resultingDenom} />{' '}
-                  <Text fontSize="sm">{resultingDenomName} Price</Text>
+                  <DenomIcon denomName={priceOfDenom} /> <Text fontSize="sm">{priceOfDenomName} Price</Text>
                 </HStack>
               }
             />
             <NumberInput textAlign="right" pr={16} placeholder="0.00" onChange={helpers.setValue} {...field} />
-            <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
+            <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{priceInDenomName}</Text>} />
           </InputGroup>
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
           {Boolean(price) && (

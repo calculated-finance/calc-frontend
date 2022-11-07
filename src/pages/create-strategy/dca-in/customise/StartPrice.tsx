@@ -53,7 +53,7 @@ export default function StartPrice() {
         <FormHelperText>
           <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-              Current price: 1 {resultingDenomName} = {price} {initialDenomName}
+              Current price: 1 {initialDenomName} = {price} {resultingDenomName}
             </Button>
           </Link>
         </FormHelperText>

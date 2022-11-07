@@ -108,6 +108,7 @@ function Page() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
+                      transactionType="sell"
                       formName={FormNames.DcaOut}
                       title="Set sell price floor?"
                       description="CALC won't sell if the asset price drops below this set value."

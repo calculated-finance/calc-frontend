@@ -107,6 +107,7 @@ function DcaInStep2() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
+                      transactionType="buy"
                       formName={FormNames.DcaIn}
                       title="Set buy price ceiling?"
                       description="CALC won't buy if the asset price exceeds this set value."
