@@ -178,7 +178,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-end-date').textContent).toBe('-'));
+          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
         });
       });
       describe('when active', () => {
@@ -186,7 +186,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-end-date').textContent).toBe('-'));
+          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
         });
       });
     });
