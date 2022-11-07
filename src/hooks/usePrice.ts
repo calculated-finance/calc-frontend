@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '@wizard-ui/react';
 import { isNumber } from 'lodash';
 import { findPair } from '../helpers/findPair';
 import usePairs from './usePairs';
 import { Denom } from '../models/Denom';
+import useQueryWithNotification from './useQueryWithNotification';
 
 type PriceAndOffer = {
   quote_price: string;
@@ -45,7 +45,7 @@ export default function usePrice(resultingDenom: Denom | undefined, initialDenom
   const { pairs } = pairsData || {};
   const pairAddress = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-  const { data, ...helpers } = useQuery<BookResult>(
+  const { data, ...helpers } = useQueryWithNotification<BookResult>(
     ['price', pairAddress, client],
     async () => {
       const result = await client!.queryContractSmart(pairAddress!, {
