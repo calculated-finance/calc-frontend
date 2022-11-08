@@ -53,7 +53,6 @@ export default function usePrice(resultingDenom: Denom | undefined, initialDenom
           limit: 1,
         },
       });
-      console.log(result);
       return result;
     },
     {

@@ -71,12 +71,13 @@ function didLastSwapHaveSlippageError(events: Event[] | undefined) {
     return false;
   }
 
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if (lastEventData.d_c_a_vault_execution_skipped) {
+  if (lastEventData?.dca_vault_execution_skipped) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (lastEventData.d_c_a_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
+    if (lastEventData?.dca_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
       return true;
     }
   }
