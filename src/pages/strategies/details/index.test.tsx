@@ -37,7 +37,6 @@ function mockCancelVault(success = true) {
   const execute = jest.fn();
   const msg = {
     cancel_vault: {
-      address: 'kujitestwallet',
       vault_id: '1',
     },
   };
