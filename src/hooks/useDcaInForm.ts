@@ -75,7 +75,7 @@ export const useStep2Form = (formName: FormNames) => {
     const step1 = step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
     const step2 = {
       ...step2ValidationSchema.cast(initialValues, { stripUnknown: true }),
-      ...step2ValidationSchema.cast(state, { stripUnknown: true }),
+      ...step2ValidationSchema.cast(getFormState(state, formName), { stripUnknown: true }),
     };
 
     return {
@@ -101,13 +101,14 @@ export const useDcaInFormPostPurchase = (formName: FormNames) => {
   try {
     return {
       context: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
-      state: postPurchaseValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      state: {
+        ...postPurchaseValidationSchema.cast(initialValues, { stripUnknown: true }),
+        ...postPurchaseValidationSchema.cast(getFormState(state, formName), { stripUnknown: true }),
+      },
       actions,
     };
   } catch (e) {
     return {
-      context: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
-      state: postPurchaseValidationSchema.cast(initialValues, { stripUnknown: true }),
       actions,
     };
   }
