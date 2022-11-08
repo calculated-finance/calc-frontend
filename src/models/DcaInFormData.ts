@@ -154,7 +154,7 @@ export const allValidationSchema = Yup.object({
     .nullable()
     .label('Slippage Tolerance')
     .lessThan(100)
-    .positive()
+    .min(0)
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),
