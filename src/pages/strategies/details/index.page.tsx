@@ -38,6 +38,7 @@ import strategy from 'src/fixtures/strategy';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
+import { findLastIndex } from 'lodash';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
@@ -65,21 +66,23 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; result
 }
 
 function didLastSwapHaveSlippageError(events: Event[] | undefined) {
-  const lastEventData = events?.slice(-1)[0]?.data;
-
   if (!events) {
     return false;
   }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const executionTriggeredIndex = findLastIndex(events, (event) => event.data.dca_vault_execution_triggered);
 
+  const executionSkippedIndex = executionTriggeredIndex + 1;
+
+  if (executionTriggeredIndex === -1 || executionSkippedIndex >= events.length) {
+    return false;
+  }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if (lastEventData?.dca_vault_execution_skipped) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (lastEventData?.dca_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
-      return true;
-    }
+  if (events[executionSkippedIndex]?.data.dca_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded') {
+    return true;
   }
 
   return false;
