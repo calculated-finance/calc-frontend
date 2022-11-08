@@ -53,11 +53,9 @@ const denoms: Record<string, DenomInfo> = {
     name: 'NBTC',
     stakeable: false,
   },
-  [Denoms.LOCAL]: {
-    name: 'Local',
-    stakeable: false,
-  },
 };
+
+export const SUPPORTED_DENOMS = Object.keys(denoms);
 
 export class DenomValue {
   readonly denomId: Denom;
