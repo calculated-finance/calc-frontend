@@ -144,7 +144,7 @@ export const allValidationSchema = Yup.object({
       message: 'Swap amount must be less than initial deposit',
       test(value, context) {
         const { initialDeposit = 0 } = { ...context.parent, ...context.options.context };
-        if (!value) {
+        if (!value || isNaN(initialDeposit) || !initialDeposit) {
           return true;
         }
         return value <= initialDeposit;
