@@ -2,6 +2,7 @@ import 'isomorphic-fetch';
 import { useWallet } from '@wizard-ui/react';
 import { REST_ENDPOINT } from 'src/constants';
 import { Coin } from '@cosmjs/stargate';
+import { SUPPORTED_DENOMS } from '@utils/getDenomInfo';
 import useQueryWithNotification from './useQueryWithNotification';
 
 type BalanceResponse = {
@@ -15,7 +16,7 @@ type BalanceResponse = {
 const useBalances = () => {
   const { address } = useWallet();
 
-  return useQueryWithNotification<BalanceResponse>(
+  const { data, ...other } = useQueryWithNotification<BalanceResponse>(
     ['balances', address],
     async () => {
       const result = await fetch(`${REST_ENDPOINT}/cosmos/bank/v1beta1/balances/${address}`);
@@ -26,6 +27,14 @@ const useBalances = () => {
       cacheTime: 0,
     },
   );
+
+  return {
+    data: {
+      ...data,
+      balances: data?.balances?.filter((balance: Coin) => SUPPORTED_DENOMS.includes(balance.denom)) || [],
+    },
+    ...other,
+  };
 };
 
 export default useBalances;
