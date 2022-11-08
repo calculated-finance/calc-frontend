@@ -19,7 +19,6 @@ const useCancelStrategy = () => {
 
     const msg = {
       cancel_vault: {
-        address,
         vault_id: strategyId,
       },
     } as ExecuteMsg;
