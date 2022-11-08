@@ -71,12 +71,13 @@ function didLastSwapHaveSlippageError(events: Event[] | undefined) {
     return false;
   }
 
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if (lastEventData.d_c_a_vault_execution_skipped) {
+  if (lastEventData?.dca_vault_execution_skipped) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (lastEventData.d_c_a_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
+    if (lastEventData?.dca_vault_execution_skipped.reason === 'slippage_tolerance_exceeded') {
       return true;
     }
   }
@@ -133,17 +134,16 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
-  const trigger = data?.trigger;
+  const { trigger } = data.vault;
   let nextSwapInfo;
 
   if (trigger) {
-    const { configuration } = trigger;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { time, f_i_n_limit_order } = configuration;
+    const { time, fin_limit_order } = trigger;
     const targetTime = time?.target_time;
 
-    const targetPrice = f_i_n_limit_order?.target_price;
+    const targetPrice = fin_limit_order?.target_price;
 
     if (isStrategyOperating(data.vault)) {
       if (targetTime) {

@@ -1,7 +1,6 @@
-import { Box, Button, chakra, Flex, FormControl, FormErrorMessage, HStack, Text, useCheckbox } from '@chakra-ui/react';
+import { chakra, Flex, FormControl, FormErrorMessage, HStack, useCheckbox } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { useField, useFormikContext } from 'formik';
-import { ReactNode } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { ChildrenProp } from './Sidebar';
 

@@ -6,19 +6,18 @@ import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 
 export default function useStrategy(id?: Strategy['id']) {
-  const { address, client } = useWallet();
+  const { client } = useWallet();
 
   return useQueryWithNotification<VaultResponse>(
-    ['strategy', address, id, client],
+    ['strategy', id, client],
     () =>
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vault: {
           vault_id: id,
-          address,
         },
       } as QueryMsg),
     {
-      enabled: !!address && !!client && !!id,
+      enabled: !!client && !!id,
     },
   );
 }

@@ -76,13 +76,15 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
       pair_address: pairAddress,
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
-      target_price: startPrice ? deconversion(startPrice).toString() : undefined,
+      minimum_receive_amount: startPrice ? deconversion(startPrice).toString() : undefined,
       slippage_tolerance:
         advancedSettings && slippageTolerance
           ? getSlippageWithoutTrailingZeros(slippageTolerance)
           : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
       destinations: destinations.length ? destinations : undefined,
-      price_threshold: priceThresholdValue ? deconversion(priceThresholdValue).toString() : undefined,
+      target_receive_amount: priceThresholdValue
+        ? deconversion(priceThresholdValue / swapAmount).toString()
+        : undefined,
     },
   } as ExecuteMsg;
 

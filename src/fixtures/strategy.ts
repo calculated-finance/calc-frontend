@@ -1,4 +1,5 @@
 import { Strategy } from '@hooks/useStrategies';
+import { mockPriceTrigger, mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 
@@ -20,7 +21,6 @@ export default {
   swap_amount: '1000000', // 1 DEMO
   slippage_tolerance: null,
   status: 'active',
-  trigger_id: '1',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
   received_amount: {
@@ -38,6 +38,7 @@ export default {
       action: 'send',
     },
   ],
+  trigger: mockTimeTrigger,
 } as Strategy;
 
 export const dcaOutStrategy = {
@@ -58,7 +59,6 @@ export const dcaOutStrategy = {
   swap_amount: '1000000',
   slippage_tolerance: null,
   status: 'active',
-  trigger_id: '1',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
   swapped_amount: {
