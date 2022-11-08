@@ -33,6 +33,12 @@ export type QueryMsg =
       };
     }
   | {
+      get_vaults: {
+        limit?: number | null;
+        start_after?: number | null;
+      };
+    }
+  | {
       get_events_by_resource_id: {
         limit?: number | null;
         resource_id: Uint128;
