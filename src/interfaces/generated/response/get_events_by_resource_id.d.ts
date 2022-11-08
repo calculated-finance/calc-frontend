@@ -6,36 +6,44 @@
  */
 
 export type EventData =
-  | ("d_c_a_vault_created" | "d_c_a_vault_cancelled" | "d_c_a_vault_delegation_failed")
   | {
-      d_c_a_vault_funds_deposited: {
+      dca_vault_created: {};
+    }
+  | {
+      dca_vault_funds_deposited: {
         amount: Coin;
       };
     }
   | {
-      d_c_a_vault_execution_triggered: {
+      dca_vault_execution_triggered: {
         asset_price: Decimal256;
         base_denom: string;
         quote_denom: string;
       };
     }
   | {
-      d_c_a_vault_execution_completed: {
+      dca_vault_execution_completed: {
         fee: Coin;
         received: Coin;
         sent: Coin;
       };
     }
   | {
-      d_c_a_vault_execution_skipped: {
+      dca_vault_execution_skipped: {
         reason: ExecutionSkippedReason;
       };
     }
   | {
-      d_c_a_vault_z_delegation_succeeded: {
+      dca_vault_cancelled: {};
+    }
+  | {
+      dca_vault_z_delegation_succeeded: {
         delegation: Coin;
         validator_address: string;
       };
+    }
+  | {
+      dca_vault_delegation_failed: {};
     };
 /**
  * A thin wrapper around u128 that is using strings for JSON encoding/decoding, such that the full u128 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
@@ -58,7 +66,7 @@ export type Uint128 = string;
  */
 export type Decimal256 = string;
 export type ExecutionSkippedReason =
-  | ("slippage_tolerance_exceeded" | "insufficient_funds" | "unknown_failure")
+  | ('slippage_tolerance_exceeded' | 'unknown_failure')
   | {
       price_threshold_exceeded: {
         price: Decimal256;

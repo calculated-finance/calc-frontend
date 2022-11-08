@@ -22,6 +22,6 @@ export function mockUseStrategy(data: Partial<VaultResponse> = {}) {
         address: 'kujitestwallet',
       },
     })
-    .mockResolvedValueOnce({ vault: mockStrategy(), trigger: mockTimeTrigger, ...data });
+    .mockResolvedValueOnce({ vault: mockStrategy(), ...data });
   return queryContractSmart;
 }

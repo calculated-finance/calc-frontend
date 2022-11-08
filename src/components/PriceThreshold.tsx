@@ -71,9 +71,6 @@ export default function PriceThreshold({ title, description, formName, transacti
     return null;
   }
 
-  const { name: resultingDenomName } = getDenomInfo(state.step1.resultingDenom);
-  const { name: initialDenomName } = getDenomInfo(state.step1.initialDenom);
-
   const priceOfDenom = transactionType === 'buy' ? state?.step1.resultingDenom : state?.step1.initialDenom;
   const priceInDenom = transactionType === 'buy' ? state?.step1.initialDenom : state?.step1.resultingDenom;
 

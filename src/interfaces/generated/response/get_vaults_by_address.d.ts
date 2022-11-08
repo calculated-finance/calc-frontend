@@ -43,7 +43,7 @@ export type Timestamp = Uint64;
  * let b = Uint64::from(70u32); assert_eq!(b.u64(), 70); ```
  */
 export type Uint64 = string;
-export type PostExecutionAction = "send" | "z_delegate";
+export type PostExecutionAction = 'send' | 'z_delegate';
 /**
  * A human readable address.
  *
@@ -60,15 +60,14 @@ export type Addr = string;
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
-export type PositionType = "enter" | "exit";
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0
  *
  * The greatest possible value that can be represented is 115792089237316195423570985008687907853269984665640564039457.584007913129639935 (which is (2^256 - 1) / 10^18)
  */
 export type Decimal256 = string;
-export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
-export type TimeInterval = "hourly" | "daily" | "weekly" | "monthly";
+export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
+export type TimeInterval = 'half_hourly' | 'hourly' | 'half_daily' | 'daily' | 'weekly' | 'fortnightly' | 'monthly';
 export type TriggerConfiguration =
   | {
       time: {
@@ -76,7 +75,7 @@ export type TriggerConfiguration =
       };
     }
   | {
-      f_i_n_limit_order: {
+      fin_limit_order: {
         order_idx?: Uint128 | null;
         target_price: Decimal256;
       };
@@ -91,10 +90,9 @@ export interface Vault {
   destinations: Destination[];
   id: Uint128;
   label?: string | null;
+  minimum_receive_amount?: Uint128 | null;
   owner: Addr;
   pair: Pair;
-  position_type?: PositionType | null;
-  price_threshold?: Decimal256 | null;
   received_amount: Coin;
   slippage_tolerance?: Decimal256 | null;
   started_at?: Timestamp | null;

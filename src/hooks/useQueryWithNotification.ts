@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react';
-import { QueryFunction, QueryKey, QueryOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { QueryFunction, QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 export default function useQueryWithNotification<TQueryFnData = unknown>(
   queryKey: QueryKey,

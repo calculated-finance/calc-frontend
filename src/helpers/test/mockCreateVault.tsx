@@ -3,6 +3,7 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
+import { ExecuteMsg } from 'src/interfaces/generated/execute';
 
 export function mockStrategy(data?: Partial<Strategy>) {
   return {
@@ -18,12 +19,12 @@ const defaultMsg = {
     pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
     slippage_tolerance: '0.02',
     swap_amount: '1000000',
-    target_price: undefined,
+    minimum_receive_amount: undefined,
     target_start_time_utc_seconds: undefined,
     time_interval: 'daily',
-    price_threshold: undefined,
+    target_receive_amount: undefined,
   },
-};
+} as ExecuteMsg;
 
 const defaultFunds = [
   { amount: '1000000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },

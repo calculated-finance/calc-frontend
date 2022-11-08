@@ -27,5 +27,6 @@ export interface InstantiateMsg {
   fee_collector: Addr;
   fee_percent: Decimal;
   page_limit: number;
+  paused: boolean;
   staking_router_address: Addr;
 }

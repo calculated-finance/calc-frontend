@@ -133,17 +133,16 @@ function Page() {
 
   const startDate = getStrategyStartDate(data.vault);
 
-  const trigger = data?.trigger;
+  const { trigger } = data.vault;
   let nextSwapInfo;
 
   if (trigger) {
-    const { configuration } = trigger;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { time, f_i_n_limit_order } = configuration;
+    const { time, fin_limit_order } = trigger;
     const targetTime = time?.target_time;
 
-    const targetPrice = f_i_n_limit_order?.target_price;
+    const targetPrice = fin_limit_order?.target_price;
 
     if (isStrategyOperating(data.vault)) {
       if (targetTime) {
