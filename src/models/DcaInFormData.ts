@@ -37,11 +37,11 @@ export const initialValues = {
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
   resultingDenom: Yup.mixed<Denom>()
-    .oneOf(Object.values(Denoms), ({ label }) => `${label} is required.`)
+    .oneOf(Object.values(Denoms), ({ label }) => `${label} is a required field`)
     .label('Resulting Denom')
     .required(),
   initialDenom: Yup.mixed<Denom>()
-    .oneOf(Object.values(Denoms), ({ label }) => `${label} is required.`)
+    .oneOf(Object.values(Denoms), ({ label }) => `${label} is a required field`)
     .label('Initial Denom')
     .required(),
   initialDeposit: Yup.number()
@@ -67,6 +67,7 @@ export const allValidationSchema = Yup.object({
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
   triggerType: Yup.mixed<TriggerTypes>()
+    .label('Trigger Type')
     .oneOf(Object.values(TriggerTypes))
     .required()
     .when('startImmediately', {
@@ -87,7 +88,7 @@ export const allValidationSchema = Yup.object({
         return Yup.date()
           .label('Start Date')
           .nullable()
-          .min(minDate, ({ label }) => `${label} must be in the future.`)
+          .min(minDate, ({ label }) => `${label} must be in the future`)
           .required();
       }
 
