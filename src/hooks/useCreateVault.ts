@@ -76,7 +76,7 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
       pair_address: pairAddress,
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
-      minimum_receive_amount: startPrice ? deconversion(startPrice).toString() : undefined,
+      minimum_receive_amount: startPrice ? deconversion(startPrice / swapAmount).toString() : undefined,
       slippage_tolerance:
         advancedSettings && slippageTolerance
           ? getSlippageWithoutTrailingZeros(slippageTolerance)
