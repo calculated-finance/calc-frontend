@@ -1,4 +1,18 @@
-import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner, Link } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  Image,
+  Box,
+  Badge,
+  Spacer,
+  Wrap,
+  Spinner,
+  Link,
+  Center,
+} from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
@@ -17,7 +31,7 @@ type StrategyCardProps = {
   enabled?: boolean;
   href?: StrategyUrls;
   advanced?: boolean;
-  learnMoreHref?: string;
+  learnMoreHref: string;
 };
 
 const accumulationStratgies: StrategyCardProps[] = [
@@ -106,7 +120,7 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <NextLink href={href ?? '/'}>
+          <NextLink href={href ?? '#'}>
             <Button mb={2}>Get started</Button>
           </NextLink>
         ) : (
@@ -115,11 +129,11 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
           </Button>
         )}
 
-        <Link href={learnMoreHref} isExternal>
-          <Button as="a" colorScheme="blue" variant="ghost">
+        <NextLink href={learnMoreHref} passHref>
+          <Button as="a" target="_blank" colorScheme="blue" variant="ghost">
             Learn more
           </Button>
-        </Link>
+        </NextLink>
       </Flex>
     </Stack>
   );
