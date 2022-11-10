@@ -1,12 +1,13 @@
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
+import { findLast } from 'lodash'
 import { isStrategyOperating } from './getStrategyStatus';
 import { getStrategyTotalExecutions } from './getStrategyTotalExecutions';
 
 function getLastExecutionDate(events: Event[]) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const lastExecutionEvent = findLast(events, (event: Event) => event.data.d_c_a_vault_execution_completed) as Event
+  const lastExecutionEvent = findLast(events, (event: Event) => event.data.dca_vault_execution_completed) as Event
 
   // vault has no executions yet
   if (!lastExecutionEvent)
@@ -29,7 +30,6 @@ export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefin
 
   if (isStrategyOperating(strategy) && lastExecutionDate)
   {
-    // this needs to be the date of the last swap
     const executions = getStrategyTotalExecutions(strategy)
 
     switch (strategy.time_interval) {
@@ -64,6 +64,6 @@ export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefin
       day: 'numeric',
     })
   }
-  
+
   return '-'
 }

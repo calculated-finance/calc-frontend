@@ -177,7 +177,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toMatch(/^[A-Z][a-z]+\s[0-9]+,\s[0-9]+$/)); // regex for Mmm dd, yyyy
+          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
         });
       });
       describe('when active', () => {
@@ -185,7 +185,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toMatch(/^[A-Z][a-z]+\s[0-9]+,\s[0-9]+$/)); // regex for Mmm dd, yyyy
+          await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
         });
       });
     });
