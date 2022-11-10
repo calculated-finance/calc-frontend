@@ -220,6 +220,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
     const result = client.signAndBroadcast(senderAddress, msgs, 'auto', 'memo');
+
     return result.then((data) => getVaultIdFromDeliverTxResponse(data));
   });
 };
