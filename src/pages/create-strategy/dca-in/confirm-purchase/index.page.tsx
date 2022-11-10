@@ -12,6 +12,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import { TermsModal } from '@components/TermsModal';
+import { TransactionType } from '@components/TransactionType';
 import Summary from './Summary';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
@@ -45,7 +46,7 @@ function ConfirmPurchase() {
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(steps);
 
-  const { mutate, isError, error } = useCreateVault(FormNames.DcaIn);
+  const { mutate, isError, error } = useCreateVault(FormNames.DcaIn, TransactionType.Buy);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

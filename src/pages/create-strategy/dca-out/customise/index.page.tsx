@@ -10,6 +10,7 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
 import PriceThreshold from '@components/PriceThreshold';
+import { TransactionType } from '@components/TransactionType';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -108,7 +109,7 @@ function Page() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
-                      transactionType="sell"
+                      transactionType={TransactionType.Sell}
                       formName={FormNames.DcaOut}
                       title="Set sell price floor?"
                       description="CALC won't sell if the asset price drops below this set value."

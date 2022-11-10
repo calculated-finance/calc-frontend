@@ -12,6 +12,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import { TermsModal } from '@components/TermsModal';
+import { TransactionType } from '@components/TransactionType';
 import Summary from './Summary';
 import dcaOutSteps from '../dcaOutSteps';
 import Fees from '../../../../components/Fees';
@@ -46,7 +47,7 @@ function ConfirmPurchase() {
   const { nextStep } = useSteps(dcaOutSteps);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { mutate, isError, error } = useCreateVault(FormNames.DcaOut);
+  const { mutate, isError, error } = useCreateVault(FormNames.DcaOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {

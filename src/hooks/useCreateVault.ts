@@ -12,6 +12,7 @@ import { Log } from '@cosmjs/stargate/build/logs';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
+import { TransactionType } from '@components/TransactionType';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { FormNames, useConfirmForm } from './useDcaInForm';
@@ -23,7 +24,27 @@ function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
 }
 
-function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: ExecuteMsg; funds: Coin[] } {
+function getReceiveAmount(
+  price: number | null | undefined,
+  deconversion: (value: number) => number,
+  swapAmount: number,
+  transactionType: TransactionType,
+) {
+  if (!price) {
+    return undefined;
+  }
+
+  if (transactionType === TransactionType.Buy) {
+    return Math.floor(deconversion(swapAmount / price)).toString();
+  }
+  return Math.floor(deconversion(swapAmount * price)).toString();
+}
+
+function getMessageAndFunds(
+  state: DcaInFormDataAll,
+  pairs: Pair[],
+  transactionType: TransactionType,
+): { msg: ExecuteMsg; funds: Coin[] } {
   const {
     initialDenom,
     resultingDenom,
@@ -69,6 +90,9 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
+  console.log(priceThresholdValue);
+  const minimumReceiveAmount = getReceiveAmount(priceThresholdValue, deconversion, swapAmount, transactionType);
+  const targetReceiveAmount = getReceiveAmount(startPrice, deconversion, swapAmount, transactionType);
   const msg = {
     create_vault: {
       label: '',
@@ -76,15 +100,13 @@ function getMessageAndFunds(state: DcaInFormDataAll, pairs: Pair[]): { msg: Exec
       pair_address: pairAddress,
       swap_amount: deconversion(swapAmount).toString(),
       target_start_time_utc_seconds: startTimeSeconds,
-      minimum_receive_amount: startPrice ? Math.floor(deconversion(startPrice / swapAmount)).toString() : undefined,
+      minimum_receive_amount: minimumReceiveAmount,
       slippage_tolerance:
         advancedSettings && slippageTolerance
           ? getSlippageWithoutTrailingZeros(slippageTolerance)
           : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
       destinations: destinations.length ? destinations : undefined,
-      target_receive_amount: priceThresholdValue
-        ? Math.floor(deconversion(priceThresholdValue / swapAmount)).toString()
-        : undefined,
+      target_receive_amount: targetReceiveAmount,
     },
   } as ExecuteMsg;
 
@@ -98,7 +120,7 @@ function getStrategyIdFromLog(log: Log) {
     ?.value;
 }
 
-const useCreateVault = (formName: FormNames) => {
+const useCreateVault = (formName: FormNames, transactionType: TransactionType) => {
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
@@ -119,7 +141,7 @@ const useCreateVault = (formName: FormNames) => {
       throw Error('No pairs found');
     }
 
-    const { msg, funds } = getMessageAndFunds(state, pairs);
+    const { msg, funds } = getMessageAndFunds(state, pairs, transactionType);
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {

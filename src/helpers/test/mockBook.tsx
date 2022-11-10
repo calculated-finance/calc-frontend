@@ -2,7 +2,7 @@
 import { when } from 'jest-when';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 
-export function mockBook(pairAddress, bookData: BookResponse) {
+export function mockBook(pairAddress: string, bookData: BookResponse) {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
     .calledWith(pairAddress, {
