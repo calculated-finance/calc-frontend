@@ -4,9 +4,9 @@ import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { mockValidators } from 'src/helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
+import { mockPriceTrigger } from 'src/fixtures/trigger';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -37,7 +37,6 @@ function mockCancelVault(success = true) {
   const execute = jest.fn();
   const msg = {
     cancel_vault: {
-      address: 'kujitestwallet',
       vault_id: '1',
     },
   };
@@ -91,7 +90,7 @@ describe('Detail page', () => {
       });
       describe('when price trigger is set', () => {
         it('renders next swap', async () => {
-          mockUseWallet(mockUseStrategy({ trigger: mockPriceTrigger }), mockCancelVault());
+          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ trigger: mockPriceTrigger }) }), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('When 1 KUJI ≤ 0.5 DEMO'));

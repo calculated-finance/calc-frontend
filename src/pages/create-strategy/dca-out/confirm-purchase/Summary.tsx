@@ -80,13 +80,13 @@ export default function Summary() {
       <>
         when{' '}
         <BadgeButton url="customise">
-          <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />
+          <Text>{initialDenomName}</Text>
+          <DenomIcon denomName={initialDenomName} />
           <Text>=</Text>
           <Text>
-            {startPrice} {initialDenomName}
+            {startPrice} {resultingDenomName}
           </Text>
-          <DenomIcon denomName={initialDenom} />
+          <DenomIcon denomName={resultingDenom} />
         </BadgeButton>
       </>
     );

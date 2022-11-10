@@ -1,17 +1,48 @@
-import { Box, Collapse, FormControl, FormHelperText, HStack, Image, Stack, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Collapse,
+  FormControl,
+  FormHelperText,
+  HStack,
+  Image,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
+import { useRouter } from 'next/router';
 import SendToWallet from './SendToWallet';
 import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import dcaOutSteps from '../dcaOutSteps';
+
+function InvalidData() {
+  const router = useRouter();
+  const { actions } = useConfirmForm(FormNames.DcaOut);
+
+  const handleClick = () => {
+    actions.resetAction();
+    router.push('/create-strategy/dca-out/assets');
+  };
+  return (
+    <Center>
+      {/* Better to link to start of specific strategy */}
+      Invalid Data, please&nbsp;
+      <Button onClick={handleClick} variant="link">
+        restart
+      </Button>
+    </Center>
+  );
+}
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaOut);
@@ -35,25 +66,29 @@ function Page() {
             Post Purchase
           </NewStrategyModalHeader>
           <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
-            <Form autoComplete="off">
-              <FormControl>
-                <Stack direction="column" spacing={6}>
-                  <SendToWallet />
-                  <FormHelperText>
-                    <HStack>
-                      <Text>Multiple transactions supported by</Text>
-                      <Image src="/images/kujiraLogo.svg" /> <Text>(Coming soon)</Text>
-                    </HStack>
-                  </FormHelperText>
-                  <Collapse in={values.sendToWallet === SendToWalletValues.No}>
-                    <Box m="px">
-                      <RecipientAccount />
-                    </Box>
-                  </Collapse>
-                  <Submit>Next</Submit>
-                </Stack>
-              </FormControl>
-            </Form>
+            {state ? (
+              <Form autoComplete="off">
+                <FormControl>
+                  <Stack direction="column" spacing={6}>
+                    <SendToWallet />
+                    <FormHelperText>
+                      <HStack>
+                        <Text>Multiple transactions supported by</Text>
+                        <Image src="/images/kujiraLogo.svg" /> <Text>(Coming soon)</Text>
+                      </HStack>
+                    </FormHelperText>
+                    <Collapse in={values.sendToWallet === SendToWalletValues.No}>
+                      <Box m="px">
+                        <RecipientAccount />
+                      </Box>
+                    </Collapse>
+                    <Submit>Next</Submit>
+                  </Stack>
+                </FormControl>
+              </Form>
+            ) : (
+              <InvalidData />
+            )}
           </NewStrategyModalBody>
         </NewStrategyModal>
       )}

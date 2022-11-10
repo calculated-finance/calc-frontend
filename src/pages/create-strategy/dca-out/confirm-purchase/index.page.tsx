@@ -23,7 +23,7 @@ function InvalidData() {
 
   const handleClick = () => {
     actions.resetAction();
-    router.push('/create-strategy/assets');
+    router.push('/create-strategy/dca-out/assets');
   };
   return (
     <Center>
