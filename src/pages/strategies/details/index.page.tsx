@@ -39,7 +39,6 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
-import { getLastExecutionDate } from 'src/helpers/getLastExecutionDate';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
@@ -273,9 +272,7 @@ function Page() {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-                  {isStrategyOperating(data.vault) 
-                  ? getStrategyEndDate(data.vault) 
-                  : getLastExecutionDate(events)}
+                  {getStrategyEndDate(data.vault, events)} 
                 </Text>
               </GridItem>
               <GridItem colSpan={1}>
