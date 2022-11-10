@@ -1,6 +1,6 @@
 import { useWallet } from '@wizard-ui/react';
 
-export function mockUseWallet(mockQuery: jest.Mock, mockExecute: jest.Mock, mockGetBalance?: jest.Mock) {
+export function mockUseWallet(mockQuery: jest.Mock, mockExecute?: jest.Mock, mockGetBalance?: jest.Mock) {
   (useWallet as jest.Mock).mockImplementation(() => ({
     address: 'kujitestwallet',
     connected: true,

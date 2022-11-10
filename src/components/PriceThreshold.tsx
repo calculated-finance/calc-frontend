@@ -17,14 +17,15 @@ import {
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '@components/NumberInput';
 import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
-import usePrice from '@hooks/usePrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
+import usePrice from '@hooks/usePrice';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { yesNoData } from '../pages/create-strategy/dca-in/customise/yesNoData';
+import { TransactionType } from './TransactionType';
 
 function PriceThresholdToggle() {
   const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
@@ -57,7 +58,7 @@ type PriceThresholdProps = {
   title: string;
   description: string;
   formName: FormNames;
-  transactionType: 'buy' | 'sell';
+  transactionType: TransactionType;
 };
 
 export default function PriceThreshold({ title, description, formName, transactionType }: PriceThresholdProps) {
@@ -65,7 +66,11 @@ export default function PriceThreshold({ title, description, formName, transacti
   const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
 
-  const { price, pairAddress, isLoading } = usePrice(state?.step1.resultingDenom, state?.step1.initialDenom);
+  const { price, pairAddress, isLoading } = usePrice(
+    state?.step1.resultingDenom,
+    state?.step1.initialDenom,
+    transactionType,
+  );
 
   if (!state) {
     return null;
