@@ -9,6 +9,7 @@ import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
+import { TransactionType } from '@components/TransactionType';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -107,7 +108,7 @@ function DcaInStep2() {
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
-                      transactionType="buy"
+                      transactionType={TransactionType.Buy}
                       formName={FormNames.DcaIn}
                       title="Set buy price ceiling?"
                       description="CALC won't buy if the asset price exceeds this set value."

@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '@components/NumberInput';
+import { TransactionType } from '@components/TransactionType';
 import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
 import usePrice from '@hooks/usePrice';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -22,7 +23,11 @@ export default function StartPrice() {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
   const { state } = useStep2Form(FormNames.DcaIn);
 
-  const { price, pairAddress, isLoading } = usePrice(state?.step1.resultingDenom, state?.step1.initialDenom);
+  const { price, pairAddress, isLoading } = usePrice(
+    state?.step1.resultingDenom,
+    state?.step1.initialDenom,
+    TransactionType.Buy,
+  );
 
   if (!state) {
     return null;
