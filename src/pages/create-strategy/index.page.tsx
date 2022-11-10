@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner, Link } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
@@ -17,6 +17,7 @@ type StrategyCardProps = {
   enabled?: boolean;
   href?: StrategyUrls;
   advanced?: boolean;
+  learnMoreHref?: string;
 };
 
 const accumulationStratgies: StrategyCardProps[] = [
@@ -26,18 +27,21 @@ const accumulationStratgies: StrategyCardProps[] = [
     icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
     enabled: true,
     href: StrategyUrls.DCAIn,
+    learnMoreHref: 'https://calculated.fi/standard-dca-in',
   },
   {
     name: 'Algorithm DCA+ In',
     description: 'Let our machine learning DCA algorithms invest for you.',
     advanced: true,
     icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+    learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
   },
   {
     name: 'Buy the Dip',
     description: 'Auto-buy after a specified % dip in your favourite asset.',
     advanced: true,
     icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
+    learnMoreHref: 'https://calculated.fi/buy-the-dip',
   },
 ];
 
@@ -48,12 +52,14 @@ const takeProfitStrategies: StrategyCardProps[] = [
     icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
     enabled: true,
     href: StrategyUrls.DCAOut,
+    learnMoreHref: 'https://calculated.fi/standard-dca-out',
   },
   {
     name: 'Algorithm DCA+ Out',
     description: 'Let our machine learning DCA algorithms sell for you.',
     advanced: true,
     icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+    learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
   },
   {
     name: 'Auto-take Profit',
@@ -62,6 +68,7 @@ const takeProfitStrategies: StrategyCardProps[] = [
 
     icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
     enabled: false,
+    learnMoreHref: 'https://calculated.fi/auto-take-profit',
   },
 ];
 
@@ -79,7 +86,7 @@ function InfoPanel(): JSX.Element {
   );
 }
 
-function StrategyCard({ name, description, advanced, icon, href, enabled }: StrategyCardProps) {
+function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, enabled }: StrategyCardProps) {
   return (
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
@@ -108,9 +115,11 @@ function StrategyCard({ name, description, advanced, icon, href, enabled }: Stra
           </Button>
         )}
 
-        <Button colorScheme="blue" variant="ghost">
-          Learn more
-        </Button>
+        <Link href={learnMoreHref} isExternal>
+          <Button as="a" colorScheme="blue" variant="ghost">
+            Learn more
+          </Button>
+        </Link>
       </Flex>
     </Stack>
   );
