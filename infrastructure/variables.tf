@@ -16,6 +16,12 @@ variable "bucket_domain_name" {
   default     = ".calculated.fi"
 }
 
+variable "bucket_subdomain_name" {
+  description = "the subdomain name used for the s3 bucket name"
+  type        = string
+  default     = "test"
+}
+
 variable "project_name" {
   description = "The project/component name"
   type        = string
