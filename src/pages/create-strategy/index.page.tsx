@@ -129,8 +129,8 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
           </Button>
         )}
 
-        <NextLink href={learnMoreHref} target="_blank">
-          <Button as="a" colorScheme="blue" variant="ghost">
+        <NextLink href={learnMoreHref} passHref>
+          <Button as="a" target="_blank" colorScheme="blue" variant="ghost">
             Learn more
           </Button>
         </NextLink>
