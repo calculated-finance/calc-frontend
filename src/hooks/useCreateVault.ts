@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
-import { STAKING_ROUTER_CONTRACT_ADDRESS, CONTRACT_ADDRESS } from 'src/constants';
+import { STAKING_ROUTER_CONTRACT_ADDRESS, CONTRACT_ADDRESS, CREATE_VAULT_FEE, ONE_MILLION } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -8,11 +8,15 @@ import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
-import { Log } from '@cosmjs/stargate/build/logs';
+import { Event } from '@cosmjs/stargate/build/events';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { getFiatPrice } from 'src/helpers/getFiatPrice';
+import { getFeeMessage } from 'src/helpers/getFeeMessage';
+import { DeliverTxResponse } from '@cosmjs/stargate';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { FormNames, useConfirmForm } from './useDcaInForm';
@@ -40,11 +44,12 @@ function getReceiveAmount(
   return Math.floor(deconversion(swapAmount * price)).toString();
 }
 
-function getMessageAndFunds(
+function getCreateVaultExecuteMsg(
   state: DcaInFormDataAll,
   pairs: Pair[],
   transactionType: TransactionType,
-): { msg: ExecuteMsg; funds: Coin[] } {
+  senderAddress: string,
+): { typeUrl: string; value: MsgExecuteContract } {
   const {
     initialDenom,
     resultingDenom,
@@ -90,10 +95,9 @@ function getMessageAndFunds(
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
-  console.log(priceThresholdValue);
   const minimumReceiveAmount = getReceiveAmount(priceThresholdValue, deconversion, swapAmount, transactionType);
   const targetReceiveAmount = getReceiveAmount(startPrice, deconversion, swapAmount, transactionType);
-  const msg = {
+  const createVaultExecuteMsg = {
     create_vault: {
       label: '',
       time_interval: executionInterval,
@@ -109,18 +113,80 @@ function getMessageAndFunds(
       target_receive_amount: targetReceiveAmount,
     },
   } as ExecuteMsg;
-
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
-  return { msg, funds };
+  const raw = JSON.stringify(createVaultExecuteMsg);
+  const textEncoder = new TextEncoder();
+  const encoded_msg = textEncoder.encode(raw);
+
+  const msgExecuteContract = MsgExecuteContract.fromPartial({
+    contract: CONTRACT_ADDRESS,
+    funds: [
+      Coin.fromPartial({
+        amount: funds[0].amount,
+        denom: funds[0].denom,
+      }),
+    ],
+    msg: encoded_msg,
+    sender: senderAddress,
+  });
+
+  const protobufMsg = {
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+    value: msgExecuteContract,
+  };
+
+  return protobufMsg;
 }
 
-function getStrategyIdFromLog(log: Log) {
-  return log.events.find((event) => event.type === 'wasm')?.attributes.find((attribute) => attribute.key === 'vault_id')
+function getGrantMsg(senderAddress: string): { typeUrl: string; value: MsgGrant } {
+  // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
+  // https://www.npmjs.com/package/cosmjs-types
+  const secondsInOneYear = 31536000;
+  return {
+    typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+    value: {
+      granter: senderAddress,
+      grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
+      grant: {
+        authorization: {
+          typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
+          value: GenericAuthorization.encode(
+            GenericAuthorization.fromPartial({
+              msg: '/cosmos.staking.v1beta1.MsgDelegate',
+            }),
+          ).finish(),
+        },
+        expiration: Timestamp.fromPartial({
+          seconds: new Date().getTime() / 1000 + secondsInOneYear,
+          nanos: 0,
+        }),
+      },
+    } as MsgGrant,
+  };
+}
+
+function getStrategyIdFromEvents(events: readonly Event[]) {
+  return events.find((event) => event.type === 'wasm')?.attributes.find((attribute) => attribute.key === 'vault_id')
     ?.value;
 }
 
+function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse) {
+  const { events } = data;
+  if (!events) {
+    throw new Error('No events');
+  }
+
+  const id = getStrategyIdFromEvents(events);
+
+  if (!id) {
+    throw new Error('No id found');
+  }
+  return id;
+}
+
 const useCreateVault = (formName: FormNames, transactionType: TransactionType) => {
+  const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
@@ -141,91 +207,20 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       throw Error('No pairs found');
     }
 
-    const { msg, funds } = getMessageAndFunds(state, pairs, transactionType);
+    msgs.push(getCreateVaultExecuteMsg(state, pairs, transactionType, senderAddress));
+
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
-      // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
-      // https://www.npmjs.com/package/cosmjs-types
-
-      const raw = JSON.stringify(msg);
-      const enc = new TextEncoder();
-      const encoded_msg = enc.encode(raw);
-
-      const contractMsg = MsgExecuteContract.fromPartial({
-        contract: CONTRACT_ADDRESS,
-        funds: [
-          Coin.fromPartial({
-            amount: funds[0].amount,
-            denom: funds[0].denom,
-          }),
-        ],
-        msg: encoded_msg,
-        sender: senderAddress,
-      });
-
-      const secondsInOneYear = 31536000;
-
-      const grantMsg = {
-        typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-        value: {
-          granter: senderAddress,
-          grantee: STAKING_ROUTER_CONTRACT_ADDRESS,
-          grant: {
-            authorization: {
-              typeUrl: '/cosmos.authz.v1beta1.GenericAuthorization',
-              value: GenericAuthorization.encode(
-                GenericAuthorization.fromPartial({
-                  msg: '/cosmos.staking.v1beta1.MsgDelegate',
-                }),
-              ).finish(),
-            },
-            expiration: Timestamp.fromPartial({
-              seconds: new Date().getTime() / 1000 + secondsInOneYear,
-              nanos: 0,
-            }),
-          },
-        } as MsgGrant,
-      };
-
-      const result = client.signAndBroadcast(
-        senderAddress,
-        [
-          grantMsg,
-          {
-            typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-            value: contractMsg,
-          },
-        ],
-        'auto',
-        'memo',
-      );
-      return result.then((data) => {
-        const { rawLog } = data;
-        if (!rawLog) {
-          throw new Error('No raw log');
-        }
-
-        const parsedLogs = JSON.parse(rawLog);
-        const [, log] = parsedLogs as Log[];
-        const id = getStrategyIdFromLog(log);
-
-        if (!id) {
-          throw new Error('No id found');
-        }
-        return id;
-      });
+      msgs.push(getGrantMsg(senderAddress));
     }
-    const result = client.execute(senderAddress, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
-    return result.then((data) => {
-      const [log] = data.logs;
-      const id = getStrategyIdFromLog(log);
 
-      if (!id) {
-        throw new Error('No id found');
-      }
-      return id;
-    });
+    const price = getFiatPrice(state.initialDenom);
+    const tokensToCoverFee = ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
+    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
+
+    const result = client.signAndBroadcast(senderAddress, msgs, 'auto', 'memo');
+    return result.then((data) => getVaultIdFromDeliverTxResponse(data));
   });
 };
 
