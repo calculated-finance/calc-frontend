@@ -6,50 +6,11 @@ on:
       - main
 
 jobs:
-  # test-calc-fi-frontend-sandbox:
-  #   name: Test (sandbox)
-  #   uses: ./.github/workflows/test.yml
-  #   with:
-  #     ENVIRONMENT: test
-  #   secrets:
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  #     AWS_REGION: ${{ secrets.AWS_REGION }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #     NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
-  #     NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
-  #     NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
-  #     NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
-  #     NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
-  #     NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
-
-  # deploy-calc-fi-frontend-sandbox:
-  #   name: Deploy (sandbox)
-  #   uses: ./.github/workflows/deploy.yml
-  #   needs:
-  #     - test-calc-fi-frontend-sandbox
-  #   with:
-  #     ENVIRONMENT: test
-  #     BUCKET_DOMAIN_NAME: test.calculated.fi
-  #   secrets:
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  #     AWS_REGION: ${{ secrets.AWS_REGION }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #     NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
-  #     NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
-  #     NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
-  #     NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
-  #     NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
-  #     NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
-
-  deploy-calc-fi-frontend-production:
-    name: Deploy (production)
-    uses: ./.github/workflows/deploy.yml
-    # needs: [test-calc-fi-frontend-sandbox, deploy-calc-fi-frontend-sandbox]
+  test-calc-fi-frontend-sandbox:
+    name: Test (sandbox)
+    uses: ./.github/workflows/test.yml
     with:
-      ENVIRONMENT: production
-      BUCKET_DOMAIN_NAME: app.calculated.fi
+      ENVIRONMENT: test
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -61,3 +22,42 @@ jobs:
       NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
       NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
       NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
+
+  deploy-calc-fi-frontend-sandbox:
+    name: Deploy (sandbox)
+    uses: ./.github/workflows/deploy.yml
+    needs:
+      - test-calc-fi-frontend-sandbox
+    with:
+      ENVIRONMENT: test
+      BUCKET_DOMAIN_NAME: test.calculated.fi
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
+      NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
+      NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
+      NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
+      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
+      NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
+
+  # deploy-calc-fi-frontend-production:
+  #   name: Deploy (production)
+  #   uses: ./.github/workflows/deploy.yml
+  #   # needs: [test-calc-fi-frontend-sandbox, deploy-calc-fi-frontend-sandbox]
+  #   with:
+  #     ENVIRONMENT: production
+  #     BUCKET_DOMAIN_NAME: app.calculated.fi
+  #   secrets:
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  #     AWS_REGION: ${{ secrets.AWS_REGION }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #     NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
+  #     NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
+  #     NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
+  #     NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
+  #     NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
+  #     NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
