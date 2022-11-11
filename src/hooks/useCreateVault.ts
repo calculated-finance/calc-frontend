@@ -192,7 +192,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
   const { data: pairsData } = usePairs();
 
   const { state } = useConfirmForm(formName);
-  const { price, data } = useFiatPrice(state?.initialDenom as Denoms);
+  const { price } = useFiatPrice(state?.initialDenom as Denoms);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
