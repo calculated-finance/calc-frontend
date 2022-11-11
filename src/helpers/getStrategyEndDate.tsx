@@ -51,7 +51,7 @@ export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefin
   // @ts-ignore
   if (strategy.trigger.fin_limit_order)
   {
-    return 'pending strategy start'
+    return 'Pending strategy start'
   }
 
   const executions = getStrategyTotalExecutions(strategy)
