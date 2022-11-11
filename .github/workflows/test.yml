@@ -16,17 +16,17 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      CHAIN_ID:
+      NEXT_PUBLIC_CHAIN_ID:
         required: true
-      CONTRACT_ADDRESS:
+      NEXT_PUBLIC_CONTRACT_ADDRESS:
         required: true
-      REST_ENDPOINT:
+      NEXT_PUBLIC_REST_ENDPOINT:
         required: true
-      RPC_ENDPOINT:
+      NEXT_PUBLIC_RPC_ENDPOINT:
         required: true
-      STAKING_ROUTER_CONTRACT_ADDRESS:
+      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS:
         required: true
-      FEE_TAKER_ADDRESS:
+      NEXT_PUBLIC_FEE_TAKER_ADDRESS:
         required: true
   pull_request:
     inputs:
@@ -58,12 +58,12 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      CHAIN_ID: ${{ secrets.CHAIN_ID }}
-      CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
-      REST_ENDPOINT: ${{ secrets.REST_ENDPOINT }}
-      RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
-      STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.STAKING_ROUTER_CONTRACT_ADDRESS }}
-      FEE_TAKER_ADDRESS: ${{ secrets.FEE_TAKER_ADDRESS }}
+      NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
+      NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
+      NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
+      NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
+      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
+      NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
