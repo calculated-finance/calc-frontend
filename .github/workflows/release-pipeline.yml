@@ -1,9 +1,9 @@
-name: Deployment Pipeline
+name: Deploy to Production
 
 on:
   push:
     branches:
-      - main
+      - release
 
 jobs:
   test-calc-fi-frontend-sandbox:
@@ -32,7 +32,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy-calc-fi-frontend-production:
-    name: Deploy (sandbox)
+    name: Deploy (production)
     uses: ./.github/workflows/deploy.yml
     needs: [test-calc-fi-frontend-sandbox, deploy-calc-fi-frontend-sandbox]
     with:
