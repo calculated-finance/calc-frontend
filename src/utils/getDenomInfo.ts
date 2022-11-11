@@ -1,5 +1,6 @@
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
+import { CHAIN_ID } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 
 type DenomInfo = {
@@ -98,7 +99,7 @@ const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
 };
 
 function isMainnet() {
-  return (process.env.CHAIN_ID as NETWORK) === 'kaiyo-1';
+  return (CHAIN_ID as NETWORK) === 'kaiyo-1';
 }
 
 export const SUPPORTED_DENOMS = isMainnet() ? Object.keys(mainnetDenoms) : Object.keys(testnetDenoms);
@@ -120,6 +121,7 @@ export class DenomValue {
 }
 
 const getDenomInfo = (denom?: string) => {
+  console.log(isMainnet());
   if (!denom) {
     return defaultDenom;
   }
