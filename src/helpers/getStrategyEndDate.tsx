@@ -1,10 +1,36 @@
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import { findLast } from 'lodash'
-import { isStrategyOperating } from './getStrategyStatus';
+import { isStrategyOperating, isStrategyScheduled } from './getStrategyStatus';
 import { getStrategyTotalExecutions } from './getStrategyTotalExecutions';
 
-function getLastExecutionDate(events: Event[]) {
+function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, remainingExecutions: number)
+{
+  switch (strategy.time_interval) {
+    case 'hourly':
+      startDate.setHours(startDate.getHours() + remainingExecutions)
+      break
+    case 'daily':
+      startDate.setDate(startDate.getDate() + remainingExecutions)
+      break
+    case 'weekly':
+      startDate.setDate(startDate.getDate() + 7 * remainingExecutions)
+      break
+    case 'monthly':
+      startDate.setMonth(startDate.getMonth() + remainingExecutions)
+      break
+    default:
+      return '-'
+  }
+
+  return startDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+function getLastExecutionDateFromStrategyEvents(events: Event[]) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const lastExecutionEvent = findLast(events, (event: Event) => event.data.dca_vault_execution_completed) as Event
@@ -21,39 +47,36 @@ function getLastExecutionDate(events: Event[]) {
 }
 
 export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefined) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (strategy.trigger.fin_limit_order)
+  {
+    return 'Pending strategy start'
+  }
+
+  const executions = getStrategyTotalExecutions(strategy)
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (isStrategyScheduled(strategy) && strategy?.trigger?.time)
+  {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const startDate = new Date(strategy.trigger.time.target_time / 1000000)
+    return getEndDateFromRemainingExecutions(strategy, startDate, executions)
+  }
+
   if (!events)
   {
     return '-'
   }
 
-  const lastExecutionDate = getLastExecutionDate(events)
-
+  const lastExecutionDate = getLastExecutionDateFromStrategyEvents(events)
+  
   if (isStrategyOperating(strategy) && lastExecutionDate)
   {
-    const executions = getStrategyTotalExecutions(strategy)
 
-    switch (strategy.time_interval) {
-      case 'hourly':
-        lastExecutionDate.setHours(lastExecutionDate.getHours() + executions)
-        break
-      case 'daily':
-        lastExecutionDate.setDate(lastExecutionDate.getDate() + executions)
-        break
-      case 'weekly':
-        lastExecutionDate.setDate(lastExecutionDate.getDate() + 7 * executions)
-        break
-      case 'monthly':
-        lastExecutionDate.setMonth(lastExecutionDate.getMonth() + executions)
-        break
-      default:
-        return '-'
-    }
-
-    return lastExecutionDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
+    return getEndDateFromRemainingExecutions(strategy, lastExecutionDate, executions)
   }
 
   if (lastExecutionDate)
