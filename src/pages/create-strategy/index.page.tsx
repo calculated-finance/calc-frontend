@@ -1,25 +1,11 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Image,
-  Box,
-  Badge,
-  Spacer,
-  Wrap,
-  Spinner,
-  Link,
-  Center,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import NextLink from 'next/link';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { useWallet } from '@wizard-ui/react';
 import { ReactElement } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
@@ -146,10 +132,10 @@ StrategyCard.defaultProps = {
 };
 
 function Strategies() {
-  const { data, isLoading } = useQuery(['fear-and-greed-index'], async () => {
+  const { data, isLoading } = useQueryWithNotification(['fear-and-greed-index'], async () => {
     const response = await fetch(`https://api.alternative.me/fng/`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Failed to fetch fear and greed index.');
     }
     return response.json();
   });

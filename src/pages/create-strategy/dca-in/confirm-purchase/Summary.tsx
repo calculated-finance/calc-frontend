@@ -3,9 +3,9 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
-import { useQuery } from '@tanstack/react-query';
 import BadgeButton from '@components/BadgeButton';
 import { REST_ENDPOINT } from 'src/constants';
+import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
@@ -15,12 +15,12 @@ import 'isomorphic-fetch';
 export default function Summary() {
   const { state } = useConfirmForm(FormNames.DcaIn);
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading } = useQueryWithNotification(
     ['validator', state?.autoStakeValidator],
     async () => {
       const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators/${state?.autoStakeValidator}`);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to fetch validators');
       }
       return response.json();
     },

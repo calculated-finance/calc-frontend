@@ -14,15 +14,16 @@ import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { getFiatPrice } from 'src/helpers/getFiatPrice';
 import { getFeeMessage } from 'src/helpers/getFeeMessage';
 import { DeliverTxResponse } from '@cosmjs/stargate';
+import { Denoms } from '@models/Denom';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { FormNames, useConfirmForm } from './useDcaInForm';
 import { Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from '../helpers/findPair';
+import useFiatPrice from './useFiatPrice';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -191,10 +192,15 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
   const { data: pairsData } = usePairs();
 
   const { state } = useConfirmForm(formName);
+  const { price } = useFiatPrice(state?.initialDenom as Denoms);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
       throw new Error('No state');
+    }
+
+    if (!price) {
+      throw new Error('No fiat price');
     }
 
     if (!client) {
@@ -215,7 +221,6 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    const price = getFiatPrice(state.initialDenom);
     const tokensToCoverFee = ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
