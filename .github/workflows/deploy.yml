@@ -21,6 +21,18 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+      CHAIN_ID:
+        required: true
+      CONTRACT_ADDRESS:
+        required: true
+      REST_ENDPOINT:
+        required: true
+      RPC_ENDPOINT:
+        required: true
+      STAKING_ROUTER_CONTRACT_ADDRESS:
+        required: true
+      FEE_TAKER_ADDRESS:
+        required: true
 
 jobs:
   deploy:
@@ -30,6 +42,12 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      CHAIN_ID: ${{ secrets.CHAIN_ID }}
+      CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
+      REST_ENDPOINT: ${{ secrets.REST_ENDPOINT }}
+      RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
+      STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.STAKING_ROUTER_CONTRACT_ADDRESS }}
+      FEE_TAKER_ADDRESS: ${{ secrets.FEE_TAKER_ADDRESS }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
