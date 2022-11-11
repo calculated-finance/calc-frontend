@@ -219,7 +219,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
     const tokensToCoverFee = ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
-    const result = client.signAndBroadcast(senderAddress, msgs, 'auto', 'memo');
+    const result = client.signAndBroadcast(senderAddress, msgs, 'auto');
 
     return result.then((data) => getVaultIdFromDeliverTxResponse(data));
   });

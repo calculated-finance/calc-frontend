@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
@@ -11,29 +10,54 @@ export function mockStrategy(data?: Partial<Strategy>) {
     ...data,
   };
 }
+export function encode(msg: any) {
+  const raw = JSON.stringify(msg);
+  const textEncoder = new TextEncoder();
+  return textEncoder.encode(raw);
+}
 
-const defaultMsg = {
+const defaultExecuteMsg: ExecuteMsg = {
   create_vault: {
-    destinations: undefined,
     label: '',
-    pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
-    slippage_tolerance: '0.02',
-    swap_amount: '1000000',
-    minimum_receive_amount: undefined,
-    target_start_time_utc_seconds: undefined,
     time_interval: 'daily',
+    pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
+    swap_amount: '1000000',
+    target_start_time_utc_seconds: undefined,
+    minimum_receive_amount: undefined,
+    slippage_tolerance: '0.02',
+    destinations: undefined,
     target_receive_amount: undefined,
   },
-} as ExecuteMsg;
+};
 
-const defaultFunds = [
-  { amount: '1000000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
+const defaultMsgs = [
+  {
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+    value: {
+      contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+      funds: [
+        { amount: '1000000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
+      ],
+      msg: encode(defaultExecuteMsg),
+      sender: 'kujitestwallet',
+    },
+  },
+  {
+    typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+    value: {
+      amount: [
+        { amount: '200000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
+      ],
+      fromAddress: 'kujitestwallet',
+      toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+    },
+  },
 ];
 
-export function mockCreateVault(msg = defaultMsg, funds = defaultFunds) {
+export function mockCreateVault(msgs = defaultMsgs) {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
-    .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, funds)
+    .expectCalledWith('kujitestwallet', msgs, 'auto')
     .mockResolvedValueOnce({
       logs: [
         {

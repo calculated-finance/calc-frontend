@@ -113,7 +113,7 @@ describe('DCA In confirm page', () => {
     it('submits form successfully', async () => {
       const mockCreateStrategy = mockCreateVault();
       const mockGetPairsSpy = mockGetPairs();
-      mockUseWallet(mockGetPairsSpy, mockCreateStrategy, jest.fn());
+      mockUseWallet(mockGetPairsSpy, jest.fn(), jest.fn(), mockCreateStrategy);
 
       await renderTarget();
 
@@ -123,7 +123,6 @@ describe('DCA In confirm page', () => {
       // submit
       await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Confirm' })), { timeout: 5000 });
 
-      // expect(mockCreateStrategy).toBeCalledWith({});
       await waitFor(() => expect(mockStateMachine.actions.resetAction).toHaveBeenCalled());
 
       expect(mockRouter.push).toHaveBeenCalledWith({
