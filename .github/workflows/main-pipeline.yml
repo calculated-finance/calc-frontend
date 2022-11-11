@@ -16,6 +16,12 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CHAIN_ID: ${{ secrets.CHAIN_ID }}
+      CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
+      REST_ENDPOINT: ${{ secrets.REST_ENDPOINT }}
+      RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
+      STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.STAKING_ROUTER_CONTRACT_ADDRESS }}
+      FEE_TAKER_ADDRESS: ${{ secrets.FEE_TAKER_ADDRESS }}
 
   deploy-calc-fi-frontend-sandbox:
     name: Deploy (sandbox)
@@ -30,3 +36,9 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CHAIN_ID: ${{ secrets.CHAIN_ID }}
+      CONTRACT_ADDRESS: ${{ secrets.CONTRACT_ADDRESS }}
+      REST_ENDPOINT: ${{ secrets.REST_ENDPOINT }}
+      RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
+      STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.STAKING_ROUTER_CONTRACT_ADDRESS }}
+      FEE_TAKER_ADDRESS: ${{ secrets.FEE_TAKER_ADDRESS }}

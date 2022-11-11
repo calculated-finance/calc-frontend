@@ -1,7 +1,7 @@
 import { TransactionType } from '@components/TransactionType';
-import { Denoms } from '@models/Denom';
+import { TestnetDenoms } from '@models/Denom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { Denom } from 'kujira.js/lib/cjs/fin';
 import { mockBook } from 'src/helpers/test/mockBook';
 import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
@@ -30,7 +30,7 @@ describe.skip('usePrice', () => {
       ],
     });
     mockUseWallet(mockBookSpy);
-    const { result } = renderHook(() => usePrice(Denoms.NBTC, Denoms.USK, TransactionType.Buy), {
+    const { result } = renderHook(() => usePrice(TestnetDenoms.NBTC, TestnetDenoms.USK, TransactionType.Buy), {
       wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
     });
     expect(result.current).toEqual(1);
