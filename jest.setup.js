@@ -1,4 +1,5 @@
 import 'jest-canvas-mock';
+import { TextEncoder, TextDecoder } from 'util';
 
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
@@ -10,5 +11,8 @@ global.console.error = (error) => {
     ? null
     : originalConsoleError(error);
 };
+
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 
 jest.setTimeout(10000);

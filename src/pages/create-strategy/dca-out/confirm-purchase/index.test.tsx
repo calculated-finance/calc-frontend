@@ -6,7 +6,7 @@ import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
+import { encode, mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
 import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
@@ -111,24 +111,50 @@ describe('DCA Out confirm page', () => {
 
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
-      const mockCreateStrategy = mockCreateVault(
+      const executeMsg = {
+        create_vault: {
+          label: '',
+          time_interval: 'daily',
+          pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
+          swap_amount: '1000000',
+          target_start_time_utc_seconds: undefined,
+          minimum_receive_amount: undefined,
+          slippage_tolerance: '0.02',
+          destinations: undefined,
+          target_receive_amount: undefined,
+        },
+      };
+      const mockCreateStrategy = mockCreateVault([
         {
-          create_vault: {
-            destinations: undefined,
-            label: '',
-            pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
-            slippage_tolerance: '0.02',
-            swap_amount: '1000000',
-            target_receive_amount: undefined,
-            target_start_time_utc_seconds: undefined,
-            time_interval: 'daily',
-            minimum_receive_amount: undefined,
+          typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+          value: {
+            contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+            funds: [
+              {
+                amount: '1000000',
+                denom: 'ukuji',
+              },
+            ],
+            msg: encode(executeMsg),
+            sender: 'kujitestwallet',
           },
         },
-        [{ amount: '1000000', denom: 'ukuji' }],
-      );
+        {
+          typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+          value: {
+            amount: [
+              {
+                amount: '200000',
+                denom: 'ukuji',
+              },
+            ],
+            fromAddress: 'kujitestwallet',
+            toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+          },
+        },
+      ]);
       const mockGetPairsSpy = mockGetPairs();
-      mockUseWallet(mockGetPairsSpy, mockCreateStrategy, jest.fn());
+      mockUseWallet(mockGetPairsSpy, jest.fn(), jest.fn(), mockCreateStrategy);
 
       await renderTarget();
 
