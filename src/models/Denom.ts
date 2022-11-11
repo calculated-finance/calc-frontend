@@ -2,7 +2,7 @@ import { Coin } from '@cosmjs/stargate';
 
 export type Denom = Coin['denom'];
 
-export enum Denoms {
+export enum TestnetDenoms {
   Demo = 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   Kuji = 'ukuji',
   AXL = 'ibc/85CE72EE820A66F0ABD5EE3907A34E243E4BE2D6CFAEB4C08DF85BD6C0784FA2',
@@ -10,5 +10,11 @@ export enum Denoms {
   OSMO = 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
   USK = 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
   NBTC = 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
-  LOCAL = 'factory/kujira12w0ua4eqnkk0aahtnjlt6h3dhxael6x25s507w/local',
+}
+
+export enum MainnetDenoms {
+  Kuji = 'ukuji',
+  AXL = 'ibc/295548A78785A1007F232DE286149A6FF512F180AF5657780FC89C009E2C348F',
+  USK = 'factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk',
+  ATOM = 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
 }

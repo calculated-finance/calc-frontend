@@ -16,7 +16,7 @@ import { TransactionType } from '@components/TransactionType';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { getFeeMessage } from 'src/helpers/getFeeMessage';
 import { DeliverTxResponse } from '@cosmjs/stargate';
-import { Denoms } from '@models/Denom';
+import { Denom } from '@models/Denom';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { FormNames, useConfirmForm } from './useDcaInForm';
@@ -192,7 +192,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
   const { data: pairsData } = usePairs();
 
   const { state } = useConfirmForm(formName);
-  const { price } = useFiatPrice(state?.initialDenom as Denoms);
+  const { price } = useFiatPrice(state?.initialDenom as Denom);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {

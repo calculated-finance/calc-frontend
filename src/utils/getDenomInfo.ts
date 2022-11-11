@@ -1,4 +1,5 @@
-import { Denom, Denoms } from '@models/Denom';
+import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
+import { NETWORK } from 'kujira.js';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 
 type DenomInfo = {
@@ -9,6 +10,7 @@ type DenomInfo = {
   stakeable?: boolean;
   stable?: boolean;
   coingeckoId: string;
+  stakeableAndSupported?: boolean;
 };
 
 const defaultDenom = {
@@ -17,54 +19,89 @@ const defaultDenom = {
   conversion: (value: number) => value / 1000000,
   deconversion: (value: number) => value * 1000000,
   stakeable: true,
+  stakeableAndSupported: false,
   stable: false,
   coingeckoId: '',
 };
 
-const denoms: Record<string, DenomInfo> = {
-  [Denoms.Demo]: {
-    name: 'DEMO',
-    stable: true,
-    coingeckoId: 'evmos',
+const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
+  [MainnetDenoms.ATOM]: {
+    name: 'ATOM',
+    icon: '/images/denoms/atom.svg',
+    stakeable: true,
+    coingeckoId: 'cosmos',
   },
-  [Denoms.USK]: {
+  [MainnetDenoms.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
   },
-  [Denoms.Kuji]: {
+  [MainnetDenoms.Kuji]: {
     name: 'KUJI',
-
     icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
+    stakeableAndSupported: true,
   },
-  [Denoms.AXL]: {
+  [MainnetDenoms.AXL]: {
     name: 'axlUSDC',
     icon: '/images/denoms/axl.svg',
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
   },
-  [Denoms.LUNA]: {
+};
+
+const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
+  [TestnetDenoms.Demo]: {
+    name: 'DEMO',
+    stable: true,
+    coingeckoId: 'evmos',
+  },
+  [TestnetDenoms.USK]: {
+    name: 'USK',
+    icon: '/images/denoms/usk.svg',
+    stakeable: false,
+    stable: true,
+    coingeckoId: 'usk',
+  },
+  [TestnetDenoms.Kuji]: {
+    name: 'KUJI',
+
+    icon: '/images/denoms/kuji.svg',
+    coingeckoId: 'kujira',
+    stakeableAndSupported: true,
+  },
+  [TestnetDenoms.AXL]: {
+    name: 'axlUSDC',
+    icon: '/images/denoms/axl.svg',
+    stakeable: false,
+    stable: true,
+    coingeckoId: 'usd-coin',
+  },
+  [TestnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
     coingeckoId: 'terra-luna',
   },
-  [Denoms.OSMO]: {
+  [TestnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
     coingeckoId: 'osmosis',
   },
-  [Denoms.NBTC]: {
+  [TestnetDenoms.NBTC]: {
     name: 'NBTC',
     stakeable: false,
     coingeckoId: 'bitcoin',
   },
 };
 
-export const SUPPORTED_DENOMS = Object.keys(denoms);
+function isMainnet() {
+  return (process.env.CHAIN_ID as NETWORK) === 'kaiyo-1';
+}
+
+export const SUPPORTED_DENOMS = isMainnet() ? Object.keys(mainnetDenoms) : Object.keys(testnetDenoms);
 
 export class DenomValue {
   readonly denomId: Denom;
@@ -86,9 +123,15 @@ const getDenomInfo = (denom?: string) => {
   if (!denom) {
     return defaultDenom;
   }
+  if (isMainnet()) {
+    return {
+      ...defaultDenom,
+      ...mainnetDenoms[denom as MainnetDenoms],
+    };
+  }
   return {
     ...defaultDenom,
-    ...denoms[denom],
+    ...testnetDenoms[denom as TestnetDenoms],
   };
 };
 
