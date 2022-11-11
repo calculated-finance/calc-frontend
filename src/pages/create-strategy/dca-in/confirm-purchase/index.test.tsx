@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
 import YesNoValues from '@models/YesNoValues';
+import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
 import Page from './index.page';
 
 const mockRouter = {
@@ -78,6 +79,8 @@ async function renderTarget() {
 
 describe('DCA In confirm page', () => {
   beforeEach(() => {
+    mockFiatPrice('usk');
+
     jest.clearAllMocks();
   });
   describe('on page load', () => {
@@ -119,6 +122,10 @@ describe('DCA In confirm page', () => {
 
       // tick checkbox
       userEvent.click(screen.getByTestId('agreement-checkbox'));
+
+      // wait for fiat price to load
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 1000));
 
       // submit
       await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Confirm' })), { timeout: 5000 });

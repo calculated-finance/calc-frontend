@@ -25,7 +25,7 @@ const useValidators = (): Validator[] | undefined => {
     async () => {
       const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators?pagination.limit=${pageSize}`);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Failed to fetch validators');
       }
       return response.json();
     },

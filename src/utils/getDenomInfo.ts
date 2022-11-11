@@ -8,6 +8,7 @@ type DenomInfo = {
   deconversion?: (value: number) => number;
   stakeable?: boolean;
   stable?: boolean;
+  coingeckoId: string;
 };
 
 const defaultDenom = {
@@ -17,41 +18,49 @@ const defaultDenom = {
   deconversion: (value: number) => value * 1000000,
   stakeable: true,
   stable: false,
+  coingeckoId: '',
 };
 
 const denoms: Record<string, DenomInfo> = {
   [Denoms.Demo]: {
     name: 'DEMO',
     stable: true,
+    coingeckoId: 'evmos',
   },
   [Denoms.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
     stakeable: false,
     stable: true,
+    coingeckoId: 'usk',
   },
   [Denoms.Kuji]: {
     name: 'KUJI',
 
     icon: '/images/denoms/kuji.svg',
+    coingeckoId: 'kujira',
   },
   [Denoms.AXL]: {
     name: 'axlUSDC',
     icon: '/images/denoms/axl.svg',
     stakeable: false,
     stable: true,
+    coingeckoId: 'usd-coin',
   },
   [Denoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
+    coingeckoId: 'terra-luna',
   },
   [Denoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
+    coingeckoId: 'osmosis',
   },
   [Denoms.NBTC]: {
     name: 'NBTC',
     stakeable: false,
+    coingeckoId: 'bitcoin',
   },
 };
 

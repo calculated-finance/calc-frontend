@@ -13,3 +13,4 @@ export const FEE_TAKER_ADDRESS = process.env.FEE_TAKER_ADDRESS || 'kujira1tn65m5
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.3;
 export const ONE_MILLION = 1000000;
+export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
