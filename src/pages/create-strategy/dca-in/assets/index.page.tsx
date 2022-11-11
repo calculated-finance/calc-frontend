@@ -23,7 +23,7 @@ function DcaIn() {
 
   const { isPageLoading } = usePageLoad();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
+  const { validate } = useValidation(step1ValidationSchema);
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

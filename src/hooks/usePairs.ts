@@ -26,6 +26,8 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pai
 export default function usePairs() {
   const { client } = useWallet();
 
+  console.log(CONTRACT_ADDRESS);
+
   return useQueryWithNotification<PairsResponse>(
     ['pairs', client],
     async () => {
