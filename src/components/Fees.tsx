@@ -1,8 +1,23 @@
-import { Box, Button, Collapse, Fade, Flex, Heading, Icon, Spacer, Stack, Text, useBoolean } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Collapse,
+  Fade,
+  Flex,
+  Heading,
+  Icon,
+  Spacer,
+  Spinner,
+  Stack,
+  Text,
+  useBoolean,
+} from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
+import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import useFiatPrice from '@hooks/useFiatPrice';
 
 function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
   const [isOpen, { toggle }] = useBoolean(false);
@@ -102,6 +117,7 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
 
 export default function Fees({ formName }: { formName: FormNames }) {
   const { state } = useConfirmForm(formName);
+  const { price } = useFiatPrice(state?.initialDenom);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -109,7 +125,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
     return null;
   }
 
-  const { initialDenom, initialDeposit, swapAmount, autoStakeValidator } = state;
+  const { initialDenom, swapAmount, autoStakeValidator } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
 
@@ -118,17 +134,16 @@ export default function Fees({ formName }: { formName: FormNames }) {
       <Text textStyle="body-xs">
         Deposit fee{' '}
         <Text as="span" textColor="white">
-          {getPrettyFee(initialDeposit, 0.001)} {initialDenomName}
+          {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~{getPrettyFee(swapAmount, 0.015)} {initialDenomName}
+          ~{getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
         </Text>{' '}
-        per swap
-        {autoStakeValidator && <Text as="span"> &amp; 0.75% auto staking fee</Text>}
+        {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} />
+      {/* <FeeBreakdown initialDenomName={initialDenomName} /> */}
     </Stack>
   );
 }

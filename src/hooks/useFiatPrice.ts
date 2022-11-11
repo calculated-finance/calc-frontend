@@ -14,7 +14,7 @@ export type Validator = {
 
 export type PriceResponse = any;
 
-const useFiatPrice = (denom: Denom) => {
+const useFiatPrice = (denom: Denom | undefined) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
 
