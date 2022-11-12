@@ -10,7 +10,7 @@ import usePrice from '.';
 
 jest.mock('@wizard-ui/react');
 
-describe.skip('usePrice', () => {
+describe('usePrice', () => {
   test('should return price', async () => {
     const mockBookSpy = mockBook('kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw', {
       base: [

@@ -24,6 +24,9 @@ const mockKujiraQuery = {
   staking: {
     validators: mockValidators(),
   },
+  bank: {
+    msgSend: jest.fn().mockImplementation(() => 'hi'),
+  },
 };
 
 const mockToast = jest.fn();
@@ -374,7 +377,7 @@ describe('Detail page', () => {
       await renderTarget();
 
       // eslint-disable-next-line no-promise-executor-return
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 4000));
 
       await waitFor(() => {
         fireEvent.click(screen.getByTestId('cancel-strategy-button'));
