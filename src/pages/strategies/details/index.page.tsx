@@ -142,7 +142,7 @@ function Page() {
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { time, fin_limit_order } = trigger;
+    const { time, fin_limit_order } = trigger || {};
     const targetTime = time?.target_time;
 
     const targetPrice = fin_limit_order?.target_price;
