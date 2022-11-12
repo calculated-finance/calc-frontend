@@ -32,7 +32,6 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
-import strategy from 'src/fixtures/strategy';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
@@ -379,7 +378,7 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
                       ? 'Market value of holdings'
                       : 'Market value of profits'}
                   </Heading>
@@ -389,31 +388,31 @@ function Page() {
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
                       ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
                       : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
                   </Heading>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Text fontSize="sm">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
                       ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
                       : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
                   </Text>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <Heading size="xs">
-                    {getStrategyType(strategy) === StrategyTypes.DCAIn
+                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
                       ? 'Average token cost'
                       : 'Average token sell price'}
                   </Heading>
