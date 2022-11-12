@@ -11,9 +11,9 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import SendToWalletValues from '@models/SendToWalletValues';
-import useValidators, { Validator } from '@hooks/useValidators';
+import useValidators from '@hooks/useValidators';
+import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import Select from '../../../../components/Select';
-import 'isomorphic-fetch';
 
 export function DummyAutoStakeValidator() {
   return (
@@ -43,14 +43,14 @@ export function DummyAutoStakeValidator() {
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
   const [sendToWalletfield] = useField({ name: 'sendToWallet' });
-  const validators = useValidators();
+  const { validators } = useValidators();
 
   const options = validators?.map((validator: Validator) => ({
-    value: validator.operator_address,
+    value: validator.operatorAddress,
     label:
       validator.description && validator.description.moniker
         ? validator.description.moniker
-        : validator.operator_address,
+        : validator.operatorAddress,
   }));
 
   return (

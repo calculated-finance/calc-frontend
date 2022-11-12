@@ -11,6 +11,7 @@ import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
 import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { NetworkContext } from '@components/NetworkContext';
 import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
@@ -49,11 +50,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ChakraProvider theme={theme}>
         <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
-          <CalcWalletModalProvider>
-            <QueryClientProvider client={queryClient}>
-              <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
-            </QueryClientProvider>
-          </CalcWalletModalProvider>
+          <NetworkContext>
+            <CalcWalletModalProvider>
+              <QueryClientProvider client={queryClient}>
+                <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
+              </QueryClientProvider>
+            </CalcWalletModalProvider>
+          </NetworkContext>
         </WizardProvider>
       </ChakraProvider>
     </>

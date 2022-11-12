@@ -10,6 +10,8 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
 import { mockBalances } from 'src/helpers/test/mockBalances';
+import { kujiraQueryClient } from 'kujira.js';
+import { NetworkContext } from '@components/NetworkContext';
 import Page from './index.page';
 
 const mockRouter = {
@@ -29,6 +31,14 @@ jest.mock('next/router', () => ({
   },
 }));
 
+const mockKujiraQuery = {
+  bank: {
+    allBalances: mockBalances(),
+  },
+};
+
+jest.mock('kujira.js');
+
 const mockStateMachine = {
   state: {},
   actions: {
@@ -47,11 +57,13 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Page />
-        </QueryClientProvider>
-      </ThemeProvider>,
+      <NetworkContext>
+        <ThemeProvider theme={theme}>
+          <QueryClientProvider client={queryClient}>
+            <Page />
+          </QueryClientProvider>
+        </ThemeProvider>
+      </NetworkContext>,
     );
   });
 }
@@ -59,7 +71,7 @@ async function renderTarget() {
 describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockBalances();
+    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
@@ -147,6 +159,10 @@ describe('DCA Out Assets page', () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
       await renderTarget();
+
+      // wait for balances to load
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 1000));
 
       // select initial denom
       await waitFor(() => screen.getByText(/What position do you want to take profit on?/));

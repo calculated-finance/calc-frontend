@@ -12,11 +12,11 @@ import {
   Icon as ChakraIcon,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { ChildrenProp } from '@components/Sidebar';
 import Spinner from '@components/Spinner';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
+import { ChildrenProp } from 'src/helpers/ChildrenProp';
 import Stepper from './Stepper';
 import { findStep, StepConfig } from './steps';
 

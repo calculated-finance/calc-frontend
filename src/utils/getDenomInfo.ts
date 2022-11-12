@@ -25,7 +25,7 @@ const defaultDenom = {
   coingeckoId: '',
 };
 
-const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
+export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.ATOM]: {
     name: 'ATOM',
     icon: '/images/denoms/atom.svg',
@@ -54,7 +54,7 @@ const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   },
 };
 
-const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
+export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
@@ -98,11 +98,9 @@ const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   },
 };
 
-function isMainnet() {
+export function isMainnet() {
   return (CHAIN_ID as NETWORK) === 'kaiyo-1';
 }
-
-export const SUPPORTED_DENOMS = isMainnet() ? Object.keys(mainnetDenoms) : Object.keys(testnetDenoms);
 
 export class DenomValue {
   readonly denomId: Denom;
@@ -121,7 +119,6 @@ export class DenomValue {
 }
 
 const getDenomInfo = (denom?: string) => {
-  console.log(isMainnet());
   if (!denom) {
     return defaultDenom;
   }

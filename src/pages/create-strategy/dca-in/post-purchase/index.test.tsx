@@ -8,7 +8,17 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockValidators } from 'src/helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
+import { kujiraQueryClient } from 'kujira.js';
+import { NetworkContext } from '@components/NetworkContext';
 import Page from './index.page';
+
+jest.mock('kujira.js');
+
+const mockKujiraQuery = {
+  staking: {
+    validators: mockValidators(),
+  },
+};
 
 const mockRouter = {
   push: jest.fn(),
@@ -51,11 +61,13 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-      <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-          <Page />
-        </QueryClientProvider>
-      </ThemeProvider>,
+      <NetworkContext>
+        <ThemeProvider theme={theme}>
+          <QueryClientProvider client={queryClient}>
+            <Page />
+          </QueryClientProvider>
+        </ThemeProvider>
+      </NetworkContext>,
       { container: document.body },
     );
   });
@@ -64,7 +76,7 @@ async function renderTarget() {
 describe('DCA In post-purchase page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockValidators();
+    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
   });
   describe('on page load', () => {
     it('renders the heading', async () => {

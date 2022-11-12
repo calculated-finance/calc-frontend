@@ -1,40 +1,22 @@
-import { REST_ENDPOINT } from 'src/constants';
+import { useNetwork } from './useNetwork';
 import useQueryWithNotification from './useQueryWithNotification';
 
-export type Validator = {
-  operator_address: string;
-  description: {
-    moniker: string;
-  };
-  jailed: boolean;
-};
-
-export type ValidatorsResponse = {
-  pagination: {
-    next_key: string;
-    total: string;
-  };
-  validators: Validator[];
-};
-
-const useValidators = (): Validator[] | undefined => {
+const useValidators = () => {
+  const { query } = useNetwork();
   const pageSize = 1000;
 
-  const { data } = useQueryWithNotification<ValidatorsResponse>(
+  const { data, ...other } = useQueryWithNotification(
     ['validators'],
-    async () => {
-      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators?pagination.limit=${pageSize}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch validators');
-      }
-      return response.json();
-    },
+    () => query?.staking.validators('BOND_STATUS_BONDED'),
     {
-      keepPreviousData: true,
+      enabled: !!query,
     },
   );
 
-  return data?.validators.filter((v) => !v.jailed);
+  return {
+    validators: data?.validators.filter((validator) => !validator.jailed),
+    ...other,
+  };
 };
 
 export default useValidators;

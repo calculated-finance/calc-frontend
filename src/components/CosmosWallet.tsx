@@ -5,63 +5,22 @@ import {
   HStack,
   Box,
   Button,
-  Text,
   Popover,
   Icon,
   PopoverContent,
   PopoverTrigger,
   useDisclosure,
   Stack,
-  Divider,
-  GridItem,
-  Grid,
   useToast,
   useClipboard,
   useOutsideClick,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
-import useBalances from '@hooks/useBalances';
-import getDenomInfo from '@utils/getDenomInfo';
 import { CopytoclipboardIcon, Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
-import { Coin } from '@cosmjs/stargate';
 import CalcIcon from './Icon';
 import TokenBox from './TokenBox';
-
-function SpendableBalances() {
-  const { data } = useBalances();
-
-  return (
-    <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1}>
-          Balance
-        </Text>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Text textStyle="body-xs">Asset</Text>
-      </GridItem>
-      <GridItem colSpan={3}>
-        <Divider />
-      </GridItem>
-      {data?.balances.map((balance: Coin) => {
-        const { name, conversion } = getDenomInfo(balance.denom);
-        return (
-          <>
-            <GridItem colSpan={1}>
-              <Text fontSize="xs" noOfLines={1}>
-                {conversion(Number(balance.amount))}
-              </Text>
-            </GridItem>
-            <GridItem colSpan={2}>
-              <Text textStyle="body-xs">{name || balance.denom}</Text>
-            </GridItem>
-          </>
-        );
-      })}
-    </Grid>
-  );
-}
+import { SpendableBalances } from './SpendableBalances';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();

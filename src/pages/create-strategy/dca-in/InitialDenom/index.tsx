@@ -75,11 +75,7 @@ export default function InitialDenom() {
     return null;
   }
 
-  console.log(pairs);
-
   const denoms = uniqueQuoteDenoms(pairs).filter(isDenomStable);
-
-  console.log(denoms);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
