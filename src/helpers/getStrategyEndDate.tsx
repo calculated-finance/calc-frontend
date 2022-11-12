@@ -32,7 +32,7 @@ function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, 
 function getLastExecutionDateFromStrategyEvents(events: Event[]) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const lastExecutionEvent = findLast(events, (event: Event) => event.data.dca_vault_execution_completed) as Event;
+  const lastExecutionEvent = findLast(events, (event: Event) => event.data.dca_vault_execution_triggered) as Event;
 
   // vault has no executions yet
   if (!lastExecutionEvent) {
