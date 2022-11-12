@@ -1,4 +1,4 @@
-import { Denom } from '@models/Denom';
+import { Denoms } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
@@ -14,7 +14,7 @@ export type Validator = {
 
 export type PriceResponse = any;
 
-const useFiatPrice = (denom: Denom) => {
+const useFiatPrice = (denom: Denoms) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
 
@@ -31,7 +31,7 @@ const useFiatPrice = (denom: Denom) => {
       return response.json();
     },
     {
-      enabled: !!coingeckoId,
+      enabled: !!coingeckoId && !!fiatCurrencyId,
     },
   );
 

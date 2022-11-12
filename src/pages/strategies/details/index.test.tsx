@@ -2,16 +2,16 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { when } from 'jest-when';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockValidators } from 'src/helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { NetworkContext } from '@components/NetworkContext';
 import { kujiraQueryClient } from 'kujira.js';
+import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
+import { mockCancelVault } from '../../../helpers/test/mockCancelVault';
 
 const mockRouter = {
   push: jest.fn(),
@@ -43,23 +43,6 @@ jest.mock('next/router', () => ({
   },
 }));
 
-function mockCancelVault(success = true) {
-  const execute = jest.fn();
-  const msg = {
-    cancel_vault: {
-      vault_id: '1',
-    },
-  };
-  if (success) {
-    when(execute).calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto').mockResolvedValueOnce({});
-  } else {
-    when(execute)
-      .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto')
-      .mockRejectedValueOnce(new Error('test reason'));
-  }
-  return execute;
-}
-
 async function renderTarget() {
   act(() => {
     render(
@@ -76,16 +59,22 @@ describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    mockFiatPrice('evmos');
   });
   it('renders the heading', async () => {
-    mockUseWallet(mockUseStrategy(), mockCancelVault());
+    mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
     await renderTarget();
     await waitFor(() => expect(screen.getByTestId('details-heading').textContent).toBe('DEMO to KUJI - Weekly'));
   });
   describe('next swap', () => {
     describe('when strategy is completed', () => {
       it('does not render next swap', async () => {
-        mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }), mockCancelVault());
+        mockUseWallet(
+          mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }),
+          jest.fn(),
+          jest.fn(),
+          mockCancelVault(),
+        );
 
         await renderTarget();
         await waitFor(() => expect(screen.queryAllByTestId('next-swap-info')).toEqual([]));
@@ -94,7 +83,7 @@ describe('Detail page', () => {
     describe('when strategy is not completed', () => {
       describe('when time trigger is set', () => {
         it('renders next swap', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('May 22, 2022 at 5:00 PM'));
@@ -102,7 +91,12 @@ describe('Detail page', () => {
       });
       describe('when price trigger is set', () => {
         it('renders next swap', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ trigger: mockPriceTrigger }) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ trigger: mockPriceTrigger }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('When 1 KUJI ≤ 0.5 DEMO'));
@@ -114,7 +108,7 @@ describe('Detail page', () => {
     describe('strategy status', () => {
       describe('when active', () => {
         it('renders active', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('active'));
@@ -122,7 +116,12 @@ describe('Detail page', () => {
       });
       describe('when scheduled', () => {
         it('renders scheduled', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'scheduled' }) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ status: 'scheduled' }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('scheduled'));
@@ -130,7 +129,12 @@ describe('Detail page', () => {
       });
       describe('when completed', () => {
         it('renders completed', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ status: 'inactive' }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-status').textContent).toBe('completed'));
@@ -140,7 +144,7 @@ describe('Detail page', () => {
     describe('strategy name', () => {
       describe('when dca in', () => {
         it('renders name', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-name').textContent).toBe('DEMO to KUJI - Weekly'));
@@ -150,7 +154,7 @@ describe('Detail page', () => {
     describe('strategy type', () => {
       describe('when DCA In', () => {
         it('renders type', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA In'));
@@ -158,7 +162,12 @@ describe('Detail page', () => {
       });
       describe('when DCA Out', () => {
         it('renders type', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-type').textContent).toBe('DCA Out'));
@@ -168,7 +177,12 @@ describe('Detail page', () => {
     describe('strategy start date', () => {
       describe('when scheduled', () => {
         it('renders start date', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('-'));
@@ -176,7 +190,7 @@ describe('Detail page', () => {
       });
       describe('when active', () => {
         it('renders start date', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('May 21, 2022'));
@@ -186,7 +200,12 @@ describe('Detail page', () => {
     describe('strategy end date', () => {
       describe('when scheduled', () => {
         it('renders end date', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }), mockCancelVault());
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
@@ -194,7 +213,7 @@ describe('Detail page', () => {
       });
       describe('when active', () => {
         it('renders end date', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.getByTestId('estimated-strategy-end-date').textContent).toBe('-'));
@@ -203,7 +222,7 @@ describe('Detail page', () => {
     });
     describe('investment cycle', () => {
       it('renders cycle', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-investment-cycle').textContent).toBe('weekly'));
@@ -211,7 +230,7 @@ describe('Detail page', () => {
     });
     describe('strategy swap amount', () => {
       it('renders swap amount', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-swap-amount').textContent).toBe('1 DEMO'));
@@ -219,7 +238,7 @@ describe('Detail page', () => {
     });
     describe('current amount in wallet', () => {
       it('renders amount', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => expect(screen.getByTestId('strategy-current-balance').textContent).toBe('10 DEMO'));
@@ -234,6 +253,8 @@ describe('Detail page', () => {
                 destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
               }),
             }),
+            jest.fn(),
+            jest.fn(),
             mockCancelVault(),
           );
 
@@ -247,6 +268,8 @@ describe('Detail page', () => {
                 destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
               }),
             }),
+            jest.fn(),
+            jest.fn(),
             mockCancelVault(),
           );
 
@@ -256,7 +279,7 @@ describe('Detail page', () => {
       });
       describe('when auto staker is not set', () => {
         it('does not render status', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
           await renderTarget();
           await waitFor(() => expect(screen.queryByTestId('strategy-auto-staking-status')).toBeNull());
         });
@@ -265,7 +288,7 @@ describe('Detail page', () => {
     describe('receiving address', () => {
       describe('when receiving address is the same as current address', () => {
         it('does not render address', async () => {
-          mockUseWallet(mockUseStrategy(), mockCancelVault());
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.queryByTestId('strategy-receiving-address')).toBeNull());
@@ -279,6 +302,8 @@ describe('Detail page', () => {
                 destinations: [{ address: 'kujiraotheraddress', allocation: '1', action: 'send' }],
               }),
             }),
+            jest.fn(),
+            jest.fn(),
             mockCancelVault(),
           );
 
@@ -294,7 +319,7 @@ describe('Detail page', () => {
   describe('cancel button', () => {
     describe('when cancel button is clicked', () => {
       it('opens cancel modal', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => {
@@ -305,7 +330,7 @@ describe('Detail page', () => {
     });
     describe('when cancel modal is closed', () => {
       it('closes cancel modal', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => {
@@ -318,7 +343,7 @@ describe('Detail page', () => {
     });
     describe('when strategy is successfully cancelled', () => {
       it('cancels strategy, redirects and shows toast', async () => {
-        mockUseWallet(mockUseStrategy(), mockCancelVault());
+        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
         await waitFor(() => {
@@ -343,9 +368,14 @@ describe('Detail page', () => {
   });
   describe('when strategy failed to cancel', () => {
     it('closes and shows toast', async () => {
-      mockUseWallet(mockUseStrategy(), mockCancelVault(false));
+      const cancelSpy = mockCancelVault(false);
+      mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), cancelSpy);
 
       await renderTarget();
+
+      // eslint-disable-next-line no-promise-executor-return
+      await new Promise((r) => setTimeout(r, 2000));
+
       await waitFor(() => {
         fireEvent.click(screen.getByTestId('cancel-strategy-button'));
       });

@@ -3,6 +3,7 @@ import { when } from 'jest-when';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { encode } from '../encode';
 
 export function mockStrategy(data?: Partial<Strategy>) {
   return {
@@ -10,12 +11,6 @@ export function mockStrategy(data?: Partial<Strategy>) {
     ...data,
   };
 }
-export function encode(msg: any) {
-  const raw = JSON.stringify(msg);
-  const textEncoder = new TextEncoder();
-  return textEncoder.encode(raw);
-}
-
 const defaultExecuteMsg: ExecuteMsg = {
   create_vault: {
     label: '',

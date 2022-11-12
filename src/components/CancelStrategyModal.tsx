@@ -14,6 +14,7 @@ import {
   ModalProps,
   Stack,
 } from '@chakra-ui/react';
+import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import getDenomInfo from '@utils/getDenomInfo';
 import React from 'react';
@@ -25,7 +26,7 @@ type CancelStrategyModalProps = {
 } & Omit<ModalProps, 'children'>;
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
-  const { mutate: cancelStrategy, isLoading } = useCancelStrategy();
+  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(strategy.balance.denom);
 
   const toast = useToast();
 
@@ -79,7 +80,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
               </Text>
             </Flex>
             <Text textAlign="center" textStyle="body-xs">
-              Cancellation Fee: TBD
+              Cancellation Fee: $1.00 USD
             </Text>
           </Stack>
         </ModalBody>
