@@ -12,7 +12,7 @@ import {
   Icon as ChakraIcon,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { ChildrenProp } from '@components/Sidebar';
+import { ChildrenProp } from "@components/ChildrenProp";
 import Spinner from '@components/Spinner';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';

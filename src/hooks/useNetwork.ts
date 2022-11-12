@@ -1,4 +1,4 @@
-import { Context } from "@components/Context";
+import { Context } from '@components/Context';
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 import { KujiraQueryClient } from 'kujira.js';
 import { useContext } from 'react';

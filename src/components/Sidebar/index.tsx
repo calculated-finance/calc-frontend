@@ -50,10 +50,6 @@ const LinkItems: Array<LinkItem> = [
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
-export type ChildrenProp = {
-  children: ReactNode;
-};
-
 const SIDEBAR_WIDTH = 64;
 
 interface SidebarProps extends BoxProps {

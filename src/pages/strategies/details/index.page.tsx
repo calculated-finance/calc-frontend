@@ -32,8 +32,6 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
-import useValidators from '@hooks/useValidators';
-import { getValidatorNameFromValidators } from 'src/helpers/getValidatorNameFromValidators';
 import strategy from 'src/fixtures/strategy';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';

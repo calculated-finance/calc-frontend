@@ -1,5 +1,5 @@
 import { HStack, StackProps } from '@chakra-ui/react';
-import { ChildrenProp } from '@components/Sidebar';
+import { ChildrenProp } from "@components/ChildrenProp";
 
 export default function Radio({ children, ...props }: ChildrenProp & StackProps) {
   return (

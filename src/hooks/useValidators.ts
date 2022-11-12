@@ -1,4 +1,3 @@
-import { BondStatus } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { useNetwork } from './useNetwork';
 import useQueryWithNotification from './useQueryWithNotification';
 

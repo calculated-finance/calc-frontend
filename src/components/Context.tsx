@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { NetworkContextProps } from './NetworkContext';
+import { NetworkContextProps } from "./NetworkContextProps";
 
 
 export const Context = createContext<NetworkContextProps>({

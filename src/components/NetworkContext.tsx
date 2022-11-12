@@ -1,15 +1,10 @@
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc';
 import { HttpBatchClient } from '@cosmjs/tendermint-rpc/build/rpcclients';
-import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
+import { kujiraQueryClient } from 'kujira.js';
 import { useEffect, useMemo, useState } from 'react';
 import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { ChildrenProp } from 'src/helpers/ChildrenProp';
 import { Context } from './Context';
-import { ChildrenProp } from './Sidebar';
-
-export type NetworkContextProps = {
-  tmClient: Tendermint34Client | null;
-  query: KujiraQueryClient | null;
-};
 
 export function NetworkContext({ children }: ChildrenProp) {
   const [tmClient, setTmClient] = useState<null | Tendermint34Client>(null);
