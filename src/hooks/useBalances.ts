@@ -1,7 +1,6 @@
-import 'isomorphic-fetch';
 import { useWallet } from '@wizard-ui/react';
 import { Coin } from '@cosmjs/stargate';
-import { SUPPORTED_DENOMS } from '@utils/getDenomInfo';
+import { SUPPORTED_DENOMS } from "@utils/SUPPORTED_DENOMS";
 import useQueryWithNotification from './useQueryWithNotification';
 import { useNetwork } from './useNetwork';
 
