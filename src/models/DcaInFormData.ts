@@ -129,7 +129,7 @@ export const allValidationSchema = Yup.object({
   executionInterval: Yup.mixed<ExecutionIntervals>().oneOf(Object.values(ExecutionIntervals)).required(),
   swapAmount: Yup.number()
     .label('Swap Amount')
-    .positive()
+    .moreThan(0.05)
     .required()
     .nullable()
     // can we do the below with .when()?
