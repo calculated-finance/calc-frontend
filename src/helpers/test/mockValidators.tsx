@@ -1,25 +1,21 @@
-import { REST_ENDPOINT } from 'src/constants';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import nock from 'nock';
-import { ValidatorsResponse } from '@hooks/useValidators';
+import { when } from 'jest-when';
+import { QueryValidatorsResponse } from 'cosmjs-types/cosmos/staking/v1beta1/query';
 
 export function mockValidators() {
-  nock(REST_ENDPOINT)
-    .get('/cosmos/staking/v1beta1/validators')
-    .query({ 'pagination.limit': '1000' })
-    .reply(200, {
-      pagination: {
-        next_key: '',
-        total: '',
-      },
+  const validatorsSpy = jest.fn();
+  when(validatorsSpy)
+    .expectCalledWith('BOND_STATUS_BONDED')
+    .mockResolvedValue({
       validators: [
         {
-          operator_address: 'kujiravalopertestvalidator',
+          operatorAddress: 'kujiravalopertestvalidator',
           description: {
             moniker: 'test',
           },
           jailed: false,
         },
       ],
-    } as ValidatorsResponse);
+    } as QueryValidatorsResponse);
+  return validatorsSpy;
 }

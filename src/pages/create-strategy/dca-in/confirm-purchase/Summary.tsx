@@ -4,30 +4,16 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import BadgeButton from '@components/BadgeButton';
-import { REST_ENDPOINT } from 'src/constants';
-import useQueryWithNotification from '@hooks/useQueryWithNotification';
+import useValidator from '@hooks/useValidator';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import TriggerTypes from '../../../../models/TriggerTypes';
-import 'isomorphic-fetch';
 
 export default function Summary() {
   const { state } = useConfirmForm(FormNames.DcaIn);
 
-  const { data, isLoading } = useQueryWithNotification(
-    ['validator', state?.autoStakeValidator],
-    async () => {
-      const response = await fetch(`${REST_ENDPOINT}/cosmos/staking/v1beta1/validators/${state?.autoStakeValidator}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch validators');
-      }
-      return response.json();
-    },
-    {
-      enabled: !!state?.autoStakeValidator,
-    },
-  );
+  const { validator, isLoading } = useValidator(state?.autoStakeValidator);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -166,7 +152,7 @@ export default function Summary() {
               <Spinner size="xs" />
             ) : (
               <BadgeButton url="post-purchase">
-                <Text>{data?.validator?.description?.moniker}</Text>
+                <Text>{validator && validator.description?.moniker}</Text>
               </BadgeButton>
             )}
           </Text>

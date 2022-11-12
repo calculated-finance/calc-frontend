@@ -121,7 +121,6 @@ export class DenomValue {
 }
 
 const getDenomInfo = (denom?: string) => {
-  console.log(isMainnet());
   if (!denom) {
     return defaultDenom;
   }

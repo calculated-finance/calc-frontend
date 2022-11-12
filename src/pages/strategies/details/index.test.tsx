@@ -7,6 +7,8 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockValidators } from 'src/helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
+import { NetworkContext } from '@components/NetworkContext';
+import { kujiraQueryClient } from 'kujira.js';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -14,6 +16,14 @@ import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVaul
 const mockRouter = {
   push: jest.fn(),
   query: { id: '1' },
+};
+
+jest.mock('kujira.js');
+
+const mockKujiraQuery = {
+  staking: {
+    validators: mockValidators(),
+  },
 };
 
 const mockToast = jest.fn();
@@ -53,9 +63,11 @@ function mockCancelVault(success = true) {
 async function renderTarget() {
   act(() => {
     render(
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>,
+      <NetworkContext>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </NetworkContext>,
     );
   });
 }
@@ -63,7 +75,7 @@ async function renderTarget() {
 describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockValidators();
+    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockCancelVault());

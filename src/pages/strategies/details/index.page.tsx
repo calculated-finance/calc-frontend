@@ -40,6 +40,7 @@ import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
 import { findLastIndex } from 'lodash';
+import useValidator from '@hooks/useValidator';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
@@ -100,7 +101,7 @@ function Page() {
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
-  const validators = useValidators();
+  const { validator, isLoading } = useValidator(data?.vault.destinations[0].address);
 
   const { connected } = useWallet();
 
@@ -112,7 +113,7 @@ function Page() {
 
   const lastSwapSlippageError = didLastSwapHaveSlippageError(events);
 
-  if (!data || !validators) {
+  if (!data) {
     return (
       <Center h="100vh">
         <Spinner />
@@ -275,7 +276,7 @@ function Page() {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-                  {getStrategyEndDate(data.vault, events)} 
+                  {getStrategyEndDate(data.vault, events)}
                 </Text>
               </GridItem>
               <GridItem colSpan={1}>
@@ -330,7 +331,7 @@ function Page() {
                     </GridItem>
                     <GridItem colSpan={2}>
                       <Text fontSize="sm" data-testid="strategy-validator-name">
-                        {getValidatorNameFromValidators(validators, destinations[0].address)}
+                        {isLoading ? <Spinner /> : validator?.description?.moniker}
                       </Text>
                     </GridItem>
                   </>

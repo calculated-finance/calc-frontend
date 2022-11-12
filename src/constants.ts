@@ -6,7 +6,6 @@ export const CONTRACT_ADDRESS =
 export const STAKING_ROUTER_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS ||
   'kujira1n2jm3jrjzztjvdljwh549m8zx6w5v59svvta5kkysf5znr40af8qu0vpca';
-export const REST_ENDPOINT = process.env.NEXT_PUBLIC_REST_ENDPOINT || 'https://lcd.harpoon.kujira.setten.io';
 export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://rpc.harpoon.kujira.setten.io';
 export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoon-4';
 export const FEE_TAKER_ADDRESS =

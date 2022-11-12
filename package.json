@@ -17,6 +17,7 @@
     "@cosmjs/cosmwasm-stargate": "^0.29.3",
     "@cosmjs/proto-signing": "^0.29.3",
     "@cosmjs/stargate": "^0.29.3",
+    "@cosmjs/tendermint-rpc": "^0.29.3",
     "@cosmostation/cosmos-client": "^0.0.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
