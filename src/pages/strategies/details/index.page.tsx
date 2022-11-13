@@ -1,4 +1,3 @@
-import { PlusSquareIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -8,11 +7,8 @@ import {
   HStack,
   IconButton,
   Icon,
-  Divider,
-  Badge,
   Center,
   Flex,
-  Button,
   Image,
   Alert,
   useDisclosure,
@@ -23,28 +19,22 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
-import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-import { isStrategyCancelled, isStrategyOperating } from 'src/helpers/getStrategyStatus';
+import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
-import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
 import { findLastIndex } from 'lodash';
-import useValidator from '@hooks/useValidator';
 import { getSidebarLayout } from '../../../components/Layout';
-import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
-import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
-import { getStrategyStartDate } from '../../../helpers/getStrategyStartDate';
-import { CancelButton } from './CancelButton';
+import StrategyPerformance from './StrategyPerformance';
+import StrategyDetails from './StrategyDetails';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -94,11 +84,7 @@ function Page() {
   const { data } = useStrategy(id as string);
   const { data: eventsData } = useStrategyEvents(id as string);
 
-  const { address } = useWallet();
-
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
-
-  const { validator, isLoading } = useValidator(data?.vault.destinations[0].address);
 
   const { connected } = useWallet();
 
@@ -118,23 +104,8 @@ function Page() {
     );
   }
 
-  const marketValueAmount = data.vault.received_amount.amount;
-
-  const costAmount = data.vault.swapped_amount.amount;
-
-  const { time_interval, swap_amount, balance, destinations } = data.vault;
   const initialDenom = getStrategyInitialDenom(data.vault);
   const resultingDenom = getStrategyResultingDenom(data.vault);
-
-  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
-
-  const initialDenomValue = new DenomValue(balance);
-  const swapAmountValue = new DenomValue({ denom: initialDenom, amount: swap_amount });
-
-  const strategyType = getStrategyType(data.vault);
-
-  const startDate = getStrategyStartDate(data.vault);
 
   const { trigger } = data.vault;
   let nextSwapInfo;
@@ -223,221 +194,8 @@ function Page() {
       )}
 
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
-        <GridItem colSpan={[6, null, null, null, 3]}>
-          <Heading pb={4} size="md">
-            Strategy details
-          </Heading>
-          <Box px={8} py={6} layerStyle="panel">
-            <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
-              <GridItem colSpan={1}>
-                <Heading size="xs">Strategy status</Heading>
-              </GridItem>
-              <GridItem colSpan={1} data-testid="strategy-status">
-                <StrategyStatusBadge strategy={data.vault} />
-              </GridItem>
-              <GridItem colSpan={1} visibility={isStrategyCancelled(data.vault) ? 'hidden' : 'visible'}>
-                <Flex justifyContent="end">
-                  <CancelButton strategy={data.vault} />
-                </Flex>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Strategy name</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-name">
-                  {getStrategyName(data.vault)}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={3}>
-                <Divider />
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Strategy type</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-type">
-                  {strategyType}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Strategy start date</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-start-date">
-                  {startDate}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Estimated strategy end date</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-                  {getStrategyEndDate(data.vault, events)}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Investment cycle</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" textTransform="capitalize" data-testid="strategy-investment-cycle">
-                  {time_interval}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Purchase each cycle</Heading>
-              </GridItem>
-              <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-swap-amount">
-                  {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
-                </Text>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Heading size="xs">Current amount in vault</Heading>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Text fontSize="sm" data-testid="strategy-current-balance">
-                  {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
-                </Text>
-              </GridItem>
-              <GridItem visibility={isStrategyCancelled(data.vault) ? 'hidden' : 'visible'}>
-                <Flex justify="end">
-                  <Link href={generateStrategyTopUpUrl(id as string)}>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="brand"
-                      leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                    >
-                      Add more funds
-                    </Button>
-                  </Link>
-                </Flex>
-              </GridItem>
-              {Boolean(destinations.length) &&
-                (destinations[0].address.startsWith('kujiravaloper') ? (
-                  <>
-                    <GridItem colSpan={1}>
-                      <Heading size="xs">Auto staking status</Heading>
-                    </GridItem>
-                    <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
-                      <Badge colorScheme="green">Active</Badge>
-                    </GridItem>
-                    <GridItem colSpan={1}>
-                      <Heading size="xs">Validator name</Heading>
-                    </GridItem>
-                    <GridItem colSpan={2}>
-                      <Text fontSize="sm" data-testid="strategy-validator-name">
-                        {isLoading ? <Spinner /> : validator?.description?.moniker}
-                      </Text>
-                    </GridItem>
-                  </>
-                ) : (
-                  destinations[0].address !== address && (
-                    <>
-                      <GridItem colSpan={1}>
-                        <Heading size="xs">Sending to </Heading>
-                      </GridItem>
-                      <GridItem colSpan={2}>
-                        <Text fontSize="sm" data-testid="strategy-receiving-address">
-                          {destinations[0].address}
-                        </Text>
-                      </GridItem>
-                    </>
-                  )
-                ))}
-            </Grid>
-          </Box>
-        </GridItem>
-        <GridItem colSpan={[6, null, null, null, 3]}>
-          <Flex h="full" flexDirection="column">
-            <Heading pb={4} size="md">
-              Strategy performance
-            </Heading>
-            <Flex layerStyle="panel" flexGrow={1} alignItems="start">
-              <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Asset in</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-                    <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
-                  </Flex>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Asset out</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-                    <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text>{' '}
-                    <DenomIcon denomName={resultingDenom} />
-                  </Flex>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Divider />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
-                      ? 'Market value of holdings'
-                      : 'Market value of profits'}
-                  </Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
-                  </Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
-                      ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
-                      : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
-                  </Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
-                      ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
-                      : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
-                  </Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">
-                    {getStrategyType(data.vault) === StrategyTypes.DCAIn
-                      ? 'Average token cost'
-                      : 'Average token sell price'}
-                  </Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Divider />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Profit/Loss</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">% change</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text fontSize="sm">-</Text>
-                </GridItem>
-              </Grid>
-            </Flex>
-          </Flex>
-        </GridItem>
+        <StrategyDetails strategy={data.vault} />
+        <StrategyPerformance strategy={data.vault} />
         <GridItem colSpan={6}>
           <Box layerStyle="panel">
             <Heading p={6} size="md">

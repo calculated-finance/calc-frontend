@@ -58,7 +58,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
-    coingeckoId: 'evmos',
+    coingeckoId: 'usd-coin',
   },
   [TestnetDenoms.USK]: {
     name: 'USK',
