@@ -39,8 +39,6 @@ const useCancelStrategy = (initialDenom: Denom) => {
   const msgs: EncodeObject[] = [];
   const { price } = useFiatPrice(initialDenom);
 
-  console.log(price);
-
   return useMutation<DeliverTxResponse, Error, Strategy['id']>((strategyId: Strategy['id']) => {
     if (client == null) {
       throw new Error('no client');

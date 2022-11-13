@@ -62,7 +62,7 @@ describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
-    mockFiatPrice('evmos');
+    mockFiatPrice('usd-coin');
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());

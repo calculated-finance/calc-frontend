@@ -8,13 +8,10 @@ export function getFeeMessage(
   denom: string,
   amount: string,
 ): { typeUrl: string; value: MsgSend } {
-  console.log('got to fee msg');
-  console.log(msg.bank.msgSend);
   const result = msg.bank.msgSend({
     amount: [coin(amount, denom)],
     fromAddress: senderAddress,
     toAddress: FEE_TAKER_ADDRESS,
   });
-  console.log('result', result);
   return result;
 }
