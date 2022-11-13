@@ -38,6 +38,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
 function StrategyRow({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
+
   return (
     <Grid
       templateRows="repeat(1, 1fr)"
@@ -71,7 +72,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm">Interval:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
-          {strategy.time_interval}
+          {strategy.time_interval}: {getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount))}{' '}
+          {getDenomInfo(initialDenom).name}
         </Text>
       </GridItem>
 
