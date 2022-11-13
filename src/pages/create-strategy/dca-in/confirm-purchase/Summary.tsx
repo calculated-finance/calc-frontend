@@ -143,6 +143,19 @@ export default function Summary() {
           .
         </Text>
       </Box>
+      {!autoStakeValidator && !recipientAccount && (
+        <Box>
+          <Text textStyle="body-xs">After each swap</Text>
+          <Text lineHeight={8}>
+            After each swap, CALC will send{' '}
+            <BadgeButton url="assets">
+              <Text>{resultingDenomName}</Text>
+              <DenomIcon denomName={resultingDenom} />
+            </BadgeButton>{' '}
+            to your wallet.
+          </Text>
+        </Box>
+      )}
       {autoStakeValidator && (
         <Box>
           <Text textStyle="body-xs">After each swap</Text>
