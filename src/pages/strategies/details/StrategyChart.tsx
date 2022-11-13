@@ -1,18 +1,29 @@
 import {
-  Heading, GridItem,
-  Box, Center, Select
+  Heading,
+  GridItem,
+  Box,
+  Center,
+  Select,
+  Stat,
+  StatNumber,
+  Stack,
+  StatLabel,
+  StatHelpText,
+  StatArrow,
 } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { VictoryChart, VictoryLine, VictoryTheme } from 'victory';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
+import useFiatPrice from '@hooks/useFiatPrice';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
+import { formatFiat } from './StrategyPerformance';
 
-export function StrategyChart({ strategy }: { strategy: Strategy; }) {
+export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState(1);
 
   const { data: eventsData } = useStrategyEvents(strategy.id);
@@ -21,6 +32,8 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
 
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
+  const { price: resultingDenomPrice, isLoading: resultingDenomPriceIsLoading } = useFiatPrice(resultingDenom);
+  const { price: initialDenomPrice, isLoading: initialDenomPriceIsLoading } = useFiatPrice(initialDenom);
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDays(Number(event.target.value));
@@ -28,7 +41,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
 
   const { data: coingeckoData, isLoading } = useQuery(['coingecko', days], async () => {
     const result = await fetch(
-      `https://api.coingecko.com/api/v3/coins/kujira/market_chart?vs_currency=usd&days=${days}}`
+      `https://api.coingecko.com/api/v3/coins/kujira/market_chart?vs_currency=usd&days=${days}}`,
     );
     return result.json();
   });
@@ -68,8 +81,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
         currentAmount = event.accumulation;
       });
     } catch (e) {
-      if (e !== BreakException)
-        throw e;
+      if (e !== BreakException) throw e;
     }
 
     console.log(currentAmount);
@@ -83,6 +95,22 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
   }));
 
   console.log('chartData', chartData);
+
+  const marketValueAmount = strategy.received_amount.amount;
+
+  const costAmount = strategy.swapped_amount.amount;
+
+  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
+  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
+
+  const costInFiat = costValue.toConverted() * initialDenomPrice;
+  const marketValueInFiat = marketValueValue.toConverted() * resultingDenomPrice;
+
+  const profit = marketValueInFiat - costInFiat;
+
+  const percentageChange = `${(costInFiat ? (profit / costInFiat) * 100 : 0).toFixed(2)}%`;
+
+  const color = profit > 0 ? 'green.200' : profit < 0 ? 'red.200' : 'white';
 
   // const chartData = completedEvents?.map((event) => {
   //   const amount = Number(event.data.dca_vault_execution_completed.received.amount);
@@ -106,14 +134,20 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
   return (
     <GridItem colSpan={6}>
       <Box layerStyle="panel">
-        <Heading pt={6} pl={6} size="md">
-          Portfolio accumulated with this strategy
-        </Heading>
-        {/* <Stat>
-                  <StatNumber>
-                    {getDenomInfo(resultingDenom).conversion(Number(0))} {getDenomInfo(resultingDenom).name}
-                  </StatNumber>
-                </Stat> */}
+        <Stack spacing={3} p={6}>
+          <Stat>
+            <StatLabel fontSize="lg">Portfolio accumulated with this strategy</StatLabel>
+            <StatNumber>
+              {formatFiat(
+                getDenomInfo(resultingDenom).conversion(Number(strategy.received_amount.amount) * resultingDenomPrice),
+              )}
+            </StatNumber>
+            <StatHelpText color={color}>
+              <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
+              {formatFiat(profit)} : {percentageChange}
+            </StatHelpText>
+          </Stat>
+        </Stack>
         <Select mx={6} mt={3} w={200} onChange={handleSelect}>
           <option value={1}>1D</option>
           <option value={3}>3D</option>
@@ -137,7 +171,8 @@ export function StrategyChart({ strategy }: { strategy: Strategy; }) {
                 interpolation="step"
                 // labels={({ datum }) => datum.price.toFixed(2)}
                 x="date"
-                y="price" />
+                y="price"
+              />
             </VictoryChart>
           )}
         </Center>
