@@ -18,7 +18,7 @@ const defaultDenom = {
   name: '',
   icon: '',
   conversion: (value: number) => value / 1000000,
-  deconversion: (value: number) => value * 1000000,
+  deconversion: (value: number) => Math.round(value * 1000000),
   stakeable: true,
   stakeableAndSupported: false,
   stable: false,
