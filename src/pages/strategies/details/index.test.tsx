@@ -102,7 +102,9 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('When 1 KUJI ≤ 0.5 DEMO'));
+          await waitFor(() =>
+            expect(screen.getByTestId('next-swap-info').textContent).toBe('When price hits 1 KUJI ≤ 0.5 DEMO'),
+          );
         });
       });
     });
@@ -233,10 +235,12 @@ describe('Detail page', () => {
     });
     describe('price ceiling', () => {
       it('renders ceiling', async () => {
-        mockUseWallet(mockUseStrategy({vault: mockStrategy({minimum_receive_amount: "3000"})}), mockCancelVault());
+        mockUseWallet(mockUseStrategy({ vault: mockStrategy({ minimum_receive_amount: '3000' }) }), mockCancelVault());
 
         await renderTarget();
-        await waitFor(() => expect(screen.getByTestId('strategy-minimum-receive-amount').textContent).toBe('0.003 DEMO'));
+        await waitFor(() =>
+          expect(screen.getByTestId('strategy-minimum-receive-amount').textContent).toBe('0.003 DEMO'),
+        );
       });
     });
     describe('strategy swap amount', () => {

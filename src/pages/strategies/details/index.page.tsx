@@ -138,7 +138,8 @@ function Page() {
       } else if (targetPrice) {
         nextSwapInfo = (
           <>
-            When 1 {getDenomInfo(resultingDenom).name} &le; {Number(targetPrice)} {getDenomInfo(initialDenom).name}
+            When price hits 1 {getDenomInfo(resultingDenom).name} &le; {Number(targetPrice)}{' '}
+            {getDenomInfo(initialDenom).name}
           </>
         );
       }
