@@ -3,13 +3,13 @@ import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
-import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
-import { getStrategyResultingDenom } from "src/helpers/getStrategyResultingDenom";
-import { getStrategyInitialDenom } from "src/helpers/getStrategyInitialDenom";
+import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
+import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { getStrategyName } from 'src/helpers/getStrategyName';
+import getDenomInfo from '@utils/getDenomInfo';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -63,12 +63,6 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </HStack>
       </GridItem>
 
-      <GridItem colSpan={{ base: 4, xl: 2 }}>
-        <Text fontSize="sm">Start Date:</Text>
-
-        <Text textStyle="body-xs">{getStrategyStartDate(strategy)}</Text>
-      </GridItem>
-
       <GridItem colSpan={{ base: 3, xl: 2 }}>
         <Text fontSize="sm">Status:</Text>
         <StrategyStatusBadge strategy={strategy} />
@@ -78,6 +72,14 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm">Interval:</Text>
         <Text textStyle="body-xs" textTransform="capitalize">
           {strategy.time_interval}
+        </Text>
+      </GridItem>
+
+      <GridItem colSpan={{ base: 4, xl: 2 }}>
+        <Text fontSize="sm">Balance:</Text>
+        <Text textStyle="body-xs" textTransform="capitalize">
+          {getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount))}{' '}
+          {getDenomInfo(strategy.balance.denom).name}
         </Text>
       </GridItem>
       <GridItem
