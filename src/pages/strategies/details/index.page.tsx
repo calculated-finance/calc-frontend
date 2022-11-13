@@ -1,8 +1,7 @@
+import 'isomorphic-fetch';
 import {
   Heading,
   Grid,
-  GridItem,
-  Box,
   Text,
   HStack,
   IconButton,
@@ -35,6 +34,7 @@ import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDeno
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
+import { StrategyChart } from './StrategyChart';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -142,24 +142,7 @@ function Page() {
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
         <StrategyDetails strategy={data.vault} />
         <StrategyPerformance strategy={data.vault} />
-        <GridItem colSpan={6}>
-          <Box layerStyle="panel">
-            <Heading p={6} size="md">
-              Portfolio accumulated with this strategy
-            </Heading>
-            {/* <Stat>
-              <StatNumber>
-                {getDenomInfo(resultingDenom).conversion(Number(0))} {getDenomInfo(resultingDenom).name}
-              </StatNumber>
-            </Stat> */}
-            <Box position="relative">
-              <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="2px">
-                <Heading>Coming soon</Heading>
-              </Center>
-              <Image borderBottomRadius="2xl" w="full" h="full" src="/images/dummyChart.svg" />
-            </Box>
-          </Box>
-        </GridItem>
+        <StrategyChart strategy={data.vault} />
       </Grid>
     </>
   );
