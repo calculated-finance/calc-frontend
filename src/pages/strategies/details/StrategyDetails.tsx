@@ -12,7 +12,6 @@ import { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import useValidator from '@hooks/useValidator';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import useStrategyEvents from '@hooks/useStrategyEvents';

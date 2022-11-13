@@ -5,6 +5,7 @@ import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import totalExecutions from 'src/utils/totalExecutions';
 import BadgeButton from '@components/BadgeButton';
 import useValidator from '@hooks/useValidator';
+import { initialValues } from '@models/DcaInFormData';
 import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import DcaDiagram from '../../../../components/DcaDiagram';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
@@ -34,6 +35,8 @@ export default function Summary() {
     startPrice,
     autoStakeValidator,
     recipientAccount,
+    priceThresholdValue,
+    slippageTolerance,
   } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -96,6 +99,13 @@ export default function Summary() {
     );
   }
 
+  const showSlippage =
+    slippageTolerance !== undefined &&
+    slippageTolerance !== null &&
+    slippageTolerance !== initialValues.slippageTolerance;
+
+  const showWhileSwapping = showSlippage || priceThresholdValue;
+
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval = executionIntervalDisplay[executionInterval][executions > 1 ? 1 : 0];
   return (
@@ -143,6 +153,40 @@ export default function Summary() {
           .
         </Text>
       </Box>
+      {showWhileSwapping && (
+        <Box data-testid="summary-the-swap">
+          <Text textStyle="body-xs">While swapping</Text>
+          <Text lineHeight={8}>
+            If the{' '}
+            {Boolean(priceThresholdValue) && (
+              <>
+                <BadgeButton url="customise">
+                  <Text>{resultingDenomName}</Text>
+                  <DenomIcon denomName={resultingDenom} />
+                </BadgeButton>{' '}
+                price is higher than
+                <BadgeButton url="customise">
+                  <Text>
+                    ~{priceThresholdValue} {initialDenomName}
+                  </Text>
+                  <DenomIcon denomName={initialDenom} />
+                </BadgeButton>{' '}
+              </>
+            )}
+            {showSlippage && (
+              <>
+                {Boolean(priceThresholdValue) && 'or '}
+                slippage exceeds{' '}
+                <BadgeButton url="customise">
+                  <Text>{slippageTolerance}%</Text>
+                </BadgeButton>
+                {', '}
+              </>
+            )}
+            CALC will not swap.
+          </Text>
+        </Box>
+      )}
       {!autoStakeValidator && !recipientAccount && (
         <Box>
           <Text textStyle="body-xs">After each swap</Text>
