@@ -17,7 +17,7 @@ import NumberInput from '@components/NumberInput';
 function SlippagePreset({ value }: { value: number }) {
   const [field, , helpers] = useField('slippageTolerance');
 
-  const enabled = (field.value || 1) === value;
+  const enabled = field.value === value;
 
   const handleClick = () => {
     helpers.setValue(value);
