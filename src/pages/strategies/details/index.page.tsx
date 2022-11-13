@@ -118,9 +118,9 @@ function Page() {
     );
   }
 
-  const marketValueAmount = data.vault.swapped_amount.amount;
+  const marketValueAmount = data.vault.received_amount.amount;
 
-  const costAmount = data.vault.received_amount.amount;
+  const costAmount = data.vault.swapped_amount.amount;
 
   const { time_interval, swap_amount, balance, destinations } = data.vault;
   const initialDenom = getStrategyInitialDenom(data.vault);
@@ -167,8 +167,7 @@ function Page() {
       } else if (targetPrice) {
         nextSwapInfo = (
           <>
-            When 1 {getDenomInfo(resultingDenom).name} &le; {getDenomInfo(initialDenom).conversion(Number(targetPrice))}{' '}
-            {getDenomInfo(initialDenom).name}
+            When 1 {getDenomInfo(resultingDenom).name} &le; {Number(targetPrice)} {getDenomInfo(initialDenom).name}
           </>
         );
       }

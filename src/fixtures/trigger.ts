@@ -11,6 +11,6 @@ export const mockTimeTrigger: TriggerConfiguration = {
 
 export const mockPriceTrigger: TriggerConfiguration = {
   fin_limit_order: {
-    target_price: '500000', // 0.5 DEMO
+    target_price: '0.5', // 0.5 DEMO
   },
 };
