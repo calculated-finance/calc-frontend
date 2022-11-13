@@ -81,7 +81,7 @@ export default function Summary() {
         Starting when{' '}
         <BadgeButton url="customise">
           <Text>{initialDenomName}</Text>
-          <DenomIcon denomName={initialDenomName} />
+          <DenomIcon denomName={initialDenom} />
           <Text>=</Text>
           <Text>
             {startPrice} {resultingDenomName}
