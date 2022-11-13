@@ -70,7 +70,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
 
-    icon: '/images/denoms/atom.svg',
+    icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
     stakeableAndSupported: true,
   },
