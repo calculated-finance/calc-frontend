@@ -1,5 +1,5 @@
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -15,6 +15,8 @@ import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import useStrategyEvents from '@hooks/useStrategyEvents';
+import { getPriceCeilingFloor } from 'src/helpers/getPriceCeilingFloor';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { CancelButton } from './CancelButton';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 
@@ -104,6 +106,22 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
+          {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
+            <>
+              <GridItem colSpan={1}>
+                <Heading size="xs">{strategyType === StrategyTypes.DCAIn ? 'Price ceiling' : 'Price floor'}</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <HStack>
+                  <StrategyStatusBadge strategy={strategy} />
+                  <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
+                    {getPriceCeilingFloor(strategy.minimum_receive_amount, strategy.swap_amount)}{' '}
+                    {getDenomInfo(initialDenom).name}
+                  </Text>
+                </HStack>
+              </GridItem>
+            </>
+          )}
           <GridItem colSpan={1}>
             <Heading size="xs">Current amount in vault</Heading>
           </GridItem>
