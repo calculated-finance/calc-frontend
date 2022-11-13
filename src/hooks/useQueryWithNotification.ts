@@ -7,6 +7,7 @@ export default function useQueryWithNotification<TQueryFnData = unknown>(
   options: UseQueryOptions<TQueryFnData, Error> = {},
 ) {
   const toast = useToast();
+  const label = queryKey[0];
 
   return useQuery<TQueryFnData, Error>(queryKey, queryFn, {
     ...options,
@@ -14,7 +15,7 @@ export default function useQueryWithNotification<TQueryFnData = unknown>(
       toast({
         title: 'Something went wrong',
         position: 'top-right',
-        description: `There was a problem while loading (Reason: ${error.message})`,
+        description: `There was a problem while loading (Reason: ${error.message}, key: ${label})`,
         status: 'error',
         duration: 9000,
         isClosable: true,

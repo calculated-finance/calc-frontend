@@ -9,5 +9,6 @@ export function mockFiatPrice(coingeckoId: string) {
       [coingeckoId]: {
         usd: 1.5,
       },
-    });
+    })
+    .persist();
 }

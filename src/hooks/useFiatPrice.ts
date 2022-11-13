@@ -31,7 +31,7 @@ const useFiatPrice = (denom: Denom) => {
       return response.json();
     },
     {
-      enabled: !!coingeckoId,
+      enabled: !!coingeckoId && !!fiatCurrencyId,
     },
   );
 

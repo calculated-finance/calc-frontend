@@ -17,19 +17,10 @@ export function mockUseStrategy(data: Partial<VaultResponse> = {}) {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
     .calledWith(CONTRACT_ADDRESS, {
-      get_vault: {
-        vault_id: '1',
-      },
-    })
-    .mockResolvedValueOnce({ vault: mockStrategy(), ...data });
-
-  // strategy events
-  when(queryContractSmart)
-    .calledWith(CONTRACT_ADDRESS, {
       get_events_by_resource_id: {
         resource_id: '1',
       },
     } as QueryMsg)
-    .mockResolvedValueOnce({ events: [] });
+    .mockResolvedValueOnce({ vault: mockStrategy(), ...data });
   return queryContractSmart;
 }
