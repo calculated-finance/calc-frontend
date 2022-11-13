@@ -24,7 +24,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
-import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import { Denom } from '@models/Denom';
@@ -35,6 +34,7 @@ import { getStrategyResultingDenom } from '../../../helpers/getStrategyResulting
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
+import { NextSwapInfo } from './NextSwapInfo';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -107,44 +107,6 @@ function Page() {
   const initialDenom = getStrategyInitialDenom(data.vault);
   const resultingDenom = getStrategyResultingDenom(data.vault);
 
-  const { trigger } = data.vault;
-  let nextSwapInfo;
-
-  if (trigger) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { time, fin_limit_order } = trigger || {};
-    const targetTime = time?.target_time;
-
-    const targetPrice = fin_limit_order?.target_price;
-
-    if (isStrategyOperating(data.vault)) {
-      if (targetTime) {
-        const nextSwapDate = new Date(Number(time?.target_time) / 1000000).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        });
-
-        const nextSwapTime = new Date(Number(time?.target_time) / 1000000).toLocaleTimeString('en-US', {
-          minute: 'numeric',
-          hour: 'numeric',
-        });
-        nextSwapInfo = (
-          <>
-            {nextSwapDate} at {nextSwapTime}
-          </>
-        );
-      } else if (targetPrice) {
-        nextSwapInfo = (
-          <>
-            When 1 {getDenomInfo(resultingDenom).name} &le; {Number(targetPrice)} {getDenomInfo(initialDenom).name}
-          </>
-        );
-      }
-    }
-  }
-
   return (
     <>
       <HStack spacing={6} pb={6}>
@@ -175,23 +137,7 @@ function Page() {
         </Alert>
       )}
 
-      {Boolean(nextSwapInfo) && (
-        <HStack
-          mb={8}
-          py={4}
-          px={8}
-          layerStyle="panel"
-          spacing={4}
-          backgroundImage="/images/backgrounds/thin.svg"
-          backgroundPosition="center"
-          backgroundSize="cover"
-        >
-          <Heading size="xs">Next swap:</Heading>
-          <Text fontSize="sm" data-testid="next-swap-info">
-            {nextSwapInfo}
-          </Text>
-        </HStack>
-      )}
+      <NextSwapInfo strategy={data.vault} />
 
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
         <StrategyDetails strategy={data.vault} />
