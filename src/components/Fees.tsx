@@ -125,7 +125,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
           ~{getPrettyFee(swapAmount, 0.015)} {initialDenomName}
         </Text>{' '}
         per swap
-        {autoStakeValidator && <Text as="span"> &amp; 1.5% auto staking fee</Text>}
+        {autoStakeValidator && <Text as="span"> &amp; 0.75% auto staking fee</Text>}
       </Text>
 
       <FeeBreakdown initialDenomName={initialDenomName} />
