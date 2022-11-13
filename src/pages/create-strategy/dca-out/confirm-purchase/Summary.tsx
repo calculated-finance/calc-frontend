@@ -78,7 +78,7 @@ export default function Summary() {
   } else {
     triggerInfo = (
       <>
-        when{' '}
+        Starting when{' '}
         <BadgeButton url="customise">
           <Text>{initialDenomName}</Text>
           <DenomIcon denomName={initialDenomName} />
