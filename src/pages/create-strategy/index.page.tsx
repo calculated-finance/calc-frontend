@@ -174,7 +174,7 @@ function Strategies() {
           </Badge>
         </Wrap>
         <Text pb={4} textStyle="body">
-          You want to build a position in an asset.{' '}
+          Strategies that build a position in an asset.{' '}
         </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {accumulationStratgies.map((strategy) => (
@@ -189,7 +189,7 @@ function Strategies() {
           Take Profit strategies
         </Heading>
         <Text pb={4} textStyle="body">
-          You want to start selling assets because you have a good return on them already.
+          Strategies that sell assets for profit.
         </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {takeProfitStrategies.map((strategy) => (
@@ -217,10 +217,7 @@ function CreateStrategy() {
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
         <Heading size="lg">Set up an investment strategy</Heading>
-        <Text textStyle="body">
-          The first complete fiat-to-crypto decentralised DCA (dollar-cost averaging) protocol that provides advanced
-          algorithms for long-term investing.
-        </Text>
+        <Text textStyle="body">Save time by automating your investing and profit-taking with CALC.</Text>
       </Stack>
 
       {address ? (
