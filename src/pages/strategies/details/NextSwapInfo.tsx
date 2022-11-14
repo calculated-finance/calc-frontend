@@ -1,11 +1,33 @@
-import { Heading, Text, HStack } from '@chakra-ui/react';
+import { Heading, Text, HStack, Flex } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import DenomIcon from '@components/DenomIcon';
+import Lottie from 'lottie-react';
+import arrow from 'src/pages/create-strategy/dca-in/confirm-purchase/arrow.json';
+import { Denom } from '@models/Denom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
+import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+
+function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  return (
+    <HStack spacing={5}>
+      <HStack>
+        <DenomIcon size={5} denomName={initialDenom} />
+        <Text>{initialDenomName}</Text>
+      </HStack>
+      <Lottie animationData={arrow} loop height="100%" />
+      <HStack>
+        <DenomIcon size={5} denomName={resultingDenom} />
+        <Text>{resultingDenomName}</Text>
+      </HStack>
+    </HStack>
+  );
+}
 
 export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   let nextSwapInfo;
@@ -60,20 +82,16 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
     }
   }
   return nextSwapInfo ? (
-    <HStack
-      mb={8}
-      py={4}
-      px={8}
-      layerStyle="panel"
-      spacing={4}
-      backgroundImage="/images/backgrounds/thin.svg"
-      backgroundPosition="center"
-      backgroundSize="cover"
-    >
-      <Heading size="xs">Next swap:</Heading>
-      <Text fontSize="sm" data-testid="next-swap-info">
-        {nextSwapInfo}
-      </Text>
+    <HStack mb={8} py={4} px={8} layerStyle="panel" spacing={8}>
+      <HStack spacing={4} w="50%">
+        <Heading size="xs">Next swap:</Heading>
+        <Text fontSize="sm" data-testid="next-swap-info">
+          {nextSwapInfo}
+        </Text>
+      </HStack>
+      <Flex w="50%">
+        <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+      </Flex>
     </HStack>
   ) : null;
 }

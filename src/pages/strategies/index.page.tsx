@@ -40,7 +40,7 @@ function Page() {
               Active Strategies ({activeStrategies.length})
             </Heading>
             <Text pb={4} textStyle="body">
-              You can analyse the performance of or cancel these strategies at anytime.
+              Strategies actively swapping.
             </Text>
             <Stack spacing={4}>
               {/* eslint-disable-next-line no-nested-ternary */}
@@ -59,7 +59,7 @@ function Page() {
                 Scheduled Strategies ({scheduledStrategies.length})
               </Heading>
               <Text pb={4} textStyle="body">
-                You can cancel these strategies at anytime.
+                Strategies with triggers that are waiting to be executed.
               </Text>
               <Stack spacing={4}>
                 {/* eslint-disable-next-line no-nested-ternary */}
@@ -78,7 +78,7 @@ function Page() {
               Completed Strategies ({completedStrategies.length})
             </Heading>
             <Text pb={4} textStyle="body">
-              View your past performance.
+              Strategies that have fully executed their swaps. Top them up to reactivate them.
             </Text>
             <Stack spacing={4}>
               {!completedStrategies.length ? (
@@ -95,7 +95,7 @@ function Page() {
               Cancelled Strategies ({cancelledStrategies.length})
             </Heading>
             <Text pb={4} textStyle="body">
-              View cancelled strategies.
+              Strategies that have been closed, and the funds returned.
             </Text>
             <Stack spacing={4}>
               {!cancelledStrategies.length ? (

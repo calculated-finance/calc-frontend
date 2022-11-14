@@ -1,4 +1,4 @@
-import { DeliverTxResponse, ExecuteResult } from '@cosmjs/cosmwasm-stargate';
+import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { Denom } from '@models/Denom';
 import { useMutation } from '@tanstack/react-query';

@@ -7,25 +7,21 @@ import {
   IconButton,
   Icon,
   Center,
-  Flex,
   Image,
   Alert,
   useDisclosure,
   Spacer,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
-import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
 import { getSidebarLayout } from '../../../components/Layout';
@@ -35,24 +31,6 @@ import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
-
-function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
-  return (
-    <HStack spacing={5}>
-      <HStack>
-        <DenomIcon size={5} denomName={initialDenom} />
-        <Text>{initialDenomName}</Text>
-      </HStack>
-      <CalcIcon as={ArrowRightIcon} stroke="grey" />
-      <HStack>
-        <DenomIcon size={5} denomName={resultingDenom} />
-        <Text>{resultingDenomName}</Text>
-      </HStack>
-    </HStack>
-  );
-}
 
 function didLastSwapHaveSlippageError(events: Event[] | undefined) {
   if (!events) {
@@ -118,9 +96,6 @@ function Page() {
 
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">{getStrategyName(data.vault)}</Heading>
-          <Flex w={200}>
-            <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-          </Flex>
         </HStack>
       </HStack>
 
