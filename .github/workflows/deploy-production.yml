@@ -25,7 +25,7 @@ jobs:
 
   deploy-calc-fi-frontend-sandbox:
     name: Deploy (sandbox)
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy-reusable.yml
     needs:
       - test-calc-fi-frontend-sandbox
     with:
@@ -45,7 +45,7 @@ jobs:
 
   deploy-calc-fi-frontend-production:
     name: Deploy (production)
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy-reusable.yml
     needs: [test-calc-fi-frontend-sandbox, deploy-calc-fi-frontend-sandbox]
     with:
       ENVIRONMENT: production
