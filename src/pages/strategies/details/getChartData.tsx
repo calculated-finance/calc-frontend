@@ -56,7 +56,7 @@ export function getChartData(events: Event[] | undefined, coingeckoData: FiatPri
       totalAmount += Number(amount);
       return {
         time: new Date(Number(event.timestamp) / 1000000),
-        accumulation: totalAmount,
+        accumulation: totalAmount.toFixed(),
       };
     }
     throw new Error();
