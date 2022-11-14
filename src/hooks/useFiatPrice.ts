@@ -4,21 +4,13 @@ import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import useQueryWithNotification from './useQueryWithNotification';
 
-export type Validator = {
-  operator_address: string;
-  description: {
-    moniker: string;
-  };
-  jailed: boolean;
-};
-
-export type PriceResponse = any;
+export type FiatPriceResponse = any;
 
 const useFiatPrice = (denom: Denom | undefined) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
 
-  const { data, ...other } = useQueryWithNotification<PriceResponse>(
+  const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-price', coingeckoId, fiatCurrencyId],
     async () => {
       const response = await fetch(

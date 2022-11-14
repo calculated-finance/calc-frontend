@@ -8,6 +8,7 @@ import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { NetworkContext } from '@components/NetworkContext';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
+import { mockFiatPriceHistory } from 'src/helpers/test/mockFiatPriceHistory';
 import Page from './index.page';
 import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
@@ -63,6 +64,7 @@ describe('Detail page', () => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
     mockFiatPrice('usd-coin');
+    mockFiatPriceHistory('usd-coin');
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());

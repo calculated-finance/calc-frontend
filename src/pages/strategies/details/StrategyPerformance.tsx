@@ -9,7 +9,7 @@ import { isNaN } from 'lodash';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 
-function formatFiat(value: number) {
+export function formatFiat(value: number) {
   return `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
     !isNaN(value) ? value : 0,
   )} USD`;
