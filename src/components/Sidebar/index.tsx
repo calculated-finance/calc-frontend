@@ -75,6 +75,8 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         color={isActive ? 'brand.200' : '#D5F8F9'}
         _hover={{
           bg: 'navy',
+          boxShadow: 'inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)',
+
           color: isActive ? 'brand.200' : 'white',
         }}
         {...rest}
@@ -106,6 +108,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       w={{ base: 'full', md: SIDEBAR_WIDTH }}
       pos="fixed"
       h="full"
+      boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
       {...rest}
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
