@@ -2,6 +2,7 @@ const components = {
   Button: {
     // baseStyle: ({ theme }) => {
     //   console.log(theme.components.Modal);
+    //   console.log(theme.components.Modal);
     //   return {
     //     borderRadius: 'lg',
     //     fontSize: 'sm',
