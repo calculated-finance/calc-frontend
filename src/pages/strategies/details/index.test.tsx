@@ -185,14 +185,27 @@ describe('Detail page', () => {
       describe('when scheduled', () => {
         it('renders start date', async () => {
           mockUseWallet(
-            mockUseStrategy({ vault: mockStrategy({ started_at: undefined }) }),
+            mockUseStrategy({ vault: mockStrategy({ started_at: undefined, status: 'scheduled' }) }),
             jest.fn(),
             jest.fn(),
             mockCancelVault(),
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('-'));
+          await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('May 22, 2022'));
+        });
+      });
+      describe('when price trigger', () => {
+        it('renders start date', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy({ started_at: undefined, trigger: mockPriceTrigger }) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('When KUJI hits 0.5 DEMO'));
         });
       });
       describe('when active', () => {
