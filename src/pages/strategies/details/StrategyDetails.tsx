@@ -8,6 +8,7 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
+import { getSlippageTolerance } from 'src/helpers/getStrategySlippageTolerance';
 import { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import useValidator from '@hooks/useValidator';
@@ -106,6 +107,18 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
+          {Boolean(strategy.slippage_tolerance) && (
+            <>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Slippage tolerance</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
+                  {getSlippageTolerance(strategy)}
+                </Text>
+              </GridItem>
+            </>
+          )}
           {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
             <>
               <GridItem colSpan={1}>
@@ -113,11 +126,11 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={2}>
                 <HStack>
-                  <StrategyStatusBadge strategy={strategy} />
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
                     {getPriceCeilingFloor(strategy.minimum_receive_amount, strategy.swap_amount)}{' '}
                     {getDenomInfo(initialDenom).name}
                   </Text>
+                  <Badge colorScheme="green">Set</Badge>
                 </HStack>
               </GridItem>
             </>
