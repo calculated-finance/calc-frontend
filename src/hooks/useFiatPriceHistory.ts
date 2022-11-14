@@ -10,7 +10,7 @@ export type FiatPriceHistoryResponse = {
   market_caps: number[][];
 };
 
-const useFiatPriceHistory = (denom: Denom | undefined, days: number) => {
+const useFiatPriceHistory = (denom: Denom | undefined, days: string) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
 

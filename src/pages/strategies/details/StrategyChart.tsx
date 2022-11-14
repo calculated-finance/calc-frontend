@@ -10,6 +10,8 @@ import {
   StatLabel,
   StatHelpText,
   StatArrow,
+  useRadioGroup,
+  HStack,
 } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -20,13 +22,45 @@ import { Strategy } from '@hooks/useStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
+import Radio from '@components/Radio';
+import RadioCard from '@components/RadioCard';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
 import { getChartData } from './getChartData';
 
+const daysData = [
+  { value: '3', label: '3D' },
+  { value: '7', label: '1W' },
+  { value: '30', label: '1M' },
+  { value: '90', label: '3M' },
+  { value: '365', label: '1Y' },
+];
+
+function DaysRadio({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    value,
+    onChange,
+  });
+
+  return (
+    <HStack spacing={0}>
+      <Radio {...getRootProps} px={0}>
+        {daysData.map((option) => {
+          const radio = getRadioProps({ value: option.value });
+          return (
+            <RadioCard key={option.label} {...radio}>
+              {option.label}
+            </RadioCard>
+          );
+        })}
+      </Radio>
+    </HStack>
+  );
+}
+
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState('3');
 
   const elementRef = useRef<HTMLDivElement>(null);
   const dimensions = useSize(elementRef);
@@ -41,7 +75,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDays(Number(event.target.value));
+    setDays(event.target.value);
   };
 
   const { data: coingeckoData } = useFiatPriceHistory(resultingDenom, days);
@@ -86,14 +120,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
           </Stat>
         </Stack>
         <Box p={6} position="absolute" top={0} right={0}>
-          <Select onChange={handleSelect} size="xs" variant="outline">
-            <option value={1}>1D</option>
-            <option value={3}>3D</option>
-            <option value={7}>1W</option>
-            <option value={30}>1M</option>
-            <option value={90}>3M</option>
-            <option value={365}>1Y</option>
-          </Select>
+          <DaysRadio value={days} onChange={setDays} />
         </Box>
         <Box h={0}>
           <svg>
