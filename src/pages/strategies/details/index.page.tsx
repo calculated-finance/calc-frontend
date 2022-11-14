@@ -7,29 +7,23 @@ import {
   IconButton,
   Icon,
   Center,
-  Flex,
   Image,
   Alert,
   useDisclosure,
   Spacer,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
+import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
-import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
-import arrow from 'src/pages/create-strategy/dca-in/confirm-purchase/arrow.json';
-import Lottie from 'lottie-react';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';

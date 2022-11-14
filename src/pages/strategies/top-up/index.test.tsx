@@ -13,6 +13,9 @@ const mockRouter = {
   push: jest.fn(),
   pathname: '/strategies/top-up',
   query: { id: '1' },
+  events: {
+    on: jest.fn(),
+  },
 };
 
 const mockToast = jest.fn();

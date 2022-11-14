@@ -15,9 +15,10 @@ import getStrategyBalance from 'src/helpers/getStrategyBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyName } from 'src/helpers/getStrategyName';
+import usePageLoad from '@hooks/usePageLoad';
 import TopUpAmount from './TopUpAmount';
-import { getStrategyResultingDenom } from "../../../helpers/getStrategyResultingDenom";
-import { getStrategyInitialDenom } from "../../../helpers/getStrategyInitialDenom";
+import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { getTimeSaved } from '../../../helpers/getTimeSaved';
 
 export const topUpSteps: StepConfig[] = [
@@ -36,6 +37,7 @@ export const topUpSteps: StepConfig[] = [
 
 function TopUpForm({ strategy }: { strategy: Strategy }) {
   const { nextStep } = useSteps(topUpSteps);
+  const { isPageLoading } = usePageLoad();
 
   const { mutate, error, isError } = useTopUpStrategy();
 
@@ -78,31 +80,33 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-      <Form autoComplete="off">
-        <Stack direction="column" spacing={6}>
-          <Stack spacing={2}>
-            <Heading size="sm">{getStrategyName(strategy)}</Heading>
-            <Text textStyle="body-xs">
-              Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
-            </Text>
-            <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-          </Stack>
-          <Divider />
-          <TopUpAmount initialDenom={initialDenom} />
-          <FormControl isInvalid={isError}>
-            <Submit>Confirm</Submit>
-            <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>
-          </FormControl>
-        </Stack>
-      </Form>
+      {({ isSubmitting }) => (
+        <NewStrategyModalBody stepsConfig={topUpSteps} isLoading={isPageLoading} isSigning={isSubmitting}>
+          <Form autoComplete="off">
+            <Stack direction="column" spacing={6}>
+              <Stack spacing={2}>
+                <Heading size="sm">{getStrategyName(strategy)}</Heading>
+                <Text textStyle="body-xs">
+                  Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
+                </Text>
+                <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+              </Stack>
+              <Divider />
+              <TopUpAmount initialDenom={initialDenom} />
+              <FormControl isInvalid={isError}>
+                <Submit>Confirm</Submit>
+                <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>
+              </FormControl>
+            </Stack>
+          </Form>
+        </NewStrategyModalBody>
+      )}
     </Formik>
   );
 }
 
 function Page() {
   const { query } = useRouter();
-  // const { isPageLoading } = usePageLoad();
-  const isPageLoading = false;
   const { data, isLoading } = useStrategy(query?.id as string);
 
   return (
@@ -110,9 +114,7 @@ function Page() {
       <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false}>
         Choose Funding &amp; Assets
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={topUpSteps} isLoading={isLoading || isPageLoading}>
-        {data?.vault && <TopUpForm strategy={data.vault} />}
-      </NewStrategyModalBody>
+      {data?.vault && <TopUpForm strategy={data.vault} />}
     </NewStrategyModal>
   );
 }

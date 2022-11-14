@@ -76,45 +76,47 @@ function ConfirmPurchase() {
   return (
     <>
       <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-            Confirm &amp; Sign
-          </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
-            {state ? (
-              <Form>
-                <Stack spacing={4}>
-                  <Summary />
-                  <Fees formName={FormNames.DcaIn} />
-                  <AgreementCheckbox>
-                    <Text textStyle="body-xs">
-                      I have read and agree to be bound by the{' '}
-                      <Button
-                        textDecoration="underline"
-                        fontWeight="normal"
-                        size="xs"
-                        display="inline-flex"
-                        colorScheme="blue"
-                        variant="unstyled"
-                        onClick={onOpen}
-                      >
-                        CALC Terms & Conditions.
-                      </Button>
-                    </Text>
-                  </AgreementCheckbox>
-                  <FormControl isInvalid={isError}>
-                    <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
-                      Confirm
-                    </Submit>
-                    <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
-                  </FormControl>
-                </Stack>
-              </Form>
-            ) : (
-              <InvalidData />
-            )}
-          </NewStrategyModalBody>
-        </NewStrategyModal>
+        {({ isSubmitting }) => (
+          <NewStrategyModal>
+            <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+              Confirm &amp; Sign
+            </NewStrategyModalHeader>
+            <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isSubmitting}>
+              {state ? (
+                <Form>
+                  <Stack spacing={4}>
+                    <Summary />
+                    <Fees formName={FormNames.DcaIn} />
+                    <AgreementCheckbox>
+                      <Text textStyle="body-xs">
+                        I have read and agree to be bound by the{' '}
+                        <Button
+                          textDecoration="underline"
+                          fontWeight="normal"
+                          size="xs"
+                          display="inline-flex"
+                          colorScheme="blue"
+                          variant="unstyled"
+                          onClick={onOpen}
+                        >
+                          CALC Terms & Conditions.
+                        </Button>
+                      </Text>
+                    </AgreementCheckbox>
+                    <FormControl isInvalid={isError}>
+                      <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
+                        Confirm
+                      </Submit>
+                      <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+                    </FormControl>
+                  </Stack>
+                </Form>
+              ) : (
+                <InvalidData />
+              )}
+            </NewStrategyModalBody>
+          </NewStrategyModal>
+        )}
       </Formik>
       <TermsModal showCheckbox={false} isOpen={isOpen} onClose={onClose} />
     </>

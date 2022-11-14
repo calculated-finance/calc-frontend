@@ -17,6 +17,8 @@ import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
 import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import broadcast from 'src/animations/broadcast.json';
+import Lottie from 'lottie-react';
 import Stepper from './Stepper';
 import { findStep, StepConfig } from './steps';
 
@@ -32,35 +34,48 @@ export function NewStrategyModalBody({
   children,
   isLoading,
   stepsConfig,
-}: ChildrenProp & { isLoading?: boolean; stepsConfig: StepConfig[] }) {
+  isSigning,
+}: ChildrenProp & { isLoading?: boolean; stepsConfig: StepConfig[]; isSigning?: boolean }) {
   const router = useRouter();
   const step = findStep(router.pathname, stepsConfig);
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
-      {isLoading ? (
-        <Center h={56}>
-          <Spinner />
-        </Center>
-      ) : (
-        <>
-          {children}
-          {Boolean(step?.footerText) && (
-            <>
-              <Divider my={6} />
-              <Center>
-                <Button
-                  variant="link"
-                  colorScheme="blue"
-                  fontWeight="normal"
-                  rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}
-                >
-                  {step?.footerText}
-                </Button>
+      <Box position="relative">
+        {isLoading ? (
+          <Center h={56}>
+            <Spinner />
+          </Center>
+        ) : (
+          <>
+            {isSigning && (
+              <Center position="absolute" w="full" h="full">
+                <Stack spacing={6}>
+                  <Lottie animationData={broadcast} loop />
+                  <Heading size="xs">Review and approve the transaction.</Heading>
+                </Stack>
               </Center>
-            </>
-          )}
-        </>
-      )}
+            )}
+            <Box visibility={isSigning ? 'hidden' : 'visible'}>
+              {children}
+              {Boolean(step?.footerText) && (
+                <>
+                  <Divider my={6} />
+                  <Center>
+                    <Button
+                      variant="link"
+                      colorScheme="blue"
+                      fontWeight="normal"
+                      rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}
+                    >
+                      {step?.footerText}
+                    </Button>
+                  </Center>
+                </>
+              )}
+            </Box>
+          </>
+        )}
+      </Box>
     </Box>
   );
 }

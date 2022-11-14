@@ -1,5 +1,5 @@
 import { Strategy } from '@hooks/useStrategies';
-import { mockPriceTrigger, mockTimeTrigger } from './trigger';
+import { mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 
