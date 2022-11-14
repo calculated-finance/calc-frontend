@@ -1506,6 +1506,13 @@
   dependencies:
     "@zag-js/element-size" "0.1.0"
 
+"@chakra-ui/react-use-size@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/react-use-size/-/react-use-size-2.0.4.tgz#3634782f8dab6aa2a37699188afa89251cbae8f3"
+  integrity sha512-W6rgTLuoSC4ovZtqYco8cG+yBadH3bhlg92T5lgpKDakSDr0mXcZdbGx6g0AOkgxXm0V1jWNGO1743wudtF7ew==
+  dependencies:
+    "@zag-js/element-size" "0.1.0"
+
 "@chakra-ui/react-use-timeout@2.0.1":
   version "2.0.1"
   resolved "https://registry.npmjs.org/@chakra-ui/react-use-timeout/-/react-use-timeout-2.0.1.tgz"
