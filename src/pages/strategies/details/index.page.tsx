@@ -28,6 +28,8 @@ import { getStrategyName } from 'src/helpers/getStrategyName';
 import { Denom } from '@models/Denom';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
+import arrow from 'src/pages/create-strategy/dca-in/confirm-purchase/arrow.json';
+import Lottie from 'lottie-react';
 import { getSidebarLayout } from '../../../components/Layout';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
@@ -35,24 +37,6 @@ import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
-
-function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
-  return (
-    <HStack spacing={5}>
-      <HStack>
-        <DenomIcon size={5} denomName={initialDenom} />
-        <Text>{initialDenomName}</Text>
-      </HStack>
-      <CalcIcon as={ArrowRightIcon} stroke="grey" />
-      <HStack>
-        <DenomIcon size={5} denomName={resultingDenom} />
-        <Text>{resultingDenomName}</Text>
-      </HStack>
-    </HStack>
-  );
-}
 
 function didLastSwapHaveSlippageError(events: Event[] | undefined) {
   if (!events) {
@@ -118,9 +102,6 @@ function Page() {
 
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">{getStrategyName(data.vault)}</Heading>
-          <Flex w={200}>
-            <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-          </Flex>
         </HStack>
       </HStack>
 
