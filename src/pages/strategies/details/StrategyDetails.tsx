@@ -8,6 +8,7 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
+import { getSlippageTolerance } from 'src/helpers/getStrategySlippageTolerance';
 import { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import useValidator from '@hooks/useValidator';
@@ -113,7 +114,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
-                  {strategy.slippage_tolerance}%
+                  {getSlippageTolerance(strategy)}
                 </Text>
               </GridItem>
             </>

@@ -241,7 +241,7 @@ describe('Detail page', () => {
 
         await renderTarget();
         await waitFor(() =>
-          expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('0.02%'),
+          expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('2.00%'),
         );
       });
       describe('when slippage tolerance is null', () => {
