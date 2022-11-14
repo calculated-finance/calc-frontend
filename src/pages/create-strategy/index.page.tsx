@@ -167,7 +167,7 @@ function Strategies() {
                     Fear &amp; Greed index score
                   </Text>
                 </NextLink>
-                : {fearAndGreedIndex} ({fearAndGreedClassification}), it&apos;s a good time to use accumulation
+                : {fearAndGreedIndex} ({fearAndGreedClassification}), it may be a good time to use accumulation
                 strategies
               </>
             ) : null}
