@@ -126,11 +126,11 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={2}>
                 <HStack>
-                  <StrategyStatusBadge strategy={strategy} />
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
                     {getPriceCeilingFloor(strategy.minimum_receive_amount, strategy.swap_amount)}{' '}
                     {getDenomInfo(initialDenom).name}
                   </Text>
+                  <Badge colorScheme="green">Set</Badge>
                 </HStack>
               </GridItem>
             </>
