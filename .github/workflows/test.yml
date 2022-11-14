@@ -1,33 +1,6 @@
 name: Run Tests
 
 on:
-  workflow_dispatch:
-    inputs:
-      ENVIRONMENT:
-        type: string
-        required: true
-        description: Github environment to use
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_ACCOUNT_ID:
-        required: true
-      AWS_REGION:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      NEXT_PUBLIC_CHAIN_ID:
-        required: true
-      NEXT_PUBLIC_CONTRACT_ADDRESS:
-        required: true
-      NEXT_PUBLIC_REST_ENDPOINT:
-        required: true
-      NEXT_PUBLIC_RPC_ENDPOINT:
-        required: true
-      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS:
-        required: true
-      NEXT_PUBLIC_FEE_TAKER_ADDRESS:
-        required: true
   workflow_call:
     inputs:
       ENVIRONMENT:
