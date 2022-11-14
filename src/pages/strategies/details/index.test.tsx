@@ -235,6 +235,26 @@ describe('Detail page', () => {
         await waitFor(() => expect(screen.getByTestId('strategy-investment-cycle').textContent).toBe('weekly'));
       });
     });
+    describe('slippage tolerance', () => {
+      it('renders slippage tolerance', async () => {
+        mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: '0.02' }) }), mockCancelVault());
+
+        await renderTarget();
+        await waitFor(() =>
+          expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('0.02%'),
+        );
+      });
+      describe('when slippage tolerance is null', () => {
+        it('does not render slippage tolerance', async () => {
+          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: null }) }), mockCancelVault());
+  
+          await renderTarget();
+          await waitFor(() =>
+            expect(screen.queryByTestId('strategy-slippage-tolerance')).toBeNull()
+          );
+        });
+      })
+    });
     describe('price ceiling', () => {
       it('renders ceiling', async () => {
         mockUseWallet(mockUseStrategy({ vault: mockStrategy({ minimum_receive_amount: '3000' }) }), mockCancelVault());

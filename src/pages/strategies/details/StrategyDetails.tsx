@@ -106,6 +106,18 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
+          {Boolean(strategy.slippage_tolerance) && (
+            <>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Slippage tolerance</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
+                  {strategy.slippage_tolerance}%
+                </Text>
+              </GridItem>
+            </>
+          )}
           {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
             <>
               <GridItem colSpan={1}>
