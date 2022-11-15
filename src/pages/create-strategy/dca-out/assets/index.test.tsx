@@ -12,6 +12,7 @@ import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
 import { mockBalances } from 'src/helpers/test/mockBalances';
 import { kujiraQueryClient } from 'kujira.js';
 import { NetworkContext } from '@components/NetworkContext';
+import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
 import Page from './index.page';
 
 const mockRouter = {
@@ -71,6 +72,7 @@ async function renderTarget() {
 describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockFiatPrice('kujira');
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
   });
   describe('on page load', () => {
@@ -95,7 +97,7 @@ describe('DCA Out Assets page', () => {
         const select = await waitFor(() => screen.getByLabelText(/What position do you want to take profit on?/));
         selectEvent.select(select, ['KUJI']);
 
-        await waitFor(() => expect(screen.getByText('12.12')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('11.92')).toBeInTheDocument());
       });
     });
   });
@@ -126,7 +128,7 @@ describe('DCA Out Assets page', () => {
         );
         await selectEvent.select(initalDenomSelect, ['KUJI']);
 
-        await waitFor(() => expect(screen.getByText('12.12')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('11.92')).toBeInTheDocument());
         const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
 
         // enter initial deposit

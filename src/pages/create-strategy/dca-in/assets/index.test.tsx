@@ -12,6 +12,7 @@ import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
 
 import { kujiraQueryClient } from 'kujira.js';
 import { NetworkContext } from '@components/NetworkContext';
+import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
 import Page from './index.page';
 import { mockBalances } from '../../../../helpers/test/mockBalances';
 
@@ -73,6 +74,7 @@ describe('DCA In Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    mockFiatPrice('usd-coin');
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
@@ -96,7 +98,7 @@ describe('DCA In Assets page', () => {
         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
         selectEvent.select(select, ['DEMO']);
 
-        await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('87.92')).toBeInTheDocument());
       });
     });
   });
@@ -127,7 +129,7 @@ describe('DCA In Assets page', () => {
         );
         await selectEvent.select(initalDenomSelect, ['DEMO']);
 
-        await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('87.92')).toBeInTheDocument());
         const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
 
         // enter initial deposit
