@@ -37,6 +37,7 @@ import { formatFiat } from './StrategyPerformance';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
 const daysData = [
+  { value: '1', label: '1D' },
   { value: '3', label: '3D' },
   { value: '7', label: '1W' },
   { value: '30', label: '1M' },
