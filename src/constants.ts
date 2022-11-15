@@ -19,3 +19,5 @@ export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
 export const SWAP_FEE = 0.0165;
 export const DELEGATION_FEE = 0.0075;
 export const FIN_TAKER_FEE = 0.0015;
+
+export const OUT_OF_GAS_ERROR_MESSAGE = 'The transaction ran out of gas during execution. Please provide more gas.';
