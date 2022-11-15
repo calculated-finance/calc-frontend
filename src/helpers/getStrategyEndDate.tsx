@@ -30,35 +30,32 @@ function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, 
 }
 
 function getLastExecutionDateFromStrategyEvents(events: Event[]) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const lastExecutionEvent = findLast(events, (event: Event) => event.data.dca_vault_execution_triggered) as Event;
+  const lastExecutionEvent = findLast(events, (event: Event) => {
+    const { data } = event;
+    if ('dca_vault_execution_triggered' in data) {
+      return data.dca_vault_execution_triggered;
+    }
+    return false;
+  }) as Event;
 
   // vault has no executions yet
   if (!lastExecutionEvent) {
     return undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return new Date(lastExecutionEvent.timestamp / 1000000);
+  return new Date(Number(lastExecutionEvent.timestamp) / 1000000);
 }
 
 export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefined) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (strategy?.trigger?.fin_limit_order) {
+  const { trigger } = strategy;
+  if (trigger && 'fin_limit_order' in trigger) {
     return 'Pending strategy start';
   }
 
   const executions = getStrategyTotalExecutions(strategy);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (isStrategyScheduled(strategy) && strategy?.trigger?.time) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const startDate = new Date(strategy.trigger.time.target_time / 1000000);
+  if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
+    const startDate = new Date(Number(trigger.time.target_time) / 1000000);
     return getEndDateFromRemainingExecutions(strategy, startDate, executions);
   }
 
