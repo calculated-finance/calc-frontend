@@ -24,17 +24,16 @@ import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
+import { PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE, PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE } from 'src/constants';
 import { getSidebarLayout } from '../../../components/Layout';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 
-function didLastSwapHaveSlippageError(events: Event[] | undefined) {
+function getLatestSwapError(events: Event[] | undefined): string | undefined {
   if (!events) {
-    return false;
+    return undefined;
   }
   const executionTriggeredIndex = findLastIndex(events, (event) => {
     const { data } = event;
@@ -47,18 +46,21 @@ function didLastSwapHaveSlippageError(events: Event[] | undefined) {
   const executionSkippedIndex = executionTriggeredIndex + 1;
 
   if (executionTriggeredIndex === -1 || executionSkippedIndex >= events.length) {
-    return false;
+    return undefined;
   }
 
   const { data } = events[executionSkippedIndex];
-  if (
-    'dca_vault_execution_skipped' in data &&
-    data.dca_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded'
-  ) {
-    return true;
-  }
 
-  return false;
+  if (!('dca_vault_execution_skipped' in data)) return undefined;
+
+  const swapReasonMessages: Record<string, string> = {
+    'slippage_tolerance_exceeded': PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
+    'unknown_failure': PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE
+  };
+
+  const swapSkippedReason = data.dca_vault_execution_skipped?.reason.toString();
+
+  return Object.keys(swapReasonMessages).includes(swapSkippedReason) && swapReasonMessages[swapSkippedReason] || undefined;
 }
 
 function Page() {
@@ -78,7 +80,7 @@ function Page() {
 
   const events = eventsData?.events;
 
-  const lastSwapSlippageError = didLastSwapHaveSlippageError(events);
+  const lastSwapSlippageError = getLatestSwapError(events);
 
   if (!data) {
     return (
@@ -87,9 +89,6 @@ function Page() {
       </Center>
     );
   }
-
-  const initialDenom = getStrategyInitialDenom(data.vault);
-  const resultingDenom = getStrategyResultingDenom(data.vault);
 
   return (
     <>
@@ -109,8 +108,7 @@ function Page() {
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
           <Image mr={4} src="/images/warningIcon.svg" />
           <Text fontSize="sm" mr={4}>
-            The previous swap failed due to slippage being exceeded - your funds are safe, and the next swap is
-            scheduled.
+            {lastSwapSlippageError}
           </Text>
           <Spacer />
 
