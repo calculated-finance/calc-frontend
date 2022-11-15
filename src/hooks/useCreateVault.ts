@@ -226,10 +226,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
 
     const result = client.signAndBroadcast(senderAddress, msgs, 'auto');
 
-    return result.then((data) => {
-      console.log(data);
-      return getVaultIdFromDeliverTxResponse(data);
-    });
+    return result.then((data) => getVaultIdFromDeliverTxResponse(data));
   });
 };
 

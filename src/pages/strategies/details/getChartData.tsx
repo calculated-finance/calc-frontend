@@ -119,6 +119,5 @@ export function getChartData(events: Event[] | undefined, coingeckoData: FiatPri
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  console.log(chartData);
   return [...chartData, ...(getChartDataSwaps(events, coingeckoData, false) || [])];
 }
