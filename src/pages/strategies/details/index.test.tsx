@@ -205,7 +205,9 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-start-date').textContent).toBe('When KUJI hits 0.5 DEMO'));
+          await waitFor(() =>
+            expect(screen.getByTestId('strategy-start-date').textContent).toBe('When KUJI hits 0.5 DEMO'),
+          );
         });
       });
       describe('when active', () => {
@@ -253,20 +255,16 @@ describe('Detail page', () => {
         mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: '0.02' }) }), mockCancelVault());
 
         await renderTarget();
-        await waitFor(() =>
-          expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('2.00%'),
-        );
+        await waitFor(() => expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('2.00%'));
       });
       describe('when slippage tolerance is null', () => {
         it('does not render slippage tolerance', async () => {
           mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: null }) }), mockCancelVault());
-  
+
           await renderTarget();
-          await waitFor(() =>
-            expect(screen.queryByTestId('strategy-slippage-tolerance')).toBeNull()
-          );
+          await waitFor(() => expect(screen.queryByTestId('strategy-slippage-tolerance')).toBeNull());
         });
-      })
+      });
     });
     describe('price ceiling', () => {
       it('renders ceiling', async () => {
@@ -406,11 +404,12 @@ describe('Detail page', () => {
         await waitFor(() =>
           expect(mockToast).toHaveBeenCalledWith({
             description: "We've cancelled your strategy and refunded remaining funds.",
-            duration: 9000,
+            duration: 12000,
             isClosable: true,
             position: 'top-right',
             status: 'success',
             title: 'Strategy cancelled.',
+            variant: 'subtle',
           }),
         );
       });
@@ -438,11 +437,12 @@ describe('Detail page', () => {
       await waitFor(() =>
         expect(mockToast).toHaveBeenCalledWith({
           description: 'There was a problem cancelling your strategy (Reason: test reason)',
-          duration: 9000,
+          duration: 12000,
           isClosable: true,
           position: 'top-right',
           status: 'error',
           title: 'Something went wrong',
+          variant: 'subtle',
         }),
       );
     });

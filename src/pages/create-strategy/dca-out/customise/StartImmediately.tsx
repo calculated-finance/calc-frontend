@@ -27,7 +27,7 @@ export default function StartImmediately() {
 
   return (
     <FormControl>
-      <FormLabel>Start Strategy immediately?</FormLabel>
+      <FormLabel>Start strategy immediately?</FormLabel>
       <FormHelperText>Starting immediately means your first swap occurs straight after set-up.</FormHelperText>
       <HStack>
         <Radio {...getRootProps}>

@@ -38,7 +38,8 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
           position: 'top-right',
           description: "We've cancelled your strategy and refunded remaining funds.",
           status: 'success',
-          duration: 9000,
+          duration: 12000,
+          variant: 'subtle',
           isClosable: true,
         });
         onCancel();
@@ -49,8 +50,9 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
           position: 'top-right',
           description: `There was a problem cancelling your strategy (Reason: ${error.message})`,
           status: 'error',
-          duration: 9000,
+          duration: 12000,
           isClosable: true,
+          variant: 'subtle',
         });
       },
       onSettled: onClose,

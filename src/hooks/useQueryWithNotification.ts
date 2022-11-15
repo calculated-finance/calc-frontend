@@ -17,6 +17,7 @@ export default function useQueryWithNotification<TQueryFnData = unknown>(
         position: 'top-right',
         description: `There was a problem while loading (Reason: ${error.message}, key: ${label})`,
         status: 'error',
+        variant: 'subtle',
         duration: 9000,
         isClosable: true,
       });
