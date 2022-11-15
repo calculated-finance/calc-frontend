@@ -186,6 +186,10 @@ function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse) {
   return id;
 }
 
+export function createStrategyFeeInTokens(price: any) {
+  return ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
+}
+
 const useCreateVault = (formName: FormNames, transactionType: TransactionType) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
@@ -221,7 +225,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    const tokensToCoverFee = ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
+    const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
     const result = client.signAndBroadcast(senderAddress, msgs, 'auto');

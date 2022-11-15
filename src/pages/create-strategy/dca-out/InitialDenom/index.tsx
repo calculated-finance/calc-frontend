@@ -7,53 +7,14 @@ import {
   SimpleGrid,
   Spacer,
   Text,
-  Button,
   Center,
 } from '@chakra-ui/react';
 import usePairs, { uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
-import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { isDenomVolatile } from '@utils/getDenomInfo';
+import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '../InitialDeposit';
 import { DenomSelect } from '../../../../components/DenomSelect';
-
-// TODO: make this generic
-function AvailableFunds() {
-  const [field] = useField({ name: 'initialDenom' });
-
-  const initialDenom = field.value;
-
-  const { displayAmount, isLoading } = useBalance({
-    token: initialDenom,
-  });
-
-  const [, , helpers] = useField('initialDeposit');
-
-  const handleClick = () => {
-    helpers.setValue(displayAmount);
-  };
-
-  if (!initialDenom) {
-    return null;
-  }
-
-  return (
-    <Center textStyle="body-xs">
-      <Text mr={1}>Available: </Text>
-      <Button
-        size="xs"
-        isLoading={isLoading}
-        colorScheme="blue"
-        variant="link"
-        cursor="pointer"
-        isDisabled={!displayAmount}
-        onClick={handleClick}
-      >
-        {displayAmount || 'None'}
-      </Button>
-    </Center>
-  );
-}
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
 export default function InitialDenom() {
