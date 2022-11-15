@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@wizard-ui/react';
-import { STAKING_ROUTER_CONTRACT_ADDRESS, CONTRACT_ADDRESS, CREATE_VAULT_FEE, ONE_MILLION } from 'src/constants';
+import {
+  STAKING_ROUTER_CONTRACT_ADDRESS,
+  CONTRACT_ADDRESS,
+  CREATE_VAULT_FEE,
+  ONE_MILLION,
+  OUT_OF_GAS_ERROR_MESSAGE,
+} from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -230,7 +236,21 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
 
     const result = client.signAndBroadcast(senderAddress, msgs, 'auto');
 
-    return result.then((data) => getVaultIdFromDeliverTxResponse(data));
+    return result
+      .then((data) => {
+        try {
+          return getVaultIdFromDeliverTxResponse(data);
+        } catch (error) {
+          throw data.rawLog ? new Error(data.rawLog) : error;
+        }
+      })
+      .catch((error) => {
+        const errorMessages: Record<string, string> = {
+          'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
+        };
+        const matchingErrorKey = Object.keys(errorMessages).find((key) => error.toString().includes(key));
+        throw new Error(matchingErrorKey ? errorMessages[matchingErrorKey] : error);
+      });
   });
 };
 
