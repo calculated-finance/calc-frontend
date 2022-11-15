@@ -36,9 +36,13 @@ function didLastSwapHaveSlippageError(events: Event[] | undefined) {
   if (!events) {
     return false;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const executionTriggeredIndex = findLastIndex(events, (event) => event.data.dca_vault_execution_triggered);
+  const executionTriggeredIndex = findLastIndex(events, (event) => {
+    const { data } = event;
+    if ('dca_vault_execution_triggered' in data) {
+      return true;
+    }
+    return false;
+  });
 
   const executionSkippedIndex = executionTriggeredIndex + 1;
 
@@ -46,9 +50,11 @@ function didLastSwapHaveSlippageError(events: Event[] | undefined) {
     return false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  if (events[executionSkippedIndex]?.data.dca_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded') {
+  const { data } = events[executionSkippedIndex];
+  if (
+    'dca_vault_execution_skipped' in data &&
+    data.dca_vault_execution_skipped?.reason === 'slippage_tolerance_exceeded'
+  ) {
     return true;
   }
 
