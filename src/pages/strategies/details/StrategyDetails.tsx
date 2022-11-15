@@ -100,7 +100,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             </Text>
           </GridItem>
           <GridItem colSpan={1}>
-            <Heading size="xs">Purchase each cycle</Heading>
+            <Heading size="xs">Swap each cycle</Heading>
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-swap-amount">
