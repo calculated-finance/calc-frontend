@@ -15,6 +15,53 @@ class BreakException extends Error {
   }
 }
 
+export const findCurrentPriceInTime = (time: Date, coingeckoData: FiatPriceHistoryResponse) => {
+  let currentPrice = 0;
+  try {
+    coingeckoData.prices.forEach((price) => {
+      if (new Date(price[0]) > time) {
+        throw BreakException;
+      }
+      [, currentPrice] = price;
+    });
+  } catch (e) {
+    if (e !== BreakException) throw e;
+  }
+
+  return currentPrice;
+};
+
+function getEventsWithAccumulation(completedEvents: Event[]) {
+  let totalAmount = 0;
+
+  return completedEvents?.map((event) => {
+    const { data } = event;
+
+    if ('dca_vault_execution_completed' in data) {
+      const { conversion, name } = getDenomInfo(data.dca_vault_execution_completed.received.denom);
+
+      const amount = conversion(Number(data.dca_vault_execution_completed.received.amount));
+      totalAmount += Number(amount);
+      return {
+        time: new Date(Number(event.timestamp) / 1000000),
+        accumulation: parseFloat(totalAmount.toFixed(2)),
+        swapAmount: amount,
+        swapDenom: name,
+      };
+    }
+    throw new Error();
+  });
+}
+function getCompletedEvents(events: Event[] | undefined) {
+  return events?.filter((event) => {
+    const { data } = event;
+    if ('dca_vault_execution_completed' in data) {
+      return data.dca_vault_execution_completed;
+    }
+    return undefined;
+  });
+}
+
 export const findCurrentAmountInTime = (time: number, events: EventWithAccumulation[]) => {
   let currentAmount = 0;
   try {
@@ -31,36 +78,39 @@ export const findCurrentAmountInTime = (time: number, events: EventWithAccumulat
   return currentAmount;
 };
 
-export function getChartData(events: Event[] | undefined, coingeckoData: FiatPriceHistoryResponse | undefined) {
-  const completedEvents = events?.filter((event) => {
-    const { data } = event;
-    if ('dca_vault_execution_completed' in data) {
-      return data.dca_vault_execution_completed;
-    }
-    return undefined;
+export function getChartDataSwaps(
+  events: Event[] | undefined,
+  coingeckoData: FiatPriceHistoryResponse | undefined,
+  includeLabel: boolean,
+) {
+  const completedEvents = getCompletedEvents(events);
+  if (!completedEvents || !coingeckoData) {
+    return null;
+  }
+  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
+
+  const chartData = eventsWithAccumulation?.map((event) => {
+    const date = new Date(event.time);
+    return {
+      date,
+      price: event.accumulation * findCurrentPriceInTime(date, coingeckoData),
+      label: includeLabel
+        ? `Received ${event.swapAmount} ${event.swapDenom} at ${date.toLocaleTimeString()}`
+        : undefined,
+    };
   });
+
+  return chartData;
+}
+
+export function getChartData(events: Event[] | undefined, coingeckoData: FiatPriceHistoryResponse | undefined) {
+  const completedEvents = getCompletedEvents(events);
 
   if (!completedEvents || !coingeckoData) {
     return null;
   }
 
-  let totalAmount = 0;
-
-  const eventsWithAccumulation = completedEvents?.map((event) => {
-    const { data } = event;
-
-    if ('dca_vault_execution_completed' in data) {
-      const { conversion } = getDenomInfo(data.dca_vault_execution_completed.received.denom);
-
-      const amount = conversion(Number(data.dca_vault_execution_completed.received.amount));
-      totalAmount += Number(amount);
-      return {
-        time: new Date(Number(event.timestamp) / 1000000),
-        accumulation: parseFloat(totalAmount.toFixed(2)),
-      };
-    }
-    throw new Error();
-  });
+  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
 
   const chartData = coingeckoData?.prices.map((price) => ({
     date: new Date(price[0]),
@@ -69,5 +119,5 @@ export function getChartData(events: Event[] | undefined, coingeckoData: FiatPri
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  return chartData;
+  return [...chartData, ...(getChartDataSwaps(events, coingeckoData, false) || [])];
 }

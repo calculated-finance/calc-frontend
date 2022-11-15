@@ -16,7 +16,14 @@ import {
 import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import useStrategyEvents from '@hooks/useStrategyEvents';
-import { VictoryArea, VictoryAxis, VictoryChart, VictoryTooltip, VictoryVoronoiContainer } from 'victory';
+import {
+  VictoryArea,
+  VictoryAxis,
+  VictoryChart,
+  VictoryScatter,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from 'victory';
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -27,7 +34,7 @@ import RadioCard from '@components/RadioCard';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
-import { getChartData } from './getChartData';
+import { getChartData, getChartDataSwaps } from './getChartData';
 
 const daysData = [
   { value: '3', label: '3D' },
@@ -74,13 +81,10 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDays(event.target.value);
-  };
-
   const { data: coingeckoData } = useFiatPriceHistory(resultingDenom, days);
 
   const chartData = getChartData(events, coingeckoData);
+  const swapsData = getChartDataSwaps(events, coingeckoData, true);
 
   const marketValueAmount = strategy.received_amount.amount;
 
@@ -134,7 +138,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
         </Box>
 
         <Center width="full" height={250} ref={elementRef} px={6}>
-          {!chartData ? (
+          {!chartData || !swapsData ? (
             <Spinner />
           ) : (
             <VictoryChart
@@ -161,6 +165,14 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                     day: 'numeric',
                   })
                 }
+              />
+              <VictoryScatter
+                style={{ data: { fill: '#1AEFAF' } }}
+                size={5}
+                data={swapsData}
+                x="date"
+                y="price"
+                labelComponent={<VictoryTooltip />}
               />
               <VictoryArea
                 style={{
