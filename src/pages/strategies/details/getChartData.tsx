@@ -93,7 +93,7 @@ export function getChartDataSwaps(
     const date = new Date(event.time);
     return {
       date,
-      price: event.accumulation * findCurrentPriceInTime(date, coingeckoData),
+      price: Number((event.accumulation * findCurrentPriceInTime(date, coingeckoData)).toFixed(2)),
       label: includeLabel
         ? `Received ${event.swapAmount} ${event.swapDenom} at ${date.toLocaleTimeString()}`
         : undefined,
@@ -114,7 +114,7 @@ export function getChartData(events: Event[] | undefined, coingeckoData: FiatPri
 
   const chartData = coingeckoData?.prices.map((price) => ({
     date: new Date(price[0]),
-    price: price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation),
+    price: Number((price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)),
     label: `$${(price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)} (${new Date(
       price[0],
     ).toLocaleTimeString()})`,
