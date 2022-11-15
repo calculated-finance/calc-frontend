@@ -44,7 +44,7 @@ export default function SlippageTolerance() {
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
-      <FormLabel>Set Slippage Tolerance</FormLabel>
+      <FormLabel>Set slippage tolerance</FormLabel>
       <FormHelperText>
         If the slippage exceeds your tolerance, the swap will fail, be skipped for that increment and your strategy
         length will increase by 1 increment.

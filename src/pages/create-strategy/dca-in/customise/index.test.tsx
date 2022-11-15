@@ -216,7 +216,7 @@ describe('DCA In customise page', () => {
       await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
 
       // enter slippage tolerance
-      const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set Slippage Tolerance/));
+      const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set slippage tolerance/));
       await waitFor(() => userEvent.type(slippageToleranceInput, '1'), { timeout: 5000 });
 
       // submit

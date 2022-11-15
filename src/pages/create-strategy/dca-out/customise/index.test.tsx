@@ -216,7 +216,7 @@ describe('DCA Out customise page', () => {
       await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
 
       // enter swap amount
-      const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set Slippage Tolerance/));
+      const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set slippage tolerance/));
       await waitFor(() => fireEvent.change(slippageToleranceInput, { target: { value: '5' } }), { timeout: 5000 });
 
       // submit
