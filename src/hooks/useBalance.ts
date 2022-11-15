@@ -11,6 +11,10 @@ interface UseBalanceArgs {
   token?: string;
 }
 
+export function getDisplayAmount(token: string | undefined, amount: number) {
+  return Number(getDenomInfo(token).conversion(amount));
+}
+
 const useBalance = ({ token }: UseBalanceArgs) => {
   const { address, client } = useWallet();
 
@@ -32,7 +36,7 @@ const useBalance = ({ token }: UseBalanceArgs) => {
   );
 
   return {
-    displayAmount: result.data ? Number(getDenomInfo(token).conversion(Number(result.data.amount))) : 0,
+    displayAmount: result.data ? getDisplayAmount(token, Number(result.data.amount)) : 0,
     ...result,
   };
 };

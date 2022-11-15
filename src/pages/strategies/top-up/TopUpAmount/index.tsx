@@ -18,7 +18,7 @@ import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import NumberInput from '../../../../components/NumberInput';
 
-function AvailableFunds({ initialDenom }: { initialDenom: Denom }) {
+function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
     token: initialDenom,
   });
@@ -59,7 +59,7 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
         <Center>
           <Text textStyle="body-xs">You must deposit the same asset.</Text>
           <Spacer />
-          <AvailableFunds initialDenom={initialDenom} />
+          <TopUpAvailableFunds initialDenom={initialDenom} />
         </Center>
       </FormHelperText>
       <InputGroup>

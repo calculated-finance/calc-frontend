@@ -8,17 +8,16 @@ import {
   Spacer,
   Text,
   HStack,
-  Button,
   Center,
 } from '@chakra-ui/react';
 import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
 import { Denom } from '@models/Denom';
-import useBalance from '@hooks/useBalance';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
+import { AvailableFunds } from '@components/AvailableFunds';
+import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '../InitialDeposit';
-import { DenomSelect } from '../../../../components/DenomSelect';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (
@@ -26,43 +25,6 @@ export function DenomSelectLabel({ denom }: { denom: Denom }) {
       <DenomIcon denomName={denom} />
       <Text>{getDenomInfo(denom).name}</Text>
     </HStack>
-  );
-}
-
-function AvailableFunds() {
-  const [field] = useField({ name: 'initialDenom' });
-
-  const initialDenom = field.value;
-
-  const { displayAmount, isLoading } = useBalance({
-    token: initialDenom,
-  });
-
-  const [, , helpers] = useField('initialDeposit');
-
-  const handleClick = () => {
-    helpers.setValue(displayAmount);
-  };
-
-  if (!initialDenom) {
-    return null;
-  }
-
-  return (
-    <Center textStyle="body-xs">
-      <Text mr={1}>Available: </Text>
-      <Button
-        size="xs"
-        isLoading={isLoading}
-        colorScheme="blue"
-        variant="link"
-        cursor="pointer"
-        isDisabled={!displayAmount}
-        onClick={handleClick}
-      >
-        {displayAmount || 'None'}
-      </Button>
-    </Center>
   );
 }
 
