@@ -9,7 +9,7 @@ import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
-import PriceThreshold from '@components/PriceThreshold';
+import { DummyPriceThreshold } from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
@@ -108,7 +108,7 @@ function Page() {
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
-                    <PriceThreshold
+                    <DummyPriceThreshold
                       transactionType={TransactionType.Sell}
                       formName={FormNames.DcaOut}
                       title="Set sell price floor?"
