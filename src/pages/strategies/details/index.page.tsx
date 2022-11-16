@@ -24,14 +24,18 @@ import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
-import { PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE, PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE } from 'src/constants';
+import {
+  PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
+  PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
+} from 'src/constants';
+import { Strategy } from '@hooks/useStrategies';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 
-function getLatestSwapError(events: Event[] | undefined): string | undefined {
+function getLatestSwapError(strategy: Strategy, events: Event[] | undefined): string | undefined {
   if (!events) {
     return undefined;
   }
@@ -51,16 +55,18 @@ function getLatestSwapError(events: Event[] | undefined): string | undefined {
 
   const { data } = events[executionSkippedIndex];
 
-  if (!('dca_vault_execution_skipped' in data)) return undefined;
+  if (!('dca_vault_execution_skipped' in data) || Number(strategy.balance.amount) === 0) return undefined;
 
   const swapReasonMessages: Record<string, string> = {
-    'slippage_tolerance_exceeded': PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
-    'unknown_failure': PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE
+    slippage_tolerance_exceeded: PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
+    unknown_failure: PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
   };
 
   const swapSkippedReason = data.dca_vault_execution_skipped?.reason.toString();
 
-  return Object.keys(swapReasonMessages).includes(swapSkippedReason) && swapReasonMessages[swapSkippedReason] || undefined;
+  return (
+    (Object.keys(swapReasonMessages).includes(swapSkippedReason) && swapReasonMessages[swapSkippedReason]) || undefined
+  );
 }
 
 function Page() {
@@ -80,8 +86,6 @@ function Page() {
 
   const events = eventsData?.events;
 
-  const lastSwapSlippageError = getLatestSwapError(events);
-
   if (!data) {
     return (
       <Center h="100vh">
@@ -89,6 +93,7 @@ function Page() {
       </Center>
     );
   }
+  const lastSwapSlippageError = getLatestSwapError(data.vault, events);
 
   return (
     <>
