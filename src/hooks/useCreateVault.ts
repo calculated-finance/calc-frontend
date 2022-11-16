@@ -224,13 +224,13 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       throw Error('No pairs found');
     }
 
-    msgs.push(getCreateVaultExecuteMsg(state, pairs, transactionType, senderAddress));
-
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
       msgs.push(getGrantMsg(senderAddress));
     }
+
+    msgs.push(getCreateVaultExecuteMsg(state, pairs, transactionType, senderAddress));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
