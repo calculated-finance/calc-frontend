@@ -281,7 +281,7 @@ describe('Detail page', () => {
         mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
-        await waitFor(() => expect(screen.getByTestId('strategy-swap-amount').textContent).toBe('1 DEMO'));
+        await waitFor(() => expect(screen.getByTestId('strategy-swap-amount').textContent).toBe('1 DEMO - fees*'));
       });
     });
     describe('current amount in wallet', () => {
@@ -298,7 +298,7 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
+                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'z_delegate' }],
               }),
             }),
             jest.fn(),
@@ -313,7 +313,7 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'send' }],
+                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'z_delegate' }],
               }),
             }),
             jest.fn(),
@@ -347,7 +347,7 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiraotheraddress', allocation: '1', action: 'send' }],
+                destinations: [{ address: 'kujiraotheraddress', allocation: '1', action: 'z_delegate' }],
               }),
             }),
             jest.fn(),

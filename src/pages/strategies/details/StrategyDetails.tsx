@@ -1,5 +1,5 @@
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack, Tooltip } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -18,8 +18,11 @@ import { getStrategyType } from 'src/helpers/getStrategyType';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { getPriceCeilingFloor } from 'src/helpers/getPriceCeilingFloor';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { CancelButton } from './CancelButton';
+import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { isAutoStaking } from 'src/helpers/isAutoStaking';
+import { getPrettyFee } from 'src/helpers/getPrettyFee';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
+import { CancelButton } from './CancelButton';
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();
@@ -104,7 +107,18 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-swap-amount">
-              {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name}
+              {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name} -{' '}
+              <Tooltip label={
+                <Box>
+                  <Text>Fees automatically deducted from each swap:</Text>
+                  <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
+                  <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
+                  {isAutoStaking(destinations) && (
+                  <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>
+                  )}
+                </Box>
+              }>fees*
+              </Tooltip>
             </Text>
           </GridItem>
           {Boolean(strategy.slippage_tolerance) && (
@@ -158,7 +172,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             </Flex>
           </GridItem>
           {Boolean(destinations.length) &&
-            (destinations[0].address.startsWith('kujiravaloper') ? (
+            (isAutoStaking(destinations) ? (
               <>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Auto staking status</Heading>
