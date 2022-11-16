@@ -64,7 +64,6 @@ export default function StartPrice() {
           pr={16}
           placeholder="0.00"
           onChange={(value) => helpers.setValue(restrictTo3DecimalPlaces(value))}
-          onInput={console.log}
           {...field}
         />
         <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
