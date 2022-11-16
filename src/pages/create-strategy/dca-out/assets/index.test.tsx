@@ -72,7 +72,7 @@ async function renderTarget() {
 describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockFiatPrice('kujira');
+    mockFiatPrice();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
   });
   describe('on page load', () => {

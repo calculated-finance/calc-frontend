@@ -74,7 +74,7 @@ describe('DCA In Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
-    mockFiatPrice('usd-coin');
+    mockFiatPrice();
   });
   describe('on page load', () => {
     it('renders the heading', async () => {

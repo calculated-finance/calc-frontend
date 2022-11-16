@@ -2,11 +2,20 @@ import { COINGECKO_ENDPOINT } from 'src/constants';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import nock from 'nock';
 
-export function mockFiatPrice(coingeckoId: string) {
+export function mockFiatPrice() {
   return nock(COINGECKO_ENDPOINT)
-    .get(`/simple/price?ids=${coingeckoId}&vs_currencies=usd`)
+    .get(`/simple/price?ids=usd-coin,usk,kujira,usd-coin,terra-luna,osmosis,bitcoin&vs_currencies=usd`)
     .reply(200, {
-      [coingeckoId]: {
+      cosmos: {
+        usd: 1.5,
+      },
+      kujira: {
+        usd: 1.5,
+      },
+      'usd-coin': {
+        usd: 1.5,
+      },
+      usk: {
         usd: 1.5,
       },
     })

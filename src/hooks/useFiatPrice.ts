@@ -1,5 +1,6 @@
 import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
+import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import useQueryWithNotification from './useQueryWithNotification';
@@ -11,11 +12,13 @@ const useFiatPrice = (denom: Denom | undefined) => {
   const fiatCurrencyId = 'usd';
 
   const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
-    ['fiat-price', coingeckoId, fiatCurrencyId],
+    ['fiat-price'],
     async () => {
-      const response = await fetch(
-        `${COINGECKO_ENDPOINT}/simple/price?ids=${coingeckoId}&vs_currencies=${fiatCurrencyId}`,
-      );
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${SUPPORTED_DENOMS.map(
+        (denomId: Denom) => getDenomInfo(denomId).coingeckoId,
+      ).join(',')}&vs_currencies=${fiatCurrencyId}`;
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch fiat price');
       }
@@ -23,6 +26,7 @@ const useFiatPrice = (denom: Denom | undefined) => {
       return response.json();
     },
     {
+      cacheTime: 5000,
       enabled: !!coingeckoId && !!fiatCurrencyId,
     },
   );

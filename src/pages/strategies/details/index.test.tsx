@@ -63,7 +63,7 @@ describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
-    mockFiatPrice('usd-coin');
+    mockFiatPrice();
     mockFiatPriceHistory('usd-coin');
   });
   it('renders the heading', async () => {
@@ -382,7 +382,9 @@ describe('Detail page', () => {
         await waitFor(() => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
-        await waitFor(() => expect(screen.getByTestId('cancel-strategy-model-fee').textContent).toBe('Cancellation Fee: $0.50 USD'));
+        await waitFor(() =>
+          expect(screen.getByTestId('cancel-strategy-model-fee').textContent).toBe('Cancellation Fee: $0.50 USD'),
+        );
       });
     });
     describe('when cancel modal is closed', () => {
