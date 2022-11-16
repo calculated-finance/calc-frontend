@@ -38,11 +38,6 @@ function CosmosWallet() {
     setVisible(!visible);
   };
 
-  const handleChangeWallet = () => {
-    setVisible(true);
-    onClose();
-  };
-
   const handleDisconnect = () => {
     disconnect();
     onClose();
@@ -87,15 +82,6 @@ function CosmosWallet() {
                 </Button>
                 <SpendableBalances />
                 <Stack>
-                  <Button
-                    w="min-content"
-                    size="xs"
-                    variant="link"
-                    onClick={handleChangeWallet}
-                    leftIcon={<CalcIcon as={SwitchIcon} stroke="brand.200" />}
-                  >
-                    Change wallet
-                  </Button>
                   <Button
                     size="xs"
                     w="min-content"

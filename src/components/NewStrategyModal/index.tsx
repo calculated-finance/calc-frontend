@@ -10,6 +10,13 @@ import {
   Center,
   Divider,
   Icon as ChakraIcon,
+  Modal,
+  ModalOverlay,
+  ModalHeader,
+  ModalBody,
+  useDisclosure,
+  ModalContent,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -38,6 +45,7 @@ export function NewStrategyModalBody({
 }: ChildrenProp & { isLoading?: boolean; stepsConfig: StepConfig[]; isSigning?: boolean }) {
   const router = useRouter();
   const step = findStep(router.pathname, stepsConfig);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
       <Box position="relative">
@@ -65,10 +73,19 @@ export function NewStrategyModalBody({
                       variant="link"
                       colorScheme="blue"
                       fontWeight="normal"
+                      onClick={onOpen}
                       rightIcon={<ChakraIcon as={QuestionOutlineIcon} />}
                     >
                       {step?.footerText}
                     </Button>
+                    <Modal size="lg" isOpen={isOpen} onClose={onClose}>
+                      <ModalOverlay />
+                      <ModalContent>
+                        <ModalHeader>{step?.footerText}</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody pb={12}>{step?.helpContent}</ModalBody>
+                      </ModalContent>
+                    </Modal>
                   </Center>
                 </>
               )}
