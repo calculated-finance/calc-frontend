@@ -164,10 +164,10 @@ export default function Summary() {
                   <Text>{resultingDenomName}</Text>
                   <DenomIcon denomName={resultingDenom} />
                 </BadgeButton>{' '}
-                price is higher than
+                price is higher than{' '}
                 <BadgeButton url="customise">
                   <Text>
-                    ~{priceThresholdValue} {initialDenomName}
+                    {priceThresholdValue} {initialDenomName}
                   </Text>
                   <DenomIcon denomName={initialDenom} />
                 </BadgeButton>{' '}
