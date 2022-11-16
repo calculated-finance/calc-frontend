@@ -3,7 +3,6 @@ import {
   GridItem,
   Box,
   Center,
-  Select,
   Stat,
   StatNumber,
   Stack,
@@ -14,7 +13,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
@@ -31,10 +30,10 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
-import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
+import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
 const daysData = [
@@ -88,22 +87,11 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const chartData = getChartData(events, coingeckoData);
   const swapsData = getChartDataSwaps(events, coingeckoData, true);
 
-  const marketValueAmount = strategy.received_amount.amount;
-
-  const costAmount = strategy.swapped_amount.amount;
-  const costAmountWithFeesSubtracted = Number(costAmount) - Number(costAmount) * (SWAP_FEE + FIN_TAKER_FEE);
-
-  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmountWithFeesSubtracted.toString(), denom: initialDenom });
-
-  const costInFiat = Number((costValue.toConverted() * initialDenomPrice).toFixed(2));
-  const marketValueInFiat = Number((marketValueValue.toConverted() * resultingDenomPrice).toFixed(2));
-
-  const profit = marketValueInFiat - costInFiat;
-
-  const percentageChange = `${(costInFiat ? (profit / costInFiat) * 100 : 0).toFixed(2)}%`;
-
-  const color = profit > 0 ? 'green.200' : profit < 0 ? 'red.200' : 'white';
+  const { color, percentageChange, profit } = getPerformanceStatistics(
+    strategy,
+    initialDenomPrice,
+    resultingDenomPrice,
+  );
 
   return (
     <GridItem colSpan={6}>
