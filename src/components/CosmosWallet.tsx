@@ -19,7 +19,6 @@ import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import { CopytoclipboardIcon, Remove1Icon, SwitchIcon } from '@fusion-icons/react/interface';
 import CalcIcon from './Icon';
-import TokenBox from './TokenBox';
 import { SpendableBalances } from './SpendableBalances';
 
 function CosmosWallet() {
@@ -65,7 +64,6 @@ function CosmosWallet() {
   return (
     <Box>
       <HStack spacing="3">
-        <TokenBox />
         {address != null ? (
           <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
