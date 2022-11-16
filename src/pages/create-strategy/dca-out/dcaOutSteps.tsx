@@ -29,20 +29,26 @@ const dcaOutSteps: StepConfig[] = [
     title: 'Customise Strategy',
     footerText: 'What are advanced settings?',
     helpContent: (
-      <Stack textStyle="body-xs">
+      <Stack textStyle="body" spacing={2}>
         <Text>Advanced features offer you the following functionality:</Text>
-        <OrderedList spacing={1} pb={2}>
+        <OrderedList spacing={1} pb={2} pl={4}>
           <ListItem>
-            Start based on timeChoose a date and time in the future and when that time is hit, the strategy will begin
-            to execute.
+            Start based on time.
+            <UnorderedList>
+              <ListItem>
+                Choose a date and time in the future and when that time is hit, the strategy will begin to execute.
+              </ListItem>
+            </UnorderedList>
           </ListItem>
 
           <ListItem>
-            Start based on price.Choose a price target and when the price is hit, the strategy will begin to execute
+            Start based on price.
+            <UnorderedList>
+              <ListItem>Choose a price target and when the price is hit, the strategy will begin to execute</ListItem>
+            </UnorderedList>
           </ListItem>
           <ListItem>
-            Set buy price ceiling (for DCA In) or price floor (for DCA Out)Set buy price ceiling (for DCA In) or price
-            floor (for DCA Out)
+            Set buy price ceiling (for DCA In) or price floor (for DCA Out)
             <UnorderedList>
               <ListItem>
                 CALC will not execute swaps if the price of the asset you are accumulating is higher (price ceiling on
@@ -50,9 +56,9 @@ const dcaOutSteps: StepConfig[] = [
               </ListItem>
               <ListItem>You can only set a price floor for DCA in and a price floor for DCA out.</ListItem>
               <ListItem>
-                or example, If the price ceiling is set to $2.00 on a USK {'-->'} KUJI DCA out strategy and the KUJI
+                For example, If the price ceiling is set to $2.00 on a USK {'-->'} KUJI DCA out strategy and the KUJI
                 price rises above $2.00 the swaps that are scheduled to happen will be skipped and your strategy will
-                extend an interval. These skips will continue until the price drops below the price ceiling
+                extend an interval. These skips will continue until the price drops below the price ceiling.
               </ListItem>
             </UnorderedList>
           </ListItem>
@@ -76,7 +82,7 @@ const dcaOutSteps: StepConfig[] = [
     title: 'Post Purchase',
     footerText: 'What will I be able to do with my profits in the future?',
     helpContent: (
-      <Stack textStyle="body-xs">
+      <Stack textStyle="body">
         <Text>
           CALC is all about automation and we know that flexibility with your assets is key to an amazing product. A few
           things that you can expect to be added to this strategy set-up flow are reinvesting, moving to other yield
