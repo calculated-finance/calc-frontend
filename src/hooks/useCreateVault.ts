@@ -47,9 +47,9 @@ function getReceiveAmount(
   }
 
   if (transactionType === TransactionType.Buy) {
-    return Math.floor(deconversion(swapAmount / price)).toString();
+    return deconversion(swapAmount / price).toString();
   }
-  return Math.floor(deconversion(swapAmount * price)).toString();
+  return deconversion(swapAmount * price).toString();
 }
 
 function getCreateVaultExecuteMsg(
