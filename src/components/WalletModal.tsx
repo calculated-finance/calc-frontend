@@ -5,8 +5,11 @@ import { WalletReadyState } from '@wizard-ui/core';
 // import { Collapse } from "./Collapse";
 import {
   Box,
+  Button,
   Center,
+  Collapse,
   Link,
+  Icon,
   Modal,
   ModalBody,
   ModalContent,
@@ -14,8 +17,10 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '@wizard-ui/react';
+import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '../hooks/useWalletModal';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
@@ -23,6 +28,8 @@ import Spinner from './Spinner';
 function WalletModal() {
   const { wallets, select, connecting } = useWallet();
   const { visible, setVisible } = useWalletModal();
+
+  const { isOpen, onToggle } = useDisclosure();
 
   const [installedWallets] = useMemo(() => {
     const installed: Wallet[] = [];
@@ -88,9 +95,33 @@ function WalletModal() {
                     <Text textStyle="body">No wallet extensions found</Text>
                   </Center>
                 )}
-                <Center>
-                  <Link href="/">What&apos;s a Wallet?</Link>
-                </Center>
+                <Stack>
+                  <Button
+                    onClick={onToggle}
+                    variant="ghost"
+                    colorScheme="blue"
+                    rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}
+                  >
+                    What&apos;s a Wallet?
+                  </Button>
+                  <Collapse in={isOpen}>
+                    <Stack textStyle="body">
+                      <Text>
+                        A wallet or a cryptocurrency wallet stores your public and private keys while providing an
+                        easy-to-use interface to manage crypto balances.
+                      </Text>
+                      <Text>
+                        It is your tool for both authentications (no more username and password) as well as your ticket
+                        to access decentralised apps (like CALC). Each wallet has an address and that&apos;s how people
+                        send you money.
+                      </Text>
+                      <Text>
+                        You can connect your wallet to CALC to start using it. If you don&apos;t have a wallet yet, open
+                        one up and come back!
+                      </Text>
+                    </Stack>
+                  </Collapse>
+                </Stack>
               </Stack>
             </ModalBody>
           </>
