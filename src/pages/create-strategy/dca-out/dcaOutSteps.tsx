@@ -5,19 +5,13 @@ const dcaOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-out/assets',
     title: 'Choose Funding & Assets',
-    footerText: 'How does taking profit work?',
+    footerText: 'How does taking profit into fiat work?',
     helpContent: (
       <Stack textStyle="body">
         <Text>
           We don&apos;t support this yet but it is on the roadmap and will be CALC&apos;s next development focus to
-          create a true, end-to-end DeFi experience.
-        </Text>
-
-        <Text>
-          CALC is focused on ease of use and knows that recurring payments are part of a complete set-and-forget
-          strategy. At the moment, we are waiting for the Axelar team to push the General Message Passing module to
-          production and for Kado money to support recurring payments. Once that is ready, we will integrate with Kado
-          Money and allow you to set up recurring payments directly from your bank account to CALC, automatically.
+          create a true, end-to-end DeFi experience. After the Kado Money integration, you&apos;ll be able to create a
+          Kado Money account within CALC, link your bank account and have profits sent directly to your account.
         </Text>
 
         <Text>
