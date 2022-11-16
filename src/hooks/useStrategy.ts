@@ -6,16 +6,24 @@ import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 
 export default function useStrategy(id?: Strategy['id']) {
-  const { client } = useWallet();
+  const { address, client } = useWallet();
 
   return useQueryWithNotification<VaultResponse>(
     ['strategy', id, client],
-    () =>
-      client!.queryContractSmart(CONTRACT_ADDRESS, {
+    async () => {
+      if (!client) {
+        throw new Error('No client');
+      }
+      const result = await client.queryContractSmart(CONTRACT_ADDRESS, {
         get_vault: {
           vault_id: id,
         },
-      } as QueryMsg),
+      } as QueryMsg);
+      if (result.vault.owner !== address) {
+        throw new Error('Strategy not found');
+      }
+      return result;
+    },
     {
       enabled: !!client && !!id,
     },
