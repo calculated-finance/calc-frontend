@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
@@ -8,6 +8,7 @@ import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { isNaN } from 'lodash';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function formatFiat(value: number) {
   return `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
@@ -25,21 +26,11 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
     return null;
   }
 
-  const marketValueAmount = strategy.received_amount.amount;
-
-  const costAmount = strategy.swapped_amount.amount;
-
-  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
-
-  const costInFiat = costValue.toConverted() * initialDenomPrice;
-  const marketValueInFiat = marketValueValue.toConverted() * resultingDenomPrice;
-
-  const profit = marketValueInFiat - costInFiat;
-
-  const percentageChange = `${(costInFiat ? (profit / costInFiat) * 100 : 0).toFixed(2)}%`;
-
-  const color = profit > 0 ? 'green.200' : profit < 0 ? 'red.200' : 'white';
+  const { color, percentageChange, marketValueValue, costValue, profit } = getPerformanceStatistics(
+    strategy,
+    initialDenomPrice,
+    resultingDenomPrice,
+  );
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
