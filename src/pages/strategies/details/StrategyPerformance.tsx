@@ -109,7 +109,7 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
               <Divider />
             </GridItem>
             <GridItem colSpan={1}>
-              <Heading size="xs">Profit/Loss</Heading>
+              <Heading size="xs">{getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}</Heading>
             </GridItem>
             <GridItem colSpan={1}>
               <Text color={color} fontSize="sm">
