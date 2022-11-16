@@ -13,9 +13,8 @@ import {
   UnorderedList,
   Link,
 } from '@chakra-ui/react';
+import { CALC_TELEGRAM_URL } from 'src/constants';
 import { getSidebarLayout } from '../../components/Layout';
-
-const CALC_PROTOCOL_TELEGRAM_URL = 'https://t.me/calcprotocol';
 
 function HowItWorks() {
   return (
@@ -219,8 +218,8 @@ function HowItWorks() {
               <Text textStyle="body" pb={2}>
                 Want to suggest a feature? The community would love to hear from you. Please send a message to the
                 community Telegram group:{' '}
-                <Link isExternal href={CALC_PROTOCOL_TELEGRAM_URL}>
-                  {CALC_PROTOCOL_TELEGRAM_URL}
+                <Link isExternal href={CALC_TELEGRAM_URL}>
+                  {CALC_TELEGRAM_URL}
                 </Link>
               </Text>
             </AccordionPanel>
@@ -309,8 +308,8 @@ function HowItWorks() {
               <Text textStyle="body" pb={2}>
                 CALC is run by a DAO of users that have a passion for contributing to the project. Do you love what CALC
                 is doing and want to get involved? Then ask in the CALC Telegram group:{' '}
-                <Link isExternal href={CALC_PROTOCOL_TELEGRAM_URL}>
-                  {CALC_PROTOCOL_TELEGRAM_URL}
+                <Link isExternal href={CALC_TELEGRAM_URL}>
+                  {CALC_TELEGRAM_URL}
                 </Link>
               </Text>
               <Text textStyle="body" pb={2}>
