@@ -6,6 +6,7 @@ import {
   CREATE_VAULT_FEE,
   ONE_MILLION,
   OUT_OF_GAS_ERROR_MESSAGE,
+  LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
 } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
@@ -247,6 +248,8 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       .catch((error) => {
         const errorMessages: Record<string, string> = {
           'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
+          "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
+            LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
         };
         const matchingErrorKey = Object.keys(errorMessages).find((key) => error.toString().includes(key));
         throw new Error(matchingErrorKey ? errorMessages[matchingErrorKey] : error);

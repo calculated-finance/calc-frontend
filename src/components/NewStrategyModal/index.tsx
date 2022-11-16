@@ -133,7 +133,6 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
-
         <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />

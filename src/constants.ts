@@ -26,4 +26,7 @@ export const PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE =
 export const PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE =
   'The previous swap failed and this strategy has moved to complete. This is likely due to a swap amount that is too small to be swapped without losing a large part of the funds to gas. Please cancel the vault to get your remaining funds back.';
 
-export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol'
+export const LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE =
+  'Sorry, but we are waiting for CosmWasm Version 0.47 before Ledger supports AuthZ staking to your wallet. This is estimated to be early Jan 2023. You can still auto-stake but without a Ledger or remove the auto-staking option from this strategy and your Ledger will work.';
+
+export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
