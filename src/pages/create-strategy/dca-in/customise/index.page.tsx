@@ -10,6 +10,7 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
 import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -28,7 +29,7 @@ function DcaInStep2() {
   const { actions, state } = useStep2Form(FormNames.DcaIn);
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
+  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAIn });
   const { nextStep } = useSteps(steps);
 
   if (!state) {

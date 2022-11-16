@@ -11,6 +11,7 @@ import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
 import { DummyPriceThreshold } from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -28,7 +29,7 @@ function Page() {
   const { actions, state } = useStep2Form(FormNames.DcaOut);
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1 });
+  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAOut });
   const { nextStep } = useSteps(dcaOutSteps);
 
   if (!state) {

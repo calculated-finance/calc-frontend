@@ -11,6 +11,7 @@ import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import YesNoValues from './YesNoValues';
+import { StrategyTypes } from './StrategyTypes';
 
 export const initialValues = {
   resultingDenom: '',
@@ -169,6 +170,40 @@ export const allValidationSchema = Yup.object({
         advancedSettings === true && priceThresholdEnabled === YesNoValues.Yes,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
+    })
+    .test({
+      name: 'less-than-price-trigger',
+      message: 'Price ceiling must be greater than or equal to price trigger',
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { startPrice = undefined, strategyType = undefined } = { ...context.parent, ...context.options.context };
+        if (!startPrice) {
+          return true;
+        }
+        if (strategyType !== StrategyTypes.DCAIn) {
+          return true;
+        }
+        return value >= startPrice;
+      },
+    })
+    .test({
+      name: 'greater-than-price-trigger',
+      message: 'Price floor must be less than or equal to price trigger',
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { startPrice = undefined, strategyType = undefined } = { ...context.parent, ...context.options.context };
+        if (!startPrice) {
+          return true;
+        }
+        if (strategyType !== StrategyTypes.DCAOut) {
+          return true;
+        }
+        return value <= startPrice;
+      },
     }),
   sendToWallet: Yup.mixed<SendToWalletValues>().oneOf(Object.values(SendToWalletValues)).required(),
   recipientAccount: Yup.string()
