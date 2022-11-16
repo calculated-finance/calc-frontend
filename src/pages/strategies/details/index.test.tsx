@@ -272,7 +272,7 @@ describe('Detail page', () => {
 
         await renderTarget();
         await waitFor(() =>
-          expect(screen.getByTestId('strategy-minimum-receive-amount').textContent).toBe('0.003 DEMO'),
+          expect(screen.getByTestId('strategy-minimum-receive-amount').textContent).toBe('333.333 DEMO'),
         );
       });
     });
