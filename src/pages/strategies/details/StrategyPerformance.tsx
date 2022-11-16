@@ -6,6 +6,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { isNaN } from 'lodash';
+import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 
@@ -28,12 +29,13 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
   const marketValueAmount = strategy.received_amount.amount;
 
   const costAmount = strategy.swapped_amount.amount;
+  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - Number(costAmount) * (SWAP_FEE + FIN_TAKER_FEE);
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
+  const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });
 
-  const costInFiat = costValue.toConverted() * initialDenomPrice;
-  const marketValueInFiat = marketValueValue.toConverted() * resultingDenomPrice;
+  const costInFiat = Number((costValue.toConverted() * initialDenomPrice).toFixed(2));
+  const marketValueInFiat = Number((marketValueValue.toConverted() * resultingDenomPrice).toFixed(2));
 
   const profit = marketValueInFiat - costInFiat;
 

@@ -31,6 +31,7 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
+import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
@@ -90,12 +91,13 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const marketValueAmount = strategy.received_amount.amount;
 
   const costAmount = strategy.swapped_amount.amount;
+  const costAmountWithFeesSubtracted = Number(costAmount) - Number(costAmount) * (SWAP_FEE + FIN_TAKER_FEE);
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmount, denom: initialDenom });
+  const costValue = new DenomValue({ amount: costAmountWithFeesSubtracted.toString(), denom: initialDenom });
 
-  const costInFiat = costValue.toConverted() * initialDenomPrice;
-  const marketValueInFiat = marketValueValue.toConverted() * resultingDenomPrice;
+  const costInFiat = Number((costValue.toConverted() * initialDenomPrice).toFixed(2));
+  const marketValueInFiat = Number((marketValueValue.toConverted() * resultingDenomPrice).toFixed(2));
 
   const profit = marketValueInFiat - costInFiat;
 
