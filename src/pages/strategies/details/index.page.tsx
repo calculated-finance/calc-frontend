@@ -55,8 +55,6 @@ function getLatestSwapError(strategy: Strategy, events: Event[] | undefined): st
 
   const { data } = events[executionSkippedIndex];
 
-  console.log('data', data);
-
   if (!('dca_vault_execution_skipped' in data) && Number(strategy.balance) > 0) return undefined;
 
   const swapReasonMessages: Record<string, string> = {
