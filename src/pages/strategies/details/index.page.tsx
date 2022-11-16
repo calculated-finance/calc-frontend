@@ -55,7 +55,7 @@ function getLatestSwapError(strategy: Strategy, events: Event[] | undefined): st
 
   const { data } = events[executionSkippedIndex];
 
-  if (!('dca_vault_execution_skipped' in data) && Number(strategy.balance) > 0) return undefined;
+  if (!('dca_vault_execution_skipped' in data) || Number(strategy.balance.amount) === 0) return undefined;
 
   const swapReasonMessages: Record<string, string> = {
     slippage_tolerance_exceeded: PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
@@ -86,8 +86,6 @@ function Page() {
 
   const events = eventsData?.events;
 
-  const lastSwapSlippageError = getLatestSwapError(events);
-
   if (!data) {
     return (
       <Center h="100vh">
@@ -95,6 +93,7 @@ function Page() {
       </Center>
     );
   }
+  const lastSwapSlippageError = getLatestSwapError(data.vault, events);
 
   return (
     <>
