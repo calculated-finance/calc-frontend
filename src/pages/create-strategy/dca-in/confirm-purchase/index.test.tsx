@@ -79,7 +79,7 @@ async function renderTarget() {
 
 describe('DCA In confirm page', () => {
   beforeEach(() => {
-    mockFiatPrice('usk');
+    mockFiatPrice();
 
     jest.clearAllMocks();
   });

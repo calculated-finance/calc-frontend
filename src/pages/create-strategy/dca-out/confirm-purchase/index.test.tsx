@@ -80,7 +80,7 @@ async function renderTarget() {
 
 describe('DCA Out confirm page', () => {
   beforeEach(() => {
-    mockFiatPrice('kujira');
+    mockFiatPrice();
     jest.clearAllMocks();
   });
   describe('on page load', () => {
