@@ -8,11 +8,11 @@ import SendToWalletValues from '../../../../models/SendToWalletValues';
 
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   {
-    value: SendToWalletValues.Yes,
+    value: SendToWalletValues.No,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.No,
+    value: SendToWalletValues.Yes,
     label: 'No',
   },
 ];
@@ -29,7 +29,7 @@ export default function SendToWallet() {
 
   return (
     <FormControl>
-      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} from CALC to my wallet after each swap?</FormLabel>
+      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} to a different account?</FormLabel>
       <FormHelperText>
         This wallet address will be the one the funds are sent to or autostaked to on your behalf.
       </FormHelperText>

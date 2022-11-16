@@ -94,7 +94,7 @@ describe('DCA In post-purchase page', () => {
 
       await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getAllByText(/No/)[0]), { timeout: 10000 });
+      await waitFor(() => userEvent.click(screen.getAllByText(/Yes/)[0]), { timeout: 10000 });
 
       await waitFor(
         () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
