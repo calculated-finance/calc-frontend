@@ -14,11 +14,11 @@ const useFiatPrice = (denom: Denom | undefined) => {
   const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-price'],
     async () => {
-      const response = await fetch(
-        `${COINGECKO_ENDPOINT}/simple/price?ids=${SUPPORTED_DENOMS.map(
-          (denomId: Denom) => getDenomInfo(denomId).coingeckoId,
-        ).join(',')}&vs_currencies=usd&vs_currencies=${fiatCurrencyId}`,
-      );
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${SUPPORTED_DENOMS.map(
+        (denomId: Denom) => getDenomInfo(denomId).coingeckoId,
+      ).join(',')}&vs_currencies=${fiatCurrencyId}`;
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch fiat price');
       }
@@ -26,11 +26,10 @@ const useFiatPrice = (denom: Denom | undefined) => {
       return response.json();
     },
     {
+      cacheTime: 5000,
       enabled: !!coingeckoId && !!fiatCurrencyId,
     },
   );
-
-  console.log(data);
 
   return {
     price: data?.[coingeckoId]?.[fiatCurrencyId],
