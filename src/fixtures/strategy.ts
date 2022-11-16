@@ -6,7 +6,7 @@ const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 export default {
   id: '1',
   created_at: '0',
-  owner: 'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt',
+  owner: 'kujitestwallet',
   balance: {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO
@@ -44,7 +44,7 @@ export default {
 export const dcaOutStrategy = {
   id: '1',
   created_at: '0',
-  owner: 'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt',
+  owner: 'kujitestwallet',
   balance: {
     denom: 'ukuji',
     amount: '10000000',
