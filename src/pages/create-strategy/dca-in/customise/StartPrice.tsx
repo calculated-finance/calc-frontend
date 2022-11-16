@@ -36,6 +36,15 @@ export default function StartPrice() {
   const { name: resultingDenomName } = getDenomInfo(state.step1.resultingDenom);
   const { name: initialDenomName } = getDenomInfo(state.step1.initialDenom);
 
+  const restrictTo3DecimalPlaces = (inputValue: number | null) => {
+    if (!inputValue || Math.floor(inputValue) === inputValue) {
+      return inputValue;
+    }
+
+    const decimalPlaces = inputValue.toString().split('.')[1].length || 0;
+    return decimalPlaces > 3 ? inputValue.toFixed(3) : inputValue;
+  };
+
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>Strategy start price</FormLabel>
@@ -50,7 +59,13 @@ export default function StartPrice() {
             </HStack>
           }
         />
-        <NumberInput textAlign="right" pr={16} placeholder="0.00" onChange={helpers.setValue} {...field} />
+        <NumberInput
+          textAlign="right"
+          pr={16}
+          placeholder="0.00"
+          onChange={(value) => helpers.setValue(restrictTo3DecimalPlaces(value))}
+          {...field}
+        />
         <InputRightElement mr={3} pointerEvents="none" children={<Text fontSize="sm">{initialDenomName}</Text>} />
       </InputGroup>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
