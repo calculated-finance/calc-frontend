@@ -21,8 +21,9 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { isAutoStaking } from 'src/helpers/isAutoStaking';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
+import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { CancelButton } from './CancelButton';
+import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();
@@ -30,6 +31,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const { time_interval, swap_amount, balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
 
   const initialDenomValue = new DenomValue(balance);
   const swapAmountValue = new DenomValue({ denom: initialDenom, amount: swap_amount });
@@ -108,16 +110,17 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-swap-amount">
               {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name} -{' '}
-              <Tooltip label={
-                <Box>
-                  <Text>Fees automatically deducted from each swap:</Text>
-                  <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
-                  <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
-                  {isAutoStaking(destinations) && (
-                  <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>
-                  )}
-                </Box>
-              }>fees*
+              <Tooltip
+                label={
+                  <Box>
+                    <Text>Fees automatically deducted from each swap:</Text>
+                    <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
+                    <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
+                    {isAutoStaking(destinations) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
+                  </Box>
+                }
+              >
+                fees*
               </Tooltip>
             </Text>
           </GridItem>
@@ -141,8 +144,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy.minimum_receive_amount, strategy.swap_amount)}{' '}
-                    {getDenomInfo(initialDenom).name}
+                    {getPriceCeilingFloor(strategy)}{' '}
+                    {getDenomInfo(strategyType === StrategyTypes.DCAIn ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>

@@ -20,6 +20,7 @@ export default function useStrategies() {
       const result = client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vaults_by_address: {
           address,
+          limit: 1000,
         },
       });
       return result;
