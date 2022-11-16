@@ -113,7 +113,7 @@ export class DenomValue {
   }
 
   toConverted() {
-    return this.amount / 1000000;
+    return parseFloat((this.amount / 1000000).toFixed(6));
   }
 }
 
