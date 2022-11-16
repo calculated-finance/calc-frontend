@@ -13,7 +13,7 @@ export const FEE_TAKER_ADDRESS =
 
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.3; // 30c
-export const CANCEL_VAULT_FEE = 1; // $1
+export const CANCEL_VAULT_FEE = 0.5; // $1
 export const ONE_MILLION = 1000000;
 export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
 export const SWAP_FEE = 0.0165;

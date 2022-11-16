@@ -81,8 +81,8 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                 {getDenomInfo(strategy.balance.denom).name}
               </Text>
             </Flex>
-            <Text textAlign="center" textStyle="body-xs">
-              Cancellation Fee: $1.00 USD
+            <Text textAlign="center" textStyle="body-xs" data-testid="cancel-strategy-model-fee">
+              Cancellation Fee: $0.50 USD
             </Text>
           </Stack>
         </ModalBody>
