@@ -9,10 +9,10 @@ const QUERY_KEY = 'active-vaults';
 export type Strategy = Vault;
 
 export default function useAdminStrategies() {
-  const { address, client } = useWallet();
+  const { client } = useWallet();
 
   return useQueryWithNotification<VaultsResponse>(
-    [QUERY_KEY, address, client],
+    [QUERY_KEY, client],
     () => {
       const result = client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_vaults: {
@@ -22,7 +22,7 @@ export default function useAdminStrategies() {
       return result;
     },
     {
-      enabled: !!address && !!client,
+      enabled: !!client,
     },
   );
 }
