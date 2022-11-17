@@ -26,7 +26,7 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
     return null;
   }
 
-  const { color, percentageChange, marketValueValue, costValue, profit } = getPerformanceStatistics(
+  const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
@@ -67,7 +67,7 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
               </Heading>
             </GridItem>
             <GridItem colSpan={1}>
-              <Text fontSize="sm">{formatFiat(marketValueValue.toConverted() * resultingDenomPrice)}</Text>
+              <Text fontSize="sm">{formatFiat(marketValueInFiat)}</Text>
             </GridItem>
             <GridItem colSpan={1}>
               <Heading size="xs">
@@ -109,21 +109,33 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
               <Divider />
             </GridItem>
             <GridItem colSpan={1}>
-              <Heading size="xs">{getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}</Heading>
+              <Heading size="xs">
+                {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}
+              </Heading>
             </GridItem>
             <GridItem colSpan={1}>
-              <Text color={color} fontSize="sm">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn ? formatFiat(profit) : formatFiat(profit)}
-              </Text>
+              {getStrategyType(strategy) === StrategyTypes.DCAIn ? (
+                <Text color={color} fontSize="sm">
+                  {formatFiat(profit)}
+                </Text>
+              ) : (
+                <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} fontSize="sm">
+                  {formatFiat(marketValueInFiat)}
+                </Text>
+              )}
             </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">% change</Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text color={color} fontSize="sm">
-                {percentageChange}
-              </Text>
-            </GridItem>
+            {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+              <>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">% change</Heading>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <Text color={color} fontSize="sm">
+                    {percentageChange}
+                  </Text>
+                </GridItem>
+              </>
+            )}
           </Grid>
         </Flex>
       </Flex>
