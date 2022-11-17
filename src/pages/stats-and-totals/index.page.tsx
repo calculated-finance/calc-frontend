@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Divider, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Divider, Grid, GridItem, Heading, SimpleGrid, Stack, Text, Wrap } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -11,7 +11,49 @@ import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
+import { Coin } from '@cosmjs/stargate';
+import { isAutoStaking, isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
 import { formatFiat } from '../strategies/details/StrategyPerformance';
+
+function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
+  return strategies
+    .filter((strategy) => strategy.swapped_amount.denom === denom)
+    .map((strategy) => strategy.swapped_amount.amount)
+    .reduce((total, amount) => total + Number(amount), 0)
+    .toFixed(6);
+}
+
+function getTotalSwapped(strategies: Strategy[]) {
+  const totalSwapped = SUPPORTED_DENOMS.map(
+    (denom) =>
+      ({
+        denom,
+        amount: getTotalSwappedForDenom(denom, strategies),
+      } as Coin),
+  );
+
+  return totalSwapped;
+}
+
+function getTotalReceivedForDenom(denom: string, strategies: Strategy[]) {
+  return strategies
+    .filter((strategy) => strategy.received_amount.denom === denom)
+    .map((strategy) => strategy.received_amount.amount)
+    .reduce((total, amount) => total + Number(amount), 0)
+    .toFixed(6);
+}
+
+function getTotalReceived(strategies: Strategy[]) {
+  const totalSwapped = SUPPORTED_DENOMS.map(
+    (denom) =>
+      ({
+        denom,
+        amount: getTotalReceivedForDenom(denom, strategies),
+      } as Coin),
+  );
+
+  return totalSwapped;
+}
 
 function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
   const { data: allStrategies } = useAdminStrategies();
@@ -118,6 +160,19 @@ function StrategiesTimeIntervalList() {
   );
 }
 
+function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
+  return (
+    coins
+      ?.map((balance, acc) => {
+        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
+        const denomConvertedAmount = conversion(Number(balance.amount));
+        const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;
+        return fiatAmount;
+      })
+      .reduce((amount, total) => total + amount, 0) || 0
+  );
+}
+
 function Page() {
   const { data: contractBalances } = useAdminBalances(CONTRACT_ADDRESS);
   const { data: feeTakerBalances } = useAdminBalances(FEE_TAKER_ADDRESS);
@@ -127,61 +182,75 @@ function Page() {
 
   const uniqueWalletAddresses = Array.from(new Set(allStrategies?.vaults.map((strategy) => strategy.owner) || []));
 
-  if (!fiatPrices) {
+  if (!fiatPrices || !allStrategies) {
     return null;
   }
-  const totalInContract =
-    contractBalances
-      ?.map((balance, acc) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
-        const denomConvertedAmount = conversion(Number(balance.amount));
-        const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;
-        return fiatAmount;
-      })
-      .reduce((amount, total) => total + amount, 0) || 0;
+  const totalInContract = totalFromCoins(contractBalances, fiatPrices);
 
-  const totalInFeeTaker =
-    feeTakerBalances
-      ?.map((balance, acc) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
-        const denomConvertedAmount = conversion(Number(balance.amount));
-        const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;
-        return fiatAmount;
-      })
-      .reduce((amount, total) => total + amount, 0) || 0;
+  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices);
+
+  const totalSwappedAmounts = getTotalSwapped(allStrategies?.vaults);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
+
+  const totalReceivedAmounts = getTotalReceived(allStrategies?.vaults);
+  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices);
   return (
     <Stack spacing={6}>
       <Heading data-testid="details-heading">CALC statistics</Heading>
-      <Stack spacing={4}>
-        <Heading size="md">Unique wallets with strategies</Heading>
-        <Text>Total: {uniqueWalletAddresses.length}</Text>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Amount in contract</Heading>
-        <Text>Total: {formatFiat(totalInContract)}</Text>
-        <Box w={300}>
-          <BalanceList balances={contractBalances} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Amount in Fee Taker</Heading>
-        <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
-        <Box w={300}>
-          <BalanceList balances={feeTakerBalances} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Strategy statistics</Heading>
-        <Text>Total: {allStrategies?.vaults.length}</Text>
-        <Heading size="sm">By Status</Heading>
-        <Box w={300}>
-          <StrategiesStatusList />
-        </Box>
-        <Heading size="sm">By Time Interval</Heading>
-        <Box w={300}>
-          <StrategiesTimeIntervalList />
-        </Box>
-      </Stack>
+      <SimpleGrid spacing={12} columns={[1, null, 2, null, 3]}>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Totals</Heading>
+          <Heading size="sm" />
+          <Text>Unique wallets with strategies: {uniqueWalletAddresses.length}</Text>
+          <Text>Total strategies: {allStrategies?.vaults.length}</Text>
+          <Text>
+            Strategies per wallet: {((allStrategies?.vaults.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
+          </Text>
+          <Text>Strategies with autostaking: {allStrategies?.vaults.filter(isStrategyAutoStaking).length}</Text>
+        </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount in contract</Heading>
+          <Text>Total: {formatFiat(totalInContract)}</Text>
+          <Box w={300}>
+            <BalanceList balances={contractBalances} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount in Fee Taker</Heading>
+          <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
+          <Box w={300}>
+            <BalanceList balances={feeTakerBalances} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount Swapped</Heading>
+          <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
+          <Box w={300}>
+            <BalanceList balances={totalSwappedAmounts} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount Received</Heading>
+          <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
+          <Box w={300}>
+            <BalanceList balances={totalReceivedAmounts} showFiat />
+          </Box>
+        </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Status</Heading>
+          <Box w={300}>
+            <StrategiesStatusList />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Time Interval</Heading>
+          <Box w={300}>
+            <StrategiesTimeIntervalList />
+          </Box>
+        </Stack>
+      </SimpleGrid>
     </Stack>
   );
 }
