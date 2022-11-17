@@ -170,9 +170,13 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
                 stroke: link.href === router.asPath ? 'brand.200' : 'white',
               }}
               icon={
-                <Icon as={link.icon} cursor="pointer" stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'} />
+                <Icon
+                  as={link.icon}
+                  cursor="pointer"
+                  color={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                  stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                />
               }
-              colorScheme="brand"
             />
           </Link>
         ))}
