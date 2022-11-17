@@ -3,26 +3,13 @@ import { Event } from 'src/interfaces/generated/response/get_events_by_resource_
 import { findLast } from 'lodash';
 import { isStrategyOperating, isStrategyScheduled } from './getStrategyStatus';
 import { getStrategyTotalExecutions } from './getStrategyTotalExecutions';
+import { getEndDateFromRemainingExecutions } from './getEndDateFromRemainingExecutions';
 
-function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, remainingExecutions: number) {
-  switch (strategy.time_interval) {
-    case 'hourly':
-      startDate.setHours(startDate.getHours() + remainingExecutions);
-      break;
-    case 'daily':
-      startDate.setDate(startDate.getDate() + remainingExecutions);
-      break;
-    case 'weekly':
-      startDate.setDate(startDate.getDate() + 7 * remainingExecutions);
-      break;
-    case 'monthly':
-      startDate.setMonth(startDate.getMonth() + remainingExecutions);
-      break;
-    default:
-      return '-';
+function formatDate(date: Date | undefined) {
+  if (!date) {
+    return '-';
   }
-
-  return startDate.toLocaleDateString('en-US', {
+  return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -56,7 +43,7 @@ export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefin
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
-    return getEndDateFromRemainingExecutions(strategy, startDate, executions);
+    return formatDate(getEndDateFromRemainingExecutions(strategy, startDate, executions));
   }
 
   if (!events) {
@@ -66,7 +53,7 @@ export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefin
   const lastExecutionDate = getLastExecutionDateFromStrategyEvents(events);
 
   if (isStrategyOperating(strategy) && lastExecutionDate) {
-    return getEndDateFromRemainingExecutions(strategy, lastExecutionDate, executions);
+    return formatDate(getEndDateFromRemainingExecutions(strategy, lastExecutionDate, executions));
   }
 
   if (lastExecutionDate) {
