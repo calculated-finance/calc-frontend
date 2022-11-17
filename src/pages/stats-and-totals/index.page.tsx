@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Divider, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Divider, Grid, GridItem, Heading, SimpleGrid, Stack, Text, Wrap } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -12,6 +12,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
+import { isAutoStaking, isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
 import { formatFiat } from '../strategies/details/StrategyPerformance';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
@@ -196,51 +197,60 @@ function Page() {
   return (
     <Stack spacing={6}>
       <Heading data-testid="details-heading">CALC statistics</Heading>
-      <Stack spacing={4}>
-        <Heading size="md">Unique wallets with strategies</Heading>
-        <Text>Total: {uniqueWalletAddresses.length}</Text>
-      </Stack>
+      <SimpleGrid spacing={12} columns={[1, null, 2, null, 3]}>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Totals</Heading>
+          <Heading size="sm" />
+          <Text>Unique wallets with strategies: {uniqueWalletAddresses.length}</Text>
+          <Text>Total strategies: {allStrategies?.vaults.length}</Text>
+          <Text>
+            Strategies per wallet: {((allStrategies?.vaults.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
+          </Text>
+          <Text>Strategies with autostaking: {allStrategies?.vaults.filter(isStrategyAutoStaking).length}</Text>
+        </Stack>
 
-      <Stack spacing={4}>
-        <Heading size="md">Amount in contract</Heading>
-        <Text>Total: {formatFiat(totalInContract)}</Text>
-        <Box w={300}>
-          <BalanceList balances={contractBalances} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Amount in Fee Taker</Heading>
-        <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
-        <Box w={300}>
-          <BalanceList balances={feeTakerBalances} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Amount Swapped</Heading>
-        <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
-        <Box w={300}>
-          <BalanceList balances={totalSwappedAmounts} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Amount Received</Heading>
-        <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
-        <Box w={300}>
-          <BalanceList balances={totalReceivedAmounts} showFiat />
-        </Box>
-      </Stack>
-      <Stack spacing={4}>
-        <Heading size="md">Strategy statistics</Heading>
-        <Text>Total: {allStrategies?.vaults.length}</Text>
-        <Heading size="sm">By Status</Heading>
-        <Box w={300}>
-          <StrategiesStatusList />
-        </Box>
-        <Heading size="sm">By Time Interval</Heading>
-        <Box w={300}>
-          <StrategiesTimeIntervalList />
-        </Box>
-      </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount in contract</Heading>
+          <Text>Total: {formatFiat(totalInContract)}</Text>
+          <Box w={300}>
+            <BalanceList balances={contractBalances} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount in Fee Taker</Heading>
+          <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
+          <Box w={300}>
+            <BalanceList balances={feeTakerBalances} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount Swapped</Heading>
+          <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
+          <Box w={300}>
+            <BalanceList balances={totalSwappedAmounts} showFiat />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Amount Received</Heading>
+          <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
+          <Box w={300}>
+            <BalanceList balances={totalReceivedAmounts} showFiat />
+          </Box>
+        </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Status</Heading>
+          <Box w={300}>
+            <StrategiesStatusList />
+          </Box>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Time Interval</Heading>
+          <Box w={300}>
+            <StrategiesTimeIntervalList />
+          </Box>
+        </Stack>
+      </SimpleGrid>
     </Stack>
   );
 }
