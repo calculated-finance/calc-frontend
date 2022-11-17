@@ -38,7 +38,7 @@ export function AvailableFunds() {
     <Center textStyle="body-xs">
       <Tooltip
         isDisabled={balance === 0}
-        label={`This is the estimated balance available to you after fees have been deducted (~${displayFee} ${name}). This exclude gas fees, so please make sure you have remaining funds.`}
+        label={`This is the estimated balance available to you after fees have been deducted (~${displayFee} ${name}). This excludes gas fees, so please make sure you have remaining funds.`}
       >
         <Text mr={1}>Available*: </Text>
       </Tooltip>

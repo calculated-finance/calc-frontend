@@ -30,6 +30,8 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
+import { getStrategyType } from 'src/helpers/getStrategyType';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
@@ -87,7 +89,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const chartData = getChartData(events, coingeckoData);
   const swapsData = getChartDataSwaps(events, coingeckoData, true);
 
-  const { color, percentageChange, profit } = getPerformanceStatistics(
+  const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
@@ -103,15 +105,13 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
         <Stack spacing={3} pt={6} pl={6}>
           <Stat>
             <StatLabel fontSize="lg">Strategy market value</StatLabel>
-            <StatNumber>
-              {formatFiat(
-                getDenomInfo(resultingDenom).conversion(Number(strategy.received_amount.amount) * resultingDenomPrice),
-              )}
-            </StatNumber>
-            <StatHelpText color={color} m={0}>
-              <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
-              {formatFiat(profit)} : {percentageChange}
-            </StatHelpText>
+            <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
+            {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+              <StatHelpText color={color} m={0}>
+                <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
+                {formatFiat(profit)} : {percentageChange}
+              </StatHelpText>
+            )}
           </Stat>
         </Stack>
         <Box p={6} position="absolute" top={0} right={0}>

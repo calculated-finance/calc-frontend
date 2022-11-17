@@ -9,7 +9,7 @@ export default function useStrategy(id?: Strategy['id']) {
   const { address, client } = useWallet();
 
   return useQueryWithNotification<VaultResponse>(
-    ['strategy', id, client],
+    ['strategy', id, client, address],
     async () => {
       if (!client) {
         throw new Error('No client');
@@ -25,7 +25,7 @@ export default function useStrategy(id?: Strategy['id']) {
       return result;
     },
     {
-      enabled: !!client && !!id,
+      enabled: !!client && !!id && !!address,
     },
   );
 }

@@ -30,6 +30,7 @@ export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: 
     color,
     percentageChange,
     marketValueValue,
+    marketValueInFiat,
     costValue,
     profit,
   };
