@@ -125,6 +125,8 @@ function Page() {
 
   const { data: allStrategies } = useAdminStrategies();
 
+  const uniqueWalletAddresses = Array.from(new Set(allStrategies?.vaults.map((strategy) => strategy.owner) || []));
+
   if (!fiatPrices) {
     return null;
   }
@@ -150,6 +152,10 @@ function Page() {
   return (
     <Stack spacing={6}>
       <Heading data-testid="details-heading">CALC statistics</Heading>
+      <Stack spacing={4}>
+        <Heading size="md">Unique wallets with strategies</Heading>
+        <Text>Total: {uniqueWalletAddresses.length}</Text>
+      </Stack>
       <Stack spacing={4}>
         <Heading size="md">Amount in contract</Heading>
         <Text>Total: {formatFiat(totalInContract)}</Text>
