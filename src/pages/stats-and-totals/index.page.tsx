@@ -30,6 +30,8 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
 } from 'victory';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { getStrategyType } from 'src/helpers/getStrategyType';
 import { formatFiat } from '../strategies/details/StrategyPerformance';
 import { getStrategyTotalExecutions } from '../create-strategy/dca-in/success/getStrategyTotalExecutions';
 
@@ -110,6 +112,12 @@ function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: st
   const strategiesByTimeInterval = allStrategies.filter((strategy) => strategy.time_interval === timeInterval) || [];
   const percentage = (Number(strategiesByTimeInterval.length / allStrategies.length) * 100).toFixed(2);
   return { strategiesByTimeInterval, percentage };
+}
+
+function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
+  const strategiesByType = allStrategies.filter((strategy) => getStrategyType(strategy) === type) || [];
+  const percentage = (Number(strategiesByType.length / allStrategies.length) * 100).toFixed(2);
+  return { strategiesByType, percentage };
 }
 
 function StrategiesTimeIntervalItem({ timeInterval }: { timeInterval: Strategy['time_interval'] }) {
@@ -463,6 +471,46 @@ function Page() {
                 return {
                   x: timeInterval,
                   y: strategiesByTimeInterval.length,
+                  label: `${percentage}%`,
+                };
+              })}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
+        </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Type</Heading>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryBar
+              animate={{
+                duration: 2000,
+                onLoad: { duration: 1000 },
+              }}
+              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut].map((type: StrategyTypes) => {
+                const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
+
+                return {
+                  x: type,
+                  y: strategiesByType.length,
                   label: `${percentage}%`,
                 };
               })}
