@@ -16,6 +16,20 @@ import { isAutoStaking, isStrategyAutoStaking } from 'src/helpers/isAutoStaking'
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
 import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
 import { isStrategyActive } from 'src/helpers/getStrategyStatus';
+import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryContainer,
+  VictoryGroup,
+  VictoryHistogram,
+  VictoryLabel,
+  VictoryPie,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from 'victory';
 import { formatFiat } from '../strategies/details/StrategyPerformance';
 import { getStrategyTotalExecutions } from '../create-strategy/dca-in/success/getStrategyTotalExecutions';
 
@@ -59,6 +73,12 @@ function getTotalReceived(strategies: Strategy[]) {
   return totalSwapped;
 }
 
+function getStrategiesByStatus(allStrategies: Strategy[], status: string) {
+  const strategiesByStatus = allStrategies.filter((strategy) => strategy.status === status) || [];
+  const percentage = (Number(strategiesByStatus.length / allStrategies.length) * 100).toFixed(2);
+  return { strategiesByStatus, percentage };
+}
+
 function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
   const { data: allStrategies } = useAdminStrategies();
   if (!allStrategies?.vaults.length) {
@@ -67,8 +87,7 @@ function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
   if (allStrategies.vaults.length === 0) {
     return null;
   }
-  const strategiesByStatus = allStrategies?.vaults.filter((strategy) => strategy.status === status) || [];
-  const percentage = (Number(strategiesByStatus.length / allStrategies.vaults.length) * 100).toFixed(2);
+  const { strategiesByStatus, percentage } = getStrategiesByStatus(allStrategies.vaults, status);
 
   return (
     <>
@@ -87,6 +106,12 @@ function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
   );
 }
 
+function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: string) {
+  const strategiesByTimeInterval = allStrategies.filter((strategy) => strategy.time_interval === timeInterval) || [];
+  const percentage = (Number(strategiesByTimeInterval.length / allStrategies.length) * 100).toFixed(2);
+  return { strategiesByTimeInterval, percentage };
+}
+
 function StrategiesTimeIntervalItem({ timeInterval }: { timeInterval: Strategy['time_interval'] }) {
   const { data: allStrategies } = useAdminStrategies();
   if (!allStrategies?.vaults.length) {
@@ -95,9 +120,7 @@ function StrategiesTimeIntervalItem({ timeInterval }: { timeInterval: Strategy['
   if (allStrategies.vaults.length === 0) {
     return null;
   }
-  const strategiesByTimeInterval =
-    allStrategies?.vaults.filter((strategy) => strategy.time_interval === timeInterval) || [];
-  const percentage = (Number(strategiesByTimeInterval.length / allStrategies.vaults.length) * 100).toFixed(2);
+  const { strategiesByTimeInterval, percentage } = getStrategiesByTimeInterval(allStrategies.vaults, timeInterval);
 
   return (
     <>
@@ -157,8 +180,8 @@ function StrategiesTimeIntervalList() {
       <GridItem colSpan={3}>
         <Divider />
       </GridItem>
-      {['hourly', 'daily', 'weekly', 'monthly'].map((timeInvertal: string) => (
-        <StrategiesTimeIntervalItem timeInterval={timeInvertal as TimeInterval} />
+      {['hourly', 'daily', 'weekly', 'monthly'].map((timeInterval: string) => (
+        <StrategiesTimeIntervalItem timeInterval={timeInterval as TimeInterval} />
       ))}
     </Grid>
   );
@@ -379,15 +402,119 @@ function Page() {
 
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Strategies By Status</Heading>
-          <Box w={300}>
-            <StrategiesStatusList />
-          </Box>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryBar
+              data={['scheduled', 'active', 'inactive', 'cancelled'].map((timeInterval: string) => {
+                const { strategiesByStatus } = getStrategiesByStatus(allStrategies?.vaults || [], timeInterval) || [];
+
+                return {
+                  x: timeInterval,
+                  y: strategiesByStatus.length,
+                  label: `${timeInterval} \n(${strategiesByStatus.length})`,
+                };
+              })}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Strategies By Time Interval</Heading>
-          <Box w={300}>
-            <StrategiesTimeIntervalList />
-          </Box>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryBar
+              animate={{
+                duration: 2000,
+                onLoad: { duration: 1000 },
+              }}
+              data={['hourly', 'daily', 'weekly', 'monthly'].map((timeInterval: string) => {
+                const { strategiesByTimeInterval, percentage } =
+                  getStrategiesByTimeInterval(allStrategies?.vaults || [], timeInterval) || [];
+
+                return {
+                  x: timeInterval,
+                  y: strategiesByTimeInterval.length,
+                  label: `${percentage}%`,
+                };
+              })}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
+        </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Active Strategies By Remaining Days</Heading>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryHistogram
+              animate={{
+                duration: 2000,
+                onLoad: { duration: 1000 },
+              }}
+              bins={20}
+              data={allStrategies.vaults.filter(isStrategyActive).map((strategy: Strategy) => {
+                const remainingTime = timeUntilEndOfStrategyInMilliseconds(strategy);
+                const remainingTimeInDays = Math.round(remainingTime / (1000 * 60 * 60 * 24));
+                return {
+                  x: remainingTimeInDays,
+                  label: remainingTimeInDays,
+                };
+              })}
+              labelComponent={<VictoryTooltip />}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
         </Stack>
       </SimpleGrid>
     </Stack>
