@@ -10,6 +10,7 @@ import {
   Text,
   InputRightElement,
   Button,
+  Input,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
@@ -21,7 +22,7 @@ import executionIntervalDisplay from '../../../../helpers/executionIntervalDispl
 import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
-  const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
+  const [field, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
   const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
@@ -32,7 +33,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(step1State.initialDeposit, value);
+  const executions = totalExecutions(step1State.initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
@@ -55,13 +56,13 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
         <InputLeftElement>
           <DenomIcon denomName={step1State.initialDenom} />
         </InputLeftElement>
-        <NumberInput pl={10} onChange={helpers.setValue} placeholder="Enter amount" value={value} {...field} />
-        <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
-          <Text>{initialDenomName}</Text>
+        <Input type="number" placeholder="Enter amount" {...field} />
+        <InputRightElement flexGrow={1} textAlign="right" textStyle="body-xs">
+          {initialDenomName}
         </InputRightElement>
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(value) && !meta.error && (
+      {Boolean(field.value) && !meta.error && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
