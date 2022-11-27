@@ -1,25 +1,11 @@
-import {
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Spacer,
-  Text,
-  InputRightElement,
-  Button,
-  Input,
-} from '@chakra-ui/react';
+import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import NumberInput from '@components/NumberInput';
-import DenomIcon from '@components/DenomIcon';
 import { DcaInFormDataStep1 } from '../../../../models/DcaInFormData';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
+import { DenomInput } from '../../../../components/DenomInput';
 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
   const [field, meta, helpers] = useField({ name: 'swapAmount' });
@@ -52,15 +38,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <InputGroup>
-        <InputLeftElement>
-          <DenomIcon denomName={step1State.initialDenom} />
-        </InputLeftElement>
-        <Input type="number" placeholder="Enter amount" {...field} />
-        <InputRightElement flexGrow={1} textAlign="right" textStyle="body-xs">
-          {initialDenomName}
-        </InputRightElement>
-      </InputGroup>
+      <DenomInput denom={step1State.initialDenom} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && (
         <FormHelperText color="brand.200" fontSize="xs">
