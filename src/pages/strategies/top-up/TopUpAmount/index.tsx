@@ -7,16 +7,11 @@ import {
   Text,
   Button,
   Center,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
 } from '@chakra-ui/react';
 import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import DenomIcon from '@components/DenomIcon';
-import NumberInput from '../../../../components/NumberInput';
+import { DenomInput } from '@components/DenomInput';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
@@ -48,9 +43,7 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
 }
 
 export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'topUpAmount' });
-
-  const { name } = getDenomInfo(initialDenom);
+  const [field, meta] = useField({ name: 'topUpAmount' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -62,22 +55,8 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
           <TopUpAvailableFunds initialDenom={initialDenom} />
         </Center>
       </FormHelperText>
-      <InputGroup>
-        <InputLeftElement>
-          <DenomIcon denomName={initialDenom} />
-        </InputLeftElement>
-        <NumberInput
-          data-testid="top-up-input"
-          pl={10}
-          onChange={helpers.setValue}
-          placeholder="Enter amount"
-          {...field}
-        />
+      <DenomInput data-testid="top-up-input" denom={initialDenom} {...field} />
 
-        <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
-          <Text>{name}</Text>
-        </InputRightElement>
-      </InputGroup>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

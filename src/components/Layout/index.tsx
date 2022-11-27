@@ -133,7 +133,12 @@ function SidebarLayout({ children }: { children: ReactElement }) {
 
   const { connected } = useWallet();
 
-  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement');
+  //  create date one year from now
+  const oneYearFromNow = new Date();
+  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+
+
+  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement', { expires: oneYearFromNow});
 
   const agreementPreviouslyAccepted = acceptedAgreementState === 'true';
 

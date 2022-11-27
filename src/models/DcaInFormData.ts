@@ -10,6 +10,7 @@ import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
+import { isNaN } from 'lodash';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 
@@ -133,7 +134,12 @@ export const allValidationSchema = Yup.object({
     .moreThan(0.05)
     .required()
     .nullable()
-    // can we do the below with .when()?
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    })
     .test({
       name: 'less-than-deposit',
       message: 'Swap amount must be less than initial deposit',

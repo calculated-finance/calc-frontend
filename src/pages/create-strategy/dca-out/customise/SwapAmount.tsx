@@ -1,27 +1,14 @@
-import {
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Spacer,
-  Text,
-  InputRightElement,
-  Button,
-} from '@chakra-ui/react';
+import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import NumberInput from '@components/NumberInput';
-import DenomIcon from '@components/DenomIcon';
+import { DenomInput } from '@components/DenomInput';
 import { DcaInFormDataStep1 } from '../../../../models/DcaInFormData';
 import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
-  const [{ value, onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
+  const [field, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
   const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
@@ -32,7 +19,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(step1State.initialDeposit, value);
+  const executions = totalExecutions(step1State.initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
@@ -51,17 +38,9 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <InputGroup>
-        <InputLeftElement>
-          <DenomIcon denomName={step1State.initialDenom} />
-        </InputLeftElement>
-        <NumberInput pl={10} onChange={helpers.setValue} placeholder="Enter amount" value={value} {...field} />
-        <InputRightElement textAlign="right" mr={3} textStyle="body-xs">
-          <Text>{initialDenomName}</Text>
-        </InputRightElement>
-      </InputGroup>
+      <DenomInput denom={step1State.initialDenom} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(value) && !meta.error && (
+      {Boolean(field.value) && !meta.error && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
