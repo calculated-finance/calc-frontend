@@ -55,7 +55,7 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
           <TopUpAvailableFunds initialDenom={initialDenom} />
         </Center>
       </FormHelperText>
-      <DenomInput denom={initialDenom} {...field} />
+      <DenomInput data-testid="top-up-input" denom={initialDenom} {...field} />
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
