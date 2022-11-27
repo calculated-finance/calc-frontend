@@ -82,8 +82,8 @@ export default function usePrice(
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {
-        maximumFractionDigits: 6,
-        minimumFractionDigits: 2,
+        maximumFractionDigits: 3,
+        minimumFractionDigits: 3,
       })
     : undefined;
 
