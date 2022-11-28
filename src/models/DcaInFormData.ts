@@ -134,12 +134,6 @@ export const allValidationSchema = Yup.object({
     .moreThan(0.05)
     .required()
     .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') {
-        return null;
-      }
-      return value;
-    })
     .test({
       name: 'less-than-deposit',
       message: 'Swap amount must be less than initial deposit',
