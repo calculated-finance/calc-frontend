@@ -28,6 +28,8 @@ on:
         required: true
       NEXT_PUBLIC_FEE_TAKER_ADDRESS:
         required: true
+      NEXT_PUBLIC_HOTJAR_SITE_ID:
+        required: true
   pull_request:
     inputs:
       ENVIRONMENT:
@@ -64,6 +66,8 @@ jobs:
       NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
       NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
       NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
+      NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
