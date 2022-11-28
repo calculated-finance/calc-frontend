@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
-import { ReactElement, ReactNode, useMemo } from 'react';
+import { ReactElement, ReactNode, useEffect, useMemo } from 'react';
 import type { NextPage } from 'next';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
@@ -10,8 +10,9 @@ import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
-import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { CHAIN_ID, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
 import { NetworkContext } from '@components/NetworkContext';
+import { hotjar } from 'react-hotjar';
 import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
@@ -25,6 +26,12 @@ export const queryClient = new QueryClient();
 createStore({});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  useEffect(() => {
+    if (HOTJAR_SITE_ID) {
+      hotjar.initialize(parseInt(HOTJAR_SITE_ID, 10), 0);
+    }
+  });
+
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const endpoint = useMemo(() => RPC_ENDPOINT, []);

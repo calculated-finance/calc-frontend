@@ -11,6 +11,8 @@ export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoo
 export const FEE_TAKER_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
 
+export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
+
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.3; // 30c
 export const CANCEL_VAULT_FEE = 0.5; // $1
