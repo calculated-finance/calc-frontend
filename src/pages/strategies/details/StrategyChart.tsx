@@ -13,7 +13,6 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import getDenomInfo from '@utils/getDenomInfo';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
@@ -86,8 +85,8 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const { data: coingeckoData } = useFiatPriceHistory(resultingDenom, days);
 
-  const chartData = getChartData(events, coingeckoData);
-  const swapsData = getChartDataSwaps(events, coingeckoData, true);
+  const chartData = getChartData(events, coingeckoData?.prices);
+  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, true);
 
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
@@ -136,15 +135,19 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
               height={dimensions?.height}
               width={dimensions?.width}
               containerComponent={<VictoryVoronoiContainer />}
+              padding={{ left: 60, bottom: 40, top: 10 }}
             >
               <VictoryAxis
                 dependentAxis
                 style={{
                   tickLabels: { fill: 'white' },
                 }}
-                tickFormat={(tick) =>
-                  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tick)
-                }
+                tickFormat={(tick) => {
+                  if (tick >= 1000) {
+                    return `$${(tick / 1000).toFixed(1)}k`;
+                  }
+                  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tick);
+                }}
               />
               <VictoryAxis
                 style={{
