@@ -15,10 +15,10 @@ class BreakException extends Error {
   }
 }
 
-export const findCurrentPriceInTime = (time: Date, coingeckoData: FiatPriceHistoryResponse) => {
-  let currentPrice = 0;
+export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryResponse['prices']) => {
+  let currentPrice = null;
   try {
-    coingeckoData.prices.forEach((price) => {
+    fiatPrices.forEach((price) => {
       if (new Date(price[0]) > time) {
         throw BreakException;
       }
@@ -81,44 +81,48 @@ export const findCurrentAmountInTime = (time: number, events: EventWithAccumulat
 
 export function getChartDataSwaps(
   events: Event[] | undefined,
-  coingeckoData: FiatPriceHistoryResponse | undefined,
+  fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   includeLabel: boolean,
 ) {
   const completedEvents = getCompletedEvents(events);
-  if (!completedEvents || !coingeckoData) {
+  if (!completedEvents || !fiatPrices) {
     return null;
   }
   const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
 
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
+    const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
+    if (currentPriceInTime === null) {
+      return null;
+    }
     return {
       date,
-      price: Number((event.accumulation * findCurrentPriceInTime(date, coingeckoData)).toFixed(2)),
+      price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
         ? `Received ${event.swapAmount} ${event.swapDenom} at ${date.toLocaleTimeString()}`
         : undefined,
     };
   });
 
-  return chartData;
+  return chartData.filter((data) => data !== null);
 }
 
-export function getChartData(events: Event[] | undefined, coingeckoData: FiatPriceHistoryResponse | undefined) {
+export function getChartData(events: Event[] | undefined, fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
   const completedEvents = getCompletedEvents(events);
 
-  if (!completedEvents || !coingeckoData) {
+  if (!completedEvents || !fiatPrices) {
     return null;
   }
 
   const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
 
-  const chartData = coingeckoData?.prices.map((price) => ({
+  const chartData = fiatPrices?.map((price) => ({
     date: new Date(price[0]),
     price: Number((price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)),
     label: `$${(price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)} (${new Date(
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  return [...chartData, ...(getChartDataSwaps(events, coingeckoData, false) || [])];
+  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false) || [])];
 }
