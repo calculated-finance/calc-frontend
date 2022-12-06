@@ -11,7 +11,6 @@ import {
   GridItem,
   Flex,
 } from '@chakra-ui/react';
-import ConnectWallet from '@components/ConnectWallet';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
@@ -165,7 +164,7 @@ export default function TopPanel() {
   const completedStrategies = data?.vaults.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
-    if (isLoading) {
+    if (connected && isLoading) {
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'transparent',
@@ -203,7 +202,7 @@ export default function TopPanel() {
   const { background, border, Content } = getConfig();
   const colSpan = { base: 6, lg: activeStrategies.length ? 4 : 6 };
 
-  return connected ? (
+  return (
     <GridItem
       position="relative"
       borderWidth={2}
@@ -212,7 +211,7 @@ export default function TopPanel() {
       colSpan={colSpan}
       minHeight={222}
     >
-      {isLoading ? (
+      {connected && isLoading ? (
         <Center h="full">
           <Spinner />
         </Center>
@@ -233,10 +232,6 @@ export default function TopPanel() {
           </Stack>
         </Flex>
       )}
-    </GridItem>
-  ) : (
-    <GridItem layerStyle="panel" colSpan={colSpan}>
-      <ConnectWallet layerStyle="panel" />
     </GridItem>
   );
 }

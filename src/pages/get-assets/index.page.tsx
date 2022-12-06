@@ -78,8 +78,8 @@ function CreateStrategy() {
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
-        <Heading size="lg">Get Funds</Heading>
-        <Text textStyle="body">Use these protocols to get more assets to invest.</Text>
+        <Heading size="lg">Get Assets</Heading>
+        <Text textStyle="body">Use any of these tools to get funds before you set up a CALC strategy!</Text>
       </Stack>
 
       <Strategies />

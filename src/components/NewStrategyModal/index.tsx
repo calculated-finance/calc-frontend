@@ -26,6 +26,7 @@ import { useRouter } from 'next/router';
 import { ChildrenProp } from 'src/helpers/ChildrenProp';
 import broadcast from 'src/animations/broadcast.json';
 import Lottie from 'lottie-react';
+import { useWallet } from '@wizard-ui/react';
 import Stepper from './Stepper';
 import { findStep, StepConfig } from './steps';
 
@@ -105,6 +106,7 @@ export function NewStrategyModalHeader({
 }: { resetForm?: () => void; finalStep?: boolean; stepsConfig: StepConfig[]; showStepper?: boolean } & ChildrenProp) {
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
+  const { connected } = useWallet();
 
   const handleCancel = async () => {
     await router.push('/create-strategy');
@@ -133,7 +135,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
-        <Heading size="sm">{currentStep?.title}</Heading>
+        <Heading size="sm">{connected ? currentStep?.title : 'No wallet connected'}</Heading>
       </Stack>
       <Spacer />
       {showStepper && <Stepper steps={stepsConfig} />}

@@ -43,7 +43,7 @@ function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
     .toFixed(6);
 }
 
-function getTotalSwapped(strategies: Strategy[]) {
+export function getTotalSwapped(strategies: Strategy[]) {
   const totalSwapped = SUPPORTED_DENOMS.map(
     (denom) =>
       ({
@@ -195,7 +195,7 @@ function StrategiesTimeIntervalList() {
   );
 }
 
-function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
+export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
       ?.map((balance, acc) => {
@@ -297,6 +297,9 @@ function getAverageDurationForActiveStrategies(strategies: Strategy[]) {
     .reduce((amount, total) => total + amount, 0);
   return totalDuration / strategies.length;
 }
+export function uniqueAddresses(allStrategies: VaultsResponse | undefined) {
+  return Array.from(new Set(allStrategies?.vaults.map((strategy) => strategy.owner) || []));
+}
 
 function Page() {
   const { data: contractBalances } = useAdminBalances(CONTRACT_ADDRESS);
@@ -305,7 +308,7 @@ function Page() {
 
   const { data: allStrategies } = useAdminStrategies();
 
-  const uniqueWalletAddresses = Array.from(new Set(allStrategies?.vaults.map((strategy) => strategy.owner) || []));
+  const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 
   if (!fiatPrices || !allStrategies) {
     return null;

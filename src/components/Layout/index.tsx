@@ -115,7 +115,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
             {/* TODO: we should do something around the way the stepper works here */}
             <NewStrategyModalHeader stepsConfig={[]}> Connect to a wallet </NewStrategyModalHeader>
             <NewStrategyModalBody stepsConfig={[]}>
-              <ConnectWallet h={56} />
+              <ConnectWallet h={80} />
             </NewStrategyModalBody>
           </NewStrategyModal>
         )}
@@ -137,8 +137,9 @@ function SidebarLayout({ children }: { children: ReactElement }) {
   const oneYearFromNow = new Date();
   oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
 
-
-  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement', { expires: oneYearFromNow});
+  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement', {
+    expires: oneYearFromNow,
+  });
 
   const agreementPreviouslyAccepted = acceptedAgreementState === 'true';
 
