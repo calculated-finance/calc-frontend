@@ -15,22 +15,6 @@ describe('top panel', () => {
       isLoading: false,
     }));
   });
-  describe('when user has not connected to a wallet', () => {
-    beforeEach(() => {
-      (useWallet as jest.Mock).mockImplementation(() => ({
-        connected: false,
-      }));
-    });
-    it('renders the connect wallet button', () => {
-      render(
-        <QueryClientProvider client={queryClient}>
-          <TopPanel />
-        </QueryClientProvider>,
-      );
-
-      expect(screen.getByText(/Connect to a wallet/)).toBeInTheDocument();
-    });
-  });
 
   describe('when user has connected to a wallet', () => {
     beforeEach(() => {

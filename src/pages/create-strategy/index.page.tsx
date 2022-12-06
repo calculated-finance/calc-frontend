@@ -211,8 +211,6 @@ function Strategies() {
 }
 
 function CreateStrategy() {
-  const { address } = useWallet();
-
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
@@ -220,14 +218,7 @@ function CreateStrategy() {
         <Text textStyle="body">Save time by automating your investing and profit-taking with CALC.</Text>
       </Stack>
 
-      {address ? (
-        <Strategies />
-      ) : (
-        <>
-          <ConnectWallet layerStyle="panel" />
-          <InfoPanel />
-        </>
-      )}
+      <Strategies />
     </Stack>
   );
 }

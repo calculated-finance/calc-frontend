@@ -15,11 +15,17 @@ import {
   StatNumber,
   Divider,
   Wrap,
+  SimpleGrid,
+  Spacer,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
+import useAdminStrategies from '@hooks/useAdminStrategies';
+import useFiatPrice from '@hooks/useFiatPrice';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
@@ -27,6 +33,8 @@ import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
+import { getTotalSwapped, totalFromCoins, uniqueAddresses } from './stats-and-totals/index.page';
+import { formatFiat } from './strategies/details/StrategyPerformance';
 
 function InfoPanel() {
   return (
@@ -114,10 +122,11 @@ function InvestmentThesis() {
 
 function ActiveStrategies() {
   const { data, isLoading } = useStrategies();
+  const { connected } = useWallet();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
-      {isLoading ? (
+      {connected && isLoading ? (
         <Spinner />
       ) : (
         <Stack spacing={4}>
@@ -125,18 +134,20 @@ function ActiveStrategies() {
           <Heading data-testid="active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
-          <Link href="/create-strategy">
-            <Button w={44} variant="outline" colorScheme="blue">
-              {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
-            </Button>
-          </Link>
-          {Boolean(activeStrategies.length) && (
-            <Link href="/strategies">
+          <ButtonGroup>
+            <Link href="/create-strategy">
               <Button w={44} variant="outline" colorScheme="blue">
-                Review my strategies
+                {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
               </Button>
             </Link>
-          )}
+            {Boolean(activeStrategies.length) && (
+              <Link href="/strategies">
+                <Button w={44} variant="outline" colorScheme="blue">
+                  Review my strategies
+                </Button>
+              </Link>
+            )}
+          </ButtonGroup>
         </Stack>
       )}
     </Flex>
@@ -144,27 +155,47 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
+  const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
+  const { data: allStrategies } = useAdminStrategies();
+  const { connected } = useWallet();
+  if (!fiatPrices || !allStrategies) {
+    return (
+      <Center layerStyle="panel" p={8} h="full">
+        <Spinner />
+      </Center>
+    );
+  }
+
+  const totalSwappedAmounts = getTotalSwapped(allStrategies?.vaults);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
+  const strategiesCount = allStrategies.vaults.length;
+
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
-      <Stack spacing={4}>
-        <Heading size="md">Total invested with CALC</Heading>
-        <Stat>
-          <StatLabel>Total capital invested</StatLabel>
-          <StatNumber data-testid="total-invested">(Coming Soon)</StatNumber>
-        </Stat>
-        <Divider />
-        <HStack>
-          <Box>
-            <Heading size="xs">Fiat invested</Heading>
-            <Text textStyle="body-xs">-</Text>
-          </Box>
-          <Box>
-            <Heading size="xs">Stablecoin invested</Heading>
-            <Text textStyle="body-xs">(Coming Soon)</Text>
-          </Box>
-        </HStack>
-      </Stack>
-    </Flex>
+    <Stack layerStyle="panel" p={8} h="full" spacing={6}>
+      <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
+      <Flex gap={12} direction={['column', null, 'row']}>
+        <Stack spacing={4}>
+          <Heading data-testid="active-strategy-count" fontSize="5xl">
+            {strategiesCount}
+            <Heading size="sm">total strategies created</Heading>
+          </Heading>
+        </Stack>
+        <Divider display={['none', null, 'flex']} orientation="vertical" />
+        <Divider display={['flex', null, 'none']} />
+        <Stack spacing={4}>
+          <Heading data-testid="active-strategy-count" fontSize="5xl">
+            ${Math.floor(totalSwappedTotal / 1000)}k <Heading size="sm">total swapped (USD)</Heading>
+          </Heading>
+        </Stack>
+      </Flex>
+      {!connected && (
+        <Link href="/how-it-works">
+          <Button w={44} variant="outline" colorScheme="blue">
+            Learn how CALC works
+          </Button>
+        </Link>
+      )}
+    </Stack>
   );
 }
 
@@ -186,6 +217,7 @@ function WorkflowInformation() {
 
 function Home() {
   const { connected } = useWallet();
+
   const { data } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   return (
@@ -209,18 +241,17 @@ function Home() {
 
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
-          <GridItem colSpan={{ base: 6, lg: activeStrategies.length ? 3 : 6, xl: 3 }}>
+          <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
             <ActiveStrategies />
           </GridItem>
         )}
-        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 3 : 6 }}>
+
+        <GridItem colSpan={{ base: 6, xl: 3 }}>
+          <TotalInvestment />
+        </GridItem>
+        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
           <WorkflowInformation />
         </GridItem>
-        {Boolean(activeStrategies.length) && (
-          <GridItem colSpan={{ base: 6, lg: 3 }}>
-            <TotalInvestment />
-          </GridItem>
-        )}
       </Grid>
     </>
   );

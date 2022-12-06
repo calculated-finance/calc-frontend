@@ -1,4 +1,4 @@
-import { Button, Flex, FlexProps, Heading, Link, Stack, Text } from '@chakra-ui/react';
+import { Button, Flex, FlexProps, Heading, Link, Stack, Text, Image } from '@chakra-ui/react';
 import { useWallet } from '@wizard-ui/react';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import Spinner from './Spinner';
@@ -17,11 +17,11 @@ function ConnectWallet(props: FlexProps) {
           <Spinner />
         ) : (
           <>
-            <Stack spacing={1}>
-              <Heading textAlign="center">No Wallet Connected</Heading>
-              <Text color="grey.200" textAlign="center">
-                Get started by connecting your wallet.
-              </Text>
+            <Stack spacing={8} align="center">
+              <Image w={28} h={28} src="/images/notConnected.png" />
+              <Heading size="sm" textAlign="center">
+                You will need to connect to a wallet before continuing.
+              </Heading>
             </Stack>
             <Button onClick={handleConnect}>Connect to a wallet</Button>
             <Text color="grey.200" textAlign="center">

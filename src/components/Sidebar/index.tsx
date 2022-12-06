@@ -19,17 +19,19 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { HomeIcon, Add1Icon, ToolkitIcon } from '@fusion-icons/react/interface';
+import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { Swap2Icon } from '@fusion-icons/react/web3';
 
 // based on linkitems href values
 export enum Pages {
   Home = '/',
   Strategies = '/strategies/',
   CreateStrategy = '/create-strategy/',
+  GetAssets = '/get-assets/',
   // Settings = '/settings/',
   HowItWorks = '/how-it-works/',
   // Performance = '/performance/',
@@ -45,6 +47,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
+  { name: 'Get assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
   { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
