@@ -17,8 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
-import { BoxedImportIcon, CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
-import Link from 'next/link';
+import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
 import CalcIcon from './Icon';
 import { SpendableBalances } from './SpendableBalances';
 
@@ -83,16 +82,6 @@ function CosmosWallet() {
                 </Button>
                 <SpendableBalances />
                 <Stack>
-                  <Link href="/get-assets" passHref>
-                    <Button
-                      size="xs"
-                      variant="link"
-                      w="min-content"
-                      leftIcon={<CalcIcon as={BoxedImportIcon} stroke="brand.200" />}
-                    >
-                      Get more assets
-                    </Button>
-                  </Link>
                   <Button
                     size="xs"
                     w="min-content"
