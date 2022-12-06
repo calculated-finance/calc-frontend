@@ -31,7 +31,7 @@ export enum Pages {
   Home = '/',
   Strategies = '/strategies/',
   CreateStrategy = '/create-strategy/',
-  GetAssets = '/get-assets/',
+  GetAssets = '/bridge-assets/',
   // Settings = '/settings/',
   HowItWorks = '/how-it-works/',
   // Performance = '/performance/',

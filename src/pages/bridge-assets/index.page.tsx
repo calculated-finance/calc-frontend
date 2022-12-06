@@ -31,13 +31,13 @@ const accumulationStratgies: GetAssetsCardProps[] = [
     href: 'https://blue.kujira.app/ibc',
     cta: 'Bridge now',
   },
-  {
-    name: 'Fiat on ramp',
-    description: 'Get axlUSDC from a fiat on ramp provider.',
-    image: '/images/kado.svg',
-    href: 'https://www.kado.money/assets/usd-coin',
-    cta: 'Get axlUSDC now',
-  },
+  // {
+  //   name: 'Fiat on ramp',
+  //   description: 'Get axlUSDC from a fiat on ramp provider.',
+  //   image: '/images/kado.svg',
+  //   href: 'https://www.kado.money/assets/usd-coin',
+  //   cta: 'Get axlUSDC now',
+  // },
   {
     name: 'Mint USK',
     description: 'Use ATOM or DOT as collateral to mint the USK stablecoin.',
@@ -74,7 +74,7 @@ function Strategies() {
   );
 }
 
-function CreateStrategy() {
+function BridgeAssets() {
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
@@ -87,6 +87,6 @@ function CreateStrategy() {
   );
 }
 
-CreateStrategy.getLayout = getSidebarLayout;
+BridgeAssets.getLayout = getSidebarLayout;
 
-export default CreateStrategy;
+export default BridgeAssets;
