@@ -33,7 +33,7 @@ const accumulationStratgies: GetAssetsCardProps[] = [
   },
   {
     name: 'Fiat on ramp',
-    description: 'Get USDC from a fiat on ramp provider.',
+    description: 'Get axlUSDC from a fiat on ramp provider.',
     image: '/images/kado.svg',
     href: 'https://www.kado.money/assets/usd-coin',
     cta: 'Get axlUSDC now',
@@ -78,7 +78,7 @@ function CreateStrategy() {
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
-        <Heading size="lg">Get Assets</Heading>
+        <Heading size="lg">Bridge Assets</Heading>
         <Text textStyle="body">Use any of these tools to get funds before you set up a CALC strategy!</Text>
       </Stack>
 

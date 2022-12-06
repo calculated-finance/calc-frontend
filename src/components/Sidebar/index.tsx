@@ -47,7 +47,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
-  { name: 'Get assets', icon: BoxedImportIcon, href: Pages.GetAssets },
+  { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
   { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
