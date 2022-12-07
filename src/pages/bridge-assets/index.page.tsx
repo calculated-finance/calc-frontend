@@ -6,8 +6,6 @@ import {
   Text,
   Image,
   SimpleGrid,
-  Modal,
-  ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';

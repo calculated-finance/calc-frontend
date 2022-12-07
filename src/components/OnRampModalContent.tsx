@@ -15,30 +15,25 @@ import { useWallet } from '@wizard-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 
 function OnRampModalContent() {
-  const elementRef = useRef<HTMLDivElement>(null);
   const { connected, address } = useWallet();
 
-  const dimensions = useSize(elementRef);
-
   return (
-    <ModalContent height="full" maxHeight={800}>
+    <ModalContent mx={6} >
       <ModalHeader>Get axlUSDC now</ModalHeader>
       <ModalCloseButton />
-      <ModalBody p={0} height="full">
-        <Box ref={elementRef} height="full">
+      <ModalBody px={0} pb={8}>
           {connected ? (
             <iframe
               title="kado"
               src={`https://app.kado.money/?apiKey=${KADO_API_KEY}&onRevCurrency=USDC&onToAddress=${address}&cryptoList=USDC&network=kujira&product=BUY`}
               width="100%"
-              height={`${dimensions?.height}`}
+              height={680}
             />
           ) : (
-            <Center h="full">
+            <Center h={440}>
               <ConnectWallet />
             </Center>
           )}
-        </Box>
       </ModalBody>
     </ModalContent>
   );
@@ -46,7 +41,7 @@ function OnRampModalContent() {
 
 export default function OnRampModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={false}>
       <ModalOverlay />
       <OnRampModalContent />
     </Modal>
