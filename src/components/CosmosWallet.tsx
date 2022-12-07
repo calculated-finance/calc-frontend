@@ -14,17 +14,21 @@ import {
   useToast,
   useClipboard,
   useOutsideClick,
+  Image,
+  Divider,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
 import CalcIcon from './Icon';
 import { SpendableBalances } from './SpendableBalances';
+import OnRampModal from './OnRampModalContent';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
   const { address, disconnect } = useWallet();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { onCopy } = useClipboard(address);
   const ref = React.createRef<HTMLElement>();
   useOutsideClick({
@@ -81,17 +85,28 @@ function CosmosWallet() {
                   <Box as="span">...</Box>
                 </Button>
                 <SpendableBalances />
-                <Stack>
-                  <Button
-                    size="xs"
-                    w="min-content"
-                    variant="link"
-                    onClick={handleDisconnect}
-                    leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
-                  >
-                    Disconnect
-                  </Button>
-                </Stack>
+                <Button
+                  size="xs"
+                  variant="link"
+                  onClick={onOnRampOpen}
+                  colorScheme="white"
+                  w="max-content"
+                  leftIcon={<Image src="/images/kadoIcon.svg" />}
+                >
+                  Fund With Kado
+                </Button>
+                <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
+
+                <Divider />
+                <Button
+                  size="xs"
+                  w="max-content"
+                  variant="link"
+                  onClick={handleDisconnect}
+                  leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
+                >
+                  Disconnect
+                </Button>
               </Stack>
             </PopoverContent>
           </Popover>
