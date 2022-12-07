@@ -31,3 +31,5 @@ export const LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE =
   'Sorry, but we are waiting for CosmWasm Version 0.47 before Ledger supports AuthZ staking to your wallet. This is estimated to be early Jan 2023. You can still auto-stake but without a Ledger or remove the auto-staking option from this strategy and your Ledger will work.';
 
 export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
+
+export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
