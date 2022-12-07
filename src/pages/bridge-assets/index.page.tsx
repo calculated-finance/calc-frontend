@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import 'isomorphic-fetch';
-import OnRampModal, { OnRampModalContent } from '../../components/OnRampModalContent';
+import OnRampModal from '../../components/OnRampModalContent';
 
 type GetAssetsCardProps = {
   name: string;
