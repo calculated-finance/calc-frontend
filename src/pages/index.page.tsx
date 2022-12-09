@@ -18,6 +18,7 @@ import {
   SimpleGrid,
   Spacer,
   ButtonGroup,
+  Alert,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -28,11 +29,13 @@ import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
+import { FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
+import StrategyUrls from './create-strategy/StrategyUrls';
 import { getTotalSwapped, totalFromCoins, uniqueAddresses } from './stats-and-totals/index.page';
 import { formatFiat } from './strategies/details/StrategyPerformance';
 
@@ -231,6 +234,20 @@ function Home() {
           strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
+      <Alert mb={8} borderColor="blue.200" color="blue.200" borderWidth={2}>
+        <Stack direction={['column', null, null, 'row']} w="full">
+          <Text>🎉{FEE_FREE_USK_PROMO_DESCRIPTION}</Text>
+          <Spacer />
+          <Flex>
+            <Link href={StrategyUrls.DCAIn}>
+              <Button w="full" variant="outline" colorScheme={'blue'}>
+                Create a DCA In strategy
+              </Button>
+            </Link>
+          </Flex>
+        </Stack>
+      </Alert>
+
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
         <TopPanel />
         {Boolean(activeStrategies.length) && (

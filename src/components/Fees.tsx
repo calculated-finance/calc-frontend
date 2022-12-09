@@ -10,13 +10,20 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import {
+  CREATE_VAULT_FEE,
+  DELEGATION_FEE,
+  FEE_FREE_USK_PROMO_DESCRIPTION,
+  FIN_TAKER_FEE,
+  SWAP_FEE,
+} from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 
 function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
@@ -127,7 +134,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
 
   const { initialDenom, swapAmount, autoStakeValidator } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: initialDenomName, promotion } = getDenomInfo(initialDenom);
 
   return (
     <Stack spacing={0}>
@@ -137,9 +144,17 @@ export default function Fees({ formName }: { formName: FormNames }) {
           {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
-        <Text as="span" textColor="white">
-          ~{getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
-        </Text>{' '}
+        {promotion ? (
+          <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+            <Text as="span" textColor="blue.200">
+              {getPrettyFee(swapAmount, 0)} {initialDenomName}
+            </Text>
+          </Tooltip>
+        ) : (
+          <Text as="span" textColor="white">
+            ~{getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
+          </Text>
+        )}
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 

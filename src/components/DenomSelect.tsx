@@ -17,29 +17,36 @@ function DenomSelectLabel({ denom }: { denom: Denom }) {
 
 function DenomOption({
   denom,
+  showPromotion,
   isSelected,
   rightLabel,
   children,
   ...optionProps
-}: OptionProps & { denom: Denom; rightLabel?: string }) {
+}: OptionProps & { denom: Denom; rightLabel?: string; showPromotion?: boolean }) {
   const { promotion } = getDenomInfo(denom);
   return (
     <chakraComponents.Option isSelected={isSelected} {...optionProps}>
       <Flex alignItems="center" w="full">
         {children}
         <Spacer />
-        {promotion && !rightLabel && <Badge colorScheme={isSelected ? 'abyss' : 'blue'}>PROMO</Badge>}
+        {showPromotion && promotion && !rightLabel && <Badge colorScheme={isSelected ? 'abyss' : 'blue'}>PROMO</Badge>}
         {rightLabel && <Text fontSize="xs">{rightLabel}</Text>}
       </Flex>
     </chakraComponents.Option>
   );
 }
 
-function getDenomOptionComponent(rightLabel?: string) {
+function getDenomOptionComponent(rightLabel?: string, showPromotion?: boolean) {
   // eslint-disable-next-line func-names
   return function ({ children: childrenProp, data, isSelected, ...props }: any) {
     return (
-      <DenomOption denom={data.value} isSelected={isSelected} rightLabel={rightLabel} {...props}>
+      <DenomOption
+        denom={data.value}
+        isSelected={isSelected}
+        rightLabel={rightLabel}
+        showPromotion={showPromotion}
+        {...props}
+      >
         {childrenProp}
       </DenomOption>
     );
@@ -49,10 +56,11 @@ function getDenomOptionComponent(rightLabel?: string) {
 export function DenomSelect({
   denoms,
   optionLabel,
+  showPromotion = false,
   ...selectProps
-}: { denoms: Denom[]; optionLabel?: string } & Omit<SelectProps, 'options'>) {
+}: { denoms: Denom[]; optionLabel?: string; showPromotion?: boolean } & Omit<SelectProps, 'options'>) {
   const customComponents = () => ({
-    Option: getDenomOptionComponent(optionLabel),
+    Option: getDenomOptionComponent(optionLabel, showPromotion),
   });
   const pairsOptions = denoms.map((denom) => ({
     value: denom,
