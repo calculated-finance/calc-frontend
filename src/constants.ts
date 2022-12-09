@@ -13,6 +13,7 @@ export const FEE_TAKER_ADDRESS =
 
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
+export const LAUNCHDARKLY_SDK_CLIENT_SIDE_ID = '63928928a029f71140f60625';
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.3; // 30c
 export const CANCEL_VAULT_FEE = 0.5; // $1
@@ -33,3 +34,15 @@ export const LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE =
 export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
+
+export const FEE_FREE_USK_PROMO_DESCRIPTION =
+  'As a promo for CALC and USK, we are removing swap fees for any USK DCA In. Use CALC FEE FREE for 30 days!';
+
+export const featureFlags =
+  CHAIN_ID === 'kaiyo-1'
+    ? {
+        uskPromoEnabled: false,
+      }
+    : {
+        uskPromoEnabled: true,
+      };

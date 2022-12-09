@@ -1,6 +1,8 @@
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { Text, HStack, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
-import { CHAIN_ID } from 'src/constants';
+import { CHAIN_ID, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 
 type DenomInfo = {
@@ -12,6 +14,7 @@ type DenomInfo = {
   stable?: boolean;
   coingeckoId: string;
   stakeableAndSupported?: boolean;
+  promotion?: JSX.Element;
 };
 
 const defaultDenom = {
@@ -23,6 +26,7 @@ const defaultDenom = {
   stakeableAndSupported: false,
   stable: false,
   coingeckoId: '',
+  promotion: undefined,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -66,6 +70,14 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
+    promotion: (
+      <Flex>
+        <Text fontSize="xs">Promotion now on! Fee-free USK for 30 days. </Text>
+        <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+          <Icon as={QuestionOutlineIcon} />
+        </Tooltip>
+      </Flex>
+    ),
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',

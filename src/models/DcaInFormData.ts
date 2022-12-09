@@ -38,8 +38,8 @@ export const initialValues = {
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
-  resultingDenom: Yup.mixed<Denom>().label('Resulting Denom').required(),
-  initialDenom: Yup.mixed<Denom>().label('Initial Denom').required(),
+  resultingDenom: Yup.string().label('Resulting Denom').required(),
+  initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()

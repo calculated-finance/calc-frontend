@@ -22,6 +22,7 @@ function SlippagePreset({ value }: { value: number }) {
   const handleClick = () => {
     helpers.setValue(value);
   };
+
   return (
     <Box
       borderRadius="full"

@@ -39,6 +39,8 @@ export default function InitialDenom() {
 
   const denoms = uniqueQuoteDenoms(pairs).filter(isDenomStable);
 
+  const { promotion } = getDenomInfo(field.value);
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How will you fund your first investment?</FormLabel>
@@ -51,8 +53,15 @@ export default function InitialDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
-          <DenomSelect denoms={denoms} placeholder="Choose asset" value={field.value} onChange={helpers.setValue} />
+          <DenomSelect
+            denoms={denoms}
+            placeholder="Choose asset"
+            value={field.value}
+            onChange={helpers.setValue}
+            showPromotion
+          />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+          {promotion && <FormHelperText color="blue.200">{promotion}</FormHelperText>}
         </Box>
         <InitialDeposit />
       </SimpleGrid>
