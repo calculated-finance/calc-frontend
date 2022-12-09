@@ -87,7 +87,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     coingeckoId: 'usk',
     promotion: (
       <Flex gap={2}>
-        <Text fontSize="xs">Promotion now on! Fee-free USK for 30 days. </Text>
+        <Text fontSize="xs">Fee-free USK for 30 days. </Text>
         <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
           <Icon as={QuestionOutlineIcon} />
         </Tooltip>
