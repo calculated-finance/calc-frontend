@@ -10,12 +10,8 @@ import {
   Grid,
   GridItem,
   HStack,
-  Stat,
-  StatLabel,
-  StatNumber,
   Divider,
   Wrap,
-  SimpleGrid,
   Spacer,
   ButtonGroup,
   Alert,
@@ -28,17 +24,15 @@ import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
-import { useFlags, withLDConsumer } from 'launchdarkly-react-client-sdk';
 import Link from 'next/link';
-import { FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
+import { featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
 import StrategyUrls from './create-strategy/StrategyUrls';
-import { getTotalSwapped, totalFromCoins, uniqueAddresses } from './stats-and-totals/index.page';
-import { formatFiat } from './strategies/details/StrategyPerformance';
+import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
   return (
@@ -220,8 +214,7 @@ function WorkflowInformation() {
 }
 
 function Promo() {
-  const { uskPromoEnabled } = useFlags();
-  return uskPromoEnabled ? (
+  return featureFlags.uskPromoEnabled ? (
     <Alert mb={8} borderColor="blue.200" color="blue.200" borderWidth={2}>
       <Stack direction={['column', null, null, 'row']} w="full">
         <Text>🎉{FEE_FREE_USK_PROMO_DESCRIPTION}</Text>

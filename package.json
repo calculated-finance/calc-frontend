@@ -38,7 +38,6 @@
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
     "kujira.js": "Team-Kujira/kujira.js.git",
-    "launchdarkly-react-client-sdk": "^3.0.0",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.3.1",
