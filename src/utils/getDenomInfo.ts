@@ -12,6 +12,7 @@ type DenomInfo = {
   stable?: boolean;
   coingeckoId: string;
   stakeableAndSupported?: boolean;
+  promotion?: boolean;
 };
 
 const defaultDenom = {
@@ -23,6 +24,7 @@ const defaultDenom = {
   stakeableAndSupported: false,
   stable: false,
   coingeckoId: '',
+  promotion: false,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -38,6 +40,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
+    promotion: true,
   },
   [MainnetDenoms.Kuji]: {
     name: 'KUJI',
@@ -66,6 +69,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
+    promotion: true,
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
