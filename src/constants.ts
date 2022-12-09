@@ -13,6 +13,7 @@ export const FEE_TAKER_ADDRESS =
 
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
+export const LAUNCHDARKLY_SDK_CLIENT_SIDE_ID = '63928928a029f71140f60625';
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.3; // 30c
 export const CANCEL_VAULT_FEE = 0.5; // $1

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "USK_PROMO_ENABLED=true next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -38,6 +38,7 @@
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
     "kujira.js": "Team-Kujira/kujira.js.git",
+    "launchdarkly-react-client-sdk": "^3.0.0",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.3.1",

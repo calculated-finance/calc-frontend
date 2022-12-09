@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
-import { ReactElement, ReactNode, useEffect, useMemo } from 'react';
+import { ComponentType, ReactElement, ReactNode, useEffect, useMemo } from 'react';
 import type { NextPage } from 'next';
 import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
@@ -10,9 +10,10 @@ import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
-import { CHAIN_ID, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
+import { CHAIN_ID, HOTJAR_SITE_ID, LAUNCHDARKLY_SDK_CLIENT_SIDE_ID, RPC_ENDPOINT } from 'src/constants';
 import { NetworkContext } from '@components/NetworkContext';
 import { hotjar } from 'react-hotjar';
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
 import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
@@ -74,4 +75,10 @@ export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<P
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export default MyApp;
+export default withLDProvider({
+  clientSideID: '63928928a029f71140f60625',
+  options: {
+    bootstrap: 'localStorage',
+    streaming: false,
+  },
+})(MyApp as ComponentType);
