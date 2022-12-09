@@ -223,7 +223,7 @@ function Promo() {
         <Flex>
           <Link href={Pages.CreateStrategy}>
             <Button w="full" variant="outline" colorScheme="blue">
-              Create new strategy
+              Create a strategy
             </Button>
           </Link>
         </Flex>

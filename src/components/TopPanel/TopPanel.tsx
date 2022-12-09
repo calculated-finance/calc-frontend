@@ -62,7 +62,7 @@ function Returning() {
       <ButtonGroup>
         <Link passHref href="/create-strategy">
           <Button maxWidth={402} size="sm">
-            Create a strategy
+            Create new strategy
           </Button>
         </Link>
         <Link passHref href="/strategies">
