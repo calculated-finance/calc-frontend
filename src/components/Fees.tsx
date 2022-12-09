@@ -132,9 +132,10 @@ export default function Fees({ formName }: { formName: FormNames }) {
     return null;
   }
 
-  const { initialDenom, swapAmount, autoStakeValidator } = state;
+  const { initialDenom, resultingDenom, swapAmount, autoStakeValidator } = state;
 
-  const { name: initialDenomName, promotion } = getDenomInfo(initialDenom);
+  const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
+  const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
 
   return (
     <Stack spacing={0}>
@@ -144,7 +145,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
           {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
-        {promotion ? (
+        {initialDenomPromotion || resultingDenomPromotion ? (
           <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
             <Text as="span" textColor="blue.200">
               {getPrettyFee(swapAmount, 0)} {initialDenomName}
