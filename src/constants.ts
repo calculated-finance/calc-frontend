@@ -46,3 +46,5 @@ export const featureFlags =
     : {
         uskPromoEnabled: true,
       };
+
+export const DEFAULT_PAGE_SIZE = 1000
