@@ -1,5 +1,5 @@
 import { useWallet } from '@wizard-ui/react';
-import { CONTRACT_ADDRESS } from 'src/constants';
+import { CONTRACT_ADDRESS, DEFAULT_PAGE_SIZE } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import {
   Event as GeneratedEvent,
@@ -21,6 +21,7 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined) {
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_events_by_resource_id: {
           resource_id: id,
+          limit: DEFAULT_PAGE_SIZE
         },
       } as QueryMsg),
     {
