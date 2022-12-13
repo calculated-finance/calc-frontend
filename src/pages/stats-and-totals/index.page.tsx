@@ -198,7 +198,8 @@ function StrategiesTimeIntervalList() {
 export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
-      ?.map((balance, acc) => {
+      ?.filter((coin) => SUPPORTED_DENOMS.includes(coin.denom))
+      .map((balance, acc) => {
         const { conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;
@@ -302,8 +303,8 @@ export function uniqueAddresses(allStrategies: VaultsResponse | undefined) {
 }
 
 function Page() {
-  const { data: contractBalances } = useAdminBalances(CONTRACT_ADDRESS);
-  const { data: feeTakerBalances } = useAdminBalances(FEE_TAKER_ADDRESS);
+  const { balances: contractBalances } = useAdminBalances(CONTRACT_ADDRESS);
+  const { balances: feeTakerBalances } = useAdminBalances(FEE_TAKER_ADDRESS);
   const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
 
   const { data: allStrategies } = useAdminStrategies();
@@ -323,10 +324,6 @@ function Page() {
   const totalReceivedAmounts = getTotalReceived(allStrategies?.vaults);
   const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices);
 
-  // find number of weeks in time period
-  const weeks = Math.floor(
-    (new Date().getTime() - new Date(allStrategies?.vaults[0].created_at).getTime()) / (1000 * 60 * 60 * 24 * 7),
-  );
 
   const ThirtyDaysFromNow = new Date();
   ThirtyDaysFromNow.setDate(ThirtyDaysFromNow.getDate() + 30);
