@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Divider, Grid, GridItem, Heading, SimpleGrid, Stack, Text, Wrap } from '@chakra-ui/react';
+import { Box, Divider, Grid, GridItem, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -12,23 +12,15 @@ import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
-import { isAutoStaking, isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
-import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
+import { isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
 import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
 import { isStrategyActive } from 'src/helpers/getStrategyStatus';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import {
   VictoryAxis,
   VictoryBar,
-  VictoryChart,
-  VictoryContainer,
-  VictoryGroup,
-  VictoryHistogram,
-  VictoryLabel,
-  VictoryPie,
-  VictoryTheme,
-  VictoryTooltip,
-  VictoryVoronoiContainer,
+  VictoryChart, VictoryHistogram, VictoryTheme,
+  VictoryTooltip
 } from 'victory';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyType } from 'src/helpers/getStrategyType';

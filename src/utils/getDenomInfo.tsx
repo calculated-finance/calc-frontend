@@ -1,5 +1,5 @@
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import { Text, HStack, Icon, Tooltip, Flex } from '@chakra-ui/react';
+import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
 import { CHAIN_ID, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
@@ -55,6 +55,13 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
+  },
+  [MainnetDenoms.WETH]: {
+    name: 'wETH',
+    icon: '/images/denoms/weth.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'weth',
   },
 };
 
