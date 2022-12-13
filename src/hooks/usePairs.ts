@@ -10,6 +10,13 @@ function isSupportedDenom(denom: Denom) {
   return SUPPORTED_DENOMS.includes(denom);
 }
 
+// function orderAlphabetically(denoms: Denom[]) {
+//   return denoms.sort((a, b) => {
+//     const { name: nameA } = getDenomInfo(a);
+//     return a.localeCompare(b);
+//   });
+// }
+
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom))).filter((denom) =>
     SUPPORTED_DENOMS.includes(denom),

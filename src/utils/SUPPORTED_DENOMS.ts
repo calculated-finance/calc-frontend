@@ -1,4 +1,7 @@
-import { isMainnet, mainnetDenoms, testnetDenoms } from './getDenomInfo';
+import getDenomInfo, { isMainnet, mainnetDenoms, testnetDenoms } from './getDenomInfo';
 
-
-export const SUPPORTED_DENOMS = isMainnet() ? Object.keys(mainnetDenoms) : Object.keys(testnetDenoms);
+// filter keys that arent enabled 
+export const SUPPORTED_DENOMS = Object.keys( isMainnet() ? mainnetDenoms: testnetDenoms).filter((denom) => {
+  const { enabled } = getDenomInfo(denom)
+  return enabled;
+});
