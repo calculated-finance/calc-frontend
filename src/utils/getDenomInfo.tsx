@@ -16,6 +16,7 @@ type DenomInfo = {
   stakeableAndSupported?: boolean;
   promotion?: JSX.Element;
   enabled?: boolean;
+  minimumSwapAmount?: number;
 };
 
 const defaultDenom = {
@@ -29,6 +30,7 @@ const defaultDenom = {
   coingeckoId: '',
   promotion: undefined,
   enabled: true,
+  minimumSwapAmount: 0.05,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -65,7 +67,9 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'weth',
     conversion: (value: number) => value / (10 ** 18),
-    enabled: false,
+    deconversion: (value: number) =>  Math.round(value * 10 ** 18),
+    enabled: true,
+    minimumSwapAmount: 0.05 / 1000,
   },
 };
 
