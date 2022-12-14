@@ -194,7 +194,7 @@ export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
       .map((balance, acc) => {
         const { conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
-        const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId]?.usd;
+        const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;
         return fiatAmount;
       })
       .reduce((amount, total) => total + amount, 0) || 0
