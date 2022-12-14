@@ -6,6 +6,8 @@ import { Denom } from '../models/Denom';
 import { Pair } from '../models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
+const hiddenPairs = ['kujira17w9r23r8v8r7z5lphwj99296fhlye9ej5nq3hlqw554u63m88avspdl9tc'];
+
 function isSupportedDenom(denom: Denom) {
   return SUPPORTED_DENOMS.includes(denom);
 }
@@ -42,7 +44,7 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pai
 export default function usePairs() {
   const { client } = useWallet();
 
-  return useQueryWithNotification<PairsResponse>(
+  const queryResult = useQueryWithNotification<PairsResponse>(
     ['pairs', client],
     async () => {
       const result = await client!.queryContractSmart(CONTRACT_ADDRESS, {
@@ -54,4 +56,10 @@ export default function usePairs() {
       enabled: !!client,
     },
   );
+  return {
+    ...queryResult,
+    data: {
+      pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
+    }
+  }
 }
