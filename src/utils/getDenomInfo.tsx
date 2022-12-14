@@ -1,5 +1,5 @@
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import { Text, HStack, Icon, Tooltip, Flex } from '@chakra-ui/react';
+import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
 import { CHAIN_ID, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
@@ -15,6 +15,8 @@ type DenomInfo = {
   coingeckoId: string;
   stakeableAndSupported?: boolean;
   promotion?: JSX.Element;
+  enabled?: boolean;
+  minimumSwapAmount?: number;
 };
 
 const defaultDenom = {
@@ -27,6 +29,8 @@ const defaultDenom = {
   stable: false,
   coingeckoId: '',
   promotion: undefined,
+  enabled: true,
+  minimumSwapAmount: 0.05,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -55,6 +59,17 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
+  },
+  [MainnetDenoms.WETH]: {
+    name: 'wETH',
+    icon: '/images/denoms/weth.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'weth',
+    conversion: (value: number) => value / (10 ** 18),
+    deconversion: (value: number) =>  Math.round(value * 10 ** 18),
+    enabled: true,
+    minimumSwapAmount: 0.05 / 1000,
   },
 };
 
@@ -113,22 +128,6 @@ export function isMainnet() {
   return (CHAIN_ID as NETWORK) === 'kaiyo-1';
 }
 
-export class DenomValue {
-  readonly denomId: Denom;
-
-  readonly amount: number;
-
-  constructor(denomAmount: Coin) {
-    // make this not option and handle code when loading
-    this.denomId = denomAmount?.denom || '';
-    this.amount = Number(denomAmount?.amount || 0);
-  }
-
-  toConverted() {
-    return parseFloat((this.amount / 1000000).toFixed(6));
-  }
-}
-
 const getDenomInfo = (denom?: string) => {
   if (!denom) {
     return defaultDenom;
@@ -144,6 +143,25 @@ const getDenomInfo = (denom?: string) => {
     ...testnetDenoms[denom as TestnetDenoms],
   };
 };
+
+export class DenomValue {
+  readonly denomId: Denom;
+
+  readonly amount: number;
+
+  constructor(denomAmount: Coin) {
+    // make this not option and handle code when loading
+    this.denomId = denomAmount?.denom || '';
+    this.amount = Number(denomAmount?.amount || 0);
+  }
+
+  toConverted() {
+    const { conversion } = getDenomInfo(this.denomId);
+    return parseFloat((conversion(this.amount)).toFixed(6));
+  }
+}
+
+
 
 export function isDenomStable(denom: Denom) {
   return getDenomInfo(denom).stable;

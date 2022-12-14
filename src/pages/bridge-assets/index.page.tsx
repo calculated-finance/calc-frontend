@@ -21,36 +21,6 @@ type GetAssetsCardProps = {
   onClick?: () => void;
 };
 
-const bridges: GetAssetsCardProps[] = [
-  {
-    name: 'Cross Chain Bridge',
-    description: 'Move assets from non Cosmos chains like Ethereum.',
-    image: '/images/axelar.svg',
-    href: 'https://blue.kujira.app/bridge',
-    cta: 'Bridge now',
-  },
-  {
-    name: 'IBC Bridge',
-    description: 'Move assets from Cosmos SDK chains like Terra or Juno.',
-    image: '/images/cosmos.svg',
-    href: 'https://blue.kujira.app/ibc',
-    cta: 'Bridge now',
-  },
-  {
-    name: 'Fiat on ramp',
-    description: 'Get axlUSDC from a fiat on ramp provider.',
-    image: '/images/kado.svg',
-    href: 'https://www.kado.money/assets/usd-coin',
-    cta: 'Get axlUSDC now',
-  },
-  {
-    name: 'Mint USK',
-    description: 'Use ATOM or DOT as collateral to mint the USK stablecoin.',
-    image: '/images/mintUsk.svg',
-    href: 'https://blue.kujira.app/mint',
-    cta: 'Mint USK now',
-  },
-];
 
 function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAssetsCardProps) {
   return (

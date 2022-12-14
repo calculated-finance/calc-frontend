@@ -6,6 +6,17 @@ import { Denom } from '../models/Denom';
 import { Pair } from '../models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
+function isSupportedDenom(denom: Denom) {
+  return SUPPORTED_DENOMS.includes(denom);
+}
+
+// function orderAlphabetically(denoms: Denom[]) {
+//   return denoms.sort((a, b) => {
+//     const { name: nameA } = getDenomInfo(a);
+//     return a.localeCompare(b);
+//   });
+// }
+
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom))).filter((denom) =>
     SUPPORTED_DENOMS.includes(denom),
@@ -13,19 +24,19 @@ export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
 }
 
 export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.base_denom))).filter((denom) => SUPPORTED_DENOMS.includes(denom));
+  return Array.from(new Set(pairs?.map((pair) => pair.base_denom))).filter(isSupportedDenom);
 }
 
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[] | undefined) {
   return Array.from(
     new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)),
-  ).filter((denom) => SUPPORTED_DENOMS.includes(denom));
+  ).filter(isSupportedDenom);
 }
 
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pair[] | undefined) {
   return Array.from(
     new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
-  ).filter((denom) => SUPPORTED_DENOMS.includes(denom));
+  ).filter(isSupportedDenom);
 }
 
 export default function usePairs() {
