@@ -68,7 +68,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'weth',
     conversion: (value: number) => value / (10 ** 18),
     deconversion: (value: number) =>  Math.round(value * 10 ** 18),
-    enabled: true,
+    enabled: false,
     minimumSwapAmount: 0.05 / 1000,
   },
 };
