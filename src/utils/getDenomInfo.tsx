@@ -11,6 +11,8 @@ type DenomInfo = {
   icon?: string;
   conversion?: (value: number) => number;
   deconversion?: (value: number) => number;
+  priceDeconversion?: (value: number) => number;
+  priceConversion?: (value: number) => number;
   stakeable?: boolean;
   stable?: boolean;
   coingeckoId: string;
@@ -32,6 +34,8 @@ const defaultDenom = {
   promotion: undefined,
   enabled: true,
   minimumSwapAmount: 0.05,
+  priceDeconversion: (value: number) => value,
+  priceConversion: (value: number) => value,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -77,7 +81,9 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'weth',
     conversion: (value: number) => value / 10 ** 18,
     deconversion: (value: number) => Math.round(value * 10 ** 18),
-    enabled: false,
+    priceDeconversion: (value: number) => value * 10 ** 12,
+    priceConversion: (value: number) => value / 10 ** 12,
+    enabled: true,
     minimumSwapAmount: 0.05 / 1000,
   },
 };
