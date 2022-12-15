@@ -4,7 +4,7 @@ import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_
 import { Vault } from 'src/interfaces/generated/response/get_vault';
 import useQueryWithNotification from './useQueryWithNotification';
 
-const QUERY_KEY = 'active-vaults';
+const QUERY_KEY = 'get_vaults';
 
 export type Strategy = Vault;
 
