@@ -143,22 +143,23 @@ export const allValidationSchema = Yup.object({
         }
         return value <= initialDeposit;
       },
-    }).test({
+    })
+    .test({
       name: 'greater-than-minimum-swap',
       test(value, context) {
         if (!value) {
           return true;
         }
-        const { initialDenom = null } = {...context.parent, ...context.options.context };
+        const { initialDenom = null } = { ...context.parent, ...context.options.context };
         if (!initialDenom) {
           return true;
         }
         const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
 
-        if (value >= minimumSwapAmount) {
-          return true
+        if (value > minimumSwapAmount) {
+          return true;
         }
-        return context.createError({ message: `Swap amount should be greater than or equal to ${minimumSwapAmount}`});
+        return context.createError({ message: `Swap amount should be greater than ${minimumSwapAmount}` });
       },
     }),
   slippageTolerance: Yup.number()
