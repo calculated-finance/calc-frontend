@@ -11,7 +11,6 @@ export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoo
 export const FEE_TAKER_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
 
-
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
 export const LAUNCHDARKLY_SDK_CLIENT_SIDE_ID = '63928928a029f71140f60625';
@@ -37,7 +36,7 @@ export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
 
 export const FEE_FREE_USK_PROMO_DESCRIPTION =
-  'As a promo for CALC and USK, we are removing swap fees for any USK DCA In. Use CALC FEE FREE for 30 days!';
+  'As a promo for CALC and USK, we are removing swap fees for any USK strategy. Use CALC FEE FREE for 30 days!';
 
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
@@ -48,4 +47,4 @@ export const featureFlags =
         uskPromoEnabled: true,
       };
 
-export const DEFAULT_PAGE_SIZE = 1000
+export const DEFAULT_PAGE_SIZE = 1000;

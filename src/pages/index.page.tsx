@@ -17,6 +17,7 @@ import {
   Alert,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
+import { Pages } from '@components/Sidebar';
 import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -220,9 +221,9 @@ function Promo() {
         <Text>🎉{FEE_FREE_USK_PROMO_DESCRIPTION}</Text>
         <Spacer />
         <Flex>
-          <Link href={StrategyUrls.DCAIn}>
+          <Link href={Pages.CreateStrategy}>
             <Button w="full" variant="outline" colorScheme="blue">
-              Create a DCA In strategy
+              Create a strategy
             </Button>
           </Link>
         </Flex>
