@@ -78,11 +78,6 @@ function FeeBreakdown({
                   </Text>
                 </Flex>
                 <Flex>
-                  <Text textStyle="body-xs">Kado on-ramp fees:</Text>
-                  <Spacer />
-                  <Text textStyle="body-xs">-</Text>
-                </Flex>
-                <Flex>
                   <Text textStyle="body-xs" textColor="white">
                     Total fees and tax:
                   </Text>
