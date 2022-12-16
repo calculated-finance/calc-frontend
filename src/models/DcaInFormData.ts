@@ -1,4 +1,3 @@
-import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
 import AutoStakeValues from 'src/models/AutoStakeValues';
 import SendToWalletValues from 'src/models/SendToWalletValues';
@@ -10,7 +9,6 @@ import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
-import { isNaN } from 'lodash';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 
@@ -133,6 +131,13 @@ export const allValidationSchema = Yup.object({
     .label('Swap Amount')
     .required()
     .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    })
+
     .test({
       name: 'less-than-deposit',
       message: 'Swap amount must be less than initial deposit',
