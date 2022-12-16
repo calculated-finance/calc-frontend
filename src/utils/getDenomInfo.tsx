@@ -2,7 +2,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
-import { CHAIN_ID, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
+import { CHAIN_ID, featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 
 type DenomInfo = {
@@ -46,6 +46,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
+    promotion: featureFlags.uskPromoEnabled ? (
+      <Flex gap={2}>
+        <Text fontSize="xs">Fee-free USK for 30 days. </Text>
+        <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+          <Icon as={QuestionOutlineIcon} />
+        </Tooltip>
+      </Flex>
+    ) : undefined,
   },
   [MainnetDenoms.Kuji]: {
     name: 'KUJI',
@@ -66,8 +74,8 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     stable: false,
     coingeckoId: 'weth',
-    conversion: (value: number) => value / (10 ** 18),
-    deconversion: (value: number) =>  Math.round(value * 10 ** 18),
+    conversion: (value: number) => value / 10 ** 18,
+    deconversion: (value: number) => Math.round(value * 10 ** 18),
     enabled: false,
     minimumSwapAmount: 0.05 / 1000,
   },
@@ -85,14 +93,14 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
-    promotion: (
+    promotion: featureFlags.uskPromoEnabled ? (
       <Flex gap={2}>
         <Text fontSize="xs">Fee-free USK for 30 days. </Text>
         <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
           <Icon as={QuestionOutlineIcon} />
         </Tooltip>
       </Flex>
-    ),
+    ) : undefined,
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
@@ -157,11 +165,9 @@ export class DenomValue {
 
   toConverted() {
     const { conversion } = getDenomInfo(this.denomId);
-    return parseFloat((conversion(this.amount)).toFixed(6));
+    return parseFloat(conversion(this.amount).toFixed(6));
   }
 }
-
-
 
 export function isDenomStable(denom: Denom) {
   return getDenomInfo(denom).stable;
