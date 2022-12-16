@@ -26,7 +26,15 @@ import {
 } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 
-function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
+function FeeBreakdown({
+  initialDenomName,
+  swapAmount,
+  price,
+}: {
+  initialDenomName: string;
+  swapAmount: number;
+  price: number;
+}) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
     <Stack position="relative" spacing={1}>
@@ -56,19 +64,18 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
         </Fade>
 
         <Collapse in={isOpen}>
-          <Flex flexDirection="row" px={2} pb={4} mt={0} gap={6}>
+          <Flex flexDirection="row" px={2} pb={4} mt={0} gap={3}>
             <Flex flexGrow={1} flexDirection="column">
               <Heading size="xs">Once off</Heading>
               <Stack spacing={0}>
                 <Flex>
-                  <Text textStyle="body-xs">Gas:</Text>
-                  <Spacer />
-                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
-                </Flex>
-                <Flex>
                   <Text textStyle="body-xs">Transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
+                  <Text textStyle="body-xs">
+                    {' '}
+                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                    {initialDenomName}
+                  </Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Kado on-ramp fees:</Text>
@@ -81,7 +88,8 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    0.0 {initialDenomName}
+                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                    {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -92,17 +100,21 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
                 <Flex>
                   <Text textStyle="body-xs">CALC sustainability tax:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
+                  <Text textStyle="body-xs">
+                    {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
+                  </Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
+                  <Text textStyle="body-xs">Free</Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">FIN transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">0.0 {initialDenomName}</Text>
+                  <Text textStyle="body-xs">
+                    {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
+                  </Text>
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs" textColor="white">
@@ -110,7 +122,7 @@ function FeeBreakdown({ initialDenomName }: { initialDenomName: string }) {
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    0.0 {initialDenomName}
+                    {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -159,7 +171,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 
-      {/* <FeeBreakdown initialDenomName={initialDenomName} /> */}
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} />
     </Stack>
   );
 }
