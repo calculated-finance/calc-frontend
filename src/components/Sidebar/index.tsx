@@ -24,18 +24,8 @@ import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import { Swap2Icon } from '@fusion-icons/react/web3';
-
-// based on linkitems href values
-export enum Pages {
-  Home = '/',
-  Strategies = '/strategies/',
-  CreateStrategy = '/create-strategy/',
-  GetAssets = '/bridge-assets/',
-  // Settings = '/settings/',
-  HowItWorks = '/how-it-works/',
-  // Performance = '/performance/',
-}
+import Banner from '@components/Banner';
+import { Pages } from './Pages';
 
 interface LinkItem {
   name: string;
@@ -192,6 +182,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'navy')}>
+      <Banner />
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}

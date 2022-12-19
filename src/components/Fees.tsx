@@ -30,10 +30,12 @@ function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
+  applyPromo,
 }: {
   initialDenomName: string;
   swapAmount: number;
   price: number;
+  applyPromo: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
@@ -95,9 +97,15 @@ function FeeBreakdown({
                 <Flex>
                   <Text textStyle="body-xs">CALC sustainability tax:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
-                  </Text>
+                  {applyPromo ? (
+                    <Text color="blue.200" textStyle="body-xs">
+                      Free
+                    </Text>
+                  ) : (
+                    <Text textStyle="body-xs">
+                      {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
+                    </Text>
+                  )}
                 </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
@@ -117,7 +125,7 @@ function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
+                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + FIN_TAKER_FEE)} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -144,6 +152,8 @@ export default function Fees({ formName }: { formName: FormNames }) {
   const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
   const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
 
+  const applyPromo = initialDenomPromotion || resultingDenomPromotion;
+
   return (
     <Stack spacing={0}>
       <Text textStyle="body-xs">
@@ -152,10 +162,10 @@ export default function Fees({ formName }: { formName: FormNames }) {
           {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
-        {initialDenomPromotion || resultingDenomPromotion ? (
+        {applyPromo ? (
           <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
             <Text as="span" textColor="blue.200">
-              {getPrettyFee(swapAmount, 0)} {initialDenomName}
+              {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
             </Text>
           </Tooltip>
         ) : (
@@ -166,7 +176,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo />
     </Stack>
   );
 }
