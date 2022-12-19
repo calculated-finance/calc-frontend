@@ -147,7 +147,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
   const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
   const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
 
-  const applyPromo = initialDenomPromotion || resultingDenomPromotion;
+  const applyPromo = Boolean(initialDenomPromotion) || Boolean(resultingDenomPromotion);
 
   return (
     <Stack spacing={0}>
@@ -171,7 +171,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo={applyPromo} />
     </Stack>
   );
 }
