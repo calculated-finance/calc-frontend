@@ -17,7 +17,7 @@ import {
   Alert,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { Pages } from '@components/Sidebar';
+import { Pages } from '@components/Sidebar/Pages';
 import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -32,7 +32,6 @@ import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getSidebarLayout } from '../components/Layout';
 import TopPanel from '../components/TopPanel';
-import StrategyUrls from './create-strategy/StrategyUrls';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -248,7 +247,6 @@ function Home() {
           strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <Promo />
 
       <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
         <TopPanel />

@@ -36,7 +36,7 @@ export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
 
 export const FEE_FREE_USK_PROMO_DESCRIPTION =
-  'As a promo for CALC and USK, we are removing swap fees for any USK strategy. Use CALC FEE FREE for 30 days!';
+  '🎉 Hello USK and goodbye CALC swap fees! No CALC swap fees for any USK strategy. Just pay the FIN swap fees and a small deposit fee to take advantage of this very bearish market.';
 
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'

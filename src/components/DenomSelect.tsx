@@ -29,9 +29,7 @@ function DenomOption({
       <Flex alignItems="center" w="full">
         {children}
         <Spacer />
-        {showPromotion && promotion && !rightLabel && (
-          <Badge colorScheme={isSelected ? 'abyss' : 'blue'}>0% fees</Badge>
-        )}
+        {showPromotion && promotion && !rightLabel && <Badge colorScheme={isSelected ? 'abyss' : 'blue'}>PROMO</Badge>}
         {rightLabel && <Text fontSize="xs">{rightLabel}</Text>}
       </Flex>
     </chakraComponents.Option>
