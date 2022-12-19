@@ -17,14 +17,9 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import {
-  CREATE_VAULT_FEE,
-  DELEGATION_FEE,
-  FEE_FREE_USK_PROMO_DESCRIPTION,
-  FIN_TAKER_FEE,
-  SWAP_FEE,
-} from 'src/constants';
+import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { getPromoMessage } from './Banner';
 
 function FeeBreakdown({
   initialDenomName,
@@ -163,7 +158,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         </Text>{' '}
         +{' '}
         {applyPromo ? (
-          <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+          <Tooltip label={getPromoMessage()}>
             <Text as="span" textColor="blue.200">
               {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
             </Text>

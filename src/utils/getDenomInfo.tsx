@@ -1,8 +1,9 @@
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
+import { getPromoMessage } from '@components/Banner';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { NETWORK } from 'kujira.js';
-import { CHAIN_ID, featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
+import { CHAIN_ID, featureFlags } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 
 type DenomInfo = {
@@ -49,7 +50,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     promotion: featureFlags.uskPromoEnabled ? (
       <Flex gap={2}>
         <Text fontSize="xs">Fee-free USK for 30 days. </Text>
-        <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+        <Tooltip label={getPromoMessage()}>
           <Icon as={QuestionOutlineIcon} />
         </Tooltip>
       </Flex>
@@ -96,7 +97,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     promotion: featureFlags.uskPromoEnabled ? (
       <Flex gap={2}>
         <Text fontSize="xs">Fee-free USK for 30 days. </Text>
-        <Tooltip label={FEE_FREE_USK_PROMO_DESCRIPTION}>
+        <Tooltip label={getPromoMessage()}>
           <Icon as={QuestionOutlineIcon} />
         </Tooltip>
       </Flex>
