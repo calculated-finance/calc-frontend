@@ -213,24 +213,6 @@ function WorkflowInformation() {
   );
 }
 
-function Promo() {
-  return featureFlags.uskPromoEnabled ? (
-    <Alert mb={8} borderColor="blue.200" color="blue.200" borderWidth={2}>
-      <Stack direction={['column', null, null, 'row']} w="full">
-        <Text>🎉{FEE_FREE_USK_PROMO_DESCRIPTION}</Text>
-        <Spacer />
-        <Flex>
-          <Link href={Pages.CreateStrategy}>
-            <Button w="full" variant="outline" colorScheme="blue">
-              Create a strategy
-            </Button>
-          </Link>
-        </Flex>
-      </Stack>
-    </Alert>
-  ) : null;
-}
-
 function Home() {
   const { connected } = useWallet();
 

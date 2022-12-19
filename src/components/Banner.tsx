@@ -3,7 +3,7 @@ import { useSize } from 'ahooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
+import { featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { Pages } from './Sidebar/Pages';
 
 export default function Banner() {
@@ -15,9 +15,8 @@ export default function Banner() {
   const daysLeft = Math.floor((endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
   const ref = React.useRef(null);
   const { height } = useSize(ref) || {};
-  console.log(height);
 
-  return (
+  return featureFlags.uskPromoEnabled ? (
     <Box h={`${height}px`}>
       <Box
         py={{ base: '4', md: '2.5' }}
@@ -53,5 +52,5 @@ export default function Banner() {
         </Box>
       </Box>
     </Box>
-  );
+  ) : null;
 }
