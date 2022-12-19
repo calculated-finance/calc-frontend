@@ -63,17 +63,20 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
+        const { priceDeconversion } = getDenomInfo(resultingDenom);
+        const convertedPrice = priceDeconversion(Number(targetPrice));
+
         if (getStrategyType(strategy) === StrategyTypes.DCAIn) {
           nextSwapInfo = (
             <>
-              When price hits 1 {getDenomInfo(resultingDenom).name} &le; {Number(targetPrice)}{' '}
+              When price hits 1 {getDenomInfo(resultingDenom).name} &le; {convertedPrice}{' '}
               {getDenomInfo(initialDenom).name}
             </>
           );
         } else {
           nextSwapInfo = (
             <>
-              When price hits 1 {getDenomInfo(initialDenom).name} &ge; {Number(targetPrice)}{' '}
+              When price hits 1 {getDenomInfo(initialDenom).name} &ge; {convertedPrice}{' '}
               {getDenomInfo(resultingDenom).name}
             </>
           );

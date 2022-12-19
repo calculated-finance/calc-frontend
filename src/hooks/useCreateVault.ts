@@ -47,10 +47,11 @@ function getReceiveAmount(
   }
 
   if (transactionType === TransactionType.Buy) {
-    return deconversion(swapAmount / price).toString();
+    return deconversion(Number((swapAmount / price).toFixed(2))).toString();
   }
   return deconversion(swapAmount * price).toString();
 }
+
 
 function getCreateVaultExecuteMsg(
   state: DcaInFormDataAll,
@@ -84,7 +85,10 @@ function getCreateVaultExecuteMsg(
     throw new Error('Pair not found');
   }
 
+  // 1000000 / (769230769230769 ) = 129.87012987012987
+
   const { deconversion } = getDenomInfo(initialDenom);
+  const { priceConversion } = getDenomInfo(resultingDenom);
 
   let startTimeSeconds;
 
@@ -103,8 +107,13 @@ function getCreateVaultExecuteMsg(
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
-  const minimumReceiveAmount = getReceiveAmount(priceThresholdValue, deconversion, swapAmount, transactionType);
-  const targetReceiveAmount = getReceiveAmount(startPrice, deconversion, swapAmount, transactionType);
+  const minimumReceiveAmount = getReceiveAmount(
+    priceConversion(priceThresholdValue),
+    deconversion,
+    swapAmount,
+    transactionType,
+  );
+  const targetReceiveAmount = getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
   const createVaultExecuteMsg = {
     create_vault: {
       label: '',
@@ -122,6 +131,8 @@ function getCreateVaultExecuteMsg(
     },
   } as ExecuteMsg;
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
+
+  console.log(createVaultExecuteMsg);
 
   const raw = JSON.stringify(createVaultExecuteMsg);
   const textEncoder = new TextEncoder();
