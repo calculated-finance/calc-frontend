@@ -25,6 +25,7 @@ import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Banner from '@components/Banner';
+import { featureFlags } from 'src/constants';
 import { Pages } from './Pages';
 
 interface LinkItem {
@@ -106,7 +107,11 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
         <Link href="/">
-          <Image cursor="pointer" src="/images/logo.svg" />
+          <Image
+            h={5}
+            cursor="pointer"
+            src={featureFlags.festiveLogoEnabled ? 'images/festiveLogo.svg' : '/images/logo.svg'}
+          />
         </Link>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
@@ -141,7 +146,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     >
       <Flex w="full" pb={8} alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
-          <Image src="/images/logo.svg" />
+          <Image h={5} src={featureFlags.festiveLogoEnabled ? 'images/festiveLogo.svg' : '/images/logo.svg'} />
         </Text>
         <Spacer />
         <CosmosWalletButton />

@@ -19,6 +19,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { featureFlags } from 'src/constants';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 
@@ -43,7 +44,11 @@ function AppHeader() {
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <Link href="/">
-        <Image cursor="pointer" src="/images/logo.svg" />
+        <Image
+          h={5}
+          cursor="pointer"
+          src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'}
+        />
       </Link>
       <Spacer />
       <CosmosWallet />

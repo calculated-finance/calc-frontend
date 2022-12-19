@@ -42,9 +42,11 @@ export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
         uskPromoEnabled: false,
+        festiveLogoEnabled: false,
       }
     : {
         uskPromoEnabled: true,
+        festiveLogoEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
