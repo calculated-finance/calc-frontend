@@ -12,12 +12,9 @@ import {
   HStack,
   Divider,
   Wrap,
-  Spacer,
   ButtonGroup,
-  Alert,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { Pages } from '@components/Sidebar/Pages';
 import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -26,7 +23,6 @@ import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
-import { featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
