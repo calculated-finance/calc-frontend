@@ -9,12 +9,16 @@ import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   {
-    value: AutoStakeValues.Yes,
-    label: 'Yes',
+    value: AutoStakeValues.No,
+    label: 'Send to this wallet',
   },
   {
     value: AutoStakeValues.No,
-    label: 'No',
+    label: 'Send to another wallet',
+  },
+  {
+    value: AutoStakeValues.Yes,
+    label: 'Autostaking',
   },
 ];
 
@@ -33,11 +37,13 @@ export function DummyAutoStake({
   });
 
   return (
-    <FormControl>
-      <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
-      <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
-      <HStack>
-        <Radio {...getRootProps}>
+    <FormControl w="full">
+      <FormLabel>
+        What do you want CALC to do with your {getDenomInfo(context?.resultingDenom).name} after the swap?
+      </FormLabel>
+
+      <HStack w="full">
+        <Radio {...getRootProps} w="full">
           {autoStakeData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
@@ -66,10 +72,11 @@ export function AutoStake() {
 
   return (
     <FormControl isDisabled={sendToWalletField.value === SendToWalletValues.No}>
-      <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
-      <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
+      <FormLabel>
+        What do you want CALC to do with your {getDenomInfo(context?.resultingDenom).name} after the swap?
+      </FormLabel>
       <HStack>
-        <Radio {...getRootProps}>
+        <Radio {...getRootProps} w="full">
           {autoStakeData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
