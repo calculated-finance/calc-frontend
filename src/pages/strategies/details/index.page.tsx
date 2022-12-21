@@ -29,6 +29,7 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
+import { RefundMessageModal } from '@components/RefundMessageModal';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
@@ -77,6 +78,7 @@ function Page() {
   const { data: eventsData } = useStrategyEvents(id as string);
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
+  const { isOpen: isRefundModalOpen, onClose: onRefundModalClose } = useDisclosure({ defaultIsOpen: true });
 
   const { connected } = useWallet();
 
@@ -128,6 +130,7 @@ function Page() {
         <StrategyPerformance strategy={data.vault} />
         <StrategyChart strategy={data.vault} />
       </Grid>
+      <RefundMessageModal isOpen={isRefundModalOpen} onClose={onRefundModalClose} />
     </>
   );
 }
