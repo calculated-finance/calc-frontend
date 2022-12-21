@@ -83,7 +83,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     deconversion: (value: number) => Math.round(value * 10 ** 18),
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
-    enabled: false,
+    enabled: true,
     minimumSwapAmount: 0.05 / 1000,
   },
 };
