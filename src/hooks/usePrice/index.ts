@@ -82,7 +82,6 @@ export default function usePrice(
           limit: 1,
         },
       });
-      console.log(result);
       return result;
     },
     {

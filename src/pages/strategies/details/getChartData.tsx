@@ -100,7 +100,7 @@ export function getChartDataSwaps(
       date,
       price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
-        ? `Received ${event.swapAmount.toFixed(4)} ${event.swapDenom} at ${date.toLocaleTimeString()}`
+        ? `Received ${Number(event.swapAmount.toFixed(4))} ${event.swapDenom} at ${date.toLocaleTimeString()}`
         : undefined,
     };
   });

@@ -84,8 +84,6 @@ function getCreateVaultExecuteMsg(
     throw new Error('Pair not found');
   }
 
-  // 1000000 / (769230769230769 ) = 129.87012987012987
-
   const { deconversion } = getDenomInfo(initialDenom);
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
@@ -131,8 +129,6 @@ function getCreateVaultExecuteMsg(
     },
   } as ExecuteMsg;
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
-
-  console.log(createVaultExecuteMsg);
 
   const raw = JSON.stringify(createVaultExecuteMsg);
   const textEncoder = new TextEncoder();
