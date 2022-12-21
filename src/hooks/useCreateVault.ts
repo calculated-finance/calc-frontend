@@ -52,7 +52,6 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
-
 function getCreateVaultExecuteMsg(
   state: DcaInFormDataAll,
   pairs: Pair[],
@@ -88,7 +87,8 @@ function getCreateVaultExecuteMsg(
   // 1000000 / (769230769230769 ) = 129.87012987012987
 
   const { deconversion } = getDenomInfo(initialDenom);
-  const { priceConversion } = getDenomInfo(resultingDenom);
+  const { priceConversion } =
+    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
   let startTimeSeconds;
 
