@@ -45,7 +45,7 @@ function getEventsWithAccumulation(completedEvents: Event[]) {
       totalAmount += Number(amount);
       return {
         time: new Date(Number(event.timestamp) / 1000000),
-        accumulation: parseFloat(totalAmount.toFixed(2)),
+        accumulation: totalAmount,
         swapAmount: amount,
         swapDenom: name,
       };
@@ -100,7 +100,7 @@ export function getChartDataSwaps(
       date,
       price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
-        ? `Received ${event.swapAmount} ${event.swapDenom} at ${date.toLocaleTimeString()}`
+        ? `Received ${Number(event.swapAmount.toFixed(4))} ${event.swapDenom} at ${date.toLocaleTimeString()}`
         : undefined,
     };
   });

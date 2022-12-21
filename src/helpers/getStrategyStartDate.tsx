@@ -9,16 +9,17 @@ import { getStrategyType } from './getStrategyType';
 export function getStrategyStartDate(strategy: Strategy) {
   const { trigger } = strategy;
   if (trigger && 'fin_limit_order' in trigger) {
+    const { priceDeconversion } =
+      getStrategyType(strategy) === StrategyTypes.DCAIn
+        ? getDenomInfo(getStrategyResultingDenom(strategy))
+        : getDenomInfo(getStrategyInitialDenom(strategy));
+    const price = Number(priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(3));
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     if (getStrategyType(strategy) === StrategyTypes.DCAIn) {
-      return `When ${getDenomInfo(resultingDenom).name} hits ${trigger.fin_limit_order.target_price} ${
-        getDenomInfo(initialDenom).name
-      }`;
+      return `When ${getDenomInfo(resultingDenom).name} hits ${price} ${getDenomInfo(initialDenom).name}`;
     }
-    return `When ${getDenomInfo(initialDenom).name} hits ${trigger.fin_limit_order.target_price} ${
-      getDenomInfo(resultingDenom).name
-    }`;
+    return `When ${getDenomInfo(initialDenom).name} hits ${price} ${getDenomInfo(resultingDenom).name}`;
   }
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger && trigger.time.target_time) {

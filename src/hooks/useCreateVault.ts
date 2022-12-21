@@ -47,7 +47,7 @@ function getReceiveAmount(
   }
 
   if (transactionType === TransactionType.Buy) {
-    return deconversion(swapAmount / price).toString();
+    return deconversion(Number((swapAmount / price).toFixed(2))).toString();
   }
   return deconversion(swapAmount * price).toString();
 }
@@ -85,6 +85,8 @@ function getCreateVaultExecuteMsg(
   }
 
   const { deconversion } = getDenomInfo(initialDenom);
+  const { priceConversion } =
+    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
   let startTimeSeconds;
 
@@ -103,8 +105,13 @@ function getCreateVaultExecuteMsg(
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
-  const minimumReceiveAmount = getReceiveAmount(priceThresholdValue, deconversion, swapAmount, transactionType);
-  const targetReceiveAmount = getReceiveAmount(startPrice, deconversion, swapAmount, transactionType);
+  const minimumReceiveAmount = getReceiveAmount(
+    priceConversion(priceThresholdValue),
+    deconversion,
+    swapAmount,
+    transactionType,
+  );
+  const targetReceiveAmount = getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
   const createVaultExecuteMsg = {
     create_vault: {
       label: '',
