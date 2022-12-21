@@ -86,6 +86,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     enabled: true,
     minimumSwapAmount: 0.05 / 1000,
   },
+  [MainnetDenoms.Stars]: {
+    name: 'STARS',
+    icon: '/images/denoms/stars.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'stargaze',
+    enabled: false,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
