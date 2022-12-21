@@ -63,7 +63,8 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceDeconversion } = getDenomInfo(resultingDenom);
+        const { priceDeconversion } =
+          getStrategyType(strategy) === StrategyTypes.DCAIn ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
         const convertedPrice = priceDeconversion(Number(targetPrice)).toFixed(3);
 
         if (getStrategyType(strategy) === StrategyTypes.DCAIn) {

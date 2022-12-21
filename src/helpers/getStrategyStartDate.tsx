@@ -9,8 +9,11 @@ import { getStrategyType } from './getStrategyType';
 export function getStrategyStartDate(strategy: Strategy) {
   const { trigger } = strategy;
   if (trigger && 'fin_limit_order' in trigger) {
-    const { priceDeconversion } = getDenomInfo(getStrategyResultingDenom(strategy));
-    const price = priceDeconversion(Number(trigger.fin_limit_order.target_price));
+    const { priceDeconversion } =
+      getStrategyType(strategy) === StrategyTypes.DCAIn
+        ? getDenomInfo(getStrategyResultingDenom(strategy))
+        : getDenomInfo(getStrategyInitialDenom(strategy));
+    const price = priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(3);
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     if (getStrategyType(strategy) === StrategyTypes.DCAIn) {
