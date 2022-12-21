@@ -110,7 +110,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
           <Image
             h={6}
             cursor="pointer"
-            src={featureFlags.festiveLogoEnabled ? 'images/festiveLogo.svg' : '/images/logo.svg'}
+            src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'}
           />
         </Link>
 
@@ -146,7 +146,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     >
       <Flex w="full" pb={8} alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
-          <Image h={6} src={featureFlags.festiveLogoEnabled ? 'images/festiveLogo.svg' : '/images/logo.svg'} />
+          <Image h={6} src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'} />
         </Text>
         <Spacer />
         <CosmosWalletButton />
