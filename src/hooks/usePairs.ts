@@ -7,7 +7,7 @@ import { Denom } from '../models/Denom';
 import { Pair } from '../models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
-const hiddenPairs = ['kujira17w9r23r8v8r7z5lphwj99296fhlye9ej5nq3hlqw554u63m88avspdl9tc'];
+const hiddenPairs = [] as string[];
 
 function isSupportedDenom(denom: Denom) {
   return SUPPORTED_DENOMS.includes(denom);
@@ -22,9 +22,9 @@ function orderAlphabetically(denoms: Denom[]) {
 }
 
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
-  return orderAlphabetically(Array.from(new Set(pairs?.map((pair) => pair.quote_denom))).filter((denom) =>
-    SUPPORTED_DENOMS.includes(denom),
-  ));
+  return orderAlphabetically(
+    Array.from(new Set(pairs?.map((pair) => pair.quote_denom))).filter((denom) => SUPPORTED_DENOMS.includes(denom)),
+  );
 }
 
 export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
@@ -32,15 +32,19 @@ export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
 }
 
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[] | undefined) {
-  return orderAlphabetically(Array.from(
-    new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)),
-  ).filter(isSupportedDenom));
+  return orderAlphabetically(
+    Array.from(
+      new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)),
+    ).filter(isSupportedDenom),
+  );
 }
 
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pair[] | undefined) {
-  return orderAlphabetically(Array.from(
-    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
-  ).filter(isSupportedDenom));
+  return orderAlphabetically(
+    Array.from(
+      new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
+    ).filter(isSupportedDenom),
+  );
 }
 
 export default function usePairs() {
@@ -62,6 +66,6 @@ export default function usePairs() {
     ...queryResult,
     data: {
       pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
-    }
-  }
+    },
+  };
 }
