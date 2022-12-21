@@ -20,5 +20,5 @@ export function getPriceCeilingFloor(strategy: Vault) {
       ? parseFloat(strategy.swap_amount) / parseFloat(strategy.minimum_receive_amount)
       : parseFloat(strategy.minimum_receive_amount) / parseFloat(strategy.swap_amount);
 
-  return priceDeconversion(price).toFixed(3);
+  return Number(priceDeconversion(price).toFixed(3));
 }

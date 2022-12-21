@@ -75,14 +75,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
           <Text textTransform="capitalize" as="span">
             {strategy.time_interval}
           </Text>
-          : {getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount))} {getDenomInfo(initialDenom).name}
+          : {Number(getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount)).toFixed(6))}{' '}
+          {getDenomInfo(initialDenom).name}
         </Text>
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm">Balance:</Text>
         <Text textStyle="body-xs">
-          {getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount))}{' '}
+          {Number(getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount)).toFixed(6))}{' '}
           {getDenomInfo(strategy.balance.denom).name}
         </Text>
       </GridItem>
