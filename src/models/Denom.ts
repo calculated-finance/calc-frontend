@@ -1,4 +1,5 @@
 import { Coin } from '@cosmjs/stargate';
+import { isMainnet } from '@utils/isMainnet';
 
 export type Denom = Coin['denom'];
 
@@ -17,5 +18,6 @@ export enum MainnetDenoms {
   AXL = 'ibc/295548A78785A1007F232DE286149A6FF512F180AF5657780FC89C009E2C348F',
   USK = 'factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk',
   ATOM = 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
-  WETH = 'ibc/1B38805B1C75352B28169284F96DF56BDEBD9E8FAC005BDCC8CF0378C82AA8E7'
+  WETH = 'ibc/1B38805B1C75352B28169284F96DF56BDEBD9E8FAC005BDCC8CF0378C82AA8E7',
 }
+export const Denoms = isMainnet() ? MainnetDenoms : TestnetDenoms;

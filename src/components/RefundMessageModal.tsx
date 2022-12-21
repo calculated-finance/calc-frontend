@@ -8,13 +8,32 @@ import {
   ModalProps,
   Stack,
   Button,
+  useDisclosure,
 } from '@chakra-ui/react';
+import { useCookieState } from 'ahooks';
 
 export type TermsModalProps = Omit<ModalProps, 'children'>;
 
-export function RefundMessageModal({ isOpen, onClose }: TermsModalProps) {
+export function RefundMessageModal() {
+  const { isOpen: isRefundModalOpen, onClose: onRefundModalClose } = useDisclosure({ defaultIsOpen: true });
+
+  //  create date one year from now
+  const oneYearFromNow = new Date();
+  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+
+  const [refundMessageSeen, setRefundMessageSeen] = useCookieState('refundMessageSeen', {
+    expires: oneYearFromNow,
+  });
+
+  const isRefundMessageSeen = refundMessageSeen === 'true';
+
+  const handleAcknowledgement = () => {
+    setRefundMessageSeen('true');
+    onRefundModalClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
+    <Modal isOpen={isRefundModalOpen && !isRefundMessageSeen} onClose={onRefundModalClose} autoFocus={false}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Important information</ModalHeader>
@@ -32,7 +51,7 @@ export function RefundMessageModal({ isOpen, onClose }: TermsModalProps) {
               <Text textStyle="body">No action from you required.</Text>
             </Stack>
 
-            <Button onClick={onClose} colorScheme="brand">
+            <Button onClick={handleAcknowledgement} colorScheme="brand">
               Ok
             </Button>
           </Stack>

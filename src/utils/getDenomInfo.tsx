@@ -2,9 +2,9 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { getPromoMessage } from '@components/Banner';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
-import { NETWORK } from 'kujira.js';
-import { CHAIN_ID, featureFlags } from 'src/constants';
+import { featureFlags } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
+import { isMainnet } from './isMainnet';
 
 type DenomInfo = {
   name: string;
@@ -138,10 +138,6 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     coingeckoId: 'bitcoin',
   },
 };
-
-export function isMainnet() {
-  return (CHAIN_ID as NETWORK) === 'kaiyo-1';
-}
 
 const getDenomInfo = (denom?: string) => {
   if (!denom) {
