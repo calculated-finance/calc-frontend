@@ -30,6 +30,9 @@ import {
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
 import { RefundMessageModal } from '@components/RefundMessageModal';
+import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
+import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
+import { Denoms, MainnetDenoms } from 'src/models/Denom';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
@@ -78,7 +81,6 @@ function Page() {
   const { data: eventsData } = useStrategyEvents(id as string);
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
-  const { isOpen: isRefundModalOpen, onClose: onRefundModalClose } = useDisclosure({ defaultIsOpen: true });
 
   const { connected } = useWallet();
 
@@ -96,6 +98,12 @@ function Page() {
     );
   }
   const lastSwapSlippageError = getLatestSwapError(data.vault, events);
+
+  // refund message applies unless initital denom is usdc and resulting denom is kuji
+  const shouldShowRefundMessage = !(
+    (getStrategyInitialDenom(data.vault) === Denoms.AXL && getStrategyResultingDenom(data.vault) === Denoms.Kuji) ||
+    (getStrategyResultingDenom(data.vault) === Denoms.AXL && getStrategyInitialDenom(data.vault) === Denoms.Kuji)
+  );
 
   return (
     <>
@@ -130,7 +138,7 @@ function Page() {
         <StrategyPerformance strategy={data.vault} />
         <StrategyChart strategy={data.vault} />
       </Grid>
-      <RefundMessageModal isOpen={isRefundModalOpen} onClose={onRefundModalClose} />
+      {shouldShowRefundMessage && <RefundMessageModal />}
     </>
   );
 }
