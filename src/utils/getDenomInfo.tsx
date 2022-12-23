@@ -92,7 +92,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     stable: false,
     coingeckoId: 'stargaze',
-    enabled: false,
+    enabled: true,
   },
   [MainnetDenoms.SCRT]: {
     name: 'SCRT',
