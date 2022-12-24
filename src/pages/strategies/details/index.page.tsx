@@ -32,7 +32,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { RefundMessageModal } from '@components/RefundMessageModal';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { Denoms, MainnetDenoms } from 'src/models/Denom';
+import { Denoms } from 'src/models/Denom';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';

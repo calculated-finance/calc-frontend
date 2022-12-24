@@ -1,9 +1,9 @@
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { mainnetDenoms } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
-import { Denom } from '../models/Denom';
+import { Denom, MainnetDenoms } from '../models/Denom';
 import { Pair } from '../models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
@@ -34,7 +34,15 @@ export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[] | undefined) {
   return orderAlphabetically(
     Array.from(
-      new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)),
+      new Set(pairs?.filter((pair) => {
+
+        // disable DCA in from axlUSDC to KUJI
+        if (initialDenom === MainnetDenoms.AXL && pair.base_denom === MainnetDenoms.Kuji) {
+          return false;
+        }
+
+        return pair.quote_denom === initialDenom
+      }).map((pair) => pair.base_denom)),
     ).filter(isSupportedDenom),
   );
 }
@@ -42,7 +50,15 @@ export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pair[] | undefined) {
   return orderAlphabetically(
     Array.from(
-      new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
+      new Set(pairs?.filter((pair) => { 
+
+        // disable DCA out from KUJI to axlUSDC
+        if (resultingDenom === MainnetDenoms.Kuji && pair.quote_denom === MainnetDenoms.AXL) {
+          return false
+        }
+      
+        return pair.base_denom === resultingDenom
+      }).map((pair) => pair.quote_denom)),
     ).filter(isSupportedDenom),
   );
 }
