@@ -33,6 +33,7 @@ import { RefundMessageModal } from '@components/RefundMessageModal';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { Denoms, MainnetDenoms } from 'src/models/Denom';
+import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
@@ -105,6 +106,8 @@ function Page() {
     (getStrategyResultingDenom(data.vault) === Denoms.AXL && getStrategyInitialDenom(data.vault) === Denoms.Kuji)
   );
 
+  const showInvertedEventMessage = !shouldShowRefundMessage;
+
   return (
     <>
       <HStack spacing={6} pb={6}>
@@ -139,6 +142,7 @@ function Page() {
         <StrategyChart strategy={data.vault} />
       </Grid>
       {shouldShowRefundMessage && <RefundMessageModal />}
+      {showInvertedEventMessage && <InvertedEventMessageModal />}
     </>
   );
 }
