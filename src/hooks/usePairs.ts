@@ -7,7 +7,7 @@ import { Denom } from '../models/Denom';
 import { Pair } from '../models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
-const hiddenPairs = [] as string[];
+const hiddenPairs = ['kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867'] as string[];
 
 function isSupportedDenom(denom: Denom) {
   return SUPPORTED_DENOMS.includes(denom);
