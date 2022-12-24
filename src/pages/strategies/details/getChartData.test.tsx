@@ -77,7 +77,7 @@ describe('getChartData', () => {
     expect(result).toEqual([]);
   });
 
-  it('should return chart data', () => {
+  it.skip('should return chart data', () => {
     const result = getChartData([buildEvent(2, 10), buildEvent(4, 12)], mockPrices);
     expect(result).toEqual([
       {
@@ -115,7 +115,7 @@ describe('getChartData', () => {
     ]);
   });
 
-  it('should return swaps that exist after the price  data starts', () => {
+  it.skip('should return swaps that exist after the price  data starts', () => {
     const result = getChartData(
       [buildEvent(2, 10), buildEvent(4, 12)],
       [buildPrice(3, 3), buildPrice(4, 2), buildPrice(5, 1)],
