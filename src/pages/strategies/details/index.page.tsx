@@ -29,7 +29,6 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
-import { RefundMessageModal } from '@components/RefundMessageModal';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { Denoms, MainnetDenoms } from 'src/models/Denom';
@@ -141,7 +140,6 @@ function Page() {
         <StrategyPerformance strategy={data.vault} />
         <StrategyChart strategy={data.vault} />
       </Grid>
-      {shouldShowRefundMessage && <RefundMessageModal />}
       {showInvertedEventMessage && <InvertedEventMessageModal />}
     </>
   );
