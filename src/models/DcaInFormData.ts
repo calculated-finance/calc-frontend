@@ -100,7 +100,8 @@ export const allValidationSchema = Yup.object({
     })
     .test({
       name: 'price-unsupported',
-      message: 'Price triggers are not supported for wETH strategies. We are working on a fix to resolve this.',
+      message:
+        'Price triggers are currently not supported for wETH strategies. These will be available on Jan 1st 2023.',
       test(value, context) {
         if (!value) {
           return true;
@@ -210,7 +211,8 @@ export const allValidationSchema = Yup.object({
     })
     .test({
       name: 'price-unsupported',
-      message: 'Price thresholds are not supported for wETH strategies. We are working on resolving this.',
+      message:
+        'Price thresholds are currently not supported for wETH strategies. These will be available on Jan 1st 2023.',
       test(value, context) {
         if (!value) {
           return true;
