@@ -94,6 +94,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'stargaze',
     enabled: false,
   },
+  [MainnetDenoms.SCRT]: {
+    name: 'SCRT',
+    icon: '/images/denoms/scrt.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'secret',
+    enabled: false,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
