@@ -100,7 +100,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     stable: false,
     coingeckoId: 'secret',
-    enabled: false,
+    enabled: true,
   },
 };
 
