@@ -97,23 +97,7 @@ export const allValidationSchema = Yup.object({
         triggerType === TriggerTypes.Price && startImmediately === StartImmediatelyValues.No,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
-    })
-    .test({
-      name: 'price-unsupported',
-      message:
-        'Price triggers are currently not supported for wETH strategies. These will be available on Jan 1st 2023.',
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { initialDenom = null, resultingDenom = null } = { ...context.parent, ...context.options.context };
-        if (initialDenom === MainnetDenoms.WETH || resultingDenom === MainnetDenoms.WETH) {
-          return false;
-        }
-        return true;
-      },
     }),
-
   purchaseTime: Yup.string()
     .label('Purchase Time')
     .matches(timeFormat, {
@@ -208,21 +192,6 @@ export const allValidationSchema = Yup.object({
         advancedSettings === true && priceThresholdEnabled === YesNoValues.Yes,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
-    })
-    .test({
-      name: 'price-unsupported',
-      message:
-        'Price thresholds are currently not supported for wETH strategies. These will be available on Jan 1st 2023.',
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { initialDenom = null, resultingDenom = null } = { ...context.parent, ...context.options.context };
-        if (initialDenom === MainnetDenoms.WETH || resultingDenom === MainnetDenoms.WETH) {
-          return false;
-        }
-        return true;
-      },
     })
     .test({
       name: 'less-than-price-trigger',
