@@ -4,22 +4,20 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
-import { FormNames, useConfirmForm, useFormSchema } from 'src/hooks/useDcaInForm';
-import useCreateVault from '@hooks/useCreateVault';
+import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { TermsModal } from '@components/TermsModal';
-import { TransactionType } from '@components/TransactionType';
-import Summary from './Summary';
-import Fees from '../../../../components/Fees';
-import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
-import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 import { basketOfAssetsSteps } from '@models/DcaInFormData';
 import { useMutation } from '@tanstack/react-query';
 import { Strategy } from '@hooks/useStrategies';
 import useValidation from '@hooks/useValidation';
+import useFormSchema from 'src/hooks/useFormSchema';
+import Fees from '../../../../components/Fees';
+import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
+
 import steps from '../steps';
 
 function InvalidData() {

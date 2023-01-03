@@ -21,8 +21,11 @@ import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
 import { DenomSelect } from '@components/DenomSelect';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
-import { FiPlus, FiTrash } from 'react-icons/fi';
+import { FiPlusCircle, FiStopCircle, FiTrash } from 'react-icons/fi';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
+import { Remove1Icon, Remove2Icon } from '@fusion-icons/react/interface';
+// calc icon
+import CalcIcon from '@components/Icon';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (
@@ -93,11 +96,11 @@ function PortfolioDenom({ index }: any) {
 
   return (
     <SimpleGrid columns={2} spacing={2}>
-      <Flex>
+      <Flex align="center">
         {/* delete button */}
         {Boolean(index) && (
           <Button onClick={handleDelete} variant="ghost" colorScheme="red">
-            <Icon as={FiTrash} />
+            <CalcIcon as={Remove2Icon} stroke="red.200" />
           </Button>
         )}
         <DenomField index={index} />
@@ -134,11 +137,18 @@ export default function PortfolioDenoms() {
         {field?.value?.map((denom: any, index: number) => (
           <PortfolioDenom index={index} />
         ))}
-        <Button onClick={handleAdd} w="max-content" variant="outline" leftIcon={<Icon as={FiPlus} />}>
-          Add
+        <Button
+          alignItems="center"
+          w="min-content"
+          size="sm"
+          onClick={handleAdd}
+          variant="ghost"
+          leftIcon={<Icon as={FiPlusCircle} />}
+        >
+          Add asset
         </Button>
       </Stack>
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+      <FormErrorMessage>{meta.touched && Array.isArray(meta.error) ? meta.error[0] : meta.error}</FormErrorMessage>
     </FormControl>
   );
 }

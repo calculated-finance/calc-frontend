@@ -62,7 +62,8 @@ const portfolioDenomSchema = Yup.object({
 });
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
-export const allValidationSchema = Yup.object({
+
+export const allBasketOfAssetsValidationSchema = Yup.object({
   portfolioDenoms: Yup.array()
     .of(portfolioDenomSchema)
     .label('Portfolio Assets')
@@ -78,7 +79,10 @@ export const allValidationSchema = Yup.object({
   rebalanceMode: Yup.string().label('Rebalance Mode').required(),
   copierCharge: Yup.string(),
   basketManager: Yup.string(),
-  acceptedAgreement: Yup.boolean().oneOf([true], 'You must accept the agreement to continue'),
+  acceptedAgreement: Yup.boolean().oneOf([true], 'You must accept the terms and conditions before continuing.'),
+});
+
+export const allValidationSchema = Yup.object({
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
@@ -312,15 +316,12 @@ export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 export const step1ValidationSchema = allValidationSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
-export const basketOfAssetsStep1 = allValidationSchema.pick(['portfolioDenoms']);
-export type BasketOfAssetsStep1 = Yup.InferType<typeof basketOfAssetsStep1>;
-
 export const basketOfAssetsSteps = [
-  allValidationSchema.pick(['portfolioDenoms']),
-  allValidationSchema.pick(['portfolioName']),
-  allValidationSchema.pick(['rebalanceMode']),
-  allValidationSchema.pick(['copierCharge', 'basketManager']),
-  allValidationSchema.pick(['acceptedAgreement']),
+  allBasketOfAssetsValidationSchema.pick(['portfolioDenoms']),
+  allBasketOfAssetsValidationSchema.pick(['portfolioName']),
+  allBasketOfAssetsValidationSchema.pick(['rebalanceMode']),
+  allBasketOfAssetsValidationSchema.pick(['copierCharge', 'basketManager']),
+  allBasketOfAssetsValidationSchema.pick(['acceptedAgreement']),
 ];
 
 export const postPurchaseValidationSchema = allValidationSchema.pick([

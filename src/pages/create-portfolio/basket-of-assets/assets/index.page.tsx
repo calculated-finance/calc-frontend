@@ -1,12 +1,8 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import {
-  basketOfAssetsStep1,
-  basketOfAssetsSteps,
-  DcaInFormDataStep1,
-  step1ValidationSchema,
-} from 'src/models/DcaInFormData';
-import useDcaInForm, { FormNames, useFormSchema } from 'src/hooks/useDcaInForm';
+import { basketOfAssetsStep1, basketOfAssetsSteps, DcaInFormDataStep1 } from 'src/models/DcaInFormData';
+import { FormNames } from 'src/hooks/useDcaInForm';
+import useFormSchema from 'src/hooks/useFormSchema';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
@@ -30,7 +26,7 @@ function Page() {
 
   const { isPageLoading } = usePageLoad();
 
-  const { validate } = useValidation(basketOfAssetsStep1, { balances: data?.balances });
+  const { validate } = useValidation(basketOfAssetsSteps[0], { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

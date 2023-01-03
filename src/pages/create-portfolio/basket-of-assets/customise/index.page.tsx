@@ -1,16 +1,17 @@
-import { Box, Stack, Collapse, Center, Button, HStack, Text, Flex } from '@chakra-ui/react';
+import { Box, Stack, Center, Button, Text, Flex } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { FormNames, useFormSchema, useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
+import useFormSchema from 'src/hooks/useFormSchema';
+
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import { StrategyTypes } from '@models/StrategyTypes';
 import DenomIcon from '@components/DenomIcon';
-import { basketOfAssetsSteps, DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
+import { basketOfAssetsSteps, DcaInFormDataStep2 } from '../../../../models/DcaInFormData';
 import steps from '../steps';
 import PortfolioName from './PortfolioName';
 

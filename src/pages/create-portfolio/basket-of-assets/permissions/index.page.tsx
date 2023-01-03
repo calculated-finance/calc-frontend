@@ -1,7 +1,9 @@
 import { Box, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { basketOfAssetsSteps, DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
-import { FormNames, useFormSchema } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
+import useFormSchema from 'src/hooks/useFormSchema';
+
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';

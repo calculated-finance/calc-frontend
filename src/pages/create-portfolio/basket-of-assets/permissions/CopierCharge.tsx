@@ -1,6 +1,8 @@
 import { FormControl, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { FormNames, useFormSchema } from '@hooks/useDcaInForm';
+import { FormNames } from '@hooks/useDcaInForm';
+import useFormSchema from 'src/hooks/useFormSchema';
+
 import { basketOfAssetsSteps } from '@models/DcaInFormData';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
