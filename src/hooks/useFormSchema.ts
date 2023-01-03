@@ -1,6 +1,7 @@
 import { useStateMachine } from 'little-state-machine';
 import {
   allValidationSchema,
+  basketOfAssetsSteps,
   initialValues,
   postPurchaseValidationSchema,
   step1ValidationSchema,
@@ -32,7 +33,7 @@ function getResetAction(formName: FormNames) {
   function resetAction(state: any) {
     return {
       ...state,
-      [formName]: [initialValues],
+      [formName]: basketOfAssetsSteps[0].cast(initialValues, { stripUnknown: true }), // TODO: make generic
     };
   }
   return resetAction;
