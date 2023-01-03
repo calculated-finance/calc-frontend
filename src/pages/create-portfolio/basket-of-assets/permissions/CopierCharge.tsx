@@ -1,25 +1,30 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { FormNames, useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { FormNames, useDcaInFormPostPurchase, useFormSchema } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
+import SendToWalletValues from '@models/SendToWalletValues';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
+import AutoStakeValues from '../../../../models/AutoStakeValues';
+import { basketOfAssetsSteps } from '@models/DcaInFormData';
 
-const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
+export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   {
-    value: SendToWalletValues.No,
+    value: AutoStakeValues.Yes,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.Yes,
+    value: AutoStakeValues.No,
     label: 'No',
   },
 ];
 
-export default function SendToWallet() {
-  const [field, , helpers] = useField({ name: 'sendToWallet' });
-  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+export function CopierCharge() {
+  const [field, , helpers] = useField({ name: 'copierCharge' });
+
+  const {
+    state: [state],
+  } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 3);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -29,13 +34,10 @@ export default function SendToWallet() {
 
   return (
     <FormControl>
-      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} to a different account?</FormLabel>
-      <FormHelperText>
-        This wallet address will be the one the funds are sent to or autostaked to on your behalf.
-      </FormHelperText>
+      <FormLabel>Charge fees for copiers of this basket?</FormLabel>
       <HStack>
         <Radio {...getRootProps}>
-          {sendToWalletData.map((option) => {
+          {autoStakeData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
               <RadioCard key={option.label} {...radio}>

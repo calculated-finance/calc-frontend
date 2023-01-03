@@ -1,23 +1,23 @@
 import { Box, Button, Center, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { FormNames, useConfirmForm, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { basketOfAssetsSteps, DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
+import { FormNames, useConfirmForm, useDcaInFormPostPurchase, useFormSchema } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
 import { useState } from 'react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useRouter } from 'next/router';
-import SendToWallet from './SendToWallet';
+import RebalanceMode from './RebalanceMode';
 import { AutoStake, DummyAutoStake } from './AutoStake';
 import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from './AutoStakeValidator';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
+import steps from '../steps';
 
 function InvalidData() {
   const router = useRouter();
@@ -39,15 +39,14 @@ function InvalidData() {
 }
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const {
+    actions,
+    state: [state],
+  } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 2);
   const { nextStep } = useSteps(steps);
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(postPurchaseValidationSchema, { context });
-
-  const stakeingPossible = getDenomInfo(context?.resultingDenom).stakeable;
-
-  const stakeingUnsupported = !getDenomInfo(context?.resultingDenom).stakeableAndSupported;
+  const { validate } = useValidation(basketOfAssetsSteps[2]);
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
     await actions.updateAction(formData);
@@ -67,35 +66,12 @@ function Page() {
             {state ? (
               <Form autoComplete="off">
                 <Stack direction="column" spacing={6}>
-                  <SendToWallet />
+                  <RebalanceMode />
                   <Collapse in={values.sendToWallet === SendToWalletValues.No}>
                     <Box m="px">
                       <RecipientAccount />
                     </Box>
                   </Collapse>
-                  {stakeingPossible && (
-                    <Collapse in={values.sendToWallet === SendToWalletValues.Yes}>
-                      {stakeingUnsupported ? (
-                        <>
-                          <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} />
-                          <Collapse in={dummyAutoStake === AutoStakeValues.Yes}>
-                            <Box m="px">
-                              <DummyAutoStakeValidator />
-                            </Box>
-                          </Collapse>
-                        </>
-                      ) : (
-                        <>
-                          <AutoStake />
-                          <Collapse in={values.autoStake === AutoStakeValues.Yes}>
-                            <Box m="px">
-                              <AutoStakeValidator />
-                            </Box>
-                          </Collapse>
-                        </>
-                      )}
-                    </Collapse>
-                  )}
                   <Submit>Next</Submit>
                 </Stack>
               </Form>

@@ -5,20 +5,10 @@ import getDenomInfo from '@utils/getDenomInfo';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
+import { yesNoData } from '../customise/yesNoData';
 
-const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
-  {
-    value: SendToWalletValues.No,
-    label: 'Yes',
-  },
-  {
-    value: SendToWalletValues.Yes,
-    label: 'No',
-  },
-];
-
-export default function SendToWallet() {
-  const [field, , helpers] = useField({ name: 'sendToWallet' });
+export default function BasketManager() {
+  const [field, , helpers] = useField({ name: 'basketManager' });
   const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -29,13 +19,11 @@ export default function SendToWallet() {
 
   return (
     <FormControl>
-      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} to a different account?</FormLabel>
-      <FormHelperText>
-        This wallet address will be the one the funds are sent to or autostaked to on your behalf.
-      </FormHelperText>
+      <FormLabel>Add a basket manager?</FormLabel>
+      <FormHelperText>This wallet will be able to make changes to the basket of assets.</FormHelperText>
       <HStack>
         <Radio {...getRootProps}>
-          {sendToWalletData.map((option) => {
+          {yesNoData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
               <RadioCard key={option.label} {...radio}>

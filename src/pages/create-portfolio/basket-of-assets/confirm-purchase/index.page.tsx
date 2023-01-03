@@ -4,7 +4,7 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames, useConfirmForm, useFormSchema } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -17,6 +17,10 @@ import Summary from './Summary';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 import { getTimeSaved } from '../../../../helpers/getTimeSaved';
+import { basketOfAssetsSteps } from '@models/DcaInFormData';
+import { useMutation } from '@tanstack/react-query';
+import { Strategy } from '@hooks/useStrategies';
+import useValidation from '@hooks/useValidation';
 
 function InvalidData() {
   const router = useRouter();
@@ -42,39 +46,35 @@ type AgreementForm = {
 };
 
 function ConfirmPurchase() {
-  const { state, actions } = useConfirmForm(FormNames.DcaIn);
+  const {
+    state: [state, step1, step2, step3, step4],
+    actions,
+  } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 4);
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(steps);
 
-  const { mutate, isError, error } = useCreateVault(FormNames.DcaIn, TransactionType.Buy);
-
+  const { mutate, isError, error } = useMutation<Strategy['id'], Error>(() => '1');
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const validate = useValidation(basketOfAssetsSteps[4]);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          timeSaved:
-            state?.initialDeposit && state.swapAmount ? getTimeSaved(state.initialDeposit, state.swapAmount) : 0,
         });
-        actions.resetAction();
+        actions.resetAction(); //TODO fix
       },
       onSettled: () => {
         setSubmitting(false);
       },
     });
 
-  const validate = (values: AgreementForm) => {
-    if (!values.acceptedAgreement) {
-      return { acceptedAgreement: 'You must accept the terms and conditions before continuing.' };
-    }
-
-    return {};
-  };
-
   return (
     <>
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/*  @ts-ignore */}
       <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <NewStrategyModal>
@@ -85,7 +85,10 @@ function ConfirmPurchase() {
               {state ? (
                 <Form>
                   <Stack spacing={4}>
-                    <Summary />
+                    <Text>{JSON.stringify(step1)}</Text>
+                    <Text>{JSON.stringify(step2)}</Text>
+                    <Text>{JSON.stringify(step3)}</Text>
+                    <Text>{JSON.stringify(step4)}</Text>
                     <Fees formName={FormNames.DcaIn} />
                     <AgreementCheckbox>
                       <Text textStyle="body-xs">

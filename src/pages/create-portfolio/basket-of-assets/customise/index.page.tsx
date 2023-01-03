@@ -1,38 +1,31 @@
-import { Box, Stack, Collapse, Center, Button } from '@chakra-ui/react';
+import { Box, Stack, Collapse, Center, Button, HStack, Text, Flex } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames, useFormSchema, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import steps from '@components/NewStrategyModal/steps';
-import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
-import ExecutionInterval from './ExecutionInterval';
-import StartDate from './StartDate';
-import StartImmediately from './StartImmediately';
-import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
-import SwapAmount from './SwapAmount';
-import DcaDiagram from '../../../../components/DcaDiagram';
-import PurchaseTime from './PurchaseTime';
-import SlippageTolerance from './SlippageTolerance';
-import StartPrice from './StartPrice';
-import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
-import PriceThreshold from '../../../../components/PriceThreshold';
+import DenomIcon from '@components/DenomIcon';
+import { basketOfAssetsSteps, DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
+import steps from '../steps';
+import PortfolioName from './PortfolioName';
 
-function DcaInStep2() {
+function Page() {
   const router = useRouter();
-  const { actions, state } = useStep2Form(FormNames.DcaIn);
+  const {
+    actions,
+    state: [step2, step1],
+  } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 1);
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAIn });
+  const { validate } = useValidation(basketOfAssetsSteps[1]);
   const { nextStep } = useSteps(steps);
 
-  if (!state) {
+  if (!step1) {
     const handleClick = async () => {
       await router.push('/create-strategy/dca-in/assets');
       actions.resetAction();
@@ -60,7 +53,7 @@ function DcaInStep2() {
     await nextStep();
   };
 
-  const initialValues = state.step2;
+  const initialValues = step2;
 
   return (
     <Formik
@@ -78,45 +71,15 @@ function DcaInStep2() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
-                <DcaDiagram
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
-                  initialDeposit={state.step1.initialDeposit}
-                />
-                <AdvancedSettingsSwitch />
-                <Box>
-                  <StartImmediately />
-                  <Collapse in={values.startImmediately === StartImmediatelyValues.No}>
-                    <Collapse animateOpacity in={values.triggerType === 'date'}>
-                      <Box m="px">
-                        <StartDate />
-                        <Collapse in={values.advancedSettings}>
-                          <Box m="px">
-                            <PurchaseTime />
-                          </Box>
-                        </Collapse>
-                      </Box>
-                    </Collapse>
-                    <Collapse animateOpacity in={values.triggerType === 'price'}>
-                      <Box m="px">
-                        <StartPrice />
-                      </Box>
-                    </Collapse>
-                  </Collapse>
-                </Box>
-                <ExecutionInterval />
-                <SwapAmount step1State={state.step1} />
-                <Collapse in={values.advancedSettings}>
-                  <Box m="px">
-                    <PriceThreshold
-                      transactionType={TransactionType.Buy}
-                      formName={FormNames.DcaIn}
-                      title="Set buy price ceiling?"
-                      description="CALC won't buy if the asset price exceeds this set value."
-                    />
-                    <SlippageTolerance />
-                  </Box>
-                </Collapse>
+                <Flex justify={'space-between'}>
+                  {step1.portfolioDenoms.map(({ denom, percentage }) => (
+                    <Box key={denom}>
+                      <DenomIcon denomName={denom} />
+                      <Text>{percentage}</Text>
+                    </Box>
+                  ))}
+                </Flex>
+                <PortfolioName />
                 <Submit>Next</Submit>
               </Stack>
             </Form>
@@ -127,6 +90,6 @@ function DcaInStep2() {
   );
 }
 
-DcaInStep2.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaInStep2;
+export default Page;

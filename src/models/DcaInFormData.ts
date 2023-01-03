@@ -11,7 +11,7 @@ import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
-import { Denoms, MainnetDenoms } from './Denom';
+import { Denoms, MainnetDenoms, TestnetDenoms } from './Denom';
 
 export const initialValues = {
   resultingDenom: '',
@@ -33,10 +33,30 @@ export const initialValues = {
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
   autoStakeValidator: '',
+  portfolioDenoms: [
+    { denom: TestnetDenoms.Kuji, percentage: 40 },
+    { denom: TestnetDenoms.OSMO, percentage: 60 },
+  ],
+  portfolioName: '',
+  rebalanceMode: 'band-based',
+  copierCharge: 'no',
+  basketManager: 'no',
+  acceptedAgreement: false,
 };
+
+const portfolioDenomSchema = Yup.object({
+  denom: Yup.string().required(),
+  percentage: Yup.number().min(0).max(100).required(),
+});
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
+  portfolioDenoms: Yup.array().of(portfolioDenomSchema).label('Portfolio Assets').required(),
+  portfolioName: Yup.string().label('Portfolio Name').required(),
+  rebalanceMode: Yup.string().label('Rebalance Mode').required(),
+  copierCharge: Yup.string(),
+  basketManager: Yup.string(),
+  acceptedAgreement: Yup.boolean().oneOf([true], 'You must accept the agreement to continue'),
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
@@ -269,6 +289,17 @@ export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
 
 export const step1ValidationSchema = allValidationSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
+
+export const basketOfAssetsStep1 = allValidationSchema.pick(['portfolioDenoms']);
+export type BasketOfAssetsStep1 = Yup.InferType<typeof basketOfAssetsStep1>;
+
+export const basketOfAssetsSteps = [
+  allValidationSchema.pick(['portfolioDenoms']),
+  allValidationSchema.pick(['portfolioName']),
+  allValidationSchema.pick(['rebalanceMode']),
+  allValidationSchema.pick(['copierCharge', 'basketManager']),
+  allValidationSchema.pick(['acceptedAgreement']),
+];
 
 export const postPurchaseValidationSchema = allValidationSchema.pick([
   'sendToWallet',

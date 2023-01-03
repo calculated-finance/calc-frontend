@@ -1,7 +1,12 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
+import {
+  basketOfAssetsStep1,
+  basketOfAssetsSteps,
+  DcaInFormDataStep1,
+  step1ValidationSchema,
+} from 'src/models/DcaInFormData';
+import useDcaInForm, { FormNames, useFormSchema } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
@@ -10,12 +15,14 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import ResultingDenom from '../ResultingDenom';
-import InitialDenom from '../PortfolioDenoms';
+import PortfolioDenoms from '../PortfolioDenoms';
 import steps from '../steps';
 
 function Page() {
-  const { actions, state } = useDcaInForm(FormNames.DcaIn);
+  const {
+    actions,
+    state: [step1],
+  } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 0);
   const { isLoading } = usePairs();
   const { nextStep } = useSteps(steps);
 
@@ -23,14 +30,14 @@ function Page() {
 
   const { isPageLoading } = usePageLoad();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
+  const { validate } = useValidation(basketOfAssetsStep1, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);
     await nextStep();
   };
 
-  const initialValues = state.step1;
+  const initialValues = step1;
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -44,8 +51,7 @@ function Page() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
-                <InitialDenom />
-                <ResultingDenom />
+                <PortfolioDenoms />
                 <Submit>Next</Submit>
               </Stack>
             </Form>
