@@ -32,7 +32,7 @@ function getResetAction(formName: FormNames) {
   function resetAction(state: any) {
     return {
       ...state,
-      [formName]: undefined,
+      [formName]: [initialValues],
     };
   }
   return resetAction;

@@ -1,4 +1,4 @@
-import { Button, Center, FormControl, FormErrorMessage, Stack, useDisclosure, Text } from '@chakra-ui/react';
+import { Button, Center, FormControl, FormErrorMessage, Stack, useDisclosure, Text, Box } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
@@ -19,6 +19,9 @@ import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 
 import steps from '../steps';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
+import BadgeButton from '@components/BadgeButton';
+import BasketOfAssetsFees from '@components/BasketOfAssetsFees';
 
 function InvalidData() {
   const router = useRouter();
@@ -62,7 +65,7 @@ function ConfirmPurchase() {
         await nextStep({
           strategyId,
         });
-        // actions.resetAction(); //TODO fix
+        actions.resetAction();
       },
       onSettled: () => {
         setSubmitting(false);
@@ -83,11 +86,28 @@ function ConfirmPurchase() {
               {state ? (
                 <Form>
                   <Stack spacing={4}>
-                    <Text>{JSON.stringify(step1)}</Text>
-                    <Text>{JSON.stringify(step2)}</Text>
-                    <Text>{JSON.stringify(step3)}</Text>
-                    <Text>{JSON.stringify(step4)}</Text>
-                    <Fees formName={FormNames.DcaIn} />
+                    <Box>
+                      <Text textStyle="body-xs">Your basket of assets:</Text>
+                      <Text lineHeight={8}>
+                        Named{' '}
+                        <BadgeButton url="assets">
+                          <Text>{step2.portfolioName}</Text>
+                        </BadgeButton>
+                        , your baskets of assets is made up of:
+                      </Text>
+                    </Box>
+                    <PortfolioDiagram portfolio={step1.portfolioDenoms} />
+                    <Box>
+                      <Text textStyle="body-xs">Rebalance cadence:</Text>
+                      <Text lineHeight={8}>
+                        Starting today, every{' '}
+                        <BadgeButton url="assets">
+                          <Text>Week</Text>
+                        </BadgeButton>
+                        , CALC will swap the above assets to ensure you maintain a balanced exposure to risk.
+                      </Text>
+                    </Box>
+                    <BasketOfAssetsFees />
                     <AgreementCheckbox>
                       <Text textStyle="body-xs">
                         I have read and agree to be bound by the{' '}

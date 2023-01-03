@@ -17,6 +17,7 @@ import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
 import steps from '../steps';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function InvalidData() {
   const router = useRouter();
@@ -40,7 +41,7 @@ function InvalidData() {
 function Page() {
   const {
     actions,
-    state: [state],
+    state: [state, step1],
   } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 2);
   const { nextStep } = useSteps(steps);
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
@@ -65,6 +66,7 @@ function Page() {
             {state ? (
               <Form autoComplete="off">
                 <Stack direction="column" spacing={6}>
+                  <PortfolioDiagram portfolio={step1.portfolioDenoms} />
                   <RebalanceMode />
                   <Collapse in={values.sendToWallet === SendToWalletValues.No}>
                     <Box m="px">

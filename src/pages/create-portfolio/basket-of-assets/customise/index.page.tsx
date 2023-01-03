@@ -14,6 +14,7 @@ import DenomIcon from '@components/DenomIcon';
 import { basketOfAssetsSteps, DcaInFormDataStep2 } from '../../../../models/DcaInFormData';
 import steps from '../steps';
 import PortfolioName from './PortfolioName';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function Page() {
   const router = useRouter();
@@ -72,14 +73,7 @@ function Page() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
-                <Flex justify={'space-between'}>
-                  {step1.portfolioDenoms.map(({ denom, percentage }) => (
-                    <Box key={denom}>
-                      <DenomIcon denomName={denom} />
-                      <Text>{percentage}</Text>
-                    </Box>
-                  ))}
-                </Flex>
+                <PortfolioDiagram portfolio={step1.portfolioDenoms} />
                 <PortfolioName />
                 <Submit>Next</Submit>
               </Stack>

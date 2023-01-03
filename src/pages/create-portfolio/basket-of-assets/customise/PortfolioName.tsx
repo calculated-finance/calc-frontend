@@ -28,7 +28,7 @@ export default function PortfolioName() {
           <Text>This name will be shown in your list of strategies.</Text>
         </Flex>{' '}
       </FormHelperText>
-      <Input {...field} />
+      <Input placeholder="Enter name" {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
     </FormControl>
   );

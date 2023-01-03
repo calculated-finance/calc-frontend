@@ -13,11 +13,12 @@ import useSteps from '@hooks/useSteps';
 import BasketManager from './BasketManager';
 import { CopierCharge } from './CopierCharge';
 import steps from '../steps';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function Page() {
   const {
     actions,
-    state: [state],
+    state: [state, step1],
   } = useFormSchema(FormNames.BasketOfAssets, basketOfAssetsSteps, 3);
   const { nextStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
@@ -41,6 +42,7 @@ function Page() {
             {state ? (
               <Form autoComplete="off">
                 <Stack direction="column" spacing={6}>
+                  <PortfolioDiagram portfolio={step1.portfolioDenoms} />
                   <BasketManager />
                   <CopierCharge />
                   <Submit>Next</Submit>

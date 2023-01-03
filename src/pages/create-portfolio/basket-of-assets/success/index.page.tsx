@@ -14,19 +14,34 @@ function Success() {
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} finalStep={false}>
-        Strategy Set Successfully
+        Success
       </NewStrategyModalHeader>
       <NewStrategyModalBody stepsConfig={steps}>
         <Stack spacing={6} alignItems="center">
           <Image src="/images/congratulations.svg" />
           <Image src="/images/fire.svg" />
-          <Text>CALC is now working for you!</Text>
-
-          <Link passHref href="/strategies">
-            <Button as="a" isLoading={isPageLoading}>
-              View my strategies
-            </Button>
-          </Link>
+          <Text textAlign="center">Your basket of assets have been created and you are ready to start buying!</Text>
+          <>
+            <Divider />
+            <Text textAlign="center">
+              Now it’s time to add some funds to
+              <Heading p={2} size="md">
+                (basket name)
+              </Heading>
+            </Text>
+          </>
+          <Stack>
+            <Link passHref href="/strategies">
+              <Button as="a" isLoading={isPageLoading}>
+                Add funds
+              </Button>
+            </Link>
+            <Link passHref href="/strategies">
+              <Button as="a" isLoading={isPageLoading} colorScheme="blue" variant="outline">
+                Share basket
+              </Button>
+            </Link>
+          </Stack>
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>

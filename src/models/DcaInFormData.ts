@@ -33,10 +33,7 @@ export const initialValues = {
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
   autoStakeValidator: '',
-  portfolioDenoms: [
-    { denom: TestnetDenoms.Kuji, percentage: 40 },
-    { denom: TestnetDenoms.OSMO, percentage: 60 },
-  ],
+  portfolioDenoms: [{ denom: '', percentage: '' }],
   portfolioName: '',
   rebalanceMode: 'band-based',
   copierCharge: 'no',
