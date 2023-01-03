@@ -28,7 +28,7 @@ export function DenomSelectLabel({ denom }: { denom: Denom }) {
   );
 }
 
-export default function InitialDenom() {
+export default function PortfolioDenoms() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
@@ -43,7 +43,7 @@ export default function InitialDenom() {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>How will you fund your first investment?</FormLabel>
+      <FormLabel>Define your portfolio</FormLabel>
       <FormHelperText>
         <Center>
           <Text textStyle="body-xs">Choose between stablecoins or fiat</Text>

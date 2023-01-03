@@ -9,12 +9,12 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
 import useBalances from '@hooks/useBalances';
 import ResultingDenom from '../ResultingDenom';
-import InitialDenom from '../InitialDenom';
+import InitialDenom from '../PortfolioDenoms';
+import steps from '../steps';
 
-function DcaIn() {
+function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
   const { isLoading } = usePairs();
   const { nextStep } = useSteps(steps);
@@ -56,6 +56,6 @@ function DcaIn() {
   );
 }
 
-DcaIn.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaIn;
+export default Page;
