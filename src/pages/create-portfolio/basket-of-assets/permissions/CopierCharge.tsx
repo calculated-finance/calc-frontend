@@ -1,12 +1,10 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
+import { FormControl, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { FormNames, useDcaInFormPostPurchase, useFormSchema } from '@hooks/useDcaInForm';
-import getDenomInfo from '@utils/getDenomInfo';
-import SendToWalletValues from '@models/SendToWalletValues';
+import { FormNames, useFormSchema } from '@hooks/useDcaInForm';
+import { basketOfAssetsSteps } from '@models/DcaInFormData';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
-import { basketOfAssetsSteps } from '@models/DcaInFormData';
 
 export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   {

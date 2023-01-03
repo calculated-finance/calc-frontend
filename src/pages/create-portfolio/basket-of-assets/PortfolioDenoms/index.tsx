@@ -1,5 +1,4 @@
 import {
-  Box,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -15,18 +14,15 @@ import {
   Stack,
   Input,
 } from '@chakra-ui/react';
-import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePairs from '@hooks/usePairs';
 import { Denom } from '@models/Denom';
-import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import DenomIcon from '@components/DenomIcon';
-import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
-import InitialDeposit from '../InitialDeposit';
-import NumberInput from '@components/NumberInput';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { FiPlus, FiTrash } from 'react-icons/fi';
-import { NumberFormatValues, NumericFormat, PatternFormat } from 'react-number-format';
+import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 export function DenomSelectLabel({ denom }: { denom: Denom }) {
   return (

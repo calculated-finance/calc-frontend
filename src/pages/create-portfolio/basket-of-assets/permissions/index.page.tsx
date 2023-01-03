@@ -1,27 +1,15 @@
-import { Box, Button, Center, Collapse, Stack } from '@chakra-ui/react';
+import { Box, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import {
-  basketOfAssetsStep1,
-  basketOfAssetsSteps,
-  DcaInFormDataPostPurchase,
-  postPurchaseValidationSchema,
-} from 'src/models/DcaInFormData';
-import { FormNames, useConfirmForm, useDcaInFormPostPurchase, useFormSchema } from 'src/hooks/useDcaInForm';
+import { basketOfAssetsSteps, DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
+import { FormNames, useFormSchema } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import { useState } from 'react';
-import getDenomInfo from '@utils/getDenomInfo';
-import { useRouter } from 'next/router';
 import BasketManager from './BasketManager';
 import { CopierCharge } from './CopierCharge';
-import RecipientAccount from './RecipientAccount';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
-import AutoStakeValidator, { DummyAutoStakeValidator } from './AutoStakeValidator';
-import AutoStakeValues from '../../../../models/AutoStakeValues';
 import steps from '../steps';
 
 function Page() {
