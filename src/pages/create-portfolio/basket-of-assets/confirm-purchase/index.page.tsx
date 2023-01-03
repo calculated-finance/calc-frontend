@@ -10,7 +10,6 @@ import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
 import { TermsModal } from '@components/TermsModal';
 import { TransactionType } from '@components/TransactionType';
 import Summary from './Summary';
@@ -21,6 +20,7 @@ import { basketOfAssetsSteps } from '@models/DcaInFormData';
 import { useMutation } from '@tanstack/react-query';
 import { Strategy } from '@hooks/useStrategies';
 import useValidation from '@hooks/useValidation';
+import steps from '../steps';
 
 function InvalidData() {
   const router = useRouter();
@@ -56,7 +56,7 @@ function ConfirmPurchase() {
   const { mutate, isError, error } = useMutation<Strategy['id'], Error>(() => '1');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const validate = useValidation(basketOfAssetsSteps[4]);
+  const { validate } = useValidation(basketOfAssetsSteps[4]);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
@@ -64,7 +64,7 @@ function ConfirmPurchase() {
         await nextStep({
           strategyId,
         });
-        actions.resetAction(); //TODO fix
+        // actions.resetAction(); //TODO fix
       },
       onSettled: () => {
         setSubmitting(false);
