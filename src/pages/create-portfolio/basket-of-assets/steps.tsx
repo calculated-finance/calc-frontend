@@ -21,7 +21,7 @@ const steps: StepConfig[] = [
   },
   {
     href: '/create-portfolio/basket-of-assets/customise',
-    title: 'Customise your basket',
+    title: 'Customise basket',
   },
   {
     href: '/create-portfolio/basket-of-assets/rebalance',
@@ -29,7 +29,7 @@ const steps: StepConfig[] = [
   },
   {
     href: '/create-portfolio/basket-of-assets/permissions',
-    title: 'Rebalancing',
+    title: 'Set permissions',
   },
   {
     href: '/create-portfolio/basket-of-assets/confirm-purchase',

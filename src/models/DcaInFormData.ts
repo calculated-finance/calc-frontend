@@ -45,13 +45,35 @@ export const initialValues = {
 };
 
 const portfolioDenomSchema = Yup.object({
-  denom: Yup.string().required(),
-  percentage: Yup.number().min(0).max(100).required(),
+  denom: Yup.string().label('Denom').required(),
+  percentage: Yup.number()
+
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    })
+    .label('Percentage')
+    .moreThan(0)
+    .max(100)
+    .nullable()
+    .required(),
 });
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allValidationSchema = Yup.object({
-  portfolioDenoms: Yup.array().of(portfolioDenomSchema).label('Portfolio Assets').required(),
+  portfolioDenoms: Yup.array()
+    .of(portfolioDenomSchema)
+    .label('Portfolio Assets')
+    .required()
+    .test('sum-of-percentages', `Percentages must add up to 100%`, (value) => {
+      if (!value) {
+        return true;
+      }
+      const sum = value.reduce((acc, curr) => acc + (curr?.percentage ?? 0), 0);
+      return sum === 100;
+    }),
   portfolioName: Yup.string().label('Portfolio Name').required(),
   rebalanceMode: Yup.string().label('Rebalance Mode').required(),
   copierCharge: Yup.string(),
