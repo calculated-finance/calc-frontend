@@ -13,6 +13,7 @@ import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
 import PortfolioDenoms from '../PortfolioDenoms';
 import steps from '../steps';
+import { BasketOfAssetsModal } from '@components/BasketOfAssetsModal';
 
 function Page() {
   const {
@@ -36,25 +37,28 @@ function Page() {
   const initialValues = step1;
 
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //  @ts-ignore
-    <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-            Choose Funding &amp; Assets
-          </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
-            <Form autoComplete="off">
-              <Stack direction="column" spacing={6}>
-                <PortfolioDenoms />
-                <Submit>Next</Submit>
-              </Stack>
-            </Form>
-          </NewStrategyModalBody>
-        </NewStrategyModal>
-      )}
-    </Formik>
+    <>
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/*  @ts-ignore */}
+      <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
+        {({ isSubmitting }) => (
+          <NewStrategyModal>
+            <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+              Choose Funding &amp; Assets
+            </NewStrategyModalHeader>
+            <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading || (isPageLoading && !isSubmitting)}>
+              <Form autoComplete="off">
+                <Stack direction="column" spacing={6}>
+                  <PortfolioDenoms />
+                  <Submit>Next</Submit>
+                </Stack>
+              </Form>
+            </NewStrategyModalBody>
+          </NewStrategyModal>
+        )}
+      </Formik>
+      <BasketOfAssetsModal />
+    </>
   );
 }
 

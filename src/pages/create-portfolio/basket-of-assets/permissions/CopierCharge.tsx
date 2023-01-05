@@ -51,7 +51,7 @@ function FeeField({ name, label }: { name: string; label: string }) {
         textAlign="left"
         customInput={Input}
         onValueChange={handleChange}
-        placeholder="Enter percentage"
+        placeholder="Enter %"
         variant="filled"
         {...field}
       />

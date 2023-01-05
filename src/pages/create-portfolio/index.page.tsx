@@ -28,27 +28,34 @@ type StrategyCardProps = {
 
 const accumulationStratgies: StrategyCardProps[] = [
   {
-    name: 'Build a private basket of assets',
-    description:
-      'Choose your assets, select their percentage allocation and choose how you want to have the portfolio rebalanced. Only your wallet address can access this portfolio.',
-    icon: <Icon stroke="brand.200" strokeWidth={2} as={HexagonSpiderWebIcon} width={8} height={8} />,
-    enabled: true,
-    href: StrategyUrls.BasketOfAssets,
-    learnMoreHref: 'https://calculated.fi/standard-dca-in',
-  },
-  {
     name: 'Build a public basket of assets',
     description:
       'Choose your assets, select their percentage allocation and choose how you want to have the portfolio rebalanced. Others can buy into this portfolio and you can earn revenue based on performance fees.',
     advanced: true,
+    href: StrategyUrls.BasketOfAssets,
+    enabled: true,
+
     icon: <Icon stroke="brand.200" strokeWidth={2} as={GroundPlanIcon} width={8} height={8} />,
     learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
+  },
+  {
+    name: 'Build a private basket of assets',
+    description:
+      'Choose your assets, select their percentage allocation and choose how you want to have the portfolio rebalanced. Only your wallet address can access this portfolio.',
+    icon: <Icon stroke="brand.200" strokeWidth={2} as={HexagonSpiderWebIcon} width={8} height={8} />,
+    learnMoreHref: 'https://calculated.fi/standard-dca-in',
   },
 ];
 
 function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, enabled }: StrategyCardProps) {
   return (
-    <Stack direction={['row', null, null, 'row']} p={4} layerStyle="panel" width={['full', null, null, 600]} gap={4}>
+    <Stack
+      direction={['row', null, null, 'row']}
+      p={4}
+      layerStyle="panel"
+      width={['full', null, null, null, 500]}
+      gap={4}
+    >
       <Flex direction="column" flexGrow={1}>
         <Flex mb={4}>{icon}</Flex>
         <Heading size="md" mb={2}>

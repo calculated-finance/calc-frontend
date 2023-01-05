@@ -18,6 +18,9 @@ import useFormSchema from 'src/hooks/useFormSchema';
 import { PortfolioDiagram } from '@components/PortfolioDiagram';
 import BadgeButton from '@components/BadgeButton';
 import BasketOfAssetsFees from '@components/BasketOfAssetsFees';
+import { ExecutionInterval } from '@models/ExecutionIntervals';
+import executionIntervalDisplay from 'src/helpers/executionIntervalDisplay';
+import YesNoValues from '@models/YesNoValues';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 
@@ -92,23 +95,82 @@ function ConfirmPurchase() {
                       <Text textStyle="body-xs">Your basket of assets:</Text>
                       <Text lineHeight={8}>
                         Named{' '}
-                        <BadgeButton url="assets">
+                        <BadgeButton url="customise">
                           <Text>{step2.portfolioName}</Text>
                         </BadgeButton>
                         , your basket of assets is made up of:
                       </Text>
                     </Box>
                     <PortfolioDiagram portfolio={step1.portfolioDenoms} />
-                    <Box>
-                      <Text textStyle="body-xs">Rebalance cadence:</Text>
-                      <Text lineHeight={8}>
-                        Starting today, every{' '}
-                        <BadgeButton url="assets">
-                          <Text>Week</Text>
-                        </BadgeButton>
-                        , CALC will swap the above assets to ensure you maintain a balanced exposure to risk.
-                      </Text>
-                    </Box>
+                    <Text lineHeight={8}>
+                      You can edit the assets{' '}
+                      <BadgeButton url="assets">
+                        <Text>here</Text>
+                      </BadgeButton>
+                      .
+                    </Text>
+                    {step3.rebalanceMode === 'band-based' && (
+                      <Box>
+                        <Text textStyle="body-xs">Rebalance cadence:</Text>
+                        <Text lineHeight={8}>
+                          Starting today, when asset balances exceed{' '}
+                          <BadgeButton url="rebalance">
+                            <Text textTransform="capitalize">{step3.rebalanceDetails}%</Text>
+                          </BadgeButton>{' '}
+                          of the target allocation, CALC will swap the above assets to ensure you maintain a balanced
+                          exposure to risk.
+                        </Text>
+                      </Box>
+                    )}
+                    {step3.rebalanceMode === 'time-based' && (
+                      <Box>
+                        <Text textStyle="body-xs">Rebalance cadence:</Text>
+                        <Text lineHeight={8}>
+                          Starting today, every{' '}
+                          <BadgeButton url="rebalance">
+                            <Text textTransform="capitalize">
+                              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                              {/* @ts-ignore */}
+                              {executionIntervalDisplay[step3.rebalanceInterval as ExecutionInterval][0]}
+                            </Text>
+                          </BadgeButton>
+                          , CALC will swap the above assets to ensure you maintain a balanced exposure to risk.
+                        </Text>
+                      </Box>
+                    )}
+                    {step4.copierCharge === YesNoValues.Yes && (
+                      <Box>
+                        <Text textStyle="body-xs">Management:</Text>
+                        <Text lineHeight={8}>
+                          You{' '}
+                          <BadgeButton url="permissions">
+                            <Text>charge management fees</Text>
+                          </BadgeButton>{' '}
+                          for others to copy this basket. Those fees include:
+                          <br /> A{' '}
+                          <BadgeButton url="permissions">
+                            <Text>{step4.managementFee ?? 0}%</Text>
+                          </BadgeButton>{' '}
+                          annual management fee,{' '}
+                          <BadgeButton url="permissions">
+                            <Text>{step4.openingFee ?? 0}%</Text>
+                          </BadgeButton>{' '}
+                          opening fee,{' '}
+                          <BadgeButton url="permissions">
+                            <Text>{step4.closingFee ?? 0}%</Text>
+                          </BadgeButton>{' '}
+                          closing fee, and a{' '}
+                          <BadgeButton url="permissions">
+                            <Text>{step4.performanceFee ?? 0}%</Text>
+                          </BadgeButton>{' '}
+                          performance fee, with a{' '}
+                          <BadgeButton url="permissions">
+                            <Text>{step4.hurdleRate ?? 0}%</Text>
+                          </BadgeButton>{' '}
+                          hurdle rate.
+                        </Text>
+                      </Box>
+                    )}
                     <BasketOfAssetsFees />
                     <AgreementCheckbox>
                       <Text textStyle="body-xs">

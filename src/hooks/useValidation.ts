@@ -23,6 +23,7 @@ const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
         return error.inner.reduce((errors: Yup.ValidationError[], currentError) => {
           // eslint-disable-next-line no-param-reassign
           errors = set(errors, currentError.path as string, currentError.message);
+          console.log(errors);
           return errors;
         }, {});
       }

@@ -41,7 +41,7 @@ function DenomField({ index }: { index: number }) {
   const chosenDenomsList = field.value.filter((_: any, i: number) => i !== index);
   const chosenDenoms = chosenDenomsList.map((item: any) => item.denom);
 
-  const denoms = SUPPORTED_DENOMS.filter(isDenomVolatile).filter((denom) => !chosenDenoms.includes(denom));
+  const denoms = SUPPORTED_DENOMS.filter((denom) => !chosenDenoms.includes(denom));
 
   const [{ onChange: denomOnChange, ...denomField }, denomMeta, denomHelpers] = useField({
     name: `portfolioDenoms[${index}].denom`,
@@ -144,6 +144,7 @@ export default function PortfolioDenoms() {
           onClick={handleAdd}
           variant="ghost"
           leftIcon={<Icon as={FiPlusCircle} />}
+          type="button"
         >
           Add asset
         </Button>

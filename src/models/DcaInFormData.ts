@@ -38,9 +38,15 @@ export const initialValues = {
   copierCharge: 'no',
   basketManager: 'no',
   acceptedAgreement: false,
+  rebalanceDetails: 2,
+  rebalanceInterval: ExecutionIntervals.Daily,
+  openingFee: '',
+  closingFee: '',
+  hurdleRate: '',
+  performanceFee: '',
 };
 
-function emptyStringToNull(value, originalValue) {
+function emptyStringToNull(value: string | number, originalValue: string | null) {
   if (originalValue === '') {
     return null;
   }
@@ -78,11 +84,74 @@ export const allBasketOfAssetsValidationSchema = Yup.object({
   copierCharge: Yup.string(),
   basketManager: Yup.string(),
   acceptedAgreement: Yup.boolean().oneOf([true], 'You must accept the terms and conditions before continuing.'),
-  managementFee: Yup.number().label('Management Fee').nullable().transform(emptyStringToNull),
-  openingFee: Yup.number().label('Opening Fee').nullable().transform(emptyStringToNull).min(0).max(100),
-  closingFee: Yup.number().label('Closing Fee').nullable().transform(emptyStringToNull).min(0).max(100),
-  hurdleRate: Yup.number().label('Hurdle Rate').nullable().transform(emptyStringToNull).min(0).max(100),
-  performanceFee: Yup.number().label('Performance Fee').nullable().transform(emptyStringToNull).min(0).max(100),
+  managementFee: Yup.number()
+    .label('Management Fee')
+    .nullable()
+    .transform(emptyStringToNull)
+    .when(['copierCharge'], {
+      is: (copierCharge: any) => copierCharge === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  openingFee: Yup.number()
+    .label('Opening Fee')
+    .nullable()
+    .transform(emptyStringToNull)
+    .min(0)
+    .max(100)
+    .when(['copierCharge'], {
+      is: (copierCharge: any) => copierCharge === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  closingFee: Yup.number()
+    .label('Closing Fee')
+    .nullable()
+    .transform(emptyStringToNull)
+    .min(0)
+    .max(100)
+    .when(['copierCharge'], {
+      is: (copierCharge: any) => copierCharge === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  hurdleRate: Yup.number()
+    .label('Hurdle Rate')
+    .nullable()
+    .transform(emptyStringToNull)
+    .min(0)
+    .max(100)
+    .when(['copierCharge'], {
+      is: (copierCharge: any) => copierCharge === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  performanceFee: Yup.number()
+    .label('Performance Fee')
+    .nullable()
+    .transform(emptyStringToNull)
+    .min(0)
+    .max(100)
+    .when(['copierCharge'], {
+      is: (copierCharge: any) => copierCharge === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  rebalanceDetails: Yup.number()
+    .nullable()
+    .label('Rebalance Band')
+    .lessThan(100)
+    .min(0)
+    .when(['rebalanceMode'], {
+      is: (rebalanceMode: any) => rebalanceMode === 'band-based',
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+  rebalanceInterval: Yup.mixed<ExecutionIntervals>().when(['rebalanceMode'], {
+    is: (rebalanceMode: any) => rebalanceMode === 'time-based',
+    then: (schema) => schema.oneOf(Object.values(ExecutionIntervals)).required(),
+    otherwise: (schema) => schema.transform(() => ExecutionIntervals.Daily),
+  }),
 });
 
 export const allValidationSchema = Yup.object({
@@ -322,7 +391,7 @@ export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 export const basketOfAssetsSteps = [
   allBasketOfAssetsValidationSchema.pick(['portfolioDenoms']),
   allBasketOfAssetsValidationSchema.pick(['portfolioName']),
-  allBasketOfAssetsValidationSchema.pick(['rebalanceMode']),
+  allBasketOfAssetsValidationSchema.pick(['rebalanceMode', 'rebalanceDetails', 'rebalanceInterval']),
   allBasketOfAssetsValidationSchema.pick([
     'copierCharge',
     'managementFee',
