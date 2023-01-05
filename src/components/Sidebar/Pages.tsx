@@ -3,6 +3,7 @@
 export enum Pages {
   Home = '/',
   Strategies = '/strategies/',
+  CopyInvest = '/copy-invest/',
   CreateStrategy = '/create-strategy/',
   CreatePortfolio = '/create-portfolio/',
   GetAssets = '/bridge-assets/',

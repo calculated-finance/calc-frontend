@@ -12,12 +12,12 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 import RebalanceMode from './RebalanceMode';
 import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
 import steps from '../steps';
-import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function InvalidData() {
   const router = useRouter();

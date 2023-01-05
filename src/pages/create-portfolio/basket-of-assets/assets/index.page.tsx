@@ -1,6 +1,6 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { basketOfAssetsStep1, basketOfAssetsSteps, DcaInFormDataStep1 } from 'src/models/DcaInFormData';
+import { basketOfAssetsSteps, DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useDcaInForm';
 import useFormSchema from 'src/hooks/useFormSchema';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';

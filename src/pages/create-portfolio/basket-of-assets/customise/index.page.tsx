@@ -11,10 +11,10 @@ import useFormSchema from 'src/hooks/useFormSchema';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DenomIcon from '@components/DenomIcon';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 import { basketOfAssetsSteps, DcaInFormDataStep2 } from '../../../../models/DcaInFormData';
 import steps from '../steps';
 import PortfolioName from './PortfolioName';
-import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function Page() {
   const router = useRouter();

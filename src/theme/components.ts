@@ -70,6 +70,14 @@ const components = {
           bg: 'abyss.200',
         },
       },
+      filled: {
+        field: {
+          borderRadius: 'xl',
+          borderColor: 'slateGrey',
+          borderWidth: 1,
+          bg: 'darkGrey',
+        },
+      },
     },
     defaultProps: {
       variant: 'outline',

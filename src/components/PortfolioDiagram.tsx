@@ -5,7 +5,7 @@ import DenomIcon from './DenomIcon';
 export function PortfolioDiagram({ portfolio }: any) {
   return (
     <Flex gap={12} justifyContent="space-evenly">
-      {portfolio.map(({ denom, percentage }) => (
+      {portfolio.map(({ denom, percentage }: any) => (
         <Stack alignItems="center" key={denom}>
           <Text fontSize="xs">{getDenomInfo(denom).name}</Text>
           <DenomIcon size={8} denomName={denom} />

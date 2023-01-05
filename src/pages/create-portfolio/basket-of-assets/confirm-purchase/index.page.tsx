@@ -15,13 +15,13 @@ import { useMutation } from '@tanstack/react-query';
 import { Strategy } from '@hooks/useStrategies';
 import useValidation from '@hooks/useValidation';
 import useFormSchema from 'src/hooks/useFormSchema';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
+import BadgeButton from '@components/BadgeButton';
+import BasketOfAssetsFees from '@components/BasketOfAssetsFees';
 import Fees from '../../../../components/Fees';
 import { AgreementCheckbox } from '../../../../components/AgreementCheckbox';
 
 import steps from '../steps';
-import { PortfolioDiagram } from '@components/PortfolioDiagram';
-import BadgeButton from '@components/BadgeButton';
-import BasketOfAssetsFees from '@components/BasketOfAssetsFees';
 
 function InvalidData() {
   const router = useRouter();
@@ -54,7 +54,9 @@ function ConfirmPurchase() {
   const { isPageLoading } = usePageLoad();
   const { nextStep } = useSteps(steps);
 
-  const { mutate, isError, error } = useMutation<Strategy['id'], Error>(() => '1');
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { mutate, isError, error } = useMutation<Strategy['id'], Error>((id: any) => '1' as Strategy['id']);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { validate } = useValidation(basketOfAssetsSteps[4]);
@@ -65,7 +67,7 @@ function ConfirmPurchase() {
         await nextStep({
           strategyId,
         });
-        actions.resetAction();
+        // actions.resetAction();
       },
       onSettled: () => {
         setSubmitting(false);
@@ -93,7 +95,7 @@ function ConfirmPurchase() {
                         <BadgeButton url="assets">
                           <Text>{step2.portfolioName}</Text>
                         </BadgeButton>
-                        , your baskets of assets is made up of:
+                        , your basket of assets is made up of:
                       </Text>
                     </Box>
                     <PortfolioDiagram portfolio={step1.portfolioDenoms} />

@@ -11,7 +11,6 @@ import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
-import { Denoms, MainnetDenoms, TestnetDenoms } from './Denom';
 
 export const initialValues = {
   resultingDenom: '',
@@ -41,16 +40,18 @@ export const initialValues = {
   acceptedAgreement: false,
 };
 
+function emptyStringToNull(value, originalValue) {
+  if (originalValue === '') {
+    return null;
+  }
+  return value;
+}
+
 const portfolioDenomSchema = Yup.object({
   denom: Yup.string().label('Denom').required(),
   percentage: Yup.number()
 
-    .transform((value, originalValue) => {
-      if (originalValue === '') {
-        return null;
-      }
-      return value;
-    })
+    .transform(emptyStringToNull)
     .label('Percentage')
     .moreThan(0)
     .max(100)
@@ -77,6 +78,11 @@ export const allBasketOfAssetsValidationSchema = Yup.object({
   copierCharge: Yup.string(),
   basketManager: Yup.string(),
   acceptedAgreement: Yup.boolean().oneOf([true], 'You must accept the terms and conditions before continuing.'),
+  managementFee: Yup.number().label('Management Fee').nullable().transform(emptyStringToNull),
+  openingFee: Yup.number().label('Opening Fee').nullable().transform(emptyStringToNull).min(0).max(100),
+  closingFee: Yup.number().label('Closing Fee').nullable().transform(emptyStringToNull).min(0).max(100),
+  hurdleRate: Yup.number().label('Hurdle Rate').nullable().transform(emptyStringToNull).min(0).max(100),
+  performanceFee: Yup.number().label('Performance Fee').nullable().transform(emptyStringToNull).min(0).max(100),
 });
 
 export const allValidationSchema = Yup.object({
@@ -317,7 +323,14 @@ export const basketOfAssetsSteps = [
   allBasketOfAssetsValidationSchema.pick(['portfolioDenoms']),
   allBasketOfAssetsValidationSchema.pick(['portfolioName']),
   allBasketOfAssetsValidationSchema.pick(['rebalanceMode']),
-  allBasketOfAssetsValidationSchema.pick(['copierCharge', 'basketManager']),
+  allBasketOfAssetsValidationSchema.pick([
+    'copierCharge',
+    'managementFee',
+    'openingFee',
+    'closingFee',
+    'hurdleRate',
+    'performanceFee',
+  ]),
   allBasketOfAssetsValidationSchema.pick(['acceptedAgreement']),
 ];
 

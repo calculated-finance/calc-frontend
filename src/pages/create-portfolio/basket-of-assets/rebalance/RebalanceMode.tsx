@@ -1,11 +1,9 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Collapse, FormControl, FormHelperText, FormLabel, HStack, Stack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { FormNames, useDcaInFormPostPurchase, useFormSchema } from '@hooks/useDcaInForm';
-import getDenomInfo from '@utils/getDenomInfo';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
-import { basketOfAssetsSteps } from '@models/DcaInFormData';
+import RebalanceDetails from './RebalanceDetails';
+import RebalanceInterval from './RebalanceInterval';
 
 const rebalanceModeData: { value: string; label: string }[] = [
   {
@@ -32,21 +30,33 @@ export default function SendToWallet() {
   });
 
   return (
-    <FormControl>
-      <FormLabel>How would you like CALC to rebalance for you?</FormLabel>
-      <FormHelperText>When your portfolio difference exceeds this band, rebalancing will occur.</FormHelperText>
-      <HStack>
-        <Radio {...getRootProps}>
-          {rebalanceModeData.map((option) => {
-            const radio = getRadioProps({ value: option.value });
-            return (
-              <RadioCard key={option.label} {...radio}>
-                {option.label}
-              </RadioCard>
-            );
-          })}
-        </Radio>
-      </HStack>
-    </FormControl>
+    <Stack>
+      <FormControl>
+        <FormLabel>How would you like CALC to rebalance for you?</FormLabel>
+        <FormHelperText>When your portfolio difference exceeds this band, rebalancing will occur.</FormHelperText>
+        <HStack>
+          <Radio {...getRootProps}>
+            {rebalanceModeData.map((option) => {
+              const radio = getRadioProps({ value: option.value });
+              return (
+                <RadioCard key={option.label} {...radio}>
+                  {option.label}
+                </RadioCard>
+              );
+            })}
+          </Radio>
+        </HStack>
+      </FormControl>
+      <Collapse in={field.value === 'band-based'}>
+        <Box m="px">
+          <RebalanceDetails />
+        </Box>
+      </Collapse>
+      <Collapse in={field.value === 'time-based'}>
+        <Box m="px">
+          <RebalanceInterval />
+        </Box>
+      </Collapse>
+    </Stack>
   );
 }

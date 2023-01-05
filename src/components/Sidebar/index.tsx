@@ -19,7 +19,7 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon } from '@fusion-icons/react/interface';
+import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon, SequenceIcon } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
@@ -39,6 +39,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'Create basket', icon: Add1Icon, href: Pages.CreatePortfolio },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
+  { name: 'Copy invest', icon: SequenceIcon, href: Pages.CopyInvest },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
   { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks },

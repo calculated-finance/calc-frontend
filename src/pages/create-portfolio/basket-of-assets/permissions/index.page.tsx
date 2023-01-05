@@ -10,10 +10,10 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
+import { PortfolioDiagram } from '@components/PortfolioDiagram';
 import BasketManager from './BasketManager';
 import { CopierCharge } from './CopierCharge';
 import steps from '../steps';
-import { PortfolioDiagram } from '@components/PortfolioDiagram';
 
 function Page() {
   const {
@@ -43,13 +43,12 @@ function Page() {
               <Form autoComplete="off">
                 <Stack direction="column" spacing={6}>
                   <PortfolioDiagram portfolio={step1.portfolioDenoms} />
-                  <BasketManager />
                   <CopierCharge />
                   <Submit>Next</Submit>
                 </Stack>
               </Form>
             ) : (
-              <Box> Invalid data </Box> //TODO: do this properly
+              <Box> Invalid data </Box> // TODO: do this properly
             )}
           </NewStrategyModalBody>
         </NewStrategyModal>
