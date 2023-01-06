@@ -6,6 +6,7 @@ import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react
 import { useWallet } from '@wizard-ui/react';
 import { ReactElement } from 'react';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
+import { useRouter } from 'next/router';
 import { getSidebarLayout } from '../../components/Layout';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
@@ -87,6 +88,7 @@ function InfoPanel(): JSX.Element {
 }
 
 function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, enabled }: StrategyCardProps) {
+  const { query } = useRouter();
   return (
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
@@ -106,7 +108,7 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <NextLink href={href ?? '#'}>
+          <NextLink href={{ pathname: href ?? '#', query }}>
             <Button mb={2}>Get started</Button>
           </NextLink>
         ) : (
