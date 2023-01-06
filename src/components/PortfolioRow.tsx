@@ -60,7 +60,7 @@ function PortfolioRow() {
           <DenomIcon showTooltip denomName={TestnetDenoms.LUNA} />
         </HStack>
       </GridItem>
-      <GridItem colSpan={{ base: 3, xl: 2 }}>
+      <GridItem colSpan={{ base: 3, xl: 1 }}>
         <Text fontSize="sm">AUM:</Text>
         <Text textStyle="body-xs">$1,928,342.23</Text>
       </GridItem>

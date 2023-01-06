@@ -23,10 +23,10 @@ import useFormSchema from 'src/hooks/useFormSchema';
 import { basketOfAssetsSteps } from '@models/DcaInFormData';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import YesNoValues from '@models/YesNoValues';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import RadioCard from '../../../../components/RadioCard';
 import Radio from '../../../../components/Radio';
 import AutoStakeValues from '../../../../models/AutoStakeValues';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 function FeeField({ name, label }: { name: string; label: string }) {
   const [{ onChange, ...field }, meta, helpers] = useField({

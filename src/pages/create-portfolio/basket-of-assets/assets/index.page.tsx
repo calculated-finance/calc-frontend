@@ -11,9 +11,9 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
+import { BasketOfAssetsModal } from '@components/BasketOfAssetsModal';
 import PortfolioDenoms from '../PortfolioDenoms';
 import steps from '../steps';
-import { BasketOfAssetsModal } from '@components/BasketOfAssetsModal';
 
 function Page() {
   const {
