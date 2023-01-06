@@ -107,11 +107,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
         <Link href="/">
-          <Image
-            h={6}
-            cursor="pointer"
-            src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'}
-          />
+          <Image cursor="pointer" src="/images/logo.svg" />
         </Link>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
@@ -146,7 +142,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     >
       <Flex w="full" pb={8} alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
-          <Image h={6} src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'} />
+          <Image src="/images/logo.svg" />
         </Text>
         <Spacer />
         <CosmosWalletButton />
