@@ -85,7 +85,9 @@ export default function Summary() {
         <BadgeButton url="customise">
           <Text>{initialDenomName}</Text>
           <DenomIcon denomName={initialDenom} />
-          <Text>=</Text>
+          <Text pt={1} fontSize="xs">
+            &ge;
+          </Text>
           <Text>
             {startPrice} {resultingDenomName}
           </Text>
