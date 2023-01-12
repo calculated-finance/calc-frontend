@@ -34,7 +34,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
-import { usePerformanceStatistics } from '../../../hooks/usePerformanceStatistics';
+import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
 const daysData = [
@@ -74,7 +74,7 @@ function StrategyChartStats({ strategy, strategyEvents }: { strategy: Strategy; 
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { color, percentageChange, profit, marketValueInFiat } = usePerformanceStatistics(
+  const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,

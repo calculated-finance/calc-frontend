@@ -10,7 +10,7 @@ import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { usePerformanceStatistics } from '../../../hooks/usePerformanceStatistics';
+import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function formatFiat(value: number) {
   return `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
@@ -30,7 +30,7 @@ function StrategyPerformanceDetails({
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = usePerformanceStatistics(
+  const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,

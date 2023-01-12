@@ -3,7 +3,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getCompletedEvents } from 'src/pages/strategies/details/getChartData';
-import { getStrategyResultingDenom } from '../helpers/getStrategyResultingDenom';
+import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 
 function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
   const completedEvents = getCompletedEvents(strategyEvents) || [];
@@ -17,7 +17,7 @@ function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
   );
 }
 
-export function usePerformanceStatistics(
+export function getPerformanceStatistics(
   strategy: Strategy,
   initialDenomPrice: number,
   resultingDenomPrice: number,
