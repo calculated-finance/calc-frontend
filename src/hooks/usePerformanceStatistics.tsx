@@ -1,7 +1,7 @@
 import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getCompletedEvents } from 'src/pages/strategies/details/getChartData';
 import { getStrategyResultingDenom } from '../helpers/getStrategyResultingDenom';
 
@@ -17,19 +17,18 @@ function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
   );
 }
 
-export function usePerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
-  const { data: eventsData } = useStrategyEvents(strategy.id);
-
-  if (!eventsData) {
-    return {};
-  }
-
+export function usePerformanceStatistics(
+  strategy: Strategy,
+  initialDenomPrice: number,
+  resultingDenomPrice: number,
+  strategyEvents: StrategyEvent[],
+) {
   const marketValueAmount = strategy.received_amount.amount;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const costAmount = strategy.swapped_amount.amount;
-  const totalFeesPaid = getStrategyTotalFeesPaid(eventsData.events);
+  const totalFeesPaid = getStrategyTotalFeesPaid(strategyEvents);
   const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });

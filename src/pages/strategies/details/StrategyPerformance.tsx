@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -6,6 +6,8 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { isNaN } from 'lodash';
+import Spinner from '@components/Spinner';
+import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { usePerformanceStatistics } from '../../../hooks/usePerformanceStatistics';
@@ -16,20 +18,126 @@ export function formatFiat(value: number) {
   )} USD`;
 }
 
-export default function StrategyPerformance({ strategy }: { strategy: Strategy }) {
+function StrategyPerformanceDetails({
+  strategy,
+  strategyEvents,
+}: {
+  strategy: Strategy;
+  strategyEvents: StrategyEvent[];
+}) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: resultingDenomPrice, isLoading: resultingDenomPriceIsLoading } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice, isLoading: initialDenomPriceIsLoading } = useFiatPrice(initialDenom);
+  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
   const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = usePerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
+    strategyEvents,
   );
-  if (resultingDenomPriceIsLoading || initialDenomPriceIsLoading) {
-    return null;
-  }
+  return (
+    <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
+      <GridItem colSpan={1}>
+        <Heading size="xs">Asset in</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
+          <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
+        </Flex>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Asset out</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
+          <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text> <DenomIcon denomName={resultingDenom} />
+        </Flex>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Divider />
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Market value of holdings' : 'Market value of profits'}
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm">{formatFiat(marketValueInFiat)}</Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn
+            ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
+            : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn
+            ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
+            : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Average token cost' : 'Average token sell price'}
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn
+            ? formatFiat((costValue.toConverted() / marketValueValue.toConverted()) * initialDenomPrice)
+            : formatFiat((marketValueValue.toConverted() / costValue.toConverted()) * resultingDenomPrice)}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Divider />
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        {getStrategyType(strategy) === StrategyTypes.DCAIn ? (
+          <Text color={color} fontSize="sm">
+            {formatFiat(profit)}
+          </Text>
+        ) : (
+          <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} fontSize="sm">
+            {formatFiat(marketValueInFiat)}
+          </Text>
+        )}
+      </GridItem>
+      {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+        <>
+          <GridItem colSpan={1}>
+            <Heading size="xs">% change</Heading>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Text color={color} fontSize="sm">
+              {percentageChange}
+            </Text>
+          </GridItem>
+        </>
+      )}
+    </Grid>
+  );
+}
+
+export default function StrategyPerformance({ strategy }: { strategy: Strategy }) {
+  const { data: eventsData } = useStrategyEvents(strategy.id);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
@@ -38,104 +146,13 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
           Strategy performance
         </Heading>
         <Flex layerStyle="panel" flexGrow={1} alignItems="start">
-          <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
-            <GridItem colSpan={1}>
-              <Heading size="xs">Asset in</Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-                <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
-              </Flex>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">Asset out</Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-                <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text> <DenomIcon denomName={resultingDenom} />
-              </Flex>
-            </GridItem>
-            <GridItem colSpan={2}>
-              <Divider />
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn
-                  ? 'Market value of holdings'
-                  : 'Market value of profits'}
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontSize="sm">{formatFiat(marketValueInFiat)}</Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontSize="sm">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn
-                  ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
-                  : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
-              </Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontSize="sm">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn
-                  ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
-                  : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
-              </Text>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Average token cost' : 'Average token sell price'}
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Text fontSize="sm">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn
-                  ? formatFiat((costValue.toConverted() / marketValueValue.toConverted()) * initialDenomPrice)
-                  : formatFiat((marketValueValue.toConverted() / costValue.toConverted()) * resultingDenomPrice)}
-              </Text>
-            </GridItem>
-            <GridItem colSpan={2}>
-              <Divider />
-            </GridItem>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              {getStrategyType(strategy) === StrategyTypes.DCAIn ? (
-                <Text color={color} fontSize="sm">
-                  {formatFiat(profit)}
-                </Text>
-              ) : (
-                <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} fontSize="sm">
-                  {formatFiat(marketValueInFiat)}
-                </Text>
-              )}
-            </GridItem>
-            {getStrategyType(strategy) === StrategyTypes.DCAIn && (
-              <>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">% change</Heading>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Text color={color} fontSize="sm">
-                    {percentageChange}
-                  </Text>
-                </GridItem>
-              </>
-            )}
-          </Grid>
+          {eventsData?.events ? (
+            <StrategyPerformanceDetails strategy={strategy} strategyEvents={eventsData?.events} />
+          ) : (
+            <Center w="full" h="full" px={8} py={6}>
+              <Spinner />
+            </Center>
+          )}
         </Flex>
       </Flex>
     </GridItem>

@@ -13,7 +13,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import useStrategyEvents from '@hooks/useStrategyEvents';
+import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
   VictoryAxis,
@@ -68,6 +68,34 @@ function DaysRadio({ value, onChange }: { value: string; onChange: (value: strin
   );
 }
 
+function StrategyChartStats({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
+  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+
+  const { color, percentageChange, profit, marketValueInFiat } = usePerformanceStatistics(
+    strategy,
+    initialDenomPrice,
+    resultingDenomPrice,
+    strategyEvents,
+  );
+  return (
+    <Stack spacing={3} pt={6} pl={6}>
+      <Stat>
+        <StatLabel fontSize="lg">Strategy market value</StatLabel>
+        <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
+        {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+          <StatHelpText color={color} m={0}>
+            <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
+            {formatFiat(profit)} : {percentageChange}
+          </StatHelpText>
+        )}
+      </Stat>
+    </Stack>
+  );
+}
+
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');
 
@@ -78,21 +106,12 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const events = eventsData?.events;
 
-  const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
   const { data: coingeckoData } = useFiatPriceHistory(resultingDenom, days);
 
   const chartData = getChartData(events, coingeckoData?.prices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, true);
-
-  const { color, percentageChange, profit, marketValueInFiat } = usePerformanceStatistics(
-    strategy,
-    initialDenomPrice,
-    resultingDenomPrice,
-  );
 
   return (
     <GridItem colSpan={6}>
@@ -101,18 +120,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
       </Heading>
 
       <Box layerStyle="panel" position="relative">
-        <Stack spacing={3} pt={6} pl={6}>
-          <Stat>
-            <StatLabel fontSize="lg">Strategy market value</StatLabel>
-            <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
-            {getStrategyType(strategy) === StrategyTypes.DCAIn && (
-              <StatHelpText color={color} m={0}>
-                <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
-                {formatFiat(profit)} : {percentageChange}
-              </StatHelpText>
-            )}
-          </Stat>
-        </Stack>
+        {events && <StrategyChartStats strategy={strategy} strategyEvents={events} />}
         <Box p={6} position="absolute" top={0} right={0}>
           <DaysRadio value={days} onChange={setDays} />
         </Box>
