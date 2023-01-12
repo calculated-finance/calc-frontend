@@ -1,5 +1,5 @@
 import getDenomInfo from '@utils/getDenomInfo';
-import { Event } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 
 type EventWithAccumulation = {
@@ -31,7 +31,7 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
   return currentPrice;
 };
 
-function getEventsWithAccumulation(completedEvents: Event[]) {
+function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
   let totalAmount = 0;
 
   return completedEvents?.map((event) => {
@@ -53,7 +53,7 @@ function getEventsWithAccumulation(completedEvents: Event[]) {
     throw new Error();
   });
 }
-function getCompletedEvents(events: Event[] | undefined) {
+export function getCompletedEvents(events: StrategyEvent[] | undefined) {
   return events?.filter((event) => {
     const { data } = event;
     if ('dca_vault_execution_completed' in data) {
@@ -80,7 +80,7 @@ export const findCurrentAmountInTime = (time: number, events: EventWithAccumulat
 };
 
 export function getChartDataSwaps(
-  events: Event[] | undefined,
+  events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   includeLabel: boolean,
 ) {
@@ -108,7 +108,10 @@ export function getChartDataSwaps(
   return chartData.filter((data) => data !== null);
 }
 
-export function getChartData(events: Event[] | undefined, fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
+export function getChartData(
+  events: StrategyEvent[] | undefined,
+  fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
+) {
   const completedEvents = getCompletedEvents(events);
 
   if (!completedEvents || !fiatPrices) {

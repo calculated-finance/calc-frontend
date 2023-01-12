@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
-import useStrategyEvents, { Event } from '@hooks/useStrategyEvents';
+import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
@@ -31,7 +31,7 @@ import {
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { Denoms, MainnetDenoms } from 'src/models/Denom';
+import { Denoms } from 'src/models/Denom';
 import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
@@ -39,7 +39,7 @@ import StrategyDetails from './StrategyDetails';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 
-function getLatestSwapError(strategy: Strategy, events: Event[] | undefined): string | undefined {
+function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
     return undefined;
   }

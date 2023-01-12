@@ -9,8 +9,8 @@ import {
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 
-export type Event = GeneratedEvent;
-export type EventData = GeneratedEventData;
+export type StrategyEvent = GeneratedEvent;
+export type StrategyEventData = GeneratedEventData;
 
 export default function useStrategyEvents(id: Strategy['id'] | undefined) {
   const { address, client } = useWallet();
@@ -21,7 +21,7 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined) {
       client!.queryContractSmart(CONTRACT_ADDRESS, {
         get_events_by_resource_id: {
           resource_id: id,
-          limit: DEFAULT_PAGE_SIZE
+          limit: DEFAULT_PAGE_SIZE,
         },
       } as QueryMsg),
     {
