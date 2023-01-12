@@ -1,8 +1,13 @@
-import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { ExecutionInterval } from '../models/ExecutionIntervals';
 
-export default {
-  [ExecutionIntervals.Hourly]: ['hour', 'hours'],
-  [ExecutionIntervals.Daily]: ['day', 'days'],
-  [ExecutionIntervals.Weekly]: ['week', 'weeks'],
-  [ExecutionIntervals.Monthly]: ['month', 'months'],
+const executionIntervalDisplay: Record<ExecutionInterval, [string, string]> = {
+  half_hourly: ['half hour', 'half hours'],
+  hourly: ['hour', 'hours'],
+  daily: ['day', 'days'],
+  half_daily: ['half day', 'half days'],
+  weekly: ['week', 'weeks'],
+  fortnightly: ['fortnight', 'fortnights'],
+  monthly: ['month', 'months'],
 };
+
+export default executionIntervalDisplay;
