@@ -1,19 +1,36 @@
 import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
-import { isAutoStaking } from 'src/helpers/isAutoStaking';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import { getCompletedEvents } from 'src/pages/strategies/details/getChartData';
+import { getStrategyResultingDenom } from '../helpers/getStrategyResultingDenom';
 
-export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
+function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
+  const completedEvents = getCompletedEvents(strategyEvents) || [];
+  return (
+    completedEvents.reduce((acc, { data }) => {
+      if ('dca_vault_execution_completed' in data) {
+        return acc + Number(data.dca_vault_execution_completed.fee.amount);
+      }
+      return 0;
+    }, 0) || 0
+  );
+}
+
+export function usePerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
+  const { data: eventsData } = useStrategyEvents(strategy.id);
+
+  if (!eventsData) {
+    return {};
+  }
+
   const marketValueAmount = strategy.received_amount.amount;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const isAutostaking = isAutoStaking(strategy.destinations);
 
   const costAmount = strategy.swapped_amount.amount;
-  const feeFactor = SWAP_FEE + FIN_TAKER_FEE + (isAutostaking ? DELEGATION_FEE : 0);
-  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - Number(costAmount) * feeFactor;
+  const totalFeesPaid = getStrategyTotalFeesPaid(eventsData.events);
+  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
   const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });

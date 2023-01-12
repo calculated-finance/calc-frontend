@@ -34,7 +34,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { formatFiat } from './StrategyPerformance';
-import { getPerformanceStatistics } from './getPerformanceStatistics';
+import { usePerformanceStatistics } from '../../../hooks/usePerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
 const daysData = [
@@ -88,7 +88,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const chartData = getChartData(events, coingeckoData?.prices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, true);
 
-  const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
+  const { color, percentageChange, profit, marketValueInFiat } = usePerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,

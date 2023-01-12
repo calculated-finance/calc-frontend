@@ -8,7 +8,7 @@ import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { isNaN } from 'lodash';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getPerformanceStatistics } from './getPerformanceStatistics';
+import { usePerformanceStatistics } from '../../../hooks/usePerformanceStatistics';
 
 export function formatFiat(value: number) {
   return `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
@@ -22,15 +22,14 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
   const { price: resultingDenomPrice, isLoading: resultingDenomPriceIsLoading } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, isLoading: initialDenomPriceIsLoading } = useFiatPrice(initialDenom);
 
-  if (resultingDenomPriceIsLoading || initialDenomPriceIsLoading) {
-    return null;
-  }
-
-  const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = getPerformanceStatistics(
+  const { color, percentageChange, marketValueValue, costValue, profit, marketValueInFiat } = usePerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
   );
+  if (resultingDenomPriceIsLoading || initialDenomPriceIsLoading) {
+    return null;
+  }
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
