@@ -98,7 +98,20 @@ function FeeBreakdown({
                     </Text>
                   ) : (
                     <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
+                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                    </Text>
+                  )}
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs">Kujira community pool:</Text>
+                  <Spacer />
+                  {applyPromo ? (
+                    <Text color="blue.200" textStyle="body-xs">
+                      Free
+                    </Text>
+                  ) : (
+                    <Text textStyle="body-xs">
+                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
                     </Text>
                   )}
                 </Flex>
