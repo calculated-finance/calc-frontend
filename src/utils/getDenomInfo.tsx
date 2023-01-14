@@ -102,6 +102,20 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'secret',
     enabled: true,
   },
+  [MainnetDenoms.LOCAL]: {
+    name: 'LOCAL',
+    icon: '/images/denoms/local.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'local-money',
+    enabled: true,
+  },
+  [MainnetDenoms.LUNA]: {
+    name: 'LUNA',
+    icon: '/images/denoms/luna.svg',
+    coingeckoId: 'terra-luna-2',
+    enabled: true,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
