@@ -108,13 +108,13 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     stable: false,
     coingeckoId: 'local-money',
-    enabled: false,
+    enabled: true,
   },
   [MainnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
-    coingeckoId: 'terra-luna',
-    enabled: false,
+    coingeckoId: 'terra-luna-2',
+    enabled: true,
   },
 };
 
