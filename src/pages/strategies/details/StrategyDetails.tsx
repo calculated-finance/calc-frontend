@@ -22,6 +22,7 @@ import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { isAutoStaking } from 'src/helpers/isAutoStaking';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
 import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
+import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
 import { CancelButton } from './CancelButton';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 
@@ -100,8 +101,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             <Heading size="xs">Investment cycle</Heading>
           </GridItem>
           <GridItem colSpan={2}>
-            <Text fontSize="sm" textTransform="capitalize" data-testid="strategy-investment-cycle">
-              {time_interval}
+            <Text fontSize="sm" data-testid="strategy-investment-cycle">
+              {executionIntervalLabel[time_interval]}
             </Text>
           </GridItem>
           <GridItem colSpan={1}>

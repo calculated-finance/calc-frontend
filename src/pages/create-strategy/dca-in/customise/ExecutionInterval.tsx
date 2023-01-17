@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
 import Radio from '../../../../components/Radio';
 import RadioCard from '../../../../components/RadioCard';
-import { advancedExecutionIntervalData, executionIntervalData } from '../../../../helpers/executionIntervalData';
+import { executionIntervalData } from '../../../../helpers/executionIntervalData';
 
 export default function ExecutionInterval() {
   const [field, , helpers] = useField({ name: 'executionInterval' });
