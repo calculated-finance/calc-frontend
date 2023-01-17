@@ -2,10 +2,4 @@
 
 import { TimeInterval } from 'src/interfaces/generated/response/get_vault';
 
-export type ExecutionInterval = TimeInterval;
-export enum ExecutionIntervals {
-  Hourly = 'hourly',
-  Daily = 'daily',
-  Weekly = 'weekly',
-  Monthly = 'monthly',
-}
+export type ExecutionIntervals = TimeInterval;

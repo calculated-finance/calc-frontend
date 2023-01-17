@@ -11,7 +11,6 @@ import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
-import { Denoms, MainnetDenoms } from './Denom';
 
 export const initialValues = {
   resultingDenom: '',
@@ -24,7 +23,7 @@ export const initialValues = {
   purchaseTime: '',
   startPrice: null,
 
-  executionInterval: ExecutionIntervals.Daily,
+  executionInterval: 'daily',
   swapAmount: null,
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
@@ -126,7 +125,7 @@ export const allValidationSchema = Yup.object({
         return new Date() <= combineDateAndTime(startDate, value);
       },
     }),
-  executionInterval: Yup.mixed<ExecutionIntervals>().oneOf(Object.values(ExecutionIntervals)).required(),
+  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
   swapAmount: Yup.number()
     .label('Swap Amount')
     .required()

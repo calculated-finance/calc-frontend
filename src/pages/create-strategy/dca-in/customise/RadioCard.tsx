@@ -14,6 +14,7 @@ export default function RadioCard(props: UseRadioProps & ChildrenProp) {
       <Box
         {...checkbox}
         cursor="pointer"
+        w="max-content"
         px={2}
         _checked={{
           bg: 'blue.200',

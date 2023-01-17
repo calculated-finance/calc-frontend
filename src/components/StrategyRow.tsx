@@ -10,6 +10,7 @@ import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { getStrategyName } from 'src/helpers/getStrategyName';
 import getDenomInfo from '@utils/getDenomInfo';
+import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -72,10 +73,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 4, xl: 2 }}>
         <Text fontSize="sm">Interval:</Text>
         <Text textStyle="body-xs">
-          <Text textTransform="capitalize" as="span">
-            {strategy.time_interval}
-          </Text>
-          : {Number(getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount)).toFixed(6))}{' '}
+          <Text as="span">{executionIntervalLabel[strategy.time_interval]}</Text>:{' '}
+          {Number(getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount)).toFixed(6))}{' '}
           {getDenomInfo(initialDenom).name}
         </Text>
       </GridItem>

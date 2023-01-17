@@ -247,7 +247,7 @@ describe('Detail page', () => {
         mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
         await renderTarget();
-        await waitFor(() => expect(screen.getByTestId('strategy-investment-cycle').textContent).toBe('weekly'));
+        await waitFor(() => expect(screen.getByTestId('strategy-investment-cycle').textContent).toBe('Weekly'));
       });
     });
     describe('slippage tolerance', () => {
