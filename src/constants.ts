@@ -40,11 +40,11 @@ export const FEE_FREE_USK_PROMO_DESCRIPTION =
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
-        uskPromoEnabled: true,
+        uskPromoEnabled: false,
         extraTimeOptions: false,
       }
     : {
-        uskPromoEnabled: true,
+        uskPromoEnabled: false,
         extraTimeOptions: true,
       };
 
