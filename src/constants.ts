@@ -41,7 +41,7 @@ export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
         uskPromoEnabled: false,
-        extraTimeOptions: true,
+        extraTimeOptions: false,
       }
     : {
         uskPromoEnabled: false,
