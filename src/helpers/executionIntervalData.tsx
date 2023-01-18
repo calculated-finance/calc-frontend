@@ -5,7 +5,7 @@ export const executionIntervalData: { value: ExecutionIntervals; label: string }
   ? [
       {
         value: 'half_hourly',
-        label: '30m',
+        label: 'Half-hour',
       },
       {
         value: 'hourly',
@@ -13,7 +13,7 @@ export const executionIntervalData: { value: ExecutionIntervals; label: string }
       },
       {
         value: 'half_daily',
-        label: '12hr',
+        label: 'Half-day',
       },
       {
         value: 'daily',
@@ -23,10 +23,10 @@ export const executionIntervalData: { value: ExecutionIntervals; label: string }
         value: 'weekly',
         label: 'Week',
       },
-      {
-        value: 'fortnightly',
-        label: '14D',
-      },
+      // {
+      //   value: 'fortnightly',
+      //   label: '14D',
+      // },
       {
         value: 'monthly',
         label: 'Month',
