@@ -58,6 +58,6 @@ describe('DCA Out success page', () => {
 
     await renderTarget();
 
-    await waitFor(() => expect(screen.getByText(/View my strategies/)).toHaveAttribute('href', '/strategies'));
+    expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1');
   });
 });
