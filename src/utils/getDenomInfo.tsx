@@ -120,7 +120,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     name: 'wBNB',
     icon: '/images/denoms/wbnb.svg',
     coingeckoId: 'binancecoin',
-    enabled: false,
+    enabled: true,
     conversion: (value: number) => value / 10 ** 18,
     deconversion: (value: number) => Math.round(value * 10 ** 18),
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
