@@ -29,7 +29,8 @@ export function getPerformanceStatistics(
 
   const costAmount = strategy.swapped_amount.amount;
   const totalFeesPaid = getStrategyTotalFeesPaid(strategyEvents);
-  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
+  const costAmountWithFeesSubtractedInFiat = 
+    Number(costAmount) - new DenomValue({amount: totalFeesPaid.toString(), denom: resultingDenom}).toConverted()
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
   const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });

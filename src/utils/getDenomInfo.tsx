@@ -116,6 +116,37 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'terra-luna-2',
     enabled: true,
   },
+  [MainnetDenoms.WBNB]: {
+    name: 'wBNB',
+    icon: '/images/denoms/wbnb.svg',
+    stable: false,
+    coingeckoId: 'binancecoin',
+    enabled: true,
+    conversion: (value: number) => value / 10 ** 18,
+    deconversion: (value: number) => Math.round(value * 10 ** 18),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
+    minimumSwapAmount: 0.05 / 1000,
+  },
+  [MainnetDenoms.OSMO]: {
+    name: 'OSMO',
+    icon: '/images/denoms/osmo.svg',
+    stable: false,
+    coingeckoId: 'osmosis',
+    enabled: true,
+  },
+  [MainnetDenoms.DOT]: {
+    name: 'DOT',
+    icon: '/images/denoms/dot.svg',
+    stable: false,
+    coingeckoId: 'polkadot',
+    enabled: true,
+    conversion: (value: number) => value / 10 ** 10,
+    deconversion: (value: number) => Math.round(value * 10 ** 10),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 4,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 4,
+    minimumSwapAmount: 0.05 / 1000,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
