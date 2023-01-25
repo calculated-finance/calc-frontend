@@ -119,6 +119,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.WBNB]: {
     name: 'wBNB',
     icon: '/images/denoms/wbnb.svg',
+    stable: false,
     coingeckoId: 'binancecoin',
     enabled: true,
     conversion: (value: number) => value / 10 ** 18,
@@ -130,6 +131,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
+    stable: false,
     coingeckoId: 'osmosis',
     enabled: true,
   },
