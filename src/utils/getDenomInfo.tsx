@@ -147,6 +147,18 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 4,
     minimumSwapAmount: 0.05 / 1000,
   },
+  [MainnetDenoms.GPAXG]: {
+    name: 'gPAXG',
+    icon: '/images/denoms/gpaxg.svg',
+    stable: false,
+    coingeckoId: 'pax-gold',
+    enabled: true,
+    conversion: (value: number) => value / 10 ** 18,
+    deconversion: (value: number) => Math.round(value * 10 ** 18),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
+    minimumSwapAmount: 0.05 / 1000,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
