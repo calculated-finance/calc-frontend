@@ -135,6 +135,18 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'osmosis',
     enabled: true,
   },
+  [MainnetDenoms.DOT]: {
+    name: 'DOT',
+    icon: '/images/denoms/dot.svg',
+    stable: false,
+    coingeckoId: 'polkadot',
+    enabled: true,
+    conversion: (value: number) => value / 10 ** 10,
+    deconversion: (value: number) => Math.round(value * 10 ** 10),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 4,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 4,
+    minimumSwapAmount: 0.05 / 1000,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
