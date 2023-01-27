@@ -150,7 +150,7 @@ function Strategies() {
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
           {/* TODO: not really a badge anymore */}
-          <Badge
+          {/* <Badge
             colorScheme="green"
             px={4}
             py={1}
@@ -173,7 +173,7 @@ function Strategies() {
                 strategies
               </>
             ) : null}
-          </Badge>
+          </Badge> */}
         </Wrap>
         <Text pb={4} textStyle="body">
           Strategies that build a position in an asset.{' '}
