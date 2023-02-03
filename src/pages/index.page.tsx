@@ -218,7 +218,7 @@ function Home() {
     <>
       <Box pb={8}>
         <Heading size="lg" mb={2}>
-          Welcome to CALC, you&apos;ve made a great choice!
+          Welcome to STEPH, you&apos;ve made a great choice!
         </Heading>
         <Text textStyle="body">
           CALC removes the hardest part of investing, emotions! Stop being glued to a computer screen 24/7, define your
