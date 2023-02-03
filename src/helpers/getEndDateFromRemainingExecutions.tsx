@@ -17,9 +17,6 @@ export function getEndDateFromRemainingExecutions(strategy: Strategy, startDate:
     case 'weekly':
       startDate.setDate(startDate.getDate() + 7 * remainingExecutions);
       break;
-    case 'fortnightly':
-      startDate.setDate(startDate.getDate() + 14 * remainingExecutions);
-      break;
     case 'monthly':
       startDate.setMonth(startDate.getMonth() + remainingExecutions);
       break;
