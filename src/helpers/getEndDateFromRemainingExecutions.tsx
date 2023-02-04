@@ -3,7 +3,7 @@ import { Strategy } from '@hooks/useStrategies';
 export function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, remainingExecutions: number) {
   switch (strategy.time_interval) {
     case 'half_hourly':
-      startDate.setHours(startDate.getHours() + remainingExecutions/2);
+      startDate.setMinutes(startDate.getMinutes() + 30 * remainingExecutions);
       break;
     case 'hourly':
       startDate.setHours(startDate.getHours() + remainingExecutions);
@@ -11,8 +11,8 @@ export function getEndDateFromRemainingExecutions(strategy: Strategy, startDate:
     case 'daily':
       startDate.setDate(startDate.getDate() + remainingExecutions);
       break;
-      case 'half_daily':
-      startDate.setDate(startDate.getDate() + remainingExecutions/2);
+    case 'half_daily':
+      startDate.setHours(startDate.getHours() + 12 * remainingExecutions);
       break;
     case 'weekly':
       startDate.setDate(startDate.getDate() + 7 * remainingExecutions);
