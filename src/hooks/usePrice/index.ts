@@ -67,12 +67,15 @@ export default function usePrice(
   resultingDenom: Denom | undefined,
   initialDenom: Denom | undefined,
   transactionType: TransactionType,
+  enabled = true,
 ) {
   const { client } = useWallet();
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
   const pairAddress = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
+
+  console.log('pairAddress', pairAddress);
 
   const { data, ...helpers } = useQueryWithNotification<BookResponse>(
     ['price', pairAddress, client],
@@ -85,7 +88,7 @@ export default function usePrice(
       return result;
     },
     {
-      enabled: !!client && !!pairAddress,
+      enabled: !!client && !!pairAddress && enabled,
     },
   );
   const price = data && calculatePrice(data, initialDenom!, transactionType);
@@ -99,6 +102,7 @@ export default function usePrice(
 
   return {
     price: formattedPrice,
+    rawPrice: price,
     pairAddress,
     ...helpers,
   };

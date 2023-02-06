@@ -1,7 +1,7 @@
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
 import { getPromoMessage } from '@components/Banner';
-import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
+import { Denom, Denoms, MainnetDenoms, TestnetDenoms } from '@models/Denom';
 import { featureFlags } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { isMainnet } from './isMainnet';
@@ -15,11 +15,12 @@ type DenomInfo = {
   priceConversion?: (value: number | undefined | null) => number;
   stakeable?: boolean;
   stable?: boolean;
-  coingeckoId: string;
+  coingeckoId?: string;
   stakeableAndSupported?: boolean;
   promotion?: JSX.Element;
   enabled?: boolean;
   minimumSwapAmount?: number;
+  finPriceDenom?: Denom;
 };
 
 const defaultDenom = {
@@ -36,6 +37,7 @@ const defaultDenom = {
   minimumSwapAmount: 0.05,
   priceDeconversion: (value: number | undefined | null) => Number(value),
   priceConversion: (value: number | undefined | null) => Number(value),
+  finPriceDenom: undefined,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -115,6 +117,12 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     icon: '/images/denoms/luna.svg',
     coingeckoId: 'terra-luna-2',
     enabled: true,
+  },
+  [MainnetDenoms.AQUA]: {
+    name: 'AQUA',
+    icon: '/images/denoms/aqua.png',
+    enabled: true,
+    finPriceDenom: Denoms.USK,
   },
 };
 
