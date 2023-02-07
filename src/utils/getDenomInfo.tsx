@@ -113,12 +113,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
+    stakeable: true,
     coingeckoId: 'terra-luna-2',
     enabled: true,
   },
   [MainnetDenoms.WBNB]: {
     name: 'wBNB',
     icon: '/images/denoms/wbnb.svg',
+    stakeable: true,
     stable: false,
     coingeckoId: 'binancecoin',
     enabled: true,
@@ -131,6 +133,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
+    stakeable: true,
     stable: false,
     coingeckoId: 'osmosis',
     enabled: true,
@@ -138,6 +141,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.DOT]: {
     name: 'DOT',
     icon: '/images/denoms/dot.svg',
+    stakeable: true,
     stable: false,
     coingeckoId: 'polkadot',
     enabled: true,
@@ -150,6 +154,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.GPAXG]: {
     name: 'gPAXG',
     icon: '/images/denoms/gpaxg.svg',
+    stakeable: true,
     stable: false,
     coingeckoId: 'pax-gold',
     enabled: true,
@@ -162,7 +167,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.MARS]: {
     name: 'MARS',
     icon: '/images/denoms/mars.svg',
-    stakeable: false,
+    stakeable: true,
     stable: false,
     coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
     enabled: true,
