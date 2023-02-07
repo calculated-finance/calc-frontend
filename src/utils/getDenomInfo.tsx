@@ -159,6 +159,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     minimumSwapAmount: 0.05 / 1000,
   },
+  [MainnetDenoms.MARS]: {
+    name: 'MARS',
+    icon: '/images/denoms/mars.svg',
+    stakeable: false,
+    stable: false,
+    coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
+    enabled: true,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
