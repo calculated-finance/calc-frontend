@@ -144,36 +144,49 @@ function Strategies() {
 
   const fearAndGreedIndex = data?.data[0].value;
   const fearAndGreedClassification = data?.data[0].value_classification;
+  
+  let fearAndGreedStrategy;
+  if (fearAndGreedIndex < 41) { 
+      fearAndGreedStrategy = 'it may be a good time to use accumulation strategies'; 
+  } else if (fearAndGreedIndex > 59) { 
+    fearAndGreedStrategy = 'it may be a good time to use take profit strategies'; 
+  } else { 
+    fearAndGreedStrategy = 'no strategy recomendations';
+  }
+
   return (
     <Stack direction="column" spacing={8}>
       <Box>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
-          {/* TODO: not really a badge anymore */}
-          {/* <Badge
-            colorScheme="green"
-            px={4}
-            py={1}
-            layerStyle="panel"
-            whiteSpace="normal"
-            bg="deepHorizon"
-            textAlign="center"
-          >
-            {isLoading ? (
-              <Spinner w={3} h={3} />
-            ) : fearAndGreedIndex ? (
-              <>
-                According to the{' '}
-                <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
-                  <Text as="a" textDecoration="underline" target="_blank">
-                    Fear &amp; Greed index score
-                  </Text>
-                </NextLink>
-                : {fearAndGreedIndex} ({fearAndGreedClassification}), it may be a good time to use accumulation
-                strategies
-              </>
-            ) : null}
-          </Badge> */}
+          {
+            (fearAndGreedIndex < 41 || fearAndGreedIndex > 59) && (
+              <Badge
+                colorScheme="green"
+                px={4}
+                py={1}
+                layerStyle="panel"
+                whiteSpace="normal"
+                bg="deepHorizon"
+                textAlign="center"
+              >
+                {isLoading ? (
+                  <Spinner w={3} h={3} />
+                ) : fearAndGreedIndex ? (
+                  <>
+                    According to the{' '}
+                    <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+                      <Text as="a" textDecoration="underline" target="_blank">
+                        Fear &amp; Greed index score
+                      </Text>
+                    </NextLink>
+                    : {fearAndGreedIndex} ({fearAndGreedClassification}), {fearAndGreedStrategy}
+                  </>
+                ) : null}
+              </Badge>
+            )
+          }
+          
         </Wrap>
         <Text pb={4} textStyle="body">
           Strategies that build a position in an asset.{' '}
