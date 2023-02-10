@@ -87,7 +87,7 @@ function StrategyChartStats({ strategy, strategyEvents }: { strategy: Strategy; 
         <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
         {getStrategyType(strategy) === StrategyTypes.DCAIn && (
           <StatHelpText color={color} m={0}>
-            <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} />
+            <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} color={color} />
             {formatFiat(profit)} : {percentageChange}
           </StatHelpText>
         )}

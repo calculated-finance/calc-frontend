@@ -27,6 +27,7 @@ const useFiatPrice = (denom: Denom | undefined) => {
     },
     {
       cacheTime: 5000,
+      staleTime: 5000,
       enabled: !!coingeckoId && !!fiatCurrencyId,
     },
   );
