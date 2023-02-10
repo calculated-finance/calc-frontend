@@ -145,14 +145,9 @@ function Strategies() {
   const fearAndGreedIndex = data?.data[0].value;
   const fearAndGreedClassification = data?.data[0].value_classification;
   
-  let fearAndGreedStrategy;
-  if (fearAndGreedIndex < 41) { 
-      fearAndGreedStrategy = 'it may be a good time to use accumulation strategies'; 
-  } else if (fearAndGreedIndex > 59) { 
-    fearAndGreedStrategy = 'it may be a good time to use take profit strategies'; 
-  } else { 
-    fearAndGreedStrategy = 'no strategy recomendations';
-  }
+  const setStrategyRecommendation = fearAndGreedIndex < 41 ? 'accumulation' : 'take profit'
+  const StrategyRecommendation = `it may be a good time to use ${setStrategyRecommendation} strategies`
+  const showFearAndGreed = fearAndGreedIndex < 41 || fearAndGreedIndex > 59
 
   return (
     <Stack direction="column" spacing={8}>
@@ -160,7 +155,7 @@ function Strategies() {
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
           {
-            (fearAndGreedIndex < 41 || fearAndGreedIndex > 59) && (
+            showFearAndGreed && (
               <Badge
                 colorScheme="green"
                 px={4}
@@ -180,7 +175,7 @@ function Strategies() {
                         Fear &amp; Greed index score
                       </Text>
                     </NextLink>
-                    : {fearAndGreedIndex} ({fearAndGreedClassification}), {fearAndGreedStrategy}
+                    : {fearAndGreedIndex} ({fearAndGreedClassification}), {StrategyRecommendation}
                   </>
                 ) : null}
               </Badge>
