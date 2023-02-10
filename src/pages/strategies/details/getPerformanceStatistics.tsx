@@ -46,7 +46,7 @@ export function getPerformanceStatistics(
   if (profit > 0) {
     color = 'green.200';
   } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -1) {
-    color = 'grey.200';
+    color = 'white.200';
   } else if (profit < 0) {
     color = 'red.200';
   } else {
