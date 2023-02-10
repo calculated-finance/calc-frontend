@@ -42,7 +42,17 @@ export function getPerformanceStatistics(
 
   const percentageChange = `${(costInFiat ? (profit / costInFiat) * 100 : 0).toFixed(2)}%`;
 
-  const color = profit > 0 ? 'green.200' : profit < 0 ? 'red.200' : 'white';
+  let color;
+  if (profit > 0) {
+    color = 'green.200';
+  } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -1) {
+    color = 'grey.200';
+  } else if (profit < 0) {
+    color = 'red.200';
+  } else {
+    color = 'white';
+  }
+
   return {
     color,
     percentageChange,
