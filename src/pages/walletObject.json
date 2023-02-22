@@ -1,0 +1,196 @@
+{
+  "network": {
+    "akashnet-2": {
+      "baseAsset": "uakt",
+      "chainID": "akashnet-2",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "uakt": 0.025
+      },
+      "ibc": {
+        "fromTerra": "channel-45",
+        "toTerra": "channel-56"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Akash.svg",
+      "lcd": "https://rest.cosmos.directory/akash",
+      "name": "Akash",
+      "prefix": "akash"
+    },
+    "axelar-dojo-1": {
+      "baseAsset": "uaxl",
+      "chainID": "axelar-dojo-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "uaxl": 0.007
+      },
+      "ibc": {
+        "fromTerra": "channel-6",
+        "toTerra": "channel-11"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Axelar.svg",
+      "lcd": "https://lcd-axelar.imperator.co",
+      "name": "Axelar",
+      "prefix": "axelar"
+    },
+    "chihuahua-1": {
+      "baseAsset": "uhuahua",
+      "chainID": "chihuahua-1",
+      "coinType": "118",
+      "gasAdjustment": 2,
+      "gasPrices": {
+        "uhuahua": 1
+      },
+      "ibc": {
+        "fromTerra": "channel-44",
+        "toTerra": "channel-34"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Huahua.png",
+      "lcd": "https://api.chihuahua.wtf",
+      "name": "Chihuahua",
+      "prefix": "chihuahua"
+    },
+    "crescent-1": {
+      "baseAsset": "ucre",
+      "chainID": "crescent-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "ucre": 0.01
+      },
+      "ibc": {
+        "fromTerra": "channel-37",
+        "toTerra": "channel-27"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Crescent.svg",
+      "lcd": "https://mainnet.crescent.network:1317",
+      "name": "Crescent",
+      "prefix": "cre"
+    },
+    "juno-1": {
+      "baseAsset": "ujuno",
+      "chainID": "juno-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "ujuno": 0.0025
+      },
+      "ibc": {
+        "fromTerra": "channel-2",
+        "toTerra": "channel-86"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Juno.svg",
+      "lcd": "https://lcd-juno.mib.tech",
+      "name": "Juno",
+      "prefix": "juno"
+    },
+    "kaiyo-1": {
+      "baseAsset": "ukuji",
+      "chainID": "kaiyo-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "ibc/295548A78785A1007F232DE286149A6FF512F180AF5657780FC89C009E2C348F": 0.0015,
+        "ibc/DA59C009A0B3B95E0549E6BF7B075C8239285989FF457A8EDDBB56F10B2A6986": 0.000625,
+        "ukuji": 0.00119
+      },
+      "ibc": {
+        "fromTerra": "channel-10",
+        "toTerra": "channel-5"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Kujira.png",
+      "lcd": "https://lcd.kaiyo.kujira.setten.io",
+      "name": "Kujira",
+      "prefix": "kujira"
+    },
+    "mars-1": {
+      "baseAsset": "umars",
+      "chainID": "mars-1",
+      "coinType": "330",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "umars": 0
+      },
+      "ibc": {
+        "fromTerra": "channel-78",
+        "toTerra": "channel-2"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Mars.svg",
+      "lcd": "https://rest.marsprotocol.io",
+      "name": "Mars",
+      "prefix": "mars",
+      "version": "0.46"
+    },
+    "osmosis-1": {
+      "baseAsset": "uosmo",
+      "chainID": "osmosis-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "uosmo": 0.025
+      },
+      "ibc": {
+        "fromTerra": "channel-1",
+        "toTerra": "channel-251"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Osmosis.svg",
+      "lcd": "https://lcd.osmosis.zone",
+      "name": "Osmosis",
+      "prefix": "osmo"
+    },
+    "phoenix-1": {
+      "baseAsset": "uluna",
+      "chainID": "phoenix-1",
+      "coinType": "330",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "uluna": 0.015
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Terra.svg",
+      "lcd": "https://phoenix-lcd.terra.dev",
+      "name": "Terra",
+      "prefix": "terra"
+    },
+    "stride-1": {
+      "baseAsset": "ustrd",
+      "chainID": "stride-1",
+      "coinType": "118",
+      "gasAdjustment": 1.75,
+      "gasPrices": {
+        "ustrd": 0
+      },
+      "ibc": {
+        "fromTerra": "channel-46",
+        "toTerra": "channel-52"
+      },
+      "icon": "https://station-assets.terra.money/img/chains/Stride.png",
+      "lcd": "https://stride-fleet.main.stridenet.co/api",
+      "name": "Stride",
+      "prefix": "stride"
+    }
+  },
+  "addresses": {
+    "akashnet-2": "akash13zatchjvrqvtkg2asfxnjmnsur3e7fas7g660m",
+    "axelar-dojo-1": "axelar13zatchjvrqvtkg2asfxnjmnsur3e7fashap4aq",
+    "chihuahua-1": "chihuahua13zatchjvrqvtkg2asfxnjmnsur3e7fassx6nhr",
+    "crescent-1": "cre13zatchjvrqvtkg2asfxnjmnsur3e7fashmycrv",
+    "juno-1": "juno13zatchjvrqvtkg2asfxnjmnsur3e7fas9p5x3a",
+    "kaiyo-1": "kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt",
+    "mars-1": "mars1tdmmq5jwhfu0mnlxzu5fk6aunl7k9hdhmqag4q",
+    "osmosis-1": "osmo13zatchjvrqvtkg2asfxnjmnsur3e7fasmgydqn",
+    "phoenix-1": "terra1tdmmq5jwhfu0mnlxzu5fk6aunl7k9hdhqe73zm",
+    "stride-1": "stride13zatchjvrqvtkg2asfxnjmnsur3e7fasschpzd"
+  },
+  "design": "terra",
+  "availablePost": true,
+  "availableSign": true,
+  "availableSignBytes": true,
+  "connectType": "EXTENSION",
+  "connection": {
+    "type": "EXTENSION",
+    "name": "Station Wallet",
+    "icon": "https://assets.terra.money/icon/station-extension/icon.png",
+    "identifier": "station"
+  }
+}

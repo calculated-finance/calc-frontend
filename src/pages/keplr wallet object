@@ -1,0 +1,69 @@
+{
+  "codesCache": {},
+  "tmClient": {
+    "client": {
+      "url": "https://rpc.harpoon.kujira.setten.io"
+    }
+  },
+  "queryClient": {
+    "tmClient": {
+      "client": {
+        "url": "https://rpc.harpoon.kujira.setten.io"
+      }
+    },
+    "auth": {},
+    "bank": {},
+    "wasm": {},
+    "tx": {}
+  },
+  "registry": {
+    "types": {}
+  },
+  "aminoTypes": {
+    "register": {
+      "/cosmwasm.wasm.v1.MsgStoreCode": {
+        "aminoType": "wasm/MsgStoreCode"
+      },
+      "/cosmwasm.wasm.v1.MsgInstantiateContract": {
+        "aminoType": "wasm/MsgInstantiateContract"
+      },
+      "/cosmwasm.wasm.v1.MsgUpdateAdmin": {
+        "aminoType": "wasm/MsgUpdateAdmin"
+      },
+      "/cosmwasm.wasm.v1.MsgClearAdmin": {
+        "aminoType": "wasm/MsgClearAdmin"
+      },
+      "/cosmwasm.wasm.v1.MsgExecuteContract": {
+        "aminoType": "wasm/MsgExecuteContract"
+      },
+      "/cosmwasm.wasm.v1.MsgMigrateContract": {
+        "aminoType": "wasm/MsgMigrateContract"
+      },
+      "/cosmos.bank.v1beta1.MsgSend": {
+        "aminoType": "cosmos-sdk/MsgSend"
+      },
+      "/cosmos.bank.v1beta1.MsgMultiSend": {
+        "aminoType": "cosmos-sdk/MsgMultiSend"
+      }
+    }
+  },
+  "signer": {
+    "chainId": "harpoon-4",
+    "keplr": {
+      "version": "0.11.41",
+      "mode": "extension",
+      "eventListener": {},
+      "enigmaUtils": {},
+      "defaultOptions": {}
+    }
+  },
+  "gasPrice": {
+    "amount": {
+      "data": {
+        "atomics": "354a6ba7a18000",
+        "fractionalDigits": 18
+      }
+    },
+    "denom": "ukuji"
+  }
+}

@@ -13,7 +13,25 @@ import Head from 'next/head';
 import { CHAIN_ID, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
 import { NetworkContext } from '@components/NetworkContext';
 import { hotjar } from 'react-hotjar';
+import { getChainOptions, WalletController } from '@terra-money/wallet-controller';
 import { KeplrWalletAdapter } from './keplr';
+import { StationWalletAdapter } from './stationWizard';
+
+let instance: WalletController;
+
+export async function initController() {
+  const chainOptions = await getChainOptions();
+
+  instance = new WalletController({
+    ...chainOptions,
+  });
+}
+
+export function getController(): WalletController {
+  return instance;
+}
+
+initController();
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -40,6 +58,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const wallets = useMemo(
     () => [
       new KeplrWalletAdapter({
+        endpoint,
+        chainId,
+        options: {
+          gasPrice: GasPrice.fromString('0.015ukuji'),
+        },
+      }),
+      new StationWalletAdapter({
         endpoint,
         chainId,
         options: {

@@ -139,6 +139,8 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
       let wallet = null;
       let accounts = null;
 
+      console.log('connectingn keplre');
+
       const config = CHAIN_INFO[CHAIN_ID];
 
       try {
@@ -169,6 +171,8 @@ export class KeplrWalletAdapter extends BaseSignerWalletAdapter {
 
       this._wallet = wallet as KeplrWallet;
       this._address = address;
+
+      console.log('keplr wallet object', wallet);
 
       this.emit('connect', address);
     } catch (error: any) {
