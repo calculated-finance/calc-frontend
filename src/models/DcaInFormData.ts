@@ -9,6 +9,7 @@ import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
+import { isNil } from 'lodash';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 
@@ -151,7 +152,7 @@ export const allValidationSchema = Yup.object({
     .test({
       name: 'greater-than-minimum-swap',
       test(value, context) {
-        if (!value) {
+        if (isNil(value)) {
           return true;
         }
         const { initialDenom = null } = { ...context.parent, ...context.options.context };
