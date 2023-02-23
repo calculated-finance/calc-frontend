@@ -1,26 +1,18 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Image,
-  SimpleGrid,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack, Text, Image, SimpleGrid, useDisclosure } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
+import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
+import { featureFlags } from 'src/constants';
 import OnRampModal from '../../components/OnRampModalContent';
 
 type GetAssetsCardProps = {
   name: string;
   description: string;
   image: string;
-  href: string;
+  href?: string;
   cta: string;
   onClick?: () => void;
 };
-
 
 function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAssetsCardProps) {
   return (
@@ -45,6 +37,7 @@ function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAsse
 
 function Strategies() {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>
@@ -66,7 +59,6 @@ function Strategies() {
           name="Fiat on ramp"
           description="Get axlUSDC from a fiat on ramp provider."
           image="/images/kado.svg"
-          href="https://www.kado.money/assets/usd-coin"
           onClick={onOpen}
           cta="Get axlUSDC now"
         />
@@ -77,8 +69,18 @@ function Strategies() {
           href="https://blue.kujira.app/mint"
           cta="Mint USK now"
         />
+        {featureFlags.squidIntegrationEnabled && (
+          <GetAssetsCard
+            name="ETH Bridge"
+            description="Bridge ETH assets to Kujira"
+            image="/images/squid.svg"
+            onClick={onSquidOpen}
+            cta="Bridge ETH now"
+          />
+        )}
       </SimpleGrid>
       <OnRampModal isOpen={isOpen} onClose={onClose} />
+      {featureFlags.squidIntegrationEnabled && <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />}
     </Stack>
   );
 }
