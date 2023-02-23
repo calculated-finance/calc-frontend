@@ -2,13 +2,14 @@ import { Button, Flex, Heading, Stack, Text, Image, SimpleGrid, useDisclosure } 
 import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
+import { featureFlags } from 'src/constants';
 import OnRampModal from '../../components/OnRampModalContent';
 
 type GetAssetsCardProps = {
   name: string;
   description: string;
   image: string;
-  href: string;
+  href?: string;
   cta: string;
   onClick?: () => void;
 };
@@ -58,7 +59,6 @@ function Strategies() {
           name="Fiat on ramp"
           description="Get axlUSDC from a fiat on ramp provider."
           image="/images/kado.svg"
-          href="https://www.kado.money/assets/usd-coin"
           onClick={onOpen}
           cta="Get axlUSDC now"
         />
@@ -69,17 +69,18 @@ function Strategies() {
           href="https://blue.kujira.app/mint"
           cta="Mint USK now"
         />
-        <GetAssetsCard
-          name="ETH Bridge"
-          description="Bridge ETH assets to Kujira"
-          image="/images/squid.svg"
-          onClick={onSquidOpen}
-          href="https://blue.kujira.app/mint"
-          cta="Bridge ETH now"
-        />
+        {featureFlags.squidIntegrationEnabled && (
+          <GetAssetsCard
+            name="ETH Bridge"
+            description="Bridge ETH assets to Kujira"
+            image="/images/squid.svg"
+            onClick={onSquidOpen}
+            cta="Bridge ETH now"
+          />
+        )}
       </SimpleGrid>
       <OnRampModal isOpen={isOpen} onClose={onClose} />
-      <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
+      {featureFlags.squidIntegrationEnabled && <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />}
     </Stack>
   );
 }

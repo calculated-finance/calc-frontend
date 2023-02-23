@@ -20,6 +20,7 @@ import {
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
+import { featureFlags } from 'src/constants';
 import CalcIcon from './Icon';
 import { SpendableBalances } from './SpendableBalances';
 import OnRampModal from './OnRampModalContent';
@@ -98,18 +99,21 @@ function CosmosWallet() {
                   Fund With Kado
                 </Button>
                 <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
-
-                <Button
-                  size="xs"
-                  variant="link"
-                  onClick={onSquidOpen}
-                  colorScheme="white"
-                  w="max-content"
-                  leftIcon={<Image src="/images/squid.svg" w={4} h={4} />}
-                >
-                  Bridge ETH
-                </Button>
-                <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
+                {featureFlags.squidIntegrationEnabled && (
+                  <>
+                    <Button
+                      size="xs"
+                      variant="link"
+                      onClick={onSquidOpen}
+                      colorScheme="white"
+                      w="max-content"
+                      leftIcon={<Image src="/images/squid.svg" w={4} h={4} />}
+                    >
+                      Bridge ETH with Squid
+                    </Button>
+                    <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
+                  </>
+                )}
 
                 <Divider />
                 <Button

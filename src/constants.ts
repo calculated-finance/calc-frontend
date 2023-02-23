@@ -42,10 +42,12 @@ export const featureFlags =
     ? {
         uskPromoEnabled: false,
         extraTimeOptions: true,
+        squidIntegrationEnabled: false,
       }
     : {
         uskPromoEnabled: false,
         extraTimeOptions: true,
+        squidIntegrationEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
