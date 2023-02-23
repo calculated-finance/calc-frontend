@@ -2,9 +2,9 @@ import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@
 import { useField } from 'formik';
 import { FormNames, useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
-import RadioCard from '../../../../components/RadioCard';
-import Radio from '../../../../components/Radio';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
+import RadioCard from '@components/RadioCard';
+import Radio from '@components/Radio';
+import SendToWalletValues from '@models/SendToWalletValues';
 
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   {

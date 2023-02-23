@@ -5,9 +5,19 @@ import { useField } from 'formik';
 import YesNoValues from '@models/YesNoValues';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
-import { yesNoData } from '../pages/create-strategy/dca-in/customise/yesNoData';
 import { TransactionType } from './TransactionType';
 import { DenomPriceInput } from './DenomPriceInput';
+
+export const yesNoData: { value: YesNoValues; label: string }[] = [
+  {
+    value: YesNoValues.Yes,
+    label: 'Yes',
+  },
+  {
+    value: YesNoValues.No,
+    label: 'No',
+  },
+];
 
 function PriceThresholdToggle() {
   const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
