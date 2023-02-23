@@ -13,7 +13,7 @@ import { useField } from 'formik';
 import SendToWalletValues from '@models/SendToWalletValues';
 import useValidators from '@hooks/useValidators';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
-import Select from '../../../../components/Select';
+import Select from './Select';
 
 export function DummyAutoStakeValidator() {
   return (

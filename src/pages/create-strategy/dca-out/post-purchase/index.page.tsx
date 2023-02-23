@@ -20,8 +20,8 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
+import RecipientAccount from '@components/RecipientAccount';
 import SendToWallet from './SendToWallet';
-import RecipientAccount from './RecipientAccount';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import dcaOutSteps from '../dcaOutSteps';
 

@@ -15,9 +15,9 @@ import { useRouter } from 'next/router';
 import RecipientAccount from '@components/RecipientAccount';
 import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValues from '@models/AutoStakeValues';
+import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
+import { AutoStake, DummyAutoStake } from '@components/AutoStake';
 import SendToWallet from './SendToWallet';
-import { AutoStake, DummyAutoStake } from './AutoStake';
-import AutoStakeValidator, { DummyAutoStakeValidator } from './AutoStakeValidator';
 
 function InvalidData() {
   const router = useRouter();
