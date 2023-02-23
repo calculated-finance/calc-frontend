@@ -19,7 +19,7 @@ import PriceThreshold from '@components/PriceThreshold';
 import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StartDate from '@components/StartDate';
-import StartImmediately from './StartImmediately';
+import StartImmediately from '@components/StartImmediately';
 import SwapAmount from './SwapAmount';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';

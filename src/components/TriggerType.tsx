@@ -1,7 +1,7 @@
 import { RadioGroup, Stack, Radio, Text } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
-import TriggerTypes from '../../../../models/TriggerTypes';
+import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
+import TriggerTypes from '@models/TriggerTypes';
 
 export default function TriggerType() {
   const [field, , helpers] = useField('triggerType');
