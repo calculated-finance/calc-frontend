@@ -42,7 +42,7 @@ export const featureFlags =
     ? {
         uskPromoEnabled: false,
         extraTimeOptions: true,
-        squidIntegrationEnabled: false,
+        squidIntegrationEnabled: true,
       }
     : {
         uskPromoEnabled: false,
