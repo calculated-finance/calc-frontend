@@ -17,7 +17,7 @@ import ExecutionInterval from '@components/ExecutionInterval';
 import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import SlippageTolerance from '@components/SlippageTolerance';
-import StartDate from './StartDate';
+import StartDate from '@components/StartDate';
 import StartImmediately from './StartImmediately';
 import SwapAmount from './SwapAmount';
 import PurchaseTime from './PurchaseTime';
