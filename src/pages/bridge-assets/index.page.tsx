@@ -71,11 +71,11 @@ function Strategies() {
         />
         {featureFlags.squidIntegrationEnabled && (
           <GetAssetsCard
-            name="ETH Bridge"
-            description="Bridge ETH assets to Kujira"
-            image="/images/squid.svg"
+            name="Squid Cross Chain Bridge"
+            description="Bridge almost any asset to Cosmos from almost any chain with Squid and Axelar."
+            image="/images/squidAssets.png"
             onClick={onSquidOpen}
-            cta="Bridge ETH now"
+            cta="Bridge assets now"
           />
         )}
       </SimpleGrid>

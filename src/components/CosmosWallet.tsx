@@ -96,7 +96,7 @@ function CosmosWallet() {
                   w="max-content"
                   leftIcon={<Image src="/images/kadoIcon.svg" />}
                 >
-                  Fund With Kado
+                  Fund with Kado
                 </Button>
                 <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
                 {featureFlags.squidIntegrationEnabled && (
@@ -109,7 +109,7 @@ function CosmosWallet() {
                       w="max-content"
                       leftIcon={<Image src="/images/squid.svg" w={4} h={4} />}
                     >
-                      Bridge ETH with Squid
+                      Bridge assets with Squid
                     </Button>
                     <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
                   </>
