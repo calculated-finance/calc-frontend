@@ -11,18 +11,18 @@ import Submit from '@components/Submit';
 import steps from '@components/NewStrategyModal/steps';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import ExecutionInterval from '@components/ExecutionInterval';
+import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
+import DcaDiagram from '@components/DcaDiagram';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
+import PriceThreshold from '@components/PriceThreshold';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
-import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
 import StartImmediately from './StartImmediately';
-import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
 import SwapAmount from './SwapAmount';
-import DcaDiagram from '../../../../components/DcaDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
-import AdvancedSettingsSwitch from '../../../../components/AdvancedSettingsSwitch';
-import PriceThreshold from '../../../../components/PriceThreshold';
 
 function DcaInStep2() {
   const router = useRouter();
