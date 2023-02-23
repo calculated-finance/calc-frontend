@@ -21,7 +21,7 @@ import DcaDiagram from '../../../../components/DcaDiagram';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
-import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
+import AdvancedSettingsSwitch from '../../../../components/AdvancedSettingsSwitch';
 import PriceThreshold from '../../../../components/PriceThreshold';
 
 function DcaInStep2() {

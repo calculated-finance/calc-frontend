@@ -12,6 +12,7 @@ import DcaDiagram from '@components/DcaDiagram';
 import PriceThreshold from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
 import ExecutionInterval from './ExecutionInterval';
 import StartDate from './StartDate';
@@ -21,7 +22,6 @@ import SwapAmount from './SwapAmount';
 import PurchaseTime from './PurchaseTime';
 import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
-import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {
