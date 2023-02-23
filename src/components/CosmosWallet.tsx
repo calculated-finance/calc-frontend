@@ -23,12 +23,14 @@ import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface'
 import CalcIcon from './Icon';
 import { SpendableBalances } from './SpendableBalances';
 import OnRampModal from './OnRampModalContent';
+import SquidModal from './SquidModal';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
   const { address, disconnect } = useWallet();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
+  const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
   const { onCopy } = useClipboard(address);
   const ref = React.createRef<HTMLElement>();
   useOutsideClick({
@@ -96,6 +98,18 @@ function CosmosWallet() {
                   Fund With Kado
                 </Button>
                 <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
+
+                <Button
+                  size="xs"
+                  variant="link"
+                  onClick={onSquidOpen}
+                  colorScheme="white"
+                  w="max-content"
+                  leftIcon={<Image src="/images/squid.svg" w={4} h={4} />}
+                >
+                  Bridge ETH
+                </Button>
+                <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
 
                 <Divider />
                 <Button

@@ -1,14 +1,6 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Image,
-  SimpleGrid,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, Stack, Text, Image, SimpleGrid, useDisclosure } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
+import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import OnRampModal from '../../components/OnRampModalContent';
 
@@ -20,7 +12,6 @@ type GetAssetsCardProps = {
   cta: string;
   onClick?: () => void;
 };
-
 
 function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAssetsCardProps) {
   return (
@@ -45,6 +36,7 @@ function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAsse
 
 function Strategies() {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>
@@ -77,8 +69,17 @@ function Strategies() {
           href="https://blue.kujira.app/mint"
           cta="Mint USK now"
         />
+        <GetAssetsCard
+          name="ETH Bridge"
+          description="Bridge ETH assets to Kujira"
+          image="/images/squid.svg"
+          onClick={onSquidOpen}
+          href="https://blue.kujira.app/mint"
+          cta="Bridge ETH now"
+        />
       </SimpleGrid>
       <OnRampModal isOpen={isOpen} onClose={onClose} />
+      <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
     </Stack>
   );
 }
