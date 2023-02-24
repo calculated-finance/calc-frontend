@@ -147,7 +147,8 @@ function Strategies() {
   
   const setStrategyRecommendation = fearAndGreedIndex < 41 ? 'accumulation' : 'take profit'
   const StrategyRecommendation = `it may be a good time to use ${setStrategyRecommendation} strategies`
-  const showFearAndGreed = fearAndGreedIndex < 41 || fearAndGreedIndex > 59
+  const showFearAndGreedAccumulate = fearAndGreedIndex < 41
+  const showFearAndGreedProfit = fearAndGreedIndex > 59
 
   return (
     <Stack direction="column" spacing={8}>
@@ -155,7 +156,7 @@ function Strategies() {
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
           {
-            showFearAndGreed && (
+            showFearAndGreedAccumulate && (
               <Badge
                 colorScheme="green"
                 px={4}
@@ -195,9 +196,38 @@ function Strategies() {
 
       <InfoPanel />
       <Box>
-        <Heading mb={1} size="md">
-          Take Profit strategies
-        </Heading>
+        <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
+          <Heading mb={1} size="md">
+            Take Profit strategies 
+            </Heading>
+          {
+              showFearAndGreedProfit && (
+                <Badge
+                  colorScheme="green"
+                  px={4}
+                  py={1}
+                  layerStyle="panel"
+                  whiteSpace="normal"
+                  bg="deepHorizon"
+                  textAlign="center"
+                >
+                  {isLoading ? (
+                    <Spinner w={3} h={3} />
+                  ) : fearAndGreedIndex ? (
+                    <>
+                      According to the{' '}
+                      <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+                        <Text as="a" textDecoration="underline" target="_blank">
+                          Fear &amp; Greed index score
+                        </Text>
+                      </NextLink>
+                      : {fearAndGreedIndex} ({fearAndGreedClassification}), {StrategyRecommendation}
+                    </>
+                  ) : null}
+                </Badge>
+              )
+            }
+          </Wrap>
         <Text pb={4} textStyle="body">
           Strategies that sell assets for profit.
         </Text>
