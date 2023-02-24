@@ -2,7 +2,7 @@ import { Flex, HStack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
-import arrow from '../pages/create-strategy/dca-in/confirm-purchase/arrow.json';
+import arrow from 'src/animations/arrow.json';
 
 type DcaDiagramProps = {
   initialDenom: string;

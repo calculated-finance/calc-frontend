@@ -14,10 +14,10 @@ import { useField } from 'formik';
 import { isDenomVolatile } from '@utils/getDenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
-import { DenomSelect } from '../../../../components/DenomSelect';
+import { DenomSelect } from '../DenomSelect';
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
-export default function InitialDenom() {
+export default function DCAOutInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });

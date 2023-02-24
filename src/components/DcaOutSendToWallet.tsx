@@ -1,8 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import RadioCard from '../../../../components/RadioCard';
-import Radio from '../../../../components/Radio';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
+import RadioCard from './RadioCard';
+import Radio from './Radio';
+import SendToWalletValues from '../models/SendToWalletValues';
 
 // TODO: fix massive hack and actually set default vaule differently (use different schema)
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
@@ -16,7 +16,7 @@ const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   },
 ];
 
-export default function SendToWallet() {
+export default function DcaOutSendToWallet() {
   const [field, , helpers] = useField({ name: 'sendToWallet' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({

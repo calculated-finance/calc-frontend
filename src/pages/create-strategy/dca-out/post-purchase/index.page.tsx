@@ -21,7 +21,7 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
 import RecipientAccount from '@components/RecipientAccount';
-import SendToWallet from './SendToWallet';
+import DcaOutSendToWallet from '@components/DcaOutSendToWallet';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import dcaOutSteps from '../dcaOutSteps';
 
@@ -70,7 +70,7 @@ function Page() {
               <Form autoComplete="off">
                 <FormControl>
                   <Stack direction="column" spacing={6}>
-                    <SendToWallet />
+                    <DcaOutSendToWallet />
                     <FormHelperText>
                       <HStack>
                         <Text>Multiple transactions supported by</Text>

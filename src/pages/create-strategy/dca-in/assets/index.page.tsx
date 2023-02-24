@@ -11,8 +11,8 @@ import useSteps from '@hooks/useSteps';
 import steps from '@components/NewStrategyModal/steps';
 import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
-import ResultingDenom from '../ResultingDenom';
-import InitialDenom from '../InitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function DcaIn() {
@@ -59,8 +59,8 @@ function DcaIn() {
         >
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialDenom />
-              <ResultingDenom />
+              <DCAInInitialDenom />
+              <DCAInResultingDenom />
               <Submit>Next</Submit>
             </Stack>
           </Form>
