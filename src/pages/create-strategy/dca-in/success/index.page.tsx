@@ -1,7 +1,7 @@
 import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import steps from '@components/NewStrategyModal/steps';
+import steps from 'src/formConfig/dcaIn';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import Link from 'next/link';

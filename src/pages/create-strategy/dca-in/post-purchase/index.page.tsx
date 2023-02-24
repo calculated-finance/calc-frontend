@@ -8,7 +8,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
+import steps from 'src/formConfig/dcaIn';
 import { useState } from 'react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useRouter } from 'next/router';

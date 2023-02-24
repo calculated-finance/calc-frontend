@@ -10,6 +10,7 @@ import {
 export enum FormNames {
   DcaIn = 'dcaIn',
   DcaOut = 'dcaOut',
+  DcaPlusIn = 'dcaPlusIn',
 }
 
 const getFormState = (state: any, formName: FormNames) => state[formName] || {};

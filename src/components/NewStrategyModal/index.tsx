@@ -27,8 +27,9 @@ import { ChildrenProp } from 'src/helpers/ChildrenProp';
 import broadcast from 'src/animations/broadcast.json';
 import Lottie from 'lottie-react';
 import { useWallet } from '@wizard-ui/react';
+import { findStep } from 'src/helpers/findStep';
 import Stepper from './Stepper';
-import { findStep, StepConfig } from './steps';
+import { StepConfig } from '../../formConfig/StepConfig';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (

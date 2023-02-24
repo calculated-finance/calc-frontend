@@ -51,3 +51,12 @@ export const featureFlags =
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
+
+export const contentData = {
+  dcaIn: {
+    assets: {
+      title: 'Choose Funding & Assets',
+      footerText: 'Can I set up recurring deposits?',
+    },
+  },
+};

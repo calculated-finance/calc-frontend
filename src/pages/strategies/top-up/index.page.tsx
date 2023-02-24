@@ -5,7 +5,7 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import { StepConfig } from '@components/NewStrategyModal/steps';
+import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
 import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
