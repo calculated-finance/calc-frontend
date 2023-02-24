@@ -6,7 +6,7 @@ import { getStrategyType } from 'src/helpers/getStrategyType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
-import arrow from 'src/pages/create-strategy/dca-in/confirm-purchase/arrow.json';
+import arrow from 'src/animations/arrow.json';
 import { Denom } from '@models/Denom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
