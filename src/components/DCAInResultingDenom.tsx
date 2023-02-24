@@ -2,7 +2,7 @@ import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
-import { DenomSelect } from '../../../components/DenomSelect';
+import { DenomSelect } from './DenomSelect';
 
 export default function DCAInResultingDenom() {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });

@@ -10,8 +10,8 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
-import DCAOutResultingDenom from '../DCAOutResultingDenom';
-import DCAOutInitialDenom from '../DCAOutInitialDenom';
+import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
+import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import dcaOutSteps from '../dcaOutSteps';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 

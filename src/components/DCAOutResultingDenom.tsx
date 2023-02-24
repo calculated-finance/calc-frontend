@@ -3,7 +3,7 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import usePairs, { uniqueBaseDenomsFromQuoteDenom, uniqueQuoteDenomsFromBaseDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
 import getDenomInfo from '@utils/getDenomInfo';
-import { DenomSelect } from '../../../components/DenomSelect';
+import { DenomSelect } from './DenomSelect';
 
 export default function DCAOutResultingDenom() {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
