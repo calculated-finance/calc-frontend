@@ -16,16 +16,11 @@ import { isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
 import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
 import { isStrategyActive } from 'src/helpers/getStrategyStatus';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
-import {
-  VictoryAxis,
-  VictoryBar,
-  VictoryChart, VictoryHistogram, VictoryTheme,
-  VictoryTooltip
-} from 'victory';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyType } from 'src/helpers/getStrategyType';
+import { getStrategyTotalExecutions } from 'src/helpers/getStrategyTotalExecutions';
 import { formatFiat } from '../strategies/details/StrategyPerformance';
-import { getStrategyTotalExecutions } from '../create-strategy/dca-in/success/getStrategyTotalExecutions';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -315,7 +310,6 @@ function Page() {
 
   const totalReceivedAmounts = getTotalReceived(allStrategies?.vaults);
   const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices);
-
 
   const ThirtyDaysFromNow = new Date();
   ThirtyDaysFromNow.setDate(ThirtyDaysFromNow.getDate() + 30);

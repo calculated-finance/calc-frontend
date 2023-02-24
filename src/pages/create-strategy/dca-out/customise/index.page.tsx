@@ -12,16 +12,16 @@ import DcaDiagram from '@components/DcaDiagram';
 import PriceThreshold from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { DcaInFormDataStep2, step2ValidationSchema } from '../../../../models/DcaInFormData';
-import ExecutionInterval from './ExecutionInterval';
-import StartDate from './StartDate';
-import StartImmediately from './StartImmediately';
-import { StartImmediatelyValues } from '../../../../models/StartImmediatelyValues';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
+import ExecutionInterval from '@components/ExecutionInterval';
+import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
+import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
+import SlippageTolerance from '@components/SlippageTolerance';
+import StartDate from '@components/StartDate';
+import StartImmediately from '@components/StartImmediately';
 import SwapAmount from './SwapAmount';
 import PurchaseTime from './PurchaseTime';
-import SlippageTolerance from './SlippageTolerance';
 import StartPrice from './StartPrice';
-import AdvancedSettingsSwitch from './AdvancedSettingsSwitch';
 import dcaOutSteps from '../dcaOutSteps';
 
 function Page() {

@@ -12,12 +12,12 @@ import steps from '@components/NewStrategyModal/steps';
 import { useState } from 'react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useRouter } from 'next/router';
+import RecipientAccount from '@components/RecipientAccount';
+import SendToWalletValues from '@models/SendToWalletValues';
+import AutoStakeValues from '@models/AutoStakeValues';
+import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
+import { AutoStake, DummyAutoStake } from '@components/AutoStake';
 import SendToWallet from './SendToWallet';
-import { AutoStake, DummyAutoStake } from './AutoStake';
-import RecipientAccount from './RecipientAccount';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
-import AutoStakeValidator, { DummyAutoStakeValidator } from './AutoStakeValidator';
-import AutoStakeValues from '../../../../models/AutoStakeValues';
 
 function InvalidData() {
   const router = useRouter();

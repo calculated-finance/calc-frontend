@@ -13,7 +13,7 @@ import usePairs, { uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import { useField } from 'formik';
 import { isDenomVolatile } from '@utils/getDenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
-import InitialDeposit from '../InitialDeposit';
+import InitialDeposit from '@components/InitialDeposit';
 import { DenomSelect } from '../../../../components/DenomSelect';
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
