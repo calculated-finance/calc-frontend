@@ -17,7 +17,7 @@ import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValues from '@models/AutoStakeValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import { AutoStake, DummyAutoStake } from '@components/AutoStake';
-import SendToWallet from './SendToWallet';
+import DcaInSendToWallet from '@components/DcaInSendToWallet';
 
 function InvalidData() {
   const router = useRouter();
@@ -67,7 +67,7 @@ function Page() {
             {state ? (
               <Form autoComplete="off">
                 <Stack direction="column" spacing={6}>
-                  <SendToWallet />
+                  <DcaInSendToWallet />
                   <Collapse in={values.sendToWallet === SendToWalletValues.No}>
                     <Box m="px">
                       <RecipientAccount />

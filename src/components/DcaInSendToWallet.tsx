@@ -17,7 +17,7 @@ const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   },
 ];
 
-export default function SendToWallet() {
+export default function DcaInSendToWallet() {
   const [field, , helpers] = useField({ name: 'sendToWallet' });
   const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
 
