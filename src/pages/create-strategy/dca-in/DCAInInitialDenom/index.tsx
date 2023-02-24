@@ -19,16 +19,7 @@ import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
 
-export function DenomSelectLabel({ denom }: { denom: Denom }) {
-  return (
-    <HStack spacing={2} w="full">
-      <DenomIcon denomName={denom} />
-      <Text>{getDenomInfo(denom).name}</Text>
-    </HStack>
-  );
-}
-
-export default function InitialDenom() {
+export default function DCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });

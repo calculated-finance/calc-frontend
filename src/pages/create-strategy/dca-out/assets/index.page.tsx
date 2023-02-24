@@ -10,8 +10,8 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
-import ResultingDenom from '../ResultingDenom';
-import InitialDenom from '../InitialDenom';
+import DCAOutResultingDenom from '../DCAOutResultingDenom';
+import DCAOutInitialDenom from '../DCAOutInitialDenom';
 import dcaOutSteps from '../dcaOutSteps';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
@@ -59,8 +59,8 @@ function Page() {
         >
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialDenom />
-              <ResultingDenom />
+              <DCAOutInitialDenom />
+              <DCAOutResultingDenom />
               <Submit>Next</Submit>
             </Stack>
           </Form>

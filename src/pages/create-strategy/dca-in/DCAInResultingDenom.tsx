@@ -1,11 +1,10 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom, uniqueQuoteDenomsFromBaseDenom } from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
-import getDenomInfo from '@utils/getDenomInfo';
 import { DenomSelect } from '../../../components/DenomSelect';
 
-export default function ResultingDenom() {
+export default function DCAInResultingDenom() {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { data } = usePairs();
   const { pairs } = data || {};
@@ -16,30 +15,20 @@ export default function ResultingDenom() {
 
   const [initialDenomField] = useField({ name: 'initialDenom' });
 
-  const denoms = Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenomField.value, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs),
-    ]),
-  );
-
-  const { promotion } = getDenomInfo(field.value);
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <FormLabel>How do you want to hold your profits?</FormLabel>
+      <FormLabel>What asset do you want to invest in?</FormLabel>
       <FormHelperText>
-        <Text textStyle="body-xs">You will have the choice to move these funds into another strategy at the end.</Text>
+        <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
       </FormHelperText>
       <DenomSelect
-        denoms={denoms}
+        denoms={uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs)}
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        showPromotion
+        optionLabel="Swapped on FIN"
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-      {promotion && <FormHelperText color="blue.200">{promotion}</FormHelperText>}
     </FormControl>
   );
 }
