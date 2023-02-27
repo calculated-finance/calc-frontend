@@ -172,6 +172,34 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
     enabled: true,
   },
+  [MainnetDenoms.STRD]: {
+    name: 'STRD',
+    icon: '/images/denoms/strd.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'stride',
+    enabled: true,
+  },
+  [MainnetDenoms.JUNO]: {
+    name: 'JUNO',
+    icon: '/images/denoms/juno.png',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'juno-network',
+    enabled: true,
+  },
+  [MainnetDenoms.wTAO]: {
+    name: 'wTAO',
+    icon: '/images/denoms/wtao.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'wrapped-tao',
+    enabled: true,
+    conversion: (value: number) => value / 10 ** 9,
+    deconversion: (value: number) => Math.round(value * 10 ** 9),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 3,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 3,
+  }
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
