@@ -2,12 +2,18 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DenomInput } from '@components/DenomInput';
-import { DcaInFormDataStep1 } from '../../../../models/DcaInFormData';
-import executionIntervalDisplay from '../../../../helpers/executionIntervalDisplay';
-import { ExecutionIntervals } from '../../../../models/ExecutionIntervals';
+import { DcaInFormDataStep1 } from '../models/DcaInFormData';
+import executionIntervalDisplay from '../helpers/executionIntervalDisplay';
+import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { DenomInput } from './DenomInput';
 
-export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
+export default function SwapAmount({
+  step1State,
+  isSell = false,
+}: {
+  step1State: DcaInFormDataStep1;
+  isSell?: boolean;
+}) {
   const [field, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
@@ -25,7 +31,9 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>How much {initialDenomName} each swap?</FormLabel>
+      <FormLabel>
+        How much {initialDenomName} each {isSell ? 'swap' : 'purchase'}?
+      </FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
           <Text>The amount you want swapped each purchase for {resultingDenomName}.</Text>

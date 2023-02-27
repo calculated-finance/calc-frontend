@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import steps from 'src/formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import ExecutionInterval from '@components/ExecutionInterval';
@@ -20,9 +19,10 @@ import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData
 import SlippageTolerance from '@components/SlippageTolerance';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
-import SwapAmount from './SwapAmount';
-import PurchaseTime from './PurchaseTime';
-import StartPrice from './StartPrice';
+import steps from 'src/formConfig/dcaIn';
+import SwapAmount from '../../../../components/SwapAmount';
+import PurchaseTime from '../../../../components/PurchaseTime';
+import StartPrice from '../../../../components/DcaInStartPrice';
 
 function DcaInStep2() {
   const router = useRouter();
@@ -92,7 +92,10 @@ function DcaInStep2() {
                         <StartDate />
                         <Collapse in={values.advancedSettings}>
                           <Box m="px">
-                            <PurchaseTime />
+                            <PurchaseTime
+                              title="Purchase time"
+                              subtitle="This is the time of day that your first swap will be made"
+                            />
                           </Box>
                         </Collapse>
                       </Box>

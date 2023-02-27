@@ -19,10 +19,10 @@ import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
-import SwapAmount from './SwapAmount';
-import PurchaseTime from './PurchaseTime';
-import StartPrice from './StartPrice';
+import PurchaseTime from '@components/PurchaseTime';
+import StartPrice from '../../../../components/DcaOutStartPrice';
 import dcaOutSteps from '../dcaOutSteps';
+import SwapAmount from '../../../../components/SwapAmount';
 
 function Page() {
   const router = useRouter();
@@ -93,7 +93,7 @@ function Page() {
                         <StartDate />
                         <Collapse in={values.advancedSettings}>
                           <Box m="px">
-                            <PurchaseTime />
+                            <PurchaseTime title="Sell time" />
                           </Box>
                         </Collapse>
                       </Box>
@@ -106,7 +106,7 @@ function Page() {
                   </Collapse>
                 </Box>
                 <ExecutionInterval />
-                <SwapAmount step1State={state.step1} />
+                <SwapAmount step1State={state.step1} isSell />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
