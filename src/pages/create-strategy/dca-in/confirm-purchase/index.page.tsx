@@ -10,7 +10,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from '@components/NewStrategyModal/steps';
+import steps from 'src/formConfig/dcaIn';
 import { TermsModal } from '@components/TermsModal';
 import { TransactionType } from '@components/TransactionType';
 import Summary from './Summary';

@@ -1,5 +1,5 @@
 import { Link, ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
-import { StepConfig } from '@components/NewStrategyModal/steps';
+import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaOutSteps: StepConfig[] = [
   {

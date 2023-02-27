@@ -1,6 +1,6 @@
 import { Flex, Text, Box, Tooltip } from '@chakra-ui/react';
 import useSteps from '@hooks/useSteps';
-import { StepConfig } from './steps';
+import { StepConfig } from '../../formConfig/StepConfig';
 
 function StepperSeparator({ past }: { past: boolean }) {
   return <Flex h={1} my="auto" borderTopWidth={1} w={3} borderColor={past ? 'green.200' : 'abyss.200'} />;

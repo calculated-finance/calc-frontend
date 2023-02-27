@@ -8,20 +8,20 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function DcaIn() {
-  const { actions, state } = useDcaInForm(FormNames.DcaIn);
+  const { actions, state } = useDcaInForm(FormNames.DcaPlusIn);
   const {
     data: { pairs },
     isLoading,
   } = usePairs();
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(dcaPlusInSteps);
 
   const { data } = useBalances();
 
@@ -37,7 +37,7 @@ function DcaIn() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={steps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={dcaPlusInSteps} isLoading reset={actions.resetAction} />;
   }
 
   const { quote_denom, base_denom } = pairs.find((pair) => pair.address === router.query.pair) || {};
@@ -55,7 +55,7 @@ function DcaIn() {
         <ModalWrapper
           isLoading={isLoading || (isPageLoading && !isSubmitting)}
           reset={actions.resetAction}
-          stepsConfig={steps}
+          stepsConfig={dcaPlusInSteps}
         >
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

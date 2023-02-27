@@ -1,4 +1,4 @@
-import { StepConfig } from '@components/NewStrategyModal/steps';
+import { StepConfig } from 'src/formConfig/StepConfig';
 import { useRouter } from 'next/router';
 import { UrlObject } from 'url';
 

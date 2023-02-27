@@ -1,5 +1,5 @@
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { StepConfig } from '@components/NewStrategyModal/steps';
+import { StepConfig } from 'src/formConfig/StepConfig';
 
 export function ModalWrapper({
   isLoading,

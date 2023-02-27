@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import steps from '@components/NewStrategyModal/steps';
+import steps from 'src/formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import ExecutionInterval from '@components/ExecutionInterval';
