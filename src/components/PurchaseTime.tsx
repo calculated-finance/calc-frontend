@@ -14,7 +14,7 @@ import {
 import { useField } from 'formik';
 import { FiClock } from 'react-icons/fi';
 
-export default function PurchaseTime() {
+export default function PurchaseTime({ title, subtitle }: { title: string; subtitle?: string }) {
   const [field, meta] = useField({ name: 'purchaseTime' });
   const [startDateField] = useField({ name: 'startDate' });
 
@@ -22,8 +22,8 @@ export default function PurchaseTime() {
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)} isDisabled={!startDateField.value}>
-      <FormLabel>Purchase time</FormLabel>
-      <FormHelperText>This is the time of day that your first swap will be made</FormHelperText>
+      <FormLabel>{title}</FormLabel>
+      <FormHelperText>{subtitle}</FormHelperText>
       <InputGroup>
         <InputLeftElement
           pointerEvents="none"
