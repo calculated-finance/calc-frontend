@@ -9,4 +9,8 @@ export const dcaPlusInSteps: StepConfig[] = [
     footerText: contentData.dcaIn.assets.footerText,
     helpContent: <RecurringDeposits />,
   },
+  {
+    href: '/create-strategy/dca-plus-in-puff-puff/customise',
+    title: contentData.dcaIn.customise.title,
+  },
 ];

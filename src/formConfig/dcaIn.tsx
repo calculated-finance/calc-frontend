@@ -12,7 +12,7 @@ const steps: StepConfig[] = [
   },
   {
     href: '/create-strategy/dca-in/customise',
-    title: 'Customise Strategy',
+    title: contentData.dcaIn.customise.title,
     footerText: 'What are advanced settings?',
     helpContent: (
       <Stack textStyle="body" spacing={2}>

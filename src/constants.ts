@@ -58,5 +58,8 @@ export const contentData = {
       title: 'Choose Funding & Assets',
       footerText: 'Can I set up recurring deposits?',
     },
+    customise: {
+      title: 'Customise Strategy',
+    },
   },
 };
