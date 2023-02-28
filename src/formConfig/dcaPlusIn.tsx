@@ -15,6 +15,10 @@ export const dcaPlusInSteps: StepConfig[] = [
   },
   {
     href: '/create-strategy/dca-plus-in-puff-puff/post-purchase',
-    title: 'change me',
+    title: 'Post Purchase',
+  },
+  {
+    href: '/create-strategy/dca-plus-in-puff-puff/confirm-purchase',
+    title: 'Confirm & Sign',
   },
 ];

@@ -6,12 +6,14 @@ import { Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
-import { InvalidData } from '@components/InvalidData';
+import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
+import { PostPurchaseForm } from '../../../../components/PostPurchaseForm';
+import { InvalidData } from '../../../../components/InvalidData';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const steps = dcaPlusInSteps;
+
   const { nextStep, goToStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
