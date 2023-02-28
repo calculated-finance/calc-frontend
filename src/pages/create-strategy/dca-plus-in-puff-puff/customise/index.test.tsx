@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
@@ -7,15 +7,13 @@ import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import timekeeper from 'timekeeper';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
 import { ChangeEvent } from 'react';
-import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-in/customise',
+  pathname: '/create-strategy/dca-plus-in-puff-puff/customise',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -50,7 +48,7 @@ jest.mock('chakra-dayzed-datepicker', () => ({
 
 const mockStateMachine = {
   state: {
-    dcaIn: {
+    dcaPlusIn: {
       initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
       initialDeposit: '1',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
@@ -81,10 +79,16 @@ async function renderTarget() {
   });
 }
 
-describe('DCA In customise page', () => {
+describe('DCA Plus In customise page', () => {
   beforeEach(() => {
+    window.ResizeObserver = jest.fn().mockImplementation(() => ({
+      observe: jest.fn(),
+      unobserve: jest.fn(),
+      disconnect: jest.fn(),
+    }));
     jest.clearAllMocks();
   });
+
   describe('on page load', () => {
     it('renders the heading', async () => {
       mockUseWallet(jest.fn(), jest.fn(), jest.fn());
@@ -95,183 +99,27 @@ describe('DCA In customise page', () => {
     });
   });
 
-  describe('when strategy with price trigger is filled and submitted', () => {
-    it('submits form successfully', async () => {
-      mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
-      await renderTarget();
-
-      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[0]), { timeout: 10000 });
-      await waitFor(() => userEvent.click(screen.getByLabelText('Start based on asset price')), { timeout: 10000 });
-
-      const input = await waitFor(() => screen.getByLabelText(/Strategy start price/));
-      await waitFor(() => userEvent.type(input, '10.00'), { timeout: 5000 });
-
-      // enter swap amount
-      const swapAmountInput = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
-      await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
-
-      // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
-
-      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        advancedSettings: false,
-        executionInterval: 'daily',
-        priceThresholdEnabled: YesNoValues.No,
-        priceThresholdValue: null,
-        purchaseTime: '',
-        slippageTolerance: 2,
-        startDate: null,
-        startImmediately: 'no',
-        startPrice: 10,
-        swapAmount: 1,
-        triggerType: 'price',
-      });
-
-      expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-in/post-purchase',
-        query: undefined,
-      });
-    });
-  });
-
-  describe('when strategy price threshold is filled and submitted', () => {
-    it('submits form successfully', async () => {
-      mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
-      await renderTarget();
-
-      // enable advanced settings
-      const advancedSettings = await waitFor(() => screen.getByRole('checkbox'));
-      await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
-
-      // enter swap amount
-      const swapAmountInput = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
-      await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
-
-      // enable price threshold
-      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[1]), { timeout: 5000 });
-
-      // set price threshold
-      const input = await waitFor(() => screen.getByLabelText(/Set buy price ceiling?/));
-      await waitFor(() => userEvent.type(input, '10.00'), { timeout: 5000 });
-
-      // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
-
-      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        advancedSettings: true,
-        executionInterval: 'daily',
-        startPrice: null,
-        swapAmount: 1,
-        triggerType: 'date',
-        priceThresholdEnabled: YesNoValues.No,
-        priceThresholdValue: 10,
-        purchaseTime: '',
-        slippageTolerance: 2,
-        startDate: null,
-        startImmediately: 'yes',
-      });
-
-      expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-in/post-purchase',
-        query: undefined,
-      });
-    });
-  });
-
-  describe('when strategy with date trigger and advanced settings is filled and submitted', () => {
-    beforeAll(() => {
-      // Lock Time
-      timekeeper.freeze(new Date('2022-11-02T00:00:00.000+00:00'));
-    });
-
-    afterAll(() => {
-      // Unlock Time
-      timekeeper.reset();
-    });
-    it('submits form successfully', async () => {
-      mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
-      await renderTarget();
-
-      // enable advanced settings
-      const advancedSettings = await waitFor(() => screen.getByRole('checkbox'));
-      await waitFor(() => userEvent.click(advancedSettings), { timeout: 5000 });
-
-      // uncheck start immediately
-      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[0]), { timeout: 5000 });
-
-      // set start date
-      const dateInput = screen.getByTestId('mock-datepicker');
-      const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
-      fireEvent.change(dateInput, { target: { value: tomorrow.toISOString() } });
-
-      // enter purchase time
-      const purchaseTimeInput = await waitFor(() => screen.getByLabelText(/Purchase time/));
-      await waitFor(() => userEvent.type(purchaseTimeInput, '14:55'), { timeout: 5000 });
-
-      // enter swap amount
-      const swapAmountInput = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
-      await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
-
-      // enter slippage tolerance
-      const slippageToleranceInput = await waitFor(() => screen.getByLabelText(/Set slippage tolerance/));
-      await waitFor(() => userEvent.type(slippageToleranceInput, '1'), { timeout: 5000 });
-
-      // submit
-      await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
-
-      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        advancedSettings: true,
-        executionInterval: 'daily',
-        purchaseTime: '14:55',
-        slippageTolerance: 21,
-        startDate: '2022-11-03T00:00:00.000Z',
-        startImmediately: 'no',
-        startPrice: null,
-        swapAmount: 1,
-        triggerType: 'date',
-        priceThresholdEnabled: YesNoValues.No,
-        priceThresholdValue: null,
-      });
-
-      expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-in/post-purchase',
-        query: undefined,
-      });
-    });
-  });
-
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
       await renderTarget();
 
-      // enter swap amount
-      const input = await waitFor(() => screen.getByLabelText(/How much USK each purchase?/));
-      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
-
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
-        executionInterval: 'daily',
         purchaseTime: '',
-        slippageTolerance: 2,
         startDate: null,
         startImmediately: 'yes',
         startPrice: null,
-        swapAmount: 1,
         triggerType: 'date',
-        priceThresholdEnabled: YesNoValues.No,
-        priceThresholdValue: null,
+        strategyDuration: 60,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-in/post-purchase',
+        pathname: '/create-strategy/dca-plus-in-puff-puff/post-purchase',
         query: undefined,
       });
     });

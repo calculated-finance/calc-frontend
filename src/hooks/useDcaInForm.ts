@@ -1,6 +1,6 @@
 import { useStateMachine } from 'little-state-machine';
 import {
-  allValidationSchema,
+  dcaSchema,
   initialValues,
   postPurchaseValidationSchema,
   step1ValidationSchema,
@@ -13,9 +13,9 @@ export enum FormNames {
   DcaPlusIn = 'dcaPlusIn',
 }
 
-const getFormState = (state: any, formName: FormNames) => state[formName] || {};
+export const getFormState = (state: any, formName: FormNames) => state[formName] || {};
 
-function getUpdateAction(formName: FormNames) {
+export function getUpdateAction(formName: FormNames) {
   function updateAction(state: any, payload: any) {
     return {
       ...state,
@@ -28,11 +28,11 @@ function getUpdateAction(formName: FormNames) {
   return updateAction;
 }
 
-function getResetAction(formName: FormNames) {
+export function getResetAction(formName: FormNames) {
   function resetAction(state: any) {
     return {
       ...state,
-      [formName]: allValidationSchema.cast(initialValues, { stripUnknown: true }),
+      [formName]: dcaSchema.cast(initialValues, { stripUnknown: true }),
     };
   }
   return resetAction;
@@ -122,10 +122,10 @@ export const useConfirmForm = (formName: FormNames) => {
   });
 
   try {
-    allValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
+    dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
 
     return {
-      state: allValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      state: dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions,
     };
   } catch (e) {

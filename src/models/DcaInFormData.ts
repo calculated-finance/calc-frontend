@@ -33,10 +33,11 @@ export const initialValues = {
   autoStake: AutoStakeValues.No,
   recipientAccount: '',
   autoStakeValidator: '',
+  strategyDuration: 60,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
-export const allValidationSchema = Yup.object({
+export const allSchema = {
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
@@ -264,13 +265,35 @@ export const allValidationSchema = Yup.object({
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-});
-export type DcaInFormDataAll = Yup.InferType<typeof allValidationSchema>;
+  strategyDuration: Yup.number().min(30).max(90).required().nullable(),
+};
 
-export const step1ValidationSchema = allValidationSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
+export const dcaSchema = Yup.object({
+  resultingDenom: allSchema.resultingDenom,
+  initialDenom: allSchema.initialDenom,
+  initialDeposit: allSchema.initialDeposit,
+  advancedSettings: allSchema.advancedSettings,
+  startImmediately: allSchema.startImmediately,
+  triggerType: allSchema.triggerType,
+  startDate: allSchema.startDate,
+  startPrice: allSchema.startPrice,
+  purchaseTime: allSchema.purchaseTime,
+  executionInterval: allSchema.executionInterval,
+  swapAmount: allSchema.swapAmount,
+  slippageTolerance: allSchema.slippageTolerance,
+  priceThresholdEnabled: allSchema.priceThresholdEnabled,
+  priceThresholdValue: allSchema.priceThresholdValue,
+  sendToWallet: allSchema.sendToWallet,
+  recipientAccount: allSchema.recipientAccount,
+  autoStake: allSchema.autoStake,
+  autoStakeValidator: allSchema.autoStakeValidator,
+});
+export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
+
+export const step1ValidationSchema = dcaSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
-export const postPurchaseValidationSchema = allValidationSchema.pick([
+export const postPurchaseValidationSchema = dcaSchema.pick([
   'sendToWallet',
   'recipientAccount',
   'autoStake',
@@ -278,7 +301,7 @@ export const postPurchaseValidationSchema = allValidationSchema.pick([
 ]);
 export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 
-export const step2ValidationSchema = allValidationSchema.pick([
+export const step2ValidationSchema = dcaSchema.pick([
   'advancedSettings',
   'startImmediately',
   'triggerType',

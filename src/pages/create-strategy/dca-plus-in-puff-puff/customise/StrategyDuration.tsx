@@ -10,11 +10,10 @@ import {
   SliderTrack,
   Spacer,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useField } from 'formik';
 
 export default function StrategyDuration() {
-  // const [field, , helpers] = useField({ name: 'swapAmount' });
-  const [value, setValue] = useState(60);
+  const [{ value }, , { setValue }] = useField({ name: 'strategyDuration' });
 
   return (
     <FormControl>
@@ -30,7 +29,7 @@ export default function StrategyDuration() {
         <Spacer />
         77%
       </Flex>
-      <Slider value={value} onChange={setValue} defaultValue={60} min={30} max={90} step={1}>
+      <Slider value={value} onChange={setValue} min={30} max={90} step={1}>
         <SliderTrack bg="white">
           <Box position="relative" right={10} />
           <SliderFilledTrack bg="blue.200" />

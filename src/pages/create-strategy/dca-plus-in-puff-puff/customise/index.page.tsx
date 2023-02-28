@@ -5,29 +5,34 @@ import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
+import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
+import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
+import { DcaPlusSteps, dcaPlusSteps } from '@models/dcaPlusFormData';
 import PurchaseTime from '../../../../components/PurchaseTime';
 import StartPrice from '../../../../components/DcaInStartPrice';
 import StrategyDuration from './StrategyDuration';
 
 function DcaInStep2() {
   const router = useRouter();
-  const { actions, state } = useStep2Form(FormNames.DcaPlusIn);
+  const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
 
   const steps = dcaPlusInSteps;
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAIn });
+  const { validate } = useValidation(dcaPlusSteps[DcaPlusSteps.CUSTOMISE], {
+    ...state?.step1,
+    strategyType: StrategyTypes.DCAIn,
+  });
   const { nextStep } = useSteps(steps);
 
   if (!state) {
