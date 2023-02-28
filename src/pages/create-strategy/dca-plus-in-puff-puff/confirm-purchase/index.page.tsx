@@ -5,23 +5,25 @@ import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import useCreateVault from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
-import { SummaryTheSwap } from '@components/Summary/SummaryTheSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
-import { FormikHelpers } from 'formik';
 import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 import Fees from '../../../../components/Fees';
+import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
+import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
+import { FormikHelpers } from 'formik';
 
 function Page() {
-  const { state, actions } = useConfirmForm(FormNames.DcaIn);
+  const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
+
+  console.log(errors);
 
   const { mutate, isError, error, isLoading } = useCreateVault(FormNames.DcaIn, TransactionType.Buy);
 
@@ -46,10 +48,10 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
+      <NewStrategyModalHeader stepsConfig={dcaPlusInSteps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={dcaPlusInSteps} isLoading={isPageLoading} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
@@ -59,7 +61,6 @@ function Page() {
             />
             <Divider />
             <SummaryYourDeposit state={state} />
-            <SummaryTheSwap state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
             <Fees formName={FormNames.DcaIn} />

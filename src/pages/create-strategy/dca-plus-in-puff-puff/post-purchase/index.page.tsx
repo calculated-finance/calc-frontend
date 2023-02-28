@@ -1,17 +1,18 @@
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
-import { PostPurchaseForm } from '../../../../components/PostPurchaseForm';
-import { InvalidData } from '../../../../components/InvalidData';
+import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
+import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { InvalidData } from '@components/InvalidData';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const { actions, state, context } = useDcaPlusInFormPostPurchase(FormNames.DcaPlusIn);
   const steps = dcaPlusInSteps;
 
   const { nextStep, goToStep } = useSteps(steps);
