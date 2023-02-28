@@ -13,4 +13,8 @@ export const dcaPlusInSteps: StepConfig[] = [
     href: '/create-strategy/dca-plus-in-puff-puff/customise',
     title: contentData.dcaIn.customise.title,
   },
+  {
+    href: '/create-strategy/dca-plus-in-puff-puff/post-purchase',
+    title: 'change me',
+  },
 ];
