@@ -12,11 +12,13 @@ import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
-import { getTimeSaved } from '../../../../helpers/getTimeSaved';
-import Fees from '../../../../components/Fees';
+import { getTimeSaved } from 'src/helpers/getTimeSaved';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { FormikHelpers } from 'formik';
+import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
+import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
+import FeesDcaPlus from '@components/FeesDcaPlus';
 
 function Page() {
   const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
@@ -61,9 +63,11 @@ function Page() {
             />
             <Divider />
             <SummaryYourDeposit state={state} />
+            <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
-            <Fees formName={FormNames.DcaIn} />
+            <SummaryBenchmark state={state} />
+            <FeesDcaPlus formName={FormNames.DcaIn} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
