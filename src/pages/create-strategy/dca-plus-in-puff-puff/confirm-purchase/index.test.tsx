@@ -112,7 +112,7 @@ describe('DCA Plus In confirm page', () => {
   });
 
   describe('when form is filled and submitted', () => {
-    it.skip('submits form successfully', async () => {
+    it('submits form successfully', async () => {
       const mockCreateStrategy = mockCreateVault();
       const mockGetPairsSpy = mockGetPairs();
       mockUseWallet(mockGetPairsSpy, jest.fn(), jest.fn(), mockCreateStrategy);
@@ -132,10 +132,9 @@ describe('DCA Plus In confirm page', () => {
       await waitFor(() => expect(mockStateMachine.actions.resetAction).toHaveBeenCalled());
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-in/success',
+        pathname: '/create-strategy/dca-plus-in-puff-puff/success',
         query: {
           strategyId: '59',
-          timeSaved: 10,
         },
       });
     });

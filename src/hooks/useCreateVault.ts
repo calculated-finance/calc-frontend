@@ -24,6 +24,7 @@ import { EncodeObject } from '@cosmjs/proto-signing';
 import { getFeeMessage } from 'src/helpers/getFeeMessage';
 import { DeliverTxResponse } from '@cosmjs/stargate';
 import { Denom } from '@models/Denom';
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import usePairs from './usePairs';
 import { Pair } from '../models/Pair';
 import { FormNames, useConfirmForm } from './useDcaInForm';
@@ -31,6 +32,7 @@ import { Strategy } from './useStrategies';
 import { combineDateAndTime } from '../helpers/combineDateAndTime';
 import { findPair } from '../helpers/findPair';
 import useFiatPrice from './useFiatPrice';
+import { useDcaPlusConfirmForm } from './useDcaPlusForm';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -204,6 +206,27 @@ export function createStrategyFeeInTokens(price: any) {
   return ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 }
 
+function executeCreateVault(client: SigningCosmWasmClient, senderAddress: any, msgs: EncodeObject[]): Promise<string> {
+  return client
+    .signAndBroadcast(senderAddress, msgs, 'auto')
+    .then((data) => {
+      try {
+        return getVaultIdFromDeliverTxResponse(data);
+      } catch (error) {
+        throw data.rawLog ? new Error(data.rawLog) : error;
+      }
+    })
+    .catch((error) => {
+      const errorMessages: Record<string, string> = {
+        'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
+        "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
+          LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
+      };
+      const matchingErrorKey = Object.keys(errorMessages).find((key) => error.toString().includes(key));
+      throw new Error(matchingErrorKey ? errorMessages[matchingErrorKey] : error);
+    });
+}
+
 const useCreateVault = (formName: FormNames, transactionType: TransactionType) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
@@ -242,25 +265,56 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
-    const result = client.signAndBroadcast(senderAddress, msgs, 'auto');
+    return executeCreateVault(client, senderAddress, msgs);
+  });
+};
 
-    return result
-      .then((data) => {
-        try {
-          return getVaultIdFromDeliverTxResponse(data);
-        } catch (error) {
-          throw data.rawLog ? new Error(data.rawLog) : error;
-        }
-      })
-      .catch((error) => {
-        const errorMessages: Record<string, string> = {
-          'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
-          "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
-            LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
-        };
-        const matchingErrorKey = Object.keys(errorMessages).find((key) => error.toString().includes(key));
-        throw new Error(matchingErrorKey ? errorMessages[matchingErrorKey] : error);
-      });
+export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: TransactionType) => {
+  const msgs: EncodeObject[] = [];
+  const { address: senderAddress, signingClient: client } = useWallet();
+  const { data: pairsData } = usePairs();
+
+  const { state } = useDcaPlusConfirmForm(formName);
+  const { price } = useFiatPrice(state?.initialDenom as Denom);
+
+  return useMutation<Strategy['id'], Error>(() => {
+    if (!state) {
+      throw new Error('No state');
+    }
+
+    if (!price) {
+      throw new Error('No fiat price');
+    }
+
+    if (!client) {
+      throw Error('Invalid client');
+    }
+
+    const { pairs } = pairsData || {};
+
+    if (!pairs) {
+      throw Error('No pairs found');
+    }
+
+    const { autoStakeValidator } = state;
+
+    if (autoStakeValidator) {
+      msgs.push(getGrantMsg(senderAddress));
+    }
+
+    msgs.push(
+      getCreateVaultExecuteMsg(
+        { swapAmount: 1, executionInterval: 'daily', ...state },
+        pairs,
+        transactionType,
+        senderAddress,
+      ),
+    );
+
+    const tokensToCoverFee = createStrategyFeeInTokens(price);
+    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
+
+    return executeCreateVault(client, senderAddress, msgs);
   });
 };
 

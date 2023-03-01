@@ -15,6 +15,7 @@ import { SummaryTheSwap } from '@components/Summary/SummaryTheSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { FormikHelpers } from 'formik';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 import Fees from '../../../../components/Fees';
 
@@ -58,7 +59,7 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} />
+            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAIn} />
             <SummaryTheSwap state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />

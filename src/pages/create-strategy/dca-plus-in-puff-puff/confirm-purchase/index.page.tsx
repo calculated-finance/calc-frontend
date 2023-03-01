@@ -2,7 +2,7 @@ import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
-import useCreateVault from '@hooks/useCreateVault';
+import useCreateVault, { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
@@ -19,22 +19,20 @@ import { FormikHelpers } from 'formik';
 import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
 import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesDcaPlus from '@components/FeesDcaPlus';
+import { StrategyTypes } from '@models/StrategyTypes';
 
 function Page() {
   const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
 
-  console.log(errors);
-
-  const { mutate, isError, error, isLoading } = useCreateVault(FormNames.DcaIn, TransactionType.Buy);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
         });
         actions.resetAction();
       },
@@ -62,7 +60,7 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} />
+            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlus} />
             <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />

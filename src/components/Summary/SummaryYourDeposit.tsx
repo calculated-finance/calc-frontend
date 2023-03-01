@@ -2,8 +2,10 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
+import { Strategy } from '@hooks/useStrategies';
+import { StrategyTypes } from '@models/StrategyTypes';
 
-export function SummaryYourDeposit({ state }: any) {
+export function SummaryYourDeposit({ state, strategyType }: { state: any; strategyType: StrategyTypes }) {
   const { initialDenom, initialDeposit } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -19,7 +21,7 @@ export function SummaryYourDeposit({ state }: any) {
           </Text>
           <DenomIcon denomName={initialDenom} />{' '}
         </BadgeButton>{' '}
-        Into the CALC DCA In vault.
+        Into the CALC {strategyType} vault.
       </Text>
     </Box>
   );
