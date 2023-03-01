@@ -39,7 +39,7 @@ jest.mock('next/router', () => ({
 
 const mockStateMachine = {
   state: {
-    dcaIn: {
+    dcaPlusIn: {
       initialDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
       initialDeposit: '1',
       resultingDenom: 'ukuji',
