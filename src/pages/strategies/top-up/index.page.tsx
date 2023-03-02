@@ -20,7 +20,6 @@ import TopUpAmount from './TopUpAmount';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { getTimeSaved } from '../../../helpers/getTimeSaved';
-import getSwapAmount from '../../../helpers/getSwapAmount';
 
 export const topUpSteps: StepConfig[] = [
   {
@@ -44,7 +43,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
 
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const swapAmount = getSwapAmount(strategy);
+  const convertedSwapAmount = Number(getDenomInfo(strategy.balance.denom).conversion(Number(strategy.swap_amount)).toFixed(6));
 
   const { displayAmount } = useBalance({
     token: initialDenom,
@@ -94,7 +93,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
                 <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
               </Stack>
               <Divider />
-              <TopUpAmount initialDenom={initialDenom} swapAmount={swapAmount} />
+              <TopUpAmount initialDenom={initialDenom} convertedSwapAmount={convertedSwapAmount}/>
               <FormControl isInvalid={isError}>
                 <Submit>Confirm</Submit>
                 <FormErrorMessage>Failed to top up strategy (Reason: {error?.message})</FormErrorMessage>

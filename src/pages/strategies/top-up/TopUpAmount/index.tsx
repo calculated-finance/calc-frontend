@@ -42,9 +42,9 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   );
 }
 
-export default function TopUpAmount({ initialDenom, swapAmount }: { initialDenom: Denom, swapAmount: number }) {
+export default function TopUpAmount({ initialDenom, convertedSwapAmount }: { initialDenom: Denom, convertedSwapAmount: number}) {
   const [field, meta] = useField({ name: 'topUpAmount' });
-  const additionalSwapAmount = Math.ceil((field.value)/(swapAmount/1e6));
+  const additionalSwapAmount = Math.ceil((field.value)/(convertedSwapAmount));
   const displaySwaps = additionalSwapAmount > 1 ? `${additionalSwapAmount} swaps` : 'swap';
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
