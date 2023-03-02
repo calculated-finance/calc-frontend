@@ -133,7 +133,7 @@ StrategyCard.defaultProps = {
   advanced: false,
 };
 
-function Strategies() {
+function useFearAndGreed() {
   const { data, isLoading } = useQueryWithNotification(['fear-and-greed-index'], async () => {
     const response = await fetch(`https://api.alternative.me/fng/`);
     if (!response.ok) {
@@ -141,48 +141,48 @@ function Strategies() {
     }
     return response.json();
   });
+  return {
+    index: data?.data[0].value,
+    classification: data?.data[0].value_classification,
+    isLoading,
+  };
+}
 
-  const fearAndGreedIndex = data?.data[0].value;
-  const fearAndGreedClassification = data?.data[0].value_classification;
-  
-  const setStrategyRecommendation = fearAndGreedIndex < 41 ? 'accumulation' : 'take profit'
-  const StrategyRecommendation = `it may be a good time to use ${setStrategyRecommendation} strategies`
-  const showFearAndGreedAccumulate = fearAndGreedIndex < 41
-  const showFearAndGreedProfit = fearAndGreedIndex > 59
+function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: boolean }) {
+  const { index, classification, isLoading } = useFearAndGreed();
+  const setStrategyRecommendation = isAccumulation ? 'accumulation' : 'take profit';
+
+  return (
+    <Badge colorScheme="green" px={4} py={1} layerStyle="panel" whiteSpace="normal" bg="deepHorizon" textAlign="center">
+      {isLoading ? (
+        <Spinner w={3} h={3} />
+      ) : index ? (
+        <>
+          According to the{' '}
+          <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+            <Text as="a" textDecoration="underline" target="_blank">
+              Fear &amp; Greed index score
+            </Text>
+          </NextLink>
+          : {index} ({classification}), it may be a good time to use
+          {setStrategyRecommendation} strategies
+        </>
+      ) : null}
+    </Badge>
+  );
+}
+
+function Strategies() {
+  const { index } = useFearAndGreed();
+  const showFearAndGreedAccumulate = index < 41;
+  const showFearAndGreedProfit = index > 59;
 
   return (
     <Stack direction="column" spacing={8}>
       <Box>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
-          {
-            showFearAndGreedAccumulate && (
-              <Badge
-                colorScheme="green"
-                px={4}
-                py={1}
-                layerStyle="panel"
-                whiteSpace="normal"
-                bg="deepHorizon"
-                textAlign="center"
-              >
-                {isLoading ? (
-                  <Spinner w={3} h={3} />
-                ) : fearAndGreedIndex ? (
-                  <>
-                    According to the{' '}
-                    <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
-                      <Text as="a" textDecoration="underline" target="_blank">
-                        Fear &amp; Greed index score
-                      </Text>
-                    </NextLink>
-                    : {fearAndGreedIndex} ({fearAndGreedClassification}), {StrategyRecommendation}
-                  </>
-                ) : null}
-              </Badge>
-            )
-          }
-          
+          {showFearAndGreedAccumulate && <FearGreedStrategyRecommendation isAccumulation />}
         </Wrap>
         <Text pb={4} textStyle="body">
           Strategies that build a position in an asset.{' '}
@@ -198,36 +198,10 @@ function Strategies() {
       <Box>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading mb={1} size="md">
-            Take Profit strategies 
-            </Heading>
-          {
-              showFearAndGreedProfit && (
-                <Badge
-                  colorScheme="green"
-                  px={4}
-                  py={1}
-                  layerStyle="panel"
-                  whiteSpace="normal"
-                  bg="deepHorizon"
-                  textAlign="center"
-                >
-                  {isLoading ? (
-                    <Spinner w={3} h={3} />
-                  ) : fearAndGreedIndex ? (
-                    <>
-                      According to the{' '}
-                      <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
-                        <Text as="a" textDecoration="underline" target="_blank">
-                          Fear &amp; Greed index score
-                        </Text>
-                      </NextLink>
-                      : {fearAndGreedIndex} ({fearAndGreedClassification}), {StrategyRecommendation}
-                    </>
-                  ) : null}
-                </Badge>
-              )
-            }
-          </Wrap>
+            Take Profit strategies
+          </Heading>
+          {showFearAndGreedProfit && <FearGreedStrategyRecommendation />}
+        </Wrap>
         <Text pb={4} textStyle="body">
           Strategies that sell assets for profit.
         </Text>
