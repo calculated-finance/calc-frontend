@@ -54,50 +54,15 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
-function getCreateVaultExecuteMsg(
-  state: DcaInFormDataAll,
-  pairs: Pair[],
-  transactionType: TransactionType,
-  senderAddress: string,
-  dcaPlus = false,
-): { typeUrl: string; value: MsgExecuteContract } {
-  const {
-    initialDenom,
-    resultingDenom,
-    initialDeposit,
-    startDate,
-    swapAmount,
-    executionInterval,
-    purchaseTime,
-    slippageTolerance,
-    startPrice,
-    advancedSettings,
-    recipientAccount,
-    autoStakeValidator,
-    priceThresholdValue,
-  } = state;
+function encodeMsg(createVaultExecuteMsg: ExecuteMsg) {
+  const raw = JSON.stringify(createVaultExecuteMsg);
+  const textEncoder = new TextEncoder();
+  const encoded_msg = textEncoder.encode(raw);
+  return encoded_msg;
+}
 
-  // throw error if pair not found
-  // TODO: note that we need to make sure pairAddress has been set by the time mutate is called
-  // (usePair might not have fetched yet)
-
-  const pairAddress = findPair(pairs, resultingDenom, initialDenom);
-
-  if (!pairAddress) {
-    throw new Error('Pair not found');
-  }
-
-  const { deconversion } = getDenomInfo(initialDenom);
-  const { priceConversion } =
-    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
-
-  let startTimeSeconds;
-
-  if (startDate) {
-    const startTime = combineDateAndTime(startDate, purchaseTime);
-    startTimeSeconds = (startTime.valueOf() / 1000).toString();
-  }
-
+function getDestinations(state: DcaInFormDataAll) {
+  const { autoStakeValidator, recipientAccount } = state;
   const destinations = [] as Destination[];
 
   if (autoStakeValidator) {
@@ -108,44 +73,113 @@ function getCreateVaultExecuteMsg(
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
   }
 
-  const minimumReceiveAmount = getReceiveAmount(
-    priceConversion(priceThresholdValue),
-    deconversion,
-    swapAmount,
-    transactionType,
-  );
-  const targetReceiveAmount = getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
-  const createVaultExecuteMsg = {
-    create_vault: {
-      label: '',
-      time_interval: executionInterval,
-      pair_address: pairAddress,
-      swap_amount: deconversion(swapAmount).toString(),
-      target_start_time_utc_seconds: startTimeSeconds,
-      minimum_receive_amount: minimumReceiveAmount,
-      slippage_tolerance:
-        advancedSettings && slippageTolerance
-          ? getSlippageWithoutTrailingZeros(slippageTolerance)
-          : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
-      destinations: destinations.length ? destinations : undefined,
-      target_receive_amount: targetReceiveAmount,
-      use_dca_plus: dcaPlus,
-    },
-  } as ExecuteMsg;
+  return destinations.length ? destinations : undefined;
+}
+
+function getFunds(state: DcaInFormDataAll) {
+  const { initialDenom, initialDeposit } = state;
+  const { deconversion } = getDenomInfo(initialDenom);
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
 
-  const raw = JSON.stringify(createVaultExecuteMsg);
-  const textEncoder = new TextEncoder();
-  const encoded_msg = textEncoder.encode(raw);
+  const fundsInCoin = [
+    Coin.fromPartial({
+      amount: funds[0].amount,
+      denom: funds[0].denom,
+    }),
+  ];
+  return fundsInCoin;
+}
+
+function getMinimumReceiveAmount(state: DcaInFormDataAll, transactionType: TransactionType) {
+  const { initialDenom, swapAmount, priceThresholdValue, resultingDenom } = state;
+  const { priceConversion } =
+    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+
+  const { deconversion } = getDenomInfo(initialDenom);
+  return getReceiveAmount(priceConversion(priceThresholdValue), deconversion, swapAmount, transactionType);
+}
+
+function getSlippageTolerance(state: DcaInFormDataAll): string | null | undefined {
+  const { advancedSettings, slippageTolerance } = state;
+  return advancedSettings && slippageTolerance
+    ? getSlippageWithoutTrailingZeros(slippageTolerance)
+    : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance);
+}
+
+function getPairAddress(state: DcaInFormDataAll, pairs: Pair[]) {
+  const { initialDenom, resultingDenom } = state;
+  const pairAddress = findPair(pairs, resultingDenom, initialDenom);
+
+  if (!pairAddress) {
+    throw new Error('Pair not found');
+  }
+  return pairAddress;
+}
+
+function getStartTime(state: DcaInFormDataAll) {
+  const { startDate, purchaseTime } = state;
+  let startTimeSeconds;
+
+  if (startDate) {
+    const startTime = combineDateAndTime(startDate, purchaseTime);
+    startTimeSeconds = (startTime.valueOf() / 1000).toString();
+  }
+  return startTimeSeconds;
+}
+
+function getTargetReceiveAmount(state: DcaInFormDataAll, transactionType: TransactionType) {
+  const { initialDenom, swapAmount, startPrice, resultingDenom } = state;
+  const { priceConversion } =
+    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+
+  const { deconversion } = getDenomInfo(initialDenom);
+  return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
+}
+
+function getSwapAmount(state: DcaInFormDataAll) {
+  const { initialDenom, swapAmount } = state;
+  const { deconversion } = getDenomInfo(initialDenom);
+
+  return deconversion(swapAmount).toString();
+}
+
+function getExecutionInterval(state: DcaInFormDataAll) {
+  const { executionInterval } = state;
+  return executionInterval;
+}
+
+function buildCreateVaultParams(
+  state: DcaInFormDataAll,
+  pairs: Pair[],
+  transactionType: TransactionType,
+  dcaPlus = undefined,
+): ExecuteMsg {
+  return {
+    create_vault: {
+      label: '',
+      time_interval: getExecutionInterval(state),
+      pair_address: getPairAddress(state, pairs),
+      swap_amount: getSwapAmount(state),
+      target_start_time_utc_seconds: getStartTime(state),
+      minimum_receive_amount: getMinimumReceiveAmount(state, transactionType),
+      slippage_tolerance: getSlippageTolerance(state),
+      destinations: getDestinations(state),
+      target_receive_amount: getTargetReceiveAmount(state, transactionType),
+      use_dca_plus: dcaPlus,
+    },
+  };
+}
+
+function getCreateVaultExecuteMsg(
+  msg: ExecuteMsg,
+  funds: Coin[],
+  senderAddress: string,
+): { typeUrl: string; value: MsgExecuteContract } {
+  const encoded_msg = encodeMsg(msg);
 
   const msgExecuteContract = MsgExecuteContract.fromPartial({
     contract: CONTRACT_ADDRESS,
-    funds: [
-      Coin.fromPartial({
-        amount: funds[0].amount,
-        denom: funds[0].denom,
-      }),
-    ],
+    funds,
     msg: encoded_msg,
     sender: senderAddress,
   });
@@ -262,7 +296,10 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType) =
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    msgs.push(getCreateVaultExecuteMsg(state, pairs, transactionType, senderAddress));
+    const createVaultMsg = buildCreateVaultParams(state, pairs, transactionType);
+    const funds = getFunds(state);
+
+    msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
@@ -304,15 +341,14 @@ export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: Tran
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    msgs.push(
-      getCreateVaultExecuteMsg(
-        { swapAmount: 1, executionInterval: 'daily', ...state },
-        pairs,
-        transactionType,
-        senderAddress,
-        true,
-      ),
+    const createVaultMsg = buildCreateVaultParams(
+      { swapAmount: 1, executionInterval: 'daily', ...state },
+      pairs,
+      transactionType,
     );
+    const funds = getFunds(state);
+
+    msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
