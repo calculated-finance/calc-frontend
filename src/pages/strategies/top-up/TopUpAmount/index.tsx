@@ -42,9 +42,10 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   );
 }
 
-export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
+export default function TopUpAmount({ initialDenom, convertedSwapAmount }: { initialDenom: Denom, convertedSwapAmount: number}) {
   const [field, meta] = useField({ name: 'topUpAmount' });
-
+  const additionalSwapAmount = Math.ceil((field.value)/(convertedSwapAmount));
+  const displaySwaps = additionalSwapAmount > 1 ? `${additionalSwapAmount} swaps` : 'swap';
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How much do you want to add?</FormLabel>
@@ -58,6 +59,11 @@ export default function TopUpAmount({ initialDenom }: { initialDenom: Denom }) {
       <DenomInput data-testid="top-up-input" denom={initialDenom} {...field} />
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+      {Boolean(field.value) && !meta.error && (
+        <FormHelperText color="brand.200" fontSize="xs">
+          An additional {displaySwaps} will be added to your strategy.
+        </FormHelperText>
+      )}
     </FormControl>
   );
 }
