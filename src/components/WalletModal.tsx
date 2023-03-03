@@ -18,6 +18,7 @@ import {
   Stack,
   Text,
   useDisclosure,
+  ModalFooter,
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
@@ -31,25 +32,6 @@ function WalletModal() {
 
   const { isOpen, onToggle } = useDisclosure();
 
-  const [installedWallets] = useMemo(() => {
-    const installed: Wallet[] = [];
-    const notDetected: Wallet[] = [];
-    const loadable: Wallet[] = [];
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const wallet of wallets) {
-      if (wallet.readyState === WalletReadyState.NotDetected) {
-        notDetected.push(wallet);
-      } else if (wallet.readyState === WalletReadyState.Loadable) {
-        loadable.push(wallet);
-      } else if (wallet.readyState === WalletReadyState.Installed) {
-        installed.push(wallet);
-      }
-    }
-
-    return [installed, [...loadable, ...notDetected]];
-  }, [wallets]);
-
   const handleClose = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
@@ -61,6 +43,10 @@ function WalletModal() {
     },
     [select, handleClose],
   );
+
+  // const isMobile = useCallback(() => {
+  //   /Mobi/.test(navigator.userAgent);
+  // }, []);
 
   return (
     <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
@@ -80,21 +66,17 @@ function WalletModal() {
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
             <ModalBody>
               <Stack spacing={6}>
-                {installedWallets.length ? (
-                  installedWallets.map((wallet) => (
-                    <Box>
-                      <WalletListItem
-                        key={wallet.adapter.name}
-                        handleClick={() => handleWalletClick(wallet.adapter.name)}
-                        wallet={wallet}
-                      />
-                    </Box>
-                  ))
-                ) : (
-                  <Center>
-                    <Text textStyle="body">No wallet extensions found</Text>
-                  </Center>
-                )}
+                {wallets.map((wallet) => (
+                  <Box>
+                    <WalletListItem
+                      key={wallet.adapter.name}
+                      handleClick={() => handleWalletClick(wallet.adapter.name)}
+                      wallet={wallet}
+                      walletInstallLink="https://www.keplr.app/download"
+                    />
+                  </Box>
+                ))}
+
                 <Stack>
                   <Button
                     onClick={onToggle}
