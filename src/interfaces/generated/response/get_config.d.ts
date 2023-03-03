@@ -15,12 +15,27 @@
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
+/**
+ * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
+ *
+ * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
+ */
+export type Decimal = string;
 
-export interface PairsResponse {
-  pairs: Pair[];
+export interface ConfigResponse {
+  config: Config;
 }
-export interface Pair {
-  address: Addr;
-  base_denom: string;
-  quote_denom: string;
+export interface Config {
+  admin: Addr;
+  dca_plus_escrow_level: Decimal;
+  delegation_fee_percent: Decimal;
+  fee_collectors: FeeCollector[];
+  page_limit: number;
+  paused: boolean;
+  staking_router_address: Addr;
+  swap_fee_percent: Decimal;
+}
+export interface FeeCollector {
+  address: string;
+  allocation: Decimal;
 }
