@@ -59,6 +59,7 @@ function getCreateVaultExecuteMsg(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
+  dcaPlus = false,
 ): { typeUrl: string; value: MsgExecuteContract } {
   const {
     initialDenom,
@@ -128,6 +129,7 @@ function getCreateVaultExecuteMsg(
           : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance),
       destinations: destinations.length ? destinations : undefined,
       target_receive_amount: targetReceiveAmount,
+      use_dca_plus: dcaPlus,
     },
   } as ExecuteMsg;
   const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
@@ -308,6 +310,7 @@ export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: Tran
         pairs,
         transactionType,
         senderAddress,
+        true,
       ),
     );
 
