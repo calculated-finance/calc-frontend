@@ -1,4 +1,9 @@
-import { DcaPlusSteps, dcaPlusSteps } from '@models/dcaPlusFormData';
+import {
+  DcaPlusAssetsFormSchema,
+  DcaPlusConfirmFormSchema,
+  DcaPlusCustomiseFormSchema,
+  DcaPlusPostPurchaseFormSchema,
+} from '@models/dcaPlusFormData';
 import { useStateMachine } from 'little-state-machine';
 import { initialValues } from '../models/DcaInFormData';
 import { FormNames, getFormState, getResetAction, getUpdateAction } from './useDcaInForm';
@@ -10,10 +15,10 @@ export const useDCAPlusStep2Form = (formName: FormNames) => {
   });
 
   try {
-    const step1 = dcaPlusSteps[DcaPlusSteps.ASSETS].validateSync(getFormState(state, formName), { stripUnknown: true });
+    const step1 = DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
     const step2 = {
-      ...dcaPlusSteps[DcaPlusSteps.CUSTOMISE].cast(initialValues, { stripUnknown: true }),
-      ...dcaPlusSteps[DcaPlusSteps.CUSTOMISE].cast(getFormState(state, formName), { stripUnknown: true }),
+      ...DcaPlusCustomiseFormSchema.cast(initialValues, { stripUnknown: true }),
+      ...DcaPlusCustomiseFormSchema.cast(getFormState(state, formName), { stripUnknown: true }),
     };
 
     return {
@@ -38,10 +43,10 @@ export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
 
   try {
     return {
-      context: dcaPlusSteps[DcaPlusSteps.ASSETS].validateSync(getFormState(state, formName), { stripUnknown: true }),
+      context: DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       state: {
-        ...dcaPlusSteps[DcaPlusSteps.POST_PURCHASE].cast(initialValues, { stripUnknown: true }),
-        ...dcaPlusSteps[DcaPlusSteps.POST_PURCHASE].cast(getFormState(state, formName), { stripUnknown: true }),
+        ...DcaPlusPostPurchaseFormSchema.cast(initialValues, { stripUnknown: true }),
+        ...DcaPlusPostPurchaseFormSchema.cast(getFormState(state, formName), { stripUnknown: true }),
       },
       actions,
     };
@@ -59,10 +64,10 @@ export const useDcaPlusConfirmForm = (formName: FormNames) => {
   });
 
   try {
-    dcaPlusSteps[DcaPlusSteps.CONFIRM].validateSync(getFormState(state, formName), { stripUnknown: true });
+    DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
 
     return {
-      state: dcaPlusSteps[DcaPlusSteps.CONFIRM].validateSync(getFormState(state, formName), { stripUnknown: true }),
+      state: DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions,
     };
   } catch (e) {

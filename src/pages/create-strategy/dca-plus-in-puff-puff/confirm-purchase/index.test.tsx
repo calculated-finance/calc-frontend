@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
 import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
+import { encode } from 'src/helpers/encode';
 import Page from './index.page';
 
 const mockRouter = {
@@ -113,7 +114,48 @@ describe('DCA Plus In confirm page', () => {
 
   describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
-      const mockCreateStrategy = mockCreateVault();
+      const executeMsg = {
+        create_vault: {
+          label: '',
+          time_interval: 'daily',
+          pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
+          swap_amount: '16667',
+          target_start_time_utc_seconds: undefined,
+          minimum_receive_amount: undefined,
+          destinations: undefined,
+          target_receive_amount: undefined,
+          use_dca_plus: true,
+        },
+      };
+      const mockCreateStrategy = mockCreateVault([
+        {
+          typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+          value: {
+            contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+            funds: [
+              {
+                amount: '1000000',
+                denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+              },
+            ],
+            msg: encode(executeMsg),
+            sender: 'kujitestwallet',
+          },
+        },
+        {
+          typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+          value: {
+            amount: [
+              {
+                amount: '200000',
+                denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+              },
+            ],
+            fromAddress: 'kujitestwallet',
+            toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+          },
+        },
+      ]);
       const mockGetPairsSpy = mockGetPairs();
       mockUseWallet(mockGetPairsSpy, jest.fn(), jest.fn(), mockCreateStrategy);
 

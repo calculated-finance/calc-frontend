@@ -1,8 +1,8 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
-import useCreateVault, { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
+import { FormNames } from 'src/hooks/useDcaInForm';
+import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
@@ -12,7 +12,6 @@ import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
-import { getTimeSaved } from 'src/helpers/getTimeSaved';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { FormikHelpers } from 'formik';
@@ -22,7 +21,7 @@ import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
 
 function Page() {
-  const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
+  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
 

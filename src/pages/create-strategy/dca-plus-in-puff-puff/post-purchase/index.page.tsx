@@ -10,6 +10,7 @@ import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
 import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
+import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 
 function Page() {
   const { actions, state, context } = useDcaPlusInFormPostPurchase(FormNames.DcaPlusIn);
@@ -17,7 +18,7 @@ function Page() {
 
   const { nextStep, goToStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(postPurchaseValidationSchema, { context });
+  const { validate } = useValidation(DcaPlusPostPurchaseFormSchema, { context });
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
     await actions.updateAction(formData);

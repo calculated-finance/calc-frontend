@@ -5,7 +5,7 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useRouter } from 'next/router';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
-import useCreateVault from '@hooks/useCreateVault';
+import { useCreateVaultDca } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Submit from '@components/Submit';
@@ -47,7 +47,7 @@ function ConfirmPurchase() {
   const { nextStep } = useSteps(dcaOutSteps);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { mutate, isError, error } = useCreateVault(FormNames.DcaOut, TransactionType.Sell);
+  const { mutate, isError, error } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {

@@ -19,29 +19,23 @@ export const dcaPlusSchema = Yup.object({
   strategyDuration: allSchema.strategyDuration,
 });
 
-export enum DcaPlusSteps {
-  ASSETS,
-  CUSTOMISE,
-  POST_PURCHASE,
-  CONFIRM,
-}
+export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
+export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
+  'advancedSettings',
+  'startImmediately',
+  'triggerType',
+  'startDate',
+  'startPrice',
+  'purchaseTime',
+  'strategyDuration',
+]);
+export const DcaPlusPostPurchaseFormSchema = dcaPlusSchema.pick([
+  'sendToWallet',
+  'recipientAccount',
+  'autoStake',
+  'autoStakeValidator',
+]);
+export const DcaPlusConfirmFormSchema = dcaPlusSchema;
 
-export const dcaPlusSteps: Record<DcaPlusSteps, Yup.AnySchema> = {
-  [DcaPlusSteps.ASSETS]: dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']),
-  [DcaPlusSteps.CUSTOMISE]: dcaPlusSchema.pick([
-    'advancedSettings',
-    'startImmediately',
-    'triggerType',
-    'startDate',
-    'startPrice',
-    'purchaseTime',
-    'strategyDuration',
-  ]),
-  [DcaPlusSteps.POST_PURCHASE]: dcaPlusSchema.pick([
-    'sendToWallet',
-    'recipientAccount',
-    'autoStake',
-    'autoStakeValidator',
-  ]),
-  [DcaPlusSteps.CONFIRM]: dcaPlusSchema,
-};
+// infer type
+export type DcaPlusState = Yup.InferType<typeof dcaPlusSchema>;
