@@ -289,12 +289,6 @@ export const allSchema = {
         if (value < maximumDurationFromDeposit) {
           return true;
         }
-        // print everything
-        console.log('initialDenom', initialDenom);
-        console.log('initialDeposit', initialDeposit);
-        console.log('minimumSwapAmount', minimumSwapAmount);
-        console.log('maximumDurationFromDeposit', maximumDurationFromDeposit);
-        console.log('value', value);
 
         return context.createError({
           message: `Duration must be longer than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
