@@ -21,10 +21,11 @@ import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
 
 function Page() {
-  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
+  const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
 
+  console.log(errors);
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
