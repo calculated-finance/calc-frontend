@@ -35,25 +35,6 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
   return fundsInCoin;
 }
 
-function getStrategyIdFromEvents(events: readonly Event[]) {
-  return events.find((event) => event.type === 'wasm')?.attributes.find((attribute) => attribute.key === 'vault_id')
-    ?.value;
-}
-
-export function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse) {
-  const { events } = data;
-  if (!events) {
-    throw new Error('No events');
-  }
-
-  const id = getStrategyIdFromEvents(events);
-
-  if (!id) {
-    throw new Error('No id found');
-  }
-  return id;
-}
-
 const useCreateVault = (formName: FormNames, transactionType: TransactionType, state: DcaFormState | undefined) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
