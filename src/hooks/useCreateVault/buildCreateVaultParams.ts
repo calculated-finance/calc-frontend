@@ -9,6 +9,7 @@ import { Denom } from '@models/Denom';
 import { FormNames } from '../useDcaInForm';
 import { Pair } from '../../models/Pair';
 import { DcaFormState } from './DcaFormState';
+import { getSwapAmountFromDuration } from '../../helpers/getSwapAmountFromDuration';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -106,7 +107,7 @@ function getSwapAmount(initialDenom: Denom, swapAmount: number) {
 function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: number, initialDeposit: number) {
   const { deconversion } = getDenomInfo(initialDenom);
 
-  return deconversion(initialDeposit / strategyDuration);
+  return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
 
 function getExecutionInterval(executionInterval: TimeInterval) {
