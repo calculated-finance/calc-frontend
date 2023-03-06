@@ -1,9 +1,9 @@
 import { Text, Button, Center, Tooltip } from '@chakra-ui/react';
 import useBalance, { getDisplayAmount } from '@hooks/useBalance';
-import { createStrategyFeeInTokens } from '@hooks/useCreateVault';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
+import { createStrategyFeeInTokens } from 'src/helpers/createStrategyFeeInTokens';
 
 export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });

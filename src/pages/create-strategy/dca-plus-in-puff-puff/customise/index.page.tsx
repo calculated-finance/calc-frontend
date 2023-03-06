@@ -17,7 +17,7 @@ import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
-import { DcaPlusSteps, dcaPlusSteps } from '@models/dcaPlusFormData';
+import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import PurchaseTime from '../../../../components/PurchaseTime';
 import StartPrice from '../../../../components/DcaInStartPrice';
 import StrategyDuration from './StrategyDuration';
@@ -29,7 +29,7 @@ function DcaInStep2() {
   const steps = dcaPlusInSteps;
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(dcaPlusSteps[DcaPlusSteps.CUSTOMISE], {
+  const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
     strategyType: StrategyTypes.DCAIn,
   });

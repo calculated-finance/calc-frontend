@@ -2,7 +2,7 @@ import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
-import useCreateVault from '@hooks/useCreateVault';
+import { useCreateVaultDca } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
@@ -24,7 +24,7 @@ function Page() {
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(steps);
 
-  const { mutate, isError, error, isLoading } = useCreateVault(FormNames.DcaIn, TransactionType.Buy);
+  const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {

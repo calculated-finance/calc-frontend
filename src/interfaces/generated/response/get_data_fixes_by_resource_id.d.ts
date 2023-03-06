@@ -5,45 +5,24 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type EventData =
+export type DataFixData =
   | {
-      dca_vault_created: {};
-    }
-  | {
-      dca_vault_funds_deposited: {
-        amount: Coin;
+      vault_amounts: {
+        new_received: Coin;
+        new_swapped: Coin;
+        old_received: Coin;
+        old_swapped: Coin;
       };
     }
   | {
-      dca_vault_execution_triggered: {
-        asset_price: Decimal256;
-        base_denom: string;
-        quote_denom: string;
+      execution_completed_event_amounts: {
+        new_fee: Coin;
+        new_received: Coin;
+        new_sent: Coin;
+        old_fee: Coin;
+        old_received: Coin;
+        old_sent: Coin;
       };
-    }
-  | {
-      dca_vault_execution_completed: {
-        fee: Coin;
-        received: Coin;
-        sent: Coin;
-      };
-    }
-  | {
-      dca_vault_execution_skipped: {
-        reason: ExecutionSkippedReason;
-      };
-    }
-  | {
-      dca_vault_cancelled: {};
-    }
-  | {
-      dca_vault_z_delegation_succeeded: {
-        delegation: Coin;
-        validator_address: string;
-      };
-    }
-  | {
-      dca_vault_delegation_failed: {};
     };
 /**
  * A thin wrapper around u128 that is using strings for JSON encoding/decoding, such that the full u128 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
@@ -59,26 +38,6 @@ export type EventData =
  * let c = Uint128::from(70u32); assert_eq!(c.u128(), 70); ```
  */
 export type Uint128 = string;
-/**
- * A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0
- *
- * The greatest possible value that can be represented is 115792089237316195423570985008687907853269984665640564039457.584007913129639935 (which is (2^256 - 1) / 10^18)
- */
-export type Decimal256 = string;
-export type ExecutionSkippedReason =
-  | ('slippage_tolerance_exceeded' | 'unknown_failure')
-  | {
-      price_threshold_exceeded: {
-        price: Decimal256;
-      };
-    }
-  | {
-      price_delta_limit_exceeded: {
-        actual_price_delta: Decimal256;
-        duration_in_seconds: number;
-        max_price_delta: Decimal256;
-      };
-    };
 /**
  * A point in time in nanosecond precision.
  *
@@ -104,12 +63,12 @@ export type Timestamp = Uint64;
  */
 export type Uint64 = string;
 
-export interface EventsResponse {
-  events: Event[];
+export interface DataFixesResponse {
+  fixes: DataFix[];
 }
-export interface Event {
+export interface DataFix {
   block_height: number;
-  data: EventData;
+  data: DataFixData;
   id: number;
   resource_id: Uint128;
   timestamp: Timestamp;

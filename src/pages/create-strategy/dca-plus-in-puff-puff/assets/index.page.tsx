@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
+import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function DcaIn() {
@@ -27,7 +28,7 @@ function DcaIn() {
 
   const { isPageLoading } = usePageLoad();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
+  const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);
