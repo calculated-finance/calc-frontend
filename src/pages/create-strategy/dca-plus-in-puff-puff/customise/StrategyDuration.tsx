@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Slider,
@@ -11,12 +12,13 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
+import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 
 export default function StrategyDuration() {
-  const [{ value }, , { setValue }] = useField({ name: 'strategyDuration' });
+  const [{ value }, meta, { setValue }] = useField({ name: 'strategyDuration' });
 
   return (
-    <FormControl>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>On average, how long would you like the strategy to last?</FormLabel>
       <FormHelperText>This will be the benchmark for comparison between DCA and DCA+</FormHelperText>
       <Flex>
@@ -29,7 +31,13 @@ export default function StrategyDuration() {
         <Spacer />
         77%
       </Flex>
-      <Slider value={value} onChange={setValue} min={30} max={90} step={1}>
+      <Slider
+        value={value}
+        onChange={setValue}
+        min={MIN_DCA_PLUS_STRATEGY_DURATION}
+        max={MAX_DCA_PLUS_STRATEGY_DURATION}
+        step={1}
+      >
         <SliderTrack bg="white">
           <Box position="relative" right={10} />
           <SliderFilledTrack bg="blue.200" />
@@ -41,6 +49,8 @@ export default function StrategyDuration() {
         <Spacer />
         180 days
       </Flex>
+      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+
       <FormHelperText color="brand.200" fontSize="xs">
         Please note, DCA+ will dynamically alter the amount purchased based on market conditions which may result in the
         strategy ending sooner or later.
