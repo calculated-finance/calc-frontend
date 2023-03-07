@@ -4,9 +4,9 @@ import { TransactionType } from '@components/TransactionType';
 import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
-export default function StartPrice() {
+export default function StartPrice({ formName }: { formName: FormNames }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
-  const { state } = useStep2Form(FormNames.DcaIn);
+  const { state } = useStep2Form(formName);
 
   if (!state) {
     return null;
