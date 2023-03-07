@@ -19,34 +19,15 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
-import { useRouter } from 'next/router';
 import RecipientAccount from '@components/RecipientAccount';
 import DcaOutSendToWallet from '@components/DcaOutSendToWallet';
+import { InvalidData } from '@components/InvalidData';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
 import dcaOutSteps from '../dcaOutSteps';
 
-function InvalidData() {
-  const router = useRouter();
-  const { actions } = useConfirmForm(FormNames.DcaOut);
-
-  const handleClick = () => {
-    actions.resetAction();
-    router.push('/create-strategy/dca-out/assets');
-  };
-  return (
-    <Center>
-      {/* Better to link to start of specific strategy */}
-      Invalid Data, please&nbsp;
-      <Button onClick={handleClick} variant="link">
-        restart
-      </Button>
-    </Center>
-  );
-}
-
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaOut);
-  const { nextStep } = useSteps(dcaOutSteps);
+  const { nextStep, goToStep } = useSteps(dcaOutSteps);
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchema);
@@ -54,6 +35,11 @@ function Page() {
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
     await actions.updateAction(formData);
     await nextStep();
+  };
+
+  const handleRestart = () => {
+    actions.resetAction();
+    goToStep(0);
   };
 
   return (
@@ -87,7 +73,7 @@ function Page() {
                 </FormControl>
               </Form>
             ) : (
-              <InvalidData />
+              <InvalidData onRestart={handleRestart} />
             )}
           </NewStrategyModalBody>
         </NewStrategyModal>
