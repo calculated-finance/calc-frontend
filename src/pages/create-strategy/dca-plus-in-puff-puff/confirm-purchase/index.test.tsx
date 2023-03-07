@@ -177,6 +177,7 @@ describe('DCA Plus In confirm page', () => {
         pathname: '/create-strategy/dca-plus-in-puff-puff/success',
         query: {
           strategyId: '59',
+          timeSaved: 300,
         },
       });
     });

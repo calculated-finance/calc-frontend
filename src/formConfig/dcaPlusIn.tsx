@@ -23,6 +23,9 @@ export const dcaPlusInSteps: StepConfig[] = [
   },
   {
     href: '/create-strategy/dca-plus-in-puff-puff/success',
-    title: 'Success',
+    title: 'Strategy Set Successfully',
+    noBackButton: true,
+    noJump: true,
+    successPage: true,
   },
 ];
