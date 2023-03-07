@@ -19,9 +19,11 @@ import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus
 import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { getTimeSaved } from 'src/helpers/getTimeSaved';
 
 function Page() {
-  const { state, actions, errors } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
+  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
 
@@ -32,6 +34,9 @@ function Page() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
+          timeSaved:
+            state &&
+            getTimeSaved(state.initialDeposit, getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration)),
         });
         actions.resetAction();
       },
