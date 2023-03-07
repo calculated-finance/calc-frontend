@@ -13,9 +13,15 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
+import { getProbabilityOfOutperformance } from 'src/helpers/ml/getProbabilityOfOutperformance';
 
 export default function StrategyDuration() {
   const [{ value }, meta, { setValue }] = useField({ name: 'strategyDuration' });
+
+  const outperformanceProbability = getProbabilityOfOutperformance(value);
+
+  const outperformanceProbabilityFormatted =
+    outperformanceProbability && `${Math.round(outperformanceProbability * 100)}%`;
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -24,12 +30,12 @@ export default function StrategyDuration() {
       <Flex>
         Days:
         <Spacer />
-        Our performance probability:
+        Outperformance probability:
       </Flex>
       <Flex color="blue.200">
         {value}
         <Spacer />
-        77%
+        {outperformanceProbabilityFormatted}
       </Flex>
       <Slider
         value={value}
