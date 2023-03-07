@@ -4,6 +4,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { getSwapRange } from 'src/helpers/ml/getSwapRange';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
@@ -14,8 +15,10 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const minSwap = Number(Math.max(minimumSwapAmount, 0.6 * swapAmount).toFixed(3));
-  const maxSwap = Number((2.5 * swapAmount).toFixed(3));
+  const { min, max } = getSwapRange(swapAmount, strategyDuration) || {};
+
+  const minSwap = min && Number(Math.max(minimumSwapAmount, min).toFixed(3));
+  const maxSwap = max && Number(max.toFixed(3));
 
   return (
     <Box data-testid="summary-the-swap-dca-plus">

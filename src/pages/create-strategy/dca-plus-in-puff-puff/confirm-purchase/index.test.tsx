@@ -103,8 +103,8 @@ describe('DCA Plus In confirm page', () => {
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('NBTC');
-      within(theSwap).getByText('0.6 USK');
-      within(theSwap).getByText('2.5 USK');
+      within(theSwap).getByText('0.662 USK');
+      within(theSwap).getByText('1.452 USK');
 
       const benchmark = screen.getByTestId('summary-benchmark');
 
