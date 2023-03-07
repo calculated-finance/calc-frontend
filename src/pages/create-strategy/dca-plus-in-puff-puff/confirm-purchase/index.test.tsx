@@ -33,7 +33,7 @@ const mockStateMachine = {
   state: {
     dcaPlusIn: {
       initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
-      initialDeposit: '1',
+      initialDeposit: '30',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       advancedSettings: false,
       purchaseTime: '',
@@ -45,7 +45,7 @@ const mockStateMachine = {
       autoStakeValidator: null,
       recipientAccount: null,
       sendToWallet: 'yes',
-      strategyDuration: 60,
+      strategyDuration: 30,
     },
   },
   actions: {
@@ -97,18 +97,18 @@ describe('DCA Plus In confirm page', () => {
 
       const yourDeposit = screen.getByTestId('summary-your-deposit');
 
-      within(yourDeposit).getByText('1 USK');
+      within(yourDeposit).getByText('30 USK');
 
       const theSwap = screen.getByTestId('summary-the-swap-dca-plus');
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('NBTC');
-      within(theSwap).getByText('0.1 USK');
-      within(theSwap).getByText('1000 USK');
+      within(theSwap).getByText('0.662 USK');
+      within(theSwap).getByText('1.452 USK');
 
       const benchmark = screen.getByTestId('summary-benchmark');
 
-      within(benchmark).getByText('20 USK');
+      within(benchmark).getByText('1 USK');
     });
   });
 
@@ -119,7 +119,7 @@ describe('DCA Plus In confirm page', () => {
           label: '',
           time_interval: 'daily',
           pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
-          swap_amount: '16667',
+          swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,
           minimum_receive_amount: undefined,
           destinations: undefined,
@@ -134,7 +134,7 @@ describe('DCA Plus In confirm page', () => {
             contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
             funds: [
               {
-                amount: '1000000',
+                amount: '30000000',
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],

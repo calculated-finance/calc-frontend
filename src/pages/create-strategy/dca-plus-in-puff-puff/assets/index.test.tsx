@@ -173,7 +173,7 @@ describe('DCA In Assets page', () => {
 
       // enter initial deposit
       const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
-      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
+      await waitFor(() => userEvent.type(input, '5'), { timeout: 5000 });
 
       // select resulting denom
       await selectEvent.select(screen.getByLabelText(/What asset do you want to invest in?/), ['NBTC']);
@@ -183,7 +183,7 @@ describe('DCA In Assets page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
-        initialDeposit: 1,
+        initialDeposit: 5,
         resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       });
 

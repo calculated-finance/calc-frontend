@@ -10,6 +10,7 @@ import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import { isNil } from 'lodash';
+import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 
@@ -265,7 +266,35 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-  strategyDuration: Yup.number().min(30).max(90).required().nullable(),
+  strategyDuration: Yup.number()
+    .label('Strategy Duration')
+    .min(MIN_DCA_PLUS_STRATEGY_DURATION)
+    .max(MAX_DCA_PLUS_STRATEGY_DURATION)
+    .required()
+    .nullable()
+    .test({
+      name: 'swaps-greater-than-minimum',
+      test(value, context) {
+        if (isNil(value)) {
+          return true;
+        }
+        const { initialDenom = null, initialDeposit = null } = { ...context.parent, ...context.options.context };
+        if (!initialDenom || !initialDeposit) {
+          return true;
+        }
+        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+
+        const maximumDurationFromDeposit = Math.ceil(initialDeposit / minimumSwapAmount);
+
+        if (value < maximumDurationFromDeposit) {
+          return true;
+        }
+
+        return context.createError({
+          message: `Duration must be longer than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
+        });
+      },
+    }),
 };
 
 export const dcaSchema = Yup.object({

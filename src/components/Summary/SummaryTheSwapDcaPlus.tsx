@@ -2,16 +2,23 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
+import { DcaPlusState } from '@models/dcaPlusFormData';
+import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { getSwapRange } from 'src/helpers/ml/getSwapRange';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwapDcaPlus({ state }: any) {
-  const { initialDenom, resultingDenom } = state;
+export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
+  const { initialDenom, resultingDenom, strategyDuration, initialDeposit } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: initialDenomName, minimumSwapAmount } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
-  const minSwap = 0.1;
-  const maxSwap = 1000;
+  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
+
+  const { min, max } = getSwapRange(swapAmount, strategyDuration) || {};
+
+  const minSwap = min && Number(Math.max(minimumSwapAmount, min).toFixed(3));
+  const maxSwap = max && Number(max.toFixed(3));
 
   return (
     <Box data-testid="summary-the-swap-dca-plus">
