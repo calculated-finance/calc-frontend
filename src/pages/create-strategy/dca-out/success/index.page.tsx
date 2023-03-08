@@ -1,6 +1,6 @@
 import { getFlowLayout } from '@components/Layout';
 import { SuccessStrategyModal } from '@components/SuccessStrategyModal';
-import dcaOutSteps from '../dcaOutSteps';
+import dcaOutSteps from '../../../../formConfig/dcaOut';
 
 function Success() {
   return <SuccessStrategyModal stepConfig={dcaOutSteps} />;

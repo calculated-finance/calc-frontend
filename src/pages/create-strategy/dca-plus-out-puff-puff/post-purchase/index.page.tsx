@@ -1,18 +1,7 @@
-import {
-  Box,
-  Button,
-  Center,
-  Collapse,
-  FormControl,
-  FormHelperText,
-  HStack,
-  Image,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Collapse, FormControl, FormHelperText, HStack, Image, Stack, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
-import { FormNames, useConfirmForm, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
+import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -24,7 +13,7 @@ import DcaOutSendToWallet from '@components/DcaOutSendToWallet';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
-import dcaPlusOutSteps from '../dcaPlusOutSteps';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);

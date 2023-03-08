@@ -1,27 +1,23 @@
-import { Box, Stack, Collapse } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
-import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
-import PriceThreshold from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import ExecutionInterval from '@components/ExecutionInterval';
-import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
-import SlippageTolerance from '@components/SlippageTolerance';
+import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import { TriggerForm } from '@components/TriggerForm';
 import { InvalidData } from '@components/InvalidData';
-import SwapAmount from '@components/SwapAmount';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
-import dcaPlusOutSteps from '../dcaPlusOutSteps';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);

@@ -18,7 +18,7 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import { TriggerForm } from '@components/TriggerForm';
 import { InvalidData } from '@components/InvalidData';
 import SwapAmount from '@components/SwapAmount';
-import dcaOutSteps from '../dcaOutSteps';
+import dcaOutSteps from '../../../../formConfig/dcaOut';
 
 function Page() {
   const { actions, state } = useStep2Form(FormNames.DcaOut);

@@ -12,7 +12,7 @@ import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
-import dcaOutSteps from '../dcaOutSteps';
+import dcaOutSteps from '../../../../formConfig/dcaOut';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function Page() {

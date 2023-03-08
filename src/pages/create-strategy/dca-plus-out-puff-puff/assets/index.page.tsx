@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
-import dcaPlusOutSteps from '../dcaPlusOutSteps';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function Page() {

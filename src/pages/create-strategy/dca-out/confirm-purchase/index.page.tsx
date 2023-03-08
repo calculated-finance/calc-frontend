@@ -17,7 +17,7 @@ import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '../../../../helpers/getTimeSaved';
 import Fees from '../../../../components/Fees';
-import dcaOutSteps from '../dcaOutSteps';
+import dcaOutSteps from '../../../../formConfig/dcaOut';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaOut);
