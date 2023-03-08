@@ -8,6 +8,29 @@ import { useStateMachine } from 'little-state-machine';
 import { initialValues } from '../models/DcaInFormData';
 import { FormNames, getFormState, getResetAction, getUpdateAction } from './useDcaInForm';
 
+export const useDCAPlusAssetsForm = (formName: FormNames) => {
+  const { state, actions } = useStateMachine({
+    updateAction: getUpdateAction(formName),
+    resetAction: getResetAction(formName),
+  });
+
+  try {
+    return {
+      state: {
+        step1: DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      },
+      actions,
+    };
+  } catch (e) {
+    return {
+      state: {
+        step1: DcaPlusAssetsFormSchema.cast(initialValues, { stripUnknown: true }),
+      },
+      actions,
+    };
+  }
+};
+
 export const useDCAPlusStep2Form = (formName: FormNames) => {
   const { state, actions } = useStateMachine({
     updateAction: getUpdateAction(formName),

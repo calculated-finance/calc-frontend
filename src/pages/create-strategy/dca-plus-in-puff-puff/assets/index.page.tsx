@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
+import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -14,10 +14,11 @@ import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
+import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function DcaIn() {
-  const { actions, state } = useDcaInForm(FormNames.DcaPlusIn);
+  const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);
   const {
     data: { pairs },
     isLoading,

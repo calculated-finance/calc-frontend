@@ -1,37 +1,42 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
-import { useCreateVaultDca } from '@hooks/useCreateVault';
+import { FormNames } from 'src/hooks/useDcaInForm';
+import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import { FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
-import { SummaryTheSwap } from '@components/Summary/SummaryTheSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
+import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
+import { FormikHelpers } from 'formik';
+import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
+import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
+import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getTimeSaved } from '../../../../helpers/getTimeSaved';
-import Fees from '../../../../components/Fees';
-import dcaOutSteps from '../dcaOutSteps';
+import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { getTimeSaved } from 'src/helpers/getTimeSaved';
+import dcaPlusOutSteps from '../dcaPlusOutSteps';
 
 function Page() {
-  const { state, actions } = useConfirmForm(FormNames.DcaOut);
+  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
-  const { nextStep, goToStep } = useSteps(dcaOutSteps);
+  const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          timeSaved:
+            state &&
+            getTimeSaved(state.initialDeposit, getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration)),
         });
         actions.resetAction();
       },
@@ -47,10 +52,10 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+      <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
@@ -59,11 +64,12 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
-            <SummaryTheSwap state={state} />
+            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
+            <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
-            <Fees formName={FormNames.DcaOut} />
+            <SummaryBenchmark state={state} />
+            <FeesDcaPlus formName={FormNames.DcaPlusOut} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

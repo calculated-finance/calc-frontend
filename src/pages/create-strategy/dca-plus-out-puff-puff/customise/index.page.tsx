@@ -18,14 +18,21 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import { TriggerForm } from '@components/TriggerForm';
 import { InvalidData } from '@components/InvalidData';
 import SwapAmount from '@components/SwapAmount';
-import dcaOutSteps from '../dcaOutSteps';
+import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
+import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
+import StrategyDuration from '@components/StrategyDuration';
+import dcaPlusOutSteps from '../dcaPlusOutSteps';
 
 function Page() {
-  const { actions, state } = useStep2Form(FormNames.DcaOut);
+  const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);
+  const steps = dcaPlusOutSteps;
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAOut });
-  const { nextStep, goToStep } = useSteps(dcaOutSteps);
+  const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
+    ...state?.step1,
+    strategyType: StrategyTypes.DCAPlusOut,
+  });
+  const { nextStep, goToStep } = useSteps(steps);
 
   const handleRestart = () => {
     actions.resetAction();
@@ -33,24 +40,24 @@ function Page() {
   };
 
   if (!state) {
-    // TODO: clean this up so we dont need two modal codes
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
           Customise Strategy
         </NewStrategyModalHeader>
-        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
+        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
       </NewStrategyModal>
     );
   }
+
   const onSubmit = async (data: DcaInFormDataStep2) => {
     await actions.updateAction(data);
     await nextStep();
   };
 
-  const initialValues = state?.step2;
+  const initialValues = state.step2;
 
   return (
     <Formik
@@ -60,12 +67,12 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ values, isSubmitting }) => (
+      {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
             Customise Strategy
           </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
+          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaDiagram
@@ -74,20 +81,8 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaOut} />
-                <ExecutionInterval />
-                <SwapAmount step1State={state.step1} isSell />
-                <Collapse in={values.advancedSettings}>
-                  <Box m="px">
-                    <PriceThreshold
-                      transactionType={TransactionType.Sell}
-                      formName={FormNames.DcaOut}
-                      title="Set sell price floor?"
-                      description="CALC won't sell if the asset price drops below this set value."
-                    />
-                    <SlippageTolerance />
-                  </Box>
-                </Collapse>
+                <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaPlusOut} />
+                <StrategyDuration />
                 <Submit>Next</Submit>
               </Stack>
             </Form>

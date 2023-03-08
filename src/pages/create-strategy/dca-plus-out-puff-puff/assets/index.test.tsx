@@ -17,7 +17,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-out/assets',
+  pathname: '/create-strategy/dca-plus-out-puff-puff/assets',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -172,7 +172,7 @@ describe('DCA Out Assets page', () => {
 
       // enter initial deposit
       const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
-      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
+      await waitFor(() => userEvent.type(input, '10'), { timeout: 5000 });
 
       // select resulting denom
       await selectEvent.select(screen.getByLabelText(/How do you want to hold your profits?/), ['OSMO']);
@@ -182,12 +182,12 @@ describe('DCA Out Assets page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         initialDenom: 'ukuji',
-        initialDeposit: 1,
+        initialDeposit: 10,
         resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-out/customise',
+        pathname: '/create-strategy/dca-plus-out-puff-puff/customise',
         query: undefined,
       });
     });

@@ -64,12 +64,12 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlus} />
+            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
             <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
-            <FeesDcaPlus formName={FormNames.DcaIn} />
+            <FeesDcaPlus formName={FormNames.DcaPlusIn} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

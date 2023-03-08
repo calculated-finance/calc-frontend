@@ -1,9 +1,9 @@
 import { Link, ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
-const dcaOutSteps: StepConfig[] = [
+const dcaPlusOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-out/assets',
+    href: '/create-strategy/dca-plus-out-puff-puff/assets',
     title: 'Choose Funding & Assets',
     footerText: 'How does taking profit into fiat work?',
     helpContent: (
@@ -25,7 +25,7 @@ const dcaOutSteps: StepConfig[] = [
     ),
   },
   {
-    href: '/create-strategy/dca-out/customise',
+    href: '/create-strategy/dca-plus-out-puff-puff/customise',
     title: 'Customise Strategy',
     footerText: 'What are advanced settings?',
     helpContent: (
@@ -78,7 +78,7 @@ const dcaOutSteps: StepConfig[] = [
     ),
   },
   {
-    href: '/create-strategy/dca-out/post-purchase',
+    href: '/create-strategy/dca-plus-out-puff-puff/post-purchase',
     title: 'Post Purchase',
     footerText: 'What will I be able to do with my profits in the future?',
     helpContent: (
@@ -93,12 +93,12 @@ const dcaOutSteps: StepConfig[] = [
     ),
   },
   {
-    href: '/create-strategy/dca-out/confirm-purchase',
+    href: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
     title: 'Confirm & Sign',
   },
 
   {
-    href: '/create-strategy/dca-out/success',
+    href: '/create-strategy/dca-plus-out-puff-puff/success',
     title: 'Strategy Set Successfully',
     noBackButton: true,
     noJump: true,
@@ -106,4 +106,4 @@ const dcaOutSteps: StepConfig[] = [
   },
 ];
 
-export default dcaOutSteps;
+export default dcaPlusOutSteps;

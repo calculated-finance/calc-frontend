@@ -8,7 +8,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-out/success',
+  pathname: '/create-strategy/dca-plus-out-puff-puff/success',
   query: { strategyId: '1', timeSaved: 100 },
   events: {
     on: jest.fn(),
@@ -33,7 +33,7 @@ function renderTarget() {
   });
 }
 
-describe('DCA Out success page', () => {
+describe('DCA Plus Out success page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

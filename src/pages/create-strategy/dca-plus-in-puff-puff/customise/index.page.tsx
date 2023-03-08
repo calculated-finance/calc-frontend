@@ -17,17 +17,16 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { TriggerForm } from '@components/TriggerForm';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
-import StrategyDuration from './StrategyDuration';
+import StrategyDuration from '../../../../components/StrategyDuration';
 
-function DcaInStep2() {
+function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
-
   const steps = dcaPlusInSteps;
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.DCAIn,
+    strategyType: StrategyTypes.DCAPlusIn,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -90,6 +89,6 @@ function DcaInStep2() {
   );
 }
 
-DcaInStep2.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaInStep2;
+export default Page;

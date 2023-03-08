@@ -182,7 +182,7 @@ export function buildCreateVaultParams(
     return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType);
   }
 
-  if (formType === FormNames.DcaPlusIn) {
+  if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
     return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, transactionType);
   }
 

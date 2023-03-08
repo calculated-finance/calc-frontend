@@ -11,7 +11,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-out/post-purchase',
+  pathname: '/create-strategy/dca-plus-out-puff-puff/post-purchase',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -28,9 +28,9 @@ jest.mock('next/router', () => ({
 
 const mockStateMachine = {
   state: {
-    dcaOut: {
+    dcaPlusOut: {
       initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
-      initialDeposit: '1',
+      initialDeposit: '10',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
     },
   },
@@ -99,7 +99,7 @@ describe('DCA Out post-purchase page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-out/confirm-purchase',
+        pathname: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
         query: undefined,
       });
     });
@@ -124,7 +124,7 @@ describe('DCA Out post-purchase page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-out/confirm-purchase',
+        pathname: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
         query: undefined,
       });
     });

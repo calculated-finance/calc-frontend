@@ -9,13 +9,12 @@ import userEvent from '@testing-library/user-event';
 import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
 import { encode } from 'src/helpers/encode';
 import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
-import YesNoValues from '@models/YesNoValues';
 import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
 import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-out/confirm-purchase',
+  pathname: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -32,25 +31,21 @@ jest.mock('next/router', () => ({
 
 const mockStateMachine = {
   state: {
-    dcaOut: {
+    dcaPlusOut: {
       initialDenom: 'ukuji',
-      initialDeposit: '1',
+      initialDeposit: '30',
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: false,
-      executionInterval: 'daily',
-      priceThresholdEnabled: YesNoValues.No,
-      priceThresholdValue: null,
       purchaseTime: '',
-      slippageTolerance: 2,
       startDate: null,
       startImmediately: 'yes',
       startPrice: null,
-      swapAmount: 1,
       triggerType: 'date',
       autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
       sendToWallet: 'yes',
+      strategyDuration: 30,
     },
   },
   actions: {
@@ -78,7 +73,7 @@ async function renderTarget() {
   });
 }
 
-describe('DCA Out confirm page', () => {
+describe('DCA Plus Out confirm page', () => {
   beforeEach(() => {
     mockFiatPrice();
     jest.clearAllMocks();
@@ -101,14 +96,17 @@ describe('DCA Out confirm page', () => {
 
       const yourDeposit = screen.getByTestId('summary-your-deposit');
 
-      within(yourDeposit).getByText('1 KUJI');
+      within(yourDeposit).getByText('30 KUJI');
 
-      const theSwap = screen.getByTestId('summary-the-swap');
+      const theSwap = screen.getByTestId('summary-the-swap-dca-plus');
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('OSMO');
-      within(theSwap).getByText('day');
-      within(theSwap).getByText('1 day');
+      within(theSwap).getByText('0.662 KUJI');
+      within(theSwap).getByText('1.452 KUJI');
+      const benchmark = screen.getByTestId('summary-benchmark');
+
+      within(benchmark).getByText('1 KUJI');
     });
   });
 
@@ -121,12 +119,12 @@ describe('DCA Out confirm page', () => {
           pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e866',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,
-          minimum_receive_amount: undefined,
-          slippage_tolerance: '0.02',
           destinations: undefined,
           target_receive_amount: undefined,
+          use_dca_plus: true,
         },
       };
+
       const mockCreateStrategy = mockCreateVault([
         {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
@@ -134,7 +132,7 @@ describe('DCA Out confirm page', () => {
             contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
             funds: [
               {
-                amount: '1000000',
+                amount: '30000000',
                 denom: 'ukuji',
               },
             ],
@@ -169,17 +167,15 @@ describe('DCA Out confirm page', () => {
       await new Promise((r) => setTimeout(r, 1000));
 
       // submit
-      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Confirm' })), { timeout: 50000 });
-
-      // await waitFor(() => expect(mockCreateStrategy).toHaveBeenCalledWith({}));
+      await waitFor(() => userEvent.click(screen.getByRole('button', { name: 'Confirm' })), { timeout: 5000 });
 
       await waitFor(() => expect(mockStateMachine.actions.resetAction).toHaveBeenCalled());
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-out/success',
+        pathname: '/create-strategy/dca-plus-out-puff-puff/success',
         query: {
           strategyId: '59',
-          timeSaved: 10,
+          timeSaved: 300,
         },
       });
     });
