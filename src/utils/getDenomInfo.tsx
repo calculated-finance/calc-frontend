@@ -199,7 +199,27 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     deconversion: (value: number) => Math.round(value * 10 ** 9),
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 3,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 3,
-  }
+  },
+  [MainnetDenoms.INJ]: {
+    name: 'INJ',
+    icon: '/images/denoms/injective.png',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'injective-protocol',
+    conversion: (value: number) => value / 10 ** 18,
+    deconversion: (value: number) => Math.round(value * 10 ** 18),
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
+    enabled: true,
+  },
+  [MainnetDenoms.WHALE]: {
+    name: 'WHALE',
+    icon: '/images/denoms/whale.svg',
+    stakeable: true,
+    stable: false,
+    coingeckoId: 'white-whale',
+    enabled: true,
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
