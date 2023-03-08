@@ -1,5 +1,5 @@
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
+import { DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Formik } from 'formik';

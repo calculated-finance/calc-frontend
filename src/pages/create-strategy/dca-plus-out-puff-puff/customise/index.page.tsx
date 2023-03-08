@@ -7,26 +7,26 @@ import { Form, Formik } from 'formik';
 import { FormNames } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import { StrategyTypes } from '@models/StrategyTypes';
 import DcaDiagram from '@components/DcaDiagram';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
-import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
+import { TriggerForm } from '@components/TriggerForm';
+import { InvalidData } from '@components/InvalidData';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
-import { TriggerForm } from '@components/TriggerForm';
-import { TransactionType } from '@components/TransactionType';
-import { InvalidData } from '@components/InvalidData';
-import StrategyDuration from '../../../../components/StrategyDuration';
+import StrategyDuration from '@components/StrategyDuration';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
-  const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
-  const steps = dcaPlusInSteps;
+  const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);
+  const steps = dcaPlusOutSteps;
 
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.DCAPlusIn,
+    strategyType: StrategyTypes.DCAPlusOut,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -77,7 +77,7 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
+                <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaPlusOut} />
                 <StrategyDuration />
                 <Submit>Next</Submit>
               </Stack>

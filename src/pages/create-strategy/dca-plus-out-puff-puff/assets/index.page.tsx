@@ -12,22 +12,23 @@ import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
-import dcaOutSteps from '../../../../formConfig/dcaOut';
+import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 import { ModalWrapper } from '../../../../components/ModalWrapper';
 
 function Page() {
-  const { actions, state } = useDcaInForm(FormNames.DcaOut);
+  const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);
   const {
     data: { pairs },
     isLoading,
   } = usePairs();
-  const { nextStep } = useSteps(dcaOutSteps);
+  const { nextStep } = useSteps(dcaPlusOutSteps);
 
   const { data } = useBalances();
 
   const { isPageLoading } = usePageLoad();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
+  const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);
@@ -37,7 +38,7 @@ function Page() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaOutSteps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;
   }
 
   const { quote_denom, base_denom } = pairs.find((pair) => pair.address === router.query.pair) || {};
@@ -53,7 +54,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <ModalWrapper
-          stepsConfig={dcaOutSteps}
+          stepsConfig={dcaPlusOutSteps}
           isLoading={isLoading || (isPageLoading && !isSubmitting)}
           reset={actions.resetAction}
         >

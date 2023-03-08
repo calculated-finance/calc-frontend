@@ -12,7 +12,6 @@ import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
-import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { FormikHelpers } from 'formik';
 import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
@@ -21,13 +20,14 @@ import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from 'src/helpers/getTimeSaved';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
-  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
+  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
-  const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
+  const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
@@ -52,10 +52,10 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaPlusInSteps} resetForm={actions.resetAction}>
+      <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={dcaPlusInSteps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
@@ -64,12 +64,12 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
+            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
             <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
-            <FeesDcaPlus formName={FormNames.DcaPlusIn} />
+            <FeesDcaPlus formName={FormNames.DcaPlusOut} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

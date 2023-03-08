@@ -11,6 +11,7 @@ export enum FormNames {
   DcaIn = 'dcaIn',
   DcaOut = 'dcaOut',
   DcaPlusIn = 'dcaPlusIn',
+  DcaPlusOut = 'dcaPlusOut',
 }
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};

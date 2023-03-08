@@ -1,6 +1,6 @@
 import { Box, Collapse, FormControl, FormHelperText, HStack, Image, Stack, Text } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
+import { DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
 import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik } from 'formik';
@@ -11,15 +11,16 @@ import useSteps from '@hooks/useSteps';
 import RecipientAccount from '@components/RecipientAccount';
 import DcaOutSendToWallet from '@components/DcaOutSendToWallet';
 import { InvalidData } from '@components/InvalidData';
+import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import SendToWalletValues from '../../../../models/SendToWalletValues';
-import dcaOutSteps from '../../../../formConfig/dcaOut';
+import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
-  const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaOut);
-  const { nextStep, goToStep } = useSteps(dcaOutSteps);
+  const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);
+  const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(postPurchaseValidationSchema);
+  const { validate } = useValidation(DcaPlusPostPurchaseFormSchema);
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
     await actions.updateAction(formData);
@@ -37,10 +38,10 @@ function Page() {
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {({ values, isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+          <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
             Post Purchase
           </NewStrategyModalHeader>
-          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
+          <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
               <Form autoComplete="off">
                 <FormControl>
