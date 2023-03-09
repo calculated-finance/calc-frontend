@@ -7,16 +7,16 @@ export function mockFiatPrice() {
     .get(`/simple/price?ids=usd-coin,usk,kujira,usd-coin,terra-luna,osmosis,bitcoin&vs_currencies=usd`)
     .reply(200, {
       cosmos: {
-        usd: 1.5,
+        usd: 0.5,
       },
       kujira: {
         usd: 1.5,
       },
       'usd-coin': {
-        usd: 1.5,
+        usd: 2.5,
       },
       usk: {
-        usd: 1.5,
+        usd: 3.5,
       },
     })
     .persist();

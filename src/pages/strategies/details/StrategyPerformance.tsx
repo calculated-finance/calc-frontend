@@ -42,7 +42,7 @@ function StrategyPerformanceDetails({
         <Heading size="xs">Asset in</Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
+        <Flex align="center" gap={2} data-testid="strategy-initial-denom">
           <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
         </Flex>
       </GridItem>
@@ -63,7 +63,9 @@ function StrategyPerformanceDetails({
         </Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm">{formatFiat(marketValueInFiat)}</Text>
+        <Text fontSize="sm" data-testid="strategy-market-value">
+          {formatFiat(marketValueInFiat)}
+        </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Heading size="xs">
@@ -71,7 +73,7 @@ function StrategyPerformanceDetails({
         </Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm">
+        <Text fontSize="sm" data-testid="strategy-total-acculumated">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
             ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
             : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
@@ -83,7 +85,7 @@ function StrategyPerformanceDetails({
         </Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm">
+        <Text fontSize="sm" data-testid="strategy-net-cost">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
             ? `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`
             : `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`}
@@ -95,7 +97,7 @@ function StrategyPerformanceDetails({
         </Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm">
+        <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
             ? formatFiat((costValue.toConverted() / marketValueValue.toConverted()) * initialDenomPrice)
             : formatFiat((marketValueValue.toConverted() / costValue.toConverted()) * resultingDenomPrice)}
@@ -111,11 +113,11 @@ function StrategyPerformanceDetails({
       </GridItem>
       <GridItem colSpan={1}>
         {getStrategyType(strategy) === StrategyTypes.DCAIn ? (
-          <Text color={color} fontSize="sm">
+          <Text color={color} fontSize="sm" data-testid="strategy-profit">
             {formatFiat(profit)}
           </Text>
         ) : (
-          <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} fontSize="sm">
+          <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} data-testid="strategy-profit-taken" fontSize="sm">
             {formatFiat(marketValueInFiat)}
           </Text>
         )}
