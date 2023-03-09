@@ -33,9 +33,11 @@ import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { Denoms } from 'src/models/Denom';
 import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
+import { isDcaPlus } from 'src/helpers/strategy/isDcaPlus';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
+import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 
@@ -135,7 +137,14 @@ function Page() {
 
       <NextSwapInfo strategy={data.vault} />
 
-      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
+      <Grid
+        gap={6}
+        mb={6}
+        templateColumns="repeat(6, 1fr)"
+        templateRows={isDcaPlus(data.vault) ? '3fr' : '2fr'}
+        alignItems="stretch"
+      >
+        {isDcaPlus(data.vault) && <StrategyComparison strategy={data.vault} />}
         <StrategyDetails strategy={data.vault} />
         <StrategyPerformance strategy={data.vault} />
         <StrategyChart strategy={data.vault} />
