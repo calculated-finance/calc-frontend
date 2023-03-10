@@ -17,6 +17,29 @@ import { useWallet } from '@wizard-ui/react';
 import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyScheduled } from '@helpers/strategy';
 import useStrategies, { Strategy } from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '@components/Layout';
+import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import { useState } from 'react';
+
+function StrategiesAccordionButton({ children }: ChildrenProp) {
+  return (
+    <AccordionButton borderRadius="2xl" p={0} role="group" _hover={{ background: 'none' }}>
+      <Box as="span" flex="1" textAlign="left">
+        {children}
+      </Box>
+      <Box
+        _groupHover={{ background: 'blue.200' }}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        p={1}
+        borderRadius="50%"
+        marginRight={2}
+      >
+        <AccordionIcon _groupHover={{ color: 'abyss.200' }} />
+      </Box>
+    </AccordionButton>
+  );
+}
 
 function Page() {
   const { data, isLoading } = useStrategies();
@@ -39,33 +62,26 @@ function Page() {
       </Heading>
 
       <Accordion allowToggle defaultIndex={0}>
-        <AccordionItem border="none">
-          <h2>
-            <AccordionButton _hover={{ bg: 'abyss.200' }} borderRadius="2xl" px={4} py={4} pt={4} pb={4}>
-              <Box as="span" flex="1" textAlign="left">
-                <Heading pb={2} size="md">
-                  Active Strategies ({activeStrategies.length})
-                </Heading>
-                <Text pb={4} textStyle="body">
-                  Strategies actively swapping.
-                </Text>
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
+        <AccordionItem border="none" margin={0}>
+          <StrategiesAccordionButton>
+            <Heading pb={2} size="md">
+              Active Strategies ({activeStrategies.length})
+            </Heading>
+            <Text pb={4} textStyle="body">
+              Strategies actively swapping.
+            </Text>
+          </StrategiesAccordionButton>
           <AccordionPanel pb={4}>
-            <Box>
-              <Stack spacing={4}>
-                {/* eslint-disable-next-line no-nested-ternary */}
-                {!activeStrategies.length ? (
-                  <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                    {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
-                  </Flex>
-                ) : (
-                  activeStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-                )}
-              </Stack>
-            </Box>
+            <Stack spacing={4}>
+              {/* eslint-disable-next-line no-nested-ternary */}
+              {!activeStrategies.length ? (
+                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                  {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
+                </Flex>
+              ) : (
+                activeStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
+              )}
+            </Stack>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
@@ -74,20 +90,14 @@ function Page() {
         {Boolean(scheduledStrategies.length) && (
           <Accordion allowToggle>
             <AccordionItem border="none">
-              <h2>
-                <AccordionButton _hover={{ bg: 'abyss.200' }} borderRadius="2xl" px={4} py={4} pt={4} pb={4}>
-                  <Box as="span" flex="1" textAlign="left">
-                    <Heading pb={2} size="md">
-                      Scheduled Strategies ({scheduledStrategies.length})
-                    </Heading>
-                    <Text pb={4} textStyle="body">
-                      Strategies with triggers that are waiting to be executed.
-                    </Text>
-                  </Box>
-
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
+              <StrategiesAccordionButton>
+                <Heading pb={2} size="md">
+                  Scheduled Strategies ({scheduledStrategies.length})
+                </Heading>
+                <Text pb={4} textStyle="body">
+                  Strategies with triggers that are waiting to be executed.
+                </Text>
+              </StrategiesAccordionButton>
               <AccordionPanel pb={4}>
                 <Stack spacing={4}>
                   {/* eslint-disable-next-line no-nested-ternary */}
@@ -109,20 +119,14 @@ function Page() {
 
       <Accordion allowToggle>
         <AccordionItem border="none">
-          <h2>
-            <AccordionButton _hover={{ bg: 'abyss.200' }} borderRadius="2xl" px={4} py={4} pt={4} pb={4}>
-              <Box as="span" flex="1" textAlign="left">
-                <Heading size="md" pb={2}>
-                  Completed Strategies ({completedStrategies.length})
-                </Heading>
-                <Text pb={4} textStyle="body">
-                  Strategies that have fully executed their swaps. Top them up to reactivate them.
-                </Text>
-              </Box>
-
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
+          <StrategiesAccordionButton>
+            <Heading size="md" pb={2}>
+              Completed Strategies ({completedStrategies.length})
+            </Heading>
+            <Text pb={4} textStyle="body">
+              Strategies that have fully executed their swaps. Top them up to reactivate them.
+            </Text>
+          </StrategiesAccordionButton>
           <AccordionPanel pb={4}>
             <Stack spacing={4}>
               {!completedStrategies.length ? (
@@ -139,20 +143,14 @@ function Page() {
 
       <Accordion allowToggle>
         <AccordionItem border="none">
-          <h2>
-            <AccordionButton _hover={{ bg: 'abyss.200' }} borderRadius="2xl" px={4} py={4} pt={4} pb={4}>
-              <Box as="span" flex="1" textAlign="left">
-                <Heading size="md" pb={2}>
-                  Cancelled Strategies ({cancelledStrategies.length})
-                </Heading>
-                <Text pb={4} textStyle="body">
-                  Strategies that have been closed, and the funds returned.
-                </Text>
-              </Box>
-
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
+          <StrategiesAccordionButton>
+            <Heading size="md" pb={2}>
+              Cancelled Strategies ({cancelledStrategies.length})
+            </Heading>
+            <Text pb={4} textStyle="body">
+              Strategies that have been closed, and the funds returned.
+            </Text>
+          </StrategiesAccordionButton>
           <AccordionPanel pb={4}>
             <Stack spacing={4}>
               {!cancelledStrategies.length ? (
