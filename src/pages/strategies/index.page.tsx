@@ -18,7 +18,6 @@ import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyS
 import useStrategies, { Strategy } from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '@components/Layout';
 import { ChildrenProp } from 'src/helpers/ChildrenProp';
-import { useState } from 'react';
 
 function StrategiesAccordionButton({ children }: ChildrenProp) {
   return (
