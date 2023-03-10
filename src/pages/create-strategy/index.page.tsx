@@ -148,7 +148,7 @@ function useFearAndGreed() {
 
 function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: boolean }) {
   const { index, classification, isLoading } = useFearAndGreed();
-  const setStrategyRecommendation = isAccumulation ? ' accumulation' : ' take profit';
+  const setStrategyRecommendation = isAccumulation ? 'accumulation' : 'take profit';
 
   return (
     <Badge colorScheme="green" px={4} py={1} layerStyle="panel" whiteSpace="normal" bg="deepHorizon" textAlign="center">
@@ -162,7 +162,7 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
               Fear &amp; Greed index score
             </Text>
           </NextLink>
-          : {index} ({classification}), it may be a good time to use
+          : {index} ({classification}), it may be a good time to use{' '}
           {setStrategyRecommendation} strategies
         </>
       ) : null}
