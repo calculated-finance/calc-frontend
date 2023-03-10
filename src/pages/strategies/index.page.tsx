@@ -67,11 +67,11 @@ function Page() {
             <Heading pb={2} size="md">
               Active Strategies ({activeStrategies.length})
             </Heading>
-            <Text pb={4} textStyle="body">
+            <Text pb={2} textStyle="body">
               Strategies actively swapping.
             </Text>
           </StrategiesAccordionButton>
-          <AccordionPanel pb={4}>
+          <AccordionPanel pb={8}>
             <Stack spacing={4}>
               {/* eslint-disable-next-line no-nested-ternary */}
               {!activeStrategies.length ? (
@@ -94,7 +94,7 @@ function Page() {
                 <Heading pb={2} size="md">
                   Scheduled Strategies ({scheduledStrategies.length})
                 </Heading>
-                <Text pb={4} textStyle="body">
+                <Text pb={2} textStyle="body">
                   Strategies with triggers that are waiting to be executed.
                 </Text>
               </StrategiesAccordionButton>
@@ -123,7 +123,7 @@ function Page() {
             <Heading size="md" pb={2}>
               Completed Strategies ({completedStrategies.length})
             </Heading>
-            <Text pb={4} textStyle="body">
+            <Text pb={2} textStyle="body">
               Strategies that have fully executed their swaps. Top them up to reactivate them.
             </Text>
           </StrategiesAccordionButton>
@@ -147,7 +147,7 @@ function Page() {
             <Heading size="md" pb={2}>
               Cancelled Strategies ({cancelledStrategies.length})
             </Heading>
-            <Text pb={4} textStyle="body">
+            <Text pb={2} textStyle="body">
               Strategies that have been closed, and the funds returned.
             </Text>
           </StrategiesAccordionButton>
