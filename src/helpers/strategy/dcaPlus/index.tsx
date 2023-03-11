@@ -8,6 +8,7 @@ import { getLastExecutionDateFromStrategyEvents } from 'src/helpers/getLastExecu
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
 import { formatDate } from 'src/helpers/format/formatDate';
+import { getTotalReceived } from '../getTotalReceived';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -57,4 +58,35 @@ export function getStandardDcaStrategyEndDate(strategy: Strategy, events: Event[
   }
 
   return '-';
+}
+
+export function getEscrowLevel(strategy: Strategy) {
+  const { escrow_level } = getDcaPlusConfig(strategy) || {};
+
+  return Number(escrow_level);
+}
+
+// getAcculumationDifference
+export function getAcculumationDifference(strategy: Strategy) {
+  // get the total received from the standard dca
+  const standardDcaTotalReceived = getStandardDcaTotalReceived(strategy);
+
+  // get the total received from the strategy
+  const totalReceived = getTotalReceived(strategy);
+
+  // get the difference between the two
+  const difference = totalReceived - standardDcaTotalReceived;
+
+  return difference;
+}
+
+// number of swaps so far
+export function getNumberOfSwaps(strategy: Strategy) {
+  // get total cost of standard dca
+  const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
+
+  // use swap amount to calculate number of swaps
+  const swapAmount = getSwapAmount(strategy);
+
+  return Math.floor(Number(standard_dca_swapped_amount) / swapAmount);
 }

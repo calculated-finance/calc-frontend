@@ -1,36 +1,40 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
-import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
 import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
-import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getTotalCost } from './getTotalCost';
 import {
+  getAcculumationDifference,
+  getEscrowLevel,
+  getNumberOfSwaps,
   getStandardDcaAveragePrice,
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
   getStandardDcaTotalReceived,
 } from 'src/helpers/strategy/dcaPlus';
-import { getAverageCost } from './getAverageCost';
 import { formatFiat } from 'src/helpers/format/formatFiat';
-import { getFiatPrice } from 'src/helpers/getFiatPrice';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { getConvertedSwapAmount } from 'src/helpers/getSwapAmount';
+import { getAverageCost } from './getAverageCost';
+import { getTotalCost } from './getTotalCost';
+import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import { formatSignedPercentage } from '../../../helpers/format/formatSignedPercentage';
 
-function StrategyComparisonCard() {
+function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
   return (
     <Flex direction="column" p={8} my={8} mx={8} borderRadius="3xl" borderColor="green.200" borderWidth={2} w={500}>
       <Heading size="xs">
-        <Text as="span" color="green.200">
-          +20.13 KUJI
-        </Text>{' '}
-        more accumulated with DCA+
+        <Text as="span" color="green.200" /> {getAcculumationDifference(strategy)}{' '}
+        {getDenomName(getStrategyResultingDenom(strategy))} more accumulated with DCA+
       </Heading>
-      <Heading size="2xl">+ 12%</Heading>
-      <Text textStyle="body">In comparison to traditional DCA, swapping 100 USK per day for 10 days.</Text>
+      <Heading size="2xl">{formatSignedPercentage(getEscrowLevel(strategy))}</Heading>
+      <Text textStyle="body">
+        In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
+        {getDenomName(getStrategyInitialDenom(strategy))} per day for {getNumberOfSwaps(strategy)} days.
+      </Text>
     </Flex>
   );
 }
@@ -119,8 +123,6 @@ function StrategyComparisonDetails({
 export default function StrategyComparison({ strategy }: { strategy: Strategy }) {
   const { data: eventsData } = useStrategyEvents(strategy.id);
 
-  console.log(strategy);
-
   return (
     <GridItem colSpan={6}>
       <Flex h="full" flexDirection="column">
@@ -131,7 +133,7 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
           {eventsData?.events ? (
             <>
               <StrategyComparisonDetails strategy={strategy} strategyEvents={eventsData.events} />
-              <StrategyComparisonCard />
+              <StrategyComparisonCard strategy={strategy} />
             </>
           ) : (
             <Center w="full" h="full" px={8} py={6}>
