@@ -5,24 +5,27 @@ import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
-import { getStrategyName } from 'src/helpers/getStrategyName';
-import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
-import { getSlippageTolerance } from 'src/helpers/getStrategySlippageTolerance';
+
 import { Strategy } from '@hooks/useStrategies';
 import { useWallet } from '@wizard-ui/react';
 import useValidator from '@hooks/useValidator';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { getStrategyStartDate } from 'src/helpers/getStrategyStartDate';
-import { getStrategyType } from 'src/helpers/getStrategyType';
 import useStrategyEvents from '@hooks/useStrategyEvents';
-import { getPriceCeilingFloor } from 'src/helpers/getPriceCeilingFloor';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { isAutoStaking } from 'src/helpers/isAutoStaking';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
 import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
+import {
+  getStrategyInitialDenom,
+  getStrategyResultingDenom,
+  getStrategyType,
+  getStrategyStartDate,
+  isStrategyCancelled,
+  getStrategyName,
+  getStrategyEndDate,
+  getSlippageTolerance,
+  getPriceCeilingFloor,
+} from 'src/helpers/strategy';
 import { CancelButton } from './CancelButton';
 import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 

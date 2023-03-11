@@ -3,17 +3,19 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
 import { formatFiat } from 'src/helpers/format/formatFiat';
-import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import {
+  getStrategyInitialDenom,
+  getStrategyResultingDenom,
+  isBuyStrategy,
+  getTotalCost,
+  getAverageCost,
+  getAveragePrice,
+  getTotalReceived,
+} from 'src/helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
-import { getTotalCost } from './getTotalCost';
-import { getAveragePrice } from './getAveragePrice';
-import { getAverageCost } from './getAverageCost';
 
 function StrategyPerformanceDetails({
   strategy,

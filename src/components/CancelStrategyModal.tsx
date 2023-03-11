@@ -14,10 +14,8 @@ import {
   ModalProps,
   Stack,
 } from '@chakra-ui/react';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import getDenomInfo from '@utils/getDenomInfo';
-import React from 'react';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 
 type CancelStrategyModalProps = {

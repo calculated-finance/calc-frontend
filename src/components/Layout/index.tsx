@@ -19,7 +19,6 @@ import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
-import { featureFlags } from 'src/constants';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 

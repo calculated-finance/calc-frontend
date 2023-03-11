@@ -25,7 +25,6 @@ import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Banner from '@components/Banner';
-import { featureFlags } from 'src/constants';
 import { Pages } from './Pages';
 
 interface LinkItem {

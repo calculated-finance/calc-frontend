@@ -4,7 +4,6 @@ import getDenomInfo from '@utils/getDenomInfo';
 import totalExecutions from 'src/utils/totalExecutions';
 import BadgeButton from '@components/BadgeButton';
 import executionIntervalDisplay from 'src/helpers/executionIntervalDisplay';
-import { TimeInterval } from 'src/interfaces/generated/execute';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 

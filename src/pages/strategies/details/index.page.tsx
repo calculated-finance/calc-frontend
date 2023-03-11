@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getStrategyName } from 'src/helpers/getStrategyName';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
 import {
@@ -29,11 +28,9 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { Denoms } from 'src/models/Denom';
 import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
-import { isDcaPlus } from 'src/helpers/strategy/isDcaPlus';
+import { isDcaPlus, getStrategyInitialDenom, getStrategyResultingDenom, getStrategyName } from 'src/helpers/strategy';
 import { getSidebarLayout } from '../../../components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';

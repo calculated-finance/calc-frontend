@@ -30,9 +30,7 @@ import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { formatFiat } from 'src/helpers/format/formatFiat';
-import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
+import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from 'src/helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
