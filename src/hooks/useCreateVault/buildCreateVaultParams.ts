@@ -20,13 +20,14 @@ function getReceiveAmount(
   deconversion: (value: number) => number,
   swapAmount: number,
   transactionType: TransactionType,
+  significantFigures: number,
 ) {
   if (!price) {
     return undefined;
   }
 
   if (transactionType === TransactionType.Buy) {
-    return deconversion(Number((swapAmount / price).toFixed(2))).toString();
+    return deconversion(Number((swapAmount / price).toFixed(significantFigures))).toString();
   }
   return deconversion(swapAmount * price).toString();
 }
@@ -55,8 +56,14 @@ function getMinimumReceiveAmount(
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
-  const { deconversion } = getDenomInfo(initialDenom);
-  return getReceiveAmount(priceConversion(priceThresholdValue), deconversion, swapAmount, transactionType);
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  return getReceiveAmount(
+    priceConversion(priceThresholdValue),
+    deconversion,
+    swapAmount,
+    transactionType,
+    significantFigures,
+  );
 }
 
 function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTolerance: number | null | undefined) {
@@ -94,8 +101,8 @@ function getTargetReceiveAmount(
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
-  const { deconversion } = getDenomInfo(initialDenom);
-  return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType, significantFigures);
 }
 
 function getSwapAmount(initialDenom: Denom, swapAmount: number) {
