@@ -366,7 +366,7 @@ describe('Detail page', () => {
     });
   });
 
-  describe.only('strategy performance', () => {
+  describe('strategy performance', () => {
     describe('total acculumated', () => {
       describe('when DCA In', () => {
         it('renders type', async () => {
