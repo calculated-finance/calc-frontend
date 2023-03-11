@@ -89,8 +89,8 @@ function StrategyPerformanceDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAverageCost(strategy, strategyEvents, initialDenomPrice))
-            : formatFiat(getAveragePrice(strategy, strategyEvents, resultingDenomPrice))}
+            ? formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)
+            : formatFiat(getAveragePrice(strategy, strategyEvents) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>

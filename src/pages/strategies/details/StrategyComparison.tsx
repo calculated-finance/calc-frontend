@@ -9,6 +9,16 @@ import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
 import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getTotalCost } from './getTotalCost';
+import {
+  getStandardDcaAveragePrice,
+  getStandardDcaStrategyEndDate,
+  getStandardDcaTotalCost,
+  getStandardDcaTotalReceived,
+} from 'src/helpers/strategy/dcaPlus';
+import { getAverageCost } from './getAverageCost';
+import { formatFiat } from 'src/helpers/format/formatFiat';
+import { getFiatPrice } from 'src/helpers/getFiatPrice';
+import useFiatPrice from '@hooks/useFiatPrice';
 
 function StrategyComparisonCard() {
   return (
@@ -34,6 +44,8 @@ function StrategyComparisonDetails({
 }) {
   const initialDenom = getStrategyInitialDenom(strategy);
 
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1} />
@@ -48,20 +60,16 @@ function StrategyComparisonDetails({
         <Divider />
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">{isBuyStrategy(strategy) ? 'Accumulated' : 'Sold'}</Heading>
+        <Heading size="xs">Accumulated</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {isBuyStrategy(strategy)
-            ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
-            : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {`${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {isBuyStrategy(strategy)
-            ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
-            : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {`${getStandardDcaTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -69,29 +77,25 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          10 {getDenomInfo(initialDenom).name}
+          {`${getStandardDcaTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          5 {getDenomInfo(initialDenom).name}
+          {`${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">{isBuyStrategy(strategy) ? 'Average token cost' : 'Average token sell price'}</Heading>
+        <Heading size="xs">Average token cost</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {isBuyStrategy(strategy)
-            ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
-            : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
+          {formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {isBuyStrategy(strategy)
-            ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
-            : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
+          {formatFiat(getStandardDcaAveragePrice(strategy) * initialDenomPrice)}
         </Text>
       </GridItem>
 
@@ -105,7 +109,7 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {getStrategyEndDate(strategy, strategyEvents)}
+          {getStandardDcaStrategyEndDate(strategy, strategyEvents)}
         </Text>
       </GridItem>
     </Grid>
@@ -114,6 +118,8 @@ function StrategyComparisonDetails({
 
 export default function StrategyComparison({ strategy }: { strategy: Strategy }) {
   const { data: eventsData } = useStrategyEvents(strategy.id);
+
+  console.log(strategy);
 
   return (
     <GridItem colSpan={6}>
@@ -124,7 +130,7 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
         <Flex layerStyle="panel" flexGrow={1} alignItems="start">
           {eventsData?.events ? (
             <>
-              <StrategyComparisonDetails strategy={strategy} strategyEvents={eventsData?.events} />
+              <StrategyComparisonDetails strategy={strategy} strategyEvents={eventsData.events} />
               <StrategyComparisonCard />
             </>
           ) : (
