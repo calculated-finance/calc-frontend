@@ -1,13 +1,12 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
 import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
-import { getStrategyType } from '../../../helpers/getStrategyType';
+import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getTotalCost } from './getTotalCost';
 
@@ -49,18 +48,18 @@ function StrategyComparisonDetails({
         <Divider />
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">{getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Accumulated' : 'Sold'}</Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Accumulated' : 'Sold'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
             : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
             : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
@@ -79,20 +78,18 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Average token cost' : 'Average token sell price'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Average token cost' : 'Average token sell price'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
             : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
             : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>

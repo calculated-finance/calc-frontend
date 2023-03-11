@@ -2,12 +2,11 @@ import { Heading, Text, HStack, Flex } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyType } from 'src/helpers/getStrategyType';
-import { StrategyTypes } from '@models/StrategyTypes';
 import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 import { Denom } from '@models/Denom';
+import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 
@@ -63,11 +62,12 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceDeconversion } =
-          getStrategyType(strategy) === StrategyTypes.DCAIn ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+        const { priceDeconversion } = isBuyStrategy(strategy)
+          ? getDenomInfo(resultingDenom)
+          : getDenomInfo(initialDenom);
         const convertedPrice = Number(priceDeconversion(Number(targetPrice)).toFixed(3));
 
-        if (getStrategyType(strategy) === StrategyTypes.DCAIn) {
+        if (isBuyStrategy(strategy)) {
           nextSwapInfo = (
             <>
               When price hits 1 {getDenomInfo(resultingDenom).name} &le; {convertedPrice}{' '}

@@ -1,22 +1,20 @@
 import { Strategy } from '@hooks/useStrategies';
-import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo from '@utils/getDenomInfo';
 import { getStrategyInitialDenom } from './getStrategyInitialDenom';
 import { getStrategyResultingDenom } from './getStrategyResultingDenom';
 import { isStrategyScheduled } from './getStrategyStatus';
-import { getStrategyType } from './getStrategyType';
+import { isBuyStrategy } from './isBuyStrategy';
 
 export function getStrategyStartDate(strategy: Strategy) {
   const { trigger } = strategy;
   if (trigger && 'fin_limit_order' in trigger) {
-    const { priceDeconversion } =
-      getStrategyType(strategy) === StrategyTypes.DCAIn
-        ? getDenomInfo(getStrategyResultingDenom(strategy))
-        : getDenomInfo(getStrategyInitialDenom(strategy));
+    const { priceDeconversion } = isBuyStrategy(strategy)
+      ? getDenomInfo(getStrategyResultingDenom(strategy))
+      : getDenomInfo(getStrategyInitialDenom(strategy));
     const price = Number(priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(3));
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
-    if (getStrategyType(strategy) === StrategyTypes.DCAIn) {
+    if (isBuyStrategy(strategy)) {
       return `When ${getDenomInfo(resultingDenom).name} hits ${price} ${getDenomInfo(initialDenom).name}`;
     }
     return `When ${getDenomInfo(initialDenom).name} hits ${price} ${getDenomInfo(resultingDenom).name}`;
