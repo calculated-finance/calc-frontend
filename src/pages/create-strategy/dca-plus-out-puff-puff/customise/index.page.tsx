@@ -17,6 +17,7 @@ import { InvalidData } from '@components/InvalidData';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
+import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
 
 function Page() {
@@ -81,6 +82,7 @@ function Page() {
                   <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaPlusOut} />
                 )}
                 <StrategyDuration />
+                {values.advancedSettings && <SlippageTolerance />}
                 <Submit>Next</Submit>
               </Stack>
             </Form>

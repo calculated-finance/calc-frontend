@@ -17,6 +17,7 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { TriggerForm } from '@components/TriggerForm';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
+import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '../../../../components/StrategyDuration';
 
 function Page() {
@@ -81,6 +82,8 @@ function Page() {
                   <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
                 )}
                 <StrategyDuration />
+                {values.advancedSettings && <SlippageTolerance />}
+
                 <Submit>Next</Submit>
               </Stack>
             </Form>

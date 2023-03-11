@@ -35,6 +35,7 @@ export const dcaPlusSchema = Yup.object({
     then: (schema) => schema.transform(() => StartImmediatelyValues.Yes),
   }),
   triggerType: allSchema.triggerType,
+  slippageTolerance: allSchema.slippageTolerance,
   startDate: allSchema.startDate,
   startPrice: allSchema.startPrice,
   purchaseTime: allSchema.purchaseTime,
@@ -54,6 +55,7 @@ export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
   'startPrice',
   'purchaseTime',
   'strategyDuration',
+  'slippageTolerance',
 ]);
 export const DcaPlusPostPurchaseFormSchema = dcaPlusSchema.pick([
   'sendToWallet',

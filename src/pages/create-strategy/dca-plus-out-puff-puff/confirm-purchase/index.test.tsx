@@ -121,6 +121,7 @@ describe('DCA Plus Out confirm page', () => {
           target_start_time_utc_seconds: undefined,
           destinations: undefined,
           target_receive_amount: undefined,
+          slippage_tolerance: '0.02',
           use_dca_plus: true,
         },
       };

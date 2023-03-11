@@ -173,6 +173,7 @@ export function buildCreateVaultParamsDCAPlus(
         state.resultingDenom,
         transactionType,
       ),
+      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
       use_dca_plus: true,
     },
