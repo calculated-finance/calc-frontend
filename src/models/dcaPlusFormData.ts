@@ -4,6 +4,7 @@ import { MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 import * as Yup from 'yup';
 
 import { allSchema } from './DcaInFormData';
+import { StartImmediatelyValues } from './StartImmediatelyValues';
 
 export const dcaPlusSchema = Yup.object({
   resultingDenom: allSchema.resultingDenom,
@@ -29,7 +30,10 @@ export const dcaPlusSchema = Yup.object({
     },
   }),
   advancedSettings: allSchema.advancedSettings,
-  startImmediately: allSchema.startImmediately,
+  startImmediately: allSchema.startImmediately.when('advancedSettings', {
+    is: false,
+    then: (schema) => schema.transform(() => StartImmediatelyValues.Yes),
+  }),
   triggerType: allSchema.triggerType,
   startDate: allSchema.startDate,
   startPrice: allSchema.startPrice,

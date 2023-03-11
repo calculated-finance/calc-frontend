@@ -63,7 +63,7 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
             Customise Strategy
@@ -77,7 +77,9 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
+                {values.advancedSettings && (
+                  <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
+                )}
                 <StrategyDuration />
                 <Submit>Next</Submit>
               </Stack>
