@@ -114,6 +114,7 @@ describe('DCA Plus Out customise page', () => {
         startImmediately: 'yes',
         startPrice: null,
         triggerType: 'date',
+        slippageTolerance: 2,
         strategyDuration: 60,
       });
 
