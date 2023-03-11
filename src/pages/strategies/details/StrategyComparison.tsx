@@ -1,22 +1,15 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { isNaN } from 'lodash';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
+import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
 import { getStrategyType } from '../../../helpers/getStrategyType';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getPerformanceStatistics } from './getPerformanceStatistics';
-
-export function formatFiat(value: number) {
-  return `${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
-    !isNaN(value) ? value : 0,
-  )} USD`;
-}
+import { getTotalCost } from './getTotalCost';
 
 function StrategyComparisonCard() {
   return (
@@ -41,16 +34,7 @@ function StrategyComparisonDetails({
   strategyEvents: StrategyEvent[];
 }) {
   const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { marketValueValue, costValue } = getPerformanceStatistics(
-    strategy,
-    initialDenomPrice,
-    resultingDenomPrice,
-    strategyEvents,
-  );
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1} />
@@ -70,15 +54,15 @@ function StrategyComparisonDetails({
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
-            ? `${marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
-            : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
+            ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
+            : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
-            ? `${0.5 * marketValueValue.toConverted()} ${getDenomInfo(marketValueValue.denomId).name}`
-            : `${costValue.toConverted()} ${getDenomInfo(costValue.denomId).name}`}
+            ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
+            : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -102,15 +86,15 @@ function StrategyComparisonDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
-            ? formatFiat((costValue.toConverted() / marketValueValue.toConverted()) * initialDenomPrice)
-            : formatFiat((marketValueValue.toConverted() / costValue.toConverted()) * resultingDenomPrice)}
+            ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
+            : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
           {getStrategyType(strategy) === StrategyTypes.DCAIn
-            ? formatFiat(2 * (costValue.toConverted() / marketValueValue.toConverted()) * initialDenomPrice)
-            : formatFiat((marketValueValue.toConverted() / costValue.toConverted()) * resultingDenomPrice)}
+            ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
+            : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
 

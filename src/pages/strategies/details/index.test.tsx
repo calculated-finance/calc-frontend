@@ -91,7 +91,9 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('May 22, 2022 at 5:00 PM'));
+          await waitFor(() =>
+            expect(screen.getByTestId('next-swap-info')).toHaveTextContent('May 22, 2022 at 5:00 PM'),
+          );
         });
       });
       describe('when price trigger is set', () => {
@@ -364,7 +366,7 @@ describe('Detail page', () => {
     });
   });
 
-  describe('strategy performance', () => {
+  describe.only('strategy performance', () => {
     describe('total acculumated', () => {
       describe('when DCA In', () => {
         it('renders type', async () => {

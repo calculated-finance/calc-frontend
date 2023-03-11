@@ -296,6 +296,10 @@ const getDenomInfo = (denom?: string) => {
   };
 };
 
+export function getDenomName(denom: string) {
+  return getDenomInfo(denom).name;
+}
+
 export class DenomValue {
   readonly denomId: Denom;
 
