@@ -1,37 +1,10 @@
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
-import { findLast } from 'lodash';
 import { isStrategyOperating, isStrategyScheduled } from './getStrategyStatus';
 import { getStrategyTotalExecutions } from './getStrategyTotalExecutions';
 import { getEndDateFromRemainingExecutions } from './getEndDateFromRemainingExecutions';
-
-function formatDate(date: Date | undefined) {
-  if (!date) {
-    return '-';
-  }
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
-function getLastExecutionDateFromStrategyEvents(events: Event[]) {
-  const lastExecutionEvent = findLast(events, (event: Event) => {
-    const { data } = event;
-    if ('dca_vault_execution_triggered' in data) {
-      return data.dca_vault_execution_triggered;
-    }
-    return false;
-  }) as Event;
-
-  // vault has no executions yet
-  if (!lastExecutionEvent) {
-    return undefined;
-  }
-
-  return new Date(Number(lastExecutionEvent.timestamp) / 1000000);
-}
+import { getLastExecutionDateFromStrategyEvents } from './getLastExecutionDateFromStrategyEvents';
+import { formatDate } from './format/formatDate';
 
 export function getStrategyEndDate(strategy: Strategy, events: Event[] | undefined) {
   const { trigger } = strategy;

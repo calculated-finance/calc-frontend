@@ -491,15 +491,17 @@ function Page() {
                 duration: 2000,
                 onLoad: { duration: 1000 },
               }}
-              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut].map((type: StrategyTypes) => {
-                const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
+              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut, StrategyTypes.DCAPlusIn, StrategyTypes.DCAPlusOut].map(
+                (type: StrategyTypes) => {
+                  const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
 
-                return {
-                  x: type,
-                  y: strategiesByType.length,
-                  label: `${percentage}%`,
-                };
-              })}
+                  return {
+                    x: type,
+                    y: strategiesByType.length,
+                    label: `${percentage}%`,
+                  };
+                },
+              )}
               colorScale={['tomato', 'orange', 'gold', 'cyan']}
               style={{
                 labels: {

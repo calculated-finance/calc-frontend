@@ -1,7 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
@@ -9,7 +8,7 @@ import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
 import { formatFiat } from 'src/helpers/format/formatFiat';
-import { getStrategyType } from '../../../helpers/getStrategyType';
+import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getTotalCost } from './getTotalCost';
@@ -57,9 +56,7 @@ function StrategyPerformanceDetails({
         <Divider />
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Market value of holdings' : 'Market value of profits'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Market value of holdings' : 'Market value of profits'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-market-value">
@@ -67,51 +64,43 @@ function StrategyPerformanceDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Total accumulated' : 'Total sold'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Total accumulated' : 'Total sold'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-total-acculumated">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
             : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Net asset cost' : 'Net asset profit'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Net asset cost' : 'Net asset profit'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-net-cost">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
+          {isBuyStrategy(strategy)
             ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
             : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Average token cost' : 'Average token sell price'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Average token cost' : 'Average token sell price'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn
-            ? formatFiat(getAverageCost(strategy, strategyEvents, initialDenomPrice))
-            : formatFiat(getAveragePrice(strategy, strategyEvents, resultingDenomPrice))}
+          {isBuyStrategy(strategy)
+            ? formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)
+            : formatFiat(getAveragePrice(strategy, strategyEvents) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
         <Divider />
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">
-          {getStrategyType(strategy) === StrategyTypes.DCAIn ? 'Profit/Loss' : 'Profit taken'}
-        </Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Profit taken'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        {getStrategyType(strategy) === StrategyTypes.DCAIn ? (
+        {isBuyStrategy(strategy) ? (
           <Text color={color} fontSize="sm" data-testid="strategy-profit">
             {formatFiat(profit)}
           </Text>
@@ -121,7 +110,7 @@ function StrategyPerformanceDetails({
           </Text>
         )}
       </GridItem>
-      {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+      {isBuyStrategy(strategy) && (
         <>
           <GridItem colSpan={1}>
             <Heading size="xs">% change</Heading>

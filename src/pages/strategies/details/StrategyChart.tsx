@@ -29,9 +29,8 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
-import { getStrategyType } from 'src/helpers/getStrategyType';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { formatFiat } from 'src/helpers/format/formatFiat';
+import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
@@ -85,7 +84,7 @@ function StrategyChartStats({ strategy, strategyEvents }: { strategy: Strategy; 
       <Stat>
         <StatLabel fontSize="lg">Strategy market value</StatLabel>
         <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
-        {getStrategyType(strategy) === StrategyTypes.DCAIn && (
+        {isBuyStrategy(strategy) && (
           <StatHelpText color={color} m={0}>
             <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} color={color} />
             {formatFiat(profit)} : {percentageChange}

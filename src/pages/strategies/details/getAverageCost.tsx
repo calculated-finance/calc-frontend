@@ -3,6 +3,6 @@ import { Event } from 'src/interfaces/generated/response/get_events_by_resource_
 import { Vault } from 'src/interfaces/generated/response/get_vault';
 import { getTotalCost } from './getTotalCost';
 
-export function getAverageCost(strategy: Vault, strategyEvents: Event[], initialDenomPrice: number) {
-  return (getTotalCost(strategy, strategyEvents) / getTotalReceived(strategy)) * initialDenomPrice;
+export function getAverageCost(strategy: Vault, strategyEvents: Event[]) {
+  return getTotalCost(strategy, strategyEvents) / getTotalReceived(strategy);
 }
