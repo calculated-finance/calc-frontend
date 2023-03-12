@@ -31,9 +31,9 @@ import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { formatFiat } from 'src/helpers/format/formatFiat';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
 import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
-import { formatFiat } from './StrategyPerformance';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 

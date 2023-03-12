@@ -20,7 +20,7 @@ import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, 
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getStrategyType } from 'src/helpers/getStrategyType';
 import { getStrategyTotalExecutions } from 'src/helpers/getStrategyTotalExecutions';
-import { formatFiat } from '../strategies/details/StrategyPerformance';
+import { formatFiat } from 'src/helpers/format/formatFiat';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies

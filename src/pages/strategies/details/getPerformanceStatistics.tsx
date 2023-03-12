@@ -2,20 +2,8 @@ import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getCompletedEvents } from 'src/pages/strategies/details/getChartData';
 import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-
-function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
-  const completedEvents = getCompletedEvents(strategyEvents) || [];
-  return (
-    completedEvents.reduce((acc, { data }) => {
-      if ('dca_vault_execution_completed' in data) {
-        return acc + Number(data.dca_vault_execution_completed.fee.amount);
-      }
-      return 0;
-    }, 0) || 0
-  );
-}
+import { getStrategyTotalFeesPaid } from './getTotalCost';
 
 export function getPerformanceStatistics(
   strategy: Strategy,
@@ -29,8 +17,7 @@ export function getPerformanceStatistics(
 
   const costAmount = strategy.swapped_amount.amount;
   const totalFeesPaid = getStrategyTotalFeesPaid(strategyEvents);
-  const costAmountWithFeesSubtractedInFiat = 
-    Number(costAmount) - new DenomValue({amount: totalFeesPaid.toString(), denom: resultingDenom}).toConverted()
+  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
   const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });

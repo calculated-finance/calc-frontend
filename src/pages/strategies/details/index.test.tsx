@@ -91,7 +91,9 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('May 22, 2022 at 5:00 PM'));
+          await waitFor(() =>
+            expect(screen.getByTestId('next-swap-info')).toHaveTextContent('May 22, 2022 at 5:00 PM'),
+          );
         });
       });
       describe('when price trigger is set', () => {
@@ -359,6 +361,124 @@ describe('Detail page', () => {
           await waitFor(() =>
             expect(screen.getByTestId('strategy-receiving-address').textContent).toBe('kujiraotheraddress'),
           );
+        });
+      });
+    });
+  });
+
+  describe('strategy performance', () => {
+    describe('total acculumated', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-total-acculumated').textContent).toBe('1 KUJI'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-total-acculumated').textContent).toBe('1 KUJI'));
+        });
+      });
+    });
+    describe('net cost', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 DEMO'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 DEMO'));
+        });
+      });
+    });
+    describe('average token cost', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.50 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.50 USD'));
+        });
+      });
+    });
+    describe('market value', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-market-value').textContent).toBe('$1.50 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-market-value').textContent).toBe('$1.50 USD'));
+        });
+      });
+    });
+    describe('profit', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$1.00 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$2.50 USD'));
         });
       });
     });

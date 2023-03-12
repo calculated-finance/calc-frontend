@@ -147,7 +147,7 @@ describe('DCA Plus In confirm page', () => {
           value: {
             amount: [
               {
-                amount: '200000',
+                amount: '85714',
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],
