@@ -1,15 +1,12 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
 import { getDenomName } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getStrategyEndDate } from 'src/helpers/getStrategyEndDate';
-import { getTotalReceived } from 'src/helpers/strategy/getTotalReceived';
 import {
   getAcculumationDifference,
   getEscrowLevel,
-  getNumberOfSwaps,
+  getNumberOfPastSwaps,
   getStandardDcaAveragePrice,
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
@@ -17,10 +14,15 @@ import {
 } from 'src/helpers/strategy/dcaPlus';
 import { formatFiat } from 'src/helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { getConvertedSwapAmount } from 'src/helpers/getSwapAmount';
-import { getAverageCost } from './getAverageCost';
-import { getTotalCost } from './getTotalCost';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import {
+  getStrategyResultingDenom,
+  getConvertedSwapAmount,
+  getStrategyInitialDenom,
+  getTotalReceived,
+  getTotalCost,
+  getAverageCost,
+  getStrategyEndDate,
+} from 'src/helpers/strategy';
 import { formatSignedPercentage } from '../../../helpers/format/formatSignedPercentage';
 
 function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
@@ -33,7 +35,7 @@ function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
       <Heading size="2xl">{formatSignedPercentage(getEscrowLevel(strategy))}</Heading>
       <Text textStyle="body">
         In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
-        {getDenomName(getStrategyInitialDenom(strategy))} per day for {getNumberOfSwaps(strategy)} days.
+        {getDenomName(getStrategyInitialDenom(strategy))} per day for {getNumberOfPastSwaps(strategy)} days.
       </Text>
     </Flex>
   );

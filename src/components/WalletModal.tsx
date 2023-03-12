@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { WalletName } from '@wizard-ui/core';
 import { WalletReadyState } from '@wizard-ui/core';
 
@@ -8,7 +8,6 @@ import {
   Button,
   Center,
   Collapse,
-  Link,
   Icon,
   Modal,
   ModalBody,

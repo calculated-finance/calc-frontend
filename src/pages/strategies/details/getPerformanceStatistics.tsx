@@ -1,9 +1,7 @@
 import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getStrategyTotalFeesPaid } from './getTotalCost';
+import { getStrategyInitialDenom, getStrategyResultingDenom, getStrategyTotalFeesPaid } from 'src/helpers/strategy';
 
 export function getPerformanceStatistics(
   strategy: Strategy,

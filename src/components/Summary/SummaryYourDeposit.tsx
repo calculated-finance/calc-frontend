@@ -2,7 +2,6 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
-import { Strategy } from '@hooks/useStrategies';
 import { StrategyTypes } from '@models/StrategyTypes';
 
 export function SummaryYourDeposit({ state, strategyType }: { state: any; strategyType: StrategyTypes }) {

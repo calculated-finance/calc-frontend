@@ -1,5 +1,5 @@
 import dcaInStrategy from 'src/fixtures/strategy';
-import { getTotalReceived } from '.';
+import { getTotalReceived } from '..';
 
 describe('getTotalReceived', () => {
   test('should return the correct total received amount', () => {

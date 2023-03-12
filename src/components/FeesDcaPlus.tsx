@@ -10,7 +10,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -19,7 +18,6 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from 'src/helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { getPromoMessage } from './Banner';
 
 function FeeBreakdown({
   initialDenomName,

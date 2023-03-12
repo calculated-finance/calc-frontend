@@ -1,14 +1,11 @@
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
-import getStrategyBalance from 'src/helpers/getStrategyBalance';
-import getSwapAmount from 'src/helpers/getSwapAmount';
 import totalExecutions from '@utils/totalExecutions';
 import { getLastExecutionDateFromStrategyEvents } from 'src/helpers/getLastExecutionDateFromStrategyEvents';
-import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
 import { formatDate } from 'src/helpers/format/formatDate';
-import { getTotalReceived } from '../getTotalReceived';
+import getStrategyBalance, { getSwapAmount, isStrategyOperating, getTotalReceived } from '..';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -66,26 +63,19 @@ export function getEscrowLevel(strategy: Strategy) {
   return Number(escrow_level);
 }
 
-// getAcculumationDifference
 export function getAcculumationDifference(strategy: Strategy) {
-  // get the total received from the standard dca
   const standardDcaTotalReceived = getStandardDcaTotalReceived(strategy);
-
-  // get the total received from the strategy
   const totalReceived = getTotalReceived(strategy);
 
-  // get the difference between the two
   const difference = totalReceived - standardDcaTotalReceived;
 
-  return difference;
+  return Number(difference.toFixed(6));
 }
 
 // number of swaps so far
-export function getNumberOfSwaps(strategy: Strategy) {
-  // get total cost of standard dca
+export function getNumberOfPastSwaps(strategy: Strategy) {
   const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
 
-  // use swap amount to calculate number of swaps
   const swapAmount = getSwapAmount(strategy);
 
   return Math.floor(Number(standard_dca_swapped_amount) / swapAmount);

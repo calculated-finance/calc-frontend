@@ -3,14 +3,17 @@ import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
-import { getStrategyType } from 'src/helpers/getStrategyType';
-import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { isStrategyCancelled } from 'src/helpers/getStrategyStatus';
-import { PlusSquareIcon } from '@chakra-ui/icons';
-import { getStrategyName } from 'src/helpers/getStrategyName';
+
 import getDenomInfo from '@utils/getDenomInfo';
 import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
+import {
+  getStrategyInitialDenom,
+  getStrategyResultingDenom,
+  getStrategyType,
+  getStrategyName,
+  isStrategyCancelled,
+} from 'src/helpers/strategy';
+import { PlusSquareIcon } from '@chakra-ui/icons';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';

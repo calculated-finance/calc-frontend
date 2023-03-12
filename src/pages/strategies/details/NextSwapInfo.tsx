@@ -1,14 +1,16 @@
 import { Heading, Text, HStack, Flex } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { isStrategyOperating } from 'src/helpers/getStrategyStatus';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 import { Denom } from '@models/Denom';
-import { isBuyStrategy } from 'src/helpers/isBuyStrategy';
-import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import {
+  getStrategyInitialDenom,
+  getStrategyResultingDenom,
+  isStrategyOperating,
+  isBuyStrategy,
+} from 'src/helpers/strategy';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
