@@ -124,6 +124,7 @@ describe('DCA Plus In confirm page', () => {
           minimum_receive_amount: undefined,
           destinations: undefined,
           target_receive_amount: undefined,
+          slippage_tolerance: '0.02',
           use_dca_plus: true,
         },
       };

@@ -116,6 +116,7 @@ describe('DCA Plus In customise page', () => {
         startPrice: null,
         triggerType: 'date',
         strategyDuration: 60,
+        slippageTolerance: 2,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({

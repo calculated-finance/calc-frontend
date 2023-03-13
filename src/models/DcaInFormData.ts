@@ -177,6 +177,7 @@ export const allSchema = {
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => initialValues.slippageTolerance),
     }),
   priceThresholdEnabled: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))

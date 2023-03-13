@@ -17,6 +17,7 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { TriggerForm } from '@components/TriggerForm';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
+import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '../../../../components/StrategyDuration';
 
 function Page() {
@@ -63,7 +64,7 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
             Customise Strategy
@@ -77,8 +78,12 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
+                {values.advancedSettings && (
+                  <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaPlusIn} />
+                )}
                 <StrategyDuration />
+                {values.advancedSettings && <SlippageTolerance />}
+
                 <Submit>Next</Submit>
               </Stack>
             </Form>
