@@ -2,18 +2,20 @@ import getDenomInfo, { getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import totalExecutions from '@utils/totalExecutions';
-import { getLastExecutionDateFromStrategyEvents } from '@helpers/getLastExecutionDateFromStrategyEvents';
-import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
+
+import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { formatDate } from '@helpers/format/formatDate';
-import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
+import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
+import { getLastExecutionDateFromStrategyEvents } from '@helpers/getLastExecutionDateFromStrategyEvents';
 import { getModelFromId } from '@helpers/ml/getModel';
+import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
 import getStrategyBalance, {
   getSwapAmount,
   isStrategyOperating,
   getTotalReceived,
   getConvertedSwapAmount,
   getStrategyInitialDenom,
-} from '..';
+} from '@helpers/strategy';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -29,7 +31,7 @@ export function getStandardDcaTotalReceived(strategy: Strategy) {
   return parseFloat(conversion(Number(standard_dca_received_amount)).toFixed(6));
 }
 
-export function getStandardDcaTotalCost(strategy: Strategy) {
+export function getStandardDcaTotalSwapped(strategy: Strategy) {
   const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
 
   const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
@@ -37,16 +39,20 @@ export function getStandardDcaTotalCost(strategy: Strategy) {
   return parseFloat(conversion(Number(standard_dca_swapped_amount)).toFixed(6));
 }
 
+export function getStandardDcaTotalCost(strategy: Strategy) {
+  return Number((getStandardDcaTotalSwapped(strategy) * (1 - FIN_TAKER_FEE - SWAP_FEE)).toFixed(6));
+}
+
 // find the average price of the standard dca using above functions
 export function getStandardDcaAveragePrice(strategy: Strategy) {
   const totalReceived = getStandardDcaTotalReceived(strategy);
   const totalCost = getStandardDcaTotalCost(strategy);
 
-  return totalReceived / totalCost;
+  return totalCost / totalReceived;
 }
 
 export function getStandardDcaRemainingExecutions(strategy: Strategy) {
-  const swappedDifference = getStandardDcaTotalCost(strategy) - Number(strategy.swapped_amount.amount);
+  const swappedDifference = getStandardDcaTotalSwapped(strategy) - Number(strategy.swapped_amount.amount);
   const balance = getStrategyBalance(strategy) + swappedDifference;
   const swapAmount = getSwapAmount(strategy);
 
