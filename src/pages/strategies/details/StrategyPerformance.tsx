@@ -16,7 +16,6 @@ import {
   getTotalReceived,
 } from '@helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
-import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
 
 function StrategyPerformanceDetails({
   strategy,
