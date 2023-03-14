@@ -15,10 +15,7 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const { min, max } = getSwapRange(swapAmount, strategyDuration) || {};
-
-  const minSwap = min && Number(Math.max(minimumSwapAmount, min).toFixed(3));
-  const maxSwap = max && Number(max.toFixed(3));
+  const { min: minSwap, max: maxSwap } = getSwapRange(swapAmount, strategyDuration, minimumSwapAmount) || {};
 
   return (
     <Box data-testid="summary-the-swap-dca-plus">

@@ -300,6 +300,10 @@ export function getDenomName(denom: string) {
   return getDenomInfo(denom).name;
 }
 
+export function getDenomMinimumSwapAmount(denom: string) {
+  return getDenomInfo(denom).minimumSwapAmount;
+}
+
 export class DenomValue {
   readonly denomId: Denom;
 
