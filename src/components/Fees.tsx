@@ -16,7 +16,7 @@ import {
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { getPrettyFee } from 'src/helpers/getPrettyFee';
+import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { getPromoMessage } from './Banner';

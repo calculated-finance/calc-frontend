@@ -6,9 +6,10 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { TransactionType } from '@components/TransactionType';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { getFeeMessage } from 'src/helpers/getFeeMessage';
+import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
+import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import usePairs from '../usePairs';
 import { FormNames, useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -17,7 +18,6 @@ import { getGrantMsg } from './getGrantMsg';
 import { getCreateVaultExecuteMsg } from './getCreateVaultExecuteMsg';
 import { buildCreateVaultParams } from './buildCreateVaultParams';
 import { executeCreateVault } from './executeCreateVault';
-import { createStrategyFeeInTokens } from '../../helpers/createStrategyFeeInTokens';
 import { DcaFormState } from './DcaFormState';
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {

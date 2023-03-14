@@ -1,5 +1,5 @@
 import { Heading, Stack, Text } from '@chakra-ui/react';
-import { getSidebarLayout } from '../../components/Layout';
+import { getSidebarLayout } from '@components/Layout';
 
 function Settings() {
   return (

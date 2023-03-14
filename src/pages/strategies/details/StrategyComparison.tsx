@@ -11,8 +11,8 @@ import {
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
   getStandardDcaTotalReceived,
-} from 'src/helpers/strategy/dcaPlus';
-import { formatFiat } from 'src/helpers/format/formatFiat';
+} from '@helpers/strategy/dcaPlus';
+import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
 import {
   getStrategyResultingDenom,
@@ -22,8 +22,8 @@ import {
   getTotalCost,
   getAverageCost,
   getStrategyEndDate,
-} from 'src/helpers/strategy';
-import { formatSignedPercentage } from '../../../helpers/format/formatSignedPercentage';
+} from '@helpers/strategy';
+import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 
 function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
   return (

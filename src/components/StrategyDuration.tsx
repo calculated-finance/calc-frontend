@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
-import { getProbabilityOfOutperformance } from 'src/helpers/ml/getProbabilityOfOutperformance';
+import { getProbabilityOfOutperformance } from '@helpers/ml/getProbabilityOfOutperformance';
 
 export default function StrategyDuration() {
   const [{ value }, meta, { setValue }] = useField({ name: 'strategyDuration' });

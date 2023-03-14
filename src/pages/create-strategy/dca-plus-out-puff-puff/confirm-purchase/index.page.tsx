@@ -18,9 +18,9 @@ import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus
 import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesDcaPlus from '@components/FeesDcaPlus';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
-import { getTimeSaved } from 'src/helpers/getTimeSaved';
-import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { getTimeSaved } from '@helpers/getTimeSaved';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);

@@ -5,7 +5,7 @@ import {
   DcaPlusPostPurchaseFormSchema,
 } from '@models/dcaPlusFormData';
 import { useStateMachine } from 'little-state-machine';
-import { initialValues } from '../models/DcaInFormData';
+import { initialValues } from '@models/DcaInFormData';
 import { FormNames, getFormState, getResetAction, getUpdateAction } from './useDcaInForm';
 
 export const useDCAPlusAssetsForm = (formName: FormNames) => {

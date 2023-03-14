@@ -18,7 +18,7 @@ import useStrategies, { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
-import { isStrategyOperating } from 'src/helpers/strategy';
+import { isStrategyOperating } from '@helpers/strategy';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 

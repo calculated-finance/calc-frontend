@@ -12,9 +12,9 @@ import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
-import { isAutoStaking } from 'src/helpers/isAutoStaking';
-import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
+import { isAutoStaking } from '@helpers/isAutoStaking';
+import { getPrettyFee } from '@helpers/getPrettyFee';
+import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -25,9 +25,9 @@ import {
   getStrategyEndDate,
   getSlippageTolerance,
   getPriceCeilingFloor,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
+import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 import { CancelButton } from './CancelButton';
-import { StrategyStatusBadge } from '../../../components/StrategyStatusBadge';
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();

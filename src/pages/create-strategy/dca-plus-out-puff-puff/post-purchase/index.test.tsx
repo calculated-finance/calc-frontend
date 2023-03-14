@@ -2,11 +2,11 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import { mockValidators } from 'src/helpers/test/mockValidators';
+import { mockValidators } from '@helpers/test/mockValidators';
 import Page from './index.page';
 
 const mockRouter = {

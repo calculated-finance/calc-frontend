@@ -3,7 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 
 export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, initialDeposit, strategyDuration } = state;

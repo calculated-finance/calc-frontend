@@ -15,6 +15,8 @@ const customJestConfig = {
   moduleNameMapper: {
     '\\.css$': '<rootDir>/__mocks__/styleMock.js',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@helpers/(.*)$': '<rootDir>/src/helpers/$1',
+    '^@formConfig/(.*)$': '<rootDir>/src/formConfig/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@models/(.*)$': '<rootDir>/src/models/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',

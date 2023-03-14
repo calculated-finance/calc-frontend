@@ -30,8 +30,8 @@ import {
 import { Strategy } from '@hooks/useStrategies';
 import { Denoms } from 'src/models/Denom';
 import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
-import { isDcaPlus, getStrategyInitialDenom, getStrategyResultingDenom, getStrategyName } from 'src/helpers/strategy';
-import { getSidebarLayout } from '../../../components/Layout';
+import { isDcaPlus, getStrategyInitialDenom, getStrategyResultingDenom, getStrategyName } from '@helpers/strategy';
+import { getSidebarLayout } from '@components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';

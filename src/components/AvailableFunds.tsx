@@ -3,7 +3,7 @@ import useBalance, { getDisplayAmount } from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import { createStrategyFeeInTokens } from 'src/helpers/createStrategyFeeInTokens';
+import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 
 export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });

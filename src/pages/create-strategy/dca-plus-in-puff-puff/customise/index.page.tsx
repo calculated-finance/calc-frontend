@@ -18,7 +18,7 @@ import { TriggerForm } from '@components/TriggerForm';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
-import StrategyDuration from '../../../../components/StrategyDuration';
+import StrategyDuration from '@components/StrategyDuration';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);

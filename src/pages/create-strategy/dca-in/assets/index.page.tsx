@@ -13,7 +13,7 @@ import useBalances from '@hooks/useBalances';
 import { useRouter } from 'next/router';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
-import { ModalWrapper } from '../../../../components/ModalWrapper';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);

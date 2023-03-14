@@ -5,7 +5,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
-import { formatFiat } from 'src/helpers/format/formatFiat';
+import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -14,7 +14,7 @@ import {
   getAverageCost,
   getAveragePrice,
   getTotalReceived,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 function StrategyPerformanceDetails({

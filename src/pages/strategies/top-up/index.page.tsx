@@ -18,9 +18,9 @@ import getStrategyBalance, {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyName,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
+import { getTimeSaved } from '@helpers/getTimeSaved';
 import TopUpAmount from './TopUpAmount';
-import { getTimeSaved } from '../../../helpers/getTimeSaved';
 
 export const topUpSteps: StepConfig[] = [
   {

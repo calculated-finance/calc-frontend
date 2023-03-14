@@ -3,13 +3,13 @@ import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
 import getDenomInfo from '@utils/getDenomInfo';
-import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
-import { findPair } from 'src/helpers/findPair';
+import { combineDateAndTime } from '@helpers/combineDateAndTime';
+import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
+import { Pair } from '@models/Pair';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '../useDcaInForm';
-import { Pair } from '../../models/Pair';
 import { DcaFormState } from './DcaFormState';
-import { getSwapAmountFromDuration } from '../../helpers/getSwapAmountFromDuration';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();

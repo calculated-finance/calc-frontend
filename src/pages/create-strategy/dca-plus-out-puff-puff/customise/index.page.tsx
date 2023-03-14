@@ -18,7 +18,7 @@ import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
-import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);

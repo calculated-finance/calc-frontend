@@ -2,9 +2,9 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import totalExecutions from '@utils/totalExecutions';
-import { getLastExecutionDateFromStrategyEvents } from 'src/helpers/getLastExecutionDateFromStrategyEvents';
-import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
-import { formatDate } from 'src/helpers/format/formatDate';
+import { getLastExecutionDateFromStrategyEvents } from '@helpers/getLastExecutionDateFromStrategyEvents';
+import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
+import { formatDate } from '@helpers/format/formatDate';
 import getStrategyBalance, { getSwapAmount, isStrategyOperating, getTotalReceived } from '..';
 
 function getDcaPlusConfig(strategy: Strategy) {

@@ -1,5 +1,5 @@
 import { Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import { getSidebarLayout } from '../../components/Layout';
+import { getSidebarLayout } from '@components/Layout';
 import { NextPageWithLayout } from '../_app.page';
 
 // eslint-disable-next-line react/function-component-definition

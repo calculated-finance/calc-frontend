@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
-import { useWalletModal } from '../hooks/useWalletModal';
+import { useWalletModal } from '@hooks/useWalletModal';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
