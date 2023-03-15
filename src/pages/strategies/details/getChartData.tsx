@@ -1,7 +1,7 @@
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
-import { getCompletedEvents } from '../../../helpers/getCompletedEvents';
+import { getCompletedEvents } from '@helpers/getCompletedEvents';
 
 type EventWithAccumulation = {
   time: Date;

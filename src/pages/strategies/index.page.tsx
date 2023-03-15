@@ -3,9 +3,9 @@ import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@wizard-ui/react';
-import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyScheduled } from 'src/helpers/strategy';
+import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyScheduled } from '@helpers/strategy';
 import useStrategies, { Strategy } from 'src/hooks/useStrategies';
-import { getSidebarLayout } from '../../components/Layout';
+import { getSidebarLayout } from '@components/Layout';
 
 function Page() {
   const { data, isLoading } = useStrategies();

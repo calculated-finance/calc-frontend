@@ -4,9 +4,9 @@ import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
-import { mockUseStrategy } from 'src/helpers/test/mockGetVault';
-import { mockGetBalance } from 'src/helpers/test/mockGetBalance';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
+import { mockUseStrategy } from '@helpers/test/mockGetVault';
+import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import Page from './index.page';
 
 const mockRouter = {

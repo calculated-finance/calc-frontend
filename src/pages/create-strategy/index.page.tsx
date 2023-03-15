@@ -5,7 +5,7 @@ import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react
 import { ReactElement } from 'react';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
-import { getSidebarLayout } from '../../components/Layout';
+import { getSidebarLayout } from '@components/Layout';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 

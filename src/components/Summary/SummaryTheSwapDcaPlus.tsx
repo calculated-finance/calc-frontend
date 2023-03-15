@@ -3,8 +3,8 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
-import { getSwapRange } from 'src/helpers/ml/getSwapRange';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { getSwapRange } from '@helpers/ml/getSwapRange';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {

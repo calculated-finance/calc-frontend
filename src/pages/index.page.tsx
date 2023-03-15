@@ -23,9 +23,9 @@ import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import Link from 'next/link';
-import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from 'src/helpers/strategy';
-import { getSidebarLayout } from '../components/Layout';
-import TopPanel from '../components/TopPanel';
+import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
+import { getSidebarLayout } from '@components/Layout';
+import TopPanel from '@components/TopPanel';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {

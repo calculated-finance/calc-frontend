@@ -14,7 +14,7 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { CALC_TELEGRAM_URL } from 'src/constants';
-import { getSidebarLayout } from '../../components/Layout';
+import { getSidebarLayout } from '@components/Layout';
 
 function HowItWorks() {
   return (

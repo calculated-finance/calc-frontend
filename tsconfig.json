@@ -17,6 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@formConfig/*": ["src/formConfig/*"],
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
       "@models/*": ["src/models/*"]

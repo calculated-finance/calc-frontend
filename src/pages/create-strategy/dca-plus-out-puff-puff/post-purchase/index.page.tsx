@@ -12,8 +12,8 @@ import RecipientAccount from '@components/RecipientAccount';
 import DcaOutSendToWallet from '@components/DcaOutSendToWallet';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
-import SendToWalletValues from '../../../../models/SendToWalletValues';
-import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
+import SendToWalletValues from '@models/SendToWalletValues';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);

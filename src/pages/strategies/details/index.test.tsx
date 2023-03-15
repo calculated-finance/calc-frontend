@@ -2,17 +2,17 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { mockValidators } from 'src/helpers/test/mockValidators';
+import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { NetworkContext } from '@components/NetworkContext';
 import { kujiraQueryClient } from 'kujira.js';
-import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
-import { mockFiatPriceHistory } from 'src/helpers/test/mockFiatPriceHistory';
+import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
+import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
+import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import Page from './index.page';
-import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
-import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
-import { mockCancelVault } from '../../../helpers/test/mockCancelVault';
 
 const mockRouter = {
   push: jest.fn(),

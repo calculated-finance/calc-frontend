@@ -5,7 +5,7 @@ import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
-import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
+import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';

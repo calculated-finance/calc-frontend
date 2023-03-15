@@ -3,7 +3,7 @@ import { HttpBatchClient } from '@cosmjs/tendermint-rpc/build/rpcclients';
 import { kujiraQueryClient } from 'kujira.js';
 import { useEffect, useMemo, useState } from 'react';
 import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
-import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 import { Context } from './Context';
 
 export function NetworkContext({ children }: ChildrenProp) {

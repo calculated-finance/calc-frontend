@@ -12,17 +12,17 @@ import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
-import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
+import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { formatFiat } from 'src/helpers/format/formatFiat';
+import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyTotalExecutions,
   getStrategyType,
   isStrategyActive,
   isStrategyAutoStaking,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies

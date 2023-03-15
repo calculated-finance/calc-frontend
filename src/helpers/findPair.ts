@@ -1,6 +1,6 @@
 import { isDenomStable } from '@utils/getDenomInfo';
-import { Pair } from '../models/Pair';
-import { Denom } from '../models/Denom';
+import { Pair } from '@models/Pair';
+import { Denom } from '@models/Denom';
 
 export function findPair(pairs: Pair[], resultingDenom: Denom, initialDenom: Denom) {
   if (isDenomStable(initialDenom)) {

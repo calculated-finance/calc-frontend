@@ -3,8 +3,8 @@ import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
-import { Denom } from '../models/Denom';
-import { Pair } from '../models/Pair';
+import { Denom } from '@models/Denom';
+import { Pair } from '@models/Pair';
 import useQueryWithNotification from './useQueryWithNotification';
 
 const hiddenPairs = [] as string[];

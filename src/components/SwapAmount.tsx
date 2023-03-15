@@ -2,9 +2,9 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '../models/DcaInFormData';
-import executionIntervalDisplay from '../helpers/executionIntervalDisplay';
-import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { DcaInFormDataStep1 } from '@models/DcaInFormData';
+import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInput } from './DenomInput';
 
 export default function SwapAmount({

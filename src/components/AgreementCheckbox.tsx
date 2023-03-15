@@ -2,7 +2,7 @@ import { chakra, Flex, FormControl, FormErrorMessage, HStack, useCheckbox } from
 import Icon from '@components/Icon';
 import { useField, useFormikContext } from 'formik';
 import { FiCheck } from 'react-icons/fi';
-import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 
 export function AgreementCheckbox({ children }: ChildrenProp) {
   const [field, meta] = useField('acceptedAgreement');

@@ -5,14 +5,14 @@ import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 
 import getDenomInfo from '@utils/getDenomInfo';
-import { executionIntervalLabel } from 'src/helpers/executionIntervalDisplay';
+import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyType,
   getStrategyName,
   isStrategyCancelled,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';

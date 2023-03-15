@@ -23,13 +23,13 @@ import Spinner from '@components/Spinner';
 import { ArrowLeftIcon } from '@fusion-icons/react/interface';
 import useSteps from '@hooks/useSteps';
 import { useRouter } from 'next/router';
-import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 import broadcast from 'src/animations/broadcast.json';
 import Lottie from 'lottie-react';
 import { useWallet } from '@wizard-ui/react';
-import { findStep } from 'src/helpers/findStep';
+import { findStep } from '@helpers/findStep';
+import { StepConfig } from '@formConfig/StepConfig';
 import Stepper from './Stepper';
-import { StepConfig } from '../../formConfig/StepConfig';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (

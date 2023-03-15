@@ -10,7 +10,7 @@ import {
   getStrategyResultingDenom,
   isStrategyOperating,
   isBuyStrategy,
-} from 'src/helpers/strategy';
+} from '@helpers/strategy';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);

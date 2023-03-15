@@ -1,5 +1,5 @@
 import { featureFlags } from 'src/constants';
-import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 export const executionIntervalData: { value: ExecutionIntervals; label: string }[] = featureFlags.extraTimeOptions
   ? [
@@ -23,7 +23,7 @@ export const executionIntervalData: { value: ExecutionIntervals; label: string }
         value: 'weekly',
         label: 'Week',
       },
-  
+
       {
         value: 'monthly',
         label: 'Month',

@@ -29,8 +29,8 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
-import { formatFiat } from 'src/helpers/format/formatFiat';
-import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from 'src/helpers/strategy';
+import { formatFiat } from '@helpers/format/formatFiat';
+import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { getChartData, getChartDataSwaps } from './getChartData';
 
