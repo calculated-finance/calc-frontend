@@ -162,7 +162,7 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
               Fear &amp; Greed index score
             </Text>
           </NextLink>
-          : {index} ({classification}), it may be a good time to use
+          : {index} ({classification}), it may be a good time to use{' '}
           {setStrategyRecommendation} strategies
         </>
       ) : null}
