@@ -1,7 +1,6 @@
 import { Heading, GridItem, Box, Center } from '@chakra-ui/react';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
-  VictoryArea,
   VictoryAxis,
   VictoryChart,
   VictoryLine,
@@ -15,14 +14,9 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyResultingDenom } from '@helpers/strategy';
 import { buildLineChartData, buildSwapsChartData, convertEvents } from '@helpers/chart';
-import {
-  getChartDataSwapsNew,
-  getChartDataSwapsTraditional,
-  getChartDataTraditional,
-  getPriceData,
-} from './getChartData';
-import { StrategyChartStats } from './StrategyChartStats';
+import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
+import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
 
 function formatPriceTick(priceMax: number): ((...args: any[]) => any) | unknown[] | null | undefined {
   return (tick) => {
@@ -99,7 +93,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
       </Heading>
 
       <Box layerStyle="panel" position="relative">
-        {events && <StrategyChartStats strategy={strategy} strategyEvents={events} />}
+        {events && <StrategyComparisonChartStats strategy={strategy} />}
         <Box p={6} position="absolute" top={0} right={0}>
           <DaysRadio value={days} onChange={setDays} />
         </Box>
