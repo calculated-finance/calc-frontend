@@ -2,7 +2,7 @@ import { PlusSquareIcon } from '@chakra-ui/icons';
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack, Tooltip } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
@@ -25,20 +25,85 @@ import {
   getStrategyEndDate,
   getSlippageTolerance,
   getPriceCeilingFloor,
+  getConvertedSwapAmount,
+  isStrategyAutoStaking,
+  isDcaPlus,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
+
+import { getEscrowAmount, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { CancelButton } from './CancelButton';
+
+function Escrowed({ strategy }: { strategy: Strategy }) {
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">
+          {' '}
+          <Tooltip
+            label={
+              <Text>This amount will be returned in full if the strategy does not out perform traditional DCA.</Text>
+            }
+          >
+            Escrowed*
+          </Tooltip>
+        </Heading>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Text fontSize="sm" data-testid="strategy-escrow-amount">
+          {getEscrowAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
+        </Text>
+      </GridItem>
+    </>
+  );
+}
+
+function SwapEachCycle({ strategy }: { strategy: Strategy }) {
+  const { min, max } = getStrategySwapRange(strategy) || {};
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Swap each cycle </Heading>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Text fontSize="sm" data-testid="strategy-swap-amount">
+          {isDcaPlus(strategy) ? (
+            <>
+              Between {min} and {max} {getDenomName(getStrategyInitialDenom(strategy))}
+            </>
+          ) : (
+            <>
+              {getConvertedSwapAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
+            </>
+          )}{' '}
+          -{' '}
+          <Tooltip
+            label={
+              <Box>
+                <Text>Fees automatically deducted from each swap:</Text>
+                {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
+                <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
+                {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
+              </Box>
+            }
+          >
+            fees*
+          </Tooltip>
+        </Text>
+      </GridItem>
+    </>
+  );
+}
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();
   const { validator, isLoading } = useValidator(strategy.destinations[0].address);
 
-  const { time_interval, swap_amount, balance, destinations } = strategy;
+  const { time_interval, balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const initialDenomValue = new DenomValue(balance);
-  const swapAmountValue = new DenomValue({ denom: initialDenom, amount: swap_amount });
 
   const strategyType = getStrategyType(strategy);
 
@@ -108,26 +173,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               {executionIntervalLabel[time_interval]}
             </Text>
           </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Swap each cycle</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-swap-amount">
-              {swapAmountValue.toConverted()} {getDenomInfo(initialDenom).name} -{' '}
-              <Tooltip
-                label={
-                  <Box>
-                    <Text>Fees automatically deducted from each swap:</Text>
-                    <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
-                    <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
-                    {isAutoStaking(destinations) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
-                  </Box>
-                }
-              >
-                fees*
-              </Tooltip>
-            </Text>
-          </GridItem>
+          <SwapEachCycle strategy={strategy} />
+          {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
           {Boolean(strategy.slippage_tolerance) && (
             <>
               <GridItem colSpan={1}>
