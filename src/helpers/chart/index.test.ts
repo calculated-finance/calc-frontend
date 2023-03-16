@@ -1,4 +1,4 @@
-import { buildSwapEventsWithAccumulation } from '.';
+import { buildSwapEventsWithAccumulation, getTotalAtTime } from '.';
 
 describe('buildSwapEventsWithAccumulation', () => {
   const creationDate = new Date('2022-01-01T00:00:00Z');
@@ -44,5 +44,37 @@ describe('buildSwapEventsWithAccumulation', () => {
     // check that the event has a total of 0 and a null swap event
     expect(result[0].total).toBe(0);
     expect(result[0].swapEvent).toBeNull();
+  });
+});
+
+describe('getTotalAtTime', () => {
+  const creationDate = new Date('2022-01-01');
+  const swapEvents = [
+    { time: new Date('2022-01-01'), received: 100, fee: 0, sent: 0 },
+    { time: new Date('2022-01-02'), received: 50, fee: 0, sent: 0 },
+    { time: new Date('2022-01-03'), received: 200, fee: 0, sent: 0 },
+    { time: new Date('2022-01-04'), received: 75, fee: 0, sent: 0 },
+  ];
+
+  const accumulatedSwapEvents = buildSwapEventsWithAccumulation(swapEvents, creationDate);
+
+  it('should return the accumulated received amount at the specified time', () => {
+    const totalAtTime = getTotalAtTime(accumulatedSwapEvents, new Date('2022-01-02 12:00:00'));
+    expect(totalAtTime).toBe(150);
+  });
+
+  it('should return the accumulated received amount of the first event if the specified time is before the first event', () => {
+    const totalAtTime = getTotalAtTime(accumulatedSwapEvents, new Date('2021-12-31 23:59:59'));
+    expect(totalAtTime).toBe(0);
+  });
+
+  it('should return the accumulated received amount of the last event if the specified time is after the last event', () => {
+    const totalAtTime = getTotalAtTime(accumulatedSwapEvents, new Date('2022-01-05 00:00:00'));
+    expect(totalAtTime).toBe(425);
+  });
+
+  it('should return 0 if no event has a timestamp earlier than the specified time', () => {
+    const totalAtTime = getTotalAtTime(accumulatedSwapEvents, new Date('2021-01-01 00:00:00'));
+    expect(totalAtTime).toBe(0);
   });
 });

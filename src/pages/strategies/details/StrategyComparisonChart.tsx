@@ -14,6 +14,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyResultingDenom } from '@helpers/strategy';
+import { buildLineChartData, buildSwapsChartData, convertEvents } from '@helpers/chart';
 import {
   getChartDataSwapsNew,
   getChartDataSwapsTraditional,
@@ -22,7 +23,24 @@ import {
 } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
-import { buildChartDataFromEventData } from '@helpers/chart';
+
+function formatPriceTick(priceMax: number): ((...args: any[]) => any) | unknown[] | null | undefined {
+  return (tick) => {
+    if (tick >= 1000) {
+      return `$${(tick / 1000).toFixed(1)}k`;
+    }
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tick * priceMax);
+  };
+}
+
+function formatTimeTick(): unknown[] | ((...args: any[]) => any) | null | undefined {
+  return (tick) =>
+    new Date(tick).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+}
 
 export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');
@@ -38,36 +56,42 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
   const { data: coingeckoData } = useFiatPriceHistory(resultingDenom, days);
 
-  // time now
   const now = new Date();
-  // time based on value of variable days
-  const fromDate = new Date(now.getTime() - parseInt(days) * 24 * 60 * 60 * 1000);
+  const fromDate = new Date(now.getTime() - parseInt(days, 10) * 24 * 60 * 60 * 1000);
 
   if (!events) {
     return null;
   }
 
-  const swapsData = buildChartDataFromEventData(events, fromDate, now);
-  console.log('swapsData', swapsData);
-
-  const chartDataTraditional = getChartDataTraditional(events, coingeckoData?.prices);
-  const swapsDataTradtional = getChartDataSwapsTraditional(events, coingeckoData?.prices, true);
+  const accumulatedEvents = convertEvents(eventsData?.events);
+  const lineChartData = buildLineChartData(accumulatedEvents, fromDate, now);
+  const swapsChartData = buildSwapsChartData(accumulatedEvents, fromDate, now);
 
   const priceData = getPriceData(coingeckoData?.prices);
 
-  // check swapsData, chartDataTraditional, priceData are valid
-  if (!swapsData || !chartDataTraditional || !priceData) {
+  if (!accumulatedEvents || !priceData) {
     return null;
   }
 
-  const data = [swapsData, chartDataTraditional, priceData];
-  // find maxima for normalizing data
-  const maxima = data.map((dataset) => Math.max(...dataset.map((d) => d.amount)));
+  const lineChartMax = Math.max(...lineChartData.map((d) => d.amount));
+  const priceMax = Math.max(...priceData.map((d) => d.amount));
 
-  const colors = ['#1AEFAF', '#1A89EF', '#8B8CA7'];
-
-  // return <CustomTheme />;
-
+  const timeAxisStyle = {
+    axis: { stroke: 'white' },
+    ticks: { padding: 2 },
+    tickLabels: { fill: 'white' },
+  };
+  const priceAxisStyle = {
+    axis: { stroke: '#8B8CA7' },
+    tickLabels: { fill: '#8B8CA7' },
+  };
+  const priceLineStyle = { data: { stroke: '#8B8CA7', strokeWidth: 1 } };
+  const valueLineStyle = { data: { stroke: '#1AEFAF' } };
+  const valueAxisStyle = {
+    axis: { stroke: 'white' },
+    tickLabels: { fill: 'white' },
+  };
+  const valueScatterStyle = { data: { fill: '#1AEFAF' } };
   return (
     <GridItem colSpan={6}>
       <Heading size="md" pb={4}>
@@ -96,105 +120,49 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
             width={dimensions?.width}
             containerComponent={<VictoryVoronoiContainer />}
             padding={{ left: 60, bottom: 40, top: 10, right: 80 }}
-            // domain={{ y: [0, 1] }} // 1.5 here represents a good height, but it should be dynamic based on the maxima
+            domain={{ y: [0, lineChartMax * 1.1] }} // 1.5 here represents a good height, but it should be dynamic based on the maxima
           >
-            <VictoryAxis
-              style={{
-                axis: { stroke: 'white' },
-                ticks: { padding: 2 },
-                tickLabels: { fill: 'white' },
-              }}
-              tickFormat={(tick) =>
-                new Date(tick).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })
-              }
-            />
-            <VictoryAxis
-              dependentAxis
-              key={0}
-              style={{
-                axis: { stroke: 'white' },
-                tickLabels: { fill: 'white' },
-              }}
-              // Use normalized tickValues (0 - 1)
-              // tickValues={[0.25, 0.5, 0.75, 1]}
-              // Re-scale ticks by multiplying by correct maxima
-              // tickFormat={(tick) => {
-              //   if (tick >= 1000) {
-              //     return `$${(tick / 1000).toFixed(1)}k`;
-              //   }
-              //   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tick * maxima[0]);
-              // }}
-            />
-
+            {/* Time Axis */}
+            <VictoryAxis style={timeAxisStyle} tickFormat={formatTimeTick()} />
+            {/* Value axis */}
+            <VictoryAxis dependentAxis key={0} style={valueAxisStyle} />
+            {/* Price axis */}
             <VictoryAxis
               dependentAxis
               key={2}
-              style={{
-                axis: { stroke: '#8B8CA7' },
-                tickLabels: { fill: '#8B8CA7' },
-              }}
-              // Use normalized tickValues (0 - 1)
-              // tickValues={[0.25, 0.5, 0.75, 1]}
-              // Re-scale ticks by multiplying by correct maxima
+              style={priceAxisStyle}
               orientation="right"
               offsetX={80}
-              tickFormat={(tick) => {
-                if (tick >= 1000) {
-                  return `$${(tick / 1000).toFixed(1)}k`;
-                }
-                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(tick * maxima[2]);
-              }}
+              tickFormat={formatPriceTick(priceMax)}
             />
+            {/* Price line */}
+            <VictoryLine
+              key={2}
+              data={priceData}
+              style={priceLineStyle}
+              // normalize data
+              y={(datum) => datum.amount / priceMax}
+              x="date"
+              labelComponent={<VictoryTooltip />}
+            />
+            {/* Value line */}
             <VictoryLine
               key={0}
-              data={data[0]}
-              style={{ data: { stroke: colors[0] } }}
-              // normalize data
-              y={(datum) => datum.amount}
-              // y={(datum) => datum.amount / maxima[0]}
+              data={lineChartData}
+              style={valueLineStyle}
+              y="amount"
               x="time"
               interpolation="stepAfter"
               labelComponent={<VictoryTooltip />}
             />
-            {/* <VictoryLine
-              key={0}
-              data={data[1]}
-              style={{ data: { stroke: colors[1] } }}
-              // normalize data
-              y={(datum) => datum.amount / maxima[0]}
-              x="date"
-              interpolation="step"
-              labelComponent={<VictoryTooltip />}
-            /> */}
 
-            <VictoryLine
-              key={2}
-              data={data[2]}
-              style={{ data: { stroke: colors[2], strokeWidth: 1 } }}
-              // normalize data
-              y={(datum) => datum.amount / maxima[2]}
-              x="date"
-              labelComponent={<VictoryTooltip />}
-            />
-            {/* <VictoryScatter
-              style={{ data: { fill: colors[1] } }}
-              size={5}
-              data={swapsDataTradtional}
-              x="date"
-              y={(datum) => datum.price / maxima[0]}
-              labelComponent={<VictoryTooltip />}
-            /> */}
+            {/* Value scatter */}
             <VictoryScatter
-              style={{ data: { fill: colors[0] } }}
+              style={valueScatterStyle}
               size={5}
-              data={swapsData}
+              data={swapsChartData}
               x="time"
-              y={(datum) => datum.amount}
-              // y={(datum) => datum.amount / maxima[0]}
+              y="amount"
               labelComponent={<VictoryTooltip />}
             />
           </VictoryChart>

@@ -1,6 +1,5 @@
-import { Coin } from '@cosmjs/proto-signing';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { convertDenom, convertDenomFromCoin } from '@utils/getDenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 export type SwapEvent = {
   time: Date;

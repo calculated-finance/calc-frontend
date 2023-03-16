@@ -1,5 +1,4 @@
 import { createSwapEvent, getCreationDate, SwapEvent } from '@helpers/strategyEvents';
-import { Strategy } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 
 type AccumulatedSwapEvent = {
@@ -8,29 +7,18 @@ type AccumulatedSwapEvent = {
   swapEvent: SwapEvent | null;
 };
 
-export function buildSwapEventsWithAccumulation(
-  swapEvents: SwapEvent[],
-  creationDate: Date,
-  startTime: Date,
-  endTime: Date,
-) {
+export function buildSwapEventsWithAccumulation(swapEvents: SwapEvent[], creationDate: Date) {
   // create initial event for creation, if in range
 
   const swapEventsWithAccumulation: AccumulatedSwapEvent[] = [];
 
-  if (creationDate >= startTime && creationDate <= endTime) {
-    swapEventsWithAccumulation.push({
-      time: creationDate,
-      total: 0,
-      swapEvent: null,
-    });
-  }
+  swapEventsWithAccumulation.push({
+    time: creationDate,
+    total: 0,
+    swapEvent: null,
+  });
 
-  // filter to swap events within the range
-  const filteredSwapEvents = swapEvents.filter((event) => event.time >= startTime && event.time <= endTime);
-
-  filteredSwapEvents.forEach((swapEvent) => {
-    // safely
+  swapEvents.forEach((swapEvent) => {
     const previousEvent = swapEventsWithAccumulation[swapEventsWithAccumulation.length - 1];
 
     swapEventsWithAccumulation.push({
@@ -43,15 +31,27 @@ export function buildSwapEventsWithAccumulation(
   return swapEventsWithAccumulation;
 }
 
-export function buildChartData(swapEventsWithAccumulation: AccumulatedSwapEvent[]) {
-  return swapEventsWithAccumulation.map((event) => ({
-    time: event.time,
-    amount: event.total,
-    label: event.swapEvent ? `${event.swapEvent.received} received. ${event.total} total` : 'Created',
-  }));
+export function getTotalAtTime(events: AccumulatedSwapEvent[], time: Date): number {
+  const eventIndex = events.findIndex((event) => event.time > time);
+  if (eventIndex === -1) {
+    return events[events.length - 1].total;
+  }
+  const prevEvent = events[eventIndex - 1];
+  if (prevEvent) {
+    return prevEvent.swapEvent ? prevEvent.total : 0;
+  }
+  return 0;
 }
 
-export function buildChartDataFromEventData(events: StrategyEvent[] | undefined, startTime: Date, endTime: Date) {
+function filterAcculumationEventsByTime(
+  swapEventsWithAccumulation: AccumulatedSwapEvent[],
+  startTime: Date,
+  endTime: Date,
+) {
+  return swapEventsWithAccumulation.filter((event) => event.time >= startTime && event.time <= endTime);
+}
+
+export function convertEvents(events: StrategyEvent[] | undefined) {
   if (!events) {
     return [];
   }
@@ -63,6 +63,58 @@ export function buildChartDataFromEventData(events: StrategyEvent[] | undefined,
     return [];
   }
 
-  const swapEventsWithAccumulation = buildSwapEventsWithAccumulation(swapEvents, creationDate, startTime, endTime);
-  return buildChartData(swapEventsWithAccumulation);
+  return buildSwapEventsWithAccumulation(swapEvents, creationDate);
+}
+
+export function buildLineChartData(swapEventsWithAccumulation: AccumulatedSwapEvent[], startTime: Date, endTime: Date) {
+  const totalAtStart = getTotalAtTime(swapEventsWithAccumulation, startTime);
+  const totalAtEnd = getTotalAtTime(swapEventsWithAccumulation, endTime);
+
+  const filteredSwapEventsWithAccumulation = filterAcculumationEventsByTime(
+    swapEventsWithAccumulation,
+    startTime,
+    endTime,
+  );
+
+  // line chart data
+  const lineChartData = filteredSwapEventsWithAccumulation.map((event) => ({
+    time: event.time,
+    amount: event.total,
+  }));
+
+  // add start and end points in functional way
+  const lineChartDataWithStartAndEnd = [
+    {
+      time: startTime,
+      amount: totalAtStart,
+    },
+    ...lineChartData,
+    {
+      time: endTime,
+      amount: totalAtEnd,
+    },
+  ];
+
+  return lineChartDataWithStartAndEnd;
+}
+
+export function buildSwapsChartData(
+  swapEventsWithAccumulation: AccumulatedSwapEvent[],
+  startTime: Date,
+  endTime: Date,
+) {
+  const filteredSwapEventsWithAccumulation = filterAcculumationEventsByTime(
+    swapEventsWithAccumulation,
+    startTime,
+    endTime,
+  );
+
+  // line chart data
+  const swapsChartData = filteredSwapEventsWithAccumulation.map((event) => ({
+    time: event.time,
+    amount: event.total,
+    label: event.swapEvent ? `${event.swapEvent.received} received. ${event.total} total` : 'Created',
+  }));
+
+  return swapsChartData;
 }

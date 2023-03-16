@@ -88,6 +88,7 @@ export const dcaPlusStrategy = {
     model_id: 1,
     standard_dca_received_amount: '10000',
     standard_dca_swapped_amount: '1000',
+    total_deposit: '1000',
   },
 };
 
