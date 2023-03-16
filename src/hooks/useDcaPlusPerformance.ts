@@ -20,9 +20,6 @@ export default function useDcaPlusPerformance(id?: Strategy['id']) {
           vault_id: id,
         },
       } as QueryMsg);
-      if (result.vault.owner !== address) {
-        throw new Error('Strategy not found');
-      }
       return result;
     },
     {
