@@ -32,7 +32,7 @@ export function WalletListItem({ handleClick, wallet, walletInstallLink }: Walle
       <Image w={4} mr={2} src={wallet.adapter.icon} alt={`${wallet.adapter.name} icon`} />
       <div>{wallet.adapter.name}</div>
       <Spacer />
-      <p>{isInstalled ? 'Installed' : 'Install'}</p>
+      <p>{isInstalled ? 'Installed' : 'Click to install'}</p>
     </Center>
   );
 }

@@ -44,10 +44,6 @@ function WalletModal() {
     [select, handleClose],
   );
 
-  // const isMobile = useCallback(() => {
-  //   /Mobi/.test(navigator.userAgent);
-  // }, []);
-
   return (
     <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
       <ModalOverlay />
