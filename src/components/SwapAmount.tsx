@@ -40,7 +40,7 @@ export default function SwapAmount({
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
-              Max:{' '}
+              Max:
             </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
               {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
