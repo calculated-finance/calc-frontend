@@ -30,7 +30,7 @@ export function getPerformanceStatistics(
   let color;
   if (profit > 0) {
     color = 'green.200';
-  } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -1) {
+  } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -2) {
     color = 'white.200';
   } else if (profit < 0) {
     color = 'red.200';
