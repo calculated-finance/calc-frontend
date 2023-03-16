@@ -94,31 +94,6 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
     </>
   );
 }
-// return (
-//   <>
-//     <GridItem colSpan={1}>
-//       <Heading size="xs">{isDcaPlus(strategy) ? 'Purchase each cycle' : 'Swap each cycle'} </Heading>
-//     </GridItem>
-//     <GridItem colSpan={2}>
-//       <Text fontSize="sm" data-testid="strategy-swap-amount">
-//         {getConvertedSwapAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))} -{' '}
-//         <Tooltip
-//           label={
-//             <Box>
-//               <Text>Fees automatically deducted from each swap:</Text>
-//               <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
-//               <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
-//               {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
-//             </Box>
-//           }
-//         >
-//           fees*
-//         </Tooltip>
-//       </Text>
-//     </GridItem>
-//   </>
-// );
-// }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();
