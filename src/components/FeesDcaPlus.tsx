@@ -210,8 +210,8 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
         <Text as="span" textColor="white">
           ~5% of upside
         </Text>
-        {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap ONLY if
-        DCA+ outperforms traditional DCA.
+        {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
+        performance fee
       </Text>
 
       <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo={applyPromo} />
