@@ -2,7 +2,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denom } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
+import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
@@ -196,6 +196,10 @@ export function getStrategyTotalFeesPaid(strategy: Strategy) {
   const costAmount = strategy.swapped_amount.amount;
   const feeFactor = SWAP_FEE + FIN_TAKER_FEE + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
   return Number(costAmount) * feeFactor;
+}
+
+export function getTotalSwapped(strategy: Strategy) {
+  return convertDenomFromCoin(strategy.swapped_amount);
 }
 
 export function getTotalCost(strategy: Strategy) {

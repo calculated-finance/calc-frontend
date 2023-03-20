@@ -113,7 +113,9 @@ export function buildSwapsChartData(
   const swapsChartData = filteredSwapEventsWithAccumulation.map((event) => ({
     time: event.time,
     amount: event.total,
-    label: event.swapEvent ? `${event.swapEvent.received} received.\n ${event.total} total` : 'Created',
+    label: event.swapEvent
+      ? `${event.swapEvent.sent} sent.\n${event.swapEvent.received} received.\n ${event.total} total`
+      : 'Created',
   }));
 
   return swapsChartData;
