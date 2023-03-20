@@ -36,11 +36,6 @@ const mockStateMachine = {
       initialDeposit: '30',
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: false,
-      purchaseTime: '',
-      startDate: null,
-      startImmediately: 'yes',
-      startPrice: null,
-      triggerType: 'date',
       autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
@@ -146,7 +141,7 @@ describe('DCA Plus Out confirm page', () => {
           value: {
             amount: [
               {
-                amount: '200000',
+                amount: '66667',
                 denom: 'ukuji',
               },
             ],

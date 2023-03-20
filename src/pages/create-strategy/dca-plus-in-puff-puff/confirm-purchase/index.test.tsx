@@ -36,11 +36,6 @@ const mockStateMachine = {
       initialDeposit: '30',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       advancedSettings: false,
-      purchaseTime: '',
-      startDate: null,
-      startImmediately: 'yes',
-      startPrice: null,
-      triggerType: 'date',
       autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
@@ -109,6 +104,7 @@ describe('DCA Plus In confirm page', () => {
       const benchmark = screen.getByTestId('summary-benchmark');
 
       within(benchmark).getByText('1 USK');
+      within(benchmark).getByText('30 days');
     });
   });
 
@@ -148,7 +144,7 @@ describe('DCA Plus In confirm page', () => {
           value: {
             amount: [
               {
-                amount: '85714',
+                amount: '28571',
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],

@@ -2,12 +2,12 @@ import { Strategy } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denom } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
+import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
+import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
-import { getCompletedEvents } from '../getCompletedEvents';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
@@ -192,27 +192,27 @@ export function getPriceCeilingFloor(strategy: Vault) {
   return Number(priceDeconversion(price).toFixed(3));
 }
 
-export function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
-  const completedEvents = getCompletedEvents(strategyEvents) || [];
-  return (
-    completedEvents.reduce((acc, { data }) => {
-      if ('dca_vault_execution_completed' in data) {
-        return acc + Number(data.dca_vault_execution_completed.fee.amount);
-      }
-      return 0;
-    }, 0) || 0
-  );
+export function getStrategyTotalFeesPaid(strategy: Strategy) {
+  const costAmount = strategy.swapped_amount.amount;
+  const feeFactor = isDcaPlus(strategy)
+    ? 0
+    : SWAP_FEE + FIN_TAKER_FEE + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
+  return Number(costAmount) * feeFactor;
 }
 
-export function getTotalCost(strategy: Strategy, events: StrategyEvent[]) {
+export function getTotalSwapped(strategy: Strategy) {
+  return convertDenomFromCoin(strategy.swapped_amount);
+}
+
+export function getTotalCost(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const costAmount = strategy.swapped_amount.amount;
-  const totalFeesPaid = getStrategyTotalFeesPaid(events);
+  const totalFeesPaid = getStrategyTotalFeesPaid(strategy);
   const costAmountWithFeesSubtracted = Number(costAmount) - totalFeesPaid;
 
   const { conversion } = getDenomInfo(initialDenom);
 
-  return conversion(costAmountWithFeesSubtracted);
+  return Number(conversion(costAmountWithFeesSubtracted).toFixed(6));
 }
 
 export function getTotalReceived(strategy: Strategy) {
@@ -221,10 +221,10 @@ export function getTotalReceived(strategy: Strategy) {
   return parseFloat(conversion(Number(strategy.received_amount.amount)).toFixed(6));
 }
 
-export function getAveragePrice(strategy: Vault, strategyEvents: StrategyEvent[]) {
-  return getTotalReceived(strategy) / getTotalCost(strategy, strategyEvents);
+export function getAveragePrice(strategy: Vault) {
+  return getTotalReceived(strategy) / getTotalCost(strategy);
 }
 
-export function getAverageCost(strategy: Vault, strategyEvents: StrategyEvent[]) {
-  return getTotalCost(strategy, strategyEvents) / getTotalReceived(strategy);
+export function getAverageCost(strategy: Vault) {
+  return getTotalCost(strategy) / getTotalReceived(strategy);
 }

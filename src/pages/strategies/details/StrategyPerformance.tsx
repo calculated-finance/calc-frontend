@@ -3,8 +3,6 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
-import Spinner from '@components/Spinner';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyInitialDenom,
@@ -17,13 +15,7 @@ import {
 } from '@helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
-function StrategyPerformanceDetails({
-  strategy,
-  strategyEvents,
-}: {
-  strategy: Strategy;
-  strategyEvents: StrategyEvent[];
-}) {
+function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
@@ -33,7 +25,6 @@ function StrategyPerformanceDetails({
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
-    strategyEvents,
   );
 
   return (
@@ -72,7 +63,7 @@ function StrategyPerformanceDetails({
         <Text fontSize="sm" data-testid="strategy-total-acculumated">
           {isBuyStrategy(strategy)
             ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
-            : `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+            : `${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -81,7 +72,7 @@ function StrategyPerformanceDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-net-cost">
           {isBuyStrategy(strategy)
-            ? `${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`
+            ? `${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`
             : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
@@ -91,8 +82,8 @@ function StrategyPerformanceDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)
-            : formatFiat(getAveragePrice(strategy, strategyEvents) * resultingDenomPrice)}
+            ? formatFiat(getAverageCost(strategy) * initialDenomPrice)
+            : formatFiat(getAveragePrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
@@ -129,8 +120,6 @@ function StrategyPerformanceDetails({
 }
 
 export default function StrategyPerformance({ strategy }: { strategy: Strategy }) {
-  const { data: eventsData } = useStrategyEvents(strategy.id);
-
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
       <Flex h="full" flexDirection="column">
@@ -138,13 +127,7 @@ export default function StrategyPerformance({ strategy }: { strategy: Strategy }
           Strategy performance
         </Heading>
         <Flex layerStyle="panel" flexGrow={1} alignItems="start">
-          {eventsData?.events ? (
-            <StrategyPerformanceDetails strategy={strategy} strategyEvents={eventsData?.events} />
-          ) : (
-            <Center w="full" h="full" px={8} py={6}>
-              <Spinner />
-            </Center>
-          )}
+          <StrategyPerformanceDetails strategy={strategy} />
         </Flex>
       </Flex>
     </GridItem>

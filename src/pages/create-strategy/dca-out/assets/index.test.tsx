@@ -97,7 +97,7 @@ describe('DCA Out Assets page', () => {
         const select = await waitFor(() => screen.getByLabelText(/What position do you want to take profit on?/));
         selectEvent.select(select, ['KUJI']);
 
-        await waitFor(() => expect(screen.getByText('11.92')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('12.053333')).toBeInTheDocument());
       });
     });
   });
@@ -128,7 +128,7 @@ describe('DCA Out Assets page', () => {
         );
         await selectEvent.select(initalDenomSelect, ['KUJI']);
 
-        await waitFor(() => expect(screen.getByText('11.92')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('12.053333')).toBeInTheDocument());
         const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
 
         // enter initial deposit

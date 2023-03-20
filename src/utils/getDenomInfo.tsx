@@ -300,6 +300,18 @@ export function getDenomName(denom: string) {
   return getDenomInfo(denom).name;
 }
 
+export function convertDenomFromCoin(coin: Coin | undefined) {
+  if (!coin) {
+    return 0;
+  }
+  const { significantFigures, conversion } = getDenomInfo(coin.denom);
+  return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
+}
+
+export function getDenomMinimumSwapAmount(denom: string) {
+  return getDenomInfo(denom).minimumSwapAmount;
+}
+
 export class DenomValue {
   readonly denomId: Denom;
 

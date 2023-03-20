@@ -87,7 +87,7 @@ export interface VaultsResponse {
 export interface Vault {
   balance: Coin;
   created_at: Timestamp;
-  dca_plus_config?: DCAPlusConfig | null;
+  dca_plus_config?: DcaPlusConfig | null;
   destinations: Destination[];
   id: Uint128;
   label?: string | null;
@@ -108,12 +108,14 @@ export interface Coin {
   denom: string;
   [k: string]: unknown;
 }
-export interface DCAPlusConfig {
+export interface DcaPlusConfig {
   escrow_level: Decimal;
-  escrowed_balance: Uint128;
+  escrowed_balance: Coin;
   model_id: number;
-  standard_dca_received_amount: Uint128;
-  standard_dca_swapped_amount: Uint128;
+  standard_dca_received_amount: Coin;
+  standard_dca_swapped_amount: Coin;
+  total_deposit: Coin;
+  [k: string]: unknown;
 }
 export interface Destination {
   action: PostExecutionAction;

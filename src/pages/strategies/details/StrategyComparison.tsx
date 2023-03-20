@@ -5,12 +5,12 @@ import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   getAcculumationDifference,
-  getEscrowLevel,
   getNumberOfPastSwaps,
   getStandardDcaAveragePrice,
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
   getStandardDcaTotalReceived,
+  getStandardDcaTotalSwapped,
 } from '@helpers/strategy/dcaPlus';
 import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -22,17 +22,29 @@ import {
   getTotalCost,
   getAverageCost,
   getStrategyEndDate,
+  getTotalSwapped,
 } from '@helpers/strategy';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
+import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
+import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+
+function getPerformanceFactor(performance: DcaPlusPerformanceResponse | undefined) {
+  const factor = Number(performance?.factor || 0);
+  const rounded = Number(factor.toFixed(4));
+  const difference = rounded - 1;
+  return difference;
+}
 
 function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
+  const { data: performance } = useDcaPlusPerformance(strategy.id);
+
   return (
     <Flex direction="column" p={8} my={8} mx={8} borderRadius="3xl" borderColor="green.200" borderWidth={2} w={500}>
       <Heading size="xs">
         <Text as="span" color="green.200" /> {getAcculumationDifference(strategy)}{' '}
         {getDenomName(getStrategyResultingDenom(strategy))} more accumulated with DCA+
       </Heading>
-      <Heading size="2xl">{formatSignedPercentage(getEscrowLevel(strategy))}</Heading>
+      <Heading size="2xl">{formatSignedPercentage(getPerformanceFactor(performance))}</Heading>
       <Text textStyle="body">
         In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
         {getDenomName(getStrategyInitialDenom(strategy))} per day for {getNumberOfPastSwaps(strategy)} days.
@@ -83,12 +95,25 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getStandardDcaTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {`${getTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {`${getStandardDcaTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Net asset cost</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text as="span" fontSize="sm">
+          {`${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text as="span" fontSize="sm">
+          {`${getStandardDcaTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -96,7 +121,7 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)}
+          {formatFiat(getAverageCost(strategy) * initialDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>

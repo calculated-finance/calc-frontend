@@ -39,7 +39,9 @@ export default function SwapAmount({
           <Text>The amount you want swapped each purchase for {resultingDenomName}.</Text>
           <Spacer />
           <Flex flexDirection="row">
-            <Text mr={1}>Max: </Text>
+            <Text ml={4} mr={1}>
+              Max:
+            </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
               {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
             </Button>

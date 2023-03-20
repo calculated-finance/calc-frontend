@@ -120,3 +120,12 @@ export function getChartData(
   }));
   return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false) || [])];
 }
+
+export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
+  const chartData = fiatPrices?.map((price) => ({
+    date: new Date(price[0]),
+    amount: Number(price[1].toFixed(2)),
+    label: `$${price[1].toFixed(2)} (${new Date(price[0]).toLocaleTimeString()})`,
+  }));
+  return chartData;
+}

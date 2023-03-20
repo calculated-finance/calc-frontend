@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -78,11 +78,12 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                {values.advancedSettings && (
-                  <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaPlusOut} />
-                )}
                 <StrategyDuration />
-                {values.advancedSettings && <SlippageTolerance />}
+                <Collapse in={values.advancedSettings}>
+                  <Box m="px">
+                    <SlippageTolerance />
+                  </Box>
+                </Collapse>
                 <Submit>Next</Submit>
               </Stack>
             </Form>
