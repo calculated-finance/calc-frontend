@@ -4,11 +4,7 @@ import { SuccessStrategyModal } from '@components/SuccessStrategyModal';
 import React from 'react';
 
 function Success() {
-  return (
-    <>
-      <SuccessStrategyModal stepConfig={dcaPlusInSteps} />; ;
-    </>
-  );
+  return <SuccessStrategyModal stepConfig={dcaPlusInSteps} />;
 }
 Success.getLayout = getFlowLayout;
 
