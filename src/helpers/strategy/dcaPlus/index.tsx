@@ -93,7 +93,7 @@ export function getNumberOfPastSwaps(strategy: Strategy) {
 
   const swapAmount = getSwapAmount(strategy);
 
-  return Math.floor(Number(standard_dca_swapped_amount) / swapAmount);
+  return Math.floor(Number(standard_dca_swapped_amount?.amount) / swapAmount);
 }
 
 export function getStrategyModel(strategy: Strategy) {
