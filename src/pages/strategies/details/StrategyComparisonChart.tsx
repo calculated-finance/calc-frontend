@@ -1,4 +1,4 @@
-import { Heading, GridItem, Box, Center } from '@chakra-ui/react';
+import { Heading, GridItem, Box, Center, HStack, Stack } from '@chakra-ui/react';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryAxis,
@@ -14,6 +14,8 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyResultingDenom } from '@helpers/strategy';
 import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
+import { Denom } from '@models/Denom';
+import { getDenomName } from '@utils/getDenomInfo';
 import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
@@ -34,6 +36,32 @@ function formatTimeTick() {
       day: 'numeric',
       year: 'numeric',
     });
+}
+// legend with the strategy names and their line colors
+function StrategyComparisonLegend({ denom }: { denom: Denom }) {
+  return (
+    <HStack spacing={4}>
+      <HStack spacing={1}>
+        <Heading fontSize="xs">DCA+ </Heading>
+
+        <svg width="20" height="20">
+          <line x1="0" y1="10" x2="20" y2="10" style={{ stroke: '#1AEFAF', strokeWidth: 2 }} />
+        </svg>
+      </HStack>
+      <HStack spacing={1}>
+        <Heading fontSize="xs"> Traditional DCA </Heading>
+        <svg width="20" height="20">
+          <line x1="0" y1="10" x2="20" y2="10" style={{ stroke: '#1A89EF', strokeWidth: 2 }} />
+        </svg>
+      </HStack>
+      <HStack spacing={1}>
+        <Heading fontSize="xs">{getDenomName(denom)} Price </Heading>
+        <svg width="20" height="20">
+          <line x1="0" y1="10" x2="20" y2="10" style={{ stroke: '#8B8CA7', strokeWidth: 1 }} />
+        </svg>
+      </HStack>
+    </HStack>
+  );
 }
 
 export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
@@ -104,19 +132,9 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
       <Box layerStyle="panel" position="relative">
         {events && <StrategyComparisonChartStats strategy={strategy} />}
-        <Box p={6} position="absolute" top={0} right={0}>
+        <Stack p={6} position="absolute" top={0} right={0}>
           <DaysRadio value={days} onChange={setDays} />
-        </Box>
-        <Box h={0}>
-          <svg>
-            <defs>
-              <linearGradient id="myGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#1AEFAF" />
-                <stop offset="100%" stopColor="transparent" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </Box>
+        </Stack>
 
         <Center width="full" height={250} ref={elementRef} px={6}>
           <VictoryChart
@@ -184,6 +202,9 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
               labelComponent={<VictoryTooltip />}
             />
           </VictoryChart>
+        </Center>
+        <Center width="full" p={6}>
+          <StrategyComparisonLegend denom={resultingDenom} />
         </Center>
       </Box>
     </GridItem>
