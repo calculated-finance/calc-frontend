@@ -98,7 +98,7 @@ describe('DCA In Assets page', () => {
         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
         selectEvent.select(select, ['DEMO']);
 
-        await waitFor(() => expect(screen.getByText('88')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('88.08')).toBeInTheDocument());
       });
     });
   });
@@ -129,7 +129,7 @@ describe('DCA In Assets page', () => {
         );
         await selectEvent.select(initalDenomSelect, ['DEMO']);
 
-        await waitFor(() => expect(screen.getByText('88')).toBeInTheDocument());
+        await waitFor(() => expect(screen.getByText('88.08')).toBeInTheDocument());
         const input = await waitFor(() => screen.getByPlaceholderText(/Enter amount/));
 
         // enter initial deposit

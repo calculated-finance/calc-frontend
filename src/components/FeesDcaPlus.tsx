@@ -20,7 +20,7 @@ import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
-import { CREATE_VAULT_FEE, SWAP_FEE, FIN_TAKER_FEE, DELEGATION_FEE } from 'src/constants';
+import { CREATE_VAULT_FEE, FIN_TAKER_FEE, DELEGATION_FEE } from 'src/constants';
 
 function FeeBreakdown({
   initialDenomName,
@@ -190,7 +190,7 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
         performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo={applyPromo} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} />
     </Stack>
   );
 }

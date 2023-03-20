@@ -147,7 +147,7 @@ describe('DCA Out confirm page', () => {
           value: {
             amount: [
               {
-                amount: '200000',
+                amount: '66667',
                 denom: 'ukuji',
               },
             ],

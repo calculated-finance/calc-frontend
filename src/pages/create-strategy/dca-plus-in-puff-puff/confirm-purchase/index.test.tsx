@@ -104,6 +104,7 @@ describe('DCA Plus In confirm page', () => {
       const benchmark = screen.getByTestId('summary-benchmark');
 
       within(benchmark).getByText('1 USK');
+      within(benchmark).getByText('30 days');
     });
   });
 
@@ -143,7 +144,7 @@ describe('DCA Plus In confirm page', () => {
           value: {
             amount: [
               {
-                amount: '85714',
+                amount: '28571',
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],
