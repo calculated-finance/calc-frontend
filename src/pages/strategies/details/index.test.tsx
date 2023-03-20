@@ -419,7 +419,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.50 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
         });
       });
       describe('when DCA Out', () => {
@@ -432,7 +432,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.50 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
         });
       });
     });
@@ -465,7 +465,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$1.00 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$0.98 USD'));
         });
       });
       describe('when DCA Out', () => {
