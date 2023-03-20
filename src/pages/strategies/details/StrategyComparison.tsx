@@ -93,7 +93,7 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getTotalCost(strategy, strategyEvents)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {`${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -106,7 +106,7 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {formatFiat(getAverageCost(strategy, strategyEvents) * initialDenomPrice)}
+          {formatFiat(getAverageCost(strategy) * initialDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>

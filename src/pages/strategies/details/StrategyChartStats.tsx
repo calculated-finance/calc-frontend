@@ -22,7 +22,6 @@ export function StrategyChartStats({
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
-    strategyEvents,
   );
   return (
     <Stack spacing={3} pt={6} pl={6}>
