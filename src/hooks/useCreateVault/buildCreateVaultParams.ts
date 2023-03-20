@@ -153,11 +153,7 @@ export function buildCreateVaultParamsDCA(
   };
 }
 
-export function buildCreateVaultParamsDCAPlus(
-  state: DcaPlusState,
-  pairs: Pair[],
-  transactionType: TransactionType,
-): ExecuteMsg {
+export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
   return {
     create_vault: {
@@ -165,14 +161,8 @@ export function buildCreateVaultParamsDCAPlus(
       time_interval: 'daily',
       pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: swapAmount.toString(),
-      target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
-      target_receive_amount: getTargetReceiveAmount(
-        state.initialDenom,
-        swapAmount,
-        state.startPrice,
-        state.resultingDenom,
-        transactionType,
-      ),
+      target_start_time_utc_seconds: undefined,
+      target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
       use_dca_plus: true,
@@ -191,7 +181,7 @@ export function buildCreateVaultParams(
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, transactionType);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs);
   }
 
   throw new Error('Invalid form type');

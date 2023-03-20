@@ -3,14 +3,14 @@ import { useFormikContext } from 'formik';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
-import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 import { FormNames } from '@hooks/useDcaInForm';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './DcaInStartPrice';
 import { TransactionType } from './TransactionType';
 
 export function TriggerForm({ transactionType, formName }: { transactionType: TransactionType; formName: FormNames }) {
-  const { values } = useFormikContext<DcaFormState>();
+  const { values } = useFormikContext<DcaInFormDataAll>();
   const { startImmediately, triggerType, advancedSettings } = values;
 
   return (

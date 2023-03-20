@@ -292,7 +292,7 @@ export const allSchema = {
         }
 
         return context.createError({
-          message: `Duration must be longer than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
+          message: `Duration must be less than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
         });
       },
     }),
