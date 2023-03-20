@@ -8,7 +8,29 @@ export type SwapEvent = {
   sent: number;
 };
 
-export function createSwapEvent(strategyEvent: StrategyEvent): SwapEvent | null {
+export function createDcaPlusSwapEvent(strategyEvent: StrategyEvent): SwapEvent | null {
+  // get data from strategyEvent
+  const { data } = strategyEvent;
+
+  // check that event is a swap event
+  if (!('dca_plus_vault_execution_completed' in data)) {
+    return null;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { received, fee, sent } = data.dca_plus_vault_execution_completed;
+  const { timestamp } = strategyEvent;
+
+  return {
+    time: new Date(Number(timestamp) / 1000000),
+    received: convertDenomFromCoin(received),
+    fee: convertDenomFromCoin(fee),
+    sent: convertDenomFromCoin(sent),
+  };
+}
+
+export function createTradSwapEvent(strategyEvent: StrategyEvent): SwapEvent | null {
   // get data from strategyEvent
   const { data } = strategyEvent;
 

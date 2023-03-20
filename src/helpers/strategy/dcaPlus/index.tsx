@@ -76,10 +76,7 @@ export function getEscrowLevel(strategy: Strategy) {
 export function getEscrowAmount(strategy: Strategy) {
   const { escrowed_balance } = getDcaPlusConfig(strategy) || {};
 
-  // convert to the initial denom
-  const { conversion } = getDenomInfo(getStrategyInitialDenom(strategy));
-
-  return Number(conversion(Number(escrowed_balance)).toFixed(6));
+  return convertDenomFromCoin(escrowed_balance);
 }
 
 export function getAcculumationDifference(strategy: Strategy) {

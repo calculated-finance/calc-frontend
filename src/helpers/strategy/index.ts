@@ -194,7 +194,9 @@ export function getPriceCeilingFloor(strategy: Vault) {
 
 export function getStrategyTotalFeesPaid(strategy: Strategy) {
   const costAmount = strategy.swapped_amount.amount;
-  const feeFactor = SWAP_FEE + FIN_TAKER_FEE + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
+  const feeFactor = isDcaPlus(strategy)
+    ? 0
+    : SWAP_FEE + FIN_TAKER_FEE + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
   return Number(costAmount) * feeFactor;
 }
 
@@ -210,7 +212,7 @@ export function getTotalCost(strategy: Strategy) {
 
   const { conversion } = getDenomInfo(initialDenom);
 
-  return conversion(costAmountWithFeesSubtracted);
+  return Number(conversion(costAmountWithFeesSubtracted).toFixed(6));
 }
 
 export function getTotalReceived(strategy: Strategy) {
