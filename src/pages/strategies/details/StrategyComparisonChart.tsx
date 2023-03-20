@@ -13,13 +13,13 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyResultingDenom } from '@helpers/strategy';
-import { buildLineChartData, buildSwapsChartData, convertEvents } from '@helpers/chart';
+import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
 import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
 
-function formatPriceTick(priceMax: number): ((...args: any[]) => any) | unknown[] | null | undefined {
-  return (tick) => {
+function formatPriceTick(priceMax: number) {
+  return (tick: number) => {
     if (tick >= 1000) {
       return `$${(tick / 1000).toFixed(1)}k`;
     }
@@ -27,8 +27,8 @@ function formatPriceTick(priceMax: number): ((...args: any[]) => any) | unknown[
   };
 }
 
-function formatTimeTick(): unknown[] | ((...args: any[]) => any) | null | undefined {
-  return (tick) =>
+function formatTimeTick() {
+  return (tick: number) =>
     new Date(tick).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -57,17 +57,24 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
     return null;
   }
 
-  const accumulatedEvents = convertEvents(eventsData?.events);
-  const lineChartData = buildLineChartData(accumulatedEvents, fromDate, now);
-  const swapsChartData = buildSwapsChartData(accumulatedEvents, fromDate, now);
+  const accumulatedTradEvents = convertTradEvents(eventsData?.events);
+  const accumulatedDcaPlusEvents = convertDcaPlusEvents(eventsData?.events);
+
+  const dcaPlusLineChartData = buildLineChartData(accumulatedDcaPlusEvents, fromDate, now);
+  const dcaPlusSwapsChartData = buildSwapsChartData(accumulatedDcaPlusEvents, fromDate, now);
+
+  const acculumatedTradEvents = convertTradEvents(eventsData?.events);
+
+  const tradLineChartData = buildLineChartData(acculumatedTradEvents, fromDate, now);
+  const tradSwapsChartData = buildSwapsChartData(acculumatedTradEvents, fromDate, now);
 
   const priceData = getPriceData(coingeckoData?.prices);
 
-  if (!accumulatedEvents || !priceData) {
+  if (!accumulatedTradEvents || !priceData) {
     return null;
   }
 
-  const lineChartMax = Math.max(...lineChartData.map((d) => d.amount));
+  const lineChartMax = Math.max(...tradLineChartData.map((d) => d.amount));
   const priceMax = Math.max(...priceData.map((d) => d.amount));
 
   const timeAxisStyle = {
@@ -80,12 +87,15 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
     tickLabels: { fill: '#8B8CA7' },
   };
   const priceLineStyle = { data: { stroke: '#8B8CA7', strokeWidth: 1 } };
-  const valueLineStyle = { data: { stroke: '#1AEFAF' } };
   const valueAxisStyle = {
     axis: { stroke: 'white' },
     tickLabels: { fill: 'white' },
   };
-  const valueScatterStyle = { data: { fill: '#1AEFAF' } };
+  const tradValueLineStyle = { data: { stroke: '#1A89EF' } };
+  const tradValueScatterStyle = { data: { fill: '#1A89EF' } };
+
+  const dcaPlusValueLineStyle = { data: { stroke: '#1AEFAF' } };
+  const dcaPlusValueScatterStyle = { data: { fill: '#1AEFAF' } };
   return (
     <GridItem colSpan={6}>
       <Heading size="md" pb={4}>
@@ -114,7 +124,6 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
             width={dimensions?.width}
             containerComponent={<VictoryVoronoiContainer />}
             padding={{ left: 60, bottom: 40, top: 10, right: 80 }}
-            domain={{ y: [0, lineChartMax * 1.1] }} // 1.5 here represents a good height, but it should be dynamic based on the maxima
           >
             {/* Time Axis */}
             <VictoryAxis style={timeAxisStyle} tickFormat={formatTimeTick()} />
@@ -129,7 +138,6 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
               offsetX={80}
               tickFormat={formatPriceTick(priceMax)}
             />
-            {/* Price line */}
             <VictoryLine
               key={2}
               data={priceData}
@@ -139,24 +147,40 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
               x="date"
               labelComponent={<VictoryTooltip />}
             />
-            {/* Value line */}
             <VictoryLine
               key={0}
-              data={lineChartData}
-              style={valueLineStyle}
-              y="amount"
+              data={tradLineChartData}
+              style={tradValueLineStyle}
+              y={(datum) => datum.amount / lineChartMax}
               x="time"
               interpolation="stepAfter"
               labelComponent={<VictoryTooltip />}
             />
 
-            {/* Value scatter */}
             <VictoryScatter
-              style={valueScatterStyle}
+              style={tradValueScatterStyle}
               size={5}
-              data={swapsChartData}
+              data={tradSwapsChartData}
               x="time"
-              y="amount"
+              y={(datum) => datum.amount / lineChartMax}
+              labelComponent={<VictoryTooltip />}
+            />
+            <VictoryLine
+              key={0}
+              data={dcaPlusLineChartData}
+              style={dcaPlusValueLineStyle}
+              y={(datum) => datum.amount / lineChartMax}
+              x="time"
+              interpolation="stepAfter"
+              labelComponent={<VictoryTooltip />}
+            />
+
+            <VictoryScatter
+              style={dcaPlusValueScatterStyle}
+              size={5}
+              data={dcaPlusSwapsChartData}
+              x="time"
+              y={(datum) => datum.amount / lineChartMax}
               labelComponent={<VictoryTooltip />}
             />
           </VictoryChart>

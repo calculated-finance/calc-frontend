@@ -1,4 +1,4 @@
-import getDenomInfo, { getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
+import getDenomInfo, { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import totalExecutions from '@utils/totalExecutions';
@@ -24,19 +24,15 @@ function getDcaPlusConfig(strategy: Strategy) {
 }
 
 export function getStandardDcaTotalReceived(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.received_amount.denom);
-
   const { standard_dca_received_amount } = getDcaPlusConfig(strategy) || {};
 
-  return parseFloat(conversion(Number(standard_dca_received_amount)).toFixed(6));
+  return convertDenomFromCoin(standard_dca_received_amount);
 }
 
 export function getStandardDcaTotalSwapped(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
-
   const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
 
-  return parseFloat(conversion(Number(standard_dca_swapped_amount)).toFixed(6));
+  return convertDenomFromCoin(standard_dca_swapped_amount);
 }
 
 export function getStandardDcaTotalCost(strategy: Strategy) {
@@ -80,10 +76,7 @@ export function getEscrowLevel(strategy: Strategy) {
 export function getEscrowAmount(strategy: Strategy) {
   const { escrowed_balance } = getDcaPlusConfig(strategy) || {};
 
-  // convert to the initial denom
-  const { conversion } = getDenomInfo(getStrategyInitialDenom(strategy));
-
-  return Number(conversion(Number(escrowed_balance)).toFixed(6));
+  return convertDenomFromCoin(escrowed_balance);
 }
 
 export function getAcculumationDifference(strategy: Strategy) {

@@ -10,6 +10,7 @@ import {
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
   getStandardDcaTotalReceived,
+  getStandardDcaTotalSwapped,
 } from '@helpers/strategy/dcaPlus';
 import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -21,6 +22,7 @@ import {
   getTotalCost,
   getAverageCost,
   getStrategyEndDate,
+  getTotalSwapped,
 } from '@helpers/strategy';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
@@ -90,6 +92,19 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Heading size="xs">Swapped</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text as="span" fontSize="sm">
+          {`${getTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text as="span" fontSize="sm">
+          {`${getStandardDcaTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Net asset cost</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">

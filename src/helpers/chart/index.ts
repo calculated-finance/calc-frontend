@@ -1,4 +1,4 @@
-import { createSwapEvent, getCreationDate, SwapEvent } from '@helpers/strategyEvents';
+import { createDcaPlusSwapEvent, createTradSwapEvent, getCreationDate, SwapEvent } from '@helpers/strategyEvents';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 
 type AccumulatedSwapEvent = {
@@ -51,13 +51,28 @@ function filterAcculumationEventsByTime(
   return swapEventsWithAccumulation.filter((event) => event.time >= startTime && event.time <= endTime);
 }
 
-export function convertEvents(events: StrategyEvent[] | undefined) {
+export function convertDcaPlusEvents(events: StrategyEvent[] | undefined) {
   if (!events) {
     return [];
   }
 
   const creationDate = getCreationDate(events);
-  const swapEvents = events.map(createSwapEvent).filter((event) => event !== null) as SwapEvent[];
+  const swapEvents = events.map(createDcaPlusSwapEvent).filter((event) => event !== null) as SwapEvent[];
+
+  if (!creationDate) {
+    return [];
+  }
+
+  return buildSwapEventsWithAccumulation(swapEvents, creationDate);
+}
+
+export function convertTradEvents(events: StrategyEvent[] | undefined) {
+  if (!events) {
+    return [];
+  }
+
+  const creationDate = getCreationDate(events);
+  const swapEvents = events.map(createTradSwapEvent).filter((event) => event !== null) as SwapEvent[];
 
   if (!creationDate) {
     return [];
@@ -113,7 +128,9 @@ export function buildSwapsChartData(
   const swapsChartData = filteredSwapEventsWithAccumulation.map((event) => ({
     time: event.time,
     amount: event.total,
-    label: event.swapEvent ? `${event.swapEvent.received} received.\n ${event.total} total` : 'Created',
+    label: event.swapEvent
+      ? `${event.swapEvent.sent} sent.\n${event.swapEvent.received} received.\n ${event.total} total`
+      : 'Created',
   }));
 
   return swapsChartData;
