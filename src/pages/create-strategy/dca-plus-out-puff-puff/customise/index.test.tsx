@@ -109,11 +109,6 @@ describe('DCA Plus Out customise page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
-        purchaseTime: '',
-        startDate: null,
-        startImmediately: 'yes',
-        startPrice: null,
-        triggerType: 'date',
         slippageTolerance: 2,
         strategyDuration: 60,
       });

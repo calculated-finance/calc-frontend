@@ -26,19 +26,13 @@ export const dcaPlusSchema = Yup.object({
       if (value > dcaPlusMinimumDeposit) {
         return true;
       }
-      return context.createError({ message: `Swap amount should be greater than ${dcaPlusMinimumDeposit}` });
+      return context.createError({
+        message: `Initial deposit must be more than ${dcaPlusMinimumDeposit}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
+      });
     },
   }),
   advancedSettings: allSchema.advancedSettings,
-  startImmediately: allSchema.startImmediately.when('advancedSettings', {
-    is: false,
-    then: (schema) => schema.transform(() => StartImmediatelyValues.Yes),
-  }),
-  triggerType: allSchema.triggerType,
   slippageTolerance: allSchema.slippageTolerance,
-  startDate: allSchema.startDate,
-  startPrice: allSchema.startPrice,
-  purchaseTime: allSchema.purchaseTime,
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
   autoStake: allSchema.autoStake,
@@ -49,11 +43,6 @@ export const dcaPlusSchema = Yup.object({
 export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
   'advancedSettings',
-  'startImmediately',
-  'triggerType',
-  'startDate',
-  'startPrice',
-  'purchaseTime',
   'strategyDuration',
   'slippageTolerance',
 ]);
