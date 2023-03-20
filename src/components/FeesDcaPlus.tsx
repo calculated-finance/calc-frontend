@@ -14,24 +14,22 @@ import {
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
-import { CREATE_VAULT_FEE, SWAP_FEE, FIN_TAKER_FEE, CREATE_VAULT_FEE_DCA_PLUS, DELEGATION_FEE } from 'src/constants';
+import { CREATE_VAULT_FEE, SWAP_FEE, FIN_TAKER_FEE, DELEGATION_FEE } from 'src/constants';
 
 function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
-  applyPromo,
 }: {
   initialDenomName: string;
   swapAmount: number;
   price: number;
-  applyPromo: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
@@ -94,33 +92,12 @@ function FeeBreakdown({
                   <Flex>
                     <Text textStyle="body-xs">CALC sustainability tax:</Text>
                     <Spacer />
-                    {applyPromo ? (
-                      <Text color="blue.200" textStyle="body-xs">
-                        Free
-                      </Text>
-                    ) : (
-                      <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
-                      </Text>
-                    )}
-                  </Flex>
-                  <Flex>
-                    <Text textStyle="body-xs">Kujira community pool:</Text>
-                    <Spacer />
-                    {applyPromo ? (
-                      <Text color="blue.200" textStyle="body-xs">
-                        Free
-                      </Text>
-                    ) : (
-                      <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
-                      </Text>
-                    )}
+                    <Text textStyle="body-xs">FREE</Text>
                   </Flex>
                   <Flex>
                     <Text textStyle="body-xs">Estimated gas:</Text>
                     <Spacer />
-                    <Text textStyle="body-xs">Free</Text>
+                    <Text textStyle="body-xs">FREE</Text>
                   </Flex>
                   <Flex>
                     <Text textStyle="body-xs">FIN transaction fees:</Text>
@@ -135,7 +112,7 @@ function FeeBreakdown({
                     </Text>
                     <Spacer />
                     <Text textStyle="body-xs" textColor="white">
-                      {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + FIN_TAKER_FEE)} {initialDenomName}
+                      {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
                     </Text>
                   </Flex>
                 </Stack>
@@ -203,12 +180,11 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
       <Text textStyle="body-xs">
         Transaction fee{' '}
         <Text as="span" textColor="white">
-          {price ? parseFloat((CREATE_VAULT_FEE_DCA_PLUS / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-          {initialDenomName}
+          {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~5% of upside
+          ~{getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
         performance fee
