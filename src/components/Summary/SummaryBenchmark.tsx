@@ -29,6 +29,11 @@ export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />{' '}
         </BadgeButton>{' '}
+        for{' '}
+        <BadgeButton url="customise">
+          <Text>{strategyDuration} days</Text>
+        </BadgeButton>
+        .
       </Text>
     </Box>
   );
