@@ -34,7 +34,7 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
         Strategy Set Successfully
       </NewStrategyModalHeader>
       <NewStrategyModalBody stepsConfig={stepConfig}>
-        <AbsoluteCenter w="500px" h="500px" top="0%">
+        <AbsoluteCenter w="125%" h="125%" top="0%">
           <Lottie animationData={Confetti} loop={0} />
         </AbsoluteCenter>
         <Stack spacing={6} alignItems="center">
