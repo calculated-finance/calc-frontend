@@ -1,19 +1,15 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
+import { Denom } from '@models/Denom';
 import { DenomSelect } from './DenomSelect';
 
-export default function DCAInResultingDenom() {
+export default function DCAInResultingDenom({ denoms }: { denoms: Denom[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { data } = usePairs();
-  const { pairs } = data || {};
 
   const {
     values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
-
-  const [initialDenomField] = useField({ name: 'initialDenom' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
@@ -22,7 +18,7 @@ export default function DCAInResultingDenom() {
         <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
       </FormHelperText>
       <DenomSelect
-        denoms={uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs)}
+        denoms={denoms}
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}

@@ -9,20 +9,15 @@ import {
   Text,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import { useField } from 'formik';
-import { isDenomVolatile } from '@utils/getDenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
+import { Denom } from '@models/Denom';
 import { DenomSelect } from '../DenomSelect';
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
-export default function DCAOutInitialDenom() {
-  const { data } = usePairs();
-  const { pairs } = data || {};
+export default function DCAOutInitialDenom({ denoms }: { denoms: Denom[] }) {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
-
-  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>

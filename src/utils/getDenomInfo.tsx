@@ -21,6 +21,7 @@ type DenomInfo = {
   enabled?: boolean;
   minimumSwapAmount?: number;
   significantFigures: number;
+  enabledInDcaPlus?: boolean;
 };
 
 const defaultDenom = {
@@ -38,6 +39,7 @@ const defaultDenom = {
   priceDeconversion: (value: number | undefined | null) => Number(value),
   priceConversion: (value: number | undefined | null) => Number(value),
   significantFigures: 6,
+  enabledInDcaPlus: false,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -47,6 +49,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     coingeckoId: 'cosmos',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [MainnetDenoms.USK]: {
     name: 'USK',
@@ -93,6 +96,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     enabled: true,
     minimumSwapAmount: 0.05 / 1000,
+    enabledInDcaPlus: true,
   },
   [MainnetDenoms.Stars]: {
     name: 'STARS',
@@ -142,6 +146,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     minimumSwapAmount: 0.05 / 1000,
     significantFigures: 18,
+    enabledInDcaPlus: true,
   },
   [MainnetDenoms.OSMO]: {
     name: 'OSMO',
@@ -228,6 +233,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.USK]: {
     name: 'USK',
@@ -244,6 +250,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
       </Flex>
     ) : undefined,
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
@@ -251,6 +258,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     coingeckoId: 'kujira',
     stakeableAndSupported: true,
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.AXL]: {
     name: 'axlUSDC',
@@ -259,24 +267,28 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
     coingeckoId: 'terra-luna',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
     coingeckoId: 'osmosis',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.NBTC]: {
     name: 'NBTC',
     stakeable: false,
     coingeckoId: 'bitcoin',
     significantFigures: 6,
+    enabledInDcaPlus: true,
   },
 };
 

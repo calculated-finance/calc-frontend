@@ -138,7 +138,7 @@ describe('DCA Out Assets page', () => {
 
         // select resulting denom
         const select = await waitFor(() => screen.getByLabelText(/How do you want to hold your profits?/));
-        await selectEvent.select(select, ['OSMO']);
+        await selectEvent.select(select, ['DEMO']);
 
         // submit
         await act(async () => {
@@ -175,7 +175,7 @@ describe('DCA Out Assets page', () => {
       await waitFor(() => userEvent.type(input, '10'), { timeout: 5000 });
 
       // select resulting denom
-      await selectEvent.select(screen.getByLabelText(/How do you want to hold your profits?/), ['OSMO']);
+      await selectEvent.select(screen.getByLabelText(/How do you want to hold your profits?/), ['DEMO']);
 
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
@@ -183,7 +183,7 @@ describe('DCA Out Assets page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         initialDenom: 'ukuji',
         initialDeposit: 10,
-        resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
+        resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
