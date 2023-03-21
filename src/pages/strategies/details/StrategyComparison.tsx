@@ -35,9 +35,14 @@ function getPerformanceFactor(performance: DcaPlusPerformanceResponse | undefine
   return difference;
 }
 
+function puraliseDays(val: number) {
+  return val === 1 ? 'day' : 'days';
+}
+
 function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
   const { data: performance } = useDcaPlusPerformance(strategy.id);
 
+  const numberPastSwaps = getNumberOfPastSwaps(strategy);
   return (
     <Flex direction="column" p={8} my={8} mx={8} borderRadius="3xl" borderColor="green.200" borderWidth={2} w={500}>
       <Heading size="xs">
@@ -47,7 +52,7 @@ function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
       <Heading size="2xl">{formatSignedPercentage(getPerformanceFactor(performance))}</Heading>
       <Text textStyle="body">
         In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
-        {getDenomName(getStrategyInitialDenom(strategy))} per day for {getNumberOfPastSwaps(strategy)} days.
+        {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps} {puraliseDays(numberPastSwaps)}.
       </Text>
     </Flex>
   );
