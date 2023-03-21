@@ -40,20 +40,29 @@ function puraliseDays(val: number) {
 }
 
 function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
-  const { data: performance } = useDcaPlusPerformance(strategy.id);
+  const { data: performance, isLoading } = useDcaPlusPerformance(strategy.id);
 
   const numberPastSwaps = getNumberOfPastSwaps(strategy);
   return (
     <Flex direction="column" p={8} my={8} mx={8} borderRadius="3xl" borderColor="green.200" borderWidth={2} w={500}>
-      <Heading size="xs">
-        <Text as="span" color="green.200" /> {getAcculumationDifference(strategy)}{' '}
-        {getDenomName(getStrategyResultingDenom(strategy))} more accumulated with DCA+
-      </Heading>
-      <Heading size="2xl">{formatSignedPercentage(getPerformanceFactor(performance))}</Heading>
-      <Text textStyle="body">
-        In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
-        {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps} {puraliseDays(numberPastSwaps)}.
-      </Text>
+      {isLoading ? (
+        <Center h={28}>
+          <Spinner />
+        </Center>
+      ) : (
+        <>
+          <Heading size="xs">
+            <Text as="span" color="green.200" /> {getAcculumationDifference(strategy)}{' '}
+            {getDenomName(getStrategyResultingDenom(strategy))} more accumulated with DCA+
+          </Heading>
+          <Heading size="2xl">{formatSignedPercentage(getPerformanceFactor(performance))}</Heading>
+          <Text textStyle="body">
+            In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
+            {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps}{' '}
+            {puraliseDays(numberPastSwaps)}.
+          </Text>
+        </>
+      )}
     </Flex>
   );
 }
