@@ -29,7 +29,7 @@ export type EventData =
       };
     }
   | {
-      dca_vault_execution_simulated: {
+      simulated_dca_vault_execution_completed: {
         fee: Coin;
         received: Coin;
         sent: Coin;
@@ -41,7 +41,7 @@ export type EventData =
       };
     }
   | {
-      dca_plus_vault_execution_skipped: {
+      simulated_dca_vault_execution_skipped: {
         reason: ExecutionSkippedReason;
       };
     }
@@ -58,7 +58,7 @@ export type EventData =
       dca_vault_delegation_failed: {};
     }
   | {
-      dca_plus_vault_escrow_disbursed: {
+      dca_vault_escrow_disbursed: {
         amount_disbursed: Coin;
         performance_fee: Coin;
       };
