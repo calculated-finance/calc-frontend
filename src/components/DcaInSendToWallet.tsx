@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { FormNames, useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo from '@utils/getDenomInfo'; 
 import RadioCard from '@components/RadioCard';
 import Radio from '@components/Radio';
 import SendToWalletValues from '@models/SendToWalletValues';
