@@ -28,9 +28,7 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
-import { Denoms } from 'src/models/Denom';
-import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
-import { isDcaPlus, getStrategyInitialDenom, getStrategyResultingDenom, getStrategyName } from '@helpers/strategy';
+import { isDcaPlus, getStrategyName } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
@@ -100,14 +98,6 @@ function Page() {
   const strategy = data.vault;
   const lastSwapSlippageError = getLatestSwapError(strategy, events);
 
-  // refund message applies unless initital denom is usdc and resulting denom is kuji
-  const shouldShowRefundMessage = !(
-    (getStrategyInitialDenom(strategy) === Denoms.AXL && getStrategyResultingDenom(strategy) === Denoms.Kuji) ||
-    (getStrategyResultingDenom(strategy) === Denoms.AXL && getStrategyInitialDenom(strategy) === Denoms.Kuji)
-  );
-
-  const showInvertedEventMessage = !shouldShowRefundMessage;
-
   return (
     <>
       <HStack spacing={6} pb={6}>
@@ -148,7 +138,6 @@ function Page() {
         <StrategyPerformance strategy={strategy} />
         {isDcaPlus(strategy) ? <StrategyComparisonChart strategy={strategy} /> : <StrategyChart strategy={strategy} />}
       </Grid>
-      {showInvertedEventMessage && <InvertedEventMessageModal />}
     </>
   );
 }
