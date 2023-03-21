@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
-import usePairs from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -51,7 +51,7 @@ function DcaIn() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <ModalWrapper
           isLoading={isLoading || (isPageLoading && !isSubmitting)}
           reset={actions.resetAction}
@@ -60,7 +60,7 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
-              <DCAInResultingDenom />
+              <DCAInResultingDenom denoms={uniqueBaseDenomsFromQuoteDenom(values.initialDenom, pairs)} />
               <Submit>Next</Submit>
             </Stack>
           </Form>

@@ -1,5 +1,5 @@
-import getDenomInfo from '@utils/getDenomInfo';
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
+import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
+import { SUPPORTED_DENOMS, SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
@@ -11,6 +11,10 @@ const hiddenPairs = [] as string[];
 
 function isSupportedDenom(denom: Denom) {
   return SUPPORTED_DENOMS.includes(denom);
+}
+
+export function isSupportedDenomForDcaPlus(denom: Denom) {
+  return SUPPORTED_DENOMS_FOR_DCA_PLUS.includes(denom) && isDenomVolatile(denom);
 }
 
 function orderAlphabetically(denoms: Denom[]) {
@@ -31,7 +35,7 @@ export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
   return orderAlphabetically(Array.from(new Set(pairs?.map((pair) => pair.base_denom))).filter(isSupportedDenom));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom | undefined, pairs: Pair[] | undefined) {
   return orderAlphabetically(
     Array.from(
       new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)),
@@ -39,7 +43,7 @@ export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom, pairs: Pair[
   );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom, pairs: Pair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined, pairs: Pair[] | undefined) {
   return orderAlphabetically(
     Array.from(
       new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),

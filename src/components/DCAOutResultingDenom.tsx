@@ -1,27 +1,16 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom, uniqueQuoteDenomsFromBaseDenom } from '@hooks/usePairs';
 import { useField, useFormikContext } from 'formik';
 import getDenomInfo from '@utils/getDenomInfo';
+import { Denom } from '@models/Denom';
 import { DenomSelect } from './DenomSelect';
 
-export default function DCAOutResultingDenom() {
+export default function DCAOutResultingDenom({ denoms }: { denoms: Denom[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { data } = usePairs();
-  const { pairs } = data || {};
 
   const {
     values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
-
-  const [initialDenomField] = useField({ name: 'initialDenom' });
-
-  const denoms = Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenomField.value, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenomField.value, pairs),
-    ]),
-  );
 
   const { promotion } = getDenomInfo(field.value);
 
