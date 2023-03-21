@@ -13,13 +13,11 @@ export function createDcaPlusSwapEvent(strategyEvent: StrategyEvent): SwapEvent 
   const { data } = strategyEvent;
 
   // check that event is a swap event
-  if (!('dca_plus_vault_execution_completed' in data)) {
+  if (!('dca_vault_execution_completed' in data)) {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { received, fee, sent } = data.dca_plus_vault_execution_completed;
+  const { received, fee, sent } = data.dca_vault_execution_completed;
   const { timestamp } = strategyEvent;
 
   return {
@@ -35,11 +33,11 @@ export function createTradSwapEvent(strategyEvent: StrategyEvent): SwapEvent | n
   const { data } = strategyEvent;
 
   // check that event is a swap event
-  if (!('dca_vault_execution_completed' in data)) {
+  if (!('simulated_dca_vault_execution_completed' in data)) {
     return null;
   }
 
-  const { received, fee, sent } = data.dca_vault_execution_completed;
+  const { received, fee, sent } = data.simulated_dca_vault_execution_completed;
   const { timestamp } = strategyEvent;
 
   return {
