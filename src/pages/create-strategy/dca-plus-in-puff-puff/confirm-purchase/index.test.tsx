@@ -2,14 +2,14 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
-import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
-import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
-import { encode } from 'src/helpers/encode';
+import { mockCreateVault } from '@helpers/test/mockCreateVault';
+import { mockGetPairs } from '@helpers/test/mockGetPairs';
+import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { encode } from '@helpers/encode';
 import Page from './index.page';
 
 const mockRouter = {
@@ -36,11 +36,6 @@ const mockStateMachine = {
       initialDeposit: '30',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       advancedSettings: false,
-      purchaseTime: '',
-      startDate: null,
-      startImmediately: 'yes',
-      startPrice: null,
-      triggerType: 'date',
       autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
@@ -109,6 +104,7 @@ describe('DCA Plus In confirm page', () => {
       const benchmark = screen.getByTestId('summary-benchmark');
 
       within(benchmark).getByText('1 USK');
+      within(benchmark).getByText('30 days');
     });
   });
 
@@ -124,6 +120,7 @@ describe('DCA Plus In confirm page', () => {
           minimum_receive_amount: undefined,
           destinations: undefined,
           target_receive_amount: undefined,
+          slippage_tolerance: '0.02',
           use_dca_plus: true,
         },
       };
@@ -147,7 +144,7 @@ describe('DCA Plus In confirm page', () => {
           value: {
             amount: [
               {
-                amount: '200000',
+                amount: '28571',
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],

@@ -1,36 +1,15 @@
 import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getCompletedEvents } from 'src/pages/strategies/details/getChartData';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
+import { getStrategyInitialDenom, getStrategyResultingDenom, getStrategyTotalFeesPaid } from '@helpers/strategy';
 
-function getStrategyTotalFeesPaid(strategyEvents: StrategyEvent[]) {
-  const completedEvents = getCompletedEvents(strategyEvents) || [];
-  return (
-    completedEvents.reduce((acc, { data }) => {
-      if ('dca_vault_execution_completed' in data) {
-        return acc + Number(data.dca_vault_execution_completed.fee.amount);
-      }
-      return 0;
-    }, 0) || 0
-  );
-}
-
-export function getPerformanceStatistics(
-  strategy: Strategy,
-  initialDenomPrice: number,
-  resultingDenomPrice: number,
-  strategyEvents: StrategyEvent[],
-) {
+export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
   const marketValueAmount = strategy.received_amount.amount;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const costAmount = strategy.swapped_amount.amount;
-  const totalFeesPaid = getStrategyTotalFeesPaid(strategyEvents);
-  const costAmountWithFeesSubtractedInFiat = 
-    Number(costAmount) - new DenomValue({amount: totalFeesPaid.toString(), denom: resultingDenom}).toConverted()
+  const totalFeesPaid = getStrategyTotalFeesPaid(strategy);
+  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
 
   const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
   const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });
@@ -45,7 +24,7 @@ export function getPerformanceStatistics(
   let color;
   if (profit > 0) {
     color = 'green.200';
-  } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -1) {
+  } else if (parseFloat(percentageChange) < 0 && parseFloat(percentageChange) > -2) {
     color = 'white.200';
   } else if (profit < 0) {
     color = 'red.200';

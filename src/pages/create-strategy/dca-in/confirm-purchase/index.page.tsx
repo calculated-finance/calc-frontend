@@ -16,8 +16,8 @@ import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { FormikHelpers } from 'formik';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getTimeSaved } from '../../../../helpers/getTimeSaved';
-import Fees from '../../../../components/Fees';
+import Fees from '@components/Fees';
+import { getTimeSaved } from '@helpers/getTimeSaved';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);

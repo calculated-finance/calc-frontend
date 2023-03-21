@@ -1,19 +1,6 @@
-import {
-  Heading,
-  GridItem,
-  Box,
-  Center,
-  Stat,
-  StatNumber,
-  Stack,
-  StatLabel,
-  StatHelpText,
-  StatArrow,
-  useRadioGroup,
-  HStack,
-} from '@chakra-ui/react';
+import { Heading, GridItem, Box, Center } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
   VictoryAxis,
@@ -24,77 +11,12 @@ import {
 } from 'victory';
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
-import Radio from '@components/Radio';
-import RadioCard from '@components/RadioCard';
-import { getStrategyType } from 'src/helpers/getStrategyType';
-import { StrategyTypes } from '@models/StrategyTypes';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
-import { formatFiat } from './StrategyPerformance';
-import { getPerformanceStatistics } from './getPerformanceStatistics';
+import { getStrategyResultingDenom } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
-
-const daysData = [
-  { value: '1', label: '1D' },
-  { value: '3', label: '3D' },
-  { value: '7', label: '1W' },
-  { value: '30', label: '1M' },
-  { value: '90', label: '3M' },
-  { value: '365', label: '1Y' },
-];
-
-function DaysRadio({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    value,
-    onChange,
-  });
-
-  return (
-    <HStack spacing={0}>
-      <Radio {...getRootProps} px={0}>
-        {daysData.map((option) => {
-          const radio = getRadioProps({ value: option.value });
-          return (
-            <RadioCard key={option.label} {...radio}>
-              {option.label}
-            </RadioCard>
-          );
-        })}
-      </Radio>
-    </HStack>
-  );
-}
-
-function StrategyChartStats({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
-
-  const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
-    strategy,
-    initialDenomPrice,
-    resultingDenomPrice,
-    strategyEvents,
-  );
-  return (
-    <Stack spacing={3} pt={6} pl={6}>
-      <Stat>
-        <StatLabel fontSize="lg">Strategy market value</StatLabel>
-        <StatNumber>{formatFiat(marketValueInFiat)}</StatNumber>
-        {getStrategyType(strategy) === StrategyTypes.DCAIn && (
-          <StatHelpText color={color} m={0}>
-            <StatArrow type={color === 'green.200' ? 'increase' : 'decrease'} color={color} />
-            {formatFiat(profit)} : {percentageChange}
-          </StatHelpText>
-        )}
-      </Stat>
-    </Stack>
-  );
-}
+import { StrategyChartStats } from './StrategyChartStats';
+import { DaysRadio } from './DaysRadio';
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');

@@ -2,9 +2,9 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '../models/DcaInFormData';
-import executionIntervalDisplay from '../helpers/executionIntervalDisplay';
-import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { DcaInFormDataStep1 } from '@models/DcaInFormData';
+import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInput } from './DenomInput';
 
 export default function SwapAmount({
@@ -39,7 +39,9 @@ export default function SwapAmount({
           <Text>The amount you want swapped each purchase for {resultingDenomName}.</Text>
           <Spacer />
           <Flex flexDirection="row">
-            <Text mr={1}>Max: </Text>
+            <Text ml={4} mr={1}>
+              Max:
+            </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
               {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
             </Button>

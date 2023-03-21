@@ -17,8 +17,8 @@ import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData
 import SlippageTolerance from '@components/SlippageTolerance';
 import steps from 'src/formConfig/dcaIn';
 import { InvalidData } from '@components/InvalidData';
-import SwapAmount from '../../../../components/SwapAmount';
-import { TriggerForm } from '../../../../components/TriggerForm';
+import SwapAmount from '@components/SwapAmount';
+import { TriggerForm } from '@components/TriggerForm';
 
 function DcaInStep2() {
   const { actions, state } = useStep2Form(FormNames.DcaIn);

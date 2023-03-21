@@ -1,16 +1,4 @@
-import {
-  Box,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  Center,
-  Modal,
-  ModalOverlay,
-} from '@chakra-ui/react';
-import { useRef } from 'react';
-import { useSize } from 'ahooks';
-import { KADO_API_KEY } from 'src/constants';
+import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, ModalOverlay } from '@chakra-ui/react';
 import { useWallet } from '@wizard-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
 

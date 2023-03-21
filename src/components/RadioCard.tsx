@@ -1,5 +1,5 @@
 import { Box, Text, useRadio, UseRadioProps } from '@chakra-ui/react';
-import { ChildrenProp } from 'src/helpers/ChildrenProp';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 
 export default function RadioCard(props: UseRadioProps & ChildrenProp) {
   const { children } = props;

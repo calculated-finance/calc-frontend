@@ -3,7 +3,7 @@ import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import { featureFlags } from 'src/constants';
-import OnRampModal from '../../components/OnRampModalContent';
+import OnRampModal from '@components/OnRampModalContent';
 
 type GetAssetsCardProps = {
   name: string;

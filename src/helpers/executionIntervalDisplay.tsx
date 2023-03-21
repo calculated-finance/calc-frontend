@@ -1,4 +1,4 @@
-import { ExecutionIntervals } from '../models/ExecutionIntervals';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 const executionIntervalDisplay: Record<ExecutionIntervals, [string, string]> = {
   half_hourly: ['half hour', 'half hours'],

@@ -3,7 +3,7 @@ import { mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 
-export default {
+const dcaInStrategy = {
   id: '1',
   created_at: '0',
   owner: 'kujitestwallet',
@@ -39,6 +39,7 @@ export default {
     },
   ],
   trigger: mockTimeTrigger,
+  dca_plus_config: null,
 } as Strategy;
 
 export const dcaOutStrategy = {
@@ -76,4 +77,31 @@ export const dcaOutStrategy = {
       action: 'send',
     },
   ],
+  dca_plus_config: null,
 } as Strategy;
+
+export const dcaPlusStrategy = {
+  ...dcaInStrategy,
+  dca_plus_config: {
+    escrow_level: '1',
+    escrowed_balance: {
+      denom: 'ukuji',
+      amount: '10000',
+    },
+    model_id: 1,
+    standard_dca_received_amount: {
+      denom: 'ukuji',
+      amount: '10000',
+    },
+    standard_dca_swapped_amount: {
+      denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+      amount: '1000',
+    },
+    total_deposit: {
+      denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+      amount: '1000',
+    },
+  },
+};
+
+export default dcaInStrategy;

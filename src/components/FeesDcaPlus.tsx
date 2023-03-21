@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Collapse,
+  Divider,
   Fade,
   Flex,
   Heading,
@@ -10,27 +11,25 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
-import { getPrettyFee } from 'src/helpers/getPrettyFee';
-import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { getPromoMessage } from './Banner';
+import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
+import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
+import { CREATE_VAULT_FEE, FIN_TAKER_FEE, DELEGATION_FEE } from 'src/constants';
 
 function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
-  applyPromo,
 }: {
   initialDenomName: string;
   swapAmount: number;
   price: number;
-  applyPromo: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   return (
@@ -61,84 +60,96 @@ function FeeBreakdown({
         </Fade>
 
         <Collapse in={isOpen}>
-          <Flex flexDirection="row" px={2} pb={4} mt={0} gap={3}>
-            <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs">Once off</Heading>
-              <Stack spacing={0}>
-                <Flex>
-                  <Text textStyle="body-xs">Transaction fees:</Text>
-                  <Spacer />
-                  <Text textStyle="body-xs">
-                    {' '}
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
-                  </Text>
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs" textColor="white">
-                    Total fees and tax:
-                  </Text>
-                  <Spacer />
-                  <Text textStyle="body-xs" textColor="white">
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
-                  </Text>
-                </Flex>
-              </Stack>
-            </Flex>
-            <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs">Per swap</Heading>
-              <Stack spacing={0}>
-                <Flex>
-                  <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                  <Spacer />
-                  {applyPromo ? (
-                    <Text color="blue.200" textStyle="body-xs">
-                      Free
-                    </Text>
-                  ) : (
+          <Stack direction="column" px={2} pb={4}>
+            <Flex flexDirection="row" mt={0} gap={3}>
+              <Flex flexGrow={1} flexDirection="column">
+                <Heading size="xs">Once off</Heading>
+                <Stack spacing={0}>
+                  <Flex>
+                    <Text textStyle="body-xs">Transaction fees:</Text>
+                    <Spacer />
                     <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                      {' '}
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
                     </Text>
-                  )}
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs">Kujira community pool:</Text>
-                  <Spacer />
-                  {applyPromo ? (
-                    <Text color="blue.200" textStyle="body-xs">
-                      Free
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs" textColor="white">
+                      Total fees and tax:
                     </Text>
-                  ) : (
+                    <Spacer />
+                    <Text textStyle="body-xs" textColor="white">
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
+                    </Text>
+                  </Flex>
+                </Stack>
+              </Flex>
+              <Flex flexGrow={1} flexDirection="column">
+                <Heading size="xs">Per swap</Heading>
+                <Stack spacing={0}>
+                  <Flex>
+                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">FREE</Text>
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs">Estimated gas:</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">FREE</Text>
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs">FIN transaction fees:</Text>
+                    <Spacer />
                     <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                      {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
                     </Text>
-                  )}
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs">Estimated gas:</Text>
-                  <Spacer />
-                  <Text textStyle="body-xs">Free</Text>
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs">FIN transaction fees:</Text>
-                  <Spacer />
-                  <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
-                  </Text>
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs" textColor="white">
-                    Total fees per swap:
-                  </Text>
-                  <Spacer />
-                  <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + FIN_TAKER_FEE)} {initialDenomName}
-                  </Text>
-                </Flex>
-              </Stack>
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs" textColor="white">
+                      Total fees per swap:
+                    </Text>
+                    <Spacer />
+                    <Text textStyle="body-xs" textColor="white">
+                      {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
+                    </Text>
+                  </Flex>
+                </Stack>
+              </Flex>
             </Flex>
-          </Flex>
+            <Divider />
+            <Stack>
+              <Text fontSize="xs" color="green.200">
+                A performance fee is charged ONLY in the case that DCA+ outperforms traditional DCA and only on the
+                difference in assets acquired.
+              </Text>
+              <Flex flexGrow={1} flexDirection="column">
+                <Heading size="xs">Performance fee</Heading>
+                <Stack spacing={0}>
+                  <Flex>
+                    <Text textStyle="body-xs">Base fee</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">FREE FOREVER</Text>
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs">Escrow</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">5% of swaps, returned in full if DCA+ underperforms.</Text>
+                  </Flex>
+                  <Flex>
+                    <Text textStyle="body-xs" textColor="white">
+                      Total possible fee:
+                    </Text>
+                    <Spacer />
+                    <Text textStyle="body-xs" textColor="white">
+                      1/5 of additional positive returns
+                    </Text>
+                  </Flex>
+                </Stack>
+              </Flex>
+            </Stack>
+          </Stack>
         </Collapse>
       </Box>
     </Stack>
@@ -146,7 +157,7 @@ function FeeBreakdown({
 }
 
 export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
-  const { state } = useConfirmForm(formName);
+  const { state } = useDcaPlusConfirmForm(formName);
   const { price } = useFiatPrice(state?.initialDenom);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
@@ -155,7 +166,9 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
     return null;
   }
 
-  const { initialDenom, resultingDenom, swapAmount, autoStakeValidator } = state;
+  const { initialDenom, resultingDenom, autoStakeValidator, initialDeposit, strategyDuration } = state;
+
+  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
   const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
   const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
@@ -171,13 +184,13 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~5% of upside
+          ~{getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
         </Text>
-        {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap ONLY if
-        DCA+ outperforms traditional DCA.
+        {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
+        performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} applyPromo={applyPromo} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} />
     </Stack>
   );
 }

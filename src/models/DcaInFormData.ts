@@ -5,7 +5,7 @@ import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
-import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
+import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
@@ -177,6 +177,7 @@ export const allSchema = {
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => initialValues.slippageTolerance),
     }),
   priceThresholdEnabled: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
@@ -291,7 +292,7 @@ export const allSchema = {
         }
 
         return context.createError({
-          message: `Duration must be longer than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
+          message: `Duration must be less than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
         });
       },
     }),

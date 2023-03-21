@@ -4,6 +4,7 @@ import { MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 import * as Yup from 'yup';
 
 import { allSchema } from './DcaInFormData';
+import { StartImmediatelyValues } from './StartImmediatelyValues';
 
 export const dcaPlusSchema = Yup.object({
   resultingDenom: allSchema.resultingDenom,
@@ -25,15 +26,13 @@ export const dcaPlusSchema = Yup.object({
       if (value > dcaPlusMinimumDeposit) {
         return true;
       }
-      return context.createError({ message: `Swap amount should be greater than ${dcaPlusMinimumDeposit}` });
+      return context.createError({
+        message: `Initial deposit must be more than ${dcaPlusMinimumDeposit}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
+      });
     },
   }),
   advancedSettings: allSchema.advancedSettings,
-  startImmediately: allSchema.startImmediately,
-  triggerType: allSchema.triggerType,
-  startDate: allSchema.startDate,
-  startPrice: allSchema.startPrice,
-  purchaseTime: allSchema.purchaseTime,
+  slippageTolerance: allSchema.slippageTolerance,
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
   autoStake: allSchema.autoStake,
@@ -44,12 +43,8 @@ export const dcaPlusSchema = Yup.object({
 export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
   'advancedSettings',
-  'startImmediately',
-  'triggerType',
-  'startDate',
-  'startPrice',
-  'purchaseTime',
   'strategyDuration',
+  'slippageTolerance',
 ]);
 export const DcaPlusPostPurchaseFormSchema = dcaPlusSchema.pick([
   'sendToWallet',

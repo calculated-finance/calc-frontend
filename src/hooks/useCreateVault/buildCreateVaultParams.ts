@@ -3,13 +3,13 @@ import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
 import getDenomInfo from '@utils/getDenomInfo';
-import { combineDateAndTime } from 'src/helpers/combineDateAndTime';
-import { findPair } from 'src/helpers/findPair';
+import { combineDateAndTime } from '@helpers/combineDateAndTime';
+import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
+import { Pair } from '@models/Pair';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '../useDcaInForm';
-import { Pair } from '../../models/Pair';
 import { DcaFormState } from './DcaFormState';
-import { getSwapAmountFromDuration } from '../../helpers/getSwapAmountFromDuration';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -20,13 +20,14 @@ function getReceiveAmount(
   deconversion: (value: number) => number,
   swapAmount: number,
   transactionType: TransactionType,
+  significantFigures: number,
 ) {
   if (!price) {
     return undefined;
   }
 
   if (transactionType === TransactionType.Buy) {
-    return deconversion(Number((swapAmount / price).toFixed(2))).toString();
+    return deconversion(Number((swapAmount / price).toFixed(significantFigures))).toString();
   }
   return deconversion(swapAmount * price).toString();
 }
@@ -55,8 +56,14 @@ function getMinimumReceiveAmount(
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
-  const { deconversion } = getDenomInfo(initialDenom);
-  return getReceiveAmount(priceConversion(priceThresholdValue), deconversion, swapAmount, transactionType);
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  return getReceiveAmount(
+    priceConversion(priceThresholdValue),
+    deconversion,
+    swapAmount,
+    transactionType,
+    significantFigures,
+  );
 }
 
 function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTolerance: number | null | undefined) {
@@ -94,8 +101,8 @@ function getTargetReceiveAmount(
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
-  const { deconversion } = getDenomInfo(initialDenom);
-  return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType);
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType, significantFigures);
 }
 
 function getSwapAmount(initialDenom: Denom, swapAmount: number) {
@@ -146,11 +153,7 @@ export function buildCreateVaultParamsDCA(
   };
 }
 
-export function buildCreateVaultParamsDCAPlus(
-  state: DcaPlusState,
-  pairs: Pair[],
-  transactionType: TransactionType,
-): ExecuteMsg {
+export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
   return {
     create_vault: {
@@ -158,14 +161,9 @@ export function buildCreateVaultParamsDCAPlus(
       time_interval: 'daily',
       pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: swapAmount.toString(),
-      target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
-      target_receive_amount: getTargetReceiveAmount(
-        state.initialDenom,
-        swapAmount,
-        state.startPrice,
-        state.resultingDenom,
-        transactionType,
-      ),
+      target_start_time_utc_seconds: undefined,
+      target_receive_amount: undefined,
+      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
       use_dca_plus: true,
     },
@@ -183,7 +181,7 @@ export function buildCreateVaultParams(
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, transactionType);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs);
   }
 
   throw new Error('Invalid form type');

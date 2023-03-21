@@ -7,14 +7,11 @@ import {
   SimpleGrid,
   Spacer,
   Text,
-  HStack,
   Center,
 } from '@chakra-ui/react';
 import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
-import { Denom } from '@models/Denom';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { useField } from 'formik';
-import DenomIcon from '@components/DenomIcon';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';

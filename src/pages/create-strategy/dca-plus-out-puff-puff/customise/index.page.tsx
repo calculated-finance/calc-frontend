@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -17,7 +17,8 @@ import { InvalidData } from '@components/InvalidData';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
-import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
+import SlippageTolerance from '@components/SlippageTolerance';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);
@@ -63,7 +64,7 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values }) => (
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
             Customise Strategy
@@ -77,8 +78,12 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaPlusOut} />
                 <StrategyDuration />
+                <Collapse in={values.advancedSettings}>
+                  <Box m="px">
+                    <SlippageTolerance />
+                  </Box>
+                </Collapse>
                 <Submit>Next</Submit>
               </Stack>
             </Form>

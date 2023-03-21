@@ -6,8 +6,8 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getDenomName } from 'src/helpers/getDenomName';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
+import { getDenomName } from '@helpers/getDenomName';
+import { getStrategyInitialDenom } from '@helpers/strategy';
 import { topUpSteps } from './index.page';
 
 function Success() {

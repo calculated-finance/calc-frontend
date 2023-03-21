@@ -20,6 +20,7 @@ type DenomInfo = {
   promotion?: JSX.Element;
   enabled?: boolean;
   minimumSwapAmount?: number;
+  significantFigures: number;
 };
 
 const defaultDenom = {
@@ -36,6 +37,7 @@ const defaultDenom = {
   minimumSwapAmount: 0.05,
   priceDeconversion: (value: number | undefined | null) => Number(value),
   priceConversion: (value: number | undefined | null) => Number(value),
+  significantFigures: 6,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -44,6 +46,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     icon: '/images/denoms/atom.svg',
     stakeable: true,
     coingeckoId: 'cosmos',
+    significantFigures: 6,
   },
   [MainnetDenoms.USK]: {
     name: 'USK',
@@ -59,12 +62,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
         </Tooltip>
       </Flex>
     ) : undefined,
+    significantFigures: 6,
   },
   [MainnetDenoms.Kuji]: {
     name: 'KUJI',
     icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
     stakeableAndSupported: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.AXL]: {
     name: 'axlUSDC',
@@ -72,6 +77,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
+    significantFigures: 6,
   },
   [MainnetDenoms.WETH]: {
     name: 'wETH',
@@ -81,6 +87,8 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'weth',
     conversion: (value: number) => value / 10 ** 18,
     deconversion: (value: number) => Math.round(value * 10 ** 18),
+    significantFigures: 18,
+
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     enabled: true,
@@ -93,6 +101,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'stargaze',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.SCRT]: {
     name: 'SCRT',
@@ -101,6 +110,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'secret',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.LOCAL]: {
     name: 'LOCAL',
@@ -109,6 +119,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'local-money',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.LUNA]: {
     name: 'LUNA',
@@ -116,6 +127,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: true,
     coingeckoId: 'terra-luna-2',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.WBNB]: {
     name: 'wBNB',
@@ -129,6 +141,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     minimumSwapAmount: 0.05 / 1000,
+    significantFigures: 18,
   },
   [MainnetDenoms.OSMO]: {
     name: 'OSMO',
@@ -137,6 +150,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'osmosis',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.DOT]: {
     name: 'DOT',
@@ -150,6 +164,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 4,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 4,
     minimumSwapAmount: 0.05 / 1000,
+    significantFigures: 10,
   },
   [MainnetDenoms.GPAXG]: {
     name: 'gPAXG',
@@ -162,6 +177,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     deconversion: (value: number) => Math.round(value * 10 ** 18),
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
+    significantFigures: 18,
     minimumSwapAmount: 0.05 / 1000,
   },
   [MainnetDenoms.MARS]: {
@@ -171,6 +187,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.STRD]: {
     name: 'STRD',
@@ -179,6 +196,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'stride',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.JUNO]: {
     name: 'JUNO',
@@ -187,6 +205,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'juno-network',
     enabled: true,
+    significantFigures: 6,
   },
   [MainnetDenoms.wTAO]: {
     name: 'wTAO',
@@ -199,6 +218,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     deconversion: (value: number) => Math.round(value * 10 ** 9),
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 3,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 3,
+    significantFigures: 9
   },
   [MainnetDenoms.INJ]: {
     name: 'INJ',
@@ -211,6 +231,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     enabled: true,
+    significantFigures: 18,
   },
   [MainnetDenoms.WHALE]: {
     name: 'WHALE',
@@ -219,6 +240,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     coingeckoId: 'white-whale',
     enabled: true,
+    significantFigures: 6,
   },
 };
 
@@ -227,6 +249,7 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     name: 'DEMO',
     stable: true,
     coingeckoId: 'usd-coin',
+    significantFigures: 6,
   },
   [TestnetDenoms.USK]: {
     name: 'USK',
@@ -242,12 +265,14 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
         </Tooltip>
       </Flex>
     ) : undefined,
+    significantFigures: 6,
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
     icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
     stakeableAndSupported: true,
+    significantFigures: 6,
   },
   [TestnetDenoms.AXL]: {
     name: 'axlUSDC',
@@ -255,21 +280,25 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
+    significantFigures: 6,
   },
   [TestnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
     coingeckoId: 'terra-luna',
+    significantFigures: 6,
   },
   [TestnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
     coingeckoId: 'osmosis',
+    significantFigures: 6,
   },
   [TestnetDenoms.NBTC]: {
     name: 'NBTC',
     stakeable: false,
     coingeckoId: 'bitcoin',
+    significantFigures: 6,
   },
 };
 
@@ -288,6 +317,22 @@ const getDenomInfo = (denom?: string) => {
     ...testnetDenoms[denom as TestnetDenoms],
   };
 };
+
+export function getDenomName(denom: string) {
+  return getDenomInfo(denom).name;
+}
+
+export function convertDenomFromCoin(coin: Coin | undefined) {
+  if (!coin) {
+    return 0;
+  }
+  const { significantFigures, conversion } = getDenomInfo(coin.denom);
+  return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
+}
+
+export function getDenomMinimumSwapAmount(denom: string) {
+  return getDenomInfo(denom).minimumSwapAmount;
+}
 
 export class DenomValue {
   readonly denomId: Denom;

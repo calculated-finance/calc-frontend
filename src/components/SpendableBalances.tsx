@@ -4,7 +4,7 @@ import useBalances from '@hooks/useBalances';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Coin } from '@cosmjs/stargate';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { formatFiat } from 'src/pages/strategies/details/StrategyPerformance';
+import { formatFiat } from '@helpers/format/formatFiat';
 
 function CoinBalance({ balance }: { balance: Coin }) {
   const { name, conversion } = getDenomInfo(balance.denom);

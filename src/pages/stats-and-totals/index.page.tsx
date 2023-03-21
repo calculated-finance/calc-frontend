@@ -12,15 +12,17 @@ import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
-import { isStrategyAutoStaking } from 'src/helpers/isAutoStaking';
-import { getEndDateFromRemainingExecutions } from 'src/helpers/getEndDateFromRemainingExecutions';
-import { isStrategyActive } from 'src/helpers/getStrategyStatus';
+import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getStrategyType } from 'src/helpers/getStrategyType';
-import { getStrategyTotalExecutions } from 'src/helpers/getStrategyTotalExecutions';
-import { formatFiat } from '../strategies/details/StrategyPerformance';
+import { formatFiat } from '@helpers/format/formatFiat';
+import {
+  getStrategyTotalExecutions,
+  getStrategyType,
+  isStrategyActive,
+  isStrategyAutoStaking,
+} from '@helpers/strategy';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -491,15 +493,17 @@ function Page() {
                 duration: 2000,
                 onLoad: { duration: 1000 },
               }}
-              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut].map((type: StrategyTypes) => {
-                const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
+              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut, StrategyTypes.DCAPlusIn, StrategyTypes.DCAPlusOut].map(
+                (type: StrategyTypes) => {
+                  const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
 
-                return {
-                  x: type,
-                  y: strategiesByType.length,
-                  label: `${percentage}%`,
-                };
-              })}
+                  return {
+                    x: type,
+                    y: strategiesByType.length,
+                    label: `${percentage}%`,
+                  };
+                },
+              )}
               colorScale={['tomato', 'orange', 'gold', 'cyan']}
               style={{
                 labels: {

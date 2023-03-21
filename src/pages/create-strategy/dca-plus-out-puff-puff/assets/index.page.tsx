@@ -13,8 +13,8 @@ import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
-import dcaPlusOutSteps from '../../../../formConfig/dcaPlusOut';
-import { ModalWrapper } from '../../../../components/ModalWrapper';
+import { ModalWrapper } from '@components/ModalWrapper';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);

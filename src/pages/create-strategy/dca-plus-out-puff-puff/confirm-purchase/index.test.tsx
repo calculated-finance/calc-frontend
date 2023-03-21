@@ -2,14 +2,14 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { mockUseWallet } from 'src/helpers/test/mockUseWallet';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import { mockCreateVault } from 'src/helpers/test/mockCreateVault';
-import { encode } from 'src/helpers/encode';
-import { mockGetPairs } from 'src/helpers/test/mockGetPairs';
-import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
+import { mockCreateVault } from '@helpers/test/mockCreateVault';
+import { encode } from '@helpers/encode';
+import { mockGetPairs } from '@helpers/test/mockGetPairs';
+import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import Page from './index.page';
 
 const mockRouter = {
@@ -36,11 +36,6 @@ const mockStateMachine = {
       initialDeposit: '30',
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: false,
-      purchaseTime: '',
-      startDate: null,
-      startImmediately: 'yes',
-      startPrice: null,
-      triggerType: 'date',
       autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
@@ -121,6 +116,7 @@ describe('DCA Plus Out confirm page', () => {
           target_start_time_utc_seconds: undefined,
           destinations: undefined,
           target_receive_amount: undefined,
+          slippage_tolerance: '0.02',
           use_dca_plus: true,
         },
       };
@@ -145,7 +141,7 @@ describe('DCA Plus Out confirm page', () => {
           value: {
             amount: [
               {
-                amount: '200000',
+                amount: '66667',
                 denom: 'ukuji',
               },
             ],

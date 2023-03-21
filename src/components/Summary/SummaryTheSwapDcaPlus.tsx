@@ -3,8 +3,9 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
-import { getSwapRange } from 'src/helpers/ml/getSwapRange';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { getSwapRange } from '@helpers/ml/getSwapRange';
+import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
@@ -15,16 +16,14 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const { min, max } = getSwapRange(swapAmount, strategyDuration) || {};
-
-  const minSwap = min && Number(Math.max(minimumSwapAmount, min).toFixed(3));
-  const maxSwap = max && Number(max.toFixed(3));
+  const { min: minSwap, max: maxSwap } = getSwapRange(swapAmount, strategyDuration, minimumSwapAmount) || {};
 
   return (
     <Box data-testid="summary-the-swap-dca-plus">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <SummaryTriggerInfo state={state} />, CALC will swap between{' '}
+        <SummaryTriggerInfo state={{ startImmediately: StartImmediatelyValues.Yes, ...state }} />, CALC will swap
+        between{' '}
         <BadgeButton url="customise">
           <Text>
             {minSwap} {initialDenomName}
@@ -43,7 +42,7 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />
         </BadgeButton>{' '}
-        every Day based on market conditions, until the deposit is empty.
+        every day based on market conditions, until the deposit is empty.
       </Text>
     </Box>
   );

@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@wizard-ui/react';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
-import { getStrategyName } from 'src/helpers/getStrategyName';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
 import {
@@ -29,15 +28,16 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyResultingDenom } from 'src/helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from 'src/helpers/getStrategyInitialDenom';
 import { Denoms } from 'src/models/Denom';
 import { InvertedEventMessageModal } from '@components/InvertedEventMessageModal';
-import { getSidebarLayout } from '../../../components/Layout';
+import { isDcaPlus, getStrategyInitialDenom, getStrategyResultingDenom, getStrategyName } from '@helpers/strategy';
+import { getSidebarLayout } from '@components/Layout';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
+import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
+import { StrategyComparisonChart } from './StrategyComparisonChart';
 
 function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
@@ -97,12 +97,13 @@ function Page() {
       </Center>
     );
   }
-  const lastSwapSlippageError = getLatestSwapError(data.vault, events);
+  const strategy = data.vault;
+  const lastSwapSlippageError = getLatestSwapError(strategy, events);
 
   // refund message applies unless initital denom is usdc and resulting denom is kuji
   const shouldShowRefundMessage = !(
-    (getStrategyInitialDenom(data.vault) === Denoms.AXL && getStrategyResultingDenom(data.vault) === Denoms.Kuji) ||
-    (getStrategyResultingDenom(data.vault) === Denoms.AXL && getStrategyInitialDenom(data.vault) === Denoms.Kuji)
+    (getStrategyInitialDenom(strategy) === Denoms.AXL && getStrategyResultingDenom(strategy) === Denoms.Kuji) ||
+    (getStrategyResultingDenom(strategy) === Denoms.AXL && getStrategyInitialDenom(strategy) === Denoms.Kuji)
   );
 
   const showInvertedEventMessage = !shouldShowRefundMessage;
@@ -117,7 +118,7 @@ function Page() {
         </Link>
 
         <HStack spacing={8} alignItems="center">
-          <Heading data-testid="details-heading">{getStrategyName(data.vault)}</Heading>
+          <Heading data-testid="details-heading">{getStrategyName(strategy)}</Heading>
         </HStack>
       </HStack>
 
@@ -133,12 +134,19 @@ function Page() {
         </Alert>
       )}
 
-      <NextSwapInfo strategy={data.vault} />
+      <NextSwapInfo strategy={strategy} />
 
-      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="2fr" alignItems="stretch">
-        <StrategyDetails strategy={data.vault} />
-        <StrategyPerformance strategy={data.vault} />
-        <StrategyChart strategy={data.vault} />
+      <Grid
+        gap={6}
+        mb={6}
+        templateColumns="repeat(6, 1fr)"
+        templateRows={isDcaPlus(strategy) ? '3fr' : '2fr'}
+        alignItems="stretch"
+      >
+        {isDcaPlus(strategy) && <StrategyComparison strategy={strategy} />}
+        <StrategyDetails strategy={strategy} />
+        <StrategyPerformance strategy={strategy} />
+        {isDcaPlus(strategy) ? <StrategyComparisonChart strategy={strategy} /> : <StrategyChart strategy={strategy} />}
       </Grid>
       {showInvertedEventMessage && <InvertedEventMessageModal />}
     </>

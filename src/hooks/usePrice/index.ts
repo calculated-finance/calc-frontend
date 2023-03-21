@@ -3,9 +3,9 @@ import { isNumber } from 'lodash';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
-import { findPair } from '../../helpers/findPair';
+import { findPair } from '@helpers/findPair';
+import { Denom } from '@models/Denom';
 import usePairs from '../usePairs';
-import { Denom } from '../../models/Denom';
 import useQueryWithNotification from '../useQueryWithNotification';
 
 function safeInvert(value: number) {

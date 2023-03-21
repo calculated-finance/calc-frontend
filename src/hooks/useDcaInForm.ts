@@ -5,7 +5,7 @@ import {
   postPurchaseValidationSchema,
   step1ValidationSchema,
   step2ValidationSchema,
-} from '../models/DcaInFormData';
+} from '@models/DcaInFormData';
 
 export enum FormNames {
   DcaIn = 'dcaIn',

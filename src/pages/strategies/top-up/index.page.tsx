@@ -11,15 +11,16 @@ import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
-import getStrategyBalance from 'src/helpers/getStrategyBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyName } from 'src/helpers/getStrategyName';
 import usePageLoad from '@hooks/usePageLoad';
+import getStrategyBalance, {
+  getStrategyInitialDenom,
+  getStrategyResultingDenom,
+  getStrategyName,
+} from '@helpers/strategy';
+import { getTimeSaved } from '@helpers/getTimeSaved';
 import TopUpAmount from './TopUpAmount';
-import { getStrategyResultingDenom } from '../../../helpers/getStrategyResultingDenom';
-import { getStrategyInitialDenom } from '../../../helpers/getStrategyInitialDenom';
-import { getTimeSaved } from '../../../helpers/getTimeSaved';
 
 export const topUpSteps: StepConfig[] = [
   {

@@ -15,7 +15,7 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
-import { ModalWrapper } from '../../../../components/ModalWrapper';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function DcaIn() {
   const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);

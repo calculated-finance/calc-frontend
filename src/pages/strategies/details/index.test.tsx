@@ -2,17 +2,17 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from 'src/pages/_app.page';
-import { mockValidators } from 'src/helpers/test/mockValidators';
+import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
 import { NetworkContext } from '@components/NetworkContext';
 import { kujiraQueryClient } from 'kujira.js';
-import { mockFiatPrice } from 'src/helpers/test/mockFiatPrice';
-import { mockFiatPriceHistory } from 'src/helpers/test/mockFiatPriceHistory';
+import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
+import { mockUseWallet } from '@helpers/test/mockUseWallet';
+import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
+import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import Page from './index.page';
-import { mockUseWallet } from '../../../helpers/test/mockUseWallet';
-import { mockStrategy, mockUseStrategy } from '../../../helpers/test/mockGetVault';
-import { mockCancelVault } from '../../../helpers/test/mockCancelVault';
 
 const mockRouter = {
   push: jest.fn(),
@@ -91,7 +91,9 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('next-swap-info').textContent).toBe('May 22, 2022 at 5:00 PM'));
+          await waitFor(() =>
+            expect(screen.getByTestId('next-swap-info')).toHaveTextContent('May 22, 2022 at 5:00 PM'),
+          );
         });
       });
       describe('when price trigger is set', () => {
@@ -359,6 +361,124 @@ describe('Detail page', () => {
           await waitFor(() =>
             expect(screen.getByTestId('strategy-receiving-address').textContent).toBe('kujiraotheraddress'),
           );
+        });
+      });
+    });
+  });
+
+  describe('strategy performance', () => {
+    describe('total acculumated', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-total-acculumated').textContent).toBe('1 KUJI'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-total-acculumated').textContent).toBe('1 KUJI'));
+        });
+      });
+    });
+    describe('net cost', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 DEMO'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 DEMO'));
+        });
+      });
+    });
+    describe('average token cost', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+        });
+      });
+    });
+    describe('market value', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-market-value').textContent).toBe('$1.50 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-market-value').textContent).toBe('$1.50 USD'));
+        });
+      });
+    });
+    describe('profit', () => {
+      describe('when DCA In', () => {
+        it('renders type', async () => {
+          mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$0.98 USD'));
+        });
+      });
+      describe('when DCA Out', () => {
+        it('renders type', async () => {
+          mockUseWallet(
+            mockUseStrategy({ vault: mockStrategy(dcaOutStrategy) }),
+            jest.fn(),
+            jest.fn(),
+            mockCancelVault(),
+          );
+
+          await renderTarget();
+          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$2.50 USD'));
         });
       });
     });

@@ -15,7 +15,7 @@ export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
 export const LAUNCHDARKLY_SDK_CLIENT_SIDE_ID = '63928928a029f71140f60625';
 // Generic constants (not environment specific)
-export const CREATE_VAULT_FEE = 0.3; // 30c
+export const CREATE_VAULT_FEE = 0.1; // 10c
 export const CANCEL_VAULT_FEE = 0.5; // $1
 export const ONE_MILLION = 1000000;
 export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
@@ -36,7 +36,7 @@ export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
 
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
-export const MAX_DCA_PLUS_STRATEGY_DURATION = 180;
+export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
 export const FEE_FREE_USK_PROMO_DESCRIPTION =
   '🎉 No CALC swap fees for any USK strategy for the next {daysUntilPromoEnds} days! Just pay the FIN swap fees and a small deposit fee to take advantage of this very bearish market.';
