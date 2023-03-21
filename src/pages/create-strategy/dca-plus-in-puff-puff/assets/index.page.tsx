@@ -9,13 +9,15 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import { useRouter } from 'next/router';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { ModalWrapper } from '@components/ModalWrapper';
+import useWhitelist from '@hooks/useWhitelist';
+import { WhitelistModal } from '@components/WhitelistModal';
+import { useRouter } from 'next/router';
 
 function DcaIn() {
   const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);
@@ -38,6 +40,11 @@ function DcaIn() {
 
   const router = useRouter();
 
+  const { isWhitelisted } = useWhitelist();
+
+  if (!isWhitelisted) {
+    return <WhitelistModal />;
+  }
   if (!pairs) {
     return <ModalWrapper stepsConfig={dcaPlusInSteps} isLoading reset={actions.resetAction} />;
   }

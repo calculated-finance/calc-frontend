@@ -6,6 +6,7 @@ import { ReactElement } from 'react';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
+import useWhitelist from '@hooks/useWhitelist';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -18,58 +19,6 @@ type StrategyCardProps = {
   advanced?: boolean;
   learnMoreHref: string;
 };
-
-const accumulationStratgies: StrategyCardProps[] = [
-  {
-    name: 'Standard DCA In',
-    description: 'Customise your own dollar-cost average buying strategy.',
-    icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
-    enabled: true,
-    href: StrategyUrls.DCAIn,
-    learnMoreHref: 'https://calculated.fi/standard-dca-in',
-  },
-  {
-    name: 'Algorithm DCA+ In',
-    description: 'Let our machine learning DCA algorithms invest for you.',
-    advanced: true,
-    icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-    learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
-  },
-  {
-    name: 'Buy the Dip',
-    description: 'Auto-buy after a specified % dip in your favourite asset.',
-    advanced: true,
-    icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
-    learnMoreHref: 'https://calculated.fi/buy-the-dip',
-  },
-];
-
-const takeProfitStrategies: StrategyCardProps[] = [
-  {
-    name: 'Standard DCA Out',
-    description: 'Dollar-cost average out of an asset with ease.',
-    icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
-    enabled: true,
-    href: StrategyUrls.DCAOut,
-    learnMoreHref: 'https://calculated.fi/standard-dca-out',
-  },
-  {
-    name: 'Algorithm DCA+ Out',
-    description: 'Let our machine learning DCA algorithms sell for you.',
-    advanced: true,
-    icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-    learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
-  },
-  {
-    name: 'Auto-take Profit',
-    description: 'Sell a certain % of an asset after it pumps a certain %.',
-    advanced: true,
-
-    icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
-    enabled: false,
-    learnMoreHref: 'https://calculated.fi/auto-take-profit',
-  },
-];
 
 function InfoPanel(): JSX.Element {
   return (
@@ -162,8 +111,7 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
               Fear &amp; Greed index score
             </Text>
           </NextLink>
-          : {index} ({classification}), it may be a good time to use{' '}
-          {setStrategyRecommendation} strategies
+          : {index} ({classification}), it may be a good time to use {setStrategyRecommendation} strategies
         </>
       ) : null}
     </Badge>
@@ -172,8 +120,67 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
 
 function Strategies() {
   const { index } = useFearAndGreed();
+
+  const { isWhitelisted } = useWhitelist();
+
   const showFearAndGreedAccumulate = index < 41;
   const showFearAndGreedProfit = index > 59;
+
+  const accumulationStratgies: StrategyCardProps[] = [
+    {
+      name: 'Standard DCA In',
+      description: 'Customise your own dollar-cost average buying strategy.',
+      icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
+      enabled: true,
+      href: StrategyUrls.DCAIn,
+      learnMoreHref: 'https://calculated.fi/standard-dca-in',
+    },
+    {
+      name: 'Algorithm DCA+ In',
+      description: 'Let our machine learning DCA algorithms invest for you.',
+      advanced: true,
+      href: StrategyUrls.DCAPlusIn,
+      enabled: isWhitelisted,
+      icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+      learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
+    },
+    {
+      name: 'Buy the Dip',
+      description: 'Auto-buy after a specified % dip in your favourite asset.',
+      advanced: true,
+      icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
+      learnMoreHref: 'https://calculated.fi/buy-the-dip',
+    },
+  ];
+
+  const takeProfitStrategies: StrategyCardProps[] = [
+    {
+      name: 'Standard DCA Out',
+      description: 'Dollar-cost average out of an asset with ease.',
+      icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
+      enabled: true,
+      href: StrategyUrls.DCAOut,
+      learnMoreHref: 'https://calculated.fi/standard-dca-out',
+    },
+    {
+      name: 'Algorithm DCA+ Out',
+      description: 'Let our machine learning DCA algorithms sell for you.',
+      advanced: true,
+      href: StrategyUrls.DCAPlusOut,
+      icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+      enabled: isWhitelisted,
+      learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
+    },
+    {
+      name: 'Auto-take Profit',
+      description: 'Sell a certain % of an asset after it pumps a certain %.',
+      advanced: true,
+
+      icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
+      enabled: false,
+      learnMoreHref: 'https://calculated.fi/auto-take-profit',
+    },
+  ];
 
   return (
     <Stack direction="column" spacing={8}>
