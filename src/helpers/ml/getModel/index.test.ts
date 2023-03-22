@@ -1,5 +1,6 @@
 import { getModel, getModelFromId } from '.';
 import { predictionData } from './predictionData';
+
 describe('getModel', () => {
   it('should return null when duration is less than 30', () => {
     expect(getModel(20)).toBe(null);
