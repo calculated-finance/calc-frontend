@@ -24,7 +24,7 @@ export function SummaryTheSwap({ state }: any) {
         <SummaryTriggerInfo state={state} />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
-            ~{swapAmount} {initialDenomName}
+            {String.fromCharCode(8275)} {swapAmount} {initialDenomName}
           </Text>
           <DenomIcon denomName={initialDenom} />
         </BadgeButton>{' '}

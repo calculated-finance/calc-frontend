@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Collapse,
-  Divider,
   Fade,
   Flex,
   Heading,
@@ -11,11 +10,20 @@ import {
   Spinner,
   Stack,
   Text,
+  Image,
   useBoolean,
+  HStack,
+  useDisclosure,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames } from 'src/hooks/useDcaInForm';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ChevronUpIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
@@ -32,6 +40,7 @@ function FeeBreakdown({
   price: number;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
+  const { isOpen: isFeesModalOpen, onOpen: onFeesModalOpen, onClose: onFeesModalClose } = useDisclosure();
   return (
     <Stack position="relative" spacing={1}>
       <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
@@ -75,6 +84,11 @@ function FeeBreakdown({
                     </Text>
                   </Flex>
                   <Flex>
+                    <Text textStyle="body-xs">-</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">-</Text>
+                  </Flex>
+                  <Flex>
                     <Text textStyle="body-xs" textColor="white">
                       Total fees and tax:
                     </Text>
@@ -91,11 +105,6 @@ function FeeBreakdown({
                 <Stack spacing={0}>
                   <Flex>
                     <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                    <Spacer />
-                    <Text textStyle="body-xs">FREE</Text>
-                  </Flex>
-                  <Flex>
-                    <Text textStyle="body-xs">Estimated gas:</Text>
                     <Spacer />
                     <Text textStyle="body-xs">FREE</Text>
                   </Flex>
@@ -118,32 +127,39 @@ function FeeBreakdown({
                 </Stack>
               </Flex>
             </Flex>
-            <Divider />
             <Stack>
-              <Text fontSize="xs" color="green.200">
-                A performance fee is charged ONLY in the case that DCA+ outperforms traditional DCA and only on the
-                difference in assets acquired.
-              </Text>
+              <Box color="green.200" fontSize="xs" bg="abyss.200" p={2} px={3} borderRadius="md">
+                <HStack spacing={3}>
+                  <Image src="/images/lightBulbOutlineGreen.svg" alt="light bulb" />
+                  <Text onClick={onFeesModalOpen}>
+                    A performance fee is charged ONLY when DCA+ outperforms traditional DCA and ONLY on the extra assets
+                    acquired.
+                    <Button variant="link" size="xs" colorScheme="green" onClick={onFeesModalOpen}>
+                      <Icon as={QuestionOutlineIcon} />
+                    </Button>
+                  </Text>
+                </HStack>
+              </Box>
               <Flex flexGrow={1} flexDirection="column">
                 <Heading size="xs">Performance fee</Heading>
                 <Stack spacing={0}>
                   <Flex>
                     <Text textStyle="body-xs">Base fee</Text>
                     <Spacer />
-                    <Text textStyle="body-xs">FREE FOREVER</Text>
+                    <Text textStyle="body-xs">FREE</Text>
                   </Flex>
                   <Flex>
                     <Text textStyle="body-xs">Escrow</Text>
                     <Spacer />
-                    <Text textStyle="body-xs">5% of swaps, returned in full if DCA+ underperforms.</Text>
+                    <Text textStyle="body-xs">5% of swaps, returned if DCA+ underperforms.</Text>
                   </Flex>
                   <Flex>
                     <Text textStyle="body-xs" textColor="white">
-                      Total possible fee:
+                      Maximum possible fee:
                     </Text>
                     <Spacer />
                     <Text textStyle="body-xs" textColor="white">
-                      1/5 of additional positive returns
+                      20% of additional positive returns
                     </Text>
                   </Flex>
                 </Stack>
@@ -152,6 +168,25 @@ function FeeBreakdown({
           </Stack>
         </Collapse>
       </Box>
+      <Modal isOpen={isFeesModalOpen} onClose={onFeesModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Performance free</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={8}>
+              <Stack spacing={1}>
+                <Image src="/images/performanceFee.svg" alt="performance fee" />
+                <Text>Figure 1: A visual representation of a performance fee</Text>
+              </Stack>
+              <Stack spacing={1}>
+                <Image src="/images/noPerformanceFee.svg" alt="no performance fee" />
+                <Text>Figure 2: A visual representation of when no performance fees are charged</Text>
+              </Stack>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Stack>
   );
 }
@@ -166,14 +201,11 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
     return null;
   }
 
-  const { initialDenom, resultingDenom, autoStakeValidator, initialDeposit, strategyDuration } = state;
+  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration } = state;
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
-  const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
-
-  const applyPromo = Boolean(initialDenomPromotion) || Boolean(resultingDenomPromotion);
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
 
   return (
     <Stack spacing={0}>
@@ -184,7 +216,7 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          ~{getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
+          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
         performance fee

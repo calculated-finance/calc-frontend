@@ -68,6 +68,7 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   'create-strategy': { label: 'Create strategy', enabled: true },
   'dca-in': { label: 'DCA In', enabled: false },
   'dca-plus-in-puff-puff': { label: 'DCA+ In', enabled: false },
+  'dca-plus-out-puff-puff': { label: 'DCA+ Out', enabled: false },
   'dca-out': { label: 'DCA Out', enabled: false },
   strategies: { label: 'My strategies', enabled: true },
   'top-up': { label: 'Top up strategy', enabled: false },

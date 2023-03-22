@@ -10,7 +10,11 @@ import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Coin } from '@cosmjs/stargate';
 import { isNil } from 'lodash';
-import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
+import {
+  DCA_PLUS_MIN_SWAP_COEFFICIENT,
+  MAX_DCA_PLUS_STRATEGY_DURATION,
+  MIN_DCA_PLUS_STRATEGY_DURATION,
+} from 'src/constants';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 
@@ -285,7 +289,9 @@ export const allSchema = {
         }
         const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
 
-        const maximumDurationFromDeposit = Math.ceil(initialDeposit / minimumSwapAmount);
+        const maximumDurationFromDeposit = Math.ceil(
+          initialDeposit / (minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT),
+        );
 
         if (value < maximumDurationFromDeposit) {
           return true;

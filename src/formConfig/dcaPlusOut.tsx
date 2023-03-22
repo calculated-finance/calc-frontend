@@ -1,4 +1,5 @@
 import { Link, ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
+import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaPlusOutSteps: StepConfig[] = [
@@ -9,6 +10,8 @@ const dcaPlusOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-plus-out-puff-puff/customise',
     title: 'Customise Strategy',
+    footerText: 'What does outperform probability mean?',
+    helpContent: <OutperformProbability />,
   },
   {
     href: '/create-strategy/dca-plus-out-puff-puff/post-purchase',

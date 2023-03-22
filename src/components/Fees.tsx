@@ -178,7 +178,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
           </Tooltip>
         ) : (
           <Text as="span" textColor="white">
-            ~{getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
+            {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
           </Text>
         )}
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
