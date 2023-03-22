@@ -1,4 +1,4 @@
-import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter, Center } from '@chakra-ui/react';
+import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter } from '@chakra-ui/react';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
