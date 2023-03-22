@@ -1,10 +1,28 @@
-import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
+import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter, Center } from '@chakra-ui/react';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
+import Lottie from 'lottie-react';
+import * as Confetti from '../animations/confetti.json';
+
+function ThatsCalculatedThinkingText() {
+  return (
+    <Text fontSize="2xl" fontWeight="bold" textAlign="center">
+      NOW{' '}
+      <Text as="span" color="brand.200">
+        THAT&apos;S{' '}
+      </Text>
+      <br />
+      <Text as="span" color="blue.200">
+        CALCULATED{' '}
+      </Text>
+      THINKING
+    </Text>
+  );
+}
 
 export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
   const { isPageLoading } = usePageLoad();
@@ -16,8 +34,12 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
         Strategy Set Successfully
       </NewStrategyModalHeader>
       <NewStrategyModalBody stepsConfig={stepConfig}>
+        <AbsoluteCenter w="100%" h="100%" top="10%">
+          <Lottie animationData={Confetti} loop={1} />
+        </AbsoluteCenter>
+
         <Stack spacing={6} alignItems="center">
-          <Image src="/images/congratulations.svg" />
+          <ThatsCalculatedThinkingText />
           <Image src="/images/fire.svg" />
           <Text>CALC is now working for you!</Text>
           <>
