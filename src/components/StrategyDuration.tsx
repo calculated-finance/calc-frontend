@@ -45,9 +45,9 @@ export default function StrategyDuration() {
       <FormLabel>How long would you like the strategy to last?</FormLabel>
       <FormHelperText>This will be the benchmark for comparison between DCA and DCA+</FormHelperText>
       <Flex>
-        Days:
+        <Text fontSize="sm">Days:</Text>
         <Spacer />
-        Outperform probability:
+        <Text fontSize="sm">Outperform probability:</Text>
       </Flex>
       <Flex color="blue.200">
         {value}
