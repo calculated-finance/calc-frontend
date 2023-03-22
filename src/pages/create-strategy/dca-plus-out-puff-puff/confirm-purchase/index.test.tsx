@@ -97,8 +97,8 @@ describe('DCA Plus Out confirm page', () => {
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('OSMO');
-      within(theSwap).getByText('0.662 KUJI');
-      within(theSwap).getByText('1.452 KUJI');
+      within(theSwap).getByText('0.644 KUJI');
+      within(theSwap).getByText('1.474 KUJI');
       const benchmark = screen.getByTestId('summary-benchmark');
 
       within(benchmark).getByText('1 KUJI');

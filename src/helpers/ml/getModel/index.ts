@@ -25,10 +25,10 @@ export function getModel(duration: number): PredictionModel | null {
   if (duration >= 78 && duration <= 96) {
     return predictionData.Predict70;
   }
-  if (duration > 97 && duration <= 124) {
+  if (duration > 97 && duration <= 123) {
     return predictionData.Predict80;
   }
-  if (duration >= 90) {
+  if (duration >= 124) {
     return predictionData.Predict90;
   }
   return null;

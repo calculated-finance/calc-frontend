@@ -7,7 +7,7 @@ describe('getSwapRange', () => {
 
   it('should return the correct min and max swap amounts for supported durations', () => {
     const amounts = getSwapRange(100, 70, 10);
-    expect(amounts).toEqual({ min: 63.38, max: 180 });
+    expect(amounts).toEqual({ min: 63.432, max: 168.925 });
   });
 
   it('should return the correct min and max swap amounts when buy_amount is zero', () => {
@@ -17,6 +17,6 @@ describe('getSwapRange', () => {
 
   it('should return the correct min and max swap amounts when min is less than miniumSwapAmount', () => {
     const amounts = getSwapRange(100, 70, 99);
-    expect(amounts).toEqual({ min: 99, max: 180 });
+    expect(amounts).toEqual({ min: 99, max: 168.925 });
   });
 });
