@@ -5,15 +5,32 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  HStack,
   Slider,
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
   Spacer,
+  Image,
+  Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 import { getProbabilityOfOutperformance } from '@helpers/ml/getProbabilityOfOutperformance';
+
+function getHistogram(probability: number | null) {
+  if (!probability) {
+    return '/images/histograms/histogramOne.svg';
+  }
+  if (probability < 0.89) {
+    return '/images/histograms/histogramOne.svg';
+  }
+  if (probability < 0.97) {
+    return '/images/histograms/histogramTwo.svg';
+  }
+
+  return '/images/histograms/histogramThree.svg';
+}
 
 export default function StrategyDuration() {
   const [{ value }, meta, { setValue }] = useField({ name: 'strategyDuration' });
@@ -35,7 +52,10 @@ export default function StrategyDuration() {
       <Flex color="blue.200">
         {value}
         <Spacer />
-        {outperformanceProbabilityFormatted}
+        <HStack>
+          <Image src={getHistogram(outperformanceProbability)} alt="histogram one" />
+          <Text color="green.200">{outperformanceProbabilityFormatted}</Text>
+        </HStack>
       </Flex>
       <Slider
         value={value}
@@ -51,15 +71,20 @@ export default function StrategyDuration() {
         <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
       </Slider>
       <Flex textStyle="body">
-        30 days
+        {MIN_DCA_PLUS_STRATEGY_DURATION} days
         <Spacer />
-        180 days
+        {MAX_DCA_PLUS_STRATEGY_DURATION} days
       </Flex>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
 
-      <FormHelperText color="brand.200" fontSize="xs">
-        DCA+ will dynamically alter the amount swapped based on market conditions which may result in the strategy
-        ending sooner or later.
+      <FormHelperText color="brand.200" fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+        <HStack spacing={3}>
+          <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+          <Text>
+            DCA+ will dynamically alter the amount swapped based on market conditions which may result in the strategy
+            ending sooner or later.
+          </Text>
+        </HStack>
       </FormHelperText>
     </FormControl>
   );
