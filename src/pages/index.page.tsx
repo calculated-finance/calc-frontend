@@ -239,9 +239,9 @@ function Home() {
           </GridItem>
         )}
 
-        <GridItem colSpan={{ base: 6, xl: 3 }}>
+        {/* <GridItem colSpan={{ base: 6, xl: 3 }}>
           <TotalInvestment />
-        </GridItem>
+        </GridItem> */}
         <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
           <WorkflowInformation />
         </GridItem>
