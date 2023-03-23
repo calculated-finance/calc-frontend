@@ -94,10 +94,6 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
   const priceData = getPriceData(coingeckoData?.prices) || [];
 
-  // if (!accumulatedTradEvents || !priceData) {
-  //   return null;
-  // }
-
   const lineChartMax = Math.max(...tradLineChartData.map((d) => d.amount));
   const priceMax = Math.max(...priceData.map((d) => d.amount));
 
@@ -122,10 +118,6 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
   const dcaPlusValueScatterStyle = { data: { fill: '#1AEFAF' } };
   return (
     <GridItem colSpan={6}>
-      <Heading size="md" pb={4}>
-        Strategy history
-      </Heading>
-
       <Box layerStyle="panel" position="relative">
         {events && <StrategyComparisonChartStats strategy={strategy} />}
         <Stack p={6} position="absolute" top={0} right={0}>

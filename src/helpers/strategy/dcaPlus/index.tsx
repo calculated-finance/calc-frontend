@@ -4,13 +4,13 @@ import totalExecutions from '@utils/totalExecutions';
 
 import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import { getModelFromId } from '@helpers/ml/getModel';
-import { getSwapRange, getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
+import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
 import getStrategyBalance, {
-  getSwapAmount,
   getTotalReceived,
   getConvertedSwapAmount,
   getStrategyInitialDenom,
   getStrategyRemainingExecutions,
+  getTotalSwapped,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 
@@ -43,11 +43,12 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
 }
 
 // find the average price of the standard dca using above functions
-export function getStandardDcaAveragePrice(strategy: Strategy) {
-  const totalReceived = getStandardDcaTotalReceived(strategy);
-  const totalCost = getStandardDcaTotalCost(strategy);
+export function getStandardDcaAverageCost(strategy: Strategy) {
+  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceived(strategy);
+}
 
-  return totalCost / totalReceived;
+export function getStandardDcaAveragePrice(strategy: Strategy) {
+  return getStandardDcaTotalReceived(strategy) / getStandardDcaTotalSwapped(strategy);
 }
 
 export function getEscrowLevel(strategy: Strategy) {
@@ -62,7 +63,7 @@ export function getEscrowAmount(strategy: Strategy) {
   return convertDenomFromCoin(escrowed_balance);
 }
 
-export function getAcculumationDifference(strategy: Strategy) {
+export function getAccumulationGained(strategy: Strategy) {
   const standardDcaTotalReceived = getStandardDcaTotalReceived(strategy);
   const totalReceived = getTotalReceived(strategy);
 
@@ -71,12 +72,19 @@ export function getAcculumationDifference(strategy: Strategy) {
   return Number(difference.toFixed(6));
 }
 
+export function getSwappedSaved(strategy: Strategy) {
+  const standardDcaTotalSwapped = getStandardDcaTotalSwapped(strategy);
+  const totalSwapped = getTotalSwapped(strategy);
+
+  const difference = standardDcaTotalSwapped - totalSwapped;
+  return Number(difference.toFixed(6));
+}
+
 export function getNumberOfPastSwaps(strategy: Strategy) {
-  const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
+  const totalSwapped = getStandardDcaTotalSwapped(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
 
-  const swapAmount = getSwapAmount(strategy);
-
-  return Math.floor(Number(standard_dca_swapped_amount?.amount) / swapAmount);
+  return Math.floor(totalSwapped / swapAmount);
 }
 
 export function getStrategyModel(strategy: Strategy) {

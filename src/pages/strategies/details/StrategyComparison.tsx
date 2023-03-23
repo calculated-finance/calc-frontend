@@ -5,6 +5,7 @@ import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   getRemainingExecutionsRange,
+  getStandardDcaAverageCost,
   getStandardDcaAveragePrice,
   getStandardDcaRemainingBalance,
   getStandardDcaRemainingExecutions,
@@ -19,12 +20,10 @@ import getStrategyBalance, {
   getTotalReceived,
   getAverageCost,
   getTotalSwapped,
+  getAveragePrice,
+  isBuyStrategy,
 } from '@helpers/strategy';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
-
-export function puraliseDays(val: number) {
-  return val === 1 ? 'day' : 'days';
-}
 
 function StrategyComparisonDetails({
   strategy,
@@ -33,9 +32,8 @@ function StrategyComparisonDetails({
   strategy: Strategy;
   strategyEvents: StrategyEvent[];
 }) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { price: initialDenomPrice } = useFiatPrice(getStrategyInitialDenom(strategy));
+  const { price: resultingDenomPrice } = useFiatPrice(getStrategyResultingDenom(strategy));
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} px={8} py={6} w="full">
@@ -55,12 +53,12 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
+          {getTotalReceived(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getStandardDcaTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
+          {getStandardDcaTotalReceived(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -68,12 +66,12 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {getTotalSwapped(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getStandardDcaTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {getStandardDcaTotalSwapped(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
@@ -81,25 +79,29 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getStrategyBalance(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {getStrategyBalance(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text as="span" fontSize="sm">
-          {`${getStandardDcaRemainingBalance(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+          {getStandardDcaRemainingBalance(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">Average token cost</Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Average token cost' : 'Average token sell price'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {formatFiat(getAverageCost(strategy) * initialDenomPrice)}
+          {isBuyStrategy(strategy)
+            ? formatFiat(getAverageCost(strategy) * initialDenomPrice)
+            : formatFiat(getAveragePrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {formatFiat(getStandardDcaAveragePrice(strategy) * initialDenomPrice)}
+          {isBuyStrategy(strategy)
+            ? formatFiat(getStandardDcaAverageCost(strategy) * initialDenomPrice)
+            : formatFiat(getStandardDcaAveragePrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
 

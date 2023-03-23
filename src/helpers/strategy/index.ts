@@ -216,9 +216,7 @@ export function getTotalCost(strategy: Strategy) {
 }
 
 export function getTotalReceived(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.received_amount.denom);
-
-  return parseFloat(conversion(Number(strategy.received_amount.amount)).toFixed(6));
+  return convertDenomFromCoin(strategy.received_amount);
 }
 
 export function getAveragePrice(strategy: Vault) {
@@ -226,5 +224,5 @@ export function getAveragePrice(strategy: Vault) {
 }
 
 export function getAverageCost(strategy: Vault) {
-  return getTotalCost(strategy) / getTotalReceived(strategy);
+  return getTotalSwapped(strategy) / getTotalReceived(strategy);
 }
