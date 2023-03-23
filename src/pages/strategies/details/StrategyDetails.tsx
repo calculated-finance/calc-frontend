@@ -28,10 +28,11 @@ import {
   getConvertedSwapAmount,
   isStrategyAutoStaking,
   isDcaPlus,
+  isStrategyOperating,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
-import { getEscrowAmount, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
+import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -165,7 +166,14 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-              {getStrategyEndDate(strategy, events)}
+              {isDcaPlus(strategy) && isStrategyOperating(strategy) ? (
+                <>
+                  Between {getStrategyEndDateRange(strategy, events).min} and{' '}
+                  {getStrategyEndDateRange(strategy, events).max}
+                </>
+              ) : (
+                getStrategyEndDate(strategy, events)
+              )}
             </Text>
           </GridItem>
           <GridItem colSpan={1}>

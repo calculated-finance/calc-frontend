@@ -138,13 +138,12 @@ export function getStrategyStartDate(strategy: Strategy) {
     : '-';
 }
 
-export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
+export function getStrategyEndDateFromRemainingExecutions(
+  strategy: Strategy,
+  events: StrategyEvent[] | undefined,
+  executions: number,
+) {
   const { trigger } = strategy;
-  if (trigger && 'fin_limit_order' in trigger) {
-    return 'Pending strategy start';
-  }
-
-  const executions = getStrategyRemainingExecutions(strategy);
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
@@ -170,6 +169,17 @@ export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] |
   }
 
   return '-';
+}
+
+export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
+  const { trigger } = strategy;
+  if (trigger && 'fin_limit_order' in trigger) {
+    return 'Pending strategy start';
+  }
+
+  const executions = getStrategyRemainingExecutions(strategy);
+
+  return getStrategyEndDateFromRemainingExecutions(strategy, events, executions);
 }
 
 export function isStrategyAutoStaking(strategy: Strategy) {

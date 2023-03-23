@@ -22,6 +22,7 @@ import getStrategyBalance, {
   getTotalSwapped,
   getAveragePrice,
   isBuyStrategy,
+  isStrategyOperating,
 } from '@helpers/strategy';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
 
@@ -110,7 +111,9 @@ function StrategyComparisonDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {getRemainingExecutionsRange(strategy).min} - {getRemainingExecutionsRange(strategy).max}
+          {isStrategyOperating(strategy)
+            ? `${getRemainingExecutionsRange(strategy).min} - ${getRemainingExecutionsRange(strategy).max}`
+            : 0}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>

@@ -11,8 +11,11 @@ import getStrategyBalance, {
   getStrategyInitialDenom,
   getStrategyRemainingExecutions,
   getTotalSwapped,
+  getStrategyEndDateFromRemainingExecutions,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { isNil } from 'lodash';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -142,4 +145,13 @@ export function getStandardDcaRemainingExecutions(strategy: Strategy) {
 
 export function getDaysRemainingForEscrowReturn(strategy: Strategy) {
   return Math.max(getStandardDcaRemainingExecutions(strategy), getStrategyRemainingExecutions(strategy));
+}
+
+export function getStrategyEndDateRange(strategy: Strategy, strategyEvents: StrategyEvent[] | undefined) {
+  const { min, max } = getRemainingExecutionsRange(strategy) || {};
+
+  return {
+    min: !isNil(min) && getStrategyEndDateFromRemainingExecutions(strategy, strategyEvents, min),
+    max: !isNil(max) && getStrategyEndDateFromRemainingExecutions(strategy, strategyEvents, max),
+  };
 }
