@@ -113,7 +113,7 @@ describe('DCA Plus In confirm page', () => {
       const executeMsg = {
         create_vault: {
           label: '',
-          time_interval: 'daily',
+          time_interval: 'every_minute',
           pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,

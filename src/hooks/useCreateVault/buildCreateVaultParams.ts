@@ -158,7 +158,9 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
   return {
     create_vault: {
       label: '',
-      time_interval: 'daily',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      time_interval: 'every_minute',
       pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
