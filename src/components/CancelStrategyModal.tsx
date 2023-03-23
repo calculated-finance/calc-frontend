@@ -13,10 +13,20 @@ import {
   useToast,
   ModalProps,
   Stack,
+  Image,
+  HStack,
+  Box,
+  Center,
+  Spinner,
 } from '@chakra-ui/react';
+import { getStrategyInitialDenom, getStrategyResultingDenom, isDcaPlus } from '@helpers/strategy';
+import { getDaysRemainingForEscrowReturn, getEscrowAmount, getReturnedEscrowAmount } from '@helpers/strategy/dcaPlus';
+import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
+import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
+import { CANCEL_VAULT_FEE } from 'src/constants';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;
@@ -26,7 +36,11 @@ type CancelStrategyModalProps = {
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
   const { mutate: cancelStrategy, isLoading } = useCancelStrategy(strategy.balance.denom);
 
+  const { price } = useFiatPrice(getStrategyInitialDenom(strategy));
+
   const toast = useToast();
+
+  const { data: performance, isLoading: isPerformanceLoading } = useDcaPlusPerformance(strategy.id, isOpen);
 
   const handleCancelStrategy = () =>
     cancelStrategy(strategy.id, {
@@ -64,24 +78,47 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
         <ModalBody>
           <Stack spacing={4}>
             <Text textStyle="body-xs" textAlign="center">
-              By cancelling this strategy any assets held in the CALC vault will be returned. Once cancelled, this
-              strategy can not be started again. Please create a new strategy.
+              By cancelling this strategy the unswapped balance in the vault will be returned. Once cancelled, this
+              strategy can not be started again.
             </Text>
-            <Text textStyle="body-xs" textAlign="center">
-              For strategies involving fiat on ramps, any direct debits or recurring payments will also be cancelled.
-            </Text>
-            <Flex layerStyle="panel" p={4} mt={4} align="center">
-              <Heading size="sm">Amount to be returned:</Heading>
-              <Spacer />
-              <Text as="span" fontSize="lg" color="blue.200">
-                {/* TODO: what happens for multiple denoms? */}
-                {getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount))}{' '}
-                {getDenomInfo(strategy.balance.denom).name}
-              </Text>
-            </Flex>
+            <Stack layerStyle="panel" p={4} mt={4}>
+              <Flex align="center">
+                <Heading size="sm">Amount to be returned:</Heading>
+                <Spacer />
+                <Text as="span" fontSize="lg" color="blue.200">
+                  {getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount))}{' '}
+                  {getDenomInfo(strategy.balance.denom).name}
+                </Text>
+              </Flex>
+              {isDcaPlus(strategy) && (
+                <Flex align="center">
+                  <Heading size="sm">Amount escrowed:</Heading>
+                  <Spacer />
+                  <Text as="span" fontSize="lg" color="blue.200">
+                    {getEscrowAmount(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
+                  </Text>
+                </Flex>
+              )}
+            </Stack>
             <Text textAlign="center" textStyle="body-xs" data-testid="cancel-strategy-model-fee">
-              Cancellation Fee: $0.50 USD
+              Cancellation Fee: {price ? parseFloat((CANCEL_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+              {getDenomName(getStrategyInitialDenom(strategy))}
             </Text>
+            <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+              {isPerformanceLoading ? (
+                <Center>
+                  <Spinner />
+                </Center>
+              ) : (
+                <HStack spacing={3} color="brand.200">
+                  <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+                  <Text>
+                    {getReturnedEscrowAmount(strategy, performance)} {getDenomName(getStrategyResultingDenom(strategy))}{' '}
+                    estimated to be returned on XX MMM YYYY. ({getDaysRemainingForEscrowReturn(strategy)} days)
+                  </Text>
+                </HStack>
+              )}
+            </Box>
           </Stack>
         </ModalBody>
         <ModalFooter>

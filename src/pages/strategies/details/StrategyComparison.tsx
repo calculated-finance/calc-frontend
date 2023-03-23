@@ -6,6 +6,7 @@ import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   getAcculumationDifference,
   getNumberOfPastSwaps,
+  getPerformanceFactor,
   getStandardDcaAveragePrice,
   getStandardDcaStrategyEndDate,
   getStandardDcaTotalCost,
@@ -26,14 +27,6 @@ import {
 } from '@helpers/strategy';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
-
-function getPerformanceFactor(performance: DcaPlusPerformanceResponse | undefined) {
-  const factor = Number(performance?.factor || 0);
-  const rounded = Number(factor.toFixed(4));
-  const difference = rounded - 1;
-  return difference;
-}
 
 function puraliseDays(val: number) {
   return val === 1 ? 'day' : 'days';

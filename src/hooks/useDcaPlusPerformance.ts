@@ -2,11 +2,10 @@ import { useWallet } from '@wizard-ui/react';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
-import { VaultResponse } from 'src/interfaces/generated/response/get_vault';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 
-export default function useDcaPlusPerformance(id?: Strategy['id']) {
+export default function useDcaPlusPerformance(id?: Strategy['id'], enabled = true) {
   const { address, client } = useWallet();
 
   return useQueryWithNotification<DcaPlusPerformanceResponse>(
@@ -23,7 +22,7 @@ export default function useDcaPlusPerformance(id?: Strategy['id']) {
       return result;
     },
     {
-      enabled: !!client && !!id && !!address,
+      enabled: !!client && !!id && !!address && enabled,
     },
   );
 }

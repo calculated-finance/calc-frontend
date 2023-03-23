@@ -16,6 +16,7 @@ import getStrategyBalance, {
   getConvertedSwapAmount,
   getStrategyInitialDenom,
 } from '@helpers/strategy';
+import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -37,6 +38,12 @@ export function getStandardDcaTotalSwapped(strategy: Strategy) {
 
 export function getStandardDcaTotalCost(strategy: Strategy) {
   return Number((getStandardDcaTotalSwapped(strategy) * (1 - FIN_TAKER_FEE - SWAP_FEE)).toFixed(6));
+}
+
+export function getStandardDcaTotalDeposit(strategy: Strategy) {
+  const { total_deposit } = getDcaPlusConfig(strategy) || {};
+
+  return convertDenomFromCoin(total_deposit);
 }
 
 // find the average price of the standard dca using above functions
@@ -108,4 +115,29 @@ export function getStrategySwapRange(strategy: Strategy) {
 
   const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
   return getSwapRangeFromModel(swapAmount, model, minimumSwapAmount);
+}
+
+export function getPerformanceFactor(performance: DcaPlusPerformanceResponse | undefined) {
+  const factor = Number(performance?.factor || 0);
+  const rounded = Number(factor.toFixed(4));
+  const difference = rounded - 1;
+  return difference;
+}
+
+function getDcaPlusFee(performance: DcaPlusPerformanceResponse | undefined) {
+  const { fee } = performance || {};
+  return convertDenomFromCoin(fee);
+}
+
+export function getReturnedEscrowAmount(strategy: Strategy, performance: DcaPlusPerformanceResponse | undefined) {
+  return getEscrowAmount(strategy) - getDcaPlusFee(performance);
+}
+
+export function getDaysRemainingForEscrowReturn(strategy: Strategy) {
+  const remainingStandardDCABalance = getStandardDcaTotalDeposit(strategy) - getStandardDcaTotalSwapped(strategy);
+  const remainingVaultBalance = convertDenomFromCoin(strategy.balance);
+
+  const largestRemainingBalance = Math.max(remainingStandardDCABalance, remainingVaultBalance);
+
+  return Math.ceil(largestRemainingBalance / getConvertedSwapAmount(strategy));
 }
