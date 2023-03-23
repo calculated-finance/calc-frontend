@@ -71,7 +71,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     token: initialDenom,
   });
 
-  const remaining = getDenomInfo(initialDenom).conversion(getStrategyBalance(strategy));
+  const remaining = getStrategyBalance(strategy);
 
   const validationSchema = Yup.object({
     topUpAmount: Yup.number().label('Top up amount').positive().max(displayAmount).required(),

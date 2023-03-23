@@ -22,7 +22,7 @@ export function getSwapRangeFromModel(swapAmount: number, model: PredictionModel
   return null;
 }
 
-export function getSwapRange(swapAmount: number, duration: number, miniumSwapAmount: number) {
+export function getSwapRange(swapAmount: number, duration: number, minimumSwapAmount: number) {
   const model = getModel(duration);
-  return getSwapRangeFromModel(swapAmount, model, miniumSwapAmount);
+  return getSwapRangeFromModel(swapAmount, model, minimumSwapAmount);
 }

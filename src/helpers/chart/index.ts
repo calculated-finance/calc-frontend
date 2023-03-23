@@ -32,6 +32,9 @@ export function buildSwapEventsWithAccumulation(swapEvents: SwapEvent[], creatio
 }
 
 export function getTotalAtTime(events: AccumulatedSwapEvent[], time: Date): number {
+  if (!events.length) {
+    return 0;
+  }
   const eventIndex = events.findIndex((event) => event.time > time);
   if (eventIndex === -1) {
     return events[events.length - 1].total;

@@ -42,7 +42,10 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
           {' '}
           <Tooltip
             label={
-              <Text>This amount will be returned in full if the strategy does not out perform traditional DCA.</Text>
+              <Text>
+                A maximum of 5% swap volume, this amount with be returned in full if DCA+ does not outperform
+                traditional DCA at the end of the strategy.
+              </Text>
             }
           >
             Escrowed*

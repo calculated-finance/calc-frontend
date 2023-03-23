@@ -46,7 +46,7 @@ export function isStrategyCancelled(strategy: Strategy) {
 export default function getStrategyBalance(strategy: Strategy) {
   const { balance } = strategy || {};
 
-  return Number(balance.amount);
+  return convertDenomFromCoin(balance);
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): Denom {
@@ -95,9 +95,9 @@ export function getStrategyType(strategy: Strategy) {
   return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }
 
-export function getStrategyTotalExecutions(strategy: Strategy) {
+export function getStrategyRemainingExecutions(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);
-  const swapAmount = getSwapAmount(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
 
   return totalExecutions(balance, swapAmount);
 }
@@ -144,7 +144,7 @@ export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] |
     return 'Pending strategy start';
   }
 
-  const executions = getStrategyTotalExecutions(strategy);
+  const executions = getStrategyRemainingExecutions(strategy);
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
