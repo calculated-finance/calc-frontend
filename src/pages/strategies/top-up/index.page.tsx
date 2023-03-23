@@ -18,8 +18,10 @@ import getStrategyBalance, {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyName,
+  isDcaPlus,
 } from '@helpers/strategy';
 import { getTimeSaved } from '@helpers/getTimeSaved';
+import { DcaPlusTopUp } from '@components/helpContent/DcaPlusTopUp';
 import TopUpAmount from './TopUpAmount';
 
 export const topUpSteps: StepConfig[] = [
@@ -36,8 +38,25 @@ export const topUpSteps: StepConfig[] = [
   },
 ];
 
+export const dcaPlusTopUpSteps: StepConfig[] = [
+  {
+    href: '/strategies/top-up',
+    title: 'Top Up Strategy',
+    footerText: 'How does the strategy change once you top-up the balance?',
+    helpContent: <DcaPlusTopUp />,
+  },
+  {
+    href: '/strategies/top-up/success',
+    title: 'Top Up Successful',
+    noBackButton: true,
+    noJump: true,
+    successPage: true,
+  },
+];
+
 function TopUpForm({ strategy }: { strategy: Strategy }) {
-  const { nextStep } = useSteps(topUpSteps);
+  const steps = isDcaPlus(strategy) ? dcaPlusTopUpSteps : topUpSteps;
+  const { nextStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
 
   const { mutate, error, isError } = useTopUpStrategy();
@@ -85,7 +104,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     //  @ts-ignore
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
-        <NewStrategyModalBody stepsConfig={topUpSteps} isLoading={isPageLoading} isSigning={isSubmitting}>
+        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isSubmitting}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <Stack spacing={2}>
