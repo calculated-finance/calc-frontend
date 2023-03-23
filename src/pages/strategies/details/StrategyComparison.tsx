@@ -43,7 +43,9 @@ function StrategyComparisonDetails({
         <Heading size="xs">DCA +</Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">Traditional DCA</Heading>
+        <Heading size="xs" color="grey.200">
+          Traditional DCA
+        </Heading>
       </GridItem>
       <GridItem colSpan={1} />
       <GridItem colSpan={2}>
@@ -58,7 +60,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text as="span" fontSize="sm">
+        <Text as="span" fontSize="sm" color="grey.200">
           {getStandardDcaTotalReceived(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
         </Text>
       </GridItem>
@@ -71,7 +73,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text as="span" fontSize="sm">
+        <Text as="span" fontSize="sm" color="grey.200">
           {getStandardDcaTotalSwapped(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
@@ -84,7 +86,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text as="span" fontSize="sm">
+        <Text as="span" fontSize="sm" color="grey.200">
           {getStandardDcaRemainingBalance(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
         </Text>
       </GridItem>
@@ -99,7 +101,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm" as="span">
+        <Text fontSize="sm" as="span" color="grey.200">
           {isBuyStrategy(strategy)
             ? formatFiat(getStandardDcaAverageCost(strategy) * initialDenomPrice)
             : formatFiat(getStandardDcaAveragePrice(strategy) * resultingDenomPrice)}
@@ -117,7 +119,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm" as="span">
+        <Text fontSize="sm" as="span" color="grey.200">
           {getStandardDcaRemainingExecutions(strategy)}
         </Text>
       </GridItem>

@@ -12,7 +12,7 @@ import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
-import { getStrategyResultingDenom } from '@helpers/strategy';
+import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
 import { Denom } from '@models/Denom';
 import { getDenomName } from '@utils/getDenomInfo';
@@ -75,9 +75,9 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
   const events = eventsData?.events;
 
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const denom = isBuyStrategy(strategy) ? getStrategyResultingDenom(strategy) : getStrategyInitialDenom(strategy);
 
-  const { data: coingeckoData, isLoading: isPriceLoading } = useFiatPriceHistory(resultingDenom, days);
+  const { data: coingeckoData, isLoading: isPriceLoading } = useFiatPriceHistory(denom, days);
 
   const now = new Date();
   const fromDate = new Date(now.getTime() - parseInt(days, 10) * 24 * 60 * 60 * 1000);
@@ -196,7 +196,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
           )}
         </Center>
         <Center width="full" p={6}>
-          <StrategyComparisonLegend denom={resultingDenom} />
+          <StrategyComparisonLegend denom={denom} />
         </Center>
       </Box>
     </GridItem>
