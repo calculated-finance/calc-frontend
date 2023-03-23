@@ -50,7 +50,6 @@ function Page() {
   }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
-    console.log(data);
     await actions.updateAction(data);
     await nextStep();
   };
