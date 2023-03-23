@@ -148,9 +148,9 @@ function ActiveStrategies() {
 
 function TotalInvestment() {
   const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
-  const { data: allStrategies } = useAdminStrategies();
+  const { data } = useAdminStrategies();
   const { connected } = useWallet();
-  if (!fiatPrices || !allStrategies) {
+  if (!fiatPrices || !data) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -158,9 +158,9 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies?.vaults);
+  const totalSwappedAmounts = getTotalSwapped(data);
   const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
-  const strategiesCount = allStrategies.vaults.length;
+  const strategiesCount = data.length;
 
   return (
     <Stack layerStyle="panel" p={8} h="full" spacing={6}>
@@ -239,9 +239,9 @@ function Home() {
           </GridItem>
         )}
 
-        {/* <GridItem colSpan={{ base: 6, xl: 3 }}>
+        <GridItem colSpan={{ base: 6, xl: 3 }}>
           <TotalInvestment />
-        </GridItem> */}
+        </GridItem>
         <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
           <WorkflowInformation />
         </GridItem>
