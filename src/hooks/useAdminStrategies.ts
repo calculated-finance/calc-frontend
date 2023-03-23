@@ -8,21 +8,30 @@ const QUERY_KEY = 'get_vaults';
 
 export type Strategy = Vault;
 
+const GET_VAULTS_LIMIT = 400;
 export default function useAdminStrategies() {
   const { client } = useWallet();
 
-  return useQueryWithNotification<VaultsResponse>(
-    [QUERY_KEY, client],
-    () => {
-      const result = client!.queryContractSmart(CONTRACT_ADDRESS, {
+  function fetchVaultsRecursively(startAfter = null, allVaults = [] as Vault[]): Promise<Vault[]> {
+    return client!
+      .queryContractSmart(CONTRACT_ADDRESS, {
         get_vaults: {
-          limit: 1000,
+          limit: GET_VAULTS_LIMIT,
+          start_after: startAfter,
         },
+      })
+      .then((result) => {
+        allVaults.push(...result.vaults);
+
+        if (result.vaults.length === GET_VAULTS_LIMIT) {
+          const newStartAfter = result.vaults[result.vaults.length - 1].id;
+          return fetchVaultsRecursively(newStartAfter, allVaults);
+        }
+        return allVaults;
       });
-      return result;
-    },
-    {
-      enabled: !!client,
-    },
-  );
+  }
+
+  return useQueryWithNotification<Vault[]>([QUERY_KEY, client], () => fetchVaultsRecursively(), {
+    enabled: !!client,
+  });
 }

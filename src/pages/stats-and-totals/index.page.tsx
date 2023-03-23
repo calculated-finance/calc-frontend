@@ -13,7 +13,6 @@ import { VaultStatus } from 'src/interfaces/generated/query';
 import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -23,6 +22,7 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
+import { Vault } from 'src/interfaces/generated/response/get_vaults';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -72,13 +72,13 @@ function getStrategiesByStatus(allStrategies: Strategy[], status: string) {
 
 function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
   const { data: allStrategies } = useAdminStrategies();
-  if (!allStrategies?.vaults.length) {
+  if (!allStrategies?.length) {
     return null;
   }
-  if (allStrategies.vaults.length === 0) {
+  if (allStrategies?.length === 0) {
     return null;
   }
-  const { strategiesByStatus, percentage } = getStrategiesByStatus(allStrategies.vaults, status);
+  const { strategiesByStatus, percentage } = getStrategiesByStatus(allStrategies, status);
 
   return (
     <>
@@ -111,13 +111,13 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
 
 function StrategiesTimeIntervalItem({ timeInterval }: { timeInterval: Strategy['time_interval'] }) {
   const { data: allStrategies } = useAdminStrategies();
-  if (!allStrategies?.vaults.length) {
+  if (!allStrategies?.length) {
     return null;
   }
-  if (allStrategies.vaults.length === 0) {
+  if (allStrategies.length === 0) {
     return null;
   }
-  const { strategiesByTimeInterval, percentage } = getStrategiesByTimeInterval(allStrategies.vaults, timeInterval);
+  const { strategiesByTimeInterval, percentage } = getStrategiesByTimeInterval(allStrategies, timeInterval);
 
   return (
     <>
@@ -287,8 +287,8 @@ function getAverageDurationForActiveStrategies(strategies: Strategy[]) {
     .reduce((amount, total) => total + amount, 0);
   return totalDuration / strategies.length;
 }
-export function uniqueAddresses(allStrategies: VaultsResponse | undefined) {
-  return Array.from(new Set(allStrategies?.vaults.map((strategy) => strategy.owner) || []));
+export function uniqueAddresses(allStrategies: Vault[] | undefined) {
+  return Array.from(new Set(allStrategies?.map((strategy) => strategy.owner) || []));
 }
 
 function Page() {
@@ -307,10 +307,10 @@ function Page() {
 
   const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies?.vaults);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies);
   const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies?.vaults);
+  const totalReceivedAmounts = getTotalReceived(allStrategies);
   const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices);
 
   const ThirtyDaysFromNow = new Date();
@@ -322,17 +322,13 @@ function Page() {
   const AYearFromNow = new Date();
   AYearFromNow.setDate(AYearFromNow.getDate() + 365);
 
-  const thirtDayRevenue = getProjectedRevenueForStrategysForDate(allStrategies?.vaults, ThirtyDaysFromNow, fiatPrices);
-  const threeMonthRevenue = getProjectedRevenueForStrategysForDate(
-    allStrategies?.vaults,
-    ThreeMonthsFromNow,
-    fiatPrices,
-  );
-  const twelveMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies?.vaults, AYearFromNow, fiatPrices);
-  const averageDuration = getAverageDurationForActiveStrategies(allStrategies?.vaults);
+  const thirtDayRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThirtyDaysFromNow, fiatPrices);
+  const threeMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThreeMonthsFromNow, fiatPrices);
+  const twelveMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, AYearFromNow, fiatPrices);
+  const averageDuration = getAverageDurationForActiveStrategies(allStrategies);
   const averageDurationInDays = Math.floor(averageDuration / (1000 * 60 * 60 * 24));
 
-  const maxDurationInDays = getMaxDurationInMilliseconds(allStrategies?.vaults) / (1000 * 60 * 60 * 24);
+  const maxDurationInDays = getMaxDurationInMilliseconds(allStrategies) / (1000 * 60 * 60 * 24);
 
   return (
     <Stack spacing={6}>
@@ -342,12 +338,12 @@ function Page() {
           <Heading size="md">Totals</Heading>
           <Heading size="sm" />
           <Text>Unique wallets with strategies: {uniqueWalletAddresses.length}</Text>
-          <Text>Total strategies: {allStrategies?.vaults.length}</Text>
+          <Text>Total strategies: {allStrategies?.length}</Text>
           <Text textStyle="body-xs">
-            Strategies per wallet: {((allStrategies?.vaults.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
+            Strategies per wallet: {((allStrategies?.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
           </Text>
           <Text textStyle="body-xs">
-            Strategies with autostaking: {allStrategies?.vaults.filter(isStrategyAutoStaking).length}
+            Strategies with autostaking: {allStrategies?.filter(isStrategyAutoStaking).length}
           </Text>
           <Text textStyle="body-xs">
             Average Time Until End of Strategy: {averageDurationInDays} days (Max: {maxDurationInDays} days)
@@ -414,7 +410,7 @@ function Page() {
             />
             <VictoryBar
               data={['scheduled', 'active', 'inactive', 'cancelled'].map((timeInterval: string) => {
-                const { strategiesByStatus } = getStrategiesByStatus(allStrategies?.vaults || [], timeInterval) || [];
+                const { strategiesByStatus } = getStrategiesByStatus(allStrategies || [], timeInterval) || [];
 
                 return {
                   x: timeInterval,
@@ -454,7 +450,7 @@ function Page() {
               }}
               data={['hourly', 'daily', 'weekly', 'monthly'].map((timeInterval: string) => {
                 const { strategiesByTimeInterval, percentage } =
-                  getStrategiesByTimeInterval(allStrategies?.vaults || [], timeInterval) || [];
+                  getStrategiesByTimeInterval(allStrategies || [], timeInterval) || [];
 
                 return {
                   x: timeInterval,
@@ -495,7 +491,7 @@ function Page() {
               }}
               data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut, StrategyTypes.DCAPlusIn, StrategyTypes.DCAPlusOut].map(
                 (type: StrategyTypes) => {
-                  const { strategiesByType, percentage } = getStrategiesByType(allStrategies?.vaults || [], type) || [];
+                  const { strategiesByType, percentage } = getStrategiesByType(allStrategies || [], type) || [];
 
                   return {
                     x: type,
@@ -536,7 +532,7 @@ function Page() {
                 onLoad: { duration: 1000 },
               }}
               bins={20}
-              data={allStrategies.vaults.filter(isStrategyActive).map((strategy: Strategy) => {
+              data={allStrategies.filter(isStrategyActive).map((strategy: Strategy) => {
                 const remainingTime = timeUntilEndOfStrategyInMilliseconds(strategy);
                 const remainingTimeInDays = Math.round(remainingTime / (1000 * 60 * 60 * 24));
                 return {
