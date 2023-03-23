@@ -40,7 +40,10 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
 
   const toast = useToast();
 
-  const { data: performance, isLoading: isPerformanceLoading } = useDcaPlusPerformance(strategy.id, isOpen);
+  const { data: performance, isLoading: isPerformanceLoading } = useDcaPlusPerformance(
+    strategy.id,
+    isOpen && isDcaPlus(strategy),
+  );
 
   const handleCancelStrategy = () =>
     cancelStrategy(strategy.id, {
@@ -104,21 +107,24 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
               Cancellation Fee: {price ? parseFloat((CANCEL_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
               {getDenomName(getStrategyInitialDenom(strategy))}
             </Text>
-            <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
-              {isPerformanceLoading ? (
-                <Center>
-                  <Spinner />
-                </Center>
-              ) : (
-                <HStack spacing={3} color="brand.200">
-                  <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
-                  <Text>
-                    {getReturnedEscrowAmount(strategy, performance)} {getDenomName(getStrategyResultingDenom(strategy))}{' '}
-                    estimated to be returned on XX MMM YYYY. ({getDaysRemainingForEscrowReturn(strategy)} days)
-                  </Text>
-                </HStack>
-              )}
-            </Box>
+            {isDcaPlus(strategy) && (
+              <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+                {isPerformanceLoading ? (
+                  <Center>
+                    <Spinner />
+                  </Center>
+                ) : (
+                  <HStack spacing={3} color="brand.200">
+                    <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+                    <Text>
+                      {getReturnedEscrowAmount(strategy, performance)}{' '}
+                      {getDenomName(getStrategyResultingDenom(strategy))} estimated to be returned on XX MMM YYYY. (
+                      {getDaysRemainingForEscrowReturn(strategy)} days)
+                    </Text>
+                  </HStack>
+                )}
+              </Box>
+            )}
           </Stack>
         </ModalBody>
         <ModalFooter>
