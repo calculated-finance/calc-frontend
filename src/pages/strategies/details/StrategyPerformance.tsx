@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, HStack } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -37,7 +37,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={1}>
         <Flex align="center" gap={2} data-testid="strategy-initial-denom">
-          <Text fontSize="sm">{getDenomInfo(initialDenom).name}</Text> <DenomIcon denomName={initialDenom} />
+          <Text fontSize="sm">{getDenomName(initialDenom)}</Text> <DenomIcon denomName={initialDenom} />
         </Flex>
       </GridItem>
       <GridItem colSpan={1}>
@@ -45,7 +45,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={1}>
         <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-          <Text fontSize="sm">{getDenomInfo(resultingDenom).name}</Text> <DenomIcon denomName={resultingDenom} />
+          <Text fontSize="sm">{getDenomName(resultingDenom)}</Text> <DenomIcon denomName={resultingDenom} />
         </Flex>
       </GridItem>
       <GridItem colSpan={2}>
