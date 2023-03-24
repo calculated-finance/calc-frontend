@@ -21,8 +21,10 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { price: resultingDenomPrice, priceChange24Hr } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
+  const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
+
+  const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
 
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
@@ -95,20 +97,25 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
       <GridItem colSpan={1}>
         <Heading size="xs">
-          <Text fontSize="sm">{getDenomName(resultingDenom)} Price</Text>
+          <Text fontSize="sm">
+            {isBuyStrategy(strategy) ? getDenomName(resultingDenom) : getDenomName(initialDenom)} price
+          </Text>
         </Heading>
       </GridItem>
 
       <GridItem colSpan={1}>
         <Flex>
-          <HStack color={priceChange24Hr > 0 ? 'green.200' : 'red.200'}>
+          <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
             <Text fontSize="sm" data-testid="strategy-asset-price">
-              {formatFiat(resultingDenomPrice)}
+              {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
             </Text>
-            {priceChange24Hr > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
-            <Text ml="5px" fontSize="xs" data-testid="strategy-asset-price-change">
-              {formatSignedPercentage(priceChange24Hr / 100)}
-            </Text>
+            <HStack spacing={1}>
+              {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
+
+              <Text fontSize="xs" data-testid="strategy-asset-price-change">
+                {formatSignedPercentage(priceChange / 100)}
+              </Text>
+            </HStack>
           </HStack>
         </Flex>
       </GridItem>
