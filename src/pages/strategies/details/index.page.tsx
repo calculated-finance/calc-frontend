@@ -136,7 +136,8 @@ function Page() {
         {isDcaPlus(strategy) && <StrategyComparison strategy={strategy} />}
         <StrategyDetails strategy={strategy} />
         <StrategyPerformance strategy={strategy} />
-        {isDcaPlus(strategy) ? <StrategyComparisonChart strategy={strategy} /> : <StrategyChart strategy={strategy} />}
+        {isDcaPlus(strategy) && <StrategyComparisonChart strategy={strategy} />}
+        <StrategyChart strategy={strategy} />
       </Grid>
     </>
   );

@@ -17,7 +17,7 @@ import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, 
 import { StrategyTypes } from '@models/StrategyTypes';
 import { formatFiat } from '@helpers/format/formatFiat';
 import {
-  getStrategyTotalExecutions,
+  getStrategyRemainingExecutions,
   getStrategyType,
   isStrategyActive,
   isStrategyAutoStaking,
@@ -224,6 +224,8 @@ function hoursUntil(date: Date) {
 
 // map functions to time intervals
 const timeIntervalMap = {
+  every_second: () => 1,
+  every_minute: () => 1,
   half_hourly: () => 30,
   hourly: hoursUntil,
   half_daily: () => 12,
@@ -234,7 +236,8 @@ const timeIntervalMap = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyTotalExecutions(strategy));
+  console.log(strategy.time_interval);
+  return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
 }
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
@@ -270,7 +273,7 @@ function getProjectedRevenueForStrategysForDate(strategies: Strategy[], date: Da
 function timeUntilEndOfStrategyInMilliseconds(strategy: Strategy) {
   const now = new Date();
   const now2 = new Date();
-  const end = getEndDateFromRemainingExecutions(strategy, now2, getStrategyTotalExecutions(strategy));
+  const end = getEndDateFromRemainingExecutions(strategy, now2, getStrategyRemainingExecutions(strategy));
   if (!end) return 0;
   const diff = end.getTime() - now.getTime();
   return diff;

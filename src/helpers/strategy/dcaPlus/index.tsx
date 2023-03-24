@@ -1,22 +1,21 @@
-import getDenomInfo, { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
+import { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
-import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import totalExecutions from '@utils/totalExecutions';
 
 import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
-import { formatDate } from '@helpers/format/formatDate';
-import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { getLastExecutionDateFromStrategyEvents } from '@helpers/getLastExecutionDateFromStrategyEvents';
 import { getModelFromId } from '@helpers/ml/getModel';
 import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
 import getStrategyBalance, {
-  getSwapAmount,
-  isStrategyOperating,
   getTotalReceived,
   getConvertedSwapAmount,
   getStrategyInitialDenom,
+  getStrategyRemainingExecutions,
+  getTotalSwapped,
+  getStrategyEndDateFromRemainingExecutions,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { isNil } from 'lodash';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -47,31 +46,12 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
 }
 
 // find the average price of the standard dca using above functions
+export function getStandardDcaAverageCost(strategy: Strategy) {
+  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceived(strategy);
+}
+
 export function getStandardDcaAveragePrice(strategy: Strategy) {
-  const totalReceived = getStandardDcaTotalReceived(strategy);
-  const totalCost = getStandardDcaTotalCost(strategy);
-
-  return totalCost / totalReceived;
-}
-
-export function getStandardDcaRemainingExecutions(strategy: Strategy) {
-  const swappedDifference = getStandardDcaTotalSwapped(strategy) - Number(strategy.swapped_amount.amount);
-  const balance = getStrategyBalance(strategy) + swappedDifference;
-  const swapAmount = getSwapAmount(strategy);
-
-  return totalExecutions(balance, swapAmount);
-}
-
-export function getStandardDcaStrategyEndDate(strategy: Strategy, events: Event[]) {
-  const executions = getStandardDcaRemainingExecutions(strategy);
-
-  const lastExecutionDate = getLastExecutionDateFromStrategyEvents(events);
-
-  if (isStrategyOperating(strategy) && lastExecutionDate) {
-    return formatDate(getEndDateFromRemainingExecutions(strategy, lastExecutionDate, executions));
-  }
-
-  return '-';
+  return getStandardDcaTotalReceived(strategy) / getStandardDcaTotalSwapped(strategy);
 }
 
 export function getEscrowLevel(strategy: Strategy) {
@@ -86,7 +66,7 @@ export function getEscrowAmount(strategy: Strategy) {
   return convertDenomFromCoin(escrowed_balance);
 }
 
-export function getAcculumationDifference(strategy: Strategy) {
+export function getAccumulationGained(strategy: Strategy) {
   const standardDcaTotalReceived = getStandardDcaTotalReceived(strategy);
   const totalReceived = getTotalReceived(strategy);
 
@@ -95,12 +75,19 @@ export function getAcculumationDifference(strategy: Strategy) {
   return Number(difference.toFixed(6));
 }
 
+export function getSwappedSaved(strategy: Strategy) {
+  const standardDcaTotalSwapped = getStandardDcaTotalSwapped(strategy);
+  const totalSwapped = getTotalSwapped(strategy);
+
+  const difference = standardDcaTotalSwapped - totalSwapped;
+  return Number(difference.toFixed(6));
+}
+
 export function getNumberOfPastSwaps(strategy: Strategy) {
-  const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
+  const totalSwapped = getStandardDcaTotalSwapped(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
 
-  const swapAmount = getSwapAmount(strategy);
-
-  return Math.floor(Number(standard_dca_swapped_amount?.amount) / swapAmount);
+  return Math.floor(totalSwapped / swapAmount);
 }
 
 export function getStrategyModel(strategy: Strategy) {
@@ -133,11 +120,38 @@ export function getReturnedEscrowAmount(strategy: Strategy, performance: DcaPlus
   return getEscrowAmount(strategy) - getDcaPlusFee(performance);
 }
 
+export function getStandardDcaRemainingBalance(strategy: Strategy) {
+  return getStandardDcaTotalDeposit(strategy) - getStandardDcaTotalSwapped(strategy);
+}
+
+export function getRemainingExecutionsRange(strategy: Strategy) {
+  const model = getStrategyModel(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
+  const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
+  const balance = getStrategyBalance(strategy);
+  const { min: minSwap, max: maxSwap } = getSwapRangeFromModel(swapAmount, model, minimumSwapAmount) || {};
+  return {
+    min: maxSwap && totalExecutions(balance, maxSwap),
+    max: minSwap && totalExecutions(balance, minSwap),
+  };
+}
+
+export function getStandardDcaRemainingExecutions(strategy: Strategy) {
+  const balance = getStandardDcaRemainingBalance(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
+
+  return totalExecutions(balance, swapAmount);
+}
+
 export function getDaysRemainingForEscrowReturn(strategy: Strategy) {
-  const remainingStandardDCABalance = getStandardDcaTotalDeposit(strategy) - getStandardDcaTotalSwapped(strategy);
-  const remainingVaultBalance = convertDenomFromCoin(strategy.balance);
+  return Math.max(getStandardDcaRemainingExecutions(strategy), getStrategyRemainingExecutions(strategy));
+}
 
-  const largestRemainingBalance = Math.max(remainingStandardDCABalance, remainingVaultBalance);
+export function getStrategyEndDateRange(strategy: Strategy, strategyEvents: StrategyEvent[] | undefined) {
+  const { min, max } = getRemainingExecutionsRange(strategy) || {};
 
-  return Math.ceil(largestRemainingBalance / getConvertedSwapAmount(strategy));
+  return {
+    min: !isNil(min) && getStrategyEndDateFromRemainingExecutions(strategy, strategyEvents, min),
+    max: !isNil(max) && getStrategyEndDateFromRemainingExecutions(strategy, strategyEvents, max),
+  };
 }

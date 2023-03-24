@@ -37,10 +37,6 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   return (
     <GridItem colSpan={6}>
-      <Heading size="md" pb={4}>
-        Strategy history
-      </Heading>
-
       <Box layerStyle="panel" position="relative">
         {events && <StrategyChartStats strategy={strategy} strategyEvents={events} />}
         <Box p={6} position="absolute" top={0} right={0}>

@@ -46,7 +46,7 @@ export function isStrategyCancelled(strategy: Strategy) {
 export default function getStrategyBalance(strategy: Strategy) {
   const { balance } = strategy || {};
 
-  return Number(balance.amount);
+  return convertDenomFromCoin(balance);
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): Denom {
@@ -95,9 +95,9 @@ export function getStrategyType(strategy: Strategy) {
   return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }
 
-export function getStrategyTotalExecutions(strategy: Strategy) {
+export function getStrategyRemainingExecutions(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);
-  const swapAmount = getSwapAmount(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
 
   return totalExecutions(balance, swapAmount);
 }
@@ -138,13 +138,12 @@ export function getStrategyStartDate(strategy: Strategy) {
     : '-';
 }
 
-export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
+export function getStrategyEndDateFromRemainingExecutions(
+  strategy: Strategy,
+  events: StrategyEvent[] | undefined,
+  executions: number,
+) {
   const { trigger } = strategy;
-  if (trigger && 'fin_limit_order' in trigger) {
-    return 'Pending strategy start';
-  }
-
-  const executions = getStrategyTotalExecutions(strategy);
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
@@ -170,6 +169,17 @@ export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] |
   }
 
   return '-';
+}
+
+export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
+  const { trigger } = strategy;
+  if (trigger && 'fin_limit_order' in trigger) {
+    return 'Pending strategy start';
+  }
+
+  const executions = getStrategyRemainingExecutions(strategy);
+
+  return getStrategyEndDateFromRemainingExecutions(strategy, events, executions);
 }
 
 export function isStrategyAutoStaking(strategy: Strategy) {
@@ -216,9 +226,7 @@ export function getTotalCost(strategy: Strategy) {
 }
 
 export function getTotalReceived(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.received_amount.denom);
-
-  return parseFloat(conversion(Number(strategy.received_amount.amount)).toFixed(6));
+  return convertDenomFromCoin(strategy.received_amount);
 }
 
 export function getAveragePrice(strategy: Vault) {
@@ -226,5 +234,5 @@ export function getAveragePrice(strategy: Vault) {
 }
 
 export function getAverageCost(strategy: Vault) {
-  return getTotalCost(strategy) / getTotalReceived(strategy);
+  return getTotalSwapped(strategy) / getTotalReceived(strategy);
 }
