@@ -22,7 +22,7 @@ const mockKujiraQuery = {
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-plus-in-puff-puff/post-purchase',
+  pathname: '/create-strategy/dca-plus-in/post-purchase',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -112,7 +112,7 @@ describe('DCA In post-purchase page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-in-puff-puff/confirm-purchase',
+        pathname: '/create-strategy/dca-plus-in/confirm-purchase',
         query: undefined,
       });
     });
@@ -144,7 +144,7 @@ describe('DCA In post-purchase page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-in-puff-puff/confirm-purchase',
+        pathname: '/create-strategy/dca-plus-in/confirm-purchase',
         query: undefined,
       });
     });
@@ -167,7 +167,7 @@ describe('DCA In post-purchase page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-in-puff-puff/confirm-purchase',
+        pathname: '/create-strategy/dca-plus-in/confirm-purchase',
         query: undefined,
       });
     });

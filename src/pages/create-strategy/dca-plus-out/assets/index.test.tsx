@@ -17,7 +17,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-plus-out-puff-puff/assets',
+  pathname: '/create-strategy/dca-plus-out/assets',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -187,7 +187,7 @@ describe('DCA Out Assets page', () => {
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-out-puff-puff/customise',
+        pathname: '/create-strategy/dca-plus-out/customise',
         query: undefined,
       });
     });
