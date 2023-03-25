@@ -7,6 +7,49 @@ import { CHAIN_INFO } from 'kujira.js';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
+const osmoConfig = {
+  chainId: 'osmoo-test-4',
+  chainName: 'Osmosis',
+  rpc: 'https://rpc-test.osmosis.zone',
+  rest: 'https://lcd-test.osmosis.zone',
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: 'osmo',
+    bech32PrefixAccPub: 'osmopub',
+    bech32PrefixValAddr: 'osmovaloper',
+    bech32PrefixValPub: 'osmovaloperpub',
+    bech32PrefixConsAddr: 'osmovalcons',
+    bech32PrefixConsPub: 'osmovalconspub',
+  },
+  currencies: [
+    {
+      coinDenom: 'OSMO',
+      coinMinimalDenom: 'uosmo',
+      coinDecimals: 6,
+      coinGeckoId: 'osmosis',
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: 'OSMO',
+      coinMinimalDenom: 'uosmo',
+      coinDecimals: 6,
+      coinGeckoId: 'osmosis',
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: 'OSMO',
+    coinMinimalDenom: 'uosmo',
+    coinDecimals: 6,
+    coinGeckoId: 'osmosis',
+  },
+  coinType: 118,
+} as ChainInfo;
+
+CHAIN_INFO['osmo-test-4'] = osmoConfig;
+
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
 }
@@ -70,7 +113,7 @@ export const useKeplr = create<IWallet>()(
           const offlineSigner = await keplr.getOfflineSignerAuto(CHAIN_ID);
           const accounts = await offlineSigner.getAccounts();
           const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, {
-            gasPrice: GasPrice.fromString('0.015ukuji'),
+            gasPrice: GasPrice.fromString('0.015uosmo'),
           });
 
           set({

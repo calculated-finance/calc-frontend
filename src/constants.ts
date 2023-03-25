@@ -2,14 +2,14 @@ import { NETWORK } from 'kujira.js';
 
 // Environment specific constants
 export const CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c';
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'osmo18sszr5mq9788wp7z8v3pj28gmknnt8tdsvv0e4ey887m9nuslcmsesgj3w';
 export const STAKING_ROUTER_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS ||
-  'kujira1n2jm3jrjzztjvdljwh549m8zx6w5v59svvta5kkysf5znr40af8qu0vpca';
-export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://test-rpc-kujira.mintthemoon.xyz';
-export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoon-4';
+  'osmo19cgtuk3pqeg7qff434ydz8ygyjlumznqgrqpq2zhj7atcfmjtl4qpphw98';
+export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://rpc-test.osmosis.zone';
+export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'osmo-test-4';
 export const FEE_TAKER_ADDRESS =
-  process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
+  process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54';
 
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
