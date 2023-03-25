@@ -3,9 +3,9 @@ import { isNumber } from 'lodash';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
-import { findPair } from '@helpers/findPair';
+import { findPool } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
-import usePairs from '../usePairs';
+import usePools from '../usePools';
 import useQueryWithNotification from '../useQueryWithNotification';
 
 function safeInvert(value: number) {
@@ -70,9 +70,9 @@ export default function usePrice(
 ) {
   const { client } = useWallet();
 
-  const { data: pairsData } = usePairs();
-  const { pairs } = pairsData || {};
-  const pairAddress = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
+  const { data: poolsData } = usePools();
+  const { pools } = poolsData || {};
+  const pairAddress = pools && resultingDenom && initialDenom ? findPool(pools, resultingDenom, initialDenom) : null;
 
   const { data, ...helpers } = useQueryWithNotification<BookResponse>(
     ['price', pairAddress, client],

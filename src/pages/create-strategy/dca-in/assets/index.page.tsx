@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
+import usePools, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePools';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -18,9 +18,9 @@ import { ModalWrapper } from '@components/ModalWrapper';
 function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
   const {
-    data: { pairs },
+    data: { pools },
     isLoading,
-  } = usePairs();
+  } = usePools();
   const { nextStep } = useSteps(steps);
 
   const { data } = useBalances();
@@ -36,11 +36,12 @@ function DcaIn() {
 
   const router = useRouter();
 
-  if (!pairs) {
+  if (!pools) {
     return <ModalWrapper stepsConfig={steps} isLoading reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } = pairs.find((pair) => pair.address === router.query.pair) || {};
+  // calling toString to make this not failing compilation
+  const { quote_denom, base_denom } = pools.find((pool) => pool.pool_id.toString() === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
     initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
@@ -60,7 +61,7 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={uniqueBaseDenomsFromQuoteDenom(values.initialDenom, pairs)} />
+              <DCAInResultingDenom denoms={uniqueBaseDenomsFromQuoteDenom(values.initialDenom, pools)} />
               <Submit>Next</Submit>
             </Stack>
           </Form>

@@ -2,7 +2,7 @@ import { NETWORK } from 'kujira.js';
 
 // Environment specific constants
 export const CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'osmo18sszr5mq9788wp7z8v3pj28gmknnt8tdsvv0e4ey887m9nuslcmsesgj3w';
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'osmo1lf7xs0hheu4qsepk7603d9p0z69wjc3p7juu475wh5xj0yrncp9strezkz';
 export const STAKING_ROUTER_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS ||
   'osmo19cgtuk3pqeg7qff434ydz8ygyjlumznqgrqpq2zhj7atcfmjtl4qpphw98';

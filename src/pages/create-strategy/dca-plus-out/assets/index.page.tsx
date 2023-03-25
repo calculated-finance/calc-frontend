@@ -22,12 +22,12 @@ import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { isDenomStable } from '@utils/getDenomInfo';
-import { Pair } from '@models/Pair';
+import { Pool } from '@models/Pair';
 import { Denom } from '@models/Denom';
 import { WhitelistModal } from '@components/WhitelistModal';
 import useWhitelist from '@hooks/useWhitelist';
 
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+function getResultingDenoms(pairs: Pool[], initialDenom: Denom | undefined) {
   return Array.from(
     new Set([
       ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),

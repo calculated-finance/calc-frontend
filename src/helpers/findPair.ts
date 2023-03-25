@@ -1,19 +1,19 @@
 import { isDenomStable } from '@utils/getDenomInfo';
-import { Pair } from '@models/Pair';
+import { Pool } from '@models/Pool';
 import { Denom } from '@models/Denom';
 
-export function findPair(pairs: Pair[], resultingDenom: Denom, initialDenom: Denom) {
+export function findPool(pools: Pool[], resultingDenom: Denom, initialDenom: Denom) {
   if (isDenomStable(initialDenom)) {
-    return pairs?.find((pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom)
-      ?.address;
+    return pools?.find((pool: Pool) => pool.base_denom === resultingDenom && pool.quote_denom === initialDenom)
+      ?.pool_id;
   }
 
-  const initialAsQuote = pairs?.find(
-    (pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom,
-  )?.address;
+  const initialAsQuote = pools?.find(
+    (pool: Pool) => pool.base_denom === resultingDenom && pool.quote_denom === initialDenom,
+  )?.pool_id;
 
   if (initialAsQuote) {
     return initialAsQuote;
   }
-  return pairs?.find((pair: Pair) => pair.base_denom === initialDenom && pair.quote_denom === resultingDenom)?.address;
+  return pools?.find((pool: Pool) => pool.base_denom === initialDenom && pool.quote_denom === resultingDenom)?.pool_id;
 }

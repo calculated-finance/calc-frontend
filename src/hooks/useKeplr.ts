@@ -37,6 +37,11 @@ const osmoConfig = {
       coinMinimalDenom: 'uosmo',
       coinDecimals: 6,
       coinGeckoId: 'osmosis',
+      gasPriceStep: {
+        low: 0.00125,
+        average: 0.0025,
+        high: 0.00375,
+      },
     },
   ],
   stakeCurrency: {

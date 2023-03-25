@@ -4,9 +4,9 @@ import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import { findPair } from '@helpers/findPair';
+import { findPool } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
-import { Pair } from '@models/Pair';
+import { Pool } from '@models/Pool';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '../useDcaInForm';
 import { DcaFormState } from './DcaFormState';
@@ -72,13 +72,13 @@ function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTol
     : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance);
 }
 
-function getPairAddress(initialDenom: Denom, resultingDenom: Denom, pairs: Pair[]) {
-  const pairAddress = findPair(pairs, resultingDenom, initialDenom);
+function getPoolId(initialDenom: Denom, resultingDenom: Denom, pools: Pool[]) {
+  const poolId = findPool(pools, resultingDenom, initialDenom);
 
-  if (!pairAddress) {
-    throw new Error('Pair not found');
+  if (!poolId) {
+    throw new Error('Pool not found');
   }
-  return pairAddress;
+  return poolId;
 }
 
 function getStartTime(startDate: Date | undefined, purchaseTime: string | undefined) {
@@ -123,14 +123,14 @@ function getExecutionInterval(executionInterval: TimeInterval) {
 
 export function buildCreateVaultParamsDCA(
   state: DcaInFormDataAll,
-  pairs: Pair[],
+  pairs: Pool[],
   transactionType: TransactionType,
 ): ExecuteMsg {
   return {
     create_vault: {
       label: '',
       time_interval: getExecutionInterval(state.executionInterval),
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      pool_id: getPoolId(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       minimum_receive_amount: getMinimumReceiveAmount(
@@ -153,7 +153,7 @@ export function buildCreateVaultParamsDCA(
   };
 }
 
-export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg {
+export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pool[]): ExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
   return {
     create_vault: {
@@ -161,7 +161,7 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       time_interval: 'daily',
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      pool_id: getPoolId(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
@@ -175,7 +175,7 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
 export function buildCreateVaultParams(
   formType: FormNames,
   state: DcaFormState,
-  pairs: Pair[],
+  pairs: Pool[],
   transactionType: TransactionType,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {

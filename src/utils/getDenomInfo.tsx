@@ -259,12 +259,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
 };
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
-  [TestnetDenoms.Demo]: {
-    name: 'DEMO',
-    stable: true,
-    coingeckoId: 'usd-coin',
+  [TestnetDenoms.ATOM]: {
+    name: 'ATOM',
+    icon: '/images/denoms/atom.svg',
+    stakeable: true,
+    coingeckoId: 'cosmos',
     significantFigures: 6,
     enabledInDcaPlus: true,
+    stable: true
   },
   [TestnetDenoms.USK]: {
     name: 'USK',

@@ -8,9 +8,16 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });
 
+  console.log('field', field);
+
   const { price } = useFiatPrice(field.value);
 
+  console.log('price', price);
+
   const createStrategyFee = Number(createStrategyFeeInTokens(price));
+
+  console.log('createStrategyFee', createStrategyFee);
+
   const initialDenom = field.value;
 
   const { data, isLoading } = useBalance({
@@ -19,10 +26,17 @@ export function AvailableFunds() {
 
   const balance = Number(data?.amount);
 
+  console.log('balance', balance);
+
   const { name } = getDenomInfo(field.value);
+
+  console.log('sub', balance - createStrategyFee)
 
   const displayAmount = getDisplayAmount(field.value, Math.max(balance - createStrategyFee, 0));
   const displayFee = getDisplayAmount(field.value, createStrategyFee);
+
+  console.log('displayAmount', displayAmount);
+  console.log('displayFee', displayFee);
 
   const [, , helpers] = useField('initialDeposit');
 

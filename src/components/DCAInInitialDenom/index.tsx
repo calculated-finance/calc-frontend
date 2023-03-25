@@ -9,7 +9,7 @@ import {
   Text,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePools, { uniqueQuoteDenoms } from '@hooks/usePools';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
@@ -17,15 +17,15 @@ import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
 
 export default function DCAInInitialDenom() {
-  const { data } = usePairs();
-  const { pairs } = data || {};
+  const { data } = usePools();
+  const { pools } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
-  if (!pairs) {
+  if (!pools) {
     return null;
   }
 
-  const denoms = uniqueQuoteDenoms(pairs).filter(isDenomStable);
+  const denoms = uniqueQuoteDenoms(pools).filter(isDenomStable);
 
   const { promotion } = getDenomInfo(field.value);
 

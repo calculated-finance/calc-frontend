@@ -10,7 +10,7 @@ import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import usePairs from '../usePairs';
+import usePools from '../usePools';
 import { FormNames, useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
 import useFiatPrice from '../useFiatPrice';
@@ -36,7 +36,7 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
 const useCreateVault = (formName: FormNames, transactionType: TransactionType, state: DcaFormState | undefined) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
-  const { data: pairsData } = usePairs();
+  const { data: poolsData } = usePools();
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
 
@@ -56,10 +56,10 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
       throw Error('Invalid sender address');
     }
 
-    const { pairs } = pairsData || {};
+    const { pools } = poolsData || {};
 
-    if (!pairs) {
-      throw Error('No pairs found');
+    if (!pools) {
+      throw Error('No pools found');
     }
 
     const { autoStakeValidator } = state;
@@ -68,7 +68,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType);
+    const createVaultMsg = buildCreateVaultParams(formName, state, pools, transactionType);
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 
