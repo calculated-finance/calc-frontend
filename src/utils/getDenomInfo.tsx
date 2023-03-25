@@ -315,6 +315,8 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     coingeckoId: 'osmosis',
     significantFigures: 6,
     enabledInDcaPlus: true,
+    stakeable: true,
+    stakeableAndSupported: true
   },
   [TestnetDenoms.NBTC]: {
     name: 'NBTC',
