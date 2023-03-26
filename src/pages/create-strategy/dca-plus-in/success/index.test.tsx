@@ -8,7 +8,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-plus-out-puff-puff/success',
+  pathname: '/create-strategy/dca-plus-in/success',
   query: { strategyId: '1', timeSaved: 100 },
   events: {
     on: jest.fn(),
@@ -23,7 +23,7 @@ jest.mock('next/router', () => ({
   },
 }));
 
-function renderTarget() {
+async function renderTarget() {
   act(() => {
     render(
       <QueryClientProvider client={queryClient}>
@@ -33,7 +33,7 @@ function renderTarget() {
   });
 }
 
-describe('DCA Plus Out success page', () => {
+describe('DCA In success page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -58,6 +58,8 @@ describe('DCA Plus Out success page', () => {
 
     await renderTarget();
 
-    expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1');
+    await waitFor(() =>
+      expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1'),
+    );
   });
 });

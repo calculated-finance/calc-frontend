@@ -14,7 +14,7 @@ import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
+  pathname: '/create-strategy/dca-plus-out/confirm-purchase',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -168,7 +168,7 @@ describe('DCA Plus Out confirm page', () => {
       await waitFor(() => expect(mockStateMachine.actions.resetAction).toHaveBeenCalled());
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-out-puff-puff/success',
+        pathname: '/create-strategy/dca-plus-out/success',
         query: {
           strategyId: '59',
           timeSaved: 300,

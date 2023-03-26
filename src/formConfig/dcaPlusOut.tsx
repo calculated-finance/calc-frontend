@@ -4,17 +4,17 @@ import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaPlusOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-plus-out-puff-puff/assets',
+    href: '/create-strategy/dca-plus-out/assets',
     title: 'Choose Funding & Assets',
   },
   {
-    href: '/create-strategy/dca-plus-out-puff-puff/customise',
+    href: '/create-strategy/dca-plus-out/customise',
     title: 'Customise Strategy',
     footerText: 'What does outperform probability mean?',
     helpContent: <OutperformProbability />,
   },
   {
-    href: '/create-strategy/dca-plus-out-puff-puff/post-purchase',
+    href: '/create-strategy/dca-plus-out/post-purchase',
     title: 'Post Purchase',
     footerText: 'What will I be able to do with my profits in the future?',
     helpContent: (
@@ -29,12 +29,12 @@ const dcaPlusOutSteps: StepConfig[] = [
     ),
   },
   {
-    href: '/create-strategy/dca-plus-out-puff-puff/confirm-purchase',
+    href: '/create-strategy/dca-plus-out/confirm-purchase',
     title: 'Confirm & Sign',
   },
 
   {
-    href: '/create-strategy/dca-plus-out-puff-puff/success',
+    href: '/create-strategy/dca-plus-out/success',
     title: 'Strategy Set Successfully',
     noBackButton: true,
     noJump: true,

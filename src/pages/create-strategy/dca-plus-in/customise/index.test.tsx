@@ -7,13 +7,13 @@ import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
-import { ChangeEvent } from 'react';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
+import { ChangeEvent } from 'react';
 import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
-  pathname: '/create-strategy/dca-plus-out-puff-puff/customise',
+  pathname: '/create-strategy/dca-plus-in/customise',
   query: { id: '1' },
   events: {
     on: jest.fn(),
@@ -21,6 +21,12 @@ const mockRouter = {
 };
 
 jest.mock('@wizard-ui/react');
+
+jest.mock('next/router', () => ({
+  useRouter() {
+    return mockRouter;
+  },
+}));
 
 jest.mock('chakra-dayzed-datepicker', () => ({
   SingleDatepicker: ({
@@ -40,18 +46,12 @@ jest.mock('chakra-dayzed-datepicker', () => ({
   },
 }));
 
-jest.mock('next/router', () => ({
-  useRouter() {
-    return mockRouter;
-  },
-}));
-
 const mockStateMachine = {
   state: {
-    dcaPlusOut: {
-      initialDenom: 'ukuji',
-      initialDeposit: 60,
-      resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
+    dcaPlusIn: {
+      initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+      initialDeposit: '60',
+      resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
     },
   },
   actions: {
@@ -79,7 +79,7 @@ async function renderTarget() {
   });
 }
 
-describe('DCA Plus Out customise page', () => {
+describe('DCA Plus In customise page', () => {
   beforeEach(() => {
     window.ResizeObserver = jest.fn().mockImplementation(() => ({
       observe: jest.fn(),
@@ -88,6 +88,7 @@ describe('DCA Plus Out customise page', () => {
     }));
     jest.clearAllMocks();
   });
+
   describe('on page load', () => {
     it('renders the heading', async () => {
       mockUseWallet(jest.fn(), jest.fn(), jest.fn());
@@ -109,12 +110,12 @@ describe('DCA Plus Out customise page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
-        slippageTolerance: 2,
         strategyDuration: 60,
+        slippageTolerance: 2,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
-        pathname: '/create-strategy/dca-plus-out-puff-puff/post-purchase',
+        pathname: '/create-strategy/dca-plus-in/post-purchase',
         query: undefined,
       });
     });
