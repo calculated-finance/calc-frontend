@@ -5,7 +5,7 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 
-export default function useDcaPlusPerformance(id?: Strategy['id'], enabled = true) {
+export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address, client } = useWallet();
 
   return useQueryWithNotification<DcaPlusPerformanceResponse>(
@@ -22,7 +22,7 @@ export default function useDcaPlusPerformance(id?: Strategy['id'], enabled = tru
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && enabled,
+      enabled: !!client && !!id && !!address && !!enabled,
     },
   );
 }

@@ -30,6 +30,8 @@ import {
 import { Strategy } from '@hooks/useStrategies';
 import { isDcaPlus, getStrategyName } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
+import { formatDate } from '@helpers/format/formatDate';
+import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';
@@ -111,6 +113,16 @@ function Page() {
           <Heading data-testid="details-heading">{getStrategyName(strategy)}</Heading>
         </HStack>
       </HStack>
+
+      {isEscrowPending(strategy) && (
+        <Alert status="warning" mb={8} borderWidth={1} borderColor="green.200">
+          <Image mr={4} src="/images/lightBulbOutlineGreen.svg" />
+          <Text fontSize="sm" mr={4}>
+            Your strategy is now inactive and you will receive your escrow (minus performance fee) on{' '}
+            {formatDate(getStandardDcaEndDate(strategy, events))}.
+          </Text>
+        </Alert>
+      )}
 
       {Boolean(lastSwapSlippageError) && isVisible && (
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">

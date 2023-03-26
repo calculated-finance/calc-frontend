@@ -20,13 +20,14 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isDcaPlus } from '@helpers/strategy';
-import { getDaysRemainingForEscrowReturn, getEscrowAmount, getReturnedEscrowAmount } from '@helpers/strategy/dcaPlus';
-import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
+import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 import { CANCEL_VAULT_FEE } from 'src/constants';
+import { formatDate } from '@helpers/format/formatDate';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;
@@ -40,10 +41,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
 
   const toast = useToast();
 
-  const { data: performance, isLoading: isPerformanceLoading } = useDcaPlusPerformance(
-    strategy.id,
-    isOpen && isDcaPlus(strategy),
-  );
+  const { data: eventsData, isLoading: isEventsLoading } = useStrategyEvents(strategy.id, isOpen);
 
   const handleCancelStrategy = () =>
     cancelStrategy(strategy.id, {
@@ -109,7 +107,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
             </Text>
             {isDcaPlus(strategy) && (
               <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
-                {isPerformanceLoading ? (
+                {isEventsLoading ? (
                   <Center>
                     <Spinner />
                   </Center>
@@ -117,9 +115,8 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                   <HStack spacing={3} color="brand.200">
                     <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
                     <Text>
-                      {getReturnedEscrowAmount(strategy, performance)}{' '}
-                      {getDenomName(getStrategyResultingDenom(strategy))} estimated to be returned on XX MMM YYYY. (
-                      {getDaysRemainingForEscrowReturn(strategy)} days)
+                      Your escrow (minus performance fee) is estimated to be returned on{' '}
+                      {formatDate(getStandardDcaEndDate(strategy, eventsData?.events))}
                     </Text>
                   </HStack>
                 )}
