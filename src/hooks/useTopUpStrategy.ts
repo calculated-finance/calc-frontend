@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { CONTRACT_ADDRESS } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';

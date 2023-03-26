@@ -1,6 +1,6 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS, SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
 import { Denom } from '@models/Denom';

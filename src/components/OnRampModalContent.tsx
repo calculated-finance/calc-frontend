@@ -1,6 +1,6 @@
 import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, ModalOverlay } from '@chakra-ui/react';
 import { KADO_API_KEY } from 'src/constants';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 
 function OnRampModalContent() {

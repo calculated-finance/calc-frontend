@@ -21,7 +21,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';

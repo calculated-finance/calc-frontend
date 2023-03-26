@@ -1,7 +1,7 @@
 // usewhitelist
 
 import { isMainnet } from '@utils/isMainnet';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 
 const whitelist = [
   'kujira1ay2e2mgmdzkcp7we97v2aarjdh30nz4kuygghk',

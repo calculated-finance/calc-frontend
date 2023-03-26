@@ -1,4 +1,4 @@
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { Vault } from 'src/interfaces/generated/response/get_vault';

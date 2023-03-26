@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { truncate } from '@wizard-ui/core';
 import {
   HStack,

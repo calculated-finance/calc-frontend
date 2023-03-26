@@ -26,7 +26,7 @@ import { useRouter } from 'next/router';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import broadcast from 'src/animations/broadcast.json';
 import Lottie from 'lottie-react';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
 import Stepper from './Stepper';

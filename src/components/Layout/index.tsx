@@ -12,7 +12,7 @@ import {
 import { ReactElement, useEffect } from 'react';
 import CosmosWallet from '@components/CosmosWallet';
 import Link from 'next/link';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';

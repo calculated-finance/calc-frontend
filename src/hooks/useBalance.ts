@@ -1,6 +1,6 @@
 import { Coin } from '@cosmjs/stargate';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
 
 export type BalanceResponse = {

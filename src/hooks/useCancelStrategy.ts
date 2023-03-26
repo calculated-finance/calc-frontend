@@ -2,7 +2,7 @@ import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { Denom } from '@models/Denom';
 import { useMutation } from '@tanstack/react-query';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { CANCEL_VAULT_FEE, CONTRACT_ADDRESS, ONE_MILLION } from 'src/constants';
 import { encode } from '@helpers/encode';

@@ -1,4 +1,4 @@
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
