@@ -51,6 +51,14 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     significantFigures: 6,
     enabledInDcaPlus: true,
   },
+  [MainnetDenoms.stATOM]: {
+    name: 'stATOM',
+    icon: '/images/denoms/statom.svg',
+    stakeable: true,
+    coingeckoId: 'stride-staked-atom',
+    significantFigures: 6,
+    enabledInDcaPlus: true,
+  },
   [MainnetDenoms.USK]: {
     name: 'USK',
     icon: '/images/denoms/usk.svg',
