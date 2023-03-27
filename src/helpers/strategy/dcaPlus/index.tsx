@@ -9,13 +9,13 @@ import getStrategyBalance, {
   getTotalReceived,
   getConvertedSwapAmount,
   getStrategyInitialDenom,
-  getStrategyRemainingExecutions,
   getTotalSwapped,
   getStrategyEndDateFromRemainingExecutions,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { isNil } from 'lodash';
+import { findLast, isNil } from 'lodash';
+import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -143,8 +143,34 @@ export function getStandardDcaRemainingExecutions(strategy: Strategy) {
   return totalExecutions(balance, swapAmount);
 }
 
-export function getDaysRemainingForEscrowReturn(strategy: Strategy) {
-  return Math.max(getStandardDcaRemainingExecutions(strategy), getStrategyRemainingExecutions(strategy));
+export function isEscrowPending(strategy: Strategy) {
+  return getStrategyBalance(strategy) === 0 && getEscrowAmount(strategy) > 0;
+}
+
+export function getLastExecutionDateFromStrategyEvents(events: StrategyEvent[] | undefined) {
+  const lastExecutionEvent = findLast(events, (event: StrategyEvent) => {
+    const { data } = event;
+    if ('simulated_dca_vault_execution_completed' in data) {
+      return data.simulated_dca_vault_execution_completed;
+    }
+    return false;
+  }) as StrategyEvent;
+
+  // vault has no executions yet
+  if (!lastExecutionEvent) {
+    return undefined;
+  }
+
+  return new Date(Number(lastExecutionEvent.timestamp) / 1000000);
+}
+
+export function getStandardDcaEndDate(strategy: Strategy, strategyEvents: StrategyEvent[] | undefined) {
+  const remainingExecutions = getStandardDcaRemainingExecutions(strategy);
+  const lastExecutionEvent = getLastExecutionDateFromStrategyEvents(strategyEvents);
+  if (!lastExecutionEvent) {
+    return undefined;
+  }
+  return getEndDateFromRemainingExecutions(strategy, lastExecutionEvent, remainingExecutions);
 }
 
 export function getStrategyEndDateRange(strategy: Strategy, strategyEvents: StrategyEvent[] | undefined) {

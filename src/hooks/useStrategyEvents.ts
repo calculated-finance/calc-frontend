@@ -12,7 +12,7 @@ import { Strategy } from './useStrategies';
 export type StrategyEvent = GeneratedEvent;
 export type StrategyEventData = GeneratedEventData;
 
-export default function useStrategyEvents(id: Strategy['id'] | undefined) {
+export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { address, client } = useWallet();
 
   return useQueryWithNotification<EventsResponse>(
@@ -25,7 +25,7 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined) {
         },
       } as QueryMsg),
     {
-      enabled: !!address && !!client && !!id,
+      enabled: !!address && !!client && !!id && !!enabled,
     },
   );
 }

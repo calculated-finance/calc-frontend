@@ -7,8 +7,8 @@ import {
   getRemainingExecutionsRange,
   getStandardDcaAverageCost,
   getStandardDcaAveragePrice,
+  getStandardDcaEndDate,
   getStandardDcaRemainingBalance,
-  getStandardDcaRemainingExecutions,
   getStandardDcaTotalReceived,
   getStandardDcaTotalSwapped,
 } from '@helpers/strategy/dcaPlus';
@@ -24,7 +24,31 @@ import getStrategyBalance, {
   isBuyStrategy,
   isStrategyOperating,
 } from '@helpers/strategy';
+import { differenceInDays } from 'date-fns';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
+
+function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
+  const standardDcaEndDate = getStandardDcaEndDate(strategy, strategyEvents);
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Estimated days remaining</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm" as="span">
+          {isStrategyOperating(strategy)
+            ? `${getRemainingExecutionsRange(strategy).min} - ${getRemainingExecutionsRange(strategy).max}`
+            : 0}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm" as="span" color="grey.200">
+          {standardDcaEndDate && differenceInDays(standardDcaEndDate, new Date())}
+        </Text>
+      </GridItem>
+    </>
+  );
+}
 
 function StrategyComparisonDetails({
   strategy,
@@ -108,21 +132,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
 
-      <GridItem colSpan={1}>
-        <Heading size="xs">Estimated days remaining</Heading>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text fontSize="sm" as="span">
-          {isStrategyOperating(strategy)
-            ? `${getRemainingExecutionsRange(strategy).min} - ${getRemainingExecutionsRange(strategy).max}`
-            : 0}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text fontSize="sm" as="span" color="grey.200">
-          {getStandardDcaRemainingExecutions(strategy)}
-        </Text>
-      </GridItem>
+      <EstimatedDaysRemaining strategy={strategy} strategyEvents={strategyEvents} />
     </Grid>
   );
 }
