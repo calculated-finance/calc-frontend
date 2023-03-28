@@ -17,20 +17,22 @@ import {
   Stack,
   Text,
   useDisclosure,
-  ModalFooter,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '@wizard-ui/react';
+import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
-import { Adapter, useKujiWallet } from '@components/WalletProvider';
+import { useStationStore } from '@hooks/useStationZustand';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
 function WalletModal() {
-  const { wallets, select, connecting } = useWallet();
+  const { wallets, select, connecting } = useWizardUiWallet();
   const { visible, setVisible } = useWalletModal();
 
-  const { connect } = useKujiWallet();
+  const { isStationInstalled, connect: connectStation } = useStationStore((state) => ({
+    isStationInstalled: state.isStationInstalled,
+    connect: state.connect,
+  }));
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -47,10 +49,16 @@ function WalletModal() {
   );
 
   const handleStationConnect = () => {
-    if (connect) {
-      connect(Adapter.Station);
-    }
+    connectStation?.();
     handleClose();
+  };
+
+  const stationWalletData = {
+    adapter: {
+      name: 'Terra Station',
+      icon: '/images/station.svg',
+    },
+    readyState: isStationInstalled ? WalletReadyState.Installed : WalletReadyState.NotDetected,
   };
 
   return (
@@ -82,7 +90,11 @@ function WalletModal() {
                   </Box>
                 ))}
                 <Box>
-                  <Button onClick={handleStationConnect}>Connect Station</Button>
+                  <WalletListItem
+                    handleClick={handleStationConnect}
+                    wallet={stationWalletData}
+                    walletInstallLink="https://setup-station.terra.money/"
+                  />
                 </Box>
 
                 <Stack>

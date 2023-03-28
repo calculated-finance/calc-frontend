@@ -5,6 +5,7 @@ import { ChainInfo } from '@keplr-wallet/types';
 import { Msg } from '@terra-money/feather.js';
 import { ConnectedWallet, ConnectType, WalletController } from '@terra-money/wallet-controller';
 import { registry } from 'kujira.js';
+import { RPC_ENDPOINT } from 'src/constants';
 
 export class Station {
   private constructor(
@@ -16,8 +17,6 @@ export class Station {
 
   static connect = async (config: ChainInfo, opts: { controller: WalletController }): Promise<Station> => {
     const { controller } = opts;
-
-    console.log('config', config);
 
     await controller.connect(ConnectType.EXTENSION);
     const wallet: ConnectedWallet = await new Promise((r) =>
@@ -42,7 +41,7 @@ export class Station {
 
   public onChange = (fn: (k: Station) => void) => {};
 
-  public signAndBroadcast = async (rpc: string, msgs: EncodeObject[]): Promise<DeliverTxResponse> => {
+  public signAndBroadcast = async (msgs: EncodeObject[]): Promise<DeliverTxResponse> => {
     const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
 
     const res = await this.controller.sign({
@@ -50,7 +49,7 @@ export class Station {
       chainID: this.config.chainId,
     });
 
-    const stargate = await StargateClient.connect(rpc);
+    const stargate = await StargateClient.connect(RPC_ENDPOINT);
     const result = await stargate.broadcastTx(res.result.toBytes());
     return result;
   };

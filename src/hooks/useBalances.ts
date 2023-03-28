@@ -6,7 +6,7 @@ import { useNetwork } from './useNetwork';
 
 const useBalances = () => {
   const { address } = useWallet();
-  const [{ query }] = useNetwork();
+  const { query } = useNetwork();
 
   const { data, ...other } = useQueryWithNotification(
     ['balances', address],

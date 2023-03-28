@@ -1936,6 +1936,15 @@
     bech32 "^1.1.4"
     readonly-date "^1.0.0"
 
+"@cosmjs/encoding@^0.30.1":
+  version "0.30.1"
+  resolved "https://registry.yarnpkg.com/@cosmjs/encoding/-/encoding-0.30.1.tgz#b5c4e0ef7ceb1f2753688eb96400ed70f35c6058"
+  integrity sha512-rXmrTbgqwihORwJ3xYhIgQFfMSrwLu1s43RIK9I8EBudPx3KmnmyAKzMOVsRDo9edLFNuZ9GIvysUCwQfq3WlQ==
+  dependencies:
+    base64-js "^1.3.0"
+    bech32 "^1.1.4"
+    readonly-date "^1.0.0"
+
 "@cosmjs/json-rpc@^0.29.3":
   version "0.29.3"
   resolved "https://registry.npmjs.org/@cosmjs/json-rpc/-/json-rpc-0.29.3.tgz"
@@ -3088,7 +3097,7 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@terra-money/feather.js@^1.0.0-beta.4":
+"@terra-money/feather.js@^1.0.0-beta.12", "@terra-money/feather.js@^1.0.0-beta.4":
   version "1.0.0-beta.12"
   resolved "https://registry.yarnpkg.com/@terra-money/feather.js/-/feather.js-1.0.0-beta.12.tgz#285af7b0fc37551df1d8c15ceae69d87c1bbe23b"
   integrity sha512-O1Q9pZ9nK/ZbXWtt7xvX2OoyiUCgUeAzHMNiSzzfyCYupRFWDqwuSf3MASyW+KjjST6yhbv4hyM1mThApdgcoA==
@@ -6857,14 +6866,18 @@ kujira.js@Team-Kujira/kujira.js.git#dc06cb5fb58029c532f0354898c0b63075a1fc64:
   version "0.5.0"
   resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/dc06cb5fb58029c532f0354898c0b63075a1fc64"
   dependencies:
-    "@cosmjs/cosmwasm-stargate" "^0.29.0"
+    "@cosmjs/cosmwasm-stargate" "^0.29.4"
     "@cosmjs/launchpad" "^0.27.1"
-    "@cosmjs/stargate" "^0.29.0"
+    "@cosmjs/stargate" "^0.29.4"
     "@ethersproject/bignumber" "^5.7.0"
+    "@injectivelabs/chain-api" "^1.9.9"
     "@keplr-wallet/types" "^0.11.12"
+    "@types/google-protobuf" "^3.15.6"
     cosmjs-types "0.5.2"
     long "^4.0.0"
+    text-encoding "^0.7.0"
     ts-node "^10.9.1"
+    yarn "^1.22.19"
 
 language-subtag-registry@~0.3.2:
   version "0.3.22"
@@ -9379,3 +9392,10 @@ yup@^0.32.11:
     nanoclone "^0.2.1"
     property-expr "^2.0.4"
     toposort "^2.0.2"
+
+zustand@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.3.6.tgz#ce7804eb75361af0461a2d0536b65461ec5de86f"
+  integrity sha512-6J5zDxjxLE+yukC2XZWf/IyWVKnXT9b9HUv09VJ/bwGCpKNcaTqp7Ws28Xr8jnbvnZcdRaidztAPsXFBIqufiw==
+  dependencies:
+    use-sync-external-store "1.2.0"

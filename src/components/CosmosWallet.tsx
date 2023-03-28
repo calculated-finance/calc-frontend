@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWallet } from '@hooks/useWallet';
+import { useWallet, WalletTypes } from '@hooks/useWallet';
 import { truncate } from '@wizard-ui/core';
 import {
   HStack,
@@ -15,6 +15,7 @@ import {
   useClipboard,
   useOutsideClick,
   Image,
+  Text,
   Divider,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
@@ -28,7 +29,7 @@ import SquidModal from './SquidModal';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
-  const { address, disconnect } = useWallet();
+  const { address, disconnect, walletType } = useWallet();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
@@ -46,7 +47,7 @@ function CosmosWallet() {
   };
 
   const handleDisconnect = () => {
-    disconnect();
+    disconnect?.();
     onClose();
   };
 
@@ -70,7 +71,7 @@ function CosmosWallet() {
           <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
-                {truncate(address)}
+                <Text>{truncate(address)}</Text>
               </Button>
             </PopoverTrigger>
             <PopoverContent bg="deepHorizon" boxShadow="deepHorizon" p={6} borderWidth={0} w={270}>
@@ -123,7 +124,7 @@ function CosmosWallet() {
                   onClick={handleDisconnect}
                   leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                 >
-                  Disconnect
+                  Disconnect from {walletType}
                 </Button>
               </Stack>
             </PopoverContent>

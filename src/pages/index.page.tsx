@@ -219,8 +219,6 @@ function Home() {
         <Heading size="lg" mb={2}>
           Welcome to CALC, you&apos;ve made a great choice!
         </Heading>
-        <Text>{myConnected ? 'connected' : 'not connected'}</Text>
-        <Button onClick={connect}>connect</Button>
         <Text textStyle="body">
           CALC removes the hardest part of investing, emotions! Stop being glued to a computer screen 24/7, define your
           strategy up front, and leave the rest to CALC.
