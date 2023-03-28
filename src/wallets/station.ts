@@ -18,6 +18,7 @@ export class Station {
   static connect = async (config: ChainInfo, opts: { controller: WalletController }): Promise<Station> => {
     const { controller } = opts;
 
+    console.log('woo');
     await controller.connect(ConnectType.EXTENSION);
     const wallet: ConnectedWallet = await new Promise((r) =>
       controller.connectedWallet().subscribe((next) => {

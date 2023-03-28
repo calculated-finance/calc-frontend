@@ -1,14 +1,11 @@
 import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
-import { assertIsDeliverTxSuccess, DeliverTxResponse } from '@cosmjs/stargate';
-import { ChainInfo } from '@keplr-wallet/types';
-import { ConnectType, getChainOptions, WalletController } from '@terra-money/wallet-controller';
-import { CHAIN_INFO } from 'kujira.js';
-import { useCookieState } from 'ahooks';
-import { CHAIN_ID } from 'src/constants';
-import { Station as StationWallet } from 'src/wallets';
-import { useEffect } from 'react';
+import { assertIsDeliverTxSuccess, DeliverTxResponse, StargateClient } from '@cosmjs/stargate';
+import { ConnectedWallet, ConnectType, getChainOptions, WalletController } from '@terra-money/wallet-controller';
+import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
 import { create } from 'zustand';
-import { shallow } from 'zustand/middleware';
+import { Msg } from '@terra-money/feather.js';
+import { registry } from 'kujira.js';
+import { fromBech32, toBech32 } from '@cosmjs/encoding';
 
 export enum Adapter {
   Station = 'station',
@@ -20,45 +17,58 @@ export type IWallet = {
   signAndBroadcast: (msgs: EncodeObject[]) => Promise<DeliverTxResponse>;
   isStationInstalled: boolean;
   stationController: WalletController | null;
-  wallet: StationWallet | null;
+  account: AccountData | null;
   stored: Adapter | null;
   init: () => void;
 };
 
 export const useStationStore = create<IWallet>((set, get) => ({
-  disconnect: () => {
-    set((state: IWallet) => ({
-      ...state,
-      account: null,
-      wallet: null,
-    }));
-    get().wallet?.disconnect();
-  },
-  signAndBroadcast: async (msgs: EncodeObject[]) => {
-    const { wallet } = get();
-    if (!wallet) throw new Error('No Wallet Connected');
-    const res = await wallet.signAndBroadcast(msgs);
-    assertIsDeliverTxSuccess(res);
-    return res;
-  },
   isStationInstalled: false,
-  wallet: null,
   stationController: null,
   stored: null,
-  connect: () => {
+  account: null,
+  disconnect: () => {
+    get().stationController?.disconnect();
+    set({ account: null });
+  },
+  signAndBroadcast: async (msgs: EncodeObject[]) => {
+    const { account, stationController } = get();
+    if (!account || !stationController) throw new Error('No Wallet Connected');
+
+    const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
+
+    const res = await stationController.sign({
+      msgs: terraMsgs,
+      chainID: CHAIN_ID,
+    });
+
+    const stargate = await StargateClient.connect(RPC_ENDPOINT);
+    const result = await stargate.broadcastTx(res.result.toBytes());
+
+    assertIsDeliverTxSuccess(result);
+    return result;
+  },
+  connect: async () => {
     const { stationController } = get();
 
     if (stationController) {
-      StationWallet.connect(CHAIN_INFO[CHAIN_ID], {
-        controller: stationController,
-      })
-        .then((x) => {
-          set({ stored: Adapter.Station });
-          set({ wallet: x });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      await stationController.connect(ConnectType.EXTENSION);
+      const wallet: ConnectedWallet = await new Promise((r) =>
+        stationController.connectedWallet().subscribe((next) => {
+          if (next) {
+            return r(next);
+          }
+        }),
+      );
+
+      const account: AccountData = {
+        address: toBech32('kujira', fromBech32(wallet.addresses[CHAIN_ID]).data),
+        algo: 'secp256k1',
+        pubkey: new Uint8Array(),
+      };
+
+      set({ stored: Adapter.Station });
+      set({ account });
     }
   },
   init: () => {
@@ -71,7 +81,7 @@ export const useStationStore = create<IWallet>((set, get) => ({
           if (next.find((x) => x.type === ConnectType.EXTENSION))
             useStationStore.setState({ isStationInstalled: true });
 
-          if (!get().wallet && get().stored === Adapter.Station) {
+          if (!get().account && get().stored === Adapter.Station) {
             setTimeout(() => {
               get().connect?.();
             }, 10);
@@ -81,27 +91,3 @@ export const useStationStore = create<IWallet>((set, get) => ({
     }
   },
 }));
-
-export function useStation() {
-  const { wallet, connect, disconnect, signAndBroadcast } = useStationStore(
-    (state) => ({
-      wallet: state.wallet,
-      connect: state.connect,
-      disconnect: state.disconnect,
-      signAndBroadcast: state.signAndBroadcast,
-      stationController: state.stationController,
-      stored: state.stored,
-      init: state.init,
-      isStationInstalled: state.isStationInstalled,
-    }),
-    shallow,
-  );
-
-  return {
-    connect,
-    disconnect,
-    signAndBroadcast,
-    isStationInstalled: true,
-    account: wallet?.account || null,
-  };
-}

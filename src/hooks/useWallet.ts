@@ -1,7 +1,7 @@
 // wrap wizard-ui's useWallet in our own hook to add some extra functionality
 
 import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
-import { useStation, useStationStore } from '@hooks/useStationZustand';
+import { useStationStore } from '@hooks/useStationZustand';
 import { useNetwork } from './useNetwork';
 
 export enum WalletTypes {
@@ -21,7 +21,7 @@ export function useWallet() {
   } = useWizardUiWallet();
 
   const kujiWallet = useStationStore((state) => ({
-    wallet: state.wallet,
+    account: state.account,
     disconnect: state.disconnect,
     signAndBroadcast: state.signAndBroadcast,
   }));
@@ -40,9 +40,9 @@ export function useWallet() {
       walletType: WalletTypes.KEPLR,
     };
   }
-  if (kujiWallet?.wallet?.account && query) {
+  if (kujiWallet?.account && query) {
     return {
-      address: kujiWallet.wallet.account?.address,
+      address: kujiWallet.account?.address,
       connected: true,
       disconnect: kujiWallet.disconnect,
       signingClient: {
