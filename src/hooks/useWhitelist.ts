@@ -94,6 +94,12 @@ const whitelist = [
   'kujira1vd8u3tlryxvlpdc62juxqjz8ek395uts5u0pgt',
   'kujira104j0nlsm6d96yh2uwtygy78899yme2qngml09k',
   'kujira1ksjcaas536pfnz0ugnnrk5x2k7n7xtel5lffsf',
+  'kujira12n2ae9mxch6z76gws0cqp92jp0882cmg9akeux',
+  'kujira15ut2l6k7myxsyey6cwkzcah93dua87cfc7v6af',
+  'kujira16cemgtx5cwuxzfprp7zg96pmkpkhzzyfsy956f',
+  'kujira195d2y2rupak8a0qu4vnj8da0n8kgupxerfhr78',
+  'kujira1cra65ss6v4p5f3x2cj4crgph3ssvc02qffdjq4',
+  'kujira1k23yyy43glwhkn25y55xuc3wy2k7sv2r5gl9ct',
 ];
 
 export function isAddressWhitelisted(address: string) {
