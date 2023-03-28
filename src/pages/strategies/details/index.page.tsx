@@ -82,7 +82,6 @@ function Page() {
   const { data: eventsData } = useStrategyEvents(id as string);
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
-  const { isOpen: isCoinGeckoErrorOpen, onClose: onCoinGeckoErrorClose } = useDisclosure({ defaultIsOpen: true });
 
   const { connected } = useWallet();
 
