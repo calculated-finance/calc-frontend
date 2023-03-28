@@ -5,9 +5,9 @@ import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   getRemainingExecutionsRange,
-  getStandardDcaAverageCost,
-  getStandardDcaAveragePrice,
   getStandardDcaEndDate,
+  getStandardDcaAveragePurchasePrice,
+  getStandardDcaAverageSellPrice,
   getStandardDcaRemainingBalance,
   getStandardDcaTotalReceived,
   getStandardDcaTotalSwapped,
@@ -18,9 +18,9 @@ import getStrategyBalance, {
   getStrategyResultingDenom,
   getStrategyInitialDenom,
   getTotalReceived,
-  getAverageCost,
+  getAveragePurchasePrice,
   getTotalSwapped,
-  getAveragePrice,
+  getAverageSellPrice,
   isBuyStrategy,
   isStrategyOperating,
 } from '@helpers/strategy';
@@ -120,15 +120,15 @@ function StrategyComparisonDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAverageCost(strategy) * initialDenomPrice)
-            : formatFiat(getAveragePrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getAveragePurchasePrice(strategy) * initialDenomPrice)
+            : formatFiat(getAverageSellPrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
           {isBuyStrategy(strategy)
-            ? formatFiat(getStandardDcaAverageCost(strategy) * initialDenomPrice)
-            : formatFiat(getStandardDcaAveragePrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getStandardDcaAveragePurchasePrice(strategy) * initialDenomPrice)
+            : formatFiat(getStandardDcaAverageSellPrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
 

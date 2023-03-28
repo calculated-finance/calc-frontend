@@ -465,7 +465,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$0.98 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-profit').textContent).toBe('-$0.99 USD'));
         });
       });
       describe('when DCA Out', () => {

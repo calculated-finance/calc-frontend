@@ -11,6 +11,7 @@ import getStrategyBalance, {
   getStrategyInitialDenom,
   getTotalSwapped,
   getStrategyEndDateFromRemainingExecutions,
+  hasSwapFees,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
@@ -45,13 +46,17 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
   return convertDenomFromCoin(total_deposit);
 }
 
-// find the average price of the standard dca using above functions
-export function getStandardDcaAverageCost(strategy: Strategy) {
-  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceived(strategy);
+export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy) {
+  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + FIN_TAKER_FEE : FIN_TAKER_FEE;
+  return getStandardDcaTotalReceived(strategy) / (1 - feeFactor);
 }
 
-export function getStandardDcaAveragePrice(strategy: Strategy) {
-  return getStandardDcaTotalReceived(strategy) / getStandardDcaTotalSwapped(strategy);
+export function getStandardDcaAveragePurchasePrice(strategy: Strategy) {
+  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceivedBeforeFees(strategy);
+}
+
+export function getStandardDcaAverageSellPrice(strategy: Strategy) {
+  return getStandardDcaTotalReceivedBeforeFees(strategy) / getStandardDcaTotalSwapped(strategy);
 }
 
 export function getEscrowLevel(strategy: Strategy) {

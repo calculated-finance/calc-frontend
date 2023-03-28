@@ -55,7 +55,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={2}>
         <Text fontSize="sm" data-testid="strategy-escrow-amount">
-          {getEscrowAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
+          {getEscrowAmount(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
         </Text>
       </GridItem>
     </>

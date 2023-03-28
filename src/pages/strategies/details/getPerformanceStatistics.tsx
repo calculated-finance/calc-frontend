@@ -1,23 +1,12 @@
-import { DenomValue } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyInitialDenom, getStrategyResultingDenom, getStrategyTotalFeesPaid } from '@helpers/strategy';
+import { getTotalReceived, getTotalReceivedBeforeFees, getTotalSwapped } from '@helpers/strategy';
 
 export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
-  const marketValueAmount = strategy.received_amount.amount;
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const costInFiat = Number((getTotalSwapped(strategy) * initialDenomPrice).toFixed(2));
+  const marketValueInFiat = Number((getTotalReceived(strategy) * resultingDenomPrice).toFixed(2));
+  const marketValueBeforeFeesInFiat = Number((getTotalReceivedBeforeFees(strategy) * resultingDenomPrice).toFixed(2));
 
-  const costAmount = strategy.swapped_amount.amount;
-  const totalFeesPaid = getStrategyTotalFeesPaid(strategy);
-  const costAmountWithFeesSubtractedInFiat = Number(costAmount) - totalFeesPaid;
-
-  const marketValueValue = new DenomValue({ amount: marketValueAmount, denom: resultingDenom });
-  const costValue = new DenomValue({ amount: costAmountWithFeesSubtractedInFiat.toString(), denom: initialDenom });
-
-  const costInFiat = Number((costValue.toConverted() * initialDenomPrice).toFixed(2));
-  const marketValueInFiat = Number((marketValueValue.toConverted() * resultingDenomPrice).toFixed(2));
-
-  const profit = marketValueInFiat - costInFiat;
+  const profit = marketValueBeforeFeesInFiat - costInFiat;
 
   const percentageChange = `${(costInFiat ? (profit / costInFiat) * 100 : 0).toFixed(2)}%`;
 
@@ -35,9 +24,7 @@ export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: 
   return {
     color,
     percentageChange,
-    marketValueValue,
     marketValueInFiat,
-    costValue,
     profit,
   };
 }

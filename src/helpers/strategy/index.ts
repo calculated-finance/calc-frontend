@@ -1,6 +1,6 @@
 import { Strategy } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { Denom } from '@models/Denom';
+import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
@@ -214,25 +214,27 @@ export function getTotalSwapped(strategy: Strategy) {
   return convertDenomFromCoin(strategy.swapped_amount);
 }
 
-export function getTotalCost(strategy: Strategy) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const costAmount = strategy.swapped_amount.amount;
-  const totalFeesPaid = getStrategyTotalFeesPaid(strategy);
-  const costAmountWithFeesSubtracted = Number(costAmount) - totalFeesPaid;
-
-  const { conversion } = getDenomInfo(initialDenom);
-
-  return Number(conversion(costAmountWithFeesSubtracted).toFixed(6));
-}
-
 export function getTotalReceived(strategy: Strategy) {
   return convertDenomFromCoin(strategy.received_amount);
 }
 
-export function getAveragePrice(strategy: Vault) {
-  return getTotalReceived(strategy) / getTotalCost(strategy);
+export function hasSwapFees(strategy: Strategy) {
+  return (
+    !isDcaPlus(strategy) &&
+    getStrategyInitialDenom(strategy) !== Denoms.USK &&
+    getStrategyResultingDenom(strategy) !== Denoms.USK
+  );
 }
 
-export function getAverageCost(strategy: Vault) {
-  return getTotalSwapped(strategy) / getTotalReceived(strategy);
+export function getTotalReceivedBeforeFees(strategy: Strategy) {
+  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + FIN_TAKER_FEE : FIN_TAKER_FEE;
+  return getTotalReceived(strategy) / (1 - feeFactor);
+}
+
+export function getAverageSellPrice(strategy: Vault) {
+  return getTotalReceivedBeforeFees(strategy) / getTotalSwapped(strategy);
+}
+
+export function getAveragePurchasePrice(strategy: Vault) {
+  return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy);
 }
