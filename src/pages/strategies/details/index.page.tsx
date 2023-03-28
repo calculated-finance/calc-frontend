@@ -124,6 +124,17 @@ function Page() {
         </Alert>
       )}
 
+      <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
+        <Image mr={4} src="/images/warningIcon.svg" />
+        <Text fontSize="sm" mr={4}>
+          We are experiencing issues with the Coingecko price API, you may experience poor loading times or inaccurate
+          chart data. We expect this to resolved soon.
+        </Text>
+        <Spacer />
+
+        <CalcIcon as={CloseBoxedIcon} stroke="white" onClick={onClose} />
+      </Alert>
+
       {Boolean(lastSwapSlippageError) && isVisible && (
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
           <Image mr={4} src="/images/warningIcon.svg" />
