@@ -39,7 +39,6 @@ import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
-import { CloseIcon } from '@chakra-ui/icons';
 
 function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
