@@ -8,9 +8,9 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });
 
-  // const { price } = useFiatPrice(field.value);
+  const { price } = useFiatPrice(field.value);
 
-  const createStrategyFee = 0; // Number(createStrategyFeeInTokens(price));
+  const createStrategyFee = Number(createStrategyFeeInTokens(price));
   const initialDenom = field.value;
 
   const { data, isLoading } = useBalance({

@@ -125,18 +125,6 @@ function Page() {
           </Text>
         </Alert>
       )}
-      {isCoinGeckoErrorOpen && (
-        <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
-          <Image mr={4} src="/images/warningIcon.svg" />
-          <Text fontSize="sm" mr={4}>
-            We are experiencing issues with the Coingecko price API. You may experience poor loading times or inaccurate
-            chart data. We expect this to be resolved soon.
-          </Text>
-          <Spacer />
-
-          <CloseButton onClick={onCoinGeckoErrorClose} />
-        </Alert>
-      )}
 
       {Boolean(lastSwapSlippageError) && isVisible && (
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">

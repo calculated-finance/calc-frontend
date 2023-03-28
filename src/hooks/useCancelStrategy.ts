@@ -37,7 +37,7 @@ function getCancelVaultExecuteMsg(strategyId: Strategy['id'], senderAddress: str
 const useCancelStrategy = (initialDenom: Denom) => {
   const { address, signingClient: client } = useWallet();
   const msgs: EncodeObject[] = [];
-  const { price } = { price: 1 }; // useFiatPrice(initialDenom);
+  const { price } = useFiatPrice(initialDenom);
 
   return useMutation<DeliverTxResponse, Error, Strategy['id']>((strategyId: Strategy['id']) => {
     if (client == null) {
@@ -55,7 +55,7 @@ const useCancelStrategy = (initialDenom: Denom) => {
     msgs.push(getCancelVaultExecuteMsg(strategyId, address));
     const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 
-    // msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee));
+    msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee));
 
     return client.signAndBroadcast(address, msgs, 'auto');
   });

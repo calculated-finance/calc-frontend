@@ -37,16 +37,16 @@ const defaultMsgs = [
       sender: 'kujitestwallet',
     },
   },
-  // {
-  //   typeUrl: '/cosmos.bank.v1beta1.MsgSend',
-  //   value: {
-  //     amount: [
-  //       { amount: '28571', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
-  //     ],
-  //     fromAddress: 'kujitestwallet',
-  //     toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
-  //   },
-  // },
+  {
+    typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+    value: {
+      amount: [
+        { amount: '28571', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
+      ],
+      fromAddress: 'kujitestwallet',
+      toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+    },
+  },
 ];
 
 export function mockCreateVault(msgs = defaultMsgs) {

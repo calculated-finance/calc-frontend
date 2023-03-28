@@ -37,7 +37,7 @@ type CancelStrategyModalProps = {
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
   const { mutate: cancelStrategy, isLoading } = useCancelStrategy(strategy.balance.denom);
 
-  const { price } = { price: 1 }; // useFiatPrice(getStrategyInitialDenom(strategy));
+  const { price } = useFiatPrice(getStrategyInitialDenom(strategy));
 
   const toast = useToast();
 

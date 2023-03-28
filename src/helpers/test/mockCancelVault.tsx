@@ -27,7 +27,7 @@ const msgs = [
   //     toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
   //     amount: [
   //       {
-  //         amount: '60',
+  //         amount: '666667',
   //         denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   //       },
   //     ],
