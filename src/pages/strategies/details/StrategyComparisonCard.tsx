@@ -73,7 +73,7 @@ export function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
 
   const numberPastSwaps = getNumberOfPastSwaps(strategy);
 
-  const isPending = true; //numberPastSwaps < DAYS_BEFORE_REVEAL;
+  const isPending = numberPastSwaps < DAYS_BEFORE_REVEAL;
   const performanceFactor = getPerformanceFactor(performance);
 
   const color = performanceFactor > 0 && !isPending ? 'green.200' : 'grey.200';
