@@ -79,37 +79,41 @@ export function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
   const color = performanceFactor > 0 && !isPending ? 'green.200' : 'grey.200';
 
   return (
-    <Flex direction="column" p={6} my={8} mx={8} borderRadius="3xl" borderColor={color} borderWidth={2} w={500}>
+    <Flex direction="column" p={6} borderRadius="3xl" borderColor={color} borderWidth={2}>
       {isLoading ? (
-        <Center h={28}>
+        <Center h="full" minH={40} minW={80}>
           <Spinner />
         </Center>
-      ) : isPending ? (
-        <Stack spacing={8}>
-          <Heading size="xs" color="grey.200">
-            Check back later to compare performance.
-          </Heading>
-          <Stack spacing={4}>
-            <Heading size="md" fontSize={24}>
-              Comparison pending...
-            </Heading>
-            <Text textStyle="body">
-              We need to allow at least 3 transactions before comparing traditional DCA with DCA+.
-            </Text>
-          </Stack>
-        </Stack>
       ) : (
-        <Stack>
-          <Heading size="xs">
-            <DifferenceComparison strategy={strategy} performanceFactor={performanceFactor} />
-          </Heading>
-          <Heading size="3xl">{formatSignedPercentage(performanceFactor)}</Heading>
-          <Text textStyle="body">
-            In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
-            {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps}{' '}
-            {puraliseDays(numberPastSwaps)}.
-          </Text>
-        </Stack>
+        <Flex alignItems="center" h="full">
+          {isPending ? (
+            <Stack spacing={8}>
+              <Heading size="xs" color="grey.200">
+                Check back later to compare performance.
+              </Heading>
+              <Stack spacing={4}>
+                <Heading size="md" fontSize={24}>
+                  Comparison pending...
+                </Heading>
+                <Text textStyle="body">
+                  We need to allow at least 3 transactions before comparing traditional DCA with DCA+.
+                </Text>
+              </Stack>
+            </Stack>
+          ) : (
+            <Stack>
+              <Heading size="xs">
+                <DifferenceComparison strategy={strategy} performanceFactor={performanceFactor} />
+              </Heading>
+              <Heading size="3xl">{formatSignedPercentage(performanceFactor)}</Heading>
+              <Text textStyle="body">
+                In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
+                {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps}{' '}
+                {puraliseDays(numberPastSwaps)}.
+              </Text>
+            </Stack>
+          )}
+        </Flex>
       )}
     </Flex>
   );

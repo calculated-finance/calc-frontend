@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, Center } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, Center, Stack } from '@chakra-ui/react';
 import { getDenomName } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import Spinner from '@components/Spinner';
@@ -23,6 +23,7 @@ import getStrategyBalance, {
   getAverageSellPrice,
   isBuyStrategy,
   isStrategyOperating,
+  isStrategyCancelled,
 } from '@helpers/strategy';
 import { differenceInDays } from 'date-fns';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
@@ -61,14 +62,14 @@ function StrategyComparisonDetails({
   const { price: resultingDenomPrice } = useFiatPrice(getStrategyResultingDenom(strategy));
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={3} px={8} py={6} w="full">
+    <Grid templateColumns="repeat(3, 1fr)" gap={3} w="full">
       <GridItem colSpan={1} />
       <GridItem colSpan={1}>
         <Heading size="xs">DCA +</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Heading size="xs" color="grey.200">
-          Traditional DCA
+          Simulated traditional DCA
         </Heading>
       </GridItem>
       <GridItem colSpan={1} />
@@ -132,7 +133,7 @@ function StrategyComparisonDetails({
         </Text>
       </GridItem>
 
-      <EstimatedDaysRemaining strategy={strategy} strategyEvents={strategyEvents} />
+      {!isStrategyCancelled(strategy) && <EstimatedDaysRemaining strategy={strategy} strategyEvents={strategyEvents} />}
     </Grid>
   );
 }
@@ -146,12 +147,12 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
         <Heading pb={4} size="md">
           Comparison against traditional DCA
         </Heading>
-        <Flex layerStyle="panel" flexGrow={1} alignItems="start">
+        <Flex layerStyle="panel" flexGrow={1} p={8} alignItems="start">
           {eventsData?.events ? (
-            <>
+            <Stack direction={['column', null, null, null, 'row']} w="full" gap={8}>
               <StrategyComparisonDetails strategy={strategy} strategyEvents={eventsData.events} />
               <StrategyComparisonCard strategy={strategy} />
-            </>
+            </Stack>
           ) : (
             <Center w="full" h="full" px={8} py={6}>
               <Spinner />
