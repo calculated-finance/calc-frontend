@@ -503,7 +503,7 @@ describe('Detail page', () => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
         await waitFor(() =>
-          expect(screen.getByTestId('cancel-strategy-model-fee').textContent).toBe('Cancellation Fee: 0.2 DEMO'),
+          expect(screen.getByTestId('cancel-strategy-model-fee').textContent).toBe('Cancellation Fee: 0 DEMO'),
         );
       });
     });

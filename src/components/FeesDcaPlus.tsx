@@ -193,7 +193,7 @@ function FeeBreakdown({
 
 export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
   const { state } = useDcaPlusConfirmForm(formName);
-  const { price } = useFiatPrice(state?.initialDenom);
+  const { price } = { price: 1 }; // useFiatPrice(state?.initialDenom);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.

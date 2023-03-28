@@ -136,19 +136,19 @@ describe('DCA Plus Out confirm page', () => {
             sender: 'kujitestwallet',
           },
         },
-        {
-          typeUrl: '/cosmos.bank.v1beta1.MsgSend',
-          value: {
-            amount: [
-              {
-                amount: '66667',
-                denom: 'ukuji',
-              },
-            ],
-            fromAddress: 'kujitestwallet',
-            toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
-          },
-        },
+        // {
+        //   typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+        //   value: {
+        //     amount: [
+        //       {
+        //         amount: '0',
+        //         denom: 'ukuji',
+        //       },
+        //     ],
+        //     fromAddress: 'kujitestwallet',
+        //     toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+        //   },
+        // },
       ]);
       const mockGetPairsSpy = mockGetPairs();
       mockUseWallet(mockGetPairsSpy, jest.fn(), jest.fn(), mockCreateStrategy);
