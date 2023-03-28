@@ -42,7 +42,7 @@ export function AvailableFunds() {
           8275,
         )} ${displayFee} ${name}). This excludes gas fees, so please make sure you have remaining funds.`}
       >
-        <Text mr={1}>Available*: </Text>
+        <Text mr={1}>Max*: </Text>
       </Tooltip>
 
       <Button

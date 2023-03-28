@@ -26,7 +26,7 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
 
   return (
     <Center textStyle="body-xs">
-      <Text mr={1}>Available: </Text>
+      <Text mr={1}>Max: </Text>
       <Button
         size="xs"
         isLoading={isLoading}
