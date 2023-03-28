@@ -4,6 +4,7 @@ import { isMainnet } from '@utils/isMainnet';
 import { useWallet } from '@wizard-ui/react';
 
 const whitelist = [
+  'kujira1ay2e2mgmdzkcp7we97v2aarjdh30nz4kuygghk',
   'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt',
   'kujira1xgq5meypfxhhepz6htpv9rn848xhqd2dw3gany',
   'kujira1a0uqtx4erytfy2hgeysccjqusrz8ygq9ssjj0p',
