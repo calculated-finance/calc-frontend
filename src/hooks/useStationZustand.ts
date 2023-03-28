@@ -6,12 +6,13 @@ import { create } from 'zustand';
 import { Msg } from '@terra-money/feather.js';
 import { registry } from 'kujira.js';
 import { fromBech32, toBech32 } from '@cosmjs/encoding';
+import { persist } from 'zustand/middleware';
 
 export enum Adapter {
   Station = 'station',
 }
 
-export type IWallet = {
+type IWallet = {
   connect: null | (() => void);
   disconnect: () => void;
   signAndBroadcast: (msgs: EncodeObject[]) => Promise<DeliverTxResponse>;
@@ -22,72 +23,80 @@ export type IWallet = {
   init: () => void;
 };
 
-export const useStationStore = create<IWallet>((set, get) => ({
-  isStationInstalled: false,
-  stationController: null,
-  stored: null,
-  account: null,
-  disconnect: () => {
-    get().stationController?.disconnect();
-    set({ account: null });
-  },
-  signAndBroadcast: async (msgs: EncodeObject[]) => {
-    const { account, stationController } = get();
-    if (!account || !stationController) throw new Error('No Wallet Connected');
+export const useStationStore = create<IWallet>()(
+  persist(
+    (set, get) => ({
+      isStationInstalled: false,
+      stationController: null,
+      stored: null,
+      account: null,
+      disconnect: () => {
+        get().stationController?.disconnect();
+        set({ account: null });
+      },
+      signAndBroadcast: async (msgs: EncodeObject[]) => {
+        const { account, stationController } = get();
+        if (!account || !stationController) throw new Error('No Wallet Connected');
 
-    const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
+        const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
 
-    const res = await stationController.sign({
-      msgs: terraMsgs,
-      chainID: CHAIN_ID,
-    });
-
-    const stargate = await StargateClient.connect(RPC_ENDPOINT);
-    const result = await stargate.broadcastTx(res.result.toBytes());
-
-    assertIsDeliverTxSuccess(result);
-    return result;
-  },
-  connect: async () => {
-    const { stationController } = get();
-
-    if (stationController) {
-      await stationController.connect(ConnectType.EXTENSION);
-      const wallet: ConnectedWallet = await new Promise((r) =>
-        stationController.connectedWallet().subscribe((next) => {
-          if (next) {
-            return r(next);
-          }
-        }),
-      );
-
-      const account: AccountData = {
-        address: toBech32('kujira', fromBech32(wallet.addresses[CHAIN_ID]).data),
-        algo: 'secp256k1',
-        pubkey: new Uint8Array(),
-      };
-
-      set({ stored: Adapter.Station });
-      set({ account });
-    }
-  },
-  init: () => {
-    if (!get().stationController) {
-      getChainOptions().then((opts) => {
-        const stationController = new WalletController(opts);
-        set({ stationController });
-
-        stationController?.availableConnections().subscribe((next) => {
-          if (next.find((x) => x.type === ConnectType.EXTENSION))
-            useStationStore.setState({ isStationInstalled: true });
-
-          if (!get().account && get().stored === Adapter.Station) {
-            setTimeout(() => {
-              get().connect?.();
-            }, 10);
-          }
+        const res = await stationController.sign({
+          msgs: terraMsgs,
+          chainID: CHAIN_ID,
         });
-      });
-    }
-  },
-}));
+
+        const stargate = await StargateClient.connect(RPC_ENDPOINT);
+        const result = await stargate.broadcastTx(res.result.toBytes());
+
+        assertIsDeliverTxSuccess(result);
+        return result;
+      },
+      connect: async () => {
+        const { stationController } = get();
+
+        if (stationController) {
+          await stationController.connect(ConnectType.EXTENSION);
+          const wallet: ConnectedWallet = await new Promise((r) =>
+            stationController.connectedWallet().subscribe((next) => {
+              if (next) {
+                return r(next);
+              }
+            }),
+          );
+
+          const account: AccountData = {
+            address: toBech32('kujira', fromBech32(wallet.addresses[CHAIN_ID]).data),
+            algo: 'secp256k1',
+            pubkey: new Uint8Array(),
+          };
+
+          set({ stored: Adapter.Station });
+          set({ account });
+        }
+      },
+      init: () => {
+        if (!get().stationController) {
+          getChainOptions().then((opts) => {
+            const stationController = new WalletController(opts);
+
+            stationController?.availableConnections().subscribe((next) => {
+              if (next.find((x) => x.type === ConnectType.EXTENSION))
+                useStationStore.setState({ isStationInstalled: true });
+
+              setTimeout(() => {
+                if (!get().account && get().stored === Adapter.Station) {
+                  get().connect?.();
+                }
+                set({ stationController });
+              }, 10);
+            });
+          });
+        }
+      },
+    }),
+    {
+      name: 'stored',
+      partialize: (state) => ({ stored: state.stored }),
+    },
+  ),
+);
