@@ -22,12 +22,15 @@ import {
 import { useWallet, Wallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
+import { Adapter, useKujiWallet } from '@components/WalletProvider';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
 function WalletModal() {
   const { wallets, select, connecting } = useWallet();
   const { visible, setVisible } = useWalletModal();
+
+  const { connect } = useKujiWallet();
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -42,6 +45,13 @@ function WalletModal() {
     },
     [select, handleClose],
   );
+
+  const handleStationConnect = () => {
+    if (connect) {
+      connect(Adapter.Station);
+    }
+    handleClose();
+  };
 
   return (
     <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
@@ -71,6 +81,9 @@ function WalletModal() {
                     />
                   </Box>
                 ))}
+                <Box>
+                  <Button onClick={handleStationConnect}>Connect Station</Button>
+                </Box>
 
                 <Stack>
                   <Button

@@ -2,7 +2,7 @@ import { useNetwork } from './useNetwork';
 import useQueryWithNotification from './useQueryWithNotification';
 
 const useValidators = () => {
-  const { query } = useNetwork();
+  const [{ query }] = useNetwork();
   const pageSize = 1000;
 
   const { data, ...other } = useQueryWithNotification(
