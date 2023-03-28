@@ -8,10 +8,10 @@ import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   isBuyStrategy,
-  getTotalCost,
-  getAverageCost,
-  getAveragePrice,
+  getAveragePurchasePrice,
+  getAverageSellPrice,
   getTotalReceived,
+  getTotalSwapped,
 } from '@helpers/strategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
@@ -63,16 +63,16 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-total-acculumated">
           {isBuyStrategy(strategy)
             ? `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`
-            : `${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
+            : `${getTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Heading size="xs">{isBuyStrategy(strategy) ? 'Net asset cost' : 'Net asset profit'}</Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Total swapped' : 'Total asset profit'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-net-cost">
           {isBuyStrategy(strategy)
-            ? `${getTotalCost(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`
+            ? `${getTotalSwapped(strategy)} ${getDenomName(getStrategyInitialDenom(strategy))}`
             : `${getTotalReceived(strategy)} ${getDenomName(getStrategyResultingDenom(strategy))}`}
         </Text>
       </GridItem>
@@ -82,8 +82,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAverageCost(strategy) * initialDenomPrice)
-            : formatFiat(getAveragePrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getAveragePurchasePrice(strategy) * initialDenomPrice)
+            : formatFiat(getAverageSellPrice(strategy) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
