@@ -100,6 +100,7 @@ const whitelist = [
   'kujira195d2y2rupak8a0qu4vnj8da0n8kgupxerfhr78',
   'kujira1cra65ss6v4p5f3x2cj4crgph3ssvc02qffdjq4',
   'kujira1k23yyy43glwhkn25y55xuc3wy2k7sv2r5gl9ct',
+  'kujira1xrfkdd6pamquamlqxvdlmh86kn9jxvk3fw4ffe',
 ];
 
 export function isAddressWhitelisted(address: string) {
