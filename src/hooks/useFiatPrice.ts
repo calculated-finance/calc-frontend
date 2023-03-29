@@ -10,13 +10,14 @@ export type FiatPriceResponse = any;
 const useFiatPrice = (denom: Denom | undefined) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
+  const priceChange = 'usd_24h_change';
 
   const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-price'],
     async () => {
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${SUPPORTED_DENOMS.map(
         (denomId: Denom) => getDenomInfo(denomId).coingeckoId,
-      ).join(',')}&vs_currencies=${fiatCurrencyId}`;
+      ).join(',')}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
 
       const response = await fetch(url);
       if (!response.ok) {
@@ -35,6 +36,7 @@ const useFiatPrice = (denom: Denom | undefined) => {
   return {
     price: data?.[coingeckoId]?.[fiatCurrencyId],
     data,
+    priceChange24Hr: data?.[coingeckoId]?.[priceChange],
     ...other,
   };
 };
