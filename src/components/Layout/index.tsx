@@ -43,7 +43,7 @@ function AppHeader() {
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <Link href="/">
-        <Image cursor="pointer" src="/images/logo.svg" w="105px" />
+        <Image cursor="pointer" src="/images/logo.svg" w={105} />
       </Link>
       <Spacer />
       <CosmosWallet />
