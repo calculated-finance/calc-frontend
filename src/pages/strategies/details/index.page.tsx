@@ -82,7 +82,6 @@ function Page() {
   const { data: eventsData } = useStrategyEvents(id as string);
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
-  const { isOpen: isCoinGeckoErrorOpen, onClose: onCoinGeckoErrorClose } = useDisclosure({ defaultIsOpen: true });
 
   const { connected } = useWallet();
 
@@ -123,18 +122,6 @@ function Page() {
             Your strategy is now inactive and you will receive your escrow (minus performance fee) on{' '}
             {formatDate(getStandardDcaEndDate(strategy, events))}.
           </Text>
-        </Alert>
-      )}
-      {isCoinGeckoErrorOpen && (
-        <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
-          <Image mr={4} src="/images/warningIcon.svg" />
-          <Text fontSize="sm" mr={4}>
-            We are experiencing issues with the Coingecko price API. You may experience poor loading times or inaccurate
-            chart data. We expect this to be resolved soon.
-          </Text>
-          <Spacer />
-
-          <CloseButton onClick={onCoinGeckoErrorClose} />
         </Alert>
       )}
 

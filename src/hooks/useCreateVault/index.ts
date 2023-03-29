@@ -38,7 +38,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
 
-  const { price } = { price: 1 }; // useFiatPrice(state?.initialDenom as Denom);
+  const { price } = useFiatPrice(state?.initialDenom as Denom);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
@@ -72,7 +72,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
     msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
-    // msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
+    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
 
     return executeCreateVault(client, senderAddress, msgs);
   });

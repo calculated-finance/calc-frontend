@@ -147,7 +147,7 @@ function FeeBreakdown({
 
 export default function Fees({ formName }: { formName: FormNames }) {
   const { state } = useConfirmForm(formName);
-  const { price } = { price: 1 }; // useFiatPrice(state?.initialDenom);
+  const { price } = useFiatPrice(state?.initialDenom);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
