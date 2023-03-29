@@ -53,13 +53,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       py={4}
       px={8}
       layerStyle="panel"
-      borderWidth={isDcaPlus(strategy) ? 2 : 0}
-      style={{
-        borderImageSource:
-          'linear-gradient(90deg, #EBD57A 0%, #CB9C24 9.38%, #EEDF96 23.96%, #EACF6C 29.17%, #C7A246 46.88%, #EEDF96 67.71%, #C7A246 76.04%, #EACF6C 95.31%)',
-        borderImageSlice: 1,
-        borderRadius: 4,
-      }}
+      borderWidth={isDcaPlus(strategy) ? 1 : 0}
+      borderColor="brand.200"
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">{getStrategyType(strategy)}</Heading>
