@@ -32,7 +32,7 @@ function CosmosWallet() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
-  const { onCopy } = useClipboard(address);
+  const { onCopy } = useClipboard(address || '');
   const ref = React.createRef<HTMLElement>();
   useOutsideClick({
     ref,

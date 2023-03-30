@@ -22,9 +22,9 @@ import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { useStation } from '@hooks/useStation';
+import { featureFlags } from 'src/constants';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
-import { featureFlags } from 'src/constants';
 
 function WalletModal() {
   const { wallets, select, connecting } = useWizardUiWallet();

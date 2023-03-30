@@ -7,6 +7,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { Denom } from '@models/Denom';
+import { isNil } from 'lodash';
 import { Strategy } from './useStrategies';
 
 type TopUpVariables = {
@@ -22,6 +23,13 @@ const useTopUpStrategy = () => {
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, id }) => {
     const { deconversion } = getDenomInfo(initialDenom);
+
+    if (isNil(address)) {
+      throw new Error('address is null or empty');
+    }
+    if (!client) {
+      throw new Error('client is null or empty');
+    }
     const msg = {
       deposit: {
         vault_id: id,
@@ -31,7 +39,7 @@ const useTopUpStrategy = () => {
 
     const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
 
-    const result = client!.execute(address, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
+    const result = client.execute(address, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
     return result;
   });
 };

@@ -104,8 +104,8 @@ const whitelist = [
   'kujira1wsj79nhlfvcw75hfejh7nt9sy66qyvp3td5zu9',
 ];
 
-export function isAddressWhitelisted(address: string) {
-  return whitelist.includes(address);
+export function isAddressWhitelisted(address: string | undefined | null) {
+  return address && whitelist.includes(address);
 }
 
 export default function useWhitelist() {

@@ -52,6 +52,9 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
     if (!client) {
       throw Error('Invalid client');
     }
+    if (!senderAddress) {
+      throw Error('Invalid sender address');
+    }
 
     const { pairs } = pairsData || {};
 

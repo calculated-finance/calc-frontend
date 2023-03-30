@@ -63,6 +63,8 @@ export interface KeplrWalletAdapterConfig {
 
 export const KeplrWalletName = 'Keplr Wallet' as WalletName;
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export class KeplrWalletAdapter extends BaseWalletAdapter {
   name = KeplrWalletName;
 
