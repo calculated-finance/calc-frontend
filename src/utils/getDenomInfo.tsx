@@ -178,6 +178,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 4,
     minimumSwapAmount: 0.05 / 1000,
     significantFigures: 10,
+    enabledInDcaPlus: true,
   },
   [MainnetDenoms.GPAXG]: {
     name: 'gPAXG',
