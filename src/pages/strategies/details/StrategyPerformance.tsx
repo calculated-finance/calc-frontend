@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -6,6 +6,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { HiTrendingUp, HiTrendingDown } from 'react-icons/hi';
+import { isNil } from 'lodash';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -25,7 +26,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
-
+  //
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
@@ -104,20 +105,24 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={1}>
-        <Flex>
-          <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
-            <Text fontSize="sm" data-testid="strategy-asset-price">
-              {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
-            </Text>
-            <HStack spacing={1}>
-              {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
-
-              <Text fontSize="xs" data-testid="strategy-asset-price-change">
-                {formatSignedPercentage(priceChange / 100)}
+        {isNil(priceChange) ? (
+          <Spinner size="xs" />
+        ) : (
+          <Flex>
+            <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
+              <Text fontSize="sm" data-testid="strategy-asset-price">
+                {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
               </Text>
+              <HStack spacing={1}>
+                {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
+
+                <Text fontSize="xs" data-testid="strategy-asset-price-change">
+                  {formatSignedPercentage(priceChange / 100)}
+                </Text>
+              </HStack>
             </HStack>
-          </HStack>
-        </Flex>
+          </Flex>
+        )}
       </GridItem>
 
       <GridItem colSpan={1}>
