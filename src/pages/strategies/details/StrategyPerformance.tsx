@@ -6,6 +6,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { HiTrendingUp, HiTrendingDown } from 'react-icons/hi';
+import { isNil } from 'lodash';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -25,7 +26,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
-
+  //
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
@@ -104,7 +105,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={1}>
-        {!priceChange ? (
+        {isNil(priceChange) ? (
           <Spinner size="xs" />
         ) : (
           <Flex>
