@@ -24,6 +24,7 @@ import { useWalletModal } from '@hooks/useWalletModal';
 import { useStation } from '@hooks/useStation';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
+import { featureFlags } from 'src/constants';
 
 function WalletModal() {
   const { wallets, select, connecting } = useWizardUiWallet();
@@ -80,22 +81,20 @@ function WalletModal() {
             <ModalBody>
               <Stack spacing={6}>
                 {wallets.map((wallet) => (
-                  <Box>
-                    <WalletListItem
-                      key={wallet.adapter.name}
-                      handleClick={() => handleWalletClick(wallet.adapter.name)}
-                      wallet={wallet}
-                      walletInstallLink="https://www.keplr.app/download"
-                    />
-                  </Box>
+                  <WalletListItem
+                    key={wallet.adapter.name}
+                    handleClick={() => handleWalletClick(wallet.adapter.name)}
+                    wallet={wallet}
+                    walletInstallLink="https://www.keplr.app/download"
+                  />
                 ))}
-                <Box>
+                {featureFlags.stationEnabled && (
                   <WalletListItem
                     handleClick={handleStationConnect}
                     wallet={stationWalletData}
                     walletInstallLink="https://setup-station.terra.money/"
                   />
-                </Box>
+                )}
 
                 <Stack>
                   <Button

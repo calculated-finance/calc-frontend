@@ -10,7 +10,7 @@ import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
-import { CHAIN_ID, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
+import { CHAIN_ID, featureFlags, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
 import { hotjar } from 'react-hotjar';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
@@ -51,7 +51,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     [endpoint, chainId],
   );
 
-  useStation((state) => state.init)();
+  const init = useStation((state) => state.init);
+  if (featureFlags.stationEnabled) {
+    init();
+  }
+
   useKujira((state) => state.init)();
 
   return (

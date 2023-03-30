@@ -41,7 +41,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
-    "kujira.js": "Team-Kujira/kujira.js.git#dc06cb5fb58029c532f0354898c0b63075a1fc64",
+    "kujira.js": "Team-Kujira/kujira.js#dc06cb5fb58029c532f0354898c0b63075a1fc64",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "lottie-react": "^2.3.1",
@@ -55,7 +55,6 @@
     "react-icons": "^4.4.0",
     "react-lottie": "^1.2.3",
     "react-number-format": "^5.1.2",
-    "text-encoding": "^0.7.0",
     "victory": "^36.6.8",
     "yup": "^0.32.11",
     "zustand": "^4.3.6"

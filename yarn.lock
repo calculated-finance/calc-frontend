@@ -1911,7 +1911,7 @@
     "@cosmjs/math" "^0.29.5"
     "@cosmjs/utils" "^0.29.5"
 
-"@cosmjs/cosmwasm-stargate@^0.29.0", "@cosmjs/cosmwasm-stargate@^0.29.3":
+"@cosmjs/cosmwasm-stargate@^0.29.3", "@cosmjs/cosmwasm-stargate@^0.29.4":
   version "0.29.5"
   resolved "https://registry.yarnpkg.com/@cosmjs/cosmwasm-stargate/-/cosmwasm-stargate-0.29.5.tgz#3f257da682658833e0f4eb9e8ff758e4d927663a"
   integrity sha512-TNdSvm2tEE3XMCuxHxquzls56t40hC8qnLeYJWHsY2ECZmRK3KrnpRReEr7N7bLtODToK7X/riYrV0JaYxjrYA==
@@ -2084,7 +2084,7 @@
     ws "^7"
     xstream "^11.14.0"
 
-"@cosmjs/stargate@^0.29.0", "@cosmjs/stargate@^0.29.3", "@cosmjs/stargate@^0.29.5":
+"@cosmjs/stargate@^0.29.3", "@cosmjs/stargate@^0.29.4", "@cosmjs/stargate@^0.29.5":
   version "0.29.5"
   resolved "https://registry.yarnpkg.com/@cosmjs/stargate/-/stargate-0.29.5.tgz#d597af1c85a3c2af7b5bdbec34d5d40692cc09e4"
   integrity sha512-hjEv8UUlJruLrYGJcUZXM/CziaINOKwfVm2BoSdUnNTMxGvY/jC1ABHKeZUYt9oXHxEJ1n9+pDqzbKc8pT0nBw==
@@ -2482,6 +2482,21 @@
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.14.1.tgz#f4662f64dc89c0f956a94bb8a3b576556c74589c"
   integrity sha512-XaIYuunepPxoiGVLLHmlnVminUGzBTnXr8Wv7khzmLWbNw4TCwJKX09GSMJlKhu/TRk6gms0ySFxewaETSBqgw==
+  dependencies:
+    browser-headers "^0.4.1"
+
+"@injectivelabs/chain-api@^1.9.9":
+  version "1.9.17"
+  resolved "https://registry.yarnpkg.com/@injectivelabs/chain-api/-/chain-api-1.9.17.tgz#36e300d2d605ec90553bfafd927e418d7ff84a00"
+  integrity sha512-7cruWOjekUDJarry2qNdB8ynmq7GUc4xWRACawKBNgKfOrKNLQTbOpQZyLmHwcJsFM/YNCRWJ2+CPoZn1Rxb3g==
+  dependencies:
+    "@injectivelabs/grpc-web" "^0.0.1"
+    google-protobuf "^3.13.0"
+
+"@injectivelabs/grpc-web@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@injectivelabs/grpc-web/-/grpc-web-0.0.1.tgz#24c028f6db50e589e30505efd2077110c8b492ba"
+  integrity sha512-Pu5YgaZp+OvR5UWfqbrPdHer3+gDf+b5fQoY+t2VZx1IAVHX8bzbN9EreYTvTYtFeDpYRWM8P7app2u4EX5wTw==
   dependencies:
     browser-headers "^0.4.1"
 
@@ -4065,6 +4080,11 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/google-protobuf@^3.15.6":
+  version "3.15.6"
+  resolved "https://registry.yarnpkg.com/@types/google-protobuf/-/google-protobuf-3.15.6.tgz#674a69493ef2c849b95eafe69167ea59079eb504"
+  integrity sha512-pYVNNJ+winC4aek+lZp93sIKxnXt5qMkuKmaqS3WGuTq0Bw1ZDYNBgzG5kkdtwcv+GmYJGo3yEg6z2cKKAiEdw==
 
 "@types/got@^9":
   version "9.6.12"
@@ -8649,7 +8669,7 @@ gonzales-pe@^4.3.0:
   dependencies:
     minimist "^1.2.5"
 
-google-protobuf@^3.17.3:
+google-protobuf@^3.13.0, google-protobuf@^3.17.3:
   version "3.21.2"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.2.tgz#4580a2bea8bbb291ee579d1fefb14d6fa3070ea4"
   integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
@@ -10412,7 +10432,7 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-kujira.js@Team-Kujira/kujira.js.git#dc06cb5fb58029c532f0354898c0b63075a1fc64:
+kujira.js@Team-Kujira/kujira.js#dc06cb5fb58029c532f0354898c0b63075a1fc64:
   version "0.5.0"
   resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/dc06cb5fb58029c532f0354898c0b63075a1fc64"
   dependencies:
@@ -15395,6 +15415,11 @@ yargs@^17.0.0, yargs@^17.3.1, yargs@^17.6.0:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
+
+yarn@^1.22.19:
+  version "1.22.19"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.19.tgz#4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  integrity sha512-/0V5q0WbslqnwP91tirOvldvYISzaqhClxzyUKXYxs07yUILIs5jx/k6CFe8bvKSkds5w+eiOqta39Wk3WxdcQ==
 
 yauzl@^2.10.0, yauzl@^2.4.2:
   version "2.10.0"
