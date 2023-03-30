@@ -13,8 +13,8 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
-import Page from './index.page';
 import { useKujira } from '@hooks/useKujira';
+import Page from './index.page';
 
 const mockRouter = {
   push: jest.fn(),
