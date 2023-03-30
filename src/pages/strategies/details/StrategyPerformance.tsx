@@ -104,8 +104,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={1}>
-        {priceChange === undefined ? (
-          <Spinner thickness="2px" size="xs" />
+        {!priceChange ? (
+          <Spinner size="xs" />
         ) : (
           <Flex>
             <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
