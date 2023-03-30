@@ -55,6 +55,7 @@
     "react-icons": "^4.4.0",
     "react-lottie": "^1.2.3",
     "react-number-format": "^5.1.2",
+    "text-encoding": "^0.7.0",
     "victory": "^36.6.8",
     "yup": "^0.32.11",
     "zustand": "^4.3.6"
