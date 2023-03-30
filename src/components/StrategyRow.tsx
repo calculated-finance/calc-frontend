@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup, HStack } from '@chakra-ui/react';
+import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup, HStack, Box } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
@@ -12,6 +12,7 @@ import {
   getStrategyType,
   getStrategyName,
   isStrategyCancelled,
+  isDcaPlus,
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import CancelStrategyModal from './CancelStrategyModal';
@@ -52,6 +53,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       py={4}
       px={8}
       layerStyle="panel"
+      borderWidth={isDcaPlus(strategy) ? 1 : 0}
+      borderColor="brand.200"
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">{getStrategyType(strategy)}</Heading>
