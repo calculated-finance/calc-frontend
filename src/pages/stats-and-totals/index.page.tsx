@@ -19,6 +19,7 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyRemainingExecutions,
   getStrategyType,
+  isDcaPlus,
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
@@ -347,6 +348,7 @@ function Page() {
           <Text textStyle="body-xs">
             Strategies with autostaking: {allStrategies?.filter(isStrategyAutoStaking).length}
           </Text>
+          <Text textStyle="body-xs">Strategies using DCA+: {allStrategies?.filter(isDcaPlus).length}</Text>
           <Text textStyle="body-xs">
             Average Time Until End of Strategy: {averageDurationInDays} days (Max: {maxDurationInDays} days)
           </Text>
