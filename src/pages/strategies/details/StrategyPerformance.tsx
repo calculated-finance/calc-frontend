@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -104,20 +104,24 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={1}>
-        <Flex>
-          <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
-            <Text fontSize="sm" data-testid="strategy-asset-price">
-              {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
-            </Text>
-            <HStack spacing={1}>
-              {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
-
-              <Text fontSize="xs" data-testid="strategy-asset-price-change">
-                {formatSignedPercentage(priceChange / 100)}
+        {priceChange === undefined ? (
+          <Spinner thickness="2px" size="xs" />
+        ) : (
+          <Flex>
+            <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
+              <Text fontSize="sm" data-testid="strategy-asset-price">
+                {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
               </Text>
+              <HStack spacing={1}>
+                {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
+
+                <Text fontSize="xs" data-testid="strategy-asset-price-change">
+                  {formatSignedPercentage(priceChange / 100)}
+                </Text>
+              </HStack>
             </HStack>
-          </HStack>
-        </Flex>
+          </Flex>
+        )}
       </GridItem>
 
       <GridItem colSpan={1}>
