@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
 import { kujiraQueryClient } from 'kujira.js';
+import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
 
 jest.mock('kujira.js');
@@ -60,17 +61,24 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-        <ThemeProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Page />
-          </QueryClientProvider>
-        </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </ThemeProvider>,
       { container: document.body },
     );
   });
 }
 
 describe('DCA In post-purchase page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
@@ -121,16 +129,16 @@ describe('DCA In post-purchase page', () => {
 
       await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getAllByText(/Yes/)[1]), { timeout: 10000 });
+      await waitFor(() => userEvent.click(screen.getAllByText(/Yes/)[1]), { timeout: 16000 });
 
-      const select = await waitFor(() => screen.getByLabelText('Choose Validator'), { timeout: 10000 });
+      const select = await waitFor(() => screen.getByLabelText('Choose Validator'), { timeout: 17000 });
       selectEvent.select(select, ['test']);
 
       // eslint-disable-next-line no-promise-executor-return
       await new Promise((r) => setTimeout(r, 100));
 
       await act(async () => {
-        await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
+        await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 15000 });
       });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({

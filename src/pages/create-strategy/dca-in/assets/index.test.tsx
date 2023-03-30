@@ -14,6 +14,7 @@ import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import Page from './index.page';
+import { useKujira } from '@hooks/useKujira';
 
 const mockRouter = {
   push: jest.fn(),
@@ -68,6 +69,12 @@ async function renderTarget() {
 }
 
 describe('DCA In Assets page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);

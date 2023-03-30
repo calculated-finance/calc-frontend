@@ -12,6 +12,7 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
 
 const mockRouter = {
@@ -67,6 +68,12 @@ async function renderTarget() {
 }
 
 describe('DCA Out Assets page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();
