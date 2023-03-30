@@ -5,13 +5,13 @@ import { queryClient } from 'src/pages/_app.page';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { NetworkContext } from '@components/NetworkContext';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockCancelVault } from '@helpers/test/mockCancelVault';
+import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
 
 const mockRouter = {
@@ -50,16 +50,20 @@ jest.mock('next/router', () => ({
 async function renderTarget() {
   act(() => {
     render(
-      <NetworkContext>
-        <QueryClientProvider client={queryClient}>
-          <Page />
-        </QueryClientProvider>
-      </NetworkContext>,
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>,
     );
   });
 }
 
 describe('Detail page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);

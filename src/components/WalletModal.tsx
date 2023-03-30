@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import type { WalletName } from '@wizard-ui/core';
 import { WalletReadyState } from '@wizard-ui/core';
 
@@ -17,17 +17,23 @@ import {
   Stack,
   Text,
   useDisclosure,
-  ModalFooter,
 } from '@chakra-ui/react';
-import { useWallet, Wallet } from '@wizard-ui/react';
+import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
+import { useStation } from '@hooks/useStation';
+import { featureFlags } from 'src/constants';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
 function WalletModal() {
-  const { wallets, select, connecting } = useWallet();
+  const { wallets, select, connecting } = useWizardUiWallet();
   const { visible, setVisible } = useWalletModal();
+
+  const { isStationInstalled, connect: connectStation } = useStation((state) => ({
+    isStationInstalled: state.isStationInstalled,
+    connect: state.connect,
+  }));
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -42,6 +48,19 @@ function WalletModal() {
     },
     [select, handleClose],
   );
+
+  const handleStationConnect = () => {
+    connectStation?.();
+    handleClose();
+  };
+
+  const stationWalletData = {
+    adapter: {
+      name: 'Terra Station',
+      icon: '/images/station.svg',
+    },
+    readyState: isStationInstalled ? WalletReadyState.Installed : WalletReadyState.NotDetected,
+  };
 
   return (
     <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
@@ -62,15 +81,20 @@ function WalletModal() {
             <ModalBody>
               <Stack spacing={6}>
                 {wallets.map((wallet) => (
-                  <Box>
-                    <WalletListItem
-                      key={wallet.adapter.name}
-                      handleClick={() => handleWalletClick(wallet.adapter.name)}
-                      wallet={wallet}
-                      walletInstallLink="https://www.keplr.app/download"
-                    />
-                  </Box>
+                  <WalletListItem
+                    key={wallet.adapter.name}
+                    handleClick={() => handleWalletClick(wallet.adapter.name)}
+                    wallet={wallet}
+                    walletInstallLink="https://www.keplr.app/download"
+                  />
                 ))}
+                {featureFlags.stationEnabled && (
+                  <WalletListItem
+                    handleClick={handleStationConnect}
+                    wallet={stationWalletData}
+                    walletInstallLink="https://setup-station.terra.money/"
+                  />
+                )}
 
                 <Stack>
                   <Button

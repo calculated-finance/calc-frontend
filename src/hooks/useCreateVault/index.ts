@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -51,6 +51,9 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 
     if (!client) {
       throw Error('Invalid client');
+    }
+    if (!senderAddress) {
+      throw Error('Invalid sender address');
     }
 
     const { pairs } = pairsData || {};

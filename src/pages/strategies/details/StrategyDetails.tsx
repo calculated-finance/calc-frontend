@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@hooks/useStrategies';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';

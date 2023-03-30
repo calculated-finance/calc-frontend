@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
 import { kujiraQueryClient } from 'kujira.js';
-import { NetworkContext } from '@components/NetworkContext';
+import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
 
 jest.mock('kujira.js');
@@ -61,19 +61,23 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-      <NetworkContext>
-        <ThemeProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Page />
-          </QueryClientProvider>
-        </ThemeProvider>
-      </NetworkContext>,
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </ThemeProvider>,
       { container: document.body },
     );
   });
 }
 
 describe('DCA In post-purchase page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
   beforeEach(() => {
     jest.clearAllMocks();
     (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);

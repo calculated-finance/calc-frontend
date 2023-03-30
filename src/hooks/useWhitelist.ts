@@ -1,7 +1,7 @@
 // usewhitelist
 
 import { isMainnet } from '@utils/isMainnet';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 
 const whitelist = [
   'kujira1ay2e2mgmdzkcp7we97v2aarjdh30nz4kuygghk',
@@ -105,8 +105,8 @@ const whitelist = [
   'kujira18gwmpc4dlk7ntzl8tx0pzcu3vkd8veyfherdpm',
 ];
 
-export function isAddressWhitelisted(address: string) {
-  return whitelist.includes(address);
+export function isAddressWhitelisted(address: string | undefined | null) {
+  return address && whitelist.includes(address);
 }
 
 export default function useWhitelist() {

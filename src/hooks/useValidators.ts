@@ -1,9 +1,8 @@
-import { useNetwork } from './useNetwork';
+import { useKujira } from './useKujira';
 import useQueryWithNotification from './useQueryWithNotification';
 
 const useValidators = () => {
-  const { query } = useNetwork();
-  const pageSize = 1000;
+  const query = useKujira((state) => state.query);
 
   const { data, ...other } = useQueryWithNotification(
     ['validators'],

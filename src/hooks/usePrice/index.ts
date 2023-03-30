@@ -1,4 +1,4 @@
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { isNumber } from 'lodash';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';

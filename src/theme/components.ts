@@ -112,6 +112,22 @@ const components = {
       },
     },
   },
+  Menu: {
+    baseStyle: {
+      list: {
+        border: 'none',
+        bg: 'deepHorizon',
+        borderRadius: 'xs',
+      },
+      item: {
+        color: 'gray.200',
+        bg: 'deepHorizon',
+        _focus: {
+          bg: 'navy',
+        },
+      },
+    },
+  },
   Modal: {
     baseStyle: {
       dialog: {

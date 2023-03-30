@@ -17,3 +17,6 @@ infrastructure/**/*.zip
 # ignore auto tfvars
 *.auto.tfvars
 
+
+# Local Netlify folder
+.netlify

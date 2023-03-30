@@ -1,15 +1,42 @@
 import { InputGroup, InputLeftElement, InputRightElement, Input, InputProps } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import DenomIcon from '@components/DenomIcon';
+import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
-export function DenomInput({ denom, ...field }: { denom: string } & InputProps) {
+type DenomInputProps = {
+  onChange: (value: number | null) => void;
+} & Omit<InputProps, 'onChange'>;
+
+export function DenomInput({
+  denom,
+  value,
+  onChange,
+  type,
+  defaultValue,
+  ...props
+}: { denom: string } & DenomInputProps) {
   const { name } = getDenomInfo(denom);
+
+  const handleChange = (values: NumberFormatValues) => {
+    onChange(values.floatValue || null);
+  };
+
   return (
     <InputGroup>
       <InputLeftElement>
         <DenomIcon denomName={denom} />
       </InputLeftElement>
-      <Input type="number" placeholder="Enter amount" {...field} />
+      <NumericFormat
+        pl={10}
+        placeholder="Enter amount"
+        customInput={Input}
+        allowNegative={false}
+        onValueChange={handleChange}
+        value={value as number}
+        defaultValue={defaultValue as number}
+        thousandSeparator=","
+        {...props}
+      />
       <InputRightElement textStyle="body-xs" w="min-content" p={3}>
         {name}
       </InputRightElement>

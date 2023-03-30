@@ -11,8 +11,8 @@ import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { kujiraQueryClient } from 'kujira.js';
-import { NetworkContext } from '@components/NetworkContext';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
 
 const mockRouter = {
@@ -58,18 +58,22 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-      <NetworkContext>
-        <ThemeProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Page />
-          </QueryClientProvider>
-        </ThemeProvider>
-      </NetworkContext>,
+      <ThemeProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <Page />
+        </QueryClientProvider>
+      </ThemeProvider>,
     );
   });
 }
 
 describe('DCA Out Assets page', () => {
+  beforeAll(() => {
+    act(() => {
+      const store = useKujira.getState();
+      store.init();
+    });
+  });
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();

@@ -11,7 +11,6 @@ import {
   Alert,
   useDisclosure,
   Spacer,
-  CloseButton,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -20,7 +19,7 @@ import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';

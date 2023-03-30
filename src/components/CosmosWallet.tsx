@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { truncate } from '@wizard-ui/core';
 import {
   HStack,
@@ -28,11 +28,11 @@ import SquidModal from './SquidModal';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
-  const { address, disconnect } = useWallet();
+  const { address, disconnect, walletType } = useWallet();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
-  const { onCopy } = useClipboard(address);
+  const { onCopy } = useClipboard(address || '');
   const ref = React.createRef<HTMLElement>();
   useOutsideClick({
     ref,
@@ -46,7 +46,7 @@ function CosmosWallet() {
   };
 
   const handleDisconnect = () => {
-    disconnect();
+    disconnect?.();
     onClose();
   };
 
@@ -123,7 +123,7 @@ function CosmosWallet() {
                   onClick={handleDisconnect}
                   leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                 >
-                  Disconnect
+                  Disconnect from {walletType}
                 </Button>
               </Stack>
             </PopoverContent>

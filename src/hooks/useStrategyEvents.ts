@@ -1,4 +1,4 @@
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { CONTRACT_ADDRESS, DEFAULT_PAGE_SIZE } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import {

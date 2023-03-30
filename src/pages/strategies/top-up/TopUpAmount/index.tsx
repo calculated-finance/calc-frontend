@@ -49,7 +49,7 @@ export default function TopUpAmount({
   initialDenom: Denom;
   convertedSwapAmount: number;
 }) {
-  const [field, meta] = useField({ name: 'topUpAmount' });
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'topUpAmount' });
   const additionalSwapAmount = Math.ceil(field.value / convertedSwapAmount);
   const displaySwaps = additionalSwapAmount > 1 ? `${additionalSwapAmount} swaps` : 'swap';
   return (
@@ -62,7 +62,7 @@ export default function TopUpAmount({
           <TopUpAvailableFunds initialDenom={initialDenom} />
         </Center>
       </FormHelperText>
-      <DenomInput data-testid="top-up-input" denom={initialDenom} {...field} />
+      <DenomInput data-testid="top-up-input" denom={initialDenom} onChange={helpers.setValue} {...field} />
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && (

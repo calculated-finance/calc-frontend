@@ -16,7 +16,7 @@ import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { isStrategyOperating } from '@helpers/strategy';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';

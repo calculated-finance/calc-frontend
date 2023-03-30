@@ -48,11 +48,13 @@ export const featureFlags =
         uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
+        stationEnabled: false,
       }
     : {
         uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
+        stationEnabled: false,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
