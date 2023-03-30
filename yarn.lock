@@ -5724,9 +5724,9 @@ camelcase@^7.0.0:
   integrity sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==
 
 caniuse-lite@^1.0.30001332, caniuse-lite@^1.0.30001449:
-  version "1.0.30001472"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001472.tgz#3f484885f2a2986c019dc416e65d9d62798cdd64"
-  integrity sha512-xWC/0+hHHQgj3/vrKYY0AAzeIUgr7L9wlELIcAvZdDUHlhL/kNxMdnQLOSOQfP8R51ZzPhmHdyMkI0MMpmxCfg==
+  version "1.0.30001473"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001473.tgz#3859898b3cab65fc8905bb923df36ad35058153c"
+  integrity sha512-ewDad7+D2vlyy+E4UJuVfiBsU69IL+8oVmTuZnH5Q6CIUbxNfI50uVpRHbUPDD6SUaN2o0Lh4DhTrvLG/Tn1yg==
 
 chakra-dayzed-datepicker@^0.2.3:
   version "0.2.7"
@@ -10436,14 +10436,18 @@ kujira.js@Team-Kujira/kujira.js#dc06cb5fb58029c532f0354898c0b63075a1fc64:
   version "0.5.0"
   resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/dc06cb5fb58029c532f0354898c0b63075a1fc64"
   dependencies:
-    "@cosmjs/cosmwasm-stargate" "^0.29.0"
+    "@cosmjs/cosmwasm-stargate" "^0.29.4"
     "@cosmjs/launchpad" "^0.27.1"
-    "@cosmjs/stargate" "^0.29.0"
+    "@cosmjs/stargate" "^0.29.4"
     "@ethersproject/bignumber" "^5.7.0"
+    "@injectivelabs/chain-api" "^1.9.9"
     "@keplr-wallet/types" "^0.11.12"
+    "@types/google-protobuf" "^3.15.6"
     cosmjs-types "0.5.2"
     long "^4.0.0"
+    text-encoding "^0.7.0"
     ts-node "^10.9.1"
+    yarn "^1.22.19"
 
 kuler@^2.0.0:
   version "2.0.0"
