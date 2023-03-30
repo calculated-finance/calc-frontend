@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
 import { kujiraQueryClient } from 'kujira.js';
-import { NetworkContext } from '@components/NetworkContext';
+import { NetworkContext } from '@hooks/useNetwork';
 import Page from './index.page';
 
 jest.mock('kujira.js');

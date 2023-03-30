@@ -57,12 +57,14 @@ export const useStationStore = create<IWallet>()(
         if (stationController) {
           await stationController.connect(ConnectType.EXTENSION);
           const wallet: ConnectedWallet = await new Promise((r) =>
+            // eslint-disable-next-line no-promise-executor-return
             stationController.connectedWallet().subscribe((next) => {
               if (next) {
-                return r(next);
+                r(next);
               }
             }),
           );
+          console.log('wallet', wallet);
 
           const account: AccountData = {
             address: toBech32('kujira', fromBech32(wallet.addresses[CHAIN_ID]).data),

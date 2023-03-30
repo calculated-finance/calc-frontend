@@ -5,7 +5,7 @@ import { queryClient } from 'src/pages/_app.page';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { NetworkContext } from '@components/NetworkContext';
+import { NetworkContext } from '@hooks/useNetwork';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';

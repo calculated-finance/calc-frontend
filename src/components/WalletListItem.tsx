@@ -29,13 +29,8 @@ export function WalletListItem({ handleClick, wallet, walletInstallLink }: Walle
       target={isInstalled ? undefined : '_blank'}
       rel={isInstalled ? undefined : 'noopener noreferrer'}
     >
-      <Image
-        w={4}
-        mr={2}
-        src={wallet.adapter?.icon || '/images/denoms/atom.svg'}
-        alt={`${wallet.adapter?.name || 'blash'} icon`}
-      />
-      <div>{wallet.adapter?.name || 'blah'}</div>
+      <Image w={4} mr={2} src={wallet.adapter.icon} alt={`${wallet.adapter.name} icon`} />
+      <div>{wallet.adapter.name}</div>
       <Spacer />
       <p>{isInstalled ? 'Installed' : 'Click to install'}</p>
     </Center>

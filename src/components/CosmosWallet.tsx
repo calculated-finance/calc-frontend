@@ -71,7 +71,7 @@ function CosmosWallet() {
           <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
-                <Text>{truncate(address)}</Text>
+                {truncate(address)}
               </Button>
             </PopoverTrigger>
             <PopoverContent bg="deepHorizon" boxShadow="deepHorizon" p={6} borderWidth={0} w={270}>

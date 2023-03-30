@@ -2,6 +2,7 @@
 
 import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { useStationStore } from '@hooks/useStationZustand';
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useNetwork } from './useNetwork';
 
 export enum WalletTypes {
@@ -46,9 +47,9 @@ export function useWallet() {
       connected: true,
       disconnect: kujiWallet.disconnect,
       signingClient: {
-        signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo: string) =>
+        signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo?: string) =>
           kujiWallet.signAndBroadcast(msgs),
-      },
+      } as SigningCosmWasmClient,
       client: {
         getBalance: query.bank.balance,
 

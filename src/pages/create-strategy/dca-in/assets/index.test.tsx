@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 
 import { kujiraQueryClient } from 'kujira.js';
-import { NetworkContext } from '@components/NetworkContext';
+import { NetworkContext } from '@hooks/useNetwork';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import Page from './index.page';
