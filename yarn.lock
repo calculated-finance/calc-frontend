@@ -2442,7 +2442,7 @@
   resolved "https://registry.yarnpkg.com/@fusion-icons/react/-/react-0.0.0.tgz#061c12b4edae01d823dd1dfea686effd86ef0098"
   integrity sha512-UiQzPbuYlIeWlHPLYlJwG7gDcPzCwTSS4ZKN6/edy9aEhH3MuBDP3RjxNkaTSPCqhmawMbyoHZXZBFHyEQ22hQ==
 
-"@headlessui/react@^1.7.4":
+"@headlessui/react@^1.7.3":
   version "1.7.13"
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.13.tgz#fd150b394954e9f1d86ed2340cffd1217d6e7628"
   integrity sha512-9n+EQKRtD9266xIHXdY5MfiXPDfYwl7zBM7KOx2Ae3Gdgxy8QML1FkCMjq6AsOf0l6N9uvI4HcFtuFlenaldKg==
@@ -4599,7 +4599,7 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@wizard-ui/core@*", "@wizard-ui/core@^1.5.0":
+"@wizard-ui/core@*":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.7.0.tgz#7d90377de089b00641ac08de1cb2c2a6a4938f3e"
   integrity sha512-rFqL159xU2b7f1HMBduuVvUHUjd5/MbvYIEcf11ekAPpyEraCqlypuMYHBHBBqzCjVPtGcWU9nFDz29kLs01hg==
@@ -4608,12 +4608,22 @@
     eventemitter3 "^4.0.7"
     lodash "^4.17.21"
 
-"@wizard-ui/react@^2.4.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.6.0.tgz#90e36de5d0e349ff0735b11d56a515ee7e0dbdeb"
-  integrity sha512-Cv1IHAW2yvoxbE0P2ghiskdFxOJECUdnAwQzSkXtKA4OQ6zH0tDt3+XUorLCgOgFDzqVxy2V+Pg/TzUH+N8c8w==
+"@wizard-ui/core@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/core/-/core-1.5.0.tgz#6ee81dce58858589811274ab9f4b71f1c149132c"
+  integrity sha512-Kie2slhyOt2htQmIzoJEHCV127xKFxnXASk/iZhweaAW35yIB+cB5AGwSwL8FFp6ZIEJomwRww0OgvAYpr8Q4g==
   dependencies:
-    "@headlessui/react" "^1.7.4"
+    bignumber.js "^9.1.0"
+    d3-format "^3.1.0"
+    eventemitter3 "^4.0.7"
+    lodash "^4.17.21"
+
+"@wizard-ui/react@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@wizard-ui/react/-/react-2.4.0.tgz#dc80cd47fe2bb2e0cba79927d328ec752bd16d4a"
+  integrity sha512-o89rFsmquqa+F3uTI6zbR4tqPg4+iLhLzT4eNv8W3njFYr3ODca2B4riNdM5JcES/jq5O6vW1cSwRdNnEoOh0g==
+  dependencies:
+    "@headlessui/react" "^1.7.3"
     "@wizard-ui/core" "*"
     ahooks "^3.7.2"
     rifm "^0.12.1"
@@ -6496,7 +6506,7 @@ d3-ease@^3.0.1:
   resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-3.0.1.tgz#9658ac38a2140d59d346160f1f6c30fda0bd12f4"
   integrity sha512-wR/XK3D3XcLIZwpbvQwQ5fK+8Ykds1ip7A2Txe0yxncXSdq1L9skcG7blcedkOX+ZcgxGAmLX1FrRGbADwzi0w==
 
-"d3-format@1 - 3":
+"d3-format@1 - 3", d3-format@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-3.1.0.tgz#9260e23a28ea5cb109e93b21a06e24e2ebd55641"
   integrity sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==
