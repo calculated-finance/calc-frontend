@@ -30,8 +30,8 @@
     "@tanstack/react-query": "^4.2.3",
     "@terra-money/feather.js": "^1.0.0-beta.12",
     "@terra-money/wallet-controller": "^4.0.0",
-    "@wizard-ui/core": "1.5.0",
-    "@wizard-ui/react": "2.4.0",
+    "@wizard-ui/core": "^1.5.0",
+    "@wizard-ui/react": "^2.4.0",
     "ahooks": "^3.7.2",
     "chakra-dayzed-datepicker": "^0.2.3",
     "chakra-react-select": "^4.2.2",
@@ -47,8 +47,8 @@
     "lottie-web": "^5.10.2",
     "next": "12.2.5",
     "prop-types": "^15.8.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.2",
     "react-hotjar": "^5.2.0",
     "react-icons": "^4.4.0",
@@ -64,9 +64,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest-when": "^3.5.2",
-    "@types/node": "18.7.13",
-    "@types/react": "18.0.17",
-    "@types/react-dom": "18.0.6",
+    "@types/node": "^18.7.13",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.36.0",
     "@typescript-eslint/parser": "^5.35.1",
     "babel-plugin-inline-react-svg": "^2.0.1",
@@ -91,6 +91,6 @@
     "prettier": "^2.7.1",
     "react-select-event": "^5.5.1",
     "timekeeper": "^2.2.0",
-    "typescript": "4.8.2"
+    "typescript": "^4.8.2"
   }
 }
