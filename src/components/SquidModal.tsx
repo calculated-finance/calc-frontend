@@ -3,7 +3,7 @@ import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 
 function SquidModalContent() {
-  const { connected, address } = useWallet();
+  const { connected } = useWallet();
 
   return (
     <ModalContent mx={6} width={420} height={641}>

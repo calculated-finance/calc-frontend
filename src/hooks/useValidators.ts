@@ -3,7 +3,6 @@ import useQueryWithNotification from './useQueryWithNotification';
 
 const useValidators = () => {
   const query = useKujira((state) => state.query);
-  const pageSize = 1000;
 
   const { data, ...other } = useQueryWithNotification(
     ['validators'],

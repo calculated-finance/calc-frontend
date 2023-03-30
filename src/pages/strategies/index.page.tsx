@@ -10,7 +10,6 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react';
-import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@hooks/useWallet';

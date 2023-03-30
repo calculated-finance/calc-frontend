@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import type { WalletName } from '@wizard-ui/core';
 import { WalletReadyState } from '@wizard-ui/core';
 

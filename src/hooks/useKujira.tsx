@@ -2,7 +2,7 @@ import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
 import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
 import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
-import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { RPC_ENDPOINT } from 'src/constants';
 
 export const useKujira = create(
   combine(

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useWallet, WalletTypes } from '@hooks/useWallet';
+import { useWallet } from '@hooks/useWallet';
 import { truncate } from '@wizard-ui/core';
 import {
   HStack,
@@ -15,7 +15,6 @@ import {
   useClipboard,
   useOutsideClick,
   Image,
-  Text,
   Divider,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';

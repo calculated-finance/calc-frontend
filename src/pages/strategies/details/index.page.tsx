@@ -11,7 +11,6 @@ import {
   Alert,
   useDisclosure,
   Spacer,
-  CloseButton,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
