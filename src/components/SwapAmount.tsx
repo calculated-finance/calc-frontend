@@ -14,7 +14,7 @@ export default function SwapAmount({
   step1State: DcaInFormDataStep1;
   isSell?: boolean;
 }) {
-  const [field, meta, helpers] = useField({ name: 'swapAmount' });
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
   const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
@@ -48,7 +48,7 @@ export default function SwapAmount({
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={step1State.initialDenom} {...field} />
+      <DenomInput denom={step1State.initialDenom} onChange={helpers.setValue} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && (
         <FormHelperText color="brand.200" fontSize="xs">
