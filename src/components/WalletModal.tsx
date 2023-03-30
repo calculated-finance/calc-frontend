@@ -21,7 +21,7 @@ import {
 import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
-import { useStationStore } from '@hooks/useStationZustand';
+import { useStation } from '@hooks/useStation';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -29,7 +29,7 @@ function WalletModal() {
   const { wallets, select, connecting } = useWizardUiWallet();
   const { visible, setVisible } = useWalletModal();
 
-  const { isStationInstalled, connect: connectStation } = useStationStore((state) => ({
+  const { isStationInstalled, connect: connectStation } = useStation((state) => ({
     isStationInstalled: state.isStationInstalled,
     connect: state.connect,
   }));

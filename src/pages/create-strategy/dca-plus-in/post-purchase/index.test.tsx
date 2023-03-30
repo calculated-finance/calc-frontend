@@ -9,7 +9,6 @@ import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
 import { kujiraQueryClient } from 'kujira.js';
-import { NetworkContext } from '@hooks/useNetwork';
 import Page from './index.page';
 
 jest.mock('kujira.js');
@@ -61,13 +60,11 @@ jest.mock('little-state-machine', () => ({
 async function renderTarget() {
   await act(() => {
     render(
-      <NetworkContext>
         <ThemeProvider theme={theme}>
           <QueryClientProvider client={queryClient}>
             <Page />
           </QueryClientProvider>
         </ThemeProvider>
-      </NetworkContext>,
       { container: document.body },
     );
   });

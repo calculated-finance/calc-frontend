@@ -12,8 +12,8 @@ import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
 import { CHAIN_ID, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
 import { hotjar } from 'react-hotjar';
-import { NetworkContext } from '@hooks/useNetwork';
-import { useStationStore } from '@hooks/useStationZustand';
+import { useKujira } from '@hooks/useKujira';
+import { useStation } from '@hooks/useStation';
 import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
@@ -51,7 +51,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     [endpoint, chainId],
   );
 
-  useStationStore((state) => state.init)();
+  useStation((state) => state.init)();
+  useKujira((state) => state.init)();
 
   return (
     <>
@@ -60,13 +61,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ChakraProvider theme={theme}>
         <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
-          <NetworkContext>
-            <CalcWalletModalProvider>
-              <QueryClientProvider client={queryClient}>
-                <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
-              </QueryClientProvider>
-            </CalcWalletModalProvider>
-          </NetworkContext>
+          <CalcWalletModalProvider>
+            <QueryClientProvider client={queryClient}>
+              <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
+            </QueryClientProvider>
+          </CalcWalletModalProvider>
         </WizardProvider>
       </ChakraProvider>
     </>

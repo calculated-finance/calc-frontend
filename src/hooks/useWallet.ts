@@ -1,9 +1,9 @@
 // wrap wizard-ui's useWallet in our own hook to add some extra functionality
 
 import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
-import { useStationStore } from '@hooks/useStationZustand';
+import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useNetwork } from './useNetwork';
+import { useKujira } from './useKujira';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
@@ -21,13 +21,13 @@ export function useWallet() {
     wallets,
   } = useWizardUiWallet();
 
-  const kujiWallet = useStationStore((state) => ({
+  const kujiWallet = useStation((state) => ({
     account: state.account,
     disconnect: state.disconnect,
     signAndBroadcast: state.signAndBroadcast,
   }));
 
-  const { query } = useNetwork();
+  const query = useKujira((state) => state.query);
 
   if (wizardConnected) {
     return {

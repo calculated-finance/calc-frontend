@@ -5,7 +5,6 @@ import { queryClient } from 'src/pages/_app.page';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { NetworkContext } from '@hooks/useNetwork';
 import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
@@ -50,11 +49,9 @@ jest.mock('next/router', () => ({
 async function renderTarget() {
   act(() => {
     render(
-      <NetworkContext>
-        <QueryClientProvider client={queryClient}>
-          <Page />
-        </QueryClientProvider>
-      </NetworkContext>,
+      <QueryClientProvider client={queryClient}>
+        <Page />
+      </QueryClientProvider>,
     );
   });
 }

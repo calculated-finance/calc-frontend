@@ -23,7 +23,7 @@ type IWallet = {
   init: () => void;
 };
 
-export const useStationStore = create<IWallet>()(
+export const useStation = create<IWallet>()(
   persist(
     (set, get) => ({
       isStationInstalled: false,
@@ -64,7 +64,6 @@ export const useStationStore = create<IWallet>()(
               }
             }),
           );
-          console.log('wallet', wallet);
 
           const account: AccountData = {
             address: toBech32('kujira', fromBech32(wallet.addresses[CHAIN_ID]).data),
@@ -82,8 +81,7 @@ export const useStationStore = create<IWallet>()(
             const stationController = new WalletController(opts);
 
             stationController?.availableConnections().subscribe((next) => {
-              if (next.find((x) => x.type === ConnectType.EXTENSION))
-                useStationStore.setState({ isStationInstalled: true });
+              if (next.find((x) => x.type === ConnectType.EXTENSION)) useStation.setState({ isStationInstalled: true });
 
               setTimeout(() => {
                 if (!get().account && get().stored === Adapter.Station) {
