@@ -37,11 +37,6 @@ export default function Select({
         isReadOnly: true,
         caretColor: 'transparent',
       }),
-      menuList: (provided) => ({
-        ...provided,
-        minW: 0,
-        bg: 'deepHorizon',
-      }),
     },
     components: customComponents,
   });
