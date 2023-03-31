@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app';
 import '@fontsource/karla';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
+import * as amplitude from '@amplitude/analytics-browser';
 import theme from 'src/theme';
 import { Box, Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -18,6 +19,10 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
+
+amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
+  defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
+});
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
