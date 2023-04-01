@@ -64,21 +64,27 @@ export const useKeplr = create<IWallet>()(
       connect: async () => {
         set({ isConnecting: true });
         const chainInfo = CHAIN_INFO[CHAIN_ID];
-        await window.keplr!.experimentalSuggestChain({
-          ...chainInfo,
-          feeCurrencies: chainInfo.feeCurrencies.filter((x) => x.coinMinimalDenom === 'ukuji'),
-        });
-        await window.keplr!.enable(CHAIN_ID);
+        try {
+          await window.keplr!.experimentalSuggestChain({
+            ...chainInfo,
+            feeCurrencies: chainInfo.feeCurrencies.filter((x) => x.coinMinimalDenom === 'ukuji'),
+          });
+          await window.keplr!.enable(CHAIN_ID);
 
-        const offlineSigner = await window.keplr!.getOfflineSignerAuto(CHAIN_ID);
+          const offlineSigner = await window.keplr!.getOfflineSignerAuto(CHAIN_ID);
 
-        const accounts = await offlineSigner.getAccounts();
+          const accounts = await offlineSigner.getAccounts();
 
-        const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, config.options);
-        set({ controller: client });
-        set({ address: accounts[0].address });
-        set({ autoconnect: true });
-        set({ isConnecting: false });
+          const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, config.options);
+          set({ controller: client });
+          set({ address: accounts[0].address });
+          set({ autoconnect: true });
+          set({ isConnecting: false });
+        } catch (e) {
+          console.error(e);
+          set({ isConnecting: false });
+          set({ autoconnect: false });
+        }
       },
       init: async () => {
         if (!get().controller) {
