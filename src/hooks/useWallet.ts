@@ -10,7 +10,7 @@ export enum WalletTypes {
 
 export function useWallet() {
   const keplrWallet = useKeplr((state) => ({
-    address: state.address,
+    account: state.account,
     controller: state.controller,
     isConnecting: state.isConnecting,
     disconnect: state.disconnect,
@@ -25,9 +25,9 @@ export function useWallet() {
 
   const query = useKujira((state) => state.query);
 
-  if (keplrWallet.address && query) {
+  if (keplrWallet.account && query) {
     return {
-      address: keplrWallet.address,
+      address: keplrWallet.account?.address,
       connected: true,
       client: {
         getBalance: query.bank.balance,

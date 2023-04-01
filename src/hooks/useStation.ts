@@ -17,7 +17,7 @@ type IWallet = {
   disconnect: () => void;
   signAndBroadcast: (msgs: EncodeObject[]) => Promise<DeliverTxResponse>;
   isStationInstalled: boolean;
-  stationController: WalletController | null;
+  controller: WalletController | null;
   account: AccountData | null;
   autoconnect: boolean;
   init: () => void;
@@ -28,17 +28,17 @@ export const useStation = create<IWallet>()(
   persist(
     (set, get) => ({
       isStationInstalled: false,
-      stationController: null,
+      controller: null,
       autoconnect: false,
       account: null,
       isConnecting: false,
       disconnect: () => {
-        get().stationController?.disconnect();
+        get().controller?.disconnect();
         set({ account: null });
         set({ autoconnect: false });
       },
       signAndBroadcast: async (msgs: EncodeObject[]) => {
-        const { account, stationController } = get();
+        const { account, controller: stationController } = get();
         if (!account || !stationController) throw new Error('No Wallet Connected');
 
         const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
@@ -55,7 +55,7 @@ export const useStation = create<IWallet>()(
         return result;
       },
       connect: async () => {
-        const { stationController } = get();
+        const { controller: stationController } = get();
 
         if (stationController) {
           set({ isConnecting: true });
@@ -82,7 +82,7 @@ export const useStation = create<IWallet>()(
         }
       },
       init: () => {
-        if (!get().stationController) {
+        if (!get().controller) {
           getChainOptions().then((opts) => {
             const stationController = new WalletController(opts);
 
@@ -93,7 +93,7 @@ export const useStation = create<IWallet>()(
                 if (!get().account && get().autoconnect) {
                   get().connect?.();
                 }
-                set({ stationController });
+                set({ controller: stationController });
               }, 10);
             });
           });
