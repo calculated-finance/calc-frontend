@@ -1,17 +1,14 @@
-import { WalletReadyState } from '@wizard-ui/core';
-import type { Wallet } from '@wizard-ui/react';
-
-import { Center, Spacer, Image, Box, Button } from '@chakra-ui/react';
+import { Center, Spacer, Image } from '@chakra-ui/react';
 
 export interface WalletListItemProps {
   handleClick: () => void;
-  wallet: Wallet;
+  icon: string;
+  name: string;
+  isInstalled: boolean;
   walletInstallLink: string;
 }
 
-export function WalletListItem({ handleClick, wallet, walletInstallLink }: WalletListItemProps) {
-  const isInstalled = wallet.readyState === WalletReadyState.Installed;
-
+export function WalletListItem({ handleClick, icon, name, isInstalled, walletInstallLink }: WalletListItemProps) {
   return (
     <Center
       as={isInstalled ? undefined : 'a'}
@@ -29,8 +26,8 @@ export function WalletListItem({ handleClick, wallet, walletInstallLink }: Walle
       target={isInstalled ? undefined : '_blank'}
       rel={isInstalled ? undefined : 'noopener noreferrer'}
     >
-      <Image w={4} mr={2} src={wallet.adapter.icon} alt={`${wallet.adapter.name} icon`} />
-      <div>{wallet.adapter.name}</div>
+      <Image w={4} mr={2} src={icon} alt={`${name} icon`} />
+      <div>{name}</div>
       <Spacer />
       <p>{isInstalled ? 'Installed' : 'Click to install'}</p>
     </Center>

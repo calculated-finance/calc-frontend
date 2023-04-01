@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import mockStrategyData from 'src/fixtures/strategy';
 import Home from './index.page';
@@ -8,7 +8,7 @@ import '@testing-library/jest-dom';
 import { queryClient } from './_app.page';
 
 jest.mock('@hooks/useStrategies');
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 
 function mockStrategy(data?: Partial<Strategy>) {
   return {

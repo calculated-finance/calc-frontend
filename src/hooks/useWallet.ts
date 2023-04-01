@@ -1,5 +1,3 @@
-// wrap wizard-ui's useWallet in our own hook to add some extra functionality
-
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useKujira } from './useKujira';

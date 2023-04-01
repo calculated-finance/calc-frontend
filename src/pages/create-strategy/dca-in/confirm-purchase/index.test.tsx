@@ -21,7 +21,7 @@ const mockRouter = {
   },
 };
 
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
   useRouter() {

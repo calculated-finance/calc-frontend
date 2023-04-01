@@ -1,21 +1,18 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
-import { ReactElement, ReactNode, useEffect, useMemo } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
-import { WizardProvider } from '@wizard-ui/react';
 import theme from 'src/theme';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { GasPrice } from '@cosmjs/stargate';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
-import { CHAIN_ID, featureFlags, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/constants';
+import { featureFlags, HOTJAR_SITE_ID } from 'src/constants';
 import { hotjar } from 'react-hotjar';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
 import { useKeplr } from '@hooks/useKeplr';
-import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -36,22 +33,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const endpoint = useMemo(() => RPC_ENDPOINT, []);
-  const chainId = useMemo(() => CHAIN_ID, []);
-
-  const wallets = useMemo(
-    () => [
-      new KeplrWalletAdapter({
-        endpoint,
-        chainId,
-        options: {
-          gasPrice: GasPrice.fromString('0.015ukuji'),
-        },
-      }),
-    ],
-    [endpoint, chainId],
-  );
-
   const init = useStation((state) => state.init);
   if (featureFlags.stationEnabled) {
     init();
@@ -66,13 +47,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>CALC - Calculated Finance</title>
       </Head>
       <ChakraProvider theme={theme}>
-        <WizardProvider endpoint={endpoint} wallets={wallets} chainId={chainId}>
-          <CalcWalletModalProvider>
-            <QueryClientProvider client={queryClient}>
-              <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
-            </QueryClientProvider>
-          </CalcWalletModalProvider>
-        </WizardProvider>
+        <CalcWalletModalProvider>
+          <QueryClientProvider client={queryClient}>
+            <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
+          </QueryClientProvider>
+        </CalcWalletModalProvider>
       </ChakraProvider>
     </>
   );

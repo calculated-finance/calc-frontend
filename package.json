@@ -30,8 +30,6 @@
     "@tanstack/react-query": "^4.2.3",
     "@terra-money/feather.js": "^1.0.0-beta.12",
     "@terra-money/wallet-controller": "^4.0.0",
-    "@wizard-ui/core": "^1.5.0",
-    "@wizard-ui/react": "^2.4.0",
     "ahooks": "^3.7.2",
     "chakra-dayzed-datepicker": "^0.2.3",
     "chakra-react-select": "^4.2.2",

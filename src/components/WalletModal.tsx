@@ -54,22 +54,6 @@ function WalletModal() {
     handleClose();
   };
 
-  const stationWalletData = {
-    adapter: {
-      name: 'Terra Station',
-      icon: '/images/station.svg',
-    },
-    readyState: isStationInstalled ? 'Installed' : 'NotDetected',
-  };
-
-  const keplrWalletData = {
-    adapter: {
-      name: 'Keplr Wallet',
-      icon: '/images/keplr.png',
-    },
-    readyState: isKeplrInstalled ? 'Installed' : 'NotDetected',
-  };
-
   return (
     <Modal isOpen={visible || isConnecting} onClose={handleClose} size="sm">
       <ModalOverlay />
@@ -90,13 +74,17 @@ function WalletModal() {
               <Stack spacing={6}>
                 <WalletListItem
                   handleClick={handleKeplrConnect}
-                  wallet={keplrWalletData}
+                  name="Keplr Wallet"
+                  icon="/images/keplr.png"
+                  isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
                 {featureFlags.stationEnabled && (
                   <WalletListItem
                     handleClick={handleStationConnect}
-                    wallet={stationWalletData}
+                    name="Terra Station"
+                    icon="/images/station.svg"
+                    isInstalled={isStationInstalled}
                     walletInstallLink="https://setup-station.terra.money/"
                   />
                 )}

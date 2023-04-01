@@ -20,7 +20,7 @@ const mockRouter = {
 
 const mockToast = jest.fn();
 
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 jest.mock('@chakra-ui/react', () => ({
   ...jest.requireActual('@chakra-ui/react'),
   useToast: () => mockToast,

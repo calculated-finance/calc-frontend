@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from 'src/pages/_app.page';
 import useStrategies from '@hooks/useStrategies';
 import TopPanel from './TopPanel';
 
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 jest.mock('@hooks/useStrategies');
 
 describe('top panel', () => {
