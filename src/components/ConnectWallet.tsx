@@ -4,7 +4,7 @@ import { useWalletModal } from 'src/hooks/useWalletModal';
 import Spinner from './Spinner';
 
 function ConnectWallet(props: FlexProps) {
-  const { connecting } = useWallet();
+  const { isConnecting } = useWallet();
   const { setVisible } = useWalletModal();
 
   const handleConnect = () => {
@@ -13,7 +13,7 @@ function ConnectWallet(props: FlexProps) {
   return (
     <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} {...props}>
       <Stack direction="column" spacing={4} alignItems="center" justifyContent="center" w="full" h="full">
-        {connecting ? (
+        {isConnecting ? (
           <Spinner />
         ) : (
           <>
