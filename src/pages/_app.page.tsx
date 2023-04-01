@@ -14,6 +14,7 @@ import { CHAIN_ID, featureFlags, HOTJAR_SITE_ID, RPC_ENDPOINT } from 'src/consta
 import { hotjar } from 'react-hotjar';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
+import { useKeplr } from '@hooks/useKeplr';
 import { KeplrWalletAdapter } from './keplr';
 
 type AppPropsWithLayout = AppProps & {
@@ -57,6 +58,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   useKujira((state) => state.init)();
+  useKeplr((state) => state.init)();
 
   return (
     <>

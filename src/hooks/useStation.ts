@@ -19,8 +19,9 @@ type IWallet = {
   isStationInstalled: boolean;
   stationController: WalletController | null;
   account: AccountData | null;
-  stored: Adapter | null;
+  autoconnect: boolean;
   init: () => void;
+  isConnecting: boolean;
 };
 
 export const useStation = create<IWallet>()(
@@ -28,11 +29,13 @@ export const useStation = create<IWallet>()(
     (set, get) => ({
       isStationInstalled: false,
       stationController: null,
-      stored: null,
+      autoconnect: false,
       account: null,
+      isConnecting: false,
       disconnect: () => {
         get().stationController?.disconnect();
         set({ account: null });
+        set({ autoconnect: false });
       },
       signAndBroadcast: async (msgs: EncodeObject[]) => {
         const { account, stationController } = get();
@@ -55,6 +58,8 @@ export const useStation = create<IWallet>()(
         const { stationController } = get();
 
         if (stationController) {
+          set({ isConnecting: true });
+
           await stationController.connect(ConnectType.EXTENSION);
           const wallet: ConnectedWallet = await new Promise((r) =>
             // eslint-disable-next-line no-promise-executor-return
@@ -71,8 +76,9 @@ export const useStation = create<IWallet>()(
             pubkey: new Uint8Array(),
           };
 
-          set({ stored: Adapter.Station });
+          set({ autoconnect: true });
           set({ account });
+          set({ isConnecting: false });
         }
       },
       init: () => {
@@ -84,7 +90,7 @@ export const useStation = create<IWallet>()(
               if (next.find((x) => x.type === ConnectType.EXTENSION)) useStation.setState({ isStationInstalled: true });
 
               setTimeout(() => {
-                if (!get().account && get().stored === Adapter.Station) {
+                if (!get().account && get().autoconnect) {
                   get().connect?.();
                 }
                 set({ stationController });
@@ -95,8 +101,8 @@ export const useStation = create<IWallet>()(
       },
     }),
     {
-      name: 'stored',
-      partialize: (state) => ({ stored: state.stored }),
+      name: 'stationAutoconnect',
+      partialize: (state) => ({ autoconnect: state.autoconnect }),
     },
   ),
 );

@@ -48,7 +48,7 @@ export const featureFlags =
         uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
-        stationEnabled: false,
+        stationEnabled: true,
       }
     : {
         uskPromoEnabled: false,
