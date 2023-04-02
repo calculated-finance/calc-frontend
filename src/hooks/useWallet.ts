@@ -60,5 +60,10 @@ export function useWallet() {
   }
   return {
     isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting,
+    client: query && {
+      getBalance: query.bank.balance,
+
+      queryContractSmart: query.wasm.queryContractSmart,
+    },
   };
 }
