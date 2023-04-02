@@ -431,6 +431,42 @@ function Page() {
             />
           </VictoryChart>
         </Stack>
+
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Strategies By Status Unique</Heading>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryBar
+              data={['scheduled', 'active', 'inactive', 'cancelled'].map((status: string) => {
+                const strategiesByStatus = Array.from(new Set((getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map((strategy) => strategy.owner)))
+                return {
+                  x: status,
+                  y: strategiesByStatus.length,
+                  label: `${status} \n(${strategiesByStatus.length})`,
+                };
+              })}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
+        </Stack>
+
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Strategies By Time Interval</Heading>
           <VictoryChart theme={VictoryTheme.material}>
