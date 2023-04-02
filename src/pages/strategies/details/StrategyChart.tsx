@@ -24,9 +24,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const elementRef = useRef<HTMLDivElement>(null);
   const dimensions = useSize(elementRef);
 
-  const { data: eventsData } = useStrategyEvents(strategy.id);
-
-  const events = eventsData?.events;
+  const { data: events } = useStrategyEvents(strategy.id);
 
   const resultingDenom = getStrategyResultingDenom(strategy);
 

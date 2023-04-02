@@ -78,7 +78,7 @@ function Page() {
   const { id } = router.query;
 
   const { data } = useStrategy(id as string);
-  const { data: eventsData } = useStrategyEvents(id as string);
+  const { data: events } = useStrategyEvents(id as string);
 
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
@@ -87,8 +87,6 @@ function Page() {
   if (!connected) {
     return <ConnectWallet layerStyle="panel" />;
   }
-
-  const events = eventsData?.events;
 
   if (!data) {
     return (

@@ -72,9 +72,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
   const elementRef = useRef<HTMLDivElement>(null);
   const dimensions = useSize(elementRef);
 
-  const { data: eventsData, isLoading: isEventsLoading } = useStrategyEvents(strategy.id);
-
-  const events = eventsData?.events;
+  const { data: events, isLoading: isEventsLoading } = useStrategyEvents(strategy.id);
 
   const denom = isBuyStrategy(strategy) ? getStrategyResultingDenom(strategy) : getStrategyInitialDenom(strategy);
 
@@ -83,12 +81,12 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
   const now = new Date();
   const fromDate = new Date(now.getTime() - parseInt(days, 10) * 24 * 60 * 60 * 1000);
 
-  const accumulatedDcaPlusEvents = convertDcaPlusEvents(eventsData?.events);
+  const accumulatedDcaPlusEvents = convertDcaPlusEvents(events);
 
   const dcaPlusLineChartData = buildLineChartData(accumulatedDcaPlusEvents, fromDate, now);
   const dcaPlusSwapsChartData = buildSwapsChartData(accumulatedDcaPlusEvents, fromDate, now);
 
-  const acculumatedTradEvents = convertTradEvents(eventsData?.events);
+  const acculumatedTradEvents = convertTradEvents(events);
 
   const tradLineChartData = buildLineChartData(acculumatedTradEvents, fromDate, now);
   const tradSwapsChartData = buildSwapsChartData(acculumatedTradEvents, fromDate, now);

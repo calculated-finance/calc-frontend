@@ -113,8 +113,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const startDate = getStrategyStartDate(strategy);
 
-  const { data: eventsData } = useStrategyEvents(strategy.id);
-  const events = eventsData?.events;
+  const { data: events } = useStrategyEvents(strategy.id);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
