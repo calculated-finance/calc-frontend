@@ -7,11 +7,16 @@ import {
   Text,
   Button,
   Center,
+  Image,
+  HStack,
+  Box,
+  Stack,
 } from '@chakra-ui/react';
 import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
+import { getConvertedSwapAmount, getStrategyInitialDenom, isDcaPlus } from '@helpers/strategy';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
@@ -42,16 +47,13 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   );
 }
 
-export default function TopUpAmount({
-  initialDenom,
-  convertedSwapAmount,
-}: {
-  initialDenom: Denom;
-  convertedSwapAmount: number;
-}) {
+export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'topUpAmount' });
-  const additionalSwapAmount = Math.ceil(field.value / convertedSwapAmount);
-  const displaySwaps = additionalSwapAmount > 1 ? `${additionalSwapAmount} swaps` : 'swap';
+  const convertedSwapAmount = getConvertedSwapAmount(strategy);
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const additionalSwaps = Math.ceil(field.value / convertedSwapAmount);
+  const displaySwaps = additionalSwaps > 1 ? `${additionalSwaps} swaps` : 'swap';
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How much do you want to add?</FormLabel>
@@ -66,9 +68,19 @@ export default function TopUpAmount({
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && (
-        <FormHelperText color="brand.200" fontSize="xs">
-          An additional {displaySwaps} will be added to your strategy.
-        </FormHelperText>
+        <Stack>
+          <FormHelperText color="brand.200" fontSize="xs">
+            An additional {displaySwaps} will be added to your strategy.
+          </FormHelperText>
+          {isDcaPlus(strategy) && additionalSwaps > 180 && (
+            <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+              <HStack spacing={3} color="brand.200">
+                <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+                <Text>Please note that this will increase your strategy duration by more than 6 months.</Text>
+              </HStack>
+            </Box>
+          )}
+        </Stack>
       )}
     </FormControl>
   );
