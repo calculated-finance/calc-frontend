@@ -16,10 +16,14 @@ declare const window: KeplrWindow;
 function waitForKeplr(timeout = 1000) {
   return new Promise((resolve) => {
     const checkKeplr = () => {
-      if (window?.keplr) {
-        resolve(true);
-      } else {
-        setTimeout(checkKeplr, timeout);
+      try {
+        if (window?.keplr) {
+          resolve(true);
+        } else {
+          setTimeout(checkKeplr, timeout);
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
 
