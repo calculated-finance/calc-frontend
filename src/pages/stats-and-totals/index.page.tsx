@@ -336,11 +336,19 @@ function getWalletsWithActiveStrategies(strategies: Strategy[]) {
   })
 }
 
-function getWalletsWithCompleteAndNoScheduledAndNoInactiveStrategies(strategies: Strategy[]) {
+function getWalletsWithOnlyInactive(strategies: Strategy[]) {
   const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
     const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.includes('complete') && !statuses.includes('scheduled') && !statuses.includes('inactive')
+    return statuses.length === 1 && statuses[0] === 'inactive'
+  })
+}
+
+function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
+    return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled')
   })
 }
 
@@ -413,7 +421,10 @@ function Page() {
             Unique wallets with active an active strategy: {getWalletsWithActiveStrategies(allStrategies).length}
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with a completed strategy (no scheduled or inactive): {getWalletsWithCompleteAndNoScheduledAndNoInactiveStrategies(allStrategies).length}
+            Unique wallets with only completed strategies: {getWalletsWithOnlyInactive(allStrategies).length}
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with only completed and cancelled strategies: {getWalletsWithOnlyInactiveAndCancelled(allStrategies).length}
           </Text>
           <Text textStyle="body-xs">
             Unique wallets with only cancelled strategies: {getWalletsWithOnlyCancelledStrategies(allStrategies).length}
