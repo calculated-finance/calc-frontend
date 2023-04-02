@@ -33,13 +33,18 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const init = useStation((state) => state.init);
-  if (featureFlags.stationEnabled) {
-    init();
-  }
+  const initStation = useStation((state) => state.init);
 
-  useKujira((state) => state.init)();
-  useKeplr((state) => state.init)();
+  const initKujira = useKujira((state) => state.init);
+  const initKeplr = useKeplr((state) => state.init);
+
+  useEffect(() => {
+    initKujira();
+    initKeplr();
+    if (featureFlags.stationEnabled) {
+      initStation();
+    }
+  }, [initKujira, initKeplr, initStation]);
 
   return (
     <>
