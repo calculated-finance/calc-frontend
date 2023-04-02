@@ -7,9 +7,6 @@ const nextConfig = {
   pageExtensions: ['page.tsx'],
   reactStrictMode: false,
   trailingSlash: true,
-  experimental: {
-    esmExternals: 'loose',
-  },
   redirects: [
     {
       source: '/create-strategy/dca-in/',
@@ -37,6 +34,4 @@ const nextConfig = {
   },
 };
 
-const withTM = require('next-transpile-modules')(['d3-format', '@wizard-ui/core', '@wizard-ui/react']);
-
-module.exports = withImages(withTM(nextConfig));
+module.exports = withImages(nextConfig);

@@ -25,7 +25,7 @@ const mockRouter = {
   },
 };
 
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
   useRouter() {
@@ -69,10 +69,11 @@ async function renderTarget() {
 }
 
 describe('DCA In Assets page', () => {
-  beforeAll(() => {
-    act(() => {
+  beforeAll(async () => {
+    await act(async () => {
       const store = useKujira.getState();
       store.init();
+      await waitFor(() => expect(store.query).toBeDefined());
     });
   });
   beforeEach(() => {

@@ -17,25 +17,28 @@ type IWallet = {
   disconnect: () => void;
   signAndBroadcast: (msgs: EncodeObject[]) => Promise<DeliverTxResponse>;
   isStationInstalled: boolean;
-  stationController: WalletController | null;
+  controller: WalletController | null;
   account: AccountData | null;
-  stored: Adapter | null;
+  autoconnect: boolean;
   init: () => void;
+  isConnecting: boolean;
 };
 
 export const useStation = create<IWallet>()(
   persist(
     (set, get) => ({
       isStationInstalled: false,
-      stationController: null,
-      stored: null,
+      controller: null,
+      autoconnect: false,
       account: null,
+      isConnecting: false,
       disconnect: () => {
-        get().stationController?.disconnect();
+        get().controller?.disconnect();
         set({ account: null });
+        set({ autoconnect: false });
       },
       signAndBroadcast: async (msgs: EncodeObject[]) => {
-        const { account, stationController } = get();
+        const { account, controller: stationController } = get();
         if (!account || !stationController) throw new Error('No Wallet Connected');
 
         const terraMsgs = msgs.map((m) => Msg.fromProto({ typeUrl: m.typeUrl, value: registry.encode(m) }));
@@ -52,9 +55,11 @@ export const useStation = create<IWallet>()(
         return result;
       },
       connect: async () => {
-        const { stationController } = get();
+        const { controller: stationController } = get();
 
         if (stationController) {
+          set({ isConnecting: true });
+
           await stationController.connect(ConnectType.EXTENSION);
           const wallet: ConnectedWallet = await new Promise((r) =>
             // eslint-disable-next-line no-promise-executor-return
@@ -71,12 +76,13 @@ export const useStation = create<IWallet>()(
             pubkey: new Uint8Array(),
           };
 
-          set({ stored: Adapter.Station });
+          set({ autoconnect: true });
           set({ account });
+          set({ isConnecting: false });
         }
       },
       init: () => {
-        if (!get().stationController) {
+        if (!get().controller) {
           getChainOptions().then((opts) => {
             const stationController = new WalletController(opts);
 
@@ -84,10 +90,10 @@ export const useStation = create<IWallet>()(
               if (next.find((x) => x.type === ConnectType.EXTENSION)) useStation.setState({ isStationInstalled: true });
 
               setTimeout(() => {
-                if (!get().account && get().stored === Adapter.Station) {
+                if (!get().account && get().autoconnect) {
                   get().connect?.();
                 }
-                set({ stationController });
+                set({ controller: stationController });
               }, 10);
             });
           });
@@ -95,8 +101,8 @@ export const useStation = create<IWallet>()(
       },
     }),
     {
-      name: 'stored',
-      partialize: (state) => ({ stored: state.stored }),
+      name: 'stationAutoconnect',
+      partialize: (state) => ({ autoconnect: state.autoconnect }),
     },
   ),
 );

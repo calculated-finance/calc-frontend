@@ -1,10 +1,6 @@
 import { useCallback } from 'react';
-import type { WalletName } from '@wizard-ui/core';
-import { WalletReadyState } from '@wizard-ui/core';
 
-// import { Collapse } from "./Collapse";
 import {
-  Box,
   Button,
   Center,
   Collapse,
@@ -18,20 +14,27 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { useStation } from '@hooks/useStation';
 import { featureFlags } from 'src/constants';
+import { useKeplr } from '@hooks/useKeplr';
+import { useWallet } from '@hooks/useWallet';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
 function WalletModal() {
-  const { wallets, select, connecting } = useWizardUiWallet();
   const { visible, setVisible } = useWalletModal();
+
+  const { isConnecting } = useWallet();
 
   const { isStationInstalled, connect: connectStation } = useStation((state) => ({
     isStationInstalled: state.isStationInstalled,
+    connect: state.connect,
+  }));
+
+  const { isInstalled: isKeplrInstalled, connect: connectKeplr } = useKeplr((state) => ({
+    isInstalled: state.isInstalled,
     connect: state.connect,
   }));
 
@@ -41,32 +44,21 @@ function WalletModal() {
     setVisible(false);
   }, [setVisible]);
 
-  const handleWalletClick = useCallback(
-    (walletName: WalletName) => {
-      select(walletName);
-      handleClose();
-    },
-    [select, handleClose],
-  );
-
   const handleStationConnect = () => {
     connectStation?.();
     handleClose();
   };
 
-  const stationWalletData = {
-    adapter: {
-      name: 'Terra Station',
-      icon: '/images/station.svg',
-    },
-    readyState: isStationInstalled ? WalletReadyState.Installed : WalletReadyState.NotDetected,
+  const handleKeplrConnect = () => {
+    connectKeplr?.();
+    handleClose();
   };
 
   return (
-    <Modal isOpen={visible || connecting} onClose={handleClose} size="sm">
+    <Modal isOpen={visible || isConnecting} onClose={handleClose} size="sm">
       <ModalOverlay />
       <ModalContent>
-        {connecting ? (
+        {isConnecting ? (
           <>
             <ModalHeader textAlign="center">Connecting to wallet</ModalHeader>
             <ModalBody>
@@ -80,18 +72,19 @@ function WalletModal() {
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
             <ModalBody>
               <Stack spacing={6}>
-                {wallets.map((wallet) => (
-                  <WalletListItem
-                    key={wallet.adapter.name}
-                    handleClick={() => handleWalletClick(wallet.adapter.name)}
-                    wallet={wallet}
-                    walletInstallLink="https://www.keplr.app/download"
-                  />
-                ))}
+                <WalletListItem
+                  handleClick={handleKeplrConnect}
+                  name="Keplr Wallet"
+                  icon="/images/keplr.png"
+                  isInstalled={isKeplrInstalled}
+                  walletInstallLink="https://www.keplr.app/download"
+                />
                 {featureFlags.stationEnabled && (
                   <WalletListItem
                     handleClick={handleStationConnect}
-                    wallet={stationWalletData}
+                    name="Terra Station"
+                    icon="/images/station.svg"
+                    isInstalled={isStationInstalled}
                     walletInstallLink="https://setup-station.terra.money/"
                   />
                 )}

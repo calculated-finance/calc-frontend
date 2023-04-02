@@ -1,9 +1,7 @@
-// wrap wizard-ui's useWallet in our own hook to add some extra functionality
-
-import { useWallet as useWizardUiWallet } from '@wizard-ui/react';
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useKujira } from './useKujira';
+import { useKeplr } from './useKeplr';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
@@ -11,44 +9,45 @@ export enum WalletTypes {
 }
 
 export function useWallet() {
-  const {
-    address,
-    connected: wizardConnected,
-    client,
-    signingClient,
-    connecting,
-    disconnect,
-    wallets,
-  } = useWizardUiWallet();
+  const keplrWallet = useKeplr((state) => ({
+    account: state.account,
+    controller: state.controller,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
 
-  const kujiWallet = useStation((state) => ({
+  const stationWallet = useStation((state) => ({
     account: state.account,
     disconnect: state.disconnect,
     signAndBroadcast: state.signAndBroadcast,
+    isConnecting: state.isConnecting,
   }));
 
   const query = useKujira((state) => state.query);
 
-  if (wizardConnected) {
+  if (keplrWallet.account && query) {
     return {
-      address,
-      connected: wizardConnected,
-      client,
-      signingClient,
-      connecting,
-      disconnect,
-      wallets,
+      address: keplrWallet.account?.address,
+      connected: true,
+      client: {
+        getBalance: query.bank.balance,
+
+        queryContractSmart: query.wasm.queryContractSmart,
+      },
+      signingClient: keplrWallet.controller,
+      disconnect: keplrWallet.disconnect,
       walletType: WalletTypes.KEPLR,
+      isConnecting: false,
     };
   }
-  if (kujiWallet?.account && query) {
+  if (stationWallet?.account && query) {
     return {
-      address: kujiWallet.account?.address,
+      address: stationWallet.account?.address,
       connected: true,
-      disconnect: kujiWallet.disconnect,
+      disconnect: stationWallet.disconnect,
       signingClient: {
         signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo?: string) =>
-          kujiWallet.signAndBroadcast(msgs),
+          stationWallet.signAndBroadcast(msgs),
       } as SigningCosmWasmClient,
       client: {
         getBalance: query.bank.balance,
@@ -56,7 +55,10 @@ export function useWallet() {
         queryContractSmart: query.wasm.queryContractSmart,
       },
       walletType: WalletTypes.STATION,
+      isConnecting: false,
     };
   }
-  return {};
+  return {
+    isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting,
+  };
 }

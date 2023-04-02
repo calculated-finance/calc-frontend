@@ -32,7 +32,7 @@ const mockKujiraQuery = {
 
 const mockToast = jest.fn();
 
-jest.mock('@wizard-ui/react');
+jest.mock('@hooks/useWallet');
 jest.mock('@chakra-ui/react', () => ({
   ...jest.requireActual('@chakra-ui/react'),
   useToast: () => mockToast,
@@ -58,10 +58,11 @@ async function renderTarget() {
 }
 
 describe('Detail page', () => {
-  beforeAll(() => {
-    act(() => {
+  beforeAll(async () => {
+    await act(async () => {
       const store = useKujira.getState();
       store.init();
+      await waitFor(() => expect(store.query).toBeDefined());
     });
   });
   beforeEach(() => {

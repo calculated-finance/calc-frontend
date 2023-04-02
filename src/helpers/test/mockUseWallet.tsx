@@ -1,4 +1,4 @@
-import { useWallet } from '@wizard-ui/react';
+import { useWallet } from '@hooks/useWallet';
 
 export function mockUseWallet(
   mockQuery: jest.Mock,
