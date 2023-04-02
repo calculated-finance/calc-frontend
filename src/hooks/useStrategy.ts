@@ -4,6 +4,7 @@ import { QueryMsg } from 'src/interfaces/generated/query';
 import { VaultResponse } from 'src/interfaces/generated/response/get_vault';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
+import { isAddressAdmin } from './useAdmin';
 
 export default function useStrategy(id?: Strategy['id']) {
   const { address, client } = useWallet();
@@ -19,7 +20,7 @@ export default function useStrategy(id?: Strategy['id']) {
           vault_id: id,
         },
       } as QueryMsg);
-      if (result.vault.owner !== address) {
+      if (result.vault.owner !== address && !isAddressAdmin(address)) {
         throw new Error('Strategy not found');
       }
       return result;

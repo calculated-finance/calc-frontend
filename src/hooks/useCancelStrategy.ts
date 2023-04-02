@@ -39,7 +39,7 @@ const useCancelStrategy = (initialDenom: Denom) => {
   const msgs: EncodeObject[] = [];
   const { price } = useFiatPrice(initialDenom);
 
-  return useMutation<DeliverTxResponse, Error, Strategy['id']>((strategyId: Strategy['id']) => {
+  return useMutation<DeliverTxResponse, Error, Strategy>((strategy: Strategy) => {
     if (client == null) {
       throw new Error('no client');
     }
@@ -52,7 +52,11 @@ const useCancelStrategy = (initialDenom: Denom) => {
       throw new Error('No fiat price information');
     }
 
-    msgs.push(getCancelVaultExecuteMsg(strategyId, address));
+    if (address !== strategy.owner) {
+      throw new Error('You are not the owner of this strategy');
+    }
+
+    msgs.push(getCancelVaultExecuteMsg(strategy.id, address));
     const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 
     msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee));

@@ -82,7 +82,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
   ) =>
     mutate(
-      { values, initialDenom, id: strategy.id },
+      { values, initialDenom, strategy },
       {
         onSuccess: async () => {
           await nextStep({

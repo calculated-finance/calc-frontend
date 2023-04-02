@@ -12,11 +12,12 @@ import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
-import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
+import { getStrategyInitialDenom, getStrategyResultingDenom, getTotalReceived, isBuyStrategy } from '@helpers/strategy';
 import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
 import { Denom } from '@models/Denom';
 import { getDenomName } from '@utils/getDenomInfo';
 import Spinner from '@components/Spinner';
+import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
 import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
@@ -94,7 +95,8 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
   const priceData = getPriceData(coingeckoData?.prices) || [];
 
-  const lineChartMax = Math.max(...tradLineChartData.map((d) => d.amount));
+  const lineChartMax = Math.max(getTotalReceived(strategy), getStandardDcaTotalReceived(strategy));
+
   const priceMax = Math.max(...priceData.map((d) => d.amount));
 
   const timeAxisStyle = {
@@ -116,6 +118,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
 
   const dcaPlusValueLineStyle = { data: { stroke: '#1AEFAF' } };
   const dcaPlusValueScatterStyle = { data: { fill: '#1AEFAF' } };
+
   return (
     <GridItem colSpan={6}>
       <Box layerStyle="panel" position="relative">
@@ -137,7 +140,12 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
               {/* Time Axis */}
               <VictoryAxis style={timeAxisStyle} tickFormat={formatTimeTick()} />
               {/* Value axis */}
-              <VictoryAxis dependentAxis key={0} style={valueAxisStyle} />
+              <VictoryAxis
+                dependentAxis
+                key={0}
+                style={valueAxisStyle}
+                tickFormat={(tick) => (tick * lineChartMax).toFixed(2)}
+              />
               {/* Price axis */}
               <VictoryAxis
                 dependentAxis
