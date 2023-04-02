@@ -17,14 +17,15 @@ function waitForKeplr(timeout = 1000) {
   return new Promise((resolve) => {
     const checkKeplr = () => {
       try {
-        if (window?.keplr) {
-          resolve(true);
-        } else {
-          setTimeout(checkKeplr, timeout);
+        if (typeof window !== 'undefined') {
+          if (window && window.keplr) {
+            resolve(true);
+          }
         }
       } catch (e) {
         console.error(e);
       }
+      setTimeout(checkKeplr, timeout);
     };
 
     checkKeplr();
