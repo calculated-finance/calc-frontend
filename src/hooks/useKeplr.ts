@@ -37,14 +37,6 @@ type IWallet = {
   controller: SigningCosmWasmClient | null;
 };
 
-const config = {
-  endpoint: RPC_ENDPOINT,
-  chainId: CHAIN_ID,
-  options: {
-    gasPrice: GasPrice.fromString('0.015ukuji'),
-  },
-};
-
 export const useKeplr = create<IWallet>()(
   persist(
     (set, get) => ({
@@ -72,7 +64,9 @@ export const useKeplr = create<IWallet>()(
           await keplr.enable(CHAIN_ID);
           const offlineSigner = await keplr.getOfflineSignerAuto(CHAIN_ID);
           const accounts = await offlineSigner.getAccounts();
-          const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, config.options);
+          const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, {
+            gasPrice: GasPrice.fromString('0.015ukuji'),
+          });
 
           set({
             controller: client,
