@@ -11,12 +11,16 @@ import {
   HStack,
   Box,
   Stack,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
 import { getConvertedSwapAmount, getStrategyInitialDenom, isDcaPlus } from '@helpers/strategy';
+import { Strategy } from '@hooks/useStrategies';
+import { Pages } from '@components/Sidebar/Pages';
+import Link from 'next/link';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
@@ -76,7 +80,14 @@ export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
             <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
               <HStack spacing={3} color="brand.200">
                 <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
-                <Text>Please note that this will increase your strategy duration by more than 6 months.</Text>
+                <Text>
+                  Please note that this will increase your strategy duration by more than 6 months. Perhaps it&apos;s
+                  best to{' '}
+                  <Link href={Pages.CreateStrategy} passHref>
+                    <ChakraLink color="brand.200">start a new strategy</ChakraLink>
+                  </Link>{' '}
+                  with a higher daily base allocation.
+                </Text>
               </HStack>
             </Box>
           )}

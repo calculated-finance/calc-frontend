@@ -4,7 +4,7 @@ import DenomIcon from '@components/DenomIcon';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 type DenomInputProps = {
-  onChange: (value: number | null) => void;
+  onChange: (value: number | undefined) => void;
 } & Omit<InputProps, 'onChange'>;
 
 export function DenomInput({
@@ -18,7 +18,7 @@ export function DenomInput({
   const { name } = getDenomInfo(denom);
 
   const handleChange = (values: NumberFormatValues) => {
-    onChange(values.floatValue || null);
+    onChange(values.floatValue);
   };
 
   return (
