@@ -41,7 +41,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
 
   const toast = useToast();
 
-  const { data: eventsData, isLoading: isEventsLoading } = useStrategyEvents(strategy.id, isOpen);
+  const { data: events, isLoading: isEventsLoading } = useStrategyEvents(strategy.id, isOpen);
 
   const handleCancelStrategy = () =>
     cancelStrategy(strategy, {
@@ -116,7 +116,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                     <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
                     <Text>
                       Your escrow (minus performance fee) is estimated to be returned on{' '}
-                      {formatDate(getStandardDcaEndDate(strategy, eventsData?.events))}
+                      {formatDate(getStandardDcaEndDate(strategy, events))}
                     </Text>
                   </HStack>
                 )}
