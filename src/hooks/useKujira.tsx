@@ -10,20 +10,22 @@ export const useKujira = create(
       tmClient: null as Tendermint34Client | null,
       query: null as KujiraQueryClient | null,
     },
-    (set) => ({
+    (set, get) => ({
       init: () => {
-        Tendermint34Client.create(
-          new HttpBatchClient(RPC_ENDPOINT, {
-            dispatchInterval: 100,
-            batchSizeLimit: 200,
-          }),
-        )
-          .then((client) => {
-            set({ tmClient: client });
-            const queryClient = kujiraQueryClient({ client });
-            set({ query: queryClient });
-          })
-          .catch((err) => console.error(err));
+        if (!get().query) {
+          Tendermint34Client.create(
+            new HttpBatchClient(RPC_ENDPOINT, {
+              dispatchInterval: 100,
+              batchSizeLimit: 200,
+            }),
+          )
+            .then((client) => {
+              set({ tmClient: client });
+              const queryClient = kujiraQueryClient({ client });
+              set({ query: queryClient });
+            })
+            .catch((err) => console.error(err));
+        }
       },
     }),
   ),
