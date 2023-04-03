@@ -1,10 +1,9 @@
 import { useWallet } from '@hooks/useWallet';
-import { CONTRACT_ADDRESS, DEFAULT_PAGE_SIZE } from 'src/constants';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import {
   Event as GeneratedEvent,
   EventData as GeneratedEventData,
-  EventsResponse,
 } from 'src/interfaces/generated/response/get_events_by_resource_id';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
@@ -12,18 +11,35 @@ import { Strategy } from './useStrategies';
 export type StrategyEvent = GeneratedEvent;
 export type StrategyEventData = GeneratedEventData;
 
+const GET_EVENTS_LIMIT = 400;
+
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { address, client } = useWallet();
 
-  return useQueryWithNotification<EventsResponse>(
-    ['strategyEvents', address, id, client],
-    () =>
-      client!.queryContractSmart(CONTRACT_ADDRESS, {
+  function fetchEventsRecursively(startAfter = null, allEvents = [] as StrategyEvent[]): Promise<StrategyEvent[]> {
+    return client!
+      .queryContractSmart(CONTRACT_ADDRESS, {
         get_events_by_resource_id: {
           resource_id: id,
-          limit: DEFAULT_PAGE_SIZE,
+          limit: GET_EVENTS_LIMIT,
+          start_after: startAfter,
         },
-      } as QueryMsg),
+      } as QueryMsg)
+      .then((result) => {
+        const { events } = result;
+        allEvents.push(...events);
+
+        if (events.length === GET_EVENTS_LIMIT) {
+          const newStartAfter = events[events.length - 1].id;
+          return fetchEventsRecursively(newStartAfter, allEvents);
+        }
+        return allEvents;
+      });
+  }
+
+  return useQueryWithNotification<StrategyEvent[]>(
+    ['strategyEvents', address, id, client],
+    () => fetchEventsRecursively(),
     {
       enabled: !!address && !!client && !!id && !!enabled,
     },

@@ -139,7 +139,7 @@ function StrategyComparisonDetails({
 }
 
 export default function StrategyComparison({ strategy }: { strategy: Strategy }) {
-  const { data: eventsData } = useStrategyEvents(strategy.id);
+  const { data: events } = useStrategyEvents(strategy.id);
 
   return (
     <GridItem colSpan={6}>
@@ -148,9 +148,9 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
           Comparison against traditional DCA
         </Heading>
         <Flex layerStyle="panel" flexGrow={1} p={8} alignItems="start">
-          {eventsData?.events ? (
+          {events ? (
             <Stack direction={['column', null, null, null, 'row']} w="full" gap={8}>
-              <StrategyComparisonDetails strategy={strategy} strategyEvents={eventsData.events} />
+              <StrategyComparisonDetails strategy={strategy} strategyEvents={events} />
               <StrategyComparisonCard strategy={strategy} />
             </Stack>
           ) : (
