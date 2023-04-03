@@ -1,6 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
 import SendToWalletValues from '@models/SendToWalletValues';
+import getDenomInfo from '@utils/getDenomInfo';
+import { FormNames, useDcaOutFormPostPurchase } from '@hooks/useDcaOutForm';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 
@@ -18,6 +20,7 @@ const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
 
 export default function DcaOutSendToWallet() {
   const [field, , helpers] = useField({ name: 'sendToWallet' });
+  const { context } = useDcaOutFormPostPurchase(FormNames.DcaOut);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -27,7 +30,7 @@ export default function DcaOutSendToWallet() {
 
   return (
     <FormControl>
-      <FormLabel>Send the profits to a different account?</FormLabel>
+      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} profits to a different account?</FormLabel>
       <FormHelperText>
         Cashflow is king, this tool is perfect for paying your team or maintaining cashflow for regular expenses.
       </FormHelperText>
