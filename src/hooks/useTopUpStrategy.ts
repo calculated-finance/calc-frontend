@@ -15,13 +15,13 @@ type TopUpVariables = {
     topUpAmount: number;
   };
   initialDenom: Denom;
-  id: Strategy['id'];
+  strategy: Strategy;
 };
 
 const useTopUpStrategy = () => {
   const { address, signingClient: client } = useWallet();
 
-  return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, id }) => {
+  return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, strategy }) => {
     const { deconversion } = getDenomInfo(initialDenom);
 
     if (isNil(address)) {
@@ -30,9 +30,13 @@ const useTopUpStrategy = () => {
     if (!client) {
       throw new Error('client is null or empty');
     }
+    if (strategy.owner !== address) {
+      throw new Error('You are not the owner of this strategy');
+    }
+
     const msg = {
       deposit: {
-        vault_id: id,
+        vault_id: strategy.id,
         address,
       },
     } as ExecuteMsg;

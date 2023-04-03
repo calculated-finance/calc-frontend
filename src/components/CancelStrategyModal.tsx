@@ -44,7 +44,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
   const { data: eventsData, isLoading: isEventsLoading } = useStrategyEvents(strategy.id, isOpen);
 
   const handleCancelStrategy = () =>
-    cancelStrategy(strategy.id, {
+    cancelStrategy(strategy, {
       onSuccess: () => {
         toast({
           title: 'Strategy cancelled.',
