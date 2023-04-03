@@ -18,10 +18,7 @@ export function PostPurchaseFormDcaOut({ resultingDenom }: { resultingDenom: Den
   // const stakeingUnsupported = false;
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
-  console.log(getDenomInfo(resultingDenom));
-
   const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
-  console.log('Staking unsupported?', stakeingUnsupported);
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
   const [{ value: autoStakeValue }] = useField('autoStake');

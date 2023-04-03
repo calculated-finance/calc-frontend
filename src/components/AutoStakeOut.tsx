@@ -3,7 +3,6 @@ import { useField } from 'formik';
 import { FormNames, useDcaOutFormPostPurchase } from '@hooks/useDcaOutForm';
 import getDenomInfo from '@utils/getDenomInfo';
 import SendToWalletValues from '@models/SendToWalletValues';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import AutoStakeValues from '@models/AutoStakeValues';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
