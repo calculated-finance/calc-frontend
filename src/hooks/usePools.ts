@@ -71,7 +71,7 @@ export default function usePools() {
     ...queryResult,
     data: {
       //pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
-      pools: queryResult.data?.pools
+      pools: queryResult.data?.pools,
     },
   };
 }

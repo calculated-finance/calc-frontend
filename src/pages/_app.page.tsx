@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
-import { featureFlags, HOTJAR_SITE_ID } from 'src/constants';
+import { CONTRACT_ADDRESS, featureFlags, HOTJAR_SITE_ID } from 'src/constants';
 import { hotjar } from 'react-hotjar';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
