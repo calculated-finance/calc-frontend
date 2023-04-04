@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
-import { CONTRACT_ADDRESS } from 'src/constants';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -8,7 +7,9 @@ import { ExecuteMsg } from 'src/interfaces/generated/execute';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { Denom } from '@models/Denom';
 import { isNil } from 'lodash';
+import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from './useStrategies';
+import { useChain } from './useChain';
 
 type TopUpVariables = {
   values: {
@@ -20,6 +21,8 @@ type TopUpVariables = {
 
 const useTopUpStrategy = () => {
   const { address, signingClient: client } = useWallet();
+
+  const chain = useChain((state) => state.chain);
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, strategy }) => {
     const { deconversion } = getDenomInfo(initialDenom);
@@ -43,7 +46,7 @@ const useTopUpStrategy = () => {
 
     const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
 
-    const result = client.execute(address, CONTRACT_ADDRESS, msg, 'auto', undefined, funds);
+    const result = client.execute(address, getChainContractAddress(chain), msg, 'auto', undefined, funds);
     return result;
   });
 };

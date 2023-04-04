@@ -3,6 +3,11 @@ import { isMainnet } from '@utils/isMainnet';
 
 export type Denom = Coin['denom'];
 
+export enum TestnetDenomsOsmosis {
+  AXL = 'ibc/FF3065989E34457F342D4EFB8692406D49D4E2B5C70F725F127862E22CE6BDCD',
+  OSMO = 'uosmo',
+}
+
 export enum TestnetDenoms {
   Demo = 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   Kuji = 'ukuji',

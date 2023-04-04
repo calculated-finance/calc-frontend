@@ -1,12 +1,13 @@
 import { useWallet } from '@hooks/useWallet';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { QueryMsg } from 'src/interfaces/generated/query';
 import {
   Event as GeneratedEvent,
   EventData as GeneratedEventData,
 } from 'src/interfaces/generated/response/get_events_by_resource_id';
+import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
+import { useChain } from './useChain';
 
 export type StrategyEvent = GeneratedEvent;
 export type StrategyEventData = GeneratedEventData;
@@ -15,10 +16,11 @@ const GET_EVENTS_LIMIT = 400;
 
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { address, client } = useWallet();
+  const chain = useChain((state) => state.chain);
 
   function fetchEventsRecursively(startAfter = null, allEvents = [] as StrategyEvent[]): Promise<StrategyEvent[]> {
     return client!
-      .queryContractSmart(CONTRACT_ADDRESS, {
+      .queryContractSmart(getChainContractAddress(chain), {
         get_events_by_resource_id: {
           resource_id: id,
           limit: GET_EVENTS_LIMIT,

@@ -1,4 +1,4 @@
-import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
+import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { isMainnet } from './isMainnet';
 
@@ -247,7 +247,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   },
 };
 
-export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
+export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomInfo> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
@@ -302,12 +302,28 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     significantFigures: 6,
     enabledInDcaPlus: true,
   },
+  [TestnetDenomsOsmosis.OSMO]: {
+    name: 'OSMO',
+    icon: '/images/denoms/osmo.svg',
+    stakeable: true,
+    coingeckoId: 'osmosis',
+    significantFigures: 6,
+  },
+  [TestnetDenomsOsmosis.AXL]: {
+    name: 'axlUSDC',
+    icon: '/images/denoms/axl.svg',
+    stakeable: false,
+    stable: true,
+    coingeckoId: 'usd-coin',
+    significantFigures: 6,
+  },
 };
 
 const getDenomInfo = (denom?: string) => {
   if (!denom) {
     return defaultDenom;
   }
+
   if (isMainnet()) {
     return {
       ...defaultDenom,

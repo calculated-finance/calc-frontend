@@ -8,6 +8,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   useDisclosure,
+  HStack,
 } from '@chakra-ui/react';
 import { ReactElement, useEffect } from 'react';
 import CosmosWallet from '@components/CosmosWallet';
@@ -19,10 +20,25 @@ import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { useAdmin } from '@hooks/useAdmin';
+import { Chains, useChain } from '@hooks/useChain';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
+import { ChainSelection } from '../ChainSelection';
 
 const HEADER_HEIGHT = '64px';
+
+function SidebarControls() {
+  const { isAdmin } = useAdmin();
+  const chain = useChain((state) => state.chain);
+  const showChainSelection = chain === Chains.Osmosis || isAdmin;
+  return (
+    <HStack>
+      {showChainSelection && <ChainSelection />}
+      <CosmosWallet />
+    </HStack>
+  );
+}
 
 function AppHeaderForSidebar() {
   return (
@@ -34,7 +50,7 @@ function AppHeaderForSidebar() {
       alignItems="center"
       display={{ base: 'none', md: 'flex' }}
     >
-      <CosmosWallet />
+      <SidebarControls />
     </Flex>
   );
 }
@@ -46,7 +62,7 @@ function AppHeader() {
         <Image cursor="pointer" src="/images/logo.svg" w={105} />
       </Link>
       <Spacer />
-      <CosmosWallet />
+      <SidebarControls />
     </Flex>
   );
 }

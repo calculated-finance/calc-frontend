@@ -1,11 +1,12 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS, SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@hooks/useWallet';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
+import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
+import { useChain } from './useChain';
 
 const hiddenPairs = [] as string[];
 
@@ -53,11 +54,12 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined
 
 export default function usePairs() {
   const { client } = useWallet();
+  const chain = useChain((state) => state.chain);
 
   const queryResult = useQueryWithNotification<PairsResponse>(
     ['pairs', client],
     async () => {
-      const result = await client!.queryContractSmart(CONTRACT_ADDRESS, {
+      const result = await client!.queryContractSmart(getChainContractAddress(chain), {
         get_pairs: {},
       });
       return result;
