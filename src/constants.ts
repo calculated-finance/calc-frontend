@@ -45,14 +45,12 @@ export const FEE_FREE_USK_PROMO_DESCRIPTION =
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
-        uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
         dcaPlusEnabled: false,
       }
     : {
-        uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
