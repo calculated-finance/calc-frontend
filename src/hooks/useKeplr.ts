@@ -8,8 +8,8 @@ import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 const osmoConfig = {
-  chainId: 'osmoo-test-4',
-  chainName: 'Osmosis',
+  chainId: 'osmo-test-4',
+  chainName: 'Osmosis Testnet',
   rpc: 'https://rpc-test.osmosis.zone',
   rest: 'https://lcd-test.osmosis.zone',
   bip44: {
@@ -111,7 +111,7 @@ export const useKeplr = create<IWallet>()(
 
           await keplr.experimentalSuggestChain({
             ...chainInfo,
-            feeCurrencies: chainInfo.feeCurrencies.filter((x) => x.coinMinimalDenom === 'ukuji'),
+            feeCurrencies: chainInfo.feeCurrencies.filter((x) => x.coinMinimalDenom === 'uosmo'),
           });
 
           await keplr.enable(CHAIN_ID);
