@@ -37,8 +37,8 @@ export default function Banner() {
           >
             <Flex direction="row" align="center" w="full" pe={4}>
               <Text fontWeight="medium">
-                DCA+ is now live! Same favorable risk profile as DCA but with a higher likelihood of better returns, set
-                up a strategy today and let the machine learning do the work for you.
+                DCA+ is now live! Same favorable risk profile as DCA, with a higher likelihood of better returns. Set up
+                a strategy today and let the machine learning do the work for you.
               </Text>
             </Flex>
             <Link href={Pages.CreateStrategy}>

@@ -3,9 +3,7 @@ import NewStrategyModal, { NewStrategyModalBody } from '@components/NewStrategyM
 export function WhitelistModal() {
   return (
     <NewStrategyModal>
-      <NewStrategyModalBody stepsConfig={[]}>
-        This address is not on the whitelist. How about a game
-      </NewStrategyModalBody>
+      <NewStrategyModalBody stepsConfig={[]}>This address is not on the whitelist.</NewStrategyModalBody>
     </NewStrategyModal>
   );
 }
