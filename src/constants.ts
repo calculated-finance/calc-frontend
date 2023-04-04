@@ -49,12 +49,14 @@ export const featureFlags =
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
+        dcaPlusEnabled: false,
       }
     : {
         uskPromoEnabled: false,
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
+        dcaPlusEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

@@ -2,6 +2,7 @@
 
 import { isMainnet } from '@utils/isMainnet';
 import { useWallet } from '@hooks/useWallet';
+import { featureFlags } from 'src/constants';
 
 const whitelist = [
   'kujira1ay2e2mgmdzkcp7we97v2aarjdh30nz4kuygghk',
@@ -113,6 +114,6 @@ export default function useWhitelist() {
   const { address } = useWallet();
 
   return {
-    isWhitelisted: isAddressWhitelisted(address) || !isMainnet(),
+    isWhitelisted: isAddressWhitelisted(address) || !isMainnet() || featureFlags.dcaPlusEnabled,
   };
 }

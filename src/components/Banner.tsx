@@ -3,16 +3,8 @@ import { useSize } from 'ahooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { featureFlags, FEE_FREE_USK_PROMO_DESCRIPTION } from 'src/constants';
+import { featureFlags } from 'src/constants';
 import { Pages } from './Sidebar/Pages';
-
-export function getPromoMessage() {
-  const promoEndDate = new Date('2023-01-18');
-  const today = new Date();
-  const diffInMs = promoEndDate.getTime() - today.getTime();
-  const diffInDays = Math.floor(diffInMs / (1000 * 3600 * 24)) + 1;
-  return FEE_FREE_USK_PROMO_DESCRIPTION.replace('{daysUntilPromoEnds}', diffInDays.toString());
-}
 
 export default function Banner() {
   const router = useRouter();
@@ -22,7 +14,7 @@ export default function Banner() {
   const ref = React.useRef(null);
   const { height } = useSize(ref) || {};
 
-  return featureFlags.uskPromoEnabled ? (
+  return featureFlags.dcaPlusEnabled ? (
     <Box h={`${height}px`}>
       <Box
         py={{ base: '4', md: '2.5' }}
@@ -44,7 +36,10 @@ export default function Banner() {
             alignItems={{ base: 'initial', md: 'center' }}
           >
             <Flex direction="row" align="center" w="full" pe={4}>
-              <Text fontWeight="medium">{getPromoMessage()}</Text>
+              <Text fontWeight="medium">
+                DCA+ is now live! Same favorable risk profile as DCA but with a higher likelihood of better returns, set
+                up a strategy today and let the machine learning do the work for you.
+              </Text>
             </Flex>
             <Link href={Pages.CreateStrategy}>
               <Button variant="outline" colorScheme="abyss" minW="max-content">
