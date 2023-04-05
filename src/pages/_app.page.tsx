@@ -14,12 +14,20 @@ import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-export const queryClient = new QueryClient();
+// no retries for now
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 // can make this more dumb because maybe we can set default values with yup schemas instead
 
@@ -39,6 +47,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const initKujira = useKujira((state) => state.init);
   const initKeplr = useKeplr((state) => state.init);
 
+  const initCosmWasmClient = useCosmWasmClient((state) => state.init);
+
   const chain = useChain((state) => state.chain);
 
   useEffect(() => {
@@ -54,6 +64,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     initKujira(chain);
   }, [initKujira, chain]);
+
+  useEffect(() => {
+    initCosmWasmClient(chain);
+  }, [initCosmWasmClient, chain]);
 
   return (
     <>

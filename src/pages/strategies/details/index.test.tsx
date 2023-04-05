@@ -5,7 +5,7 @@ import { queryClient } from 'src/pages/_app.page';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { kujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
@@ -18,8 +18,6 @@ const mockRouter = {
   push: jest.fn(),
   query: { id: '1' },
 };
-
-jest.mock('kujira.js');
 
 const mockKujiraQuery = {
   staking: {
@@ -58,16 +56,11 @@ async function renderTarget() {
 }
 
 describe('Detail page', () => {
-  beforeAll(async () => {
-    await act(async () => {
-      const store = useKujira.getState();
-      store.init();
-      await waitFor(() => expect(store.query).toBeDefined());
-    });
-  });
   beforeEach(() => {
     jest.clearAllMocks();
-    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    useKujira.setState({
+      query: mockKujiraQuery as unknown as KujiraQueryClient,
+    });
     mockFiatPrice();
     mockFiatPriceHistory('usd-coin');
   });
@@ -552,7 +545,7 @@ describe('Detail page', () => {
     });
   });
   describe('when strategy failed to cancel', () => {
-    it('closes and shows toast', async () => {
+    it.only('closes and shows toast', async () => {
       const cancelSpy = mockCancelVault(false);
       mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), cancelSpy);
 

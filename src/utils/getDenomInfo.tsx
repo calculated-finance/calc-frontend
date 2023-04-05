@@ -306,6 +306,7 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
     stakeable: true,
+    stakeableAndSupported: true,
     coingeckoId: 'osmosis',
     significantFigures: 6,
   },

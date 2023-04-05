@@ -6,10 +6,12 @@ import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 export default function useStrategy(id?: Strategy['id']) {
-  const { address, client } = useWallet();
+  const { address } = useWallet();
   const chain = useChain((state) => state.chain);
+  const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<VaultResponse>(
     ['strategy', id, client, address],

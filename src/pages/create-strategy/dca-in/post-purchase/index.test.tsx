@@ -8,17 +8,9 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
-import { kujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js';
 import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
-
-jest.mock('kujira.js');
-
-const mockKujiraQuery = {
-  staking: {
-    validators: mockValidators(),
-  },
-};
 
 const mockRouter = {
   push: jest.fn(),
@@ -72,17 +64,15 @@ async function renderTarget() {
 }
 
 describe('DCA In post-purchase page', () => {
-  beforeAll(async () => {
-    await act(async () => {
-      const store = useKujira.getState();
-      store.init();
-      await waitFor(() => expect(store.query).toBeDefined());
-    });
-  });
-
   beforeEach(() => {
     jest.clearAllMocks();
-    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    useKujira.setState({
+      query: {
+        staking: {
+          validators: mockValidators(),
+        },
+      } as unknown as KujiraQueryClient,
+    });
   });
   describe('on page load', () => {
     it('renders the heading', async () => {

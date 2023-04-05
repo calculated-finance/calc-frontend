@@ -29,11 +29,6 @@ export function useWallet() {
     return {
       address: keplrWallet.account?.address,
       connected: true,
-      client: {
-        getBalance: query.bank.balance,
-
-        queryContractSmart: query.wasm.queryContractSmart,
-      },
       signingClient: keplrWallet.controller,
       disconnect: keplrWallet.disconnect,
       walletType: WalletTypes.KEPLR,
@@ -49,21 +44,11 @@ export function useWallet() {
         signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo?: string) =>
           stationWallet.signAndBroadcast(msgs),
       } as SigningCosmWasmClient,
-      client: {
-        getBalance: query.bank.balance,
-
-        queryContractSmart: query.wasm.queryContractSmart,
-      },
       walletType: WalletTypes.STATION,
       isConnecting: false,
     };
   }
   return {
     isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting,
-    client: query && {
-      getBalance: query.bank.balance,
-
-      queryContractSmart: query.wasm.queryContractSmart,
-    },
   };
 }

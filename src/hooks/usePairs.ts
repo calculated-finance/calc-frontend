@@ -7,6 +7,7 @@ import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 const hiddenPairs = [] as string[];
 
@@ -53,7 +54,7 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined
 }
 
 export default function usePairs() {
-  const { client } = useWallet();
+  const client = useCosmWasmClient((state) => state.client);
   const chain = useChain((state) => state.chain);
 
   const queryResult = useQueryWithNotification<PairsResponse>(

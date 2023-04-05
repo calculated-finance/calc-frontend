@@ -5,6 +5,7 @@ import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
 import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import usePairs from '../usePairs';
 import useQueryWithNotification from '../useQueryWithNotification';
 
@@ -68,7 +69,7 @@ export default function usePrice(
   initialDenom: Denom | undefined,
   transactionType: TransactionType,
 ) {
-  const { client } = useWallet();
+  const client = useCosmWasmClient((state) => state.client);
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};

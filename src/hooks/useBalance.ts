@@ -2,6 +2,7 @@ import { Coin } from '@cosmjs/stargate';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 export type BalanceResponse = {
   amount: number;
@@ -16,7 +17,8 @@ export function getDisplayAmount(token: string | undefined, amount: number) {
 }
 
 const useBalance = ({ token }: UseBalanceArgs) => {
-  const { address, client } = useWallet();
+  const { address } = useWallet();
+  const client = useCosmWasmClient((state) => state.client);
 
   const result = useQueryWithNotification<Coin>(
     ['balance', token, address, client],
@@ -27,7 +29,9 @@ const useBalance = ({ token }: UseBalanceArgs) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      return client.getBalance(address, token ?? '');
+      const res = client.getBalance(address, token ?? '');
+
+      return res;
     },
     {
       enabled: !!token && !!address && !!client,

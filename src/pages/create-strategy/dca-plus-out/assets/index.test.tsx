@@ -10,7 +10,7 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
-import { kujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
@@ -68,17 +68,12 @@ async function renderTarget() {
 }
 
 describe('DCA Out Assets page', () => {
-  beforeAll(async () => {
-    await act(async () => {
-      const store = useKujira.getState();
-      store.init();
-      await waitFor(() => expect(store.query).toBeDefined());
-    });
-  });
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();
-    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    useKujira.setState({
+      query: mockKujiraQuery as unknown as KujiraQueryClient,
+    });
   });
   describe('on page load', () => {
     it('renders the heading', async () => {

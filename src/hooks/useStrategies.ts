@@ -5,6 +5,7 @@ import { Vault } from 'src/interfaces/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 const QUERY_KEY = 'get_vaults_by_address';
 
@@ -13,8 +14,9 @@ export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_K
 export type Strategy = Vault;
 
 export default function useStrategies() {
-  const { address, client } = useWallet();
+  const { address } = useWallet();
   const chain = useChain((state) => state.chain);
+  const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<VaultsResponse>(
     [QUERY_KEY, address, client],

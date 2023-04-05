@@ -10,10 +10,10 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 
-import { kujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
+import { KujiraQueryClient } from 'kujira.js';
 import Page from './index.page';
 
 const mockRouter = {
@@ -41,14 +41,6 @@ const mockStateMachine = {
   },
 };
 
-const mockKujiraQuery = {
-  bank: {
-    allBalances: mockBalances(),
-  },
-};
-
-jest.mock('kujira.js');
-
 jest.mock('little-state-machine', () => ({
   useStateMachine() {
     return mockStateMachine;
@@ -69,16 +61,16 @@ async function renderTarget() {
 }
 
 describe('DCA In Assets page', () => {
-  beforeAll(async () => {
-    await act(async () => {
-      const store = useKujira.getState();
-      store.init();
-      await waitFor(() => expect(store.query).toBeDefined());
-    });
-  });
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
-    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+
+    useKujira.setState({
+      query: {
+        bank: {
+          allBalances: mockBalances(),
+        },
+      } as unknown as KujiraQueryClient,
+    });
     mockFiatPrice();
   });
   describe('on page load', () => {

@@ -4,8 +4,23 @@ import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
 import { getChainEndpoint } from '@helpers/chains';
 import { Chains } from './useChain';
+// import { osmosis } from 'osmojs';
+// import { StargateClient } from '@cosmjs/stargate';
+// import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
-export const useKujira = create(
+// const getOsmosisClient = async (chain: Chains) => {
+//   const { createRPCQueryClient } = osmosis.ClientFactory;
+//   const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint(chain) });
+//   return client;
+// };
+
+type IUseKujira = {
+  tmClient: Tendermint34Client | null;
+  query: KujiraQueryClient | null;
+  init: (chain: Chains) => void;
+};
+
+export const useKujira = create<IUseKujira>()(
   combine(
     {
       tmClient: null as Tendermint34Client | null,
@@ -30,3 +45,28 @@ export const useKujira = create(
     }),
   ),
 );
+
+// export const useKujira = create<{
+//   query: CosmWasmClient | null;
+//   kujiraClient: KujiraQueryClient | null;
+//   osmosisClient: any;
+// }>((set, get) => ({
+//   query: null,
+//   kujiraClient: null,
+//   osmosisClient: null,
+//   init: async (chain: Chains) => {
+//     set({ query: null });
+//     try {
+//       const kujiraClient = await getKujiraClient(chain);
+//       set({ kujiraClient });
+
+//       const osmosisClient = await getOsmosisClient(chain);
+//       set({ osmosisClient });
+
+//       const queryClient = await CosmWasmClient.connect(getChainEndpoint(chain));
+//       set({ query: queryClient });
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   },
+// }));

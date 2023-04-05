@@ -10,7 +10,7 @@ type ChainState = {
   setChain: (chain: Chains) => void;
 };
 
-export const useChain = create<ChainState>((set) => ({
+export const useChain = create<ChainState>()((set) => ({
   chain: Chains.Kujira,
   setChain: (chain: Chains) => set({ chain }),
 }));
