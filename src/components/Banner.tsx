@@ -17,18 +17,24 @@ export default function Banner() {
   return featureFlags.dcaPlusEnabled ? (
     <Box h={`${height}px`}>
       <Box
-        py={{ base: '4', md: '2.5' }}
-        px={8}
+        p={2}
         position="fixed"
         zIndex={10}
         w="full"
-        bg="blue.200"
+        bg="abyss.200"
         display={isOpen && isHome ? 'block' : 'none'}
-        color="abyss.200"
+        color="white"
         ref={ref}
       >
-        <Box ref={ref}>
-          <CloseButton display={{ md: 'none' }} position="absolute" right="2" top="2" onClick={onClose} />
+        <Box ref={ref} borderWidth={2} borderColor="green.200" borderRadius="xl" py={{ base: '4', md: '2.5' }} px={5}>
+          <CloseButton
+            color="green.200"
+            display={{ md: 'none' }}
+            position="absolute"
+            right="2"
+            top="2"
+            onClick={onClose}
+          />
           <Stack
             direction={{ base: 'column', md: 'row' }}
             justify="space-between"
@@ -36,17 +42,17 @@ export default function Banner() {
             alignItems={{ base: 'initial', md: 'center' }}
           >
             <Flex direction="row" align="center" w="full" pe={4}>
-              <Text fontWeight="medium">
+              <Text fontWeight="medium" fontSize="sm">
                 DCA+ is now live! Same favorable risk profile as DCA, with a higher likelihood of better returns. Set up
                 a strategy today and let the machine learning do the work for you.
               </Text>
             </Flex>
             <Link href={Pages.CreateStrategy}>
-              <Button variant="outline" colorScheme="abyss" minW="max-content">
+              <Button variant="outline" colorScheme="green" minW="max-content">
                 Create a strategy
               </Button>
             </Link>
-            <CloseButton onClick={onClose} display={{ base: 'none', md: 'inline-flex' }} />
+            <CloseButton color="green.200" onClick={onClose} display={{ base: 'none', md: 'inline-flex' }} />
           </Stack>
         </Box>
       </Box>
