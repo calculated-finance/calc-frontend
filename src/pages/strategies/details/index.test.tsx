@@ -62,7 +62,7 @@ describe('Detail page', () => {
       query: mockKujiraQuery as unknown as KujiraQueryClient,
     });
     mockFiatPrice();
-    mockFiatPriceHistory('usd-coin');
+    mockFiatPriceHistory('kujira');
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
@@ -417,7 +417,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.48 USD'));
         });
       });
       describe('when DCA Out', () => {
@@ -430,7 +430,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$1.51 USD'));
         });
       });
     });
@@ -476,7 +476,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$2.50 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$1.50 USD'));
         });
       });
     });
@@ -545,7 +545,7 @@ describe('Detail page', () => {
     });
   });
   describe('when strategy failed to cancel', () => {
-    it.only('closes and shows toast', async () => {
+    it('closes and shows toast', async () => {
       const cancelSpy = mockCancelVault(false);
       mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), cancelSpy);
 

@@ -33,6 +33,6 @@ export function mockUseStrategy(data: Partial<VaultResponse> = {}) {
         start_after: null,
       },
     } as QueryMsg)
-    .mockResolvedValueOnce({ events: [] });
+    .mockResolvedValue({ events: [] });
   return queryContractSmart;
 }

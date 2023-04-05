@@ -19,20 +19,19 @@ const msgs = [
       funds: [],
     },
   },
-  // // TOOD: Add this back in when you can mock kujira better
-  // {
-  //   typeUrl: '/cosmos.bank.v1beta1.MsgSend',
-  //   value: {
-  //     fromAddress: 'kujitestwallet',
-  //     toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
-  //     amount: [
-  //       {
-  //         amount: '666667',
-  //         denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-  //       },
-  //     ],
-  //   },
-  // },
+  {
+    typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+    value: {
+      fromAddress: 'kujitestwallet',
+      toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
+      amount: [
+        {
+          amount: '200000',
+          denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+        },
+      ],
+    },
+  },
 ];
 
 export function mockCancelVault(success = true) {
