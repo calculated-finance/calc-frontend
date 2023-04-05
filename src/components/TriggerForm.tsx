@@ -6,7 +6,7 @@ import StartImmediately from '@components/StartImmediately';
 import { FormNames } from '@hooks/useDcaInForm';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import PurchaseTime from './PurchaseTime';
-import StartPrice from './DcaInStartPrice';
+import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
 
 export function TriggerForm({ transactionType, formName }: { transactionType: TransactionType; formName: FormNames }) {
@@ -36,7 +36,7 @@ export function TriggerForm({ transactionType, formName }: { transactionType: Tr
         </Collapse>
         <Collapse animateOpacity in={triggerType === 'price'}>
           <Box m="px">
-            <StartPrice formName={formName} />
+            <StartPrice formName={formName} transactionType={transactionType} />
           </Box>
         </Collapse>
       </Collapse>
