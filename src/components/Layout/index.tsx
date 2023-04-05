@@ -47,7 +47,7 @@ function AppHeader() {
         <Image
           h={6}
           cursor="pointer"
-          src={featureFlags.festiveLogoEnabled ? '/images/festiveLogo.svg' : '/images/logo.svg'}
+          src={featureFlags.festiveLogoEnabled ? '/images/blend.svg' : '/images/logo.svg'}
         />
       </Link>
       <Spacer />
