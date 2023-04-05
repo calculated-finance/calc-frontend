@@ -19,7 +19,6 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { getPromoMessage } from './Banner';
 
 function FeeBreakdown({
   initialDenomName,
@@ -170,17 +169,9 @@ export default function Fees({ formName }: { formName: FormNames }) {
           {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
-        {applyPromo ? (
-          <Tooltip label={getPromoMessage()}>
-            <Text as="span" textColor="blue.200">
-              {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
-            </Text>
-          </Tooltip>
-        ) : (
-          <Text as="span" textColor="white">
-            {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
-          </Text>
-        )}
+        <Text as="span" textColor="white">
+          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
+        </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 

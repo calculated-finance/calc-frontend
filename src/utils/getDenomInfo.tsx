@@ -1,8 +1,4 @@
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import { Text, Icon, Tooltip, Flex } from '@chakra-ui/react';
-import { getPromoMessage } from '@components/Banner';
 import { Denom, MainnetDenoms, TestnetDenoms } from '@models/Denom';
-import { featureFlags } from 'src/constants';
 import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { isMainnet } from './isMainnet';
 
@@ -65,14 +61,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
-    promotion: featureFlags.uskPromoEnabled ? (
-      <Flex gap={2}>
-        <Text fontSize="xs">Fee-free USK for 30 days. </Text>
-        <Tooltip label={getPromoMessage()}>
-          <Icon as={QuestionOutlineIcon} />
-        </Tooltip>
-      </Flex>
-    ) : undefined,
+
     significantFigures: 6,
   },
   [MainnetDenoms.Kuji]: {
@@ -272,14 +261,6 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
-    promotion: featureFlags.uskPromoEnabled ? (
-      <Flex gap={2}>
-        <Text fontSize="xs">Fee-free USK for 30 days. </Text>
-        <Tooltip label={getPromoMessage()}>
-          <Icon as={QuestionOutlineIcon} />
-        </Tooltip>
-      </Flex>
-    ) : undefined,
     significantFigures: 6,
     enabledInDcaPlus: true,
   },
