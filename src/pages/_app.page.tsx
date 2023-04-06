@@ -42,24 +42,32 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
 
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   useEffect(() => {
     if (featureFlags.stationEnabled) {
-      initStation();
+      if (chain) {
+        initStation();
+      }
     }
-  }, [initStation]);
+  }, [initStation, chain]);
 
   useEffect(() => {
-    initKeplr(chain);
+    if (chain) {
+      initKeplr(chain);
+    }
   }, [initKeplr, chain]);
 
   useEffect(() => {
-    initKujira(chain);
+    if (chain) {
+      initKujira(chain);
+    }
   }, [initKujira, chain]);
 
   useEffect(() => {
-    initCosmWasmClient(chain);
+    if (chain) {
+      initCosmWasmClient(chain);
+    }
   }, [initCosmWasmClient, chain]);
 
   return (

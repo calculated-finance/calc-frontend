@@ -5,10 +5,7 @@ import { Chains, useChain } from '@hooks/useChain';
 export function ChainSelection() {
   const { isOpen, onClose } = useDisclosure();
 
-  const { chain, setChain } = useChain((state) => ({
-    chain: state.chain,
-    setChain: state.setChain,
-  }));
+  const { chain, setChain } = useChain();
 
   return (
     <Menu>

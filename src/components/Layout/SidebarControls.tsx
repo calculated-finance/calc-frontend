@@ -7,7 +7,7 @@ import { ChainSelection } from '../ChainSelection';
 
 export function SidebarControls() {
   const { isAdmin } = useAdmin();
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
   const showChainSelection = !isMainnet() && (chain === Chains.Osmosis || isAdmin);
   return (
     <HStack>

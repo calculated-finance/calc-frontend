@@ -11,7 +11,7 @@ export type Strategy = Vault;
 const GET_VAULTS_LIMIT = 400;
 export default function useAdminStrategies() {
   const client = useCosmWasmClient((state) => state.client);
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   function fetchVaultsRecursively(startAfter = null, allVaults = [] as Vault[]): Promise<Vault[]> {
     return client!
@@ -33,6 +33,6 @@ export default function useAdminStrategies() {
   }
 
   return useQueryWithNotification<Vault[]>([QUERY_KEY, client], () => fetchVaultsRecursively(), {
-    enabled: !!client,
+    enabled: !!client && !!chain,
   });
 }

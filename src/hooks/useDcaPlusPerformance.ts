@@ -9,7 +9,7 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address } = useWallet();
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<DcaPlusPerformanceResponse>(
@@ -18,7 +18,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
       if (!client) {
         throw new Error('No client');
       }
-      const result = await client.queryContractSmart(getChainContractAddress(chain), {
+      const result = await client.queryContractSmart(getChainContractAddress(chain!), {
         get_dca_plus_performance: {
           vault_id: id,
         },
@@ -26,7 +26,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && !!enabled,
+      enabled: !!client && !!id && !!address && !!enabled && !!chain,
     },
   );
 }

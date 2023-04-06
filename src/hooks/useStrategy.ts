@@ -10,7 +10,7 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 export default function useStrategy(id?: Strategy['id']) {
   const { address } = useWallet();
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<VaultResponse>(
@@ -19,7 +19,7 @@ export default function useStrategy(id?: Strategy['id']) {
       if (!client) {
         throw new Error('No client');
       }
-      const result = await client.queryContractSmart(getChainContractAddress(chain), {
+      const result = await client.queryContractSmart(getChainContractAddress(chain!), {
         get_vault: {
           vault_id: id,
         },
@@ -30,7 +30,7 @@ export default function useStrategy(id?: Strategy['id']) {
       return result;
     },
     {
-      enabled: !!client && !!id && !!address,
+      enabled: !!client && !!id && !!address && !!chain,
     },
   );
 }

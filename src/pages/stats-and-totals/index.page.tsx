@@ -297,7 +297,7 @@ export function uniqueAddresses(allStrategies: Vault[] | undefined) {
 }
 
 function Page() {
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
   const { balances: contractBalances } = useAdminBalances(getChainContractAddress(chain));
   const { balances: feeTakerBalances } = useAdminBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);

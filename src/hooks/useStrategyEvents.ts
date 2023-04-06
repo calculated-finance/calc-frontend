@@ -18,11 +18,11 @@ export const GET_EVENTS_LIMIT = 400;
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { address } = useWallet();
   const client = useCosmWasmClient((state) => state.client);
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   function fetchEventsRecursively(startAfter = null, allEvents = [] as StrategyEvent[]): Promise<StrategyEvent[]> {
     return client!
-      .queryContractSmart(getChainContractAddress(chain), {
+      .queryContractSmart(getChainContractAddress(chain!), {
         get_events_by_resource_id: {
           resource_id: id,
           limit: GET_EVENTS_LIMIT,
@@ -45,7 +45,7 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined, enable
     ['strategyEvents', address, id, client],
     () => fetchEventsRecursively(),
     {
-      enabled: !!address && !!client && !!id && !!enabled,
+      enabled: !!address && !!client && !!id && !!enabled && !!chain,
     },
   );
 }

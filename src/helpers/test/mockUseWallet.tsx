@@ -1,5 +1,5 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Chains, useChain } from '@hooks/useChain';
+import { Chains, useChainStore } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useWallet } from '@hooks/useWallet';
 
@@ -16,7 +16,7 @@ export function mockUseWallet(
     } as unknown as CosmWasmClient,
   });
 
-  useChain.setState({
+  useChainStore.setState({
     chain: Chains.Kujira,
   });
 
