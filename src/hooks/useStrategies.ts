@@ -15,13 +15,13 @@ export type Strategy = Vault;
 
 export default function useStrategies() {
   const { address } = useWallet();
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<VaultsResponse>(
     [QUERY_KEY, address, client],
     () => {
-      const result = client!.queryContractSmart(getChainContractAddress(chain), {
+      const result = client!.queryContractSmart(getChainContractAddress(chain!), {
         get_vaults_by_address: {
           address,
           limit: 1000,
@@ -30,7 +30,7 @@ export default function useStrategies() {
       return result;
     },
     {
-      enabled: !!address && !!client,
+      enabled: !!address && !!client && !!chain,
     },
   );
 }

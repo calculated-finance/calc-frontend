@@ -44,7 +44,7 @@ const useCancelStrategy = (initialDenom: Denom) => {
   const { address, signingClient: client } = useWallet();
   const msgs: EncodeObject[] = [];
   const { price } = useFiatPrice(initialDenom);
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   return useMutation<DeliverTxResponse, Error, Strategy>((strategy: Strategy) => {
     if (client == null) {
@@ -53,6 +53,10 @@ const useCancelStrategy = (initialDenom: Denom) => {
 
     if (address == null) {
       throw new Error('no address');
+    }
+
+    if (chain == null) {
+      throw new Error('no chain');
     }
 
     if (!price) {

@@ -54,18 +54,18 @@ export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined
 
 export default function usePairs() {
   const client = useCosmWasmClient((state) => state.client);
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   const queryResult = useQueryWithNotification<PairsResponse>(
     ['pairs', client],
     async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(chain), {
+      const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
         get_pairs: {},
       });
       return result;
     },
     {
-      enabled: !!client,
+      enabled: !!client && !!chain,
     },
   );
   return {

@@ -22,7 +22,7 @@ type TopUpVariables = {
 const useTopUpStrategy = () => {
   const { address, signingClient: client } = useWallet();
 
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, strategy }) => {
     const { deconversion } = getDenomInfo(initialDenom);
@@ -33,6 +33,11 @@ const useTopUpStrategy = () => {
     if (!client) {
       throw new Error('client is null or empty');
     }
+
+    if (isNil(chain)) {
+      throw new Error('chain is null or empty');
+    }
+
     if (strategy.owner !== address) {
       throw new Error('You are not the owner of this strategy');
     }
@@ -46,7 +51,7 @@ const useTopUpStrategy = () => {
 
     const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
 
-    const result = client.execute(address, getChainContractAddress(chain), msg, 'auto', undefined, funds);
+    const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined, funds);
     return result;
   });
 };

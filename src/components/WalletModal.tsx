@@ -39,7 +39,7 @@ function WalletModal() {
     connect: state.connect,
   }));
 
-  const chain = useChain((state) => state.chain);
+  const { chain } = useChain();
 
   const { isOpen, onToggle } = useDisclosure();
 

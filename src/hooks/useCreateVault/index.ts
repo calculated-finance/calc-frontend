@@ -39,7 +39,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
-  const chain = useChain((useChainState) => useChainState.chain);
+  const { chain } = useChain();
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
 
@@ -55,6 +55,11 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
     if (!client) {
       throw Error('Invalid client');
     }
+
+    if (!chain) {
+      throw Error('Invalid chain');
+    }
+
     if (!senderAddress) {
       throw Error('Invalid sender address');
     }
