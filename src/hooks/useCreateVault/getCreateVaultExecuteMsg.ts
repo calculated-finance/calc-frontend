@@ -1,4 +1,3 @@
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
@@ -14,11 +13,12 @@ export function getCreateVaultExecuteMsg(
   msg: ExecuteMsg,
   funds: Coin[],
   senderAddress: string,
+  contractAddress: string,
 ): { typeUrl: string; value: MsgExecuteContract } {
   const encoded_msg = encodeMsg(msg);
 
   const msgExecuteContract = MsgExecuteContract.fromPartial({
-    contract: CONTRACT_ADDRESS,
+    contract: contractAddress,
     funds,
     msg: encoded_msg,
     sender: senderAddress,

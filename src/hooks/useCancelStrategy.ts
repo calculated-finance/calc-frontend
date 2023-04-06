@@ -4,14 +4,20 @@ import { Denom } from '@models/Denom';
 import { useMutation } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
-import { CANCEL_VAULT_FEE, CONTRACT_ADDRESS, ONE_MILLION } from 'src/constants';
+import { CANCEL_VAULT_FEE, ONE_MILLION } from 'src/constants';
 import { encode } from '@helpers/encode';
 import { getFeeMessage } from '@helpers/getFeeMessage';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import useFiatPrice from './useFiatPrice';
 import { Strategy } from './useStrategies';
+import { useChain } from './useChain';
 
-function getCancelVaultExecuteMsg(strategyId: Strategy['id'], senderAddress: string): EncodeObject {
+function getCancelVaultExecuteMsg(
+  strategyId: Strategy['id'],
+  senderAddress: string,
+  contractAddress: string,
+): EncodeObject {
   const msg = {
     cancel_vault: {
       vault_id: strategyId,
@@ -21,7 +27,7 @@ function getCancelVaultExecuteMsg(strategyId: Strategy['id'], senderAddress: str
   const encoded_msg = encode(msg);
 
   const msgExecuteContract = MsgExecuteContract.fromPartial({
-    contract: CONTRACT_ADDRESS,
+    contract: contractAddress,
     msg: encoded_msg,
     sender: senderAddress,
   });
@@ -38,6 +44,7 @@ const useCancelStrategy = (initialDenom: Denom) => {
   const { address, signingClient: client } = useWallet();
   const msgs: EncodeObject[] = [];
   const { price } = useFiatPrice(initialDenom);
+  const chain = useChain((state) => state.chain);
 
   return useMutation<DeliverTxResponse, Error, Strategy>((strategy: Strategy) => {
     if (client == null) {
@@ -56,10 +63,10 @@ const useCancelStrategy = (initialDenom: Denom) => {
       throw new Error('You are not the owner of this strategy');
     }
 
-    msgs.push(getCancelVaultExecuteMsg(strategy.id, address));
+    msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
     const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 
-    msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee));
+    msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
 
     return client.signAndBroadcast(address, msgs, 'auto');
   });

@@ -3,9 +3,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import mockStrategyData from 'src/fixtures/strategy';
+import { queryClient } from '@helpers/test/testQueryClient';
 import Home from './index.page';
 import '@testing-library/jest-dom';
-import { queryClient } from './_app.page';
 
 jest.mock('@hooks/useStrategies');
 jest.mock('@hooks/useWallet');
