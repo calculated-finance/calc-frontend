@@ -55,6 +55,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       layerStyle="panel"
       borderWidth={isDcaPlus(strategy) ? 1 : 0}
       borderColor="brand.200"
+      colSpan={{ base: 8, xl: 3 }}
+      rowStart={{ sm: 1, xl: 'auto' }}
     >
       <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
         <Heading size="md">{getStrategyType(strategy)}</Heading>

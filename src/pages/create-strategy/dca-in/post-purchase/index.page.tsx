@@ -37,7 +37,7 @@ function Page() {
           </NewStrategyModalHeader>
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
-              <PostPurchaseForm resultingDenom={context?.resultingDenom} />
+              <PostPurchaseForm resultingDenom={context?.resultingDenom} formName={FormNames.DcaIn} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

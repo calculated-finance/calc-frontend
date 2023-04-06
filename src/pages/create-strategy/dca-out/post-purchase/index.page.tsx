@@ -8,7 +8,7 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
 import dcaOutSteps from '@formConfig/dcaOut';
-import { PostPurchaseFormDcaOut } from '@components/PostPurchaseFormDcaOut';
+import { PostPurchaseForm } from '@components/PostPurchaseForm';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaOut);
@@ -37,7 +37,7 @@ function Page() {
           </NewStrategyModalHeader>
           <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
-              <PostPurchaseFormDcaOut resultingDenom={context?.resultingDenom} />
+              <PostPurchaseForm resultingDenom={context?.resultingDenom} formName={FormNames.DcaOut} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

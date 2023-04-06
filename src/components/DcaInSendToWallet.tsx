@@ -17,9 +17,9 @@ const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   },
 ];
 
-export default function DcaInSendToWallet() {
+export default function DcaInSendToWallet({ formName }: { formName: FormNames }) {
   const [field, , helpers] = useField({ name: 'sendToWallet' });
-  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const { context } = useDcaInFormPostPurchase(formName);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
