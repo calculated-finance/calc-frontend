@@ -1,11 +1,10 @@
 import { Keplr as WindowKeplr } from '@keplr-wallet/types';
 import { AccountData } from '@cosmjs/proto-signing';
-import { GasPrice } from '@cosmjs/stargate';
-import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
 import { create } from 'zustand';
-import { CHAIN_INFO } from 'kujira.js';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
+import { Chains } from './useChain';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
@@ -32,12 +31,12 @@ function waitForKeplr(timeout = 1000) {
   });
 }
 type IWallet = {
-  connect: null | (() => void);
+  connect: (chain: Chains) => void;
   disconnect: () => void;
   isInstalled: boolean;
   account: AccountData | null;
   autoconnect: boolean;
-  init: () => void;
+  init: (chain: Chains) => void;
   isConnecting: boolean;
   controller: SigningCosmWasmClient | null;
 };
@@ -55,22 +54,26 @@ export const useKeplr = create<IWallet>()(
         set({ account: null });
         set({ autoconnect: false });
       },
-      connect: async () => {
+      connect: async (chain: Chains) => {
         set({ isConnecting: true });
-        const chainInfo = CHAIN_INFO[CHAIN_ID];
+        if (get().account) {
+          get().disconnect();
+        }
+        const chainId = getChainId(chain);
+        const chainInfo = getChainInfo(chain);
         try {
           const keplr = window.keplr!;
 
           await keplr.experimentalSuggestChain({
             ...chainInfo,
-            feeCurrencies: chainInfo.feeCurrencies.filter((x) => x.coinMinimalDenom === 'ukuji'),
+            feeCurrencies: getFeeCurrencies(chain),
           });
 
-          await keplr.enable(CHAIN_ID);
-          const offlineSigner = await keplr.getOfflineSignerAuto(CHAIN_ID);
+          await keplr.enable(chainId);
+          const offlineSigner = await keplr.getOfflineSignerAuto(chainId);
           const accounts = await offlineSigner.getAccounts();
-          const client = await SigningCosmWasmClient.connectWithSigner(RPC_ENDPOINT, offlineSigner, {
-            gasPrice: GasPrice.fromString('0.015ukuji'),
+          const client = await SigningCosmWasmClient.connectWithSigner(chainInfo.rpc, offlineSigner, {
+            gasPrice: getGasPrice(chain),
           });
 
           set({
@@ -85,13 +88,13 @@ export const useKeplr = create<IWallet>()(
           set({ isConnecting: false });
         }
       },
-      init: async () => {
-        if (!get().controller) {
+      init: async (chain: Chains) => {
+        if (!get().isInstalled) {
           await waitForKeplr();
           set({ isInstalled: true });
-          if (get().autoconnect) {
-            get().connect?.();
-          }
+        }
+        if (get().autoconnect) {
+          get().connect(chain);
         }
       },
     }),

@@ -7,7 +7,7 @@ Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 const originalConsoleError = global.console.error;
 
 global.console.error = (error) => {
-  error.toString() === 'Error: test reason' || error.toString() === 'Error: Query data cannot be undefined'
+  error.toString() === 'Error: test reason' || error.toString() === 'Error: Query data cannot be undefined' || error.toString().includes('not wrapped in act') || error.toString().includes(' not configured to support act')
     ? null
     : originalConsoleError(error);
 };
@@ -30,5 +30,6 @@ beforeEach(() => {
     })),
   });
 });
+
 
 jest.setTimeout(10000);

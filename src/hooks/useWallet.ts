@@ -1,6 +1,5 @@
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useKujira } from './useKujira';
 import { useKeplr } from './useKeplr';
 
 export enum WalletTypes {
@@ -23,24 +22,17 @@ export function useWallet() {
     isConnecting: state.isConnecting,
   }));
 
-  const query = useKujira((state) => state.query);
-
-  if (keplrWallet.account && query) {
+  if (keplrWallet.account) {
     return {
       address: keplrWallet.account?.address,
       connected: true,
-      client: {
-        getBalance: query.bank.balance,
-
-        queryContractSmart: query.wasm.queryContractSmart,
-      },
       signingClient: keplrWallet.controller,
       disconnect: keplrWallet.disconnect,
       walletType: WalletTypes.KEPLR,
       isConnecting: false,
     };
   }
-  if (stationWallet?.account && query) {
+  if (stationWallet?.account) {
     return {
       address: stationWallet.account?.address,
       connected: true,
@@ -49,21 +41,11 @@ export function useWallet() {
         signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo?: string) =>
           stationWallet.signAndBroadcast(msgs),
       } as SigningCosmWasmClient,
-      client: {
-        getBalance: query.bank.balance,
-
-        queryContractSmart: query.wasm.queryContractSmart,
-      },
       walletType: WalletTypes.STATION,
       isConnecting: false,
     };
   }
   return {
     isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting,
-    client: query && {
-      getBalance: query.bank.balance,
-
-      queryContractSmart: query.wasm.queryContractSmart,
-    },
   };
 }

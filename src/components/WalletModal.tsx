@@ -20,6 +20,7 @@ import { useStation } from '@hooks/useStation';
 import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
 import { useWallet } from '@hooks/useWallet';
+import { useChain } from '@hooks/useChain';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -38,6 +39,8 @@ function WalletModal() {
     connect: state.connect,
   }));
 
+  const chain = useChain((state) => state.chain);
+
   const { isOpen, onToggle } = useDisclosure();
 
   const handleClose = useCallback(() => {
@@ -50,7 +53,7 @@ function WalletModal() {
   };
 
   const handleKeplrConnect = () => {
-    connectKeplr?.();
+    connectKeplr(chain);
     handleClose();
   };
 

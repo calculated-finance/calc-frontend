@@ -10,6 +10,8 @@ import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useChain } from '@hooks/useChain';
+import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import usePairs from '../usePairs';
 import { FormNames, useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -37,6 +39,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
+  const chain = useChain((useChainState) => useChainState.chain);
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
 
@@ -72,10 +75,10 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 
-    msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress));
+    msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
-    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee));
+    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
 
     return executeCreateVault(client, senderAddress, msgs);
   });

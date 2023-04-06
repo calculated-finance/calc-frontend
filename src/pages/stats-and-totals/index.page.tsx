@@ -6,7 +6,7 @@ import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
-import { CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, SWAP_FEE } from 'src/constants';
+import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';
@@ -24,6 +24,8 @@ import {
   isStrategyAutoStaking,
 } from '@helpers/strategy';
 import { Vault } from 'src/interfaces/generated/response/get_vaults';
+import { useChain } from '@hooks/useChain';
+import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -295,8 +297,9 @@ export function uniqueAddresses(allStrategies: Vault[] | undefined) {
 }
 
 function Page() {
-  const { balances: contractBalances } = useAdminBalances(CONTRACT_ADDRESS);
-  const { balances: feeTakerBalances } = useAdminBalances(FEE_TAKER_ADDRESS);
+  const chain = useChain((state) => state.chain);
+  const { balances: contractBalances } = useAdminBalances(getChainContractAddress(chain));
+  const { balances: feeTakerBalances } = useAdminBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
 
   const { data: allStrategies } = useAdminStrategies();
@@ -450,7 +453,13 @@ function Page() {
             />
             <VictoryBar
               data={['scheduled', 'active', 'inactive', 'cancelled'].map((status: string) => {
-                const strategiesByStatus = Array.from(new Set((getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map((strategy) => strategy.owner)))
+                const strategiesByStatus = Array.from(
+                  new Set(
+                    (getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map(
+                      (strategy) => strategy.owner,
+                    ),
+                  ),
+                );
                 return {
                   x: status,
                   y: strategiesByStatus.length,

@@ -54,12 +54,7 @@ export function getStrategyInitialDenom(strategy: Strategy): Denom {
 }
 
 export function getStrategyResultingDenom(strategy: Strategy): Denom {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  if (strategy.pair.quote_denom === initialDenom) {
-    return strategy.pair.base_denom;
-  }
-
-  return strategy.pair.quote_denom;
+  return strategy.received_amount.denom;
 }
 
 export function getStrategyName(strategy: Strategy) {

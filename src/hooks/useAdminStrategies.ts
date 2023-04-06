@@ -1,7 +1,8 @@
-import { useWallet } from '@hooks/useWallet';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vault';
+import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
+import { useChain } from './useChain';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 const QUERY_KEY = 'get_vaults';
 
@@ -9,11 +10,12 @@ export type Strategy = Vault;
 
 const GET_VAULTS_LIMIT = 400;
 export default function useAdminStrategies() {
-  const { client } = useWallet();
+  const client = useCosmWasmClient((state) => state.client);
+  const chain = useChain((state) => state.chain);
 
   function fetchVaultsRecursively(startAfter = null, allVaults = [] as Vault[]): Promise<Vault[]> {
     return client!
-      .queryContractSmart(CONTRACT_ADDRESS, {
+      .queryContractSmart(getChainContractAddress(chain), {
         get_vaults: {
           limit: GET_VAULTS_LIMIT,
           start_after: startAfter,

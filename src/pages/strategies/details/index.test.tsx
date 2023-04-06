@@ -1,11 +1,11 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { queryClient } from 'src/pages/_app.page';
+import { queryClient } from '@helpers/test/testQueryClient';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { kujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
@@ -18,8 +18,6 @@ const mockRouter = {
   push: jest.fn(),
   query: { id: '1' },
 };
-
-jest.mock('kujira.js');
 
 const mockKujiraQuery = {
   staking: {
@@ -58,18 +56,13 @@ async function renderTarget() {
 }
 
 describe('Detail page', () => {
-  beforeAll(async () => {
-    await act(async () => {
-      const store = useKujira.getState();
-      store.init();
-      await waitFor(() => expect(store.query).toBeDefined());
-    });
-  });
   beforeEach(() => {
     jest.clearAllMocks();
-    (kujiraQueryClient as jest.Mock).mockImplementation(() => mockKujiraQuery);
+    useKujira.setState({
+      query: mockKujiraQuery as unknown as KujiraQueryClient,
+    });
     mockFiatPrice();
-    mockFiatPriceHistory('usd-coin');
+    mockFiatPriceHistory('kujira');
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
@@ -424,7 +417,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.48 USD'));
         });
       });
       describe('when DCA Out', () => {
@@ -437,7 +430,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.52 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$1.51 USD'));
         });
       });
     });
@@ -483,7 +476,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$2.50 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-profit-taken').textContent).toBe('$1.50 USD'));
         });
       });
     });
