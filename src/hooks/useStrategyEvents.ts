@@ -28,8 +28,6 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined, enable
         start_after: startAfter,
       },
     };
-    console.log(msg);
-    console.log(getChainContractAddress(chain));
     return client!.queryContractSmart(getChainContractAddress(chain), msg as QueryMsg).then((result) => {
       const { events } = result;
       allEvents.push(...events);

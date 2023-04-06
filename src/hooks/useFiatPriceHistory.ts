@@ -18,7 +18,6 @@ const useFiatPriceHistory = (denom: Denom | undefined, days: string) => {
     ['fiat-price-history', coingeckoId, fiatCurrencyId, days],
     async () => {
       const url = `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}`;
-      console.log(url);
       const result = await fetch(url);
       if (!result.ok) {
         throw new Error('Failed to fetch fiat price history');
