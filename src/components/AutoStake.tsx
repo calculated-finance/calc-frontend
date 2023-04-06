@@ -21,11 +21,13 @@ export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
 export function DummyAutoStake({
   value,
   onChange,
+  formName,
 }: {
   value: AutoStakeValues;
   onChange: (value: AutoStakeValues) => void;
+  formName: FormNames;
 }) {
-  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn) || {};
+  const { context } = useDcaInFormPostPurchase(formName) || {};
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     value,
@@ -52,11 +54,11 @@ export function DummyAutoStake({
   );
 }
 
-export function AutoStake() {
+export function AutoStake({ formName }: { formName: FormNames }) {
   const [field, , helpers] = useField({ name: 'autoStake' });
   const [sendToWalletField] = useField({ name: 'sendToWallet' });
 
-  const { context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const { context } = useDcaInFormPostPurchase(formName);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
