@@ -21,10 +21,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
-import CosmosWalletButton from '@components/CosmosWallet';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Banner from '@components/Banner';
+import { SidebarControls } from '@components/Layout/SidebarControls';
 import { Pages } from './Pages';
 
 interface LinkItem {
@@ -144,7 +144,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
           <Image src="/images/logo.svg" w={105} />
         </Text>
         <Spacer />
-        <CosmosWalletButton />
+        <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
         {LinkItems.map((link) => (
