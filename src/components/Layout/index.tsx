@@ -22,6 +22,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useAdmin } from '@hooks/useAdmin';
 import { Chains, useChain } from '@hooks/useChain';
+import { isMainnet } from '@utils/isMainnet';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 import { ChainSelection } from '../ChainSelection';
@@ -31,7 +32,7 @@ const HEADER_HEIGHT = '64px';
 function SidebarControls() {
   const { isAdmin } = useAdmin();
   const chain = useChain((state) => state.chain);
-  const showChainSelection = chain === Chains.Osmosis || isAdmin;
+  const showChainSelection = !isMainnet() && (chain === Chains.Osmosis || isAdmin);
   return (
     <HStack>
       {showChainSelection && <ChainSelection />}
