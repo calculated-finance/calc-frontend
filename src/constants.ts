@@ -48,7 +48,7 @@ export const featureFlags =
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
-        dcaPlusEnabled: false,
+        dcaPlusEnabled: true,
       }
     : {
         extraTimeOptions: true,
