@@ -14,7 +14,7 @@ function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaOut);
   const steps = dcaOutSteps;
 
-  const { nextStep, goToStep } = useSteps(dcaOutSteps);
+  const { nextStep, goToStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchema);
 
