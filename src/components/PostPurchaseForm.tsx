@@ -10,8 +10,9 @@ import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoSta
 import { AutoStake, DummyAutoStake } from '@components/AutoStake';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
+import { FormNames } from '@hooks/useDcaInForm';
 
-export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) {
+export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
 
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
@@ -24,7 +25,7 @@ export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) 
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={6}>
-        <DcaInSendToWallet />
+        <DcaInSendToWallet formName={formName} />
         <Collapse in={sendToWalletValue === SendToWalletValues.No}>
           <Box m="px">
             <RecipientAccount />
@@ -34,7 +35,7 @@ export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) 
           <Collapse in={sendToWalletValue === SendToWalletValues.Yes}>
             {stakeingUnsupported ? (
               <>
-                <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} />
+                <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} formName={formName} />
                 <Collapse in={dummyAutoStake === AutoStakeValues.Yes}>
                   <Box m="px">
                     <DummyAutoStakeValidator />
@@ -43,7 +44,7 @@ export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) 
               </>
             ) : (
               <>
-                <AutoStake />
+                <AutoStake formName={formName} />
                 <Collapse in={autoStakeValue === AutoStakeValues.Yes}>
                   <Box m="px">
                     <AutoStakeValidator />
