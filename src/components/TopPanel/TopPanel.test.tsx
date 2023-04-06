@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClient } from 'src/pages/_app.page';
 import useStrategies from '@hooks/useStrategies';
+import { queryClient } from '@helpers/test/testQueryClient';
 import TopPanel from './TopPanel';
 
 jest.mock('@hooks/useWallet');

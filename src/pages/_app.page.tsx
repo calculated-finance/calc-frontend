@@ -20,14 +20,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-// no retries for now
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 // can make this more dumb because maybe we can set default values with yup schemas instead
 

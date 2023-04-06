@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within, act } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { queryClient } from 'src/pages/_app.page';
+import { queryClient } from '@helpers/test/testQueryClient';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';

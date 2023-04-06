@@ -324,7 +324,6 @@ const getDenomInfo = (denom?: string) => {
   if (!denom) {
     return defaultDenom;
   }
-
   if (isMainnet()) {
     return {
       ...defaultDenom,

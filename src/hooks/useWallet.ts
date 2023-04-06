@@ -1,6 +1,5 @@
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useKujira } from './useKujira';
 import { useKeplr } from './useKeplr';
 
 export enum WalletTypes {
@@ -23,9 +22,7 @@ export function useWallet() {
     isConnecting: state.isConnecting,
   }));
 
-  const query = useKujira((state) => state.query);
-
-  if (keplrWallet.account && query) {
+  if (keplrWallet.account) {
     return {
       address: keplrWallet.account?.address,
       connected: true,
@@ -35,7 +32,7 @@ export function useWallet() {
       isConnecting: false,
     };
   }
-  if (stationWallet?.account && query) {
+  if (stationWallet?.account) {
     return {
       address: stationWallet.account?.address,
       connected: true,

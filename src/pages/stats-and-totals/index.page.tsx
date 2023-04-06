@@ -6,7 +6,7 @@ import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
-import { FEE_TAKER_ADDRESS, SWAP_FEE } from 'src/constants';
+import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy } from '@hooks/useStrategies';
 import { VaultStatus } from 'src/interfaces/generated/query';

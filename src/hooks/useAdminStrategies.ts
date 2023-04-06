@@ -1,4 +1,3 @@
-import { useWallet } from '@hooks/useWallet';
 import { Vault } from 'src/interfaces/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';

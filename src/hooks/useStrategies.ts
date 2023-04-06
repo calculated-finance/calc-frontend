@@ -1,5 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
-import { queryClient } from 'src/pages/_app.page';
+import { queryClient } from '@helpers/test/testQueryClient';
 import { VaultsResponse } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { Vault } from 'src/interfaces/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';

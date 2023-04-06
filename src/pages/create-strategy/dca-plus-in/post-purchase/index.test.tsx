@@ -1,7 +1,7 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { queryClient } from 'src/pages/_app.page';
+import { queryClient } from '@helpers/test/testQueryClient';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
@@ -11,8 +11,6 @@ import selectEvent from 'react-select-event';
 import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
 import { useKujira } from '@hooks/useKujira';
 import Page from './index.page';
-
-jest.mock('kujira.js');
 
 const mockKujiraQuery = {
   staking: {

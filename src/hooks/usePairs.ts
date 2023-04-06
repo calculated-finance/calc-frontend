@@ -1,6 +1,5 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS, SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
-import { useWallet } from '@hooks/useWallet';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';

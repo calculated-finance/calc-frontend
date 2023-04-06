@@ -53,7 +53,7 @@ function WalletModal() {
   };
 
   const handleKeplrConnect = () => {
-    connectKeplr?.(chain);
+    connectKeplr(chain);
     handleClose();
   };
 

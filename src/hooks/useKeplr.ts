@@ -31,7 +31,7 @@ function waitForKeplr(timeout = 1000) {
   });
 }
 type IWallet = {
-  connect: null | ((chain: Chains) => void);
+  connect: (chain: Chains) => void;
   disconnect: () => void;
   isInstalled: boolean;
   account: AccountData | null;
@@ -94,7 +94,7 @@ export const useKeplr = create<IWallet>()(
           set({ isInstalled: true });
         }
         if (get().autoconnect) {
-          get().connect?.(chain);
+          get().connect(chain);
         }
       },
     }),

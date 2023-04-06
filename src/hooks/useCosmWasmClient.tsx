@@ -5,7 +5,7 @@ import { Chains } from './useChain';
 
 type IUseCosmWasmClient = {
   client: CosmWasmClient | null;
-  init: (chain: Chains) => Promise<void>;
+  init: (chain: Chains) => void;
 };
 
 export const useCosmWasmClient = create<IUseCosmWasmClient>()((set) => ({

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { queryClient } from 'src/pages/_app.page';
+import { queryClient } from '@helpers/test/testQueryClient';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';

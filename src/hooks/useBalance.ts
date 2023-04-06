@@ -29,9 +29,7 @@ const useBalance = ({ token }: UseBalanceArgs) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      const res = client.getBalance(address, token ?? '');
-
-      return res;
+      return client.getBalance(address, token ?? '');
     },
     {
       enabled: !!token && !!address && !!client,
