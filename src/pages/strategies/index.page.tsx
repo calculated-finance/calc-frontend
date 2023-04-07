@@ -41,7 +41,7 @@ function StrategiesAccordionButton({ children }: ChildrenProp) {
 
 function StrategyAccordionPanel({ children }: ChildrenProp) {
   return (
-    <AccordionPanel pb={0}>
+    <AccordionPanel pb={0} px={0}>
       <Stack spacing={4}>{children}</Stack>
     </AccordionPanel>
   );

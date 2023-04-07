@@ -1,4 +1,16 @@
-import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, ButtonGroup, HStack, Box } from '@chakra-ui/react';
+import {
+  Button,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+  Flex,
+  useDisclosure,
+  ButtonGroup,
+  HStack,
+  Box,
+  Stack,
+} from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
@@ -28,10 +40,11 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
     <>
       <Button
         size="xs"
-        variant="ghost"
+        variant={{ base: 'outline', sm: 'ghost' }}
         colorScheme="red"
         leftIcon={<Icon as={CloseBoxedIcon} stroke="red.200" width={4} height={4} />}
         onClick={onOpen}
+        width={{ base: 'full', xl: 'initial' }}
       >
         Cancel
       </Button>
@@ -48,7 +61,9 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
     <Grid
       templateRows="repeat(1, 1fr)"
       templateColumns="repeat(15, 1fr)"
-      gap={6}
+      // gap={6}
+      rowGap={6}
+      columnGap={2}
       bg="gray.900"
       py={4}
       px={8}
@@ -56,11 +71,11 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       borderWidth={isDcaPlus(strategy) ? 1 : 0}
       borderColor="brand.200"
     >
-      <GridItem colSpan={{ base: 8, xl: 3 }} rowStart={{ sm: 1, xl: 'auto' }}>
+      <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
         <Heading size="md">{getStrategyType(strategy)}</Heading>
         <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
       </GridItem>
-      <GridItem colSpan={{ base: 4, xl: 2 }}>
+      <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
         <Text fontSize="sm" pb={1}>
           Assets:
         </Text>
@@ -71,12 +86,12 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </HStack>
       </GridItem>
 
-      <GridItem colSpan={{ base: 3, xl: 2 }}>
+      <GridItem colSpan={{ base: 8, sm: 3, xl: 2 }}>
         <Text fontSize="sm">Status:</Text>
         <StrategyStatusBadge strategy={strategy} />
       </GridItem>
 
-      <GridItem colSpan={{ base: 4, xl: 2 }}>
+      <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
         <Text fontSize="sm">Interval:</Text>
         <Text textStyle="body-xs">
           <Text as="span">{executionIntervalLabel[strategy.time_interval]}</Text>:{' '}
@@ -85,7 +100,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </Text>
       </GridItem>
 
-      <GridItem colSpan={{ base: 4, xl: 2 }}>
+      <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
         <Text fontSize="sm">Balance:</Text>
         <Text textStyle="body-xs">
           {Number(getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount)).toFixed(6))}{' '}
@@ -94,25 +109,26 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem
         visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}
-        colSpan={{ base: 7, xl: 1 }}
-        rowStart={{ sm: 1, xl: 'auto' }}
+        colSpan={{ base: 15, sm: 7, xl: 1 }}
+        rowStart={{ base: 0, sm: 1, xl: 'auto' }}
       >
-        <Flex justifyContent="end" alignItems="center" h="full">
-          <ButtonGroup>
+        <Flex justifyContent={{ base: 'left', sm: 'end' }} alignItems="center" h="full">
+          <Stack direction={{ base: 'column', sm: 'row' }} w="full">
             <Link href={generateStrategyTopUpUrl(strategy.id)}>
               <Button
                 size="xs"
-                variant="ghost"
+                variant={{ base: 'outline', sm: 'ghost' }}
                 leftIcon={<Icon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                width={{ base: 'full', xl: 'initial' }}
               >
                 Top up
               </Button>
             </Link>
             <CancelButton strategy={strategy} />
-          </ButtonGroup>
+          </Stack>
         </Flex>
       </GridItem>
-      <GridItem colSpan={{ base: 15, xl: 3 }}>
+      <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
         <Flex justifyContent="end" alignItems="center" h="full">
           <Link href={generateStrategyDetailUrl(strategy.id)}>
             <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
