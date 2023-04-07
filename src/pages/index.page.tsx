@@ -12,7 +12,6 @@ import {
   HStack,
   Divider,
   Wrap,
-  ButtonGroup,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -126,7 +125,7 @@ function ActiveStrategies() {
           <Heading data-testid="active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
-          <ButtonGroup>
+          <Stack direction={{ base: 'column', sm: 'row' }}>
             <Link href="/create-strategy">
               <Button w={44} variant="outline" colorScheme="blue">
                 {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
@@ -139,7 +138,7 @@ function ActiveStrategies() {
                 </Button>
               </Link>
             )}
-          </ButtonGroup>
+          </Stack>
         </Stack>
       )}
     </Flex>
