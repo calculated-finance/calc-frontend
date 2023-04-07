@@ -16,6 +16,8 @@ import usePrice from '@hooks/usePrice';
 import { Denom } from '@models/Denom';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
+import { Chains, useChain } from '@hooks/useChain';
+import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { TransactionType } from './TransactionType';
 
 export function DenomPriceInput({
@@ -35,7 +37,19 @@ export function DenomPriceInput({
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
-  const { price, pairAddress, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { chain } = useChain();
+  const { price, pairAddress, isLoading } = usePrice(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Kujira,
+  );
+  const { price: osmosisPrice, isLoading: osmosisIsLoading } = usePriceOsmosis(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Osmosis,
+  );
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -70,7 +84,7 @@ export function DenomPriceInput({
           onValueChange={handleChange}
           value={value as number}
           defaultValue={defaultValue as number}
-          placeholder={`${price} ${priceInDenomName}`}
+          placeholder={`${price || osmosisPrice} ${priceInDenomName}`}
           {...inputProps}
         />
       </InputGroup>
@@ -80,6 +94,20 @@ export function DenomPriceInput({
           <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
               Current price: 1 {priceOfDenomName} = {price} {priceInDenomName}
+            </Button>
+          </Link>
+        </FormHelperText>
+      )}
+      {Boolean(osmosisPrice) && (
+        <FormHelperText>
+          <Link
+            isExternal
+            href={`https://app.osmosis.zone/?from=${getDenomInfo(initialDenom).osmosisId}&to=${
+              getDenomInfo(resultingDenom).osmosisId
+            }`}
+          >
+            <Button variant="link" fontWeight="normal" isLoading={osmosisIsLoading} colorScheme="blue">
+              Current price: 1 {priceOfDenomName} = {osmosisPrice} {priceInDenomName}
             </Button>
           </Link>
         </FormHelperText>

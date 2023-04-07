@@ -57,7 +57,7 @@ export default function usePairs() {
   const { chain } = useChain();
 
   const queryResult = useQueryWithNotification<PairsResponse>(
-    ['pairs', client],
+    ['pairs', chain],
     async () => {
       const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
         get_pairs: {},

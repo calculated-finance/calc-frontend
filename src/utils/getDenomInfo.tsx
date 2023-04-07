@@ -18,6 +18,7 @@ type DenomInfo = {
   minimumSwapAmount?: number;
   significantFigures: number;
   enabledInDcaPlus?: boolean;
+  osmosisId?: string;
 };
 
 const defaultDenom = {
@@ -36,6 +37,7 @@ const defaultDenom = {
   priceConversion: (value: number | undefined | null) => Number(value),
   significantFigures: 6,
   enabledInDcaPlus: false,
+  osmosisId: undefined,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -309,6 +311,7 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     stakeableAndSupported: true,
     coingeckoId: 'osmosis',
     significantFigures: 6,
+    osmosisId: 'OSMO',
   },
   [TestnetDenomsOsmosis.AXL]: {
     name: 'axlUSDC',
@@ -317,6 +320,7 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
+    osmosisId: 'USDC',
   },
 };
 

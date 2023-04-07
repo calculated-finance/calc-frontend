@@ -10447,9 +10447,9 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-kujira.js@Team-Kujira/kujira.js#dc06cb5fb58029c532f0354898c0b63075a1fc64:
+kujira.js@Team-Kujira/kujira.js#21b6a6363d2e72d48af24c71497bfd6c6f27036a:
   version "0.5.0"
-  resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/dc06cb5fb58029c532f0354898c0b63075a1fc64"
+  resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/21b6a6363d2e72d48af24c71497bfd6c6f27036a"
   dependencies:
     "@cosmjs/cosmwasm-stargate" "^0.29.4"
     "@cosmjs/launchpad" "^0.27.1"
@@ -10755,7 +10755,7 @@ long@^4.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
-long@^5.2.0:
+long@^5.2.0, long@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/long/-/long-5.2.1.tgz#e27595d0083d103d2fa2c20c7699f8e0c92b897f"
   integrity sha512-GKSNGeNAtw8IryjjkhZxuKB3JzlcLTwjtiQCHKvqQet81I93kXslhDQruGI/QsddO83mcDToBVy7GqGS/zYf/A==
