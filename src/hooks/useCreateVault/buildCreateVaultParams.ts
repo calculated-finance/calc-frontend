@@ -78,7 +78,7 @@ function getPairAddress(initialDenom: Denom, resultingDenom: Denom, pairs: Pair[
   if (!pairAddress) {
     throw new Error('Pair not found');
   }
-  return pairAddress;
+  return pairAddress.address;
 }
 
 function getStartTime(startDate: Date | undefined, purchaseTime: string | undefined) {

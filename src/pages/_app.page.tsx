@@ -15,6 +15,7 @@ import { useStation } from '@hooks/useStation';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { useOsmosis } from '@hooks/useOsmosis';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -38,6 +39,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const initStation = useStation((state) => state.init);
 
   const initKujira = useKujira((state) => state.init);
+  const initOsmosis = useOsmosis((state) => state.init);
   const initKeplr = useKeplr((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
@@ -63,6 +65,12 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       initKujira(chain);
     }
   }, [initKujira, chain]);
+
+  useEffect(() => {
+    if (chain) {
+      initOsmosis(chain);
+    }
+  }, [initOsmosis, chain]);
 
   useEffect(() => {
     if (chain) {
