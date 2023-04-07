@@ -18,6 +18,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { ConsentToast } from '@components/ConsentToast';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -180,6 +181,7 @@ function SidebarLayout({ children }: { children: ReactElement }) {
         </Content>
       </Box>
       <TermsModal isOpen={isOpen} onClose={onClose} showCheckbox onSubmit={onSubmit} />
+      <ConsentToast />
     </Sidebar>
   );
 }
