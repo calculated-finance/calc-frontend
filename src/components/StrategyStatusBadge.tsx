@@ -1,9 +1,13 @@
 import { Badge, Tooltip } from '@chakra-ui/react';
 import { Strategy } from '@hooks/useStrategies';
-import { getStrategyStatus } from '@helpers/strategy';
+import { getStrategyEndDate, getStrategyStatus } from '@helpers/strategy';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 
 export function StrategyStatusBadge({ strategy }: { strategy: Strategy }) {
   const status = getStrategyStatus(strategy);
+  const { data: events } = useStrategyEvents(strategy.id);
+
+  const lastDate = getStrategyEndDate(strategy, events);
 
   const statusColorSchemes = {
     active: 'green',
@@ -21,8 +25,13 @@ export function StrategyStatusBadge({ strategy }: { strategy: Strategy }) {
 
   return (
     <Tooltip label={statusTooltips[status]}>
-      <Badge cursor="default" colorScheme={statusColorSchemes[status] || 'grey'} textTransform="capitalize">
-        {status}
+      <Badge
+        cursor="default"
+        colorScheme={statusColorSchemes[status] || 'grey'}
+        textTransform="capitalize"
+        whiteSpace="pre-wrap"
+      >
+        {strategy.status === 'inactive' ? `${status}\n${lastDate}` : status}
       </Badge>
     </Tooltip>
   );
