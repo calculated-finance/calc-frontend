@@ -39,7 +39,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
-    "kujira.js": "Team-Kujira/kujira.js#21b6a6363d2e72d48af24c71497bfd6c6f27036a",
+    "kujira.js": "Team-Kujira/kujira.js",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "long": "^5.2.1",
