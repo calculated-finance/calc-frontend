@@ -13,7 +13,9 @@ import {
   getStrategyName,
   isStrategyCancelled,
   isDcaPlus,
+  getStrategyEndDate,
 } from '@helpers/strategy';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
@@ -43,6 +45,9 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
 function StrategyRow({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
+
+  const { data: events } = useStrategyEvents(strategy.id);
+  const lastDate = getStrategyEndDate(strategy, events);
 
   return (
     <Grid
@@ -74,6 +79,11 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={{ base: 3, xl: 2 }}>
         <Text fontSize="sm">Status:</Text>
         <StrategyStatusBadge strategy={strategy} />
+        {strategy.status === 'inactive' && (
+          <Text ml={1} color="grey.200" fontSize={{ base: 8, sm: 9, md: 10 }}>
+            {lastDate}
+          </Text>
+        )}
       </GridItem>
 
       <GridItem colSpan={{ base: 4, xl: 2 }}>
