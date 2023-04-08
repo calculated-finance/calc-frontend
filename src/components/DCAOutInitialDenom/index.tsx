@@ -33,7 +33,7 @@ export default function DCAOutInitialDenom({ denoms }: { denoms: Denom[] }) {
         <Box>
           <DenomSelect
             denoms={denoms}
-            placeholder="Choose asset"
+            placeholder="Choose&nbsp;asset"
             value={field.value}
             onChange={helpers.setValue}
             optionLabel="FIN"

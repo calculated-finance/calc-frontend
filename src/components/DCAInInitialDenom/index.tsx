@@ -43,7 +43,7 @@ export default function DCAInInitialDenom() {
         <Box>
           <DenomSelect
             denoms={denoms}
-            placeholder="Choose asset"
+            placeholder="Choose&nbsp;asset"
             value={field.value}
             onChange={helpers.setValue}
             showPromotion
