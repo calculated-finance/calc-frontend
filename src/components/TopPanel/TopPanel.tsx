@@ -1,16 +1,4 @@
-import {
-  Button,
-  Heading,
-  Text,
-  Stack,
-  Center,
-  ButtonGroup,
-  Image,
-  HStack,
-  Box,
-  GridItem,
-  Flex,
-} from '@chakra-ui/react';
+import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Flex } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
@@ -59,7 +47,7 @@ function Returning() {
           plan–and stick with it and backtest your previous startegies.
         </Text>
       </Stack>
-      <ButtonGroup>
+      <Stack direction={{ base: 'column', sm: 'row' }}>
         <Link passHref href="/create-strategy">
           <Button maxWidth={402} size="sm">
             Create new strategy
@@ -70,7 +58,7 @@ function Returning() {
             Review past strategies
           </Button>
         </Link>
-      </ButtonGroup>
+      </Stack>
     </>
   );
 }
