@@ -61,7 +61,6 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
     <Grid
       templateRows="repeat(1, 1fr)"
       templateColumns="repeat(15, 1fr)"
-      // gap={6}
       rowGap={6}
       columnGap={2}
       bg="gray.900"
