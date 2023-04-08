@@ -1,16 +1,4 @@
-import {
-  Button,
-  Grid,
-  GridItem,
-  Heading,
-  Text,
-  Flex,
-  useDisclosure,
-  ButtonGroup,
-  HStack,
-  Box,
-  Stack,
-} from '@chakra-ui/react';
+import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
