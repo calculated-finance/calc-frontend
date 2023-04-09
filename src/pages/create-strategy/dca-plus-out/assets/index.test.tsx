@@ -13,6 +13,7 @@ import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
+import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
@@ -46,13 +47,6 @@ const mockStateMachine = {
   },
 };
 
-jest.mock('little-state-machine', () => ({
-  useStateMachine() {
-    return mockStateMachine;
-  },
-  createStore: jest.fn(),
-}));
-
 async function renderTarget() {
   await act(() => {
     render(
@@ -69,6 +63,13 @@ describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();
+
+    useFormStore.setState({
+      forms: mockStateMachine.state,
+      updateForm: () => mockStateMachine.actions.updateAction,
+      resetForm: () => mockStateMachine.actions.resetAction,
+    });
+
     useKujira.setState({
       query: mockKujiraQuery as unknown as KujiraQueryClient,
     });

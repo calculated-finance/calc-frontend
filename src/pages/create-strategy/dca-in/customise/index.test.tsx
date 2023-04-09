@@ -11,6 +11,7 @@ import timekeeper from 'timekeeper';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
 import { ChangeEvent } from 'react';
 import YesNoValues from '@models/YesNoValues';
+import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
@@ -62,13 +63,6 @@ const mockStateMachine = {
   },
 };
 
-jest.mock('little-state-machine', () => ({
-  useStateMachine() {
-    return mockStateMachine;
-  },
-  createStore: jest.fn(),
-}));
-
 async function renderTarget() {
   act(() => {
     render(
@@ -84,6 +78,12 @@ async function renderTarget() {
 describe('DCA In customise page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    useFormStore.setState({
+      forms: mockStateMachine.state,
+      updateForm: () => mockStateMachine.actions.updateAction,
+      resetForm: () => mockStateMachine.actions.resetAction,
+    });
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
