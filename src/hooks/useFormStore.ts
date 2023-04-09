@@ -1,6 +1,5 @@
-import { dcaSchema, initialValues } from '@models/DcaInFormData';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export enum FormNames {
   DcaIn = 'dcaIn',
@@ -33,10 +32,13 @@ export const useFormStore = create<IFormStore>()(
         set((state: any) => ({
           forms: {
             ...state.forms,
-            [formName]: dcaSchema.cast(initialValues, { stripUnknown: true }),
+            [formName]: {},
           },
         })),
     }),
-    { name: 'dcaInForm-storage', serialize: JSON.stringify, deserialize: JSON.parse },
+    {
+      name: 'form-state',
+      storage: createJSONStorage(() => sessionStorage),
+    },
   ),
 );
