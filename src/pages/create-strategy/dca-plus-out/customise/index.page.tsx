@@ -4,7 +4,6 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
-import { FormNames } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
@@ -19,6 +18,7 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
+import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);

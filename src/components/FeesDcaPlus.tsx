@@ -22,13 +22,13 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { CREATE_VAULT_FEE, FIN_TAKER_FEE, DELEGATION_FEE } from 'src/constants';
+import { FormNames } from '@hooks/useFormStore';
 
 function FeeBreakdown({
   initialDenomName,

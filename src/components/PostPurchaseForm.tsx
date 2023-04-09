@@ -10,7 +10,7 @@ import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoSta
 import { AutoStake, DummyAutoStake } from '@components/AutoStake';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
-import { FormNames } from '@hooks/useDcaInForm';
+import { FormNames } from '@hooks/useFormStore';
 
 export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
   const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);

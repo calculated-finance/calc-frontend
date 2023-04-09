@@ -1,7 +1,8 @@
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/react';
 import { DenomPriceInput } from '@components/DenomPriceInput';
 import { TransactionType } from '@components/TransactionType';
-import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
+import { useStep2Form } from '@hooks/useDcaInForm';
+import { FormNames } from '@hooks/useFormStore';
 import { useField } from 'formik';
 
 export default function StartPrice({

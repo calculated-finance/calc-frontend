@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import useDcaInForm, { FormNames } from 'src/hooks/useDcaInForm';
+import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
   isSupportedDenomForDcaPlus,
   uniqueBaseDenoms,
@@ -26,6 +26,7 @@ import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
 import { WhitelistModal } from '@components/WhitelistModal';
 import useWhitelist from '@hooks/useWhitelist';
+import { FormNames } from '@hooks/useFormStore';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
   return Array.from(

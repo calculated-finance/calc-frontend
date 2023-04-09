@@ -14,11 +14,12 @@ import {
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
+import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { FormNames } from '@hooks/useFormStore';
 
 function FeeBreakdown({
   initialDenomName,

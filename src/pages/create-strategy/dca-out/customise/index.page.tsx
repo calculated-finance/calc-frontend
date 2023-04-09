@@ -4,7 +4,7 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
-import { FormNames, useStep2Form } from 'src/hooks/useDcaInForm';
+import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
@@ -19,6 +19,7 @@ import { TriggerForm } from '@components/TriggerForm';
 import { InvalidData } from '@components/InvalidData';
 import SwapAmount from '@components/SwapAmount';
 import dcaOutSteps from '@formConfig/dcaOut';
+import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
   const { actions, state } = useStep2Form(FormNames.DcaOut);

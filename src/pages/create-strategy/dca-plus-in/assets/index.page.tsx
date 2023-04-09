@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import { FormNames } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, { isSupportedDenomForDcaPlus, uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
