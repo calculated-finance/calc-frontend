@@ -4,38 +4,41 @@ import {
   DcaPlusCustomiseFormSchema,
   DcaPlusPostPurchaseFormSchema,
 } from '@models/dcaPlusFormData';
-import { useStateMachine } from 'little-state-machine';
 import { initialValues } from '@models/DcaInFormData';
-import { FormNames, getFormState, getResetAction, getUpdateAction } from './useDcaInForm';
+import { getFormState } from './useDcaInForm';
+import { FormNames, useFormStore } from './useFormStore';
+import { useWallet } from './useWallet';
 
 export const useDCAPlusAssetsForm = (formName: FormNames) => {
-  const { state, actions } = useStateMachine({
-    updateAction: getUpdateAction(formName),
-    resetAction: getResetAction(formName),
-  });
+  const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     return {
       state: {
         step1: DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       },
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   } catch (e) {
     return {
       state: {
         step1: DcaPlusAssetsFormSchema.cast(initialValues, { stripUnknown: true }),
       },
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   }
 };
 
 export const useDCAPlusStep2Form = (formName: FormNames) => {
-  const { state, actions } = useStateMachine({
-    updateAction: getUpdateAction(formName),
-    resetAction: getResetAction(formName),
-  });
+  const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     const step1 = DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
@@ -49,20 +52,24 @@ export const useDCAPlusStep2Form = (formName: FormNames) => {
         step1,
         step2,
       },
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   } catch (e) {
     return {
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   }
 };
 
 export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
-  const { state, actions } = useStateMachine({
-    updateAction: getUpdateAction(formName),
-    resetAction: getResetAction(formName),
-  });
+  const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     return {
@@ -71,31 +78,41 @@ export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
         ...DcaPlusPostPurchaseFormSchema.cast(initialValues, { stripUnknown: true }),
         ...DcaPlusPostPurchaseFormSchema.cast(getFormState(state, formName), { stripUnknown: true }),
       },
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   } catch (e) {
     return {
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   }
 };
 
 export const useDcaPlusConfirmForm = (formName: FormNames) => {
-  const { state, actions } = useStateMachine({
-    updateAction: getUpdateAction(formName),
-    resetAction: getResetAction(formName),
-  });
+  const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
 
     return {
       state: DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
     };
   } catch (e) {
     return {
-      actions,
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
       errors: e,
     };
   }

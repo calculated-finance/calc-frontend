@@ -6,7 +6,6 @@ import theme from 'src/theme';
 import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
-import { createStore, StateMachineProvider } from 'little-state-machine';
 import Head from 'next/head';
 import { featureFlags, HOTJAR_SITE_ID } from 'src/constants';
 import { hotjar } from 'react-hotjar';
@@ -24,8 +23,6 @@ type AppPropsWithLayout = AppProps & {
 const queryClient = new QueryClient();
 
 // can make this more dumb because maybe we can set default values with yup schemas instead
-
-createStore({});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
@@ -85,9 +82,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ChakraProvider theme={theme}>
         <CalcWalletModalProvider>
-          <QueryClientProvider client={queryClient}>
-            <StateMachineProvider>{getLayout(<Component {...pageProps} />)}</StateMachineProvider>
-          </QueryClientProvider>
+          <QueryClientProvider client={queryClient}>{getLayout(<Component {...pageProps} />)}</QueryClientProvider>
         </CalcWalletModalProvider>
       </ChakraProvider>
     </>

@@ -8,7 +8,7 @@ import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
-import { FormNames } from '../useDcaInForm';
+import { FormNames } from '@hooks/useFormStore';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {

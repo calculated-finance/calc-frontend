@@ -10,6 +10,7 @@ import { mockCreateVault } from '@helpers/test/mockCreateVault';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import YesNoValues from '@models/YesNoValues';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
+import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
@@ -58,13 +59,6 @@ const mockStateMachine = {
   },
 };
 
-jest.mock('little-state-machine', () => ({
-  useStateMachine() {
-    return mockStateMachine;
-  },
-  createStore: jest.fn(),
-}));
-
 async function renderTarget() {
   act(() => {
     render(
@@ -80,6 +74,12 @@ async function renderTarget() {
 describe('DCA In confirm page', () => {
   beforeEach(() => {
     mockFiatPrice();
+
+    useFormStore.setState({
+      forms: mockStateMachine.state,
+      updateForm: () => mockStateMachine.actions.updateAction,
+      resetForm: () => mockStateMachine.actions.resetAction,
+    });
 
     jest.clearAllMocks();
   });

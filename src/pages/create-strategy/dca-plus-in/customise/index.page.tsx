@@ -4,7 +4,7 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
-import { FormNames } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useFormStore';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import { StrategyTypes } from '@models/StrategyTypes';

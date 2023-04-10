@@ -1,6 +1,6 @@
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase } from 'src/models/DcaInFormData';
-import { FormNames, useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
+import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -10,6 +10,7 @@ import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);

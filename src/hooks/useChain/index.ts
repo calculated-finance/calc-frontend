@@ -1,3 +1,4 @@
+import { useFormStore } from '@hooks/useFormStore';
 import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -16,7 +17,10 @@ export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
       chain: Chains.Kujira,
-      setChain: (chain: Chains) => set({ chain }),
+      setChain: (chain: Chains) => {
+        useFormStore.setState({ forms: {} });
+        return set({ chain });
+      },
     }),
     {
       name: 'chain',

@@ -9,6 +9,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { ChangeEvent } from 'react';
 import { SingleDatepickerProps } from 'chakra-dayzed-datepicker';
+import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
@@ -60,13 +61,6 @@ const mockStateMachine = {
   },
 };
 
-jest.mock('little-state-machine', () => ({
-  useStateMachine() {
-    return mockStateMachine;
-  },
-  createStore: jest.fn(),
-}));
-
 async function renderTarget() {
   act(() => {
     render(
@@ -86,6 +80,13 @@ describe('DCA Plus Out customise page', () => {
       unobserve: jest.fn(),
       disconnect: jest.fn(),
     }));
+
+    useFormStore.setState({
+      forms: mockStateMachine.state,
+      updateForm: () => mockStateMachine.actions.updateAction,
+      resetForm: () => mockStateMachine.actions.resetAction,
+    });
+
     jest.clearAllMocks();
   });
   describe('on page load', () => {

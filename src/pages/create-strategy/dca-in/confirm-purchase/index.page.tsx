@@ -1,7 +1,7 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { FormNames, useConfirmForm } from 'src/hooks/useDcaInForm';
+import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDca } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
@@ -18,6 +18,7 @@ import { FormikHelpers } from 'formik';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
+import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);

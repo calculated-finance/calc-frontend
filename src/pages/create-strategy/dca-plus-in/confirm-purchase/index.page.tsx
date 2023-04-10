@@ -1,7 +1,7 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { FormNames } from 'src/hooks/useDcaInForm';
+import { FormNames } from 'src/hooks/useFormStore';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';

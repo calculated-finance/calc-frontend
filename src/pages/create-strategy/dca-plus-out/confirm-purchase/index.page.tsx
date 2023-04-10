@@ -1,7 +1,6 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { FormNames } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
@@ -21,6 +20,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
+import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);

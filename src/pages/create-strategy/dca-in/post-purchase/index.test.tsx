@@ -10,6 +10,7 @@ import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
 import { KujiraQueryClient } from 'kujira.js';
 import { useKujira } from '@hooks/useKujira';
+import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
@@ -43,13 +44,6 @@ const mockStateMachine = {
   },
 };
 
-jest.mock('little-state-machine', () => ({
-  useStateMachine() {
-    return mockStateMachine;
-  },
-  createStore: jest.fn(),
-}));
-
 async function renderTarget() {
   await act(() => {
     render(
@@ -66,6 +60,13 @@ async function renderTarget() {
 describe('DCA In post-purchase page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    useFormStore.setState({
+      forms: mockStateMachine.state,
+      updateForm: () => mockStateMachine.actions.updateAction,
+      resetForm: () => mockStateMachine.actions.resetAction,
+    });
+
     useKujira.setState({
       query: {
         staking: {

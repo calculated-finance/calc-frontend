@@ -1,8 +1,9 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Collapse, Box } from '@chakra-ui/react';
-import { FormNames, useStep2Form } from '@hooks/useDcaInForm';
+import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
+import { FormNames } from '@hooks/useFormStore';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
