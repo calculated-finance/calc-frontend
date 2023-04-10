@@ -39,6 +39,7 @@ export const dcaPlusSchema = Yup.object({
   autoStake: allSchema.autoStake,
   autoStakeValidator: allSchema.autoStakeValidator,
   strategyDuration: allSchema.strategyDuration,
+  postPurchaseOption: allSchema.postPurchaseOption,
 });
 
 export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
@@ -52,6 +53,7 @@ export const DcaPlusPostPurchaseFormSchema = dcaPlusSchema.pick([
   'recipientAccount',
   'autoStake',
   'autoStakeValidator',
+  'postPurchaseOption',
 ]);
 export const DcaPlusConfirmFormSchema = dcaPlusSchema;
 

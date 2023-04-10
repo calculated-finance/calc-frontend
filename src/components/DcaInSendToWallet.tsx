@@ -9,11 +9,11 @@ import { FormNames } from '@hooks/useFormStore';
 
 const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
   {
-    value: SendToWalletValues.No,
+    value: SendToWalletValues.Yes,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.Yes,
+    value: SendToWalletValues.No,
     label: 'No',
   },
 ];
@@ -30,10 +30,7 @@ export default function DcaInSendToWallet({ formName }: { formName: FormNames })
 
   return (
     <FormControl>
-      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} to a different account?</FormLabel>
-      <FormHelperText>
-        This wallet address will be the one the funds are sent to or autostaked to on your behalf.
-      </FormHelperText>
+      <FormLabel>Send {getDenomInfo(context?.resultingDenom).name} to my wallet?</FormLabel>
       <HStack>
         <Radio {...getRootProps}>
           {sendToWalletData.map((option) => {

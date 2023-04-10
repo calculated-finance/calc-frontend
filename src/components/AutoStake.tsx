@@ -2,13 +2,12 @@ import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@
 import { useField } from 'formik';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import getDenomInfo from '@utils/getDenomInfo';
-import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValues from '@models/AutoStakeValues';
 import { FormNames } from '@hooks/useFormStore';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 
-export const autoStakeData: { value: AutoStakeValues; label: string }[] = [
+const autoStakeData: { value: AutoStakeValues; label: string }[] = [
   {
     value: AutoStakeValues.Yes,
     label: 'Yes',
@@ -57,7 +56,6 @@ export function DummyAutoStake({
 
 export function AutoStake({ formName }: { formName: FormNames }) {
   const [field, , helpers] = useField({ name: 'autoStake' });
-  const [sendToWalletField] = useField({ name: 'sendToWallet' });
 
   const { context } = useDcaInFormPostPurchase(formName);
 
@@ -68,7 +66,7 @@ export function AutoStake({ formName }: { formName: FormNames }) {
   });
 
   return (
-    <FormControl isDisabled={sendToWalletField.value === SendToWalletValues.No}>
+    <FormControl>
       <FormLabel>Auto stake {getDenomInfo(context?.resultingDenom).name} after each swap?</FormLabel>
       <FormHelperText>Tokens will be staked on your behalf, a 14-day lock up period applies.</FormHelperText>
       <HStack>

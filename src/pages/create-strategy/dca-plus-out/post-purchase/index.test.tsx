@@ -80,7 +80,7 @@ describe('DCA Out post-purchase page', () => {
 
       await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getByText(/Yes/)), { timeout: 10000 });
+      await waitFor(() => userEvent.click(screen.getAllByText(/No/)[0]), { timeout: 10000 });
 
       await waitFor(
         () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
@@ -94,6 +94,7 @@ describe('DCA Out post-purchase page', () => {
         autoStake: 'no',
         autoStakeValidator: null,
         sendToWallet: 'no',
+        postPurchaseOption: 'sendToWallet',
         recipientAccount: 'kujira000000000000000000000000000000000000000',
       });
 
@@ -119,6 +120,7 @@ describe('DCA Out post-purchase page', () => {
         autoStake: 'no',
         autoStakeValidator: null,
         recipientAccount: null,
+        postPurchaseOption: 'sendToWallet',
         sendToWallet: 'yes',
       });
 

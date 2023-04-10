@@ -15,8 +15,11 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
+import { useChainStore } from '@hooks/useChain';
+import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
+import { PostPurchaseOptions } from './PostPurchaseOptions';
 
 export const initialValues = {
   resultingDenom: '',
@@ -39,6 +42,7 @@ export const initialValues = {
   recipientAccount: '',
   autoStakeValidator: '',
   strategyDuration: 60,
+  postPurchaseOption: PostPurchaseOptions.SendToWallet,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -234,25 +238,42 @@ export const allSchema = {
         return value <= startPrice;
       },
     }),
-  sendToWallet: Yup.mixed<SendToWalletValues>().oneOf(Object.values(SendToWalletValues)).required(),
+  postPurchaseOption: Yup.mixed<PostPurchaseOptions>(),
+  sendToWallet: Yup.mixed<SendToWalletValues>()
+    .oneOf(Object.values(SendToWalletValues))
+    .required()
+    .when('postPurchaseOption', {
+      is: PostPurchaseOptions.SendToWallet,
+      then: (schema) => schema,
+      otherwise: (schema) => schema.transform(() => SendToWalletValues.Yes),
+    }),
   recipientAccount: Yup.string()
     .label('Recipient Account')
     .nullable()
-    .min(45)
-    .max(45)
     .when('sendToWallet', {
       is: SendToWalletValues.No,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     })
     .test({
-      name: 'starts-with-kujira',
-      message: ({ label }) => `${label} must start with "kujira"`,
+      name: 'correct-length',
+      message: ({ label }) => `${label} must be ${getChainAddressLength(useChainStore.getState().chain)} characters`,
       test(value) {
         if (!value) {
           return true;
         }
-        return value?.startsWith('kujira');
+        return value?.length === getChainAddressLength(useChainStore.getState().chain);
+      },
+    })
+
+    .test({
+      name: 'starts-with-chain-prefix',
+      message: ({ label }) => `${label} must start with "${getChainAddressPrefix(useChainStore.getState().chain)}"`,
+      test(value) {
+        if (!value) {
+          return true;
+        }
+        return value?.startsWith(getChainAddressPrefix(useChainStore.getState().chain));
       },
     }),
   autoStake: Yup.mixed<AutoStakeValues>()
@@ -261,6 +282,11 @@ export const allSchema = {
     .when('sendToWallet', {
       is: SendToWalletValues.No,
       then: (schema) => schema.transform(() => AutoStakeValues.No),
+    })
+    .when('postPurchaseOption', {
+      is: PostPurchaseOptions.Stake,
+      then: (schema) => schema,
+      otherwise: (schema) => schema.transform(() => AutoStakeValues.No),
     }),
   autoStakeValidator: Yup.string()
     .label('Validator')
@@ -323,6 +349,7 @@ export const dcaSchema = Yup.object({
   recipientAccount: allSchema.recipientAccount,
   autoStake: allSchema.autoStake,
   autoStakeValidator: allSchema.autoStakeValidator,
+  postPurchaseOption: allSchema.postPurchaseOption,
 });
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
@@ -330,6 +357,7 @@ export const step1ValidationSchema = dcaSchema.pick(['resultingDenom', 'initialD
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
 export const postPurchaseValidationSchema = dcaSchema.pick([
+  'postPurchaseOption',
   'sendToWallet',
   'recipientAccount',
   'autoStake',

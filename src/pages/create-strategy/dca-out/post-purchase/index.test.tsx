@@ -80,7 +80,7 @@ describe('DCA Out post-purchase page', () => {
 
       await renderTarget();
 
-      await waitFor(() => userEvent.click(screen.getByText(/Yes/)), { timeout: 10000 });
+      await waitFor(() => userEvent.click(screen.getAllByText(/No/)[0]), { timeout: 10000 });
 
       await waitFor(
         () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
@@ -93,6 +93,7 @@ describe('DCA Out post-purchase page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStake: 'no',
         autoStakeValidator: null,
+        postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
         recipientAccount: 'kujira000000000000000000000000000000000000000',
       });
@@ -118,6 +119,7 @@ describe('DCA Out post-purchase page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStake: 'no',
         autoStakeValidator: null,
+        postPurchaseOption: 'sendToWallet',
         recipientAccount: null,
         sendToWallet: 'yes',
       });

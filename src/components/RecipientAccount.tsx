@@ -1,17 +1,20 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup } from '@chakra-ui/react';
+import { Chains, useChain } from '@hooks/useChain';
 import { useField } from 'formik';
 
 export default function RecipientAccount() {
   const [field, meta] = useField({ name: 'recipientAccount' });
+  const { chain } = useChain();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Account</FormLabel>
+      <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
       <InputGroup>
         <Input fontSize="sm" placeholder="Input Wallet" {...field} />
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      <FormHelperText>IBC transfers coming soon, please use a Kujira address.</FormHelperText>
+      <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
     </FormControl>
   );
 }
