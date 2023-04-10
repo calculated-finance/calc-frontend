@@ -12,6 +12,7 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import { useKujira } from '@hooks/useKujira';
+import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
 
 const mockRouter = {
@@ -22,9 +23,6 @@ const mockRouter = {
 const mockKujiraQuery = {
   staking: {
     validators: mockValidators(),
-  },
-  bank: {
-    msgSend: jest.fn().mockImplementation(() => 'hi'),
   },
 };
 
@@ -60,6 +58,10 @@ describe('Detail page', () => {
     jest.clearAllMocks();
     useKujira.setState({
       query: mockKujiraQuery as unknown as KujiraQueryClient,
+    });
+
+    useOsmosis.setState({
+      query: jest.fn(),
     });
     mockFiatPrice();
     mockFiatPriceHistory('kujira');
