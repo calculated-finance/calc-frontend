@@ -10,16 +10,17 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
-import { CREATE_VAULT_FEE, DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { CREATE_VAULT_FEE, DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { FormNames } from '@hooks/useFormStore';
+import { useChain } from '@hooks/useChain';
+import { getChainDexFee, getChainDexName } from '@helpers/chains';
 
 function FeeBreakdown({
   initialDenomName,
@@ -33,6 +34,7 @@ function FeeBreakdown({
   applyPromo: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
+  const { chain } = useChain();
   return (
     <Stack position="relative" spacing={1}>
       <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
@@ -121,10 +123,10 @@ function FeeBreakdown({
                   <Text textStyle="body-xs">Free</Text>
                 </Flex>
                 <Flex>
-                  <Text textStyle="body-xs">FIN transaction fees:</Text>
+                  <Text textStyle="body-xs">{getChainDexName(chain)} transaction fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, FIN_TAKER_FEE)} {initialDenomName}
+                    {getPrettyFee(swapAmount, getChainDexFee(chain))} {initialDenomName}
                   </Text>
                 </Flex>
                 <Flex>
@@ -133,7 +135,7 @@ function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + FIN_TAKER_FEE)} {initialDenomName}
+                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + getChainDexFee(chain))} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -148,6 +150,7 @@ function FeeBreakdown({
 export default function Fees({ formName }: { formName: FormNames }) {
   const { state } = useConfirmForm(formName);
   const { price } = useFiatPrice(state?.initialDenom);
+  const { chain } = useChain();
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -171,7 +174,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + FIN_TAKER_FEE)} {initialDenomName}
+          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + getChainDexFee(chain))} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>

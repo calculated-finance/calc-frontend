@@ -2,10 +2,13 @@ import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import { Denom } from '@models/Denom';
+import { useChain } from '@hooks/useChain';
+import { getChainDexName } from '@helpers/chains';
 import { DenomSelect } from './DenomSelect';
 
 export default function DCAInResultingDenom({ denoms }: { denoms: Denom[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
+  const { chain } = useChain();
 
   const {
     values: { initialDenom },
@@ -22,7 +25,7 @@ export default function DCAInResultingDenom({ denoms }: { denoms: Denom[] }) {
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        optionLabel="Swapped on FIN"
+        optionLabel={`Swapped on ${getChainDexName(chain)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

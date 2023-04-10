@@ -3,7 +3,7 @@ import { Chains } from '@hooks/useChain';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
-import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS } from 'src/constants';
+import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, FIN_TAKER_FEE } from 'src/constants';
 
 const osmoTestnetConfig = {
   chainId: 'osmo-test-4',
@@ -109,4 +109,18 @@ export function getChainId(chain: Chains) {
     return 'osmo-test-4';
   }
   return CHAIN_ID;
+}
+
+export function getChainDexName(chain: Chains) {
+  if (chain === Chains.Osmosis) {
+    return 'Osmosis';
+  }
+  return 'FIN';
+}
+
+export function getChainDexFee(chain: Chains) {
+  if (chain === Chains.Osmosis) {
+    return 0.001;
+  }
+  return FIN_TAKER_FEE;
 }
