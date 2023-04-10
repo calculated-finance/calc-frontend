@@ -6,10 +6,12 @@ import {
   step2ValidationSchema,
 } from '@models/DcaInFormData';
 import { FormNames, useFormStore } from './useFormStore';
+import { useWallet } from './useWallet';
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};
 
 const useDcaInForm = (formName: FormNames) => {
+  const { address } = useWallet();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
 
   try {
@@ -18,7 +20,7 @@ const useDcaInForm = (formName: FormNames) => {
         step1: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -28,7 +30,7 @@ const useDcaInForm = (formName: FormNames) => {
         step1: step1ValidationSchema.cast(initialValues, { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -37,6 +39,7 @@ const useDcaInForm = (formName: FormNames) => {
 
 export const useStep2Form = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     const step1 = step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
@@ -51,14 +54,14 @@ export const useStep2Form = (formName: FormNames) => {
         step2,
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -67,6 +70,7 @@ export const useStep2Form = (formName: FormNames) => {
 
 export const useDcaInFormPostPurchase = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     return {
@@ -76,14 +80,14 @@ export const useDcaInFormPostPurchase = (formName: FormNames) => {
         ...postPurchaseValidationSchema.cast(getFormState(state, formName), { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -93,20 +97,21 @@ export const useDcaInFormPostPurchase = (formName: FormNames) => {
 export const useConfirmForm = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
 
+  const { address } = useWallet();
   try {
     dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
 
     return {
       state: dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
       errors: e,

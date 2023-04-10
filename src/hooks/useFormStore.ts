@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -10,30 +11,40 @@ export enum FormNames {
 
 type IFormStore = {
   forms: any;
-  updateForm: (formName: FormNames) => (payload: any) => void;
+  address: string | null;
+  updateForm: (formName: FormNames, address: string | undefined) => (payload: any) => void;
   resetForm: (formName: FormNames) => () => void;
 };
 
 export const useFormStore = create<IFormStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
+      address: null,
       forms: {},
-      updateForm: (formName: FormNames) => (payload: any) =>
-        set((state: any) => ({
-          forms: {
-            ...state.forms,
-            [formName]: {
-              ...state.forms[formName],
-              ...payload,
+      updateForm: (formName: FormNames, address: string | undefined) => {
+        if (get().address && !isNil(address) && get().address !== address) {
+          get().resetForm(formName)();
+        }
+        return (payload: any) =>
+          set((state: any) => ({
+            forms: {
+              ...state.forms,
+              [formName]: {
+                ...state.forms[formName],
+                ...payload,
+              },
             },
-          },
-        })),
+            address,
+          }));
+      },
+
       resetForm: (formName: FormNames) => () =>
         set((state: any) => ({
           forms: {
             ...state.forms,
             [formName]: {},
           },
+          address: null,
         })),
     }),
     {

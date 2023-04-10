@@ -7,9 +7,11 @@ import {
 import { initialValues } from '@models/DcaInFormData';
 import { getFormState } from './useDcaInForm';
 import { FormNames, useFormStore } from './useFormStore';
+import { useWallet } from './useWallet';
 
 export const useDCAPlusAssetsForm = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     return {
@@ -17,7 +19,7 @@ export const useDCAPlusAssetsForm = (formName: FormNames) => {
         step1: DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -27,7 +29,7 @@ export const useDCAPlusAssetsForm = (formName: FormNames) => {
         step1: DcaPlusAssetsFormSchema.cast(initialValues, { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -36,6 +38,7 @@ export const useDCAPlusAssetsForm = (formName: FormNames) => {
 
 export const useDCAPlusStep2Form = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     const step1 = DcaPlusAssetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
@@ -50,14 +53,14 @@ export const useDCAPlusStep2Form = (formName: FormNames) => {
         step2,
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -66,6 +69,7 @@ export const useDCAPlusStep2Form = (formName: FormNames) => {
 
 export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     return {
@@ -75,14 +79,14 @@ export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
         ...DcaPlusPostPurchaseFormSchema.cast(getFormState(state, formName), { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
@@ -91,6 +95,7 @@ export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
 
 export const useDcaPlusConfirmForm = (formName: FormNames) => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
+  const { address } = useWallet();
 
   try {
     DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
@@ -98,14 +103,14 @@ export const useDcaPlusConfirmForm = (formName: FormNames) => {
     return {
       state: DcaPlusConfirmFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       actions: {
-        updateAction: updateAction(formName),
+        updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
       },
       errors: e,
