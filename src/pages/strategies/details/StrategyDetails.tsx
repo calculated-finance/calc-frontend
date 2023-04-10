@@ -11,7 +11,7 @@ import { useWallet } from '@hooks/useWallet';
 import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { isAutoStaking } from '@helpers/isAutoStaking';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
@@ -33,6 +33,8 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
+import { getChainDexFee, getChainDexName } from '@helpers/chains';
+import { useChain } from '@hooks/useChain';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -64,6 +66,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
+  const { chain } = useChain();
   return (
     <>
       <GridItem colSpan={1}>
@@ -86,7 +89,9 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
               <Box>
                 <Text>Fees automatically deducted from each swap:</Text>
                 {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
-                <Text>FIN taker fee: {getPrettyFee(100, FIN_TAKER_FEE)}%</Text>
+                <Text>
+                  {getChainDexName(chain)} fee: {getPrettyFee(100, getChainDexFee(chain))}%
+                </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>
             }

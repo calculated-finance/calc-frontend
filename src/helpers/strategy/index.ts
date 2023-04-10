@@ -4,8 +4,10 @@ import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { DELEGATION_FEE, FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
+import { useChain, useChainStore } from '@hooks/useChain';
+import { getChainDexFee } from '@helpers/chains';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -198,10 +200,11 @@ export function getPriceCeilingFloor(strategy: Vault) {
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy) {
+  const dexFee = getChainDexFee(useChainStore.getState().chain);
   const costAmount = strategy.swapped_amount.amount;
   const feeFactor = isDcaPlus(strategy)
     ? 0
-    : SWAP_FEE + FIN_TAKER_FEE + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
+    : SWAP_FEE + dexFee + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
   return Number(costAmount) * feeFactor;
 }
 
@@ -222,7 +225,9 @@ export function hasSwapFees(strategy: Strategy) {
 }
 
 export function getTotalReceivedBeforeFees(strategy: Strategy) {
-  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + FIN_TAKER_FEE : FIN_TAKER_FEE;
+  const dexFee = getChainDexFee(useChainStore.getState().chain);
+
+  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 

@@ -2,7 +2,7 @@ import { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenom
 import { Strategy } from '@hooks/useStrategies';
 import totalExecutions from '@utils/totalExecutions';
 
-import { FIN_TAKER_FEE, SWAP_FEE } from 'src/constants';
+import { SWAP_FEE } from 'src/constants';
 import { getModelFromId } from '@helpers/ml/getModel';
 import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
 import getStrategyBalance, {
@@ -17,6 +17,8 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
+import { getChainDexFee } from '@helpers/chains';
+import { useChainStore } from '@hooks/useChain';
 
 function getDcaPlusConfig(strategy: Strategy) {
   const { dca_plus_config } = strategy;
@@ -37,7 +39,9 @@ export function getStandardDcaTotalSwapped(strategy: Strategy) {
 }
 
 export function getStandardDcaTotalCost(strategy: Strategy) {
-  return Number((getStandardDcaTotalSwapped(strategy) * (1 - FIN_TAKER_FEE - SWAP_FEE)).toFixed(6));
+  const dexFee = getChainDexFee(useChainStore.getState().chain);
+
+  return Number((getStandardDcaTotalSwapped(strategy) * (1 - dexFee - SWAP_FEE)).toFixed(6));
 }
 
 export function getStandardDcaTotalDeposit(strategy: Strategy) {
@@ -47,7 +51,9 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
 }
 
 export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy) {
-  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + FIN_TAKER_FEE : FIN_TAKER_FEE;
+  const dexFee = getChainDexFee(useChainStore.getState().chain);
+
+  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getStandardDcaTotalReceived(strategy) / (1 - feeFactor);
 }
 

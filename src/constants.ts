@@ -40,8 +40,6 @@ export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
 export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
-export const FEE_FREE_USK_PROMO_DESCRIPTION =
-  '🎉 No CALC swap fees for any USK strategy for the next {daysUntilPromoEnds} days! Just pay the FIN swap fees and a small deposit fee to take advantage of this very bearish market.';
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
