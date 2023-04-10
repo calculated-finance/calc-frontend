@@ -124,3 +124,17 @@ export function getChainDexFee(chain: Chains) {
   }
   return FIN_TAKER_FEE;
 }
+
+export function getChainAddressPrefix(chain: Chains) {
+  if (chain === Chains.Osmosis) {
+    return 'osmo';
+  }
+  return 'kujira';
+}
+
+export function getChainAddressLength(chain: Chains) {
+  if (chain === Chains.Osmosis) {
+    return 43;
+  }
+  return 45;
+}

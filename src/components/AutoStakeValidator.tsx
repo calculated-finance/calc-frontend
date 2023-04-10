@@ -10,7 +10,6 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import SendToWalletValues from '@models/SendToWalletValues';
 import useValidators from '@hooks/useValidators';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import Select from './Select';
@@ -22,11 +21,6 @@ export function DummyAutoStakeValidator() {
         <Heading size="xs">Cross chain staking coming soon</Heading>
       </Center>
       <FormControl isDisabled>
-        <FormHelperText>
-          <Text textStyle="body-xs" color="blue.200">
-            Auto compounding coming soon.
-          </Text>
-        </FormHelperText>
         <FormLabel>Choose Validator</FormLabel>
         <FormHelperText>
           <Text textStyle="body-xs">
@@ -42,7 +36,6 @@ export function DummyAutoStakeValidator() {
 
 export default function AutoStakeValidator() {
   const [field, meta, helpers] = useField({ name: 'autoStakeValidator' });
-  const [sendToWalletfield] = useField({ name: 'sendToWallet' });
   const { validators } = useValidators();
 
   const options = validators?.map((validator: Validator) => ({
@@ -54,15 +47,7 @@ export default function AutoStakeValidator() {
   }));
 
   return (
-    <FormControl
-      isInvalid={Boolean(meta.touched && meta.error)}
-      isDisabled={sendToWalletfield.value === SendToWalletValues.No}
-    >
-      <FormHelperText>
-        <Text textStyle="body-xs" color="blue.200">
-          Auto compounding coming soon.
-        </Text>
-      </FormHelperText>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Validator</FormLabel>
       <FormHelperText>
         <Text textStyle="body-xs">

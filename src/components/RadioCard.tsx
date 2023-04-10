@@ -1,31 +1,37 @@
-import { Box, Text, useRadio, UseRadioProps } from '@chakra-ui/react';
+import { Box, Text, useRadio, UseRadioProps, FlexProps, Tooltip } from '@chakra-ui/react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 
-export default function RadioCard(props: UseRadioProps & ChildrenProp) {
-  const { children } = props;
+export default function RadioCard(props: UseRadioProps & ChildrenProp & FlexProps) {
+  const { children, borderRadius, isDisabled } = props;
   const { getInputProps, getCheckboxProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
 
   return (
-    <Box as="label" {...htmlProps}>
-      <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        px={2}
-        _checked={{
-          bg: 'blue.200',
-          color: 'navy',
-          borderRadius: '2xl',
-        }}
-        _focus={{
-          boxShadow: 'outline',
-        }}
-      >
-        <Text {...getLabelProps()}>{children}</Text>
+    <Tooltip label={isDisabled ? 'Not supported for this strategy' : ''}>
+      <Box as="label" {...htmlProps}>
+        <input {...input} />
+        <Box
+          {...checkbox}
+          cursor="pointer"
+          px={2}
+          _checked={{
+            bg: 'blue.200',
+            color: 'navy',
+          }}
+          borderRadius={borderRadius || '2xl'}
+          _focus={{
+            boxShadow: 'outline',
+          }}
+          _disabled={{
+            opacity: 0.4,
+            cursor: 'not-allowed',
+          }}
+        >
+          <Text {...getLabelProps()}>{children}</Text>
+        </Box>
       </Box>
-    </Box>
+    </Tooltip>
   );
 }
