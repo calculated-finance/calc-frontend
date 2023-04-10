@@ -4,9 +4,9 @@ import { ConnectedWallet, ConnectType, getChainOptions, WalletController } from 
 import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
 import { create } from 'zustand';
 import { Msg } from '@terra-money/feather.js';
-import { registry } from 'kujira.js';
 import { fromBech32, toBech32 } from '@cosmjs/encoding';
 import { persist } from 'zustand/middleware';
+import { registry } from 'kujira.js';
 
 export enum Adapter {
   Station = 'station',

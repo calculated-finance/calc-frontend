@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
-import { Coin } from 'kujira.js/lib/cjs/fin';
+import { Coin } from '@cosmjs/stargate';
 
 export function mockBalances() {
   const balancesSpy = jest.fn();

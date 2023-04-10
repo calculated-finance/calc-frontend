@@ -2,9 +2,13 @@ import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, 
 import { KADO_API_KEY } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
+import { Chains, useChain } from '@hooks/useChain';
 
 function OnRampModalContent() {
   const { connected, address } = useWallet();
+  const { chain } = useChain();
+
+  const network = chain === Chains.Kujira ? 'kujira' : 'osmosis';
 
   return (
     <ModalContent mx={6}>
@@ -14,7 +18,7 @@ function OnRampModalContent() {
         {connected ? (
           <iframe
             title="kado"
-            src={`https://app.kado.money/?apiKey=${KADO_API_KEY}&onRevCurrency=USDC&onToAddress=${address}&cryptoList=USDC&network=kujira&product=BUY`}
+            src={`https://app.kado.money/?apiKey=${KADO_API_KEY}&onRevCurrency=USDC&onToAddress=${address}&cryptoList=USDC&network=${network}&product=BUY`}
             width="100%"
             height={680}
           />

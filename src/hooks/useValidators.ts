@@ -1,14 +1,26 @@
+import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
+import { Chains, useChain } from './useChain';
 import { useKujira } from './useKujira';
+import { useOsmosis } from './useOsmosis';
 import useQueryWithNotification from './useQueryWithNotification';
 
 const useValidators = () => {
-  const query = useKujira((state) => state.query);
+  const kujiraQuery = useKujira((state) => state.query);
 
-  const { data, ...other } = useQueryWithNotification(
-    ['validators'],
-    () => query?.staking.validators('BOND_STATUS_BONDED'),
+  const osmosisQuery = useOsmosis((state) => state.query);
+
+  const { chain } = useChain();
+
+  const { data, ...other } = useQueryWithNotification<{ validators: Validator[] }>(
+    ['validators', chain],
+    () => {
+      if (chain === Chains.Osmosis) {
+        return osmosisQuery?.cosmos.staking.v1beta1.validators({ status: 'BOND_STATUS_BONDED' });
+      }
+      return kujiraQuery?.staking.validators('BOND_STATUS_BONDED');
+    },
     {
-      enabled: !!query,
+      enabled: !!kujiraQuery && !!osmosisQuery && !!chain,
     },
   );
 
