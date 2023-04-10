@@ -25,7 +25,7 @@ export default function DCAInResultingDenom({ denoms }: { denoms: Denom[] }) {
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        optionLabel={`Swapped on ${getChainDexName(chain)})}`}
+        optionLabel={`Swapped on ${getChainDexName(chain)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
