@@ -22,8 +22,6 @@ type AppPropsWithLayout = AppProps & {
 
 const queryClient = new QueryClient();
 
-// can make this more dumb because maybe we can set default values with yup schemas instead
-
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     if (HOTJAR_SITE_ID) {

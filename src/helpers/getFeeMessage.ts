@@ -1,6 +1,5 @@
 import { coin } from '@cosmjs/proto-signing';
 import { MsgSend } from 'cosmjs-types/cosmos/bank/v1beta1/tx';
-import { msg } from 'kujira.js';
 
 export function getFeeMessage(
   senderAddress: string,
@@ -8,10 +7,13 @@ export function getFeeMessage(
   amount: string,
   feeTakerAddress: string,
 ): { typeUrl: string; value: MsgSend } {
-  const result = msg.bank.msgSend({
-    amount: [coin(amount, denom)],
-    fromAddress: senderAddress,
-    toAddress: feeTakerAddress,
-  });
+  const result = {
+    typeUrl: '/cosmos.bank.v1beta1.MsgSend',
+    value: MsgSend.fromPartial({
+      amount: [coin(amount, denom)],
+      fromAddress: senderAddress,
+      toAddress: feeTakerAddress,
+    }),
+  };
   return result;
 }
