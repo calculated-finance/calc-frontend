@@ -11,6 +11,7 @@ import selectEvent from 'react-select-event';
 import { KujiraQueryClient } from 'kujira.js';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
+import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
 
 const mockKujiraQuery = {
@@ -75,6 +76,10 @@ describe('DCA In post-purchase page', () => {
 
     useKujira.setState({
       query: mockKujiraQuery as unknown as KujiraQueryClient,
+    });
+
+    useOsmosis.setState({
+      query: jest.fn(),
     });
   });
   describe('on page load', () => {

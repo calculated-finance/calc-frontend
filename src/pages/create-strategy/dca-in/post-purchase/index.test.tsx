@@ -11,6 +11,7 @@ import selectEvent from 'react-select-event';
 import { KujiraQueryClient } from 'kujira.js';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
+import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
 
 const mockRouter = {
@@ -65,6 +66,10 @@ describe('DCA In post-purchase page', () => {
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,
       resetForm: () => mockStateMachine.actions.resetAction,
+    });
+
+    useOsmosis.setState({
+      query: jest.fn(),
     });
 
     useKujira.setState({
