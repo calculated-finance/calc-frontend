@@ -15,6 +15,7 @@ import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
+import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
 
 const mockRouter = {
@@ -61,6 +62,10 @@ describe('DCA In Assets page', () => {
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,
       resetForm: () => mockStateMachine.actions.resetAction,
+    });
+
+    useOsmosis.setState({
+      query: jest.fn(),
     });
 
     useKujira.setState({
