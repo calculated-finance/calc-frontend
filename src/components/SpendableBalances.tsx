@@ -63,7 +63,11 @@ export function BalanceList({ balances = [], showFiat = false }: { balances: Coi
         <Divider />
       </GridItem>
       {balances?.map((balance: Coin) =>
-        showFiat ? <CoinBalanceWithFiat balance={balance} /> : <CoinBalance balance={balance} />,
+        showFiat ? (
+          <CoinBalanceWithFiat balance={balance} key={balance.denom} />
+        ) : (
+          <CoinBalance balance={balance} key={balance.denom} />
+        ),
       )}
     </Grid>
   );

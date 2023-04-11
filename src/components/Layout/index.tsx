@@ -83,9 +83,9 @@ function FlowBreadcrumbs() {
         const previousParts = pathParts.slice(0, index);
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
-          <BreadcrumbItem>
+          <BreadcrumbItem key={`breadcrum-item-${String(index)}`}>
             <Link href={breadcrumbData[part].enabled ? href : '#'}>
-              <BreadcrumbLink>{breadcrumbData[part].label}</BreadcrumbLink>
+              <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
         ) : null;
