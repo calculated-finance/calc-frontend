@@ -297,6 +297,15 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  yieldOption: Yup.string()
+    .label('Yield Option')
+    .nullable()
+    .when('postPurchaseOption', {
+      is: PostPurchaseOptions.GenerateYield,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
+
   strategyDuration: Yup.number()
     .label('Strategy Duration')
     .min(MIN_DCA_PLUS_STRATEGY_DURATION)
@@ -350,6 +359,7 @@ export const dcaSchema = Yup.object({
   autoStake: allSchema.autoStake,
   autoStakeValidator: allSchema.autoStakeValidator,
   postPurchaseOption: allSchema.postPurchaseOption,
+  yieldOption: allSchema.yieldOption,
 });
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
@@ -362,6 +372,7 @@ export const postPurchaseValidationSchema = dcaSchema.pick([
   'recipientAccount',
   'autoStake',
   'autoStakeValidator',
+  'yieldOption',
 ]);
 export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 
