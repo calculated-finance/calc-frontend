@@ -58,7 +58,7 @@ export default function SlippageTolerance() {
         </InputGroup>
         <HStack spacing={1}>
           {values.map((presetValue) => (
-            <SlippagePreset value={presetValue} />
+            <SlippagePreset value={presetValue} key={`slippage-preset-${presetValue}`} />
           ))}
         </HStack>
       </HStack>

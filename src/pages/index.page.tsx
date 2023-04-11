@@ -98,7 +98,7 @@ function InvestmentThesis() {
               <Text>Asset(s) taking profit on:</Text>
               <HStack>
                 {profitTakingAssets.length ? (
-                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip denomName={asset} />)
+                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset} denomName={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}
