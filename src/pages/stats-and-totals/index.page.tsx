@@ -292,64 +292,63 @@ function getAverageDurationForActiveStrategies(strategies: Strategy[]) {
 }
 
 function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string, Record<string, Strategy[]>> {
-  const strategiesGroupedByOwnerThenStatus: Record<string, Record<string, Strategy[]>> = {}
+  const strategiesGroupedByOwnerThenStatus: Record<string, Record<string, Strategy[]>> = {};
 
   strategies.forEach((strategy: Strategy) => {
-    const owner = strategy.owner
-    const status = strategy.status
+    const { owner, status } = strategy;
 
     if (!strategiesGroupedByOwnerThenStatus[owner]) {
-      strategiesGroupedByOwnerThenStatus[owner] = {}
+      strategiesGroupedByOwnerThenStatus[owner] = {};
     }
 
     if (!strategiesGroupedByOwnerThenStatus[owner][status]) {
-      strategiesGroupedByOwnerThenStatus[owner][status] = []
+      strategiesGroupedByOwnerThenStatus[owner][status] = [];
     }
 
-    strategiesGroupedByOwnerThenStatus[owner][status].push(strategy)
-  })
+    strategiesGroupedByOwnerThenStatus[owner][status].push(strategy);
+  });
 
-  return strategiesGroupedByOwnerThenStatus
+  return strategiesGroupedByOwnerThenStatus;
 }
 
 function getWalletsWithOnlyScheduledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.length === 1 && statuses[0] === 'scheduled'
-  })
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'scheduled';
+  });
 }
 
 function getWalletsWithOnlyCancelledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.length === 1 && statuses[0] === 'cancelled'
-  })
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'cancelled';
+  });
 }
 
 function getWalletsWithActiveStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.includes('active')
-  })
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.includes('active');
+  });
 }
 
 function getWalletsWithOnlyInactive(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.length === 1 && statuses[0] === 'inactive'
-  })
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'inactive';
+  });
 }
 
 function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies)
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
   return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner])
-    return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled')
-  })
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled');
+  });
 }
 
 export function uniqueAddresses(allStrategies: Vault[] | undefined) {
@@ -424,7 +423,8 @@ function Page() {
             Unique wallets with only completed strategies: {getWalletsWithOnlyInactive(allStrategies).length}
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with only completed and cancelled strategies: {getWalletsWithOnlyInactiveAndCancelled(allStrategies).length}
+            Unique wallets with only completed and cancelled strategies:{' '}
+            {getWalletsWithOnlyInactiveAndCancelled(allStrategies).length}
           </Text>
           <Text textStyle="body-xs">
             Unique wallets with only cancelled strategies: {getWalletsWithOnlyCancelledStrategies(allStrategies).length}
@@ -527,7 +527,13 @@ function Page() {
             />
             <VictoryBar
               data={['scheduled', 'active', 'inactive', 'cancelled'].map((status: string) => {
-                const strategiesByStatus = Array.from(new Set((getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map((strategy) => strategy.owner)))
+                const strategiesByStatus = Array.from(
+                  new Set(
+                    (getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map(
+                      (strategy) => strategy.owner,
+                    ),
+                  ),
+                );
                 return {
                   x: status,
                   y: strategiesByStatus.length,
