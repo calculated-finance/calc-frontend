@@ -8,7 +8,7 @@ export default function RecipientAccount() {
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Account</FormLabel>
       <InputGroup>
-        <Input fontSize="sm" placeholder="Input Wallet" {...field} value={field.name} />
+        <Input fontSize="sm" placeholder="Input Wallet" {...field} />
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       <FormHelperText>IBC transfers coming soon, please use a Kujira address.</FormHelperText>
