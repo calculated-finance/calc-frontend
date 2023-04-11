@@ -15,6 +15,7 @@ import { Chains, useChain } from '@hooks/useChain';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
+import GenerateYield from './GenerateYield';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -23,7 +24,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
       value: PostPurchaseOptions.SendToWallet,
-      label: 'Send to wallet',
+      label: 'Send',
       supported: true,
       enabled: true,
     },
@@ -87,44 +88,51 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
     <Form autoComplete="off">
       <Stack direction="column" spacing={6}>
         <PostPurchaseOptionRadio autoStakeSupported={stakeingPossible} />
-        <Collapse in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
-          <Box m="px">
-            <Stack>
-              <DcaInSendToWallet formName={formName} />
-              <Collapse in={sendToWalletValue === SendToWalletValues.No}>
-                <Box m="px">
-                  <RecipientAccount />
-                </Box>
-              </Collapse>
-            </Stack>
-          </Box>
-        </Collapse>
+        <Box>
+          <Collapse in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
+            <Box m="px">
+              <Stack>
+                <DcaInSendToWallet formName={formName} />
+                <Collapse in={sendToWalletValue === SendToWalletValues.No}>
+                  <Box m="px">
+                    <RecipientAccount />
+                  </Box>
+                </Collapse>
+              </Stack>
+            </Box>
+          </Collapse>
 
-        <Collapse in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-          <Box m="px">
-            <Stack>
-              {stakeingUnsupported ? (
-                <>
-                  <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} formName={formName} />
-                  <Collapse in={dummyAutoStake === AutoStakeValues.Yes}>
-                    <Box m="px">
-                      <DummyAutoStakeValidator />
-                    </Box>
-                  </Collapse>
-                </>
-              ) : (
-                <>
-                  <AutoStake formName={formName} />
-                  <Collapse in={autoStakeValue === AutoStakeValues.Yes}>
-                    <Box m="px">
-                      <AutoStakeValidator />
-                    </Box>
-                  </Collapse>
-                </>
-              )}
-            </Stack>
-          </Box>
-        </Collapse>
+          <Collapse in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
+            <Box m="px">
+              <Stack>
+                {stakeingUnsupported ? (
+                  <>
+                    <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} formName={formName} />
+                    <Collapse in={dummyAutoStake === AutoStakeValues.Yes}>
+                      <Box m="px">
+                        <DummyAutoStakeValidator />
+                      </Box>
+                    </Collapse>
+                  </>
+                ) : (
+                  <>
+                    <AutoStake formName={formName} />
+                    <Collapse in={autoStakeValue === AutoStakeValues.Yes}>
+                      <Box m="px">
+                        <AutoStakeValidator />
+                      </Box>
+                    </Collapse>
+                  </>
+                )}
+              </Stack>
+            </Box>
+          </Collapse>
+          <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
+            <Box m="px">
+              <GenerateYield />
+            </Box>
+          </Collapse>
+        </Box>
 
         <Submit>Next</Submit>
       </Stack>
