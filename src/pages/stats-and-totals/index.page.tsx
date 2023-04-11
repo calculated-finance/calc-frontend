@@ -292,6 +292,67 @@ function getAverageDurationForActiveStrategies(strategies: Strategy[]) {
     .reduce((amount, total) => total + amount, 0);
   return totalDuration / strategies.length;
 }
+
+function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string, Record<string, Strategy[]>> {
+  const strategiesGroupedByOwnerThenStatus: Record<string, Record<string, Strategy[]>> = {};
+
+  strategies.forEach((strategy: Strategy) => {
+    const { owner, status } = strategy;
+
+    if (!strategiesGroupedByOwnerThenStatus[owner]) {
+      strategiesGroupedByOwnerThenStatus[owner] = {};
+    }
+
+    if (!strategiesGroupedByOwnerThenStatus[owner][status]) {
+      strategiesGroupedByOwnerThenStatus[owner][status] = [];
+    }
+
+    strategiesGroupedByOwnerThenStatus[owner][status].push(strategy);
+  });
+
+  return strategiesGroupedByOwnerThenStatus;
+}
+
+function getWalletsWithOnlyScheduledStrategies(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'scheduled';
+  });
+}
+
+function getWalletsWithOnlyCancelledStrategies(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'cancelled';
+  });
+}
+
+function getWalletsWithActiveStrategies(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.includes('active');
+  });
+}
+
+function getWalletsWithOnlyInactive(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 1 && statuses[0] === 'inactive';
+  });
+}
+
+function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
+  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+    return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled');
+  });
+}
+
 export function uniqueAddresses(allStrategies: Vault[] | undefined) {
   return Array.from(new Set(allStrategies?.map((strategy) => strategy.owner) || []));
 }
@@ -354,6 +415,22 @@ function Page() {
           <Text textStyle="body-xs">Strategies using DCA+: {allStrategies?.filter(isDcaPlus).length}</Text>
           <Text textStyle="body-xs">
             Average Time Until End of Strategy: {averageDurationInDays} days (Max: {maxDurationInDays} days)
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with only scheduled strategies: {getWalletsWithOnlyScheduledStrategies(allStrategies).length}
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with active an active strategy: {getWalletsWithActiveStrategies(allStrategies).length}
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with only completed strategies: {getWalletsWithOnlyInactive(allStrategies).length}
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with only completed and cancelled strategies:{' '}
+            {getWalletsWithOnlyInactiveAndCancelled(allStrategies).length}
+          </Text>
+          <Text textStyle="body-xs">
+            Unique wallets with only cancelled strategies: {getWalletsWithOnlyCancelledStrategies(allStrategies).length}
           </Text>
         </Stack>
 
