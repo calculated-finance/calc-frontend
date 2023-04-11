@@ -144,7 +144,7 @@ describe('DCA In post-purchase page', () => {
         autoStake: 'yes',
         autoStakeValidator: 'kujiravalopertestvalidator',
         postPurchaseOption: 'stake',
-        recipientAccount: null,
+        recipientAccount: '',
         sendToWallet: 'yes',
       });
 
@@ -168,7 +168,7 @@ describe('DCA In post-purchase page', () => {
         autoStake: 'no',
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
-        recipientAccount: null,
+        recipientAccount: '',
         sendToWallet: 'yes',
       });
 

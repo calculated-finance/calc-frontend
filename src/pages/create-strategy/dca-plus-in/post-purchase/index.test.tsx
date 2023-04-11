@@ -146,7 +146,7 @@ describe('DCA In post-purchase page', () => {
         autoStake: 'yes',
         autoStakeValidator: 'kujiravalopertestvalidator',
         postPurchaseOption: 'stake',
-        recipientAccount: null,
+        recipientAccount: '',
         sendToWallet: 'yes',
       });
 
@@ -169,7 +169,7 @@ describe('DCA In post-purchase page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStake: 'no',
         autoStakeValidator: null,
-        recipientAccount: null,
+        recipientAccount: '',
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'yes',
       });
