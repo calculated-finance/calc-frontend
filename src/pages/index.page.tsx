@@ -168,14 +168,14 @@ function TotalInvestment() {
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
             {strategiesCount}
-            <Heading size="sm">total strategies created</Heading>
+            <Text fontSize="md">total strategies created</Text>
           </Heading>
         </Stack>
         <Divider display={['none', null, 'flex']} orientation="vertical" />
         <Divider display={['flex', null, 'none']} />
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            ${Math.floor(totalSwappedTotal / 1000)}k <Heading size="sm">total swapped (USD)</Heading>
+            ${Math.floor(totalSwappedTotal / 1000)}k <Text fontSize="md">total swapped (USD)</Text>
           </Heading>
         </Stack>
       </Flex>
