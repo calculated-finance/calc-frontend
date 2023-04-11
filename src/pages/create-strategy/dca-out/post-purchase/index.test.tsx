@@ -120,7 +120,7 @@ describe('DCA Out post-purchase page', () => {
         autoStake: 'no',
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
-        recipientAccount: null,
+        recipientAccount: '',
         sendToWallet: 'yes',
       });
 

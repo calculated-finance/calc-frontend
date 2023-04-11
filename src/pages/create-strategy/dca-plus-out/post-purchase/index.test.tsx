@@ -119,7 +119,7 @@ describe('DCA Out post-purchase page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStake: 'no',
         autoStakeValidator: null,
-        recipientAccount: null,
+        recipientAccount: '',
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'yes',
       });

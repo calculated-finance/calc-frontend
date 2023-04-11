@@ -253,7 +253,7 @@ export const allSchema = {
     .when('sendToWallet', {
       is: SendToWalletValues.No,
       then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
+      otherwise: (schema) => schema.transform(() => ''),
     })
     .test({
       name: 'correct-length',
