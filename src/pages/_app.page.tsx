@@ -7,7 +7,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
-import { featureFlags, HOTJAR_SITE_ID } from 'src/constants';
+import { featureFlags, HOTJAR_SITE_ID, ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { hotjar } from 'react-hotjar';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
@@ -15,6 +15,8 @@ import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
+import { useState } from 'react';
+import { ethers } from 'ethers'
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -23,11 +25,6 @@ type AppPropsWithLayout = AppProps & {
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  useEffect(() => {
-    if (HOTJAR_SITE_ID) {
-      hotjar.initialize(parseInt(HOTJAR_SITE_ID, 10), 0);
-    }
-  });
 
   const getLayout = Component.getLayout ?? ((page) => page);
 

@@ -36,6 +36,7 @@
     "cosmjs-types": "^0.5.2",
     "date-fns": "^2.29.2",
     "dayzed": "^3.2.3",
+    "ethers": "^6.3.0",
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
