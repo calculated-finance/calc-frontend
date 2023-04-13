@@ -2,7 +2,10 @@ import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
-import { Destination as OsmosisDestination } from 'src/interfaces/generated-osmosis/execute';
+import {
+  Destination as OsmosisDestination,
+  ExecuteMsg as OsmosisExecuteMsg,
+} from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { findPair } from '@helpers/findPair';
@@ -143,7 +146,7 @@ export function buildCreateVaultParamsDCA(
   state: DcaInFormDataAll,
   pairs: Pair[],
   transactionType: TransactionType,
-): ExecuteMsg {
+): ExecuteMsg | OsmosisExecuteMsg {
   return {
     create_vault: {
       label: '',
@@ -171,7 +174,7 @@ export function buildCreateVaultParamsDCA(
   };
 }
 
-export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg {
+export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg | OsmosisExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
   return {
     create_vault: {
@@ -183,8 +186,8 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
-      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance, state.yieldOption),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
+      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
+      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption),
       use_dca_plus: true,
     },
   };
