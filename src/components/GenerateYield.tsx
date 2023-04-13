@@ -106,7 +106,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
       <FormLabel>Choose Strategy</FormLabel>
       <FormHelperText pb={4}>CALC uses AuthZ to deploy the post swap capital on your behalf.</FormHelperText>
       <Stack {...getRootProps} maxH={200} overflow="auto">
-        {data.map((pool: Pool) => {
+        {data?.map((pool: Pool) => {
           const radio = getRadioProps({ value: pool.id.toString() });
           return <YieldOption key={pool.id.toString()} {...radio} pool={pool} />;
         })}

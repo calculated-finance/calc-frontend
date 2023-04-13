@@ -2,6 +2,7 @@ import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
+import { Destination as OsmosisDestination } from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { findPair } from '@helpers/findPair';
@@ -32,8 +33,12 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
-function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
-  const destinations = [] as Destination[];
+function getDestinations(
+  autoStakeValidator: string | null | undefined,
+  recipientAccount: string | null | undefined,
+  yieldOption: string | null | undefined,
+) {
+  const destinations = [] as (Destination | OsmosisDestination)[];
 
   if (autoStakeValidator) {
     destinations.push({ address: autoStakeValidator, allocation: '1', action: 'z_delegate' });
@@ -41,6 +46,19 @@ function getDestinations(autoStakeValidator: string | null | undefined, recipien
 
   if (recipientAccount) {
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
+  }
+
+  if (yieldOption) {
+    destinations.push({
+      address: yieldOption,
+      allocation: '1',
+      action: {
+        z_provide_liquidity: {
+          duration: 'one_week',
+          pool_id: Number(yieldOption),
+        },
+      },
+    });
   }
 
   return destinations.length ? destinations : undefined;
@@ -141,7 +159,7 @@ export function buildCreateVaultParamsDCA(
         transactionType,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
+      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption),
       target_receive_amount: getTargetReceiveAmount(
         state.initialDenom,
         state.swapAmount,
@@ -165,7 +183,7 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
-      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
+      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance, state.yieldOption),
       destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
       use_dca_plus: true,
     },

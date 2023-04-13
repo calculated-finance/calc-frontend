@@ -101,14 +101,14 @@ export type ExecuteMsg =
  */
 export type Addr = string;
 export type PostExecutionAction =
-  | ("send" | "z_delegate")
+  | ('send' | 'z_delegate')
   | {
       z_provide_liquidity: {
         duration: LockableDuration;
         pool_id: number;
       };
     };
-export type LockableDuration = "one_day" | "one_week" | "two_weeks";
+export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
  *
@@ -129,7 +129,7 @@ export type Decimal = string;
  * let c = Uint128::from(70u32); assert_eq!(c.u128(), 70); ```
  */
 export type Uint128 = string;
-export type PositionType = "enter" | "exit";
+export type PositionType = 'enter' | 'exit';
 /**
  * A thin wrapper around u64 that is using strings for JSON encoding/decoding, such that the full u64 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
  *
@@ -143,15 +143,15 @@ export type PositionType = "enter" | "exit";
  */
 export type Uint64 = string;
 export type TimeInterval =
-  | "every_second"
-  | "every_minute"
-  | "half_hourly"
-  | "hourly"
-  | "half_daily"
-  | "daily"
-  | "weekly"
-  | "fortnightly"
-  | "monthly";
+  | 'every_second'
+  | 'every_minute'
+  | 'half_hourly'
+  | 'hourly'
+  | 'half_daily'
+  | 'daily'
+  | 'weekly'
+  | 'fortnightly'
+  | 'monthly';
 
 export interface Destination {
   action: PostExecutionAction;
