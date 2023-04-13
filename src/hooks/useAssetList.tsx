@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
-import { AssetList } from '@chain-registry/types';
+import { Asset, AssetList } from '@chain-registry/types';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);
