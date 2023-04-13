@@ -11,7 +11,7 @@ import {
   UseRadioProps,
   useRadio,
   useRadioGroup,
-  Image,
+  Center,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
@@ -19,6 +19,9 @@ import { FormNames } from '@hooks/useFormStore';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import { useOsmosisPools } from '../hooks/useOsmosisPools';
 import { findAsset, useAssetList } from '../hooks/useAssetList';
+import Spinner from './Spinner';
+import { PoolDescription } from './PoolDescription';
+import { PoolDenomIcons } from './PoolDenomIcons';
 
 function YieldOption(props: UseRadioProps & FlexProps & { pool: Pool }) {
   const { getInputProps, getRadioProps, htmlProps, getLabelProps } = useRadio(props);
@@ -35,8 +38,6 @@ function YieldOption(props: UseRadioProps & FlexProps & { pool: Pool }) {
   };
 
   const { assetIn, assetOut } = poolInfo;
-
-  const description = `${assetIn?.symbol} / ${assetOut?.symbol} Single sided LP (${pool.futurePoolGovernor})`;
 
   return (
     <Box as="label" {...htmlProps}>
@@ -58,28 +59,9 @@ function YieldOption(props: UseRadioProps & FlexProps & { pool: Pool }) {
       >
         <Box {...getLabelProps()}>
           <Flex justify="space-between" align="center" gap={4}>
-            <Flex position="relative" w={8} h={5}>
-              <Flex as="span" position="absolute" right="px">
-                <Image
-                  data-testid={`denom-icon-${assetIn?.symbol}`}
-                  display="inline"
-                  src={assetIn?.logo_URIs?.svg}
-                  width={5}
-                  height={5}
-                />
-              </Flex>
-              <Flex as="span" position="absolute" left="px">
-                <Image
-                  data-testid={`denom-icon-${assetOut?.symbol}`}
-                  display="inline"
-                  src={assetOut?.logo_URIs?.svg}
-                  width={5}
-                  height={5}
-                />
-              </Flex>
-            </Flex>
+            <PoolDenomIcons pool={pool} />
             <Text flexGrow={1} fontSize="sm">
-              {description}
+              <PoolDescription pool={pool} />
             </Text>
             <Text>{0.1 * 100}%</Text>
           </Flex>
@@ -99,18 +81,24 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
 
   const { context } = useDcaInFormPostPurchase(formName);
 
-  const { data } = useOsmosisPools(context?.resultingDenom);
+  const { data, isLoading } = useOsmosisPools(context?.resultingDenom);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Strategy</FormLabel>
       <FormHelperText pb={4}>CALC uses AuthZ to deploy the post swap capital on your behalf.</FormHelperText>
-      <Stack {...getRootProps} maxH={200} overflow="auto">
-        {data?.map((pool: Pool) => {
-          const radio = getRadioProps({ value: pool.id.toString() });
-          return <YieldOption key={pool.id.toString()} {...radio} pool={pool} />;
-        })}
-      </Stack>
+      {isLoading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <Stack {...getRootProps} maxH={200} overflow="auto">
+          {data?.map((pool: Pool) => {
+            const radio = getRadioProps({ value: pool.id.toString() });
+            return <YieldOption key={pool.id.toString()} {...radio} pool={pool} />;
+          })}
+        </Stack>
+      )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

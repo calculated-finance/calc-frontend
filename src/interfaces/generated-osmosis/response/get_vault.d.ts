@@ -50,14 +50,14 @@ export type Uint64 = string;
  */
 export type Decimal = string;
 export type PostExecutionAction =
-  | ("send" | "z_delegate")
+  | ('send' | 'z_delegate')
   | {
       z_provide_liquidity: {
         duration: LockableDuration;
         pool_id: number;
       };
     };
-export type LockableDuration = "one_day" | "one_week" | "two_weeks";
+export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
 /**
  * A human readable address.
  *
@@ -68,17 +68,17 @@ export type LockableDuration = "one_day" | "one_week" | "two_weeks";
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
-export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
+export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
 export type TimeInterval =
-  | "every_second"
-  | "every_minute"
-  | "half_hourly"
-  | "hourly"
-  | "half_daily"
-  | "daily"
-  | "weekly"
-  | "fortnightly"
-  | "monthly";
+  | 'every_second'
+  | 'every_minute'
+  | 'half_hourly'
+  | 'hourly'
+  | 'half_daily'
+  | 'daily'
+  | 'weekly'
+  | 'fortnightly'
+  | 'monthly';
 export type TriggerConfiguration = {
   time: {
     target_time: Timestamp;

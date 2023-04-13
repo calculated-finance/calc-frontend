@@ -1,12 +1,26 @@
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack, Tooltip } from '@chakra-ui/react';
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Box,
+  Text,
+  Divider,
+  Badge,
+  Flex,
+  Button,
+  HStack,
+  Tooltip,
+  Spinner as ChakraSpinner,
+  Link as ChakraLink,
+} from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
 import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
@@ -29,12 +43,16 @@ import {
   isStrategyAutoStaking,
   isDcaPlus,
   isStrategyOperating,
+  getStrategyProvideLiquidityConfig,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { getChainDexFee, getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
+import { useOsmosisPools } from '@hooks/useOsmosisPools';
+import { PoolDenomIcons } from '@components/PoolDenomIcons';
+import { PoolDescription } from '@components/PoolDescription';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -61,6 +79,24 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
         </Text>
       </GridItem>
     </>
+  );
+}
+
+function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+  const { data: pools } = useOsmosisPools(getStrategyResultingDenom(strategy as Strategy));
+  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig(strategy)?.pool_id);
+  console.log(pool);
+  return pool ? (
+    <ChakraLink isExternal href={`https://app.osmosis.zone/pool/${pool.id}`}>
+      <HStack>
+        <PoolDenomIcons pool={pool} />
+        <Text>
+          <PoolDescription pool={pool} />
+        </Text>
+      </HStack>
+    </ChakraLink>
+  ) : (
+    <ChakraSpinner size="xs" />
   );
 }
 
@@ -255,6 +291,17 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 <GridItem colSpan={2}>
                   <Text fontSize="sm" data-testid="strategy-validator-name">
                     {isLoading ? <Spinner /> : validator?.description?.moniker}
+                  </Text>
+                </GridItem>
+              </>
+            ) : getStrategyProvideLiquidityConfig(strategy) ? (
+              <>
+                <GridItem colSpan={1}>
+                  <Heading size="xs">Providing liquidity to</Heading>
+                </GridItem>
+                <GridItem colSpan={2}>
+                  <Text fontSize="sm" data-testid="strategy-receiving-address">
+                    <LiquidityPool strategy={strategy} />
                   </Text>
                 </GridItem>
               </>

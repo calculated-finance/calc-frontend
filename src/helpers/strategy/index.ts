@@ -1,4 +1,4 @@
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -6,8 +6,9 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
-import { useChain, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
 import { getChainDexFee } from '@helpers/chains';
+import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -237,4 +238,28 @@ export function getAverageSellPrice(strategy: Vault) {
 
 export function getAveragePurchasePrice(strategy: Vault) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy);
+}
+
+export function getStrategyProvideLiquidityConfig(strategy: Strategy | StrategyOsmosis):
+  | {
+      duration: LockableDuration;
+      pool_id: number;
+    }
+  | undefined {
+  const { destinations } = strategy;
+
+  const provideLiquidityDestination = destinations?.find((destination) => {
+    if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
+      return true;
+    }
+    return false;
+  });
+  if (
+    provideLiquidityDestination &&
+    typeof provideLiquidityDestination.action === 'object' &&
+    'z_provide_liquidity' in provideLiquidityDestination.action
+  ) {
+    return provideLiquidityDestination?.action.z_provide_liquidity;
+  }
+  return undefined;
 }
