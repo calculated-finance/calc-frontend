@@ -19,7 +19,7 @@ import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { FormNames } from '@hooks/useFormStore';
-import { useChain } from '@hooks/useChain';
+import { Chains, useChain } from '@hooks/useChain';
 import { getChainDexFee, getChainDexName } from '@helpers/chains';
 
 function FeeBreakdown({
@@ -105,7 +105,7 @@ function FeeBreakdown({
                   )}
                 </Flex>
                 <Flex>
-                  <Text textStyle="body-xs">Kujira community pool:</Text>
+                  <Text textStyle="body-xs">{Chains[chain]} community pool:</Text>
                   <Spacer />
                   {applyPromo ? (
                     <Text color="blue.200" textStyle="body-xs">
