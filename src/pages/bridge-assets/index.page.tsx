@@ -4,6 +4,7 @@ import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import { featureFlags } from 'src/constants';
 import OnRampModal from '@components/OnRampModalContent';
+import { Chains, useChain } from '@hooks/useChain';
 
 type GetAssetsCardProps = {
   name: string;
@@ -14,7 +15,7 @@ type GetAssetsCardProps = {
   onClick?: () => void;
 };
 
-function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAssetsCardProps) {
+function BridgeAssetsCard({ name, description, image, href, cta, onClick }: GetAssetsCardProps) {
   return (
     <Flex direction="column" p={8} layerStyle="panel" width="full" align="start">
       <Image h={14} src={image} mb={6} />
@@ -35,42 +36,49 @@ function GetAssetsCard({ name, description, image, href, cta, onClick }: GetAsse
   );
 }
 
-function Strategies() {
+function BridgeAssetsCards() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
+  const { chain } = useChain();
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>
-        <GetAssetsCard
-          name="Cross Chain Bridge"
-          description="Move assets from non Cosmos chains like Ethereum."
-          image="/images/axelar.svg"
-          href="https://blue.kujira.app/bridge"
-          cta="Bridge now"
-        />
-        <GetAssetsCard
-          name="IBC Bridge"
-          description="Move assets from Cosmos SDK chains like Terra or Juno."
-          image="/images/cosmos.svg"
-          href="https://blue.kujira.app/ibc"
-          cta="Bridge now"
-        />
-        <GetAssetsCard
+        {chain === Chains.Kujira && (
+          <>
+            <BridgeAssetsCard
+              name="Cross Chain Bridge"
+              description="Move assets from non Cosmos chains like Ethereum."
+              image="/images/axelar.svg"
+              href="https://blue.kujira.app/bridge"
+              cta="Bridge now"
+            />
+            <BridgeAssetsCard
+              name="IBC Bridge"
+              description="Move assets from Cosmos SDK chains like Terra or Juno."
+              image="/images/cosmos.svg"
+              href="https://blue.kujira.app/ibc"
+              cta="Bridge now"
+            />
+          </>
+        )}
+        <BridgeAssetsCard
           name="Fiat on ramp"
           description="Get axlUSDC from a fiat on ramp provider."
           image="/images/kado.svg"
           onClick={onOpen}
           cta="Get axlUSDC now"
         />
-        <GetAssetsCard
-          name="Mint USK"
-          description="Use ATOM or DOT as collateral to mint the USK stablecoin."
-          image="/images/mintUsk.svg"
-          href="https://blue.kujira.app/mint"
-          cta="Mint USK now"
-        />
+        {chain === Chains.Kujira && (
+          <BridgeAssetsCard
+            name="Mint USK"
+            description="Use ATOM or DOT as collateral to mint the USK stablecoin."
+            image="/images/mintUsk.svg"
+            href="https://blue.kujira.app/mint"
+            cta="Mint USK now"
+          />
+        )}
         {featureFlags.squidIntegrationEnabled && (
-          <GetAssetsCard
+          <BridgeAssetsCard
             name="Squid Cross Chain Bridge"
             description="Bridge almost any asset to Cosmos from almost any chain with Squid and Axelar."
             image="/images/squidAssets.png"
@@ -93,7 +101,7 @@ function BridgeAssets() {
         <Text textStyle="body">Use any of these tools to get funds before you set up a CALC strategy!</Text>
       </Stack>
 
-      <Strategies />
+      <BridgeAssetsCards />
     </Stack>
   );
 }
