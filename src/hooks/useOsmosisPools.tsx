@@ -7,7 +7,7 @@ import { Denom } from '@models/Denom';
 import { useOsmosis } from './useOsmosis';
 import { findAsset, useAssetList } from './useAssetList';
 
-export function useOsmosisPools(denom: Denom | undefined): { data: any } {
+export function useOsmosisPools(denom: Denom | undefined) {
   const query = useOsmosis((state) => state.query);
   const { data: assetData } = useAssetList();
 
@@ -34,11 +34,12 @@ export function useOsmosisPools(denom: Denom | undefined): { data: any } {
             if (decodedPool.poolAssets.find((poolAsset) => poolAsset.token?.denom === denom)) {
               return decodedPool;
             }
+            return null;
           } catch (e) {
             return null;
           }
         })
-        .filter((pool) => !isNil(pool)) as Pool[];
+        .filter((pool: Pool) => !isNil(pool)) as Pool[];
 
       return decodedPools;
     },

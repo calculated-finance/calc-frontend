@@ -77,7 +77,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
       msgs.push(getGrantMsg(senderAddress));
     }
 
-    const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType);
+    const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress);
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 

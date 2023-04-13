@@ -1,8 +1,9 @@
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { ExecuteMsg as ExecutMsgOsmosis } from 'src/interfaces/generated-osmosis/execute';
 
-export function encodeMsg(createVaultExecuteMsg: ExecuteMsg) {
+export function encodeMsg(createVaultExecuteMsg: ExecuteMsg | ExecutMsgOsmosis) {
   const raw = JSON.stringify(createVaultExecuteMsg);
   const textEncoder = new TextEncoder();
   const encoded_msg = textEncoder.encode(raw);
@@ -10,7 +11,7 @@ export function encodeMsg(createVaultExecuteMsg: ExecuteMsg) {
 }
 
 export function getCreateVaultExecuteMsg(
-  msg: ExecuteMsg,
+  msg: ExecuteMsg | ExecutMsgOsmosis,
   funds: Coin[],
   senderAddress: string,
   contractAddress: string,
