@@ -980,7 +980,7 @@
   resolved "https://registry.npmjs.org/@babel/regjsgen/-/regjsgen-0.8.0.tgz"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.3", "@babel/runtime@^7.19.0", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.12.0", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.18.3", "@babel/runtime@^7.19.0", "@babel/runtime@^7.19.4", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.21.0"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.21.0.tgz"
   integrity sha512-xwII0//EObnq89Ji5AKYQaRYiW/nZ3llSv29d49IuxPhKbtJoLP+9QUUZ4nVragQVtaVGeZrpB+ZtG/Pdy/POw==
@@ -1073,6 +1073,13 @@
   version "6.0.0"
   resolved "https://registry.npmjs.org/@bugsnag/safe-json-stringify/-/safe-json-stringify-6.0.0.tgz"
   integrity sha512-htzFO1Zc57S8kgdRK9mLcPVTW1BY2ijfH7Dk2CeZmspTWKdKqSo1iwmqrq2WtRjFlo8aRZYgLX0wFrDXF/9DLA==
+
+"@chain-registry/types@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@chain-registry/types/-/types-0.14.0.tgz#43ea04992adabdee2a0f03f8a519b01722ab354b"
+  integrity sha512-TlIqc3CijT734no7RiYBfUvCG2fory0blwrBcK4XTYOCi2vANsxfDdiPLFQcaSETYDd14DdjhrdXwMocEeOnLQ==
+  dependencies:
+    "@babel/runtime" "^7.19.4"
 
 "@chakra-ui/accordion@2.1.11":
   version "2.1.11"
@@ -1923,7 +1930,7 @@
     "@cosmjs/math" "^0.29.5"
     "@cosmjs/utils" "^0.29.5"
 
-"@cosmjs/cosmwasm-stargate@^0.29.3", "@cosmjs/cosmwasm-stargate@^0.29.4":
+"@cosmjs/cosmwasm-stargate@^0.29.0", "@cosmjs/cosmwasm-stargate@^0.29.3":
   version "0.29.5"
   resolved "https://registry.npmjs.org/@cosmjs/cosmwasm-stargate/-/cosmwasm-stargate-0.29.5.tgz"
   integrity sha512-TNdSvm2tEE3XMCuxHxquzls56t40hC8qnLeYJWHsY2ECZmRK3KrnpRReEr7N7bLtODToK7X/riYrV0JaYxjrYA==
@@ -2127,7 +2134,7 @@
     protobufjs "~6.11.3"
     xstream "^11.14.0"
 
-"@cosmjs/stargate@^0.29.3", "@cosmjs/stargate@^0.29.4", "@cosmjs/stargate@^0.29.5":
+"@cosmjs/stargate@^0.29.0", "@cosmjs/stargate@^0.29.3", "@cosmjs/stargate@^0.29.5":
   version "0.29.5"
   resolved "https://registry.npmjs.org/@cosmjs/stargate/-/stargate-0.29.5.tgz"
   integrity sha512-hjEv8UUlJruLrYGJcUZXM/CziaINOKwfVm2BoSdUnNTMxGvY/jC1ABHKeZUYt9oXHxEJ1n9+pDqzbKc8pT0nBw==
@@ -2518,21 +2525,6 @@
   version "0.14.1"
   resolved "https://registry.npmjs.org/@improbable-eng/grpc-web/-/grpc-web-0.14.1.tgz"
   integrity sha512-XaIYuunepPxoiGVLLHmlnVminUGzBTnXr8Wv7khzmLWbNw4TCwJKX09GSMJlKhu/TRk6gms0ySFxewaETSBqgw==
-  dependencies:
-    browser-headers "^0.4.1"
-
-"@injectivelabs/chain-api@^1.9.9":
-  version "1.9.17"
-  resolved "https://registry.npmjs.org/@injectivelabs/chain-api/-/chain-api-1.9.17.tgz"
-  integrity sha512-7cruWOjekUDJarry2qNdB8ynmq7GUc4xWRACawKBNgKfOrKNLQTbOpQZyLmHwcJsFM/YNCRWJ2+CPoZn1Rxb3g==
-  dependencies:
-    "@injectivelabs/grpc-web" "^0.0.1"
-    google-protobuf "^3.13.0"
-
-"@injectivelabs/grpc-web@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.npmjs.org/@injectivelabs/grpc-web/-/grpc-web-0.0.1.tgz"
-  integrity sha512-Pu5YgaZp+OvR5UWfqbrPdHer3+gDf+b5fQoY+t2VZx1IAVHX8bzbN9EreYTvTYtFeDpYRWM8P7app2u4EX5wTw==
   dependencies:
     browser-headers "^0.4.1"
 
@@ -4124,11 +4116,6 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
-
-"@types/google-protobuf@^3.15.6":
-  version "3.15.6"
-  resolved "https://registry.npmjs.org/@types/google-protobuf/-/google-protobuf-3.15.6.tgz"
-  integrity sha512-pYVNNJ+winC4aek+lZp93sIKxnXt5qMkuKmaqS3WGuTq0Bw1ZDYNBgzG5kkdtwcv+GmYJGo3yEg6z2cKKAiEdw==
 
 "@types/got@^9":
   version "9.6.12"
@@ -5739,6 +5726,14 @@ caniuse-lite@^1.0.30001332, caniuse-lite@^1.0.30001449:
   version "1.0.30001476"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001476.tgz#759906c53eae17133217d75b482f9dc5c02f7898"
   integrity sha512-JmpktFppVSvyUN4gsLS0bShY2L9ZUslHLE72vgemBkS43JD2fOvKTKs+GtRwuxrtRGnwJFW0ye7kWRRlLJS9vQ==
+
+chain-registry@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/chain-registry/-/chain-registry-1.10.0.tgz#b0afb3d0919fee40bafccea465ac19117ad9ed7c"
+  integrity sha512-JfdJufFq2F5tRpw1PMO32pv199xnZvwoSLKpW/wlbVOdpyLka7s4GwxgqYK+CPOdfCj5v6GiaGfWTq7slUemXg==
+  dependencies:
+    "@babel/runtime" "^7.19.4"
+    "@chain-registry/types" "^0.14.0"
 
 chakra-dayzed-datepicker@^0.2.3:
   version "0.2.7"
@@ -8671,7 +8666,7 @@ gonzales-pe@^4.3.0:
   dependencies:
     minimist "^1.2.5"
 
-google-protobuf@^3.13.0, google-protobuf@^3.17.3:
+google-protobuf@^3.17.3:
   version "3.21.2"
   resolved "https://registry.npmjs.org/google-protobuf/-/google-protobuf-3.21.2.tgz"
   integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
@@ -10438,18 +10433,14 @@ kujira.js@Team-Kujira/kujira.js:
   version "0.5.0"
   resolved "https://codeload.github.com/Team-Kujira/kujira.js/tar.gz/7ec1efed2f6bafa942e76aacd745af053e9afac5"
   dependencies:
-    "@cosmjs/cosmwasm-stargate" "^0.29.4"
+    "@cosmjs/cosmwasm-stargate" "^0.29.0"
     "@cosmjs/launchpad" "^0.27.1"
-    "@cosmjs/stargate" "^0.29.4"
+    "@cosmjs/stargate" "^0.29.0"
     "@ethersproject/bignumber" "^5.7.0"
-    "@injectivelabs/chain-api" "^1.9.9"
     "@keplr-wallet/types" "^0.11.12"
-    "@types/google-protobuf" "^3.15.6"
     cosmjs-types "0.5.2"
     long "^4.0.0"
-    text-encoding "^0.7.0"
     ts-node "^10.9.1"
-    yarn "^1.22.19"
 
 kuler@^2.0.0:
   version "2.0.0"
@@ -14072,11 +14063,6 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-text-encoding@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.npmjs.org/text-encoding/-/text-encoding-0.7.0.tgz"
-  integrity sha512-oJQ3f1hrOnbRLOcwKz0Liq2IcrvDeZRHXhd9RgLrsT+DjWY/nty1Hi7v3dtkaEYbPYe0mUoOfzRrMwfXXwgPUA==
-
 text-hex@1.0.x:
   version "1.0.0"
   resolved "https://registry.npmjs.org/text-hex/-/text-hex-1.0.0.tgz"
@@ -15417,11 +15403,6 @@ yargs@^17.0.0, yargs@^17.3.1, yargs@^17.6.0:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
-
-yarn@^1.22.19:
-  version "1.22.19"
-  resolved "https://registry.npmjs.org/yarn/-/yarn-1.22.19.tgz"
-  integrity sha512-/0V5q0WbslqnwP91tirOvldvYISzaqhClxzyUKXYxs07yUILIs5jx/k6CFe8bvKSkds5w+eiOqta39Wk3WxdcQ==
 
 yauzl@^2.10.0, yauzl@^2.4.2:
   version "2.10.0"

@@ -129,7 +129,7 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
             <Box m="px">
-              <GenerateYield />
+              <GenerateYield formName={formName} />
             </Box>
           </Collapse>
         </Box>

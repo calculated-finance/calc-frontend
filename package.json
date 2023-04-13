@@ -13,6 +13,7 @@
     "netlify": "netlify"
   },
   "dependencies": {
+    "@chain-registry/types": "^0.14.0",
     "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.2.9",
     "@chakra-ui/react-use-size": "^2.0.4",
@@ -31,6 +32,7 @@
     "@terra-money/feather.js": "^1.0.0-beta.12",
     "@terra-money/wallet-controller": "^4.0.0",
     "ahooks": "^3.7.2",
+    "chain-registry": "^1.10.0",
     "chakra-dayzed-datepicker": "^0.2.3",
     "chakra-react-select": "^4.2.2",
     "cosmjs-types": "^0.5.2",
