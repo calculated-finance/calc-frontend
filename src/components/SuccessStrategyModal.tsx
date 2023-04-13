@@ -44,13 +44,11 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
           <Text>CALC is now working for you!</Text>
           <>
             <Divider />
-            <Text textAlign="center">
-              Plus, you have saved yourself an average of
-              <Heading p={2} size="md">
-                {timeSaved} minutes
-              </Heading>
-              and removed the emotions from your trades! 💪
-            </Text>
+            <Stack spacing={2} alignItems="center">
+              <Text>Plus, you have saved yourself an average of</Text>
+              <Heading size="md">{timeSaved} minutes</Heading>
+              <Text>and removed the emotions from your trades! 💪</Text>
+            </Stack>
           </>
           <Link passHref href={generateStrategyDetailUrl(strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
