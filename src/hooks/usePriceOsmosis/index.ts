@@ -7,6 +7,7 @@ import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
 import { safeInvert } from '@hooks/usePrice';
+import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_vault';
 import useQueryWithNotification from '../useQueryWithNotification';
 import usePairs from '../usePairs';
 
@@ -30,19 +31,16 @@ export default function usePriceOsmosis(
         )
       : null;
 
-  const { data, ...helpers } = useQueryWithNotification<any>(
+  const { data, ...helpers } = useQueryWithNotification<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
+      const osmosisPair = pair as OsmosisPair;
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        poolId: Long.fromNumber(pair.pool_id, true),
+        poolId: new Long(0),
         tokenIn: `1000000${resultingDenom}`,
         routes: [
           {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            poolId: Long.fromNumber(pair.pool_id, true),
+            poolId: Long.fromNumber(osmosisPair.route[0], true),
             tokenOutDenom: initialDenom,
           },
         ],
