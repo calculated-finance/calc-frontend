@@ -80,7 +80,7 @@ function FeeBreakdown({
                   <Flex>
                     <Text textStyle="body-xs">Transaction fees:</Text>
                     <Spacer />
-                    <Text textStyle="body-xs">
+                    <Text textStyle="body-xs" as="span">
                       {' '}
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
                       {initialDenomName}
@@ -96,7 +96,7 @@ function FeeBreakdown({
                       Total fees and tax:
                     </Text>
                     <Spacer />
-                    <Text textStyle="body-xs" textColor="white">
+                    <Text textStyle="body-xs" textColor="white" as="span">
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
                       {initialDenomName}
                     </Text>
@@ -213,7 +213,7 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
 
   return (
     <Stack spacing={0}>
-      <Text textStyle="body-xs">
+      <Text textStyle="body-xs" as="span">
         Transaction fee{' '}
         <Text as="span" textColor="white">
           {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}

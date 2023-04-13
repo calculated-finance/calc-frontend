@@ -74,7 +74,7 @@ function Page() {
       {!connected || isConnecting ? (
         <ConnectWallet layerStyle="panel" />
       ) : (
-        <Accordion allowToggle allowMultiple defaultIndex={[0]}>
+        <Accordion allowToggle defaultIndex={[0]}>
           <Stack spacing={8}>
             <StrategyAccordionItem>
               <StrategiesAccordionButton>
