@@ -1,8 +1,10 @@
 import { extendTheme, type ThemeConfig, Popover, PopoverProps } from '@chakra-ui/react';
+import { Chains } from '@hooks/useChain';
 import colors from './colors';
 import components from './components';
 import layerStyles from './layerStyles';
 import textStyles from './textStyles';
+import { osmosisColors } from './osmosisColors';
 
 // hack to get datepicker popup to not highlight input on close
 // highlighting caused radio inputs to be buggy until you unfocus
@@ -30,15 +32,18 @@ const shadows = {
   // vignette: 'inset 0 0 30px 40px var(--chakra-colors-navy)',
 };
 
-const theme = extendTheme({
-  config,
-  layerStyles,
-  fonts,
-  components,
-  colors,
-  shadows,
-  semanticTokens,
-  textStyles,
-});
+const theme = (chain: Chains) => {
+  console.log(chain);
+  return extendTheme({
+    config,
+    layerStyles,
+    fonts,
+    components,
+    colors: chain === Chains.Osmosis ? osmosisColors : colors,
+    shadows,
+    semanticTokens,
+    textStyles,
+  });
+};
 
 export default theme;

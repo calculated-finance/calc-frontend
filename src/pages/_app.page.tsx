@@ -73,12 +73,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, [initCosmWasmClient, chain]);
 
+  const activeTheme = theme(chain);
+
   return (
     <>
       <Head>
         <title>CALC - Calculated Finance</title>
       </Head>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider theme={activeTheme}>
         <CalcWalletModalProvider>
           <QueryClientProvider client={queryClient}>{getLayout(<Component {...pageProps} />)}</QueryClientProvider>
         </CalcWalletModalProvider>

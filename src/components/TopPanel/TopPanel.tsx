@@ -67,7 +67,7 @@ function ActiveWithOne() {
   const { data } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
-  const { balance } = activeStrategy;
+  const { balance } = activeStrategy || {};
   const balanceValue = new DenomValue(balance);
 
   const displayBalance = balanceValue.toConverted().toLocaleString('en-US', {
