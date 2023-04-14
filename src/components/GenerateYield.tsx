@@ -11,49 +11,34 @@ import {
   UseRadioProps,
   useRadio,
   useRadioGroup,
+  Center,
 } from '@chakra-ui/react';
-import { TestnetDenoms } from '@models/Denom';
 import { useField } from 'formik';
-import DenomIcon from './DenomIcon';
+import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { FormNames } from '@hooks/useFormStore';
+import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
+import { useOsmosisPools } from '../hooks/useOsmosisPools';
+import { findAsset, useAssetList } from '../hooks/useAssetList';
+import Spinner from './Spinner';
+import { PoolDescription } from './PoolDescription';
+import { PoolDenomIcons } from './PoolDenomIcons';
 
-type YieldPool = {
-  id: string;
-  name: string;
-  denomIn: TestnetDenoms;
-  denomOut: TestnetDenoms;
-  apr: number;
-};
-
-const yieldOptionData: YieldPool[] = [
-  {
-    id: '1',
-    name: 'ATOM / OSMO Single sided LP (1 day)',
-    denomIn: TestnetDenoms.AXL,
-    denomOut: TestnetDenoms.OSMO,
-    apr: 0.08,
-  },
-  {
-    id: '2',
-    name: 'ATOM / OSMO Single sided LP (7 days)',
-    denomIn: TestnetDenoms.AXL,
-    denomOut: TestnetDenoms.OSMO,
-    apr: 0.1,
-  },
-  {
-    id: '3',
-    name: 'ATOM / OSMO Single sided LP (14 days)',
-    denomIn: TestnetDenoms.AXL,
-    denomOut: TestnetDenoms.OSMO,
-    apr: 0.12,
-  },
-];
-
-function YieldOption(props: UseRadioProps & FlexProps & { pool: YieldPool }) {
+function YieldOption(props: UseRadioProps & FlexProps & { pool: Pool }) {
   const { getInputProps, getRadioProps, htmlProps, getLabelProps } = useRadio(props);
   const { pool } = props;
 
   const input = getInputProps();
   const checkbox = getRadioProps();
+
+  const { data: assetData } = useAssetList();
+
+  const poolInfo = {
+    assetIn: findAsset(assetData.assets, pool.poolAssets[0].token?.denom),
+    assetOut: findAsset(assetData.assets, pool.poolAssets[1].token?.denom),
+  };
+
+  const { assetIn, assetOut } = poolInfo;
+
   return (
     <Box as="label" {...htmlProps}>
       <input {...input} />
@@ -74,18 +59,11 @@ function YieldOption(props: UseRadioProps & FlexProps & { pool: YieldPool }) {
       >
         <Box {...getLabelProps()}>
           <Flex justify="space-between" align="center" gap={4}>
-            <Flex position="relative" w={8} h={5}>
-              <Flex as="span" position="absolute" right="px">
-                <DenomIcon denomName={pool.denomIn} size={5} />
-              </Flex>
-              <Flex as="span" position="absolute" left="px">
-                <DenomIcon denomName={pool.denomOut} size={5} />
-              </Flex>
-            </Flex>
+            <PoolDenomIcons pool={pool} />
             <Text flexGrow={1} fontSize="sm">
-              {pool.name}
+              <PoolDescription pool={pool} />
             </Text>
-            <Text>{pool.apr * 100}%</Text>
+            <Text>{0.1 * 100}%</Text>
           </Flex>
         </Box>
       </Box>
@@ -93,23 +71,34 @@ function YieldOption(props: UseRadioProps & FlexProps & { pool: YieldPool }) {
   );
 }
 
-export default function GenerateYield() {
+export default function GenerateYield({ formName }: { formName: FormNames }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
     value: field.value,
     onChange: helpers.setValue,
   });
+
+  const { context } = useDcaInFormPostPurchase(formName);
+
+  const { data, isLoading } = useOsmosisPools(context?.resultingDenom);
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Strategy</FormLabel>
       <FormHelperText pb={4}>CALC uses AuthZ to deploy the post swap capital on your behalf.</FormHelperText>
-      <Stack {...getRootProps}>
-        {yieldOptionData.map((option) => {
-          const radio = getRadioProps({ value: option.id });
-          return <YieldOption key={option.id} {...radio} pool={option} />;
-        })}
-      </Stack>
+      {isLoading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <Stack {...getRootProps} maxH={200} overflow="auto">
+          {data?.map((pool: Pool) => {
+            const radio = getRadioProps({ value: pool.id.toString() });
+            return <YieldOption key={pool.id.toString()} {...radio} pool={pool} />;
+          })}
+        </Stack>
+      )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

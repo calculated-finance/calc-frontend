@@ -2,6 +2,10 @@ import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
+import {
+  Destination as OsmosisDestination,
+  ExecuteMsg as OsmosisExecuteMsg,
+} from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { findPair } from '@helpers/findPair';
@@ -32,8 +36,13 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
-function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
-  const destinations = [] as Destination[];
+function getDestinations(
+  autoStakeValidator: string | null | undefined,
+  recipientAccount: string | null | undefined,
+  yieldOption: string | null | undefined,
+  senderAddress: string,
+) {
+  const destinations = [] as (Destination | OsmosisDestination)[];
 
   if (autoStakeValidator) {
     destinations.push({ address: autoStakeValidator, allocation: '1', action: 'z_delegate' });
@@ -41,6 +50,19 @@ function getDestinations(autoStakeValidator: string | null | undefined, recipien
 
   if (recipientAccount) {
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
+  }
+
+  if (yieldOption) {
+    destinations.push({
+      address: senderAddress,
+      allocation: '1',
+      action: {
+        z_provide_liquidity: {
+          duration: 'one_week',
+          pool_id: Number(yieldOption),
+        },
+      },
+    });
   }
 
   return destinations.length ? destinations : undefined;
@@ -125,7 +147,8 @@ export function buildCreateVaultParamsDCA(
   state: DcaInFormDataAll,
   pairs: Pair[],
   transactionType: TransactionType,
-): ExecuteMsg {
+  senderAddress: string,
+): ExecuteMsg | OsmosisExecuteMsg {
   return {
     create_vault: {
       label: '',
@@ -141,7 +164,7 @@ export function buildCreateVaultParamsDCA(
         transactionType,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
+      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress),
       target_receive_amount: getTargetReceiveAmount(
         state.initialDenom,
         state.swapAmount,
@@ -153,7 +176,11 @@ export function buildCreateVaultParamsDCA(
   };
 }
 
-export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]): ExecuteMsg {
+export function buildCreateVaultParamsDCAPlus(
+  state: DcaPlusState,
+  pairs: Pair[],
+  senderAddress: string,
+): ExecuteMsg | OsmosisExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
   return {
     create_vault: {
@@ -166,7 +193,7 @@ export function buildCreateVaultParamsDCAPlus(state: DcaPlusState, pairs: Pair[]
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
+      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress),
       use_dca_plus: true,
     },
   };
@@ -177,13 +204,14 @@ export function buildCreateVaultParams(
   state: DcaFormState,
   pairs: Pair[],
   transactionType: TransactionType,
+  senderAddress: string,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
-    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType);
+    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress);
   }
 
   throw new Error('Invalid form type');
