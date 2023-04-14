@@ -1,66 +1,25 @@
-import {
-  Box,
-  Heading,
-  Text,
-  Stack,
-  Flex,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from '@chakra-ui/react';
+import { Heading, Text, Flex, Center, Stack } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyScheduled } from '@helpers/strategy';
 import { Strategy } from 'src/hooks/useStrategies';
 import { getSidebarLayout } from '@components/Layout';
-import { ChildrenProp } from 'src/helpers/ChildrenProp';
 import ConnectWallet from '@components/ConnectWallet';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { useAdmin } from '@hooks/useAdmin';
 import { LockIcon } from '@chakra-ui/icons';
-
-function StrategiesAccordionButton({ children }: ChildrenProp) {
-  return (
-    <AccordionButton borderRadius="2xl" p={0} role="group" _hover={{ bg: 'none' }}>
-      <Box as="span" flex="1" textAlign="left">
-        {children}
-      </Box>
-      <Flex
-        _groupHover={{ bg: 'blue.200' }}
-        alignItems="center"
-        justifyContent="center"
-        p={1}
-        borderRadius="full"
-        mr={2}
-      >
-        <AccordionIcon _groupHover={{ color: 'abyss.200' }} />
-      </Flex>
-    </AccordionButton>
-  );
-}
-
-function StrategyAccordionPanel({ children }: ChildrenProp) {
-  return (
-    <AccordionPanel pb={0} px={0}>
-      <Stack spacing={4}>{children}</Stack>
-    </AccordionPanel>
-  );
-}
-
-function StrategyAccordionItem({ children }: ChildrenProp) {
-  return <AccordionItem border="none">{children}</AccordionItem>;
-}
+import {
+  StrategyAccordionItem,
+  StrategiesAccordionButton,
+  StrategyAccordionPanel,
+  StrategyAccordion,
+} from '@components/StrategyAccordion';
 
 function Page() {
-  // const { data, isLoading } = useStrategies();
   const { data, isLoading } = useAdminStrategies();
-
   const { isAdmin } = useAdmin();
-
-  const { connected, isConnecting } = useWallet();
+  const { connected } = useWallet();
 
   const scheduledStrategies = data?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
@@ -69,117 +28,112 @@ function Page() {
 
   const cancelledStrategies = data?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
+  if (!connected) {
+    return <ConnectWallet layerStyle="panel" />;
+  }
+
+  if (!isAdmin) {
+    return (
+      <Center flexDirection="column" h="calc(100vh - 120px)">
+        <LockIcon color="blue.200" boxSize={100} opacity="20%" m={5} />
+        <Text fontSize="sm">Oops! Looks like you stumbled upon the forbidden land of admins.</Text>
+      </Center>
+    );
+  }
+
   return (
-    <>
-      <Heading size="lg" pb={12}>
-        My CALC Strategies
-      </Heading>
+    <Stack spacing={8}>
+      <Stack>
+        <Heading size="lg">All Strategies</Heading>
+        <Text color="red.200">Warning: these are all users strategies!</Text>
+      </Stack>
 
-      {isAdmin ? (
-        !connected || isConnecting ? (
-          <ConnectWallet layerStyle="panel" />
-        ) : (
-          <Accordion allowMultiple defaultIndex={[0]}>
-            <Stack spacing={8}>
-              <StrategyAccordionItem>
-                <StrategiesAccordionButton>
-                  <Heading pb={2} size="md">
-                    Active Strategies ({activeStrategies.length})
-                  </Heading>
-                  <Text pb={2} textStyle="body">
-                    Strategies actively swapping.
-                  </Text>
-                </StrategiesAccordionButton>
-                <StrategyAccordionPanel>
-                  {/* eslint-disable-next-line no-nested-ternary */}
-                  {!activeStrategies.length ? (
-                    <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                      {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
-                    </Flex>
-                  ) : (
-                    activeStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-                  )}
-                </StrategyAccordionPanel>
-              </StrategyAccordionItem>
+      <StrategyAccordion>
+        <StrategyAccordionItem>
+          <StrategiesAccordionButton>
+            <Heading pb={2} size="md">
+              Active Strategies ({activeStrategies.length})
+            </Heading>
+            <Text pb={2} textStyle="body">
+              Strategies actively swapping.
+            </Text>
+          </StrategiesAccordionButton>
+          <StrategyAccordionPanel>
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {!activeStrategies.length ? (
+              <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
+              </Flex>
+            ) : (
+              activeStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
+            )}
+          </StrategyAccordionPanel>
+        </StrategyAccordionItem>
 
-              {Boolean(scheduledStrategies.length) && (
-                <StrategyAccordionItem>
-                  <StrategiesAccordionButton>
-                    <Heading pb={2} size="md">
-                      Scheduled Strategies ({scheduledStrategies.length})
-                    </Heading>
-                    <Text pb={2} textStyle="body">
-                      Strategies with triggers that are waiting to be executed.
-                    </Text>
-                  </StrategiesAccordionButton>
-                  <StrategyAccordionPanel>
-                    {/* eslint-disable-next-line no-nested-ternary */}
-                    {!scheduledStrategies.length ? (
-                      <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                        {isLoading ? <Spinner /> : <Text>No scheduled strategies</Text>}
-                      </Flex>
-                    ) : (
-                      scheduledStrategies.map((strategy: Strategy) => (
-                        <StrategyRow key={strategy.id} strategy={strategy} />
-                      ))
-                    )}
-                  </StrategyAccordionPanel>
-                </StrategyAccordionItem>
+        {Boolean(scheduledStrategies.length) && (
+          <StrategyAccordionItem>
+            <StrategiesAccordionButton>
+              <Heading pb={2} size="md">
+                Scheduled Strategies ({scheduledStrategies.length})
+              </Heading>
+              <Text pb={2} textStyle="body">
+                Strategies with triggers that are waiting to be executed.
+              </Text>
+            </StrategiesAccordionButton>
+            <StrategyAccordionPanel>
+              {/* eslint-disable-next-line no-nested-ternary */}
+              {!scheduledStrategies.length ? (
+                <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                  {isLoading ? <Spinner /> : <Text>No scheduled strategies</Text>}
+                </Flex>
+              ) : (
+                scheduledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
               )}
+            </StrategyAccordionPanel>
+          </StrategyAccordionItem>
+        )}
 
-              <StrategyAccordionItem>
-                <StrategiesAccordionButton>
-                  <Heading size="md" pb={2}>
-                    Completed Strategies ({completedStrategies.length})
-                  </Heading>
-                  <Text pb={2} textStyle="body">
-                    Strategies that have fully executed their swaps. Top them up to reactivate them.
-                  </Text>
-                </StrategiesAccordionButton>
-                <StrategyAccordionPanel>
-                  {!completedStrategies.length ? (
-                    <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                      {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
-                    </Flex>
-                  ) : (
-                    completedStrategies.map((strategy: Strategy) => (
-                      <StrategyRow key={strategy.id} strategy={strategy} />
-                    ))
-                  )}
-                </StrategyAccordionPanel>
-              </StrategyAccordionItem>
+        <StrategyAccordionItem>
+          <StrategiesAccordionButton>
+            <Heading size="md" pb={2}>
+              Completed Strategies ({completedStrategies.length})
+            </Heading>
+            <Text pb={2} textStyle="body">
+              Strategies that have fully executed their swaps. Top them up to reactivate them.
+            </Text>
+          </StrategiesAccordionButton>
+          <StrategyAccordionPanel>
+            {!completedStrategies.length ? (
+              <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
+              </Flex>
+            ) : (
+              completedStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
+            )}
+          </StrategyAccordionPanel>
+        </StrategyAccordionItem>
 
-              <StrategyAccordionItem>
-                <StrategiesAccordionButton>
-                  <Heading size="md" pb={2}>
-                    Cancelled Strategies ({cancelledStrategies.length})
-                  </Heading>
-                  <Text pb={2} textStyle="body">
-                    Strategies that have been closed, and the funds returned.
-                  </Text>
-                </StrategiesAccordionButton>
-                <StrategyAccordionPanel>
-                  {!cancelledStrategies.length ? (
-                    <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
-                      {isLoading ? <Spinner /> : <Text>No cancelled strategies</Text>}
-                    </Flex>
-                  ) : (
-                    cancelledStrategies.map((strategy: Strategy) => (
-                      <StrategyRow key={strategy.id} strategy={strategy} />
-                    ))
-                  )}
-                </StrategyAccordionPanel>
-              </StrategyAccordionItem>
-            </Stack>
-          </Accordion>
-        )
-      ) : (
-        <Box textAlign="center" py={20}>
-          <LockIcon color="blue.200" boxSize={100} opacity="20%" m={5} />
-          <Text fontSize="sm">Oops! Looks like you stumbled upon the forbidden land of admins.</Text>
-        </Box>
-      )}
-    </>
+        <StrategyAccordionItem>
+          <StrategiesAccordionButton>
+            <Heading size="md" pb={2}>
+              Cancelled Strategies ({cancelledStrategies.length})
+            </Heading>
+            <Text pb={2} textStyle="body">
+              Strategies that have been closed, and the funds returned.
+            </Text>
+          </StrategiesAccordionButton>
+          <StrategyAccordionPanel>
+            {!cancelledStrategies.length ? (
+              <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+                {isLoading ? <Spinner /> : <Text>No cancelled strategies</Text>}
+              </Flex>
+            ) : (
+              cancelledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
+            )}
+          </StrategyAccordionPanel>
+        </StrategyAccordionItem>
+      </StrategyAccordion>
+    </Stack>
   );
 }
 
