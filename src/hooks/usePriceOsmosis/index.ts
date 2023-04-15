@@ -8,8 +8,41 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
 import { safeInvert } from '@hooks/usePrice';
 import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { useOsmosisPools } from '@hooks/useOsmosisPools';
+import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import useQueryWithNotification from '../useQueryWithNotification';
 import usePairs from '../usePairs';
+
+interface Step {
+  poolId: Long;
+  tokenOutDenom: string;
+}
+
+function findRoute(poolIds: number[], initialDenom: string, poolList: Pool[]): Step[] {
+  let tokenInDenom = initialDenom;
+
+  const steps = poolIds.reduce((acc: Step[], poolId) => {
+    const pool = poolList.find((p) => p.id.toNumber() === poolId);
+
+    if (!pool) {
+      throw new Error(`Pool with id ${poolId} not found.`);
+    }
+
+    const { poolAssets } = pool;
+
+    const tokenOutDenomObj = poolAssets.find((asset) => asset.token?.denom !== tokenInDenom);
+
+    if (tokenOutDenomObj) {
+      const tokenOutDenom = tokenOutDenomObj.token?.denom;
+      acc.push({ poolId: Long.fromNumber(poolId, true), tokenOutDenom: tokenOutDenom! });
+      tokenInDenom = tokenOutDenom!;
+    }
+
+    return acc;
+  }, []);
+
+  return steps;
+}
 
 export default function usePriceOsmosis(
   resultingDenom: Denom | undefined,
@@ -19,6 +52,8 @@ export default function usePriceOsmosis(
 ) {
   const client = useCosmWasmClient((state) => state.client);
   const query = useOsmosis((state) => state.query);
+
+  const { data: pools, isLoading: isLoadingPools } = useOsmosisPools(enabled);
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
@@ -31,39 +66,32 @@ export default function usePriceOsmosis(
         )
       : null;
 
-  const { data, ...helpers } = useQueryWithNotification<{ tokenOutAmount: string }>(
+  const {
+    data,
+    isLoading: isPriceLoading,
+    ...helpers
+  } = useQueryWithNotification<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
       const osmosisPair = pair as OsmosisPair;
+      const route = transactionType === TransactionType.Buy ? osmosisPair.route : osmosisPair.route.reverse();
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
-        tokenIn: `1000000${resultingDenom}`,
-        routes: [
-          {
-            poolId: Long.fromNumber(osmosisPair.route[0], true),
-            tokenOutDenom: initialDenom,
-          },
-        ],
+        tokenIn: `1000000${initialDenom}`,
+        routes: findRoute(route, initialDenom!, pools!),
       });
       return result;
     },
     {
-      enabled: !!client && !!pair && !!enabled,
+      enabled: !!client && !!pair && !!enabled && !!pools,
     },
   );
-  // query.osmosis.gamm.v1beta1
-  // .spotPrice({
-  //   poolId: Long.fromNumber(pair.pool_id, true),
-  //   baseAssetDenom: initialDenom,
-  //   quoteAssetDenom: resultingDenom,
-  // })
-  // .then((res) => console.log(res));
 
   const price =
     data &&
     (transactionType === TransactionType.Buy
-      ? Number(data.tokenOutAmount) / 1000000
-      : safeInvert(Number(data.tokenOutAmount) / 1000000));
+      ? 1000000 / Number(data.tokenOutAmount)
+      : safeInvert(1000000 / Number(data.tokenOutAmount)));
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {
@@ -75,6 +103,7 @@ export default function usePriceOsmosis(
   return {
     price: formattedPrice,
     pairAddress: pair?.address,
+    isLoading: isPriceLoading || isLoadingPools,
     ...helpers,
   };
 }

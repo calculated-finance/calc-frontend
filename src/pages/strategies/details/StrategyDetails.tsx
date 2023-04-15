@@ -48,7 +48,7 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexFee, getChainDexName } from '@helpers/chains';
+import { getChainDexFee, getChainDexName, getOsmosisWebUrl } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
@@ -83,11 +83,10 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 }
 
 function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
-  const { data: pools } = useOsmosisPools(getStrategyResultingDenom(strategy as Strategy));
+  const { data: pools } = useOsmosisPools();
   const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig(strategy)?.pool_id);
-  console.log(pool);
   return pool ? (
-    <ChakraLink isExternal href={`https://app.osmosis.zone/pool/${pool.id}`}>
+    <ChakraLink isExternal href={`${getOsmosisWebUrl()}/pool/${pool.id}`}>
       <HStack>
         <PoolDenomIcons pool={pool} />
         <Text>

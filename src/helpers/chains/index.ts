@@ -141,3 +141,10 @@ export function getChainAddressLength(chain: Chains) {
   }
   return 45;
 }
+
+export function getOsmosisWebUrl() {
+  if (isMainnet()) {
+    return 'https://app.osmosis.zone';
+  }
+  return 'https://testnet.osmosis.zone';
+}

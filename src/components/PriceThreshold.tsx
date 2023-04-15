@@ -4,6 +4,7 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { FormNames } from '@hooks/useFormStore';
+import { TestnetDenomsOsmosis } from '@models/Denom';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -71,7 +72,7 @@ export default function PriceThreshold({ title, description, formName, transacti
       <Collapse in={priceThresholdField.value === YesNoValues.Yes}>
         <Box m="px" mt={3}>
           <DenomPriceInput
-            initialDenom={state.step1.initialDenom}
+            initialDenom={TestnetDenomsOsmosis.ION}
             resultingDenom={state.step1.resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}

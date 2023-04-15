@@ -15,12 +15,20 @@ import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
+import { isMainnet } from '@utils/isMainnet';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const queryClient = new QueryClient();
+// disable retries on testnet
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: isMainnet(),
+    },
+  },
+});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
