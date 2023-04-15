@@ -72,7 +72,7 @@ export default function PriceThreshold({ title, description, formName, transacti
       <Collapse in={priceThresholdField.value === YesNoValues.Yes}>
         <Box m="px" mt={3}>
           <DenomPriceInput
-            initialDenom={TestnetDenomsOsmosis.ION}
+            initialDenom={state.step1.initialDenom}
             resultingDenom={state.step1.resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}
