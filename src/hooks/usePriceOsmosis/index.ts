@@ -1,9 +1,7 @@
-import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
 import { safeInvert } from '@hooks/usePrice';
