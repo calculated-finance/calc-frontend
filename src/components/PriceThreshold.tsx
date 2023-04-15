@@ -4,7 +4,6 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { FormNames } from '@hooks/useFormStore';
-import { TestnetDenomsOsmosis } from '@models/Denom';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
