@@ -19,6 +19,7 @@ type DenomInfo = {
   significantFigures: number;
   enabledInDcaPlus?: boolean;
   osmosisId?: string;
+  pricePrecision?: number;
 };
 
 const defaultDenom = {
@@ -38,6 +39,7 @@ const defaultDenom = {
   significantFigures: 6,
   enabledInDcaPlus: false,
   osmosisId: undefined,
+  pricePrecision: 3,
 };
 
 export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
@@ -246,6 +248,16 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     coingeckoId: 'white-whale',
     enabled: true,
     significantFigures: 6,
+  },
+  [MainnetDenoms.ROAR]: {
+    name: 'ROAR',
+    icon: '/images/denoms/roar.svg',
+    stakeable: true,
+    coingeckoId: 'lion-dao',
+    significantFigures: 6,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 10,
   },
 };
 

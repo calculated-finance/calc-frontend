@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import { isNumber, max } from 'lodash';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -91,9 +91,11 @@ export default function usePrice(
   );
   const price = data && calculatePrice(data, initialDenom!, transactionType);
 
+  const pricePrecision = max([getDenomInfo(initialDenom).pricePrecision, getDenomInfo(resultingDenom).pricePrecision])
+
   const formattedPrice = price
     ? price.toLocaleString('en-US', {
-        maximumFractionDigits: 3,
+        maximumFractionDigits: pricePrecision || 3,
         minimumFractionDigits: 3,
       })
     : undefined;
