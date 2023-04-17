@@ -8,7 +8,7 @@ import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, FIN_TAKER_FEE, RPC_ENDPO
 const osmoTestnetConfig = {
   chainId: 'osmo-test-4',
   chainName: 'Osmosis Testnet',
-  rpc: 'https://rpc-test.osmosis.zone',
+  rpc: 'https://osmosis-testnet-rpc.allthatnode.com:26657',
   rest: 'https://lcd-test.osmosis.zone',
   bip44: {
     coinType: 118,
