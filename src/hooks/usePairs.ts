@@ -1,6 +1,7 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS, SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
 import { PairsResponse } from 'src/interfaces/generated/response/get_pairs';
+import { PairsResponse as OsmosisPairsResponse } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
@@ -56,7 +57,7 @@ export default function usePairs() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
 
-  const queryResult = useQueryWithNotification<PairsResponse>(
+  const queryResult = useQueryWithNotification<PairsResponse | OsmosisPairsResponse>(
     ['pairs', chain],
     async () => {
       const result = await client!.queryContractSmart(getChainContractAddress(chain!), {

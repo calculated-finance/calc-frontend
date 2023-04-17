@@ -54,6 +54,7 @@ import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
+import { OsmosisPair } from '@models/Pair';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -103,7 +104,7 @@ function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
 function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
   const { chain } = useChain();
-  const { dexFee } = useDexFee();
+  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
   return (
     <>
       <GridItem colSpan={1}>

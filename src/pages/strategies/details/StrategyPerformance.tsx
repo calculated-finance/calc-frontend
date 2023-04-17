@@ -17,12 +17,14 @@ import {
   getTotalSwapped,
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
+import { OsmosisPair } from '@models/Pair';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { dexFee } = useDexFee();
+
+  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
 
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);

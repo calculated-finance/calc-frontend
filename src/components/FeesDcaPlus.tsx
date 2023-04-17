@@ -32,21 +32,26 @@ import { FormNames } from '@hooks/useFormStore';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
+import usePairs from '@hooks/usePairs';
+import { findPair } from '@helpers/findPair';
+import { OsmosisPair } from '@models/Pair';
+import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
+  dexFee,
 }: {
   initialDenomName: string;
   swapAmount: number;
   price: number;
+  dexFee: number;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   const { chain } = useChain();
   const { isOpen: isFeesModalOpen, onOpen: onFeesModalOpen, onClose: onFeesModalClose } = useDisclosure();
 
-  const { dexFee } = useDexFee();
   return (
     <Stack position="relative" spacing={1}>
       <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
@@ -197,10 +202,30 @@ function FeeBreakdown({
   );
 }
 
-export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
+export default function FeesDcaPlus({
+  formName,
+  transactionType,
+}: {
+  formName: FormNames;
+  transactionType: TransactionType;
+}) {
   const { state } = useDcaPlusConfirmForm(formName);
   const { price } = useFiatPrice(state?.initialDenom);
-  const { dexFee } = useDexFee();
+
+  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration, resultingDenom } = state || {};
+
+  const { data: pairsData } = usePairs();
+  const { pairs } = pairsData || {};
+  const pair =
+    pairs && resultingDenom && initialDenom
+      ? findPair(
+          pairs,
+          transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
+          transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
+        )
+      : null;
+
+  const { dexFee } = useDexFee((pair as OsmosisPair)?.route);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -208,9 +233,7 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
     return null;
   }
 
-  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration } = state;
-
-  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
+  const swapAmount = getSwapAmountFromDuration(initialDeposit!, strategyDuration!);
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
 
@@ -229,7 +252,7 @@ export default function FeesDcaPlus({ formName }: { formName: FormNames }) {
         performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} dexFee={dexFee} />
     </Stack>
   );
 }
