@@ -108,8 +108,6 @@ function FlowLayout({ children }: { children: ReactElement }) {
         backgroundSize={chain === Chains.Osmosis ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
         h="100vh"
-        backgroundBlendMode={chain === Chains.Osmosis ? 'multiply' : 'normal'}
-        bgColor={chain === Chains.Osmosis ? 'rgba(0, 0, 0, 0.5)' : ''}
       >
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
