@@ -1,4 +1,16 @@
-import { useDisclosure, Menu, MenuButton, MenuList, Icon, Button, MenuItemOption, Tooltip } from '@chakra-ui/react';
+import {
+  useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  Icon,
+  Image,
+  Button,
+  MenuItemOption,
+  Tooltip,
+  Text,
+  HStack,
+} from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { Chains, useChain } from '@hooks/useChain';
 import { useRouter } from 'next/router';
@@ -27,31 +39,43 @@ export function ChainSelection() {
         <MenuButton
           as={Button}
           disabled={!isChainSelectionAllowed}
-          variant="outline"
+          variant="ghost"
           rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}
           isDisabled={!isChainSelectionAllowed}
         >
-          {chain}
+          {chain === Chains.Osmosis ? (
+            <Image src="/images/denoms/osmo.svg" w={5} />
+          ) : (
+            <Image src="/images/denoms/kuji.svg" w={5} />
+          )}
         </MenuButton>
       </Tooltip>
       <MenuList fontSize="sm">
         <MenuItemOption
+          _checked={{ bg: 'blue.500', color: 'navy' }}
           isChecked={chain === Chains.Kujira}
           onClick={() => {
             setChain(Chains.Kujira);
             onClose();
           }}
         >
-          Kujira
+          <HStack>
+            <Image src="/images/denoms/kuji.svg" w={5} />
+            <Text>Kujira</Text>
+          </HStack>
         </MenuItemOption>
         <MenuItemOption
+          _checked={{ bg: 'blue.500', color: 'navy' }}
           isChecked={chain === Chains.Osmosis}
           onClick={() => {
             setChain(Chains.Osmosis);
             onClose();
           }}
         >
-          Osmosis
+          <HStack>
+            <Image src="/images/denoms/osmo.svg" w={5} />
+            <Text>Osmosis</Text>
+          </HStack>
         </MenuItemOption>
       </MenuList>
     </Menu>
