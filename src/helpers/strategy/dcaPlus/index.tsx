@@ -17,7 +17,6 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { getChainDexFee } from '@helpers/chains';
 import { useChainStore } from '@hooks/useChain';
 
 function getDcaPlusConfig(strategy: Strategy) {
@@ -38,9 +37,7 @@ export function getStandardDcaTotalSwapped(strategy: Strategy) {
   return convertDenomFromCoin(standard_dca_swapped_amount);
 }
 
-export function getStandardDcaTotalCost(strategy: Strategy) {
-  const dexFee = getChainDexFee(useChainStore.getState().chain);
-
+export function getStandardDcaTotalCost(strategy: Strategy, dexFee: number) {
   return Number((getStandardDcaTotalSwapped(strategy) * (1 - dexFee - SWAP_FEE)).toFixed(6));
 }
 
@@ -50,19 +47,17 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
   return convertDenomFromCoin(total_deposit);
 }
 
-export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy) {
-  const dexFee = getChainDexFee(useChainStore.getState().chain);
-
+export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
   const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getStandardDcaTotalReceived(strategy) / (1 - feeFactor);
 }
 
-export function getStandardDcaAveragePurchasePrice(strategy: Strategy) {
-  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceivedBeforeFees(strategy);
+export function getStandardDcaAveragePurchasePrice(strategy: Strategy, dexFee: number) {
+  return getStandardDcaTotalSwapped(strategy) / getStandardDcaTotalReceivedBeforeFees(strategy, dexFee);
 }
 
-export function getStandardDcaAverageSellPrice(strategy: Strategy) {
-  return getStandardDcaTotalReceivedBeforeFees(strategy) / getStandardDcaTotalSwapped(strategy);
+export function getStandardDcaAverageSellPrice(strategy: Strategy, dexFee: number) {
+  return getStandardDcaTotalReceivedBeforeFees(strategy, dexFee) / getStandardDcaTotalSwapped(strategy);
 }
 
 export function getEscrowLevel(strategy: Strategy) {

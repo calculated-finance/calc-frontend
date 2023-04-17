@@ -48,11 +48,12 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexFee, getChainDexName, getOsmosisWebUrl } from '@helpers/chains';
+import { getChainDexName, getOsmosisWebUrl } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
+import useDexFee from '@hooks/useDexFee';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -102,6 +103,7 @@ function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
 function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
   const { chain } = useChain();
+  const { dexFee } = useDexFee();
   return (
     <>
       <GridItem colSpan={1}>
@@ -125,7 +127,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                 <Text>Fees automatically deducted from each swap:</Text>
                 {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
                 <Text>
-                  {getChainDexName(chain)} fee: {getPrettyFee(100, getChainDexFee(chain))}%
+                  {getChainDexName(chain)} fee: {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>

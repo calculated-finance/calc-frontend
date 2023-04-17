@@ -7,7 +7,6 @@ import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { useChainStore } from '@hooks/useChain';
-import { getChainDexFee } from '@helpers/chains';
 import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
@@ -202,8 +201,7 @@ export function getPriceCeilingFloor(strategy: Vault) {
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getStrategyTotalFeesPaid(strategy: Strategy) {
-  const dexFee = getChainDexFee(useChainStore.getState().chain);
+export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
   const costAmount = strategy.swapped_amount.amount;
   const feeFactor = isDcaPlus(strategy)
     ? 0
@@ -227,19 +225,17 @@ export function hasSwapFees(strategy: Strategy) {
   );
 }
 
-export function getTotalReceivedBeforeFees(strategy: Strategy) {
-  const dexFee = getChainDexFee(useChainStore.getState().chain);
-
+export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
   const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 
-export function getAverageSellPrice(strategy: Vault) {
-  return getTotalReceivedBeforeFees(strategy) / getTotalSwapped(strategy);
+export function getAverageSellPrice(strategy: Vault, dexFee: number) {
+  return getTotalReceivedBeforeFees(strategy, dexFee) / getTotalSwapped(strategy);
 }
 
-export function getAveragePurchasePrice(strategy: Vault) {
-  return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy);
+export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
+  return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
 }
 
 export function getStrategyProvideLiquidityConfig(strategy: Strategy | StrategyOsmosis):

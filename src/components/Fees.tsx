@@ -20,7 +20,7 @@ import { CREATE_VAULT_FEE, DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
-import { getChainDexFee, getChainDexName } from '@helpers/chains';
+import useDexFee from '@hooks/useDexFee';
 
 function FeeBreakdown({
   initialDenomName,
@@ -35,6 +35,8 @@ function FeeBreakdown({
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   const { chain } = useChain();
+
+  const { dexFee } = useDexFee();
   return (
     <Stack position="relative" spacing={1}>
       <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
@@ -123,10 +125,10 @@ function FeeBreakdown({
                   <Text textStyle="body-xs">Free</Text>
                 </Flex>
                 <Flex>
-                  <Text textStyle="body-xs">{getChainDexName(chain)} transaction fees:</Text>
+                  <Text textStyle="body-xs">{dexFee} transaction fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, getChainDexFee(chain))} {initialDenomName}
+                    {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
                   </Text>
                 </Flex>
                 <Flex>
@@ -135,7 +137,7 @@ function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + getChainDexFee(chain))} {initialDenomName}
+                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + dexFee)} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -150,7 +152,7 @@ function FeeBreakdown({
 export default function Fees({ formName }: { formName: FormNames }) {
   const { state } = useConfirmForm(formName);
   const { price } = useFiatPrice(state?.initialDenom);
-  const { chain } = useChain();
+  const { dexFee } = useDexFee();
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
@@ -174,7 +176,7 @@ export default function Fees({ formName }: { formName: FormNames }) {
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + getChainDexFee(chain))} {initialDenomName}
+          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, SWAP_FEE + dexFee)} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>

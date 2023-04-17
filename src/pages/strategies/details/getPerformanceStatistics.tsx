@@ -1,10 +1,17 @@
 import { Strategy } from '@hooks/useStrategies';
 import { getTotalReceived, getTotalReceivedBeforeFees, getTotalSwapped } from '@helpers/strategy';
 
-export function getPerformanceStatistics(strategy: Strategy, initialDenomPrice: number, resultingDenomPrice: number) {
+export function getPerformanceStatistics(
+  strategy: Strategy,
+  initialDenomPrice: number,
+  resultingDenomPrice: number,
+  dexFee: number,
+) {
   const costInFiat = Number((getTotalSwapped(strategy) * initialDenomPrice).toFixed(2));
   const marketValueInFiat = Number((getTotalReceived(strategy) * resultingDenomPrice).toFixed(2));
-  const marketValueBeforeFeesInFiat = Number((getTotalReceivedBeforeFees(strategy) * resultingDenomPrice).toFixed(2));
+  const marketValueBeforeFeesInFiat = Number(
+    (getTotalReceivedBeforeFees(strategy, dexFee) * resultingDenomPrice).toFixed(2),
+  );
 
   const profit = marketValueBeforeFeesInFiat - costInFiat;
 

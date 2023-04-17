@@ -121,13 +121,6 @@ export function getChainDexName(chain: Chains) {
   return 'FIN';
 }
 
-export function getChainDexFee(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return 0.001;
-  }
-  return FIN_TAKER_FEE;
-}
-
 export function getChainAddressPrefix(chain: Chains) {
   if (chain === Chains.Osmosis) {
     return 'osmo';

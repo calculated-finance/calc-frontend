@@ -26,6 +26,7 @@ import getStrategyBalance, {
   isStrategyCancelled,
 } from '@helpers/strategy';
 import { differenceInDays } from 'date-fns';
+import useDexFee from '@hooks/useDexFee';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
 
 function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
@@ -60,6 +61,8 @@ function StrategyComparisonDetails({
 }) {
   const { price: initialDenomPrice } = useFiatPrice(getStrategyInitialDenom(strategy));
   const { price: resultingDenomPrice } = useFiatPrice(getStrategyResultingDenom(strategy));
+
+  const { dexFee } = useDexFee();
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} w="full">
@@ -121,15 +124,15 @@ function StrategyComparisonDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAveragePurchasePrice(strategy) * initialDenomPrice)
-            : formatFiat(getAverageSellPrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getAveragePurchasePrice(strategy, dexFee) * initialDenomPrice)
+            : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
           {isBuyStrategy(strategy)
-            ? formatFiat(getStandardDcaAveragePurchasePrice(strategy) * initialDenomPrice)
-            : formatFiat(getStandardDcaAverageSellPrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getStandardDcaAveragePurchasePrice(strategy, dexFee) * initialDenomPrice)
+            : formatFiat(getStandardDcaAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
 
