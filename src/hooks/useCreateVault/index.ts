@@ -74,7 +74,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
-      msgs.push(getGrantMsg(senderAddress));
+      msgs.push(getGrantMsg(senderAddress, chain));
     }
 
     const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress);

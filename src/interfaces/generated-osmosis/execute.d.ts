@@ -57,7 +57,6 @@ export type ExecuteMsg =
         fee_collectors?: FeeCollector[] | null;
         page_limit?: number | null;
         paused?: boolean | null;
-        staking_router_address?: Addr | null;
         swap_fee_percent?: Decimal | null;
       };
     }
@@ -84,10 +83,17 @@ export type ExecuteMsg =
       };
     }
   | {
-      provide_liquidity: {
+      z_delegate: {
+        delegator_address: Addr;
+        validator_address: Addr;
+      };
+    }
+  | {
+      z_provide_liquidity: {
         duration: LockableDuration;
         pool_id: number;
         provider_address: Addr;
+        slippage_tolerance?: Decimal | null;
       };
     };
 /**
@@ -100,21 +106,18 @@ export type ExecuteMsg =
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
-export type PostExecutionAction =
-  | ('send' | 'z_delegate')
-  | {
-      z_provide_liquidity: {
-        duration: LockableDuration;
-        pool_id: number;
-      };
-    };
-export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
 /**
  * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
  *
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
+/**
+ * Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.
+ *
+ * This is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.
+ */
+export type Binary = string;
 /**
  * A thin wrapper around u128 that is using strings for JSON encoding/decoding, such that the full u128 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
  *
@@ -143,20 +146,28 @@ export type PositionType = 'enter' | 'exit';
  */
 export type Uint64 = string;
 export type TimeInterval =
-  | 'every_second'
-  | 'every_minute'
-  | 'half_hourly'
-  | 'hourly'
-  | 'half_daily'
-  | 'daily'
-  | 'weekly'
-  | 'fortnightly'
-  | 'monthly';
+  | (
+      | 'every_second'
+      | 'every_minute'
+      | 'half_hourly'
+      | 'hourly'
+      | 'half_daily'
+      | 'daily'
+      | 'weekly'
+      | 'fortnightly'
+      | 'monthly'
+    )
+  | {
+      custom: {
+        seconds: number;
+      };
+    };
+export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
 
 export interface Destination {
-  action: PostExecutionAction;
   address: Addr;
   allocation: Decimal;
+  msg?: Binary | null;
 }
 export interface FeeCollector {
   address: string;
