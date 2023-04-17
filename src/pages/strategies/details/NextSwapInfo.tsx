@@ -64,10 +64,10 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceDeconversion } = isBuyStrategy(strategy)
+        const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
           ? getDenomInfo(resultingDenom)
           : getDenomInfo(initialDenom);
-        const convertedPrice = Number(priceDeconversion(Number(targetPrice)).toFixed(3));
+        const convertedPrice = Number(priceDeconversion(Number(targetPrice)).toFixed(pricePrecision));
 
         if (isBuyStrategy(strategy)) {
           nextSwapInfo = (
