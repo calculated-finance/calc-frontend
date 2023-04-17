@@ -7,6 +7,9 @@ const admins = [
   'kujira1xgq5meypfxhhepz6htpv9rn848xhqd2dw3gany', // a
   'kujira1a0uqtx4erytfy2hgeysccjqusrz8ygq9ssjj0p', // f
   'kujira1y4k0re9q905nvvcvvmxug3sqtd9e7du4709d0t', // j
+  'kujira1mumzgqekvhvn9fkzj8tajen0qw9j7lj25r2qlk', // n
+  'kujira18gwmpc4dlk7ntzl8tx0pzcu3vkd8veyfherdpm', // s
+  'kujira1wsj79nhlfvcw75hfejh7nt9sy66qyvp3td5zu9', // t
 ];
 
 export function isAddressAdmin(address: string | undefined | null) {
