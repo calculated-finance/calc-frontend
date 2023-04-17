@@ -5,7 +5,9 @@ export type Denom = Coin['denom'];
 
 export enum TestnetDenomsOsmosis {
   AXL = 'ibc/FF3065989E34457F342D4EFB8692406D49D4E2B5C70F725F127862E22CE6BDCD',
+  ATOM = 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
   OSMO = 'uosmo',
+  ION = 'uion',
 }
 
 export enum TestnetDenoms {

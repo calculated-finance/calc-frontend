@@ -81,7 +81,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
 
   const { context } = useDcaInFormPostPurchase(formName);
 
-  const { data, isLoading } = useOsmosisPools(context?.resultingDenom);
+  const { data, isLoading } = useOsmosisPools();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>

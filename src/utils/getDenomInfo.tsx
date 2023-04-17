@@ -312,6 +312,7 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     coingeckoId: 'osmosis',
     significantFigures: 6,
     osmosisId: 'OSMO',
+    enabledInDcaPlus: true,
   },
   [TestnetDenomsOsmosis.AXL]: {
     name: 'axlUSDC',
@@ -320,7 +321,26 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
-    osmosisId: 'USDC',
+    osmosisId: 'aUSDC',
+    enabledInDcaPlus: true,
+  },
+  [TestnetDenomsOsmosis.ATOM]: {
+    name: 'ATOM',
+    icon: '/images/denoms/atom.svg',
+    osmosisId: 'ATOM',
+    stakeable: true,
+    coingeckoId: 'cosmos',
+    significantFigures: 6,
+    enabledInDcaPlus: true,
+  },
+  [TestnetDenomsOsmosis.ION]: {
+    name: 'ION',
+    icon: '/images/denoms/ion.svg',
+    osmosisId: 'ION',
+    stakeable: true,
+    coingeckoId: 'ion',
+    significantFigures: 6,
+    enabledInDcaPlus: true,
   },
 };
 

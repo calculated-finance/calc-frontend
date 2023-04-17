@@ -3,16 +3,15 @@ import { osmosis } from 'osmojs';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { isNil } from 'lodash';
-import { Denom } from '@models/Denom';
 import { useOsmosis } from './useOsmosis';
 import { findAsset, useAssetList } from './useAssetList';
 
-export function useOsmosisPools(denom: Denom | undefined) {
+export function useOsmosisPools(enabled = true) {
   const query = useOsmosis((state) => state.query);
   const { data: assetData } = useAssetList();
 
   return useQueryWithNotification(
-    ['pools-for-denom', denom],
+    ['pools-for-denom'],
     async () => {
       const pools = await query?.osmosis.gamm.v1beta1.pools({
         pagination: { limit: Long.fromNumber(1000, true), key: Long.fromNumber(0), offset: Long.fromNumber(0) },
@@ -31,10 +30,7 @@ export function useOsmosisPools(denom: Denom | undefined) {
             ) {
               return null;
             }
-            if (decodedPool.poolAssets.find((poolAsset) => poolAsset.token?.denom === denom)) {
-              return decodedPool;
-            }
-            return null;
+            return decodedPool;
           } catch (e) {
             return null;
           }
@@ -43,6 +39,6 @@ export function useOsmosisPools(denom: Denom | undefined) {
 
       return decodedPools;
     },
-    { enabled: !!assetData && !!query && !!denom },
+    { enabled: !!assetData && !!query && enabled },
   );
 }

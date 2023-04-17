@@ -18,6 +18,7 @@ import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { Chains, useChain } from '@hooks/useChain';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
+import { getOsmosisWebUrl } from '@helpers/chains';
 import { TransactionType } from './TransactionType';
 
 export function DenomPriceInput({
@@ -89,7 +90,7 @@ export function DenomPriceInput({
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      {Boolean(price) && (
+      {chain === Chains.Kujira && (
         <FormHelperText>
           <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
@@ -98,12 +99,12 @@ export function DenomPriceInput({
           </Link>
         </FormHelperText>
       )}
-      {Boolean(osmosisPrice) && (
+      {chain === Chains.Osmosis && (
         <FormHelperText>
           <Link
             isExternal
-            href={`https://app.osmosis.zone/?from=${getDenomInfo(initialDenom).osmosisId}&to=${
-              getDenomInfo(resultingDenom).osmosisId
+            href={`${getOsmosisWebUrl()}?from=${getDenomInfo(priceOfDenom).osmosisId}&to=${
+              getDenomInfo(priceInDenom).osmosisId
             }`}
           >
             <Button variant="link" fontWeight="normal" isLoading={osmosisIsLoading} colorScheme="blue">

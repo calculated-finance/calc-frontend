@@ -19,7 +19,6 @@ import GenerateYield from './GenerateYield';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
-  const { chain } = useChain();
 
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
@@ -38,7 +37,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
       supported: true,
-      enabled: chain === Chains.Osmosis,
+      enabled: false,
     },
   ].filter((option) => option.enabled);
 
