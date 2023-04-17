@@ -107,7 +107,8 @@ function FlowLayout({ children }: { children: ReactElement }) {
         backgroundPosition="bottom"
         backgroundSize={chain === Chains.Osmosis ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
-        h="100vh"
+        minH="100vh"
+        backgroundAttachment="fixed"
       >
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
