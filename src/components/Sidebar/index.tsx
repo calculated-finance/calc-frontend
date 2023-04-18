@@ -108,7 +108,11 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
         <Link href="/">
-          <Image cursor="pointer" src="/images/logo.svg" w={105} />
+          {chain === Chains.Osmosis ? (
+            <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
+          ) : (
+            <Image cursor="pointer" src="/images/logo.svg" w={105} />
+          )}
         </Link>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
@@ -140,6 +144,7 @@ interface MobileProps extends FlexProps {
 }
 function MobileNav({ onOpen, ...rest }: MobileProps) {
   const router = useRouter();
+  const { chain } = useChain();
 
   return (
     <Flex
@@ -153,7 +158,11 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     >
       <Flex w="full" pb={8} alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
-          <Image src="/images/logo.svg" w={105} />
+          {chain === Chains.Osmosis ? (
+            <Image src="/images/osmoLogo.svg" w={105} />
+          ) : (
+            <Image src="/images/logo.svg" w={105} />
+          )}
         </Text>
         <Spacer />
         <SidebarControls />
