@@ -105,6 +105,9 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
+      bgImage={chain === Chains.Osmosis ? '/images/osmoMascot.svg' : undefined}
+      bgPosition="bottom"
+      bgRepeat="no-repeat"
       {...rest}
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
@@ -118,12 +121,13 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
-        <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
-          {link.name}
-        </NavItem>
-      ))}
-      {chain === Chains.Osmosis && <Image src="/images/osmoMascot.svg" w={240} />}
+      <Box backdropFilter="auto" backdropBlur="3px">
+        {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
+          <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
+            {link.name}
+          </NavItem>
+        ))}
+      </Box>
       <Stack
         position="absolute"
         p={6}
