@@ -1,7 +1,8 @@
 import { OUT_OF_GAS_ERROR_MESSAGE, LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE } from 'src/constants';
-import { EncodeObject } from '@cosmjs/proto-signing';
+import { Coin, EncodeObject } from '@cosmjs/proto-signing';
 import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Event } from '@cosmjs/stargate/build/events';
+import { StdFee } from '@cosmjs/stargate';
 
 function getStrategyIdFromEvents(events: readonly Event[]) {
   return events.find((event) => event.type === 'wasm')?.attributes.find((attribute) => attribute.key === 'vault_id')
@@ -26,9 +27,10 @@ export function executeCreateVault(
   client: SigningCosmWasmClient,
   senderAddress: any,
   msgs: EncodeObject[],
+  fee: number | StdFee | 'auto',
 ): Promise<string> {
   return client
-    .signAndBroadcast(senderAddress, msgs, 'auto')
+    .signAndBroadcast(senderAddress, msgs, fee)
     .then((data) => {
       try {
         return getVaultIdFromDeliverTxResponse(data);

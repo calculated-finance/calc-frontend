@@ -8,7 +8,6 @@ export function getGrantMsg(senderAddress: string, chain: Chains): { typeUrl: st
   // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts
   // https://www.npmjs.com/package/cosmjs-types
   const secondsInOneYear = 31536000;
-  console.log('getGrantMsg', senderAddress, chain);
   return {
     typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
     value: {

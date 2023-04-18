@@ -53,14 +53,13 @@ function getCallbackDestinations(
       msg: Buffer.from(
         JSON.stringify({
           z_delegate: {
-            destination_address: senderAddress,
+            delegator_address: senderAddress,
             validator_address: autoStakeValidator,
           },
         }),
       ).toString('base64'),
     });
   }
-  console.log('yyo');
 
   if (recipientAccount) {
     destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });

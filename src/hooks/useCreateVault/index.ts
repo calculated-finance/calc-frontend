@@ -10,9 +10,10 @@ import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import { useChain } from '@hooks/useChain';
+import { Chains, useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { FormNames } from '@hooks/useFormStore';
+import { isMainnet } from '@utils/isMainnet';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -36,11 +37,31 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
   return fundsInCoin;
 }
 
+// temporarily use this for osmosis while auto is not supported
+export const FEE = {
+  amount: [
+    {
+      denom: 'uosmo',
+      amount: '10000',
+    },
+  ],
+  gas: '2500000',
+};
+
+function getFee() {
+  if (isMainnet()) {
+    return 'auto';
+  }
+  return FEE;
+}
+
 const useCreateVault = (formName: FormNames, transactionType: TransactionType, state: DcaFormState | undefined) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
+
+  const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
 
@@ -86,7 +107,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
 
-    return executeCreateVault(client, senderAddress, msgs);
+    return executeCreateVault(client, senderAddress, msgs, fee);
   });
 };
 
