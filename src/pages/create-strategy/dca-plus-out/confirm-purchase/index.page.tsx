@@ -69,7 +69,7 @@ function Page() {
             <SummaryWhileSwapping state={state} />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
-            <FeesDcaPlus formName={FormNames.DcaPlusOut} />
+            <FeesDcaPlus formName={FormNames.DcaPlusOut} transactionType={TransactionType.Sell} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

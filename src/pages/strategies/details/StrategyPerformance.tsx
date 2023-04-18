@@ -16,11 +16,15 @@ import {
   getTotalReceived,
   getTotalSwapped,
 } from '@helpers/strategy';
+import useDexFee from '@hooks/useDexFee';
+import { OsmosisPair } from '@models/Pair';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
+
+  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
 
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
@@ -31,6 +35,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
+    dexFee,
   );
 
   return (
@@ -88,8 +93,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAveragePurchasePrice(strategy) * initialDenomPrice)
-            : formatFiat(getAverageSellPrice(strategy) * resultingDenomPrice)}
+            ? formatFiat(getAveragePurchasePrice(strategy, dexFee) * initialDenomPrice)
+            : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
