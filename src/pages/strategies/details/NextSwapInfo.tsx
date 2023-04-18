@@ -1,4 +1,4 @@
-import { Heading, Text, HStack, Flex, Wrap } from '@chakra-ui/react';
+import { Heading, Text, HStack, Flex, Stack, Icon } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
@@ -11,22 +11,26 @@ import {
   isStrategyOperating,
   isBuyStrategy,
 } from '@helpers/strategy';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
-    <HStack spacing={5} mr={2} ml={{ base: -2, sm: 8 }}>
+    <Flex justify="space-between" gap={2} align="center">
       <HStack>
         <DenomIcon size={5} denomName={initialDenom} />
         <Text>{initialDenomName}</Text>
       </HStack>
-      <Lottie animationData={arrow} loop height="100%" />
+      <Flex display={{ base: 'none', md: 'initial' }}>
+        <Lottie animationData={arrow} loop height="100%" />
+      </Flex>
+      <Icon as={ArrowForwardIcon} display={{ base: 'initial', md: 'none' }} />
       <HStack>
         <DenomIcon size={5} denomName={resultingDenom} />
         <Text>{resultingDenomName}</Text>
       </HStack>
-    </HStack>
+    </Flex>
   );
 }
 
@@ -88,7 +92,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
     }
   }
   return nextSwapInfo ? (
-    <HStack mb={8} py={4} px={8} layerStyle="panel" flexWrap={{ base: 'wrap', sm: 'nowrap' }}>
+    <Stack mb={8} py={4} px={8} layerStyle="panel" direction={{ base: 'column', sm: 'row' }} spacing={4}>
       <HStack spacing={4} w={{ sm: '50%', base: '100%' }}>
         <Heading size="xs" whiteSpace={{ base: 'nowrap', sm: 'normal' }}>
           Next swap:
@@ -98,9 +102,9 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
         </Text>
       </HStack>
 
-      <Flex w={{ sm: '50%', base: '100%' }} pt={{ base: 2, sm: 0 }}>
+      <Flex w={{ sm: '50%', base: '100%' }}>
         <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
       </Flex>
-    </HStack>
+    </Stack>
   ) : null;
 }
