@@ -49,7 +49,7 @@ function getCallbackDestinations(
   if (autoStakeValidator) {
     destinations.push({
       address: getChainContractAddress(Chains.Osmosis),
-      allocation: '1',
+      allocation: '1.0',
       msg: Buffer.from(
         JSON.stringify({
           z_delegate: {
@@ -60,9 +60,10 @@ function getCallbackDestinations(
       ).toString('base64'),
     });
   }
+  console.log('yyo');
 
   if (recipientAccount) {
-    destinations.push({ address: recipientAccount, allocation: '1', msg: null });
+    destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
   }
 
   // if (yieldOption) {
