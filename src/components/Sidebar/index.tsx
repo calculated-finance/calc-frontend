@@ -25,6 +25,7 @@ import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Banner from '@components/Banner';
 import { SidebarControls } from '@components/Layout/SidebarControls';
+import { Chains, useChain } from '@hooks/useChain';
 import { Pages } from './Pages';
 
 interface LinkItem {
@@ -94,6 +95,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
 
 function SidebarContent({ onClose, ...rest }: SidebarProps) {
   const router = useRouter();
+  const { chain } = useChain();
 
   return (
     <Flex
@@ -116,7 +118,17 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
           {link.name}
         </NavItem>
       ))}
-      <Stack position="absolute" p={6} bottom={0} color="grey.200" w="full" spacing={2}>
+      {chain === Chains.Osmosis && <Image src="/images/osmoMascot.svg" w={240} />}
+      <Stack
+        position="absolute"
+        p={6}
+        bottom={0}
+        color="grey.200"
+        w="full"
+        spacing={2}
+        backdropFilter="auto"
+        backdropBlur="3px"
+      >
         <Footer />
       </Stack>
     </Flex>

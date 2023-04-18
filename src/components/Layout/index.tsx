@@ -18,6 +18,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { Chains, useChain } from '@hooks/useChain';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -96,16 +97,18 @@ function FlowBreadcrumbs() {
 
 function FlowLayout({ children }: { children: ReactElement }) {
   const { address } = useWallet();
+  const { chain } = useChain();
 
   return (
     <>
       <AppHeader />
       <Content
-        bgImage="/images/backgrounds/twist.svg"
+        bgImage={chain === Chains.Osmosis ? '/images/backgrounds/osmoBackground.svg' : '/images/backgrounds/twist.svg'}
         backgroundPosition="bottom"
-        backgroundSize="center"
+        backgroundSize={chain === Chains.Osmosis ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
-        h="100vh"
+        minH="100vh"
+        backgroundAttachment="fixed"
       >
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
