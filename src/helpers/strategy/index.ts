@@ -107,10 +107,10 @@ export function isBuyStrategy(strategy: Strategy) {
 export function getStrategyStartDate(strategy: Strategy) {
   const { trigger } = strategy;
   if (trigger && 'fin_limit_order' in trigger) {
-    const { priceDeconversion } = isBuyStrategy(strategy)
+    const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
       ? getDenomInfo(getStrategyResultingDenom(strategy))
       : getDenomInfo(getStrategyInitialDenom(strategy));
-    const price = Number(priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(3));
+    const price = Number(priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(pricePrecision));
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     if (isBuyStrategy(strategy)) {
@@ -189,15 +189,17 @@ export function getPriceCeilingFloor(strategy: Vault) {
     return undefined;
   }
 
-  const { priceDeconversion } = isBuyStrategy(strategy)
-    ? getDenomInfo(getStrategyResultingDenom(strategy))
-    : getDenomInfo(getStrategyInitialDenom(strategy));
+  const resultingDenom = getStrategyResultingDenom(strategy);
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
+    ? getDenomInfo(resultingDenom)
+    : getDenomInfo(initialDenom);
 
   const price = isBuyStrategy(strategy)
     ? parseFloat(strategy.swap_amount) / parseFloat(strategy.minimum_receive_amount)
     : parseFloat(strategy.minimum_receive_amount) / parseFloat(strategy.swap_amount);
 
-  return Number(priceDeconversion(price).toFixed(3));
+  return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy) {

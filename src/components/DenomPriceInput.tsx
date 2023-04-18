@@ -55,8 +55,10 @@ export function DenomPriceInput({
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
-  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
-  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
+  const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = getDenomInfo(priceOfDenom);
+  const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = getDenomInfo(priceInDenom);
+
+  const pricePrecision = Math.max(priceOfPricePrecision, priceInPricePrecision);
 
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);
@@ -77,7 +79,7 @@ export function DenomPriceInput({
         />
         <NumericFormat
           allowNegative={false}
-          decimalScale={3}
+          decimalScale={pricePrecision}
           thousandSeparator=","
           suffix={` ${priceInDenomName}`}
           textAlign="right"
