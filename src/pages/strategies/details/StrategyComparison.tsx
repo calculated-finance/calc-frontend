@@ -27,7 +27,7 @@ import getStrategyBalance, {
 } from '@helpers/strategy';
 import { differenceInDays } from 'date-fns';
 import useDexFee from '@hooks/useDexFee';
-import { OsmosisPair } from '@models/Pair';
+import { TransactionType } from '@components/TransactionType';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
 
 function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
@@ -60,10 +60,16 @@ function StrategyComparisonDetails({
   strategy: Strategy;
   strategyEvents: StrategyEvent[];
 }) {
-  const { price: initialDenomPrice } = useFiatPrice(getStrategyInitialDenom(strategy));
-  const { price: resultingDenomPrice } = useFiatPrice(getStrategyResultingDenom(strategy));
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
 
-  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
+  const { dexFee } = useDexFee(
+    initialDenom,
+    resultingDenom,
+    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
+  );
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} w="full">

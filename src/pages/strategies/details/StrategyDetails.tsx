@@ -44,6 +44,7 @@ import {
   isDcaPlus,
   isStrategyOperating,
   getStrategyProvideLiquidityConfig,
+  isBuyStrategy,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
@@ -55,6 +56,7 @@ import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
 import { OsmosisPair } from '@models/Pair';
+import { TransactionType } from '@components/TransactionType';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -104,7 +106,11 @@ function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
 function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
   const { chain } = useChain();
-  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
+  const { dexFee } = useDexFee(
+    getStrategyInitialDenom(strategy),
+    getStrategyResultingDenom(strategy),
+    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
+  );
   return (
     <>
       <GridItem colSpan={1}>

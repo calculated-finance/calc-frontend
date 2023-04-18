@@ -6,6 +6,7 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
 import { OsmosisPair } from '@models/Pair';
+import { TransactionType } from '@components/TransactionType';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function StrategyChartStats({
@@ -20,7 +21,11 @@ export function StrategyChartStats({
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
+  const { dexFee } = useDexFee(
+    initialDenom,
+    resultingDenom,
+    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
+  );
 
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
