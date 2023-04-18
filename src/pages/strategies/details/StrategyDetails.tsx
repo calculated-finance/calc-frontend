@@ -49,7 +49,7 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { getChainDexName, getOsmosisWebUrl } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
@@ -142,9 +142,37 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   );
 }
 
+function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
+  const { chain } = useChain();
+  if (chain === Chains.Kujira) {
+    return {
+      validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
+    };
+  }
+  if (strategy.destinations.length) {
+    const [destination] = (strategy as StrategyOsmosis).destinations;
+    const { msg } = destination;
+    if (msg) {
+      const decoded = Buffer.from(msg, 'base64').toString('ascii');
+      if (decoded) {
+        const parsed = JSON.parse(decoded);
+        return {
+          validatorAddress: parsed?.z_delegate?.validator_address,
+        };
+      }
+    }
+  }
+  return {
+    validatorAddress: null,
+  };
+}
+
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { address } = useWallet();
-  const { validator, isLoading } = useValidator(strategy.destinations[0].address);
+
+  const { validatorAddress } = usePostSwapCallback(strategy);
+
+  const { validator, isLoading } = useValidator(validatorAddress);
 
   const { time_interval, balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -279,7 +307,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             </Flex>
           </GridItem>
           {Boolean(destinations.length) &&
-            (isAutoStaking(destinations) ? (
+            (validator ? (
               <>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Auto staking status</Heading>
