@@ -1,4 +1,4 @@
-import { Heading, Text, HStack, Flex, Stack, Icon } from '@chakra-ui/react';
+import { Heading, Text, HStack, Flex, Stack, Icon, Box } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
@@ -17,15 +17,15 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; result
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
-    <Flex justify="space-between" gap={2} align="center">
+    <Flex justify="space-between" gap={2} align="center" w="full">
       <HStack>
         <DenomIcon size={5} denomName={initialDenom} />
         <Text>{initialDenomName}</Text>
       </HStack>
-      <Flex display={{ base: 'none', md: 'initial' }}>
-        <Lottie animationData={arrow} loop height="100%" />
+      <Flex display={{ base: 'none', lg: 'initial' }} flexShrink={1}>
+        <Box as={Lottie} animationData={arrow} loop w={{ base: 16, lg: 120, xl: 'initial' }} />
       </Flex>
-      <Icon as={ArrowForwardIcon} display={{ base: 'initial', md: 'none' }} />
+      <Icon as={ArrowForwardIcon} display={{ lg: 'none' }} />
       <HStack>
         <DenomIcon size={5} denomName={resultingDenom} />
         <Text>{resultingDenomName}</Text>
@@ -93,7 +93,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   }
   return nextSwapInfo ? (
     <Stack mb={8} py={4} px={8} layerStyle="panel" direction={{ base: 'column', sm: 'row' }} spacing={4}>
-      <HStack spacing={4} w={{ sm: '50%', base: '100%' }}>
+      <HStack spacing={4} w={{ sm: '50%' }}>
         <Heading size="xs" whiteSpace={{ base: 'nowrap', sm: 'normal' }}>
           Next swap:
         </Heading>
@@ -102,7 +102,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
         </Text>
       </HStack>
 
-      <Flex w={{ sm: '50%', base: '100%' }}>
+      <Flex w={{ sm: '50%' }}>
         <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
       </Flex>
     </Stack>
