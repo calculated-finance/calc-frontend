@@ -99,32 +99,51 @@ function FeeBreakdown({
             <Flex flexGrow={1} flexDirection="column">
               <Heading size="xs">Per swap</Heading>
               <Stack spacing={0}>
-                <Flex>
-                  <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                  <Spacer />
-                  {applyPromo ? (
-                    <Text color="blue.200" textStyle="body-xs">
-                      Free
-                    </Text>
-                  ) : (
-                    <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
-                    </Text>
-                  )}
-                </Flex>
-                <Flex>
-                  <Text textStyle="body-xs">{Chains[chain]} community pool:</Text>
-                  <Spacer />
-                  {applyPromo ? (
-                    <Text color="blue.200" textStyle="body-xs">
-                      Free
-                    </Text>
-                  ) : (
-                    <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
-                    </Text>
-                  )}
-                </Flex>
+                {chain === Chains.Osmosis && (
+                  <Flex>
+                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                    <Spacer />
+                    {applyPromo ? (
+                      <Text color="blue.200" textStyle="body-xs">
+                        Free
+                      </Text>
+                    ) : (
+                      <Text textStyle="body-xs">
+                        {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
+                      </Text>
+                    )}
+                  </Flex>
+                )}
+                {chain === Chains.Kujira && (
+                  <>
+                    <Flex>
+                      <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                      <Spacer />
+                      {applyPromo ? (
+                        <Text color="blue.200" textStyle="body-xs">
+                          Free
+                        </Text>
+                      ) : (
+                        <Text textStyle="body-xs">
+                          {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                        </Text>
+                      )}
+                    </Flex>
+                    <Flex>
+                      <Text textStyle="body-xs">{Chains[chain]} community pool:</Text>
+                      <Spacer />
+                      {applyPromo ? (
+                        <Text color="blue.200" textStyle="body-xs">
+                          Free
+                        </Text>
+                      ) : (
+                        <Text textStyle="body-xs">
+                          {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                        </Text>
+                      )}
+                    </Flex>
+                  </>
+                )}
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
                   <Spacer />

@@ -25,6 +25,7 @@ import Link from 'next/link';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
+import { Chains, useChain } from '@hooks/useChain';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -149,6 +150,8 @@ function TotalInvestment() {
   const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
   const { data } = useAdminStrategies();
   const { connected } = useWallet();
+  const { chain } = useChain();
+
   if (!fiatPrices || !data) {
     return (
       <Center layerStyle="panel" p={8} h="full">
@@ -179,10 +182,17 @@ function TotalInvestment() {
           </Heading>
         </Stack>
       </Flex>
-      {!connected && (
+      {!connected && chain === Chains.Kujira && (
         <Link href="/how-it-works">
           <Button w={44} variant="outline" colorScheme="blue">
             Learn how CALC works
+          </Button>
+        </Link>
+      )}
+      {!connected && chain === Chains.Osmosis && (
+        <Link href="/create-strategy">
+          <Button w={44} variant="outline" colorScheme="blue">
+            Create a strategy
           </Button>
         </Link>
       )}

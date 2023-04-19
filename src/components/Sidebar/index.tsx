@@ -33,6 +33,7 @@ interface LinkItem {
   icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
   href: Pages;
+  exclude?: Chains[];
 }
 const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
@@ -40,7 +41,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
-  { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks },
+  { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
@@ -117,7 +118,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
+      {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
         <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
           {link.name}
         </NavItem>
@@ -168,7 +169,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
-        {LinkItems.map((link) => (
+        {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
           <Link href={link.href} key={link.name}>
             <IconButton
               aria-label={link.name}
