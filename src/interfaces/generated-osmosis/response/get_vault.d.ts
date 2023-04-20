@@ -49,15 +49,6 @@ export type Uint64 = string;
  * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
  */
 export type Decimal = string;
-export type PostExecutionAction =
-  | ('send' | 'z_delegate')
-  | {
-      z_provide_liquidity: {
-        duration: LockableDuration;
-        pool_id: number;
-      };
-    };
-export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
 /**
  * A human readable address.
  *
@@ -68,17 +59,30 @@ export type LockableDuration = 'one_day' | 'one_week' | 'two_weeks';
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
+/**
+ * Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.
+ *
+ * This is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.
+ */
+export type Binary = string;
 export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
 export type TimeInterval =
-  | 'every_second'
-  | 'every_minute'
-  | 'half_hourly'
-  | 'hourly'
-  | 'half_daily'
-  | 'daily'
-  | 'weekly'
-  | 'fortnightly'
-  | 'monthly';
+  | (
+      | 'every_second'
+      | 'every_minute'
+      | 'half_hourly'
+      | 'hourly'
+      | 'half_daily'
+      | 'daily'
+      | 'weekly'
+      | 'fortnightly'
+      | 'monthly'
+    )
+  | {
+      custom: {
+        seconds: number;
+      };
+    };
 export type TriggerConfiguration = {
   time: {
     target_time: Timestamp;
@@ -122,9 +126,9 @@ export interface DcaPlusConfig {
   [k: string]: unknown;
 }
 export interface Destination {
-  action: PostExecutionAction;
   address: Addr;
   allocation: Decimal;
+  msg?: Binary | null;
 }
 export interface Pair {
   address: Addr;

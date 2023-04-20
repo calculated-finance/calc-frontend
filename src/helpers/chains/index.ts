@@ -3,7 +3,13 @@ import { Chains } from '@hooks/useChain';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
-import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, FIN_TAKER_FEE, RPC_ENDPOINT } from 'src/constants';
+import {
+  CHAIN_ID,
+  CONTRACT_ADDRESS,
+  FEE_TAKER_ADDRESS,
+  RPC_ENDPOINT,
+  STAKING_ROUTER_CONTRACT_ADDRESS,
+} from 'src/constants';
 
 const osmoTestnetConfig = {
   chainId: 'osmo-test-4',
@@ -102,6 +108,14 @@ export function getChainFeeTakerAddress(chain: Chains) {
   }
 
   return FEE_TAKER_ADDRESS;
+}
+
+export function getChainStakingRouterContractAddress(chain: Chains) {
+  if (chain === Chains.Osmosis) {
+    return getChainContractAddress(chain);
+  }
+
+  return STAKING_ROUTER_CONTRACT_ADDRESS;
 }
 
 export function getChainId(chain: Chains) {

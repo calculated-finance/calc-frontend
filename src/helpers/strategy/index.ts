@@ -7,7 +7,7 @@ import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { useChainStore } from '@hooks/useChain';
-import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
+import { LockableDuration, Destination } from 'src/interfaces/generated-osmosis/execute';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -244,20 +244,21 @@ export function getStrategyProvideLiquidityConfig(strategy: Strategy | StrategyO
       pool_id: number;
     }
   | undefined {
-  const { destinations } = strategy;
-
-  const provideLiquidityDestination = destinations?.find((destination) => {
-    if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
-      return true;
-    }
-    return false;
-  });
-  if (
-    provideLiquidityDestination &&
-    typeof provideLiquidityDestination.action === 'object' &&
-    'z_provide_liquidity' in provideLiquidityDestination.action
-  ) {
-    return provideLiquidityDestination?.action.z_provide_liquidity;
-  }
   return undefined;
+  // const { destinations } = strategy;
+
+  // const provideLiquidityDestination = destinations?.find((destination: Destination) => {
+  //   if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
+  //     return true;
+  //   }
+  //   return false;
+  // });
+  // if (
+  //   provideLiquidityDestination &&
+  //   typeof provideLiquidityDestination.action === 'object' &&
+  //   'z_provide_liquidity' in provideLiquidityDestination.action
+  // ) {
+  //   return provideLiquidityDestination?.action.z_provide_liquidity;
+  // }
+  // return undefined;
 }

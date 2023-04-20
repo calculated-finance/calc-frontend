@@ -13,6 +13,8 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
+import { Chains, useChainStore } from '@hooks/useChain';
+import { getChainContractAddress } from '@helpers/chains';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -36,6 +38,49 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
+function getCallbackDestinations(
+  autoStakeValidator: string | null | undefined,
+  recipientAccount: string | null | undefined,
+  yieldOption: string | null | undefined,
+  senderAddress: string,
+) {
+  const destinations = [] as (Destination | OsmosisDestination)[];
+
+  if (autoStakeValidator) {
+    destinations.push({
+      address: getChainContractAddress(Chains.Osmosis),
+      allocation: '1.0',
+      msg: Buffer.from(
+        JSON.stringify({
+          z_delegate: {
+            delegator_address: senderAddress,
+            validator_address: autoStakeValidator,
+          },
+        }),
+      ).toString('base64'),
+    });
+  }
+
+  if (recipientAccount) {
+    destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
+  }
+
+  // if (yieldOption) {
+  //   destinations.push({
+  //     address: senderAddress,
+  //     allocation: '1',
+  //     action: {
+  //       z_provide_liquidity: {
+  //         duration: 'one_week',
+  //         pool_id: Number(yieldOption),
+  //       },
+  //     },
+  //   });
+  // }
+
+  return destinations.length ? destinations : undefined;
+}
+
 function getDestinations(
   autoStakeValidator: string | null | undefined,
   recipientAccount: string | null | undefined,
@@ -50,19 +95,6 @@ function getDestinations(
 
   if (recipientAccount) {
     destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
-  }
-
-  if (yieldOption) {
-    destinations.push({
-      address: senderAddress,
-      allocation: '1',
-      action: {
-        z_provide_liquidity: {
-          duration: 'one_week',
-          pool_id: Number(yieldOption),
-        },
-      },
-    });
   }
 
   return destinations.length ? destinations : undefined;
@@ -149,6 +181,13 @@ export function buildCreateVaultParamsDCA(
   transactionType: TransactionType,
   senderAddress: string,
 ): ExecuteMsg | OsmosisExecuteMsg {
+  const { chain } = useChainStore.getState();
+
+  const destinations =
+    chain === Chains.Osmosis
+      ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
+      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+
   return {
     create_vault: {
       label: '',
@@ -164,7 +203,7 @@ export function buildCreateVaultParamsDCA(
         transactionType,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress),
+      destinations,
       target_receive_amount: getTargetReceiveAmount(
         state.initialDenom,
         state.swapAmount,
@@ -182,18 +221,24 @@ export function buildCreateVaultParamsDCAPlus(
   senderAddress: string,
 ): ExecuteMsg | OsmosisExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
+
+  const { chain } = useChainStore.getState();
+
+  const destinations =
+    chain === Chains.Osmosis
+      ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
+      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+
   return {
     create_vault: {
       label: '',
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       time_interval: 'daily',
       pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress),
+      destinations,
       use_dca_plus: true,
     },
   };
