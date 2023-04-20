@@ -1,4 +1,4 @@
-import { Heading, Text, HStack, Flex } from '@chakra-ui/react';
+import { Heading, Text, HStack, Flex, Wrap } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
@@ -16,7 +16,7 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; result
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
-    <HStack spacing={5}>
+    <HStack spacing={5} mr={2} ml={{ base: -2, sm: 8 }}>
       <HStack>
         <DenomIcon size={5} denomName={initialDenom} />
         <Text>{initialDenomName}</Text>
@@ -88,14 +88,17 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
     }
   }
   return nextSwapInfo ? (
-    <HStack mb={8} py={4} px={8} layerStyle="panel" spacing={8}>
-      <HStack spacing={4} w="50%">
-        <Heading size="xs">Next swap:</Heading>
-        <Text fontSize="sm" data-testid="next-swap-info">
+    <HStack mb={8} py={4} px={8} layerStyle="panel" flexWrap={{ base: 'wrap', sm: 'nowrap' }}>
+      <HStack spacing={4} w={{ sm: '50%', base: '100%' }}>
+        <Heading size="xs" whiteSpace={{ base: 'nowrap', sm: 'normal' }}>
+          Next swap:
+        </Heading>
+        <Text whiteSpace={{ base: 'nowrap', sm: 'normal' }} fontSize="sm" data-testid="next-swap-info">
           {nextSwapInfo}
         </Text>
       </HStack>
-      <Flex w="50%">
+
+      <Flex w={{ sm: '50%', base: '100%' }} pt={{ base: 2, sm: 0 }}>
         <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
       </Flex>
     </HStack>
