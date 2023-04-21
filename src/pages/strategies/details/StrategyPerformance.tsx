@@ -17,20 +17,24 @@ import {
   getTotalSwapped,
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
-import { OsmosisPair } from '@models/Pair';
+import { TransactionType } from '@components/TransactionType';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { dexFee } = useDexFee((strategy.pair as OsmosisPair).route);
+  const { dexFee } = useDexFee(
+    initialDenom,
+    resultingDenom,
+    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
+  );
 
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
-  //
+
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,

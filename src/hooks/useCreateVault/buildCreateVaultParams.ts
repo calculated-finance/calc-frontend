@@ -180,7 +180,7 @@ export function buildCreateVaultParamsDCA(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
-): ExecuteMsg | OsmosisExecuteMsg {
+) {
   const { chain } = useChainStore.getState();
 
   const destinations =
@@ -188,11 +188,20 @@ export function buildCreateVaultParamsDCA(
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
       : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
 
-  return {
+  const pairAddressOrTargetDenom =
+    chain === Chains.Osmosis
+      ? {
+          target_denom: state.resultingDenom,
+        }
+      : {
+          pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+        };
+
+  const msg = {
     create_vault: {
       label: '',
       time_interval: getExecutionInterval(state.executionInterval),
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      ...pairAddressOrTargetDenom,
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       minimum_receive_amount: getMinimumReceiveAmount(
@@ -213,6 +222,11 @@ export function buildCreateVaultParamsDCA(
       ),
     },
   };
+
+  if (chain === Chains.Osmosis) {
+    return msg as OsmosisExecuteMsg;
+  }
+  return msg as ExecuteMsg;
 }
 
 export function buildCreateVaultParamsDCAPlus(
@@ -229,11 +243,20 @@ export function buildCreateVaultParamsDCAPlus(
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
       : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
 
-  return {
+  const pairAddressOrTargetDenom =
+    chain === Chains.Osmosis
+      ? {
+          target_denom: state.resultingDenom,
+        }
+      : {
+          pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+        };
+
+  const msg = {
     create_vault: {
       label: '',
       time_interval: 'daily',
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      ...pairAddressOrTargetDenom,
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
@@ -242,6 +265,11 @@ export function buildCreateVaultParamsDCAPlus(
       use_dca_plus: true,
     },
   };
+
+  if (chain === Chains.Osmosis) {
+    return msg as OsmosisExecuteMsg;
+  }
+  return msg as ExecuteMsg;
 }
 
 export function buildCreateVaultParams(

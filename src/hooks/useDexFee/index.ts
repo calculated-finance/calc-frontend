@@ -1,13 +1,36 @@
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Chains, useChain } from '@hooks/useChain';
 import { FIN_TAKER_FEE } from 'src/constants';
+import { TransactionType } from '@components/TransactionType';
+import { findPair } from '@helpers/findPair';
+import usePairs from '@hooks/usePairs';
+import { OsmosisPair } from '@models/Pair';
 
-export default function useDexFee(route: number[]) {
+export default function useDexFee(
+  initialDenom: string | undefined,
+  resultingDenom: string | undefined,
+  transactionType: TransactionType,
+) {
   const { chain } = useChain();
+  const { data: pairsData } = usePairs();
   const { data: pools } = useOsmosisPools(chain === Chains.Osmosis);
+
   if (chain === Chains.Kujira) {
     return { dexFee: FIN_TAKER_FEE };
   }
+
+  const { pairs } = pairsData || {};
+
+  const pair =
+    pairs && resultingDenom && initialDenom
+      ? findPair(
+          pairs,
+          transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
+          transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
+        )
+      : null;
+
+  const route = (pair as OsmosisPair)?.route;
 
   if (route) {
     if (route.length === 1) {
@@ -32,5 +55,5 @@ export default function useDexFee(route: number[]) {
     return { dexFee };
   }
 
-  return { dexFee: 0.2 / 100 };
+  return { dexFee: 0 };
 }

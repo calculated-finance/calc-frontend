@@ -180,18 +180,7 @@ export default function Fees({ formName, transactionType }: { formName: FormName
 
   const { initialDenom, autoStakeValidator, swapAmount, resultingDenom } = state || {};
 
-  const { data: pairsData } = usePairs();
-  const { pairs } = pairsData || {};
-  const pair =
-    pairs && resultingDenom && initialDenom
-      ? findPair(
-          pairs,
-          transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
-          transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
-        )
-      : null;
-
-  const { dexFee } = useDexFee((pair as OsmosisPair)?.route);
+  const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
   // instead of returning any empty state on error, we could throw a validation error and catch it to display the
   // invalid data message, along with missing field info.
