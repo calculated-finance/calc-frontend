@@ -199,9 +199,9 @@ export function buildCreateVaultParamsDCA(
 
   const msg = {
     create_vault: {
-      ...pairAddressOrTargetDenom,
       label: '',
       time_interval: getExecutionInterval(state.executionInterval),
+      ...pairAddressOrTargetDenom,
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       minimum_receive_amount: getMinimumReceiveAmount(
@@ -254,9 +254,9 @@ export function buildCreateVaultParamsDCAPlus(
 
   const msg = {
     create_vault: {
-      ...pairAddressOrTargetDenom,
       label: '',
       time_interval: 'daily',
+      ...pairAddressOrTargetDenom,
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
