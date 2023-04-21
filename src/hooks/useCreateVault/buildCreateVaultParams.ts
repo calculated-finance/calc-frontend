@@ -14,7 +14,7 @@ import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
-import { getChainContractAddress } from '@helpers/chains';
+import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -65,18 +65,21 @@ function getCallbackDestinations(
     destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
   }
 
-  // if (yieldOption) {
-  //   destinations.push({
-  //     address: senderAddress,
-  //     allocation: '1',
-  //     action: {
-  //       z_provide_liquidity: {
-  //         duration: 'one_week',
-  //         pool_id: Number(yieldOption),
-  //       },
-  //     },
-  //   });
-  // }
+  if (yieldOption) {
+    if (yieldOption === 'mars') {
+      destinations.push({
+        address: getMarsAddress(Chains.Osmosis),
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              on_behalf_of: getChainContractAddress(Chains.Osmosis),
+            },
+          }),
+        ).toString('base64'),
+      });
+    }
+  }
 
   return destinations.length ? destinations : undefined;
 }
