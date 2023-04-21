@@ -114,7 +114,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           <Spinner size="xs" />
         ) : (
           <Flex>
-            <HStack color={priceChange > 0 ? 'green.200' : 'red.200'}>
+            <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
               <Text fontSize="sm" data-testid="strategy-asset-price">
                 {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
               </Text>
