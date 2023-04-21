@@ -10,7 +10,7 @@ export enum Chains {
 }
 
 type ChainState = {
-  chain: Chains | null;
+  chain: Chains;
   setChain: (chain: Chains) => void;
 };
 
