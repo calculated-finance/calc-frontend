@@ -114,7 +114,7 @@ function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { 
 function useMars(resultingDenom: string | undefined) {
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<DcaPlusPerformanceResponse>(
+  return useQueryWithNotification<any>(
     ['mars-check', client, resultingDenom],
     async () => {
       if (!client) {
@@ -145,10 +145,9 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
 
   const { data, isLoading } = useMars(context?.resultingDenom);
 
-  console.log(data);
   const marsRadio = getRadioProps({ value: 'mars' });
 
-  const marsEnabled = data?.find((market) => market.denom === resultingDenom);
+  const marsEnabled = data?.find((market: any) => market.denom === resultingDenom);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -163,7 +162,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
           {marsEnabled ? (
             <MarsOption {...marsRadio} resultingDenom={resultingDenom!} />
           ) : (
-            <Center textStyle="body">There are no yield options available for {getDenomName(resultingDenom)}</Center>
+            <Center textStyle="body">There are no yield options available for {getDenomName(resultingDenom!)}</Center>
           )}
         </Stack>
       )}
