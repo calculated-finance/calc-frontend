@@ -67,16 +67,16 @@ function getCallbackDestinations(
 
   if (yieldOption) {
     if (yieldOption === 'mars') {
+      const msg = {
+        deposit: {
+          on_behalf_of: senderAddress,
+        },
+      };
+      console.log(msg);
       destinations.push({
         address: getMarsAddress(),
         allocation: '1.0',
-        msg: Buffer.from(
-          JSON.stringify({
-            deposit: {
-              on_behalf_of: getChainContractAddress(Chains.Osmosis),
-            },
-          }),
-        ).toString('base64'),
+        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
       });
     }
   }

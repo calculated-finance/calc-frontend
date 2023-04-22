@@ -94,7 +94,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 
     const { autoStakeValidator, yieldOption } = state;
 
-    if (autoStakeValidator || yieldOption) {
+    if (autoStakeValidator) {
       msgs.push(getGrantMsg(senderAddress, chain));
     }
 
