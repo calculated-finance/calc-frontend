@@ -184,7 +184,7 @@ export function buildCreateVaultParamsDCA(
   const destinations =
     chain === Chains.Osmosis
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
-      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+      : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
     chain === Chains.Osmosis
@@ -239,7 +239,7 @@ export function buildCreateVaultParamsDCAPlus(
   const destinations =
     chain === Chains.Osmosis
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
-      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+      : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
     chain === Chains.Osmosis
