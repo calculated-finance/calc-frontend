@@ -16,6 +16,7 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
 
 const mockRouter = {
+  isReady: true,
   push: jest.fn(),
   query: { id: '1' },
 };

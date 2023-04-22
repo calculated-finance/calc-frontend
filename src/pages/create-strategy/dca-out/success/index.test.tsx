@@ -7,6 +7,7 @@ import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import Page from './index.page';
 
 const mockRouter = {
+  isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-out/success',
   query: { strategyId: '1', timeSaved: 100 },

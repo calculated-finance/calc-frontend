@@ -10,6 +10,7 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import Page from './index.page';
 
 const mockRouter = {
+  isReady: true,
   push: jest.fn(),
   pathname: '/strategies/top-up',
   query: { id: '1' },

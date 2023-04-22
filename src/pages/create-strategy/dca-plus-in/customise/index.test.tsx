@@ -13,6 +13,7 @@ import { useFormStore } from '@hooks/useFormStore';
 import Page from './index.page';
 
 const mockRouter = {
+  isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-in/customise',
   query: { id: '1' },
