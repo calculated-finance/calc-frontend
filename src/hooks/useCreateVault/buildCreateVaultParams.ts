@@ -68,7 +68,7 @@ function getCallbackDestinations(
   if (yieldOption) {
     if (yieldOption === 'mars') {
       destinations.push({
-        address: getMarsAddress(Chains.Osmosis),
+        address: getMarsAddress(),
         allocation: '1.0',
         msg: Buffer.from(
           JSON.stringify({
@@ -84,12 +84,7 @@ function getCallbackDestinations(
   return destinations.length ? destinations : undefined;
 }
 
-function getDestinations(
-  autoStakeValidator: string | null | undefined,
-  recipientAccount: string | null | undefined,
-  yieldOption: string | null | undefined,
-  senderAddress: string,
-) {
+function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
   const destinations = [] as (Destination | OsmosisDestination)[];
 
   if (autoStakeValidator) {

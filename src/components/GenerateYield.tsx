@@ -12,6 +12,7 @@ import {
   useRadio,
   useRadioGroup,
   Center,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
@@ -22,6 +23,7 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import { getDenomName } from '@utils/getDenomInfo';
 import { getMarsAddress } from '@helpers/chains';
 import { Chains } from '@hooks/useChain';
+import { useEffect } from 'react';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 
@@ -80,34 +82,40 @@ function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { 
   const checkbox = getRadioProps();
 
   return (
-    <Box as="label" {...htmlProps}>
-      <input {...input} />
-      <Box
-        {...checkbox}
-        borderWidth={1}
-        py={4}
-        px={6}
-        borderRadius="2xl"
-        w="full"
-        _hover={{ borderColor: 'grey', cursor: 'pointer' }}
-        _checked={{
-          borderColor: 'brand.200',
-        }}
-        _focusVisible={{
-          boxShadow: 'outline',
-        }}
-      >
-        <Box {...getLabelProps()}>
-          <Flex justify="space-between" align="center" gap={4}>
-            <DenomIcon denomName={resultingDenom} />
-            <Text flexGrow={1} fontSize="sm">
-              Loan {getDenomName(resultingDenom)} on Mars
-            </Text>
-            <Text>{0.1 * 100}%</Text>
-          </Flex>
+    <Tooltip label={props.isDisabled ? `Mars is not yet available for ${getDenomName(resultingDenom)}` : ''}>
+      <Box as="label" {...htmlProps}>
+        <input {...input} />
+        <Box
+          {...checkbox}
+          borderWidth={1}
+          py={4}
+          px={6}
+          borderRadius="2xl"
+          w="full"
+          _hover={{ borderColor: 'grey', cursor: 'pointer' }}
+          _checked={{
+            borderColor: 'brand.200',
+          }}
+          _focusVisible={{
+            boxShadow: 'outline',
+          }}
+          _disabled={{
+            opacity: 0.5,
+            cursor: 'not-allowed',
+          }}
+        >
+          <Box {...getLabelProps()}>
+            <Flex justify="space-between" align="center" gap={4}>
+              <DenomIcon denomName={resultingDenom} />
+              <Text flexGrow={1} fontSize="sm">
+                Loan {getDenomName(resultingDenom)} on Mars
+              </Text>
+              <Text>{0.1 * 100}%</Text>
+            </Flex>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </Tooltip>
   );
 }
 
@@ -120,7 +128,7 @@ function useMars(resultingDenom: string | undefined) {
       if (!client) {
         throw new Error('No client');
       }
-      const result = await client.queryContractSmart(getMarsAddress(Chains.Osmosis), {
+      const result = await client.queryContractSmart(getMarsAddress(), {
         markets: { limit: 100 },
       });
       return result;
@@ -133,11 +141,6 @@ function useMars(resultingDenom: string | undefined) {
 
 export default function GenerateYield({ formName }: { formName: FormNames }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    ...field,
-    value: field.value,
-    onChange: helpers.setValue,
-  });
 
   const { context } = useDcaInFormPostPurchase(formName);
 
@@ -145,9 +148,15 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
 
   const { data, isLoading } = useMars(context?.resultingDenom);
 
-  const marsRadio = getRadioProps({ value: 'mars' });
-
   const marsEnabled = data?.find((market: any) => market.denom === resultingDenom);
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    ...field,
+    value: marsEnabled ? field.value : null,
+    onChange: helpers.setValue,
+  });
+
+  const marsRadio = getRadioProps({ value: 'mars' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -159,11 +168,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
         </Center>
       ) : (
         <Stack {...getRootProps} maxH={200} overflow="auto">
-          {marsEnabled ? (
-            <MarsOption {...marsRadio} resultingDenom={resultingDenom!} />
-          ) : (
-            <Center textStyle="body">There are no yield options available for {getDenomName(resultingDenom!)}</Center>
-          )}
+          <MarsOption {...marsRadio} resultingDenom={resultingDenom!} isDisabled={!marsEnabled} />
         </Stack>
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
