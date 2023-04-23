@@ -18,8 +18,10 @@ class BreakException extends Error {
 
 export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryResponse['prices']) => {
   let currentPrice = null;
+  console.log('fiatPrice', fiatPrices);
   try {
     fiatPrices.forEach((price) => {
+      console.log(price);
       if (new Date(price[0]) > time) {
         throw BreakException;
       }
@@ -34,6 +36,8 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
 
 function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
   let totalAmount = 0;
+
+  console.log('compEvents', completedEvents);
 
   return completedEvents?.map((event) => {
     const { data } = event;
@@ -91,7 +95,11 @@ export function getChartDataSwaps(
       date,
       price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
-        ? `Received ${Number(event.swapAmount.toFixed(4))} ${event.swapDenom} at ${date.toLocaleTimeString()}`
+        ? `Received ${Number(event.swapAmount.toFixed(4))}\n ${
+            event.swapDenom
+          } at ${date.toLocaleTimeString()} \n Swap price: $${Number(currentPriceInTime).toFixed(2)} \n Accumulated: ${
+            event.accumulation
+          } `
         : undefined,
     };
   });
