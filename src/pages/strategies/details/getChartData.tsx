@@ -73,10 +73,11 @@ export const findCurrentAmountInTime = (time: number, events: EventWithAccumulat
 export function getChartDataSwaps(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
   includeLabel: boolean,
 ) {
   const completedEvents = getCompletedEvents(events);
-  if (!completedEvents || !fiatPrices) {
+  if (!completedEvents || !fiatPrices || !displayPrices) {
     return null;
   }
   const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
@@ -84,6 +85,8 @@ export function getChartDataSwaps(
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
     const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
+    const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
+
     if (currentPriceInTime === null) {
       return null;
     }
@@ -91,7 +94,7 @@ export function getChartDataSwaps(
       date,
       price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
-        ? `Buy: ${event.swapDenom} \n Price: $${Number(currentPriceInTime).toFixed(2)} USD \n Date: ${date
+        ? `Buy: ${event.swapDenom} \n Price: $${Number(currentDisplayPriceInTime).toFixed(2)} USD \n Date: ${date
             .toLocaleDateString('en-AU', {
               day: '2-digit',
               month: 'short',
