@@ -260,7 +260,13 @@ export function buildCreateVaultParamsDCAPlus(
 
   const destinations =
     chain === Chains.Osmosis
-      ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
+      ? getCallbackDestinations(
+          state.autoStakeValidator,
+          state.recipientAccount,
+          state.yieldOption,
+          senderAddress,
+          state.reinvestStrategy,
+        )
       : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
