@@ -250,6 +250,16 @@ export function buildCreateVaultParamsDCAPlus(
           pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
         };
 
+  const dcaPlusConfig =
+    chain === Chains.Osmosis
+      ? {
+          swap_adjustment_strategy: 'dca_plus',
+          performance_assessment_strategy: 'compare_to_standard_dca',
+        }
+      : {
+          use_dca_plus: true,
+        };
+
   const msg = {
     create_vault: {
       label: '',
@@ -260,7 +270,7 @@ export function buildCreateVaultParamsDCAPlus(
       target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations,
-      use_dca_plus: true,
+      ...dcaPlusConfig,
     },
   };
 

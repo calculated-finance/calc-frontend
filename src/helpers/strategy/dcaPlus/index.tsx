@@ -1,5 +1,5 @@
 import { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import totalExecutions from '@utils/totalExecutions';
 
 import { SWAP_FEE } from 'src/constants';
@@ -17,13 +17,8 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { useChainStore } from '@hooks/useChain';
-
-function getDcaPlusConfig(strategy: Strategy) {
-  const { dca_plus_config } = strategy;
-
-  return dca_plus_config;
-}
+import { Chains, useChainStore } from '@hooks/useChain';
+import { getDcaPlusConfig } from '../isDcaPlus';
 
 export function getStandardDcaTotalReceived(strategy: Strategy) {
   const { standard_dca_received_amount } = getDcaPlusConfig(strategy) || {};

@@ -19,13 +19,13 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyRemainingExecutions,
   getStrategyType,
-  isDcaPlus,
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
 import { Vault } from 'src/interfaces/generated/response/get_vaults';
 import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies

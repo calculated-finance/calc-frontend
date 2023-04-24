@@ -6,17 +6,14 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
-import { useChainStore } from '@hooks/useChain';
+import { Chains, useChainStore } from '@hooks/useChain';
 import { LockableDuration, Destination } from 'src/interfaces/generated-osmosis/execute';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
-
-export function isDcaPlus(strategy: Strategy) {
-  return Boolean(strategy.dca_plus_config);
-}
+import { isDcaPlus } from './isDcaPlus';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {

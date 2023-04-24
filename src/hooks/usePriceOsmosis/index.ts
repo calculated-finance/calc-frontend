@@ -5,7 +5,7 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
 import { safeInvert } from '@hooks/usePrice';
-import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import useQueryWithNotification from '../useQueryWithNotification';
@@ -64,6 +64,8 @@ export default function usePriceOsmosis(
         )
       : null;
 
+  const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
+
   const {
     data,
     isLoading: isPriceLoading,
@@ -71,17 +73,16 @@ export default function usePriceOsmosis(
   } = useQueryWithNotification<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
-      const osmosisPair = pair as OsmosisPair;
-      const route = transactionType === TransactionType.Buy ? osmosisPair.route : osmosisPair.route.reverse();
+      const directionalRoute = transactionType === TransactionType.Buy ? route! : route!.reverse();
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
         tokenIn: `1000000${initialDenom}`,
-        routes: findRoute(route, initialDenom!, pools!),
+        routes: findRoute(directionalRoute, initialDenom!, pools!),
       });
       return result;
     },
     {
-      enabled: !!client && !!pair && !!enabled && !!pools,
+      enabled: !!client && !!route && !!enabled && !!pools,
     },
   );
 

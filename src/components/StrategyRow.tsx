@@ -12,9 +12,9 @@ import {
   getStrategyType,
   getStrategyName,
   isStrategyCancelled,
-  isDcaPlus,
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
