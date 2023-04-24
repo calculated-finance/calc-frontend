@@ -1,5 +1,5 @@
 import { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import totalExecutions from '@utils/totalExecutions';
 
 import { SWAP_FEE } from 'src/constants';
@@ -17,10 +17,14 @@ import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/ge
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { useChainStore } from '@hooks/useChain';
+import { Chains, useChainStore } from '@hooks/useChain';
 
-function getDcaPlusConfig(strategy: Strategy) {
-  const { dca_plus_config } = strategy;
+function getDcaPlusConfig(strategy: Strategy | StrategyOsmosis) {
+  const { chain } = useChainStore.getState();
+  const dca_plus_config =
+    chain === Chains.Kujira
+      ? (strategy as Strategy).dca_plus_config
+      : (strategy as StrategyOsmosis).swap_adjustment_strategy?.dca_plus;
 
   return dca_plus_config;
 }

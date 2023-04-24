@@ -254,6 +254,7 @@ export function buildCreateVaultParamsDCAPlus(
     chain === Chains.Osmosis
       ? {
           swap_adjustment_strategy: 'dca_plus',
+          performance_assessment_strategy: 'compare_to_standard_dca',
         }
       : {
           use_dca_plus: true,
