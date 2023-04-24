@@ -12,6 +12,7 @@ import {
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
+import { CustomToolTip } from '@components/CustomToolTip';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { formatFiat } from '@helpers/format/formatFiat';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -112,12 +113,26 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }
               />
               <VictoryScatter
-                style={{ data: { fill: '#1AEFAF' } }}
-                size={5}
+                style={{
+                  data: { fill: '#1AEFAF', stroke: 'white', strokeWidth: 1 },
+                  labels: { fill: 'white', fontSize: 6 },
+                }}
+                size={6}
                 data={swapsDataWithLabel}
                 x="date"
                 y="marketValue"
-                labelComponent={<VictoryTooltip />}
+                labelComponent={
+                  <VictoryTooltip
+                    flyoutStyle={{
+                      fill: '#1B202B',
+                      stroke: 'none',
+                      filter: 'drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))',
+                    }}
+                    cornerRadius={10}
+                    style={{ fill: 'white' }}
+                    flyoutPadding={16}
+                  />
+                }
               />
               <VictoryArea
                 style={{
@@ -125,7 +140,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }}
                 data={chartData}
                 standalone={false}
-                interpolation="step"
+                interpolation="natural"
                 labelComponent={<VictoryTooltip />}
                 x="date"
                 y="marketValue"
