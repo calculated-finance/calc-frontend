@@ -41,7 +41,6 @@ import {
   getPriceCeilingFloor,
   getConvertedSwapAmount,
   isStrategyAutoStaking,
-  isDcaPlus,
   isStrategyOperating,
   getStrategyProvideLiquidityConfig,
   isBuyStrategy,
@@ -56,6 +55,7 @@ import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {

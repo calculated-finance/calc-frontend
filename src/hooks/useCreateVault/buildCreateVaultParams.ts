@@ -270,7 +270,6 @@ export function buildCreateVaultParamsDCAPlus(
       target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations,
-      use_dca_plus: true,
       ...dcaPlusConfig,
     },
   };

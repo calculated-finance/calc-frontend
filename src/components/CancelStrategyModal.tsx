@@ -19,7 +19,7 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { getStrategyInitialDenom, getStrategyResultingDenom, isDcaPlus } from '@helpers/strategy';
+import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
 import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
@@ -28,6 +28,7 @@ import useCancelStrategy from 'src/hooks/useCancelStrategy';
 import { CANCEL_VAULT_FEE } from 'src/constants';
 import { formatDate } from '@helpers/format/formatDate';
 import useStrategyEvents from '@hooks/useStrategyEvents';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;

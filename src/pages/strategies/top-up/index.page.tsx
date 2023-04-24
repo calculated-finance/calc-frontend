@@ -18,10 +18,10 @@ import getStrategyBalance, {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyName,
-  isDcaPlus,
 } from '@helpers/strategy';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { DcaPlusTopUp } from '@components/helpContent/DcaPlusTopUp';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import TopUpAmount from './TopUpAmount';
 
 export const topUpSteps: StepConfig[] = [

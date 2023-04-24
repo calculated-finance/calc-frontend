@@ -8,14 +8,10 @@ import {
   getPerformanceFactor,
   getSwappedSaved,
 } from '@helpers/strategy/dcaPlus';
-import {
-  getStrategyResultingDenom,
-  getConvertedSwapAmount,
-  getStrategyInitialDenom,
-  isDcaPlus,
-} from '@helpers/strategy';
+import { getStrategyResultingDenom, getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 
 export function puraliseDays(val: number) {
   return val === 1 ? 'day' : 'days';

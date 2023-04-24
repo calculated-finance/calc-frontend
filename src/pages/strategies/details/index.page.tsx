@@ -28,10 +28,11 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@hooks/useStrategies';
-import { isDcaPlus, getStrategyName } from '@helpers/strategy';
+import { getStrategyName } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';

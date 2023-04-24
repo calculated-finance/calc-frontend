@@ -1,5 +1,5 @@
 import mockStrategy, { dcaPlusStrategy } from 'src/fixtures/strategy';
-import { isDcaPlus } from '..';
+import { isDcaPlus } from '.';
 
 describe('isDcaPlus', () => {
   test('returns true for strategy with dca_plus_config property', () => {

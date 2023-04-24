@@ -17,10 +17,11 @@ import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
-import { getConvertedSwapAmount, getStrategyInitialDenom, isDcaPlus } from '@helpers/strategy';
+import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { Pages } from '@components/Sidebar/Pages';
 import Link from 'next/link';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
   const { displayAmount, isLoading } = useBalance({
