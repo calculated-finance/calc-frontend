@@ -7,6 +7,22 @@ import { queryClient } from '@helpers/test/testQueryClient';
 import Home from './index.page';
 import '@testing-library/jest-dom';
 
+const mockRouter = {
+  isReady: true,
+  push: jest.fn(),
+  pathname: '/',
+  query: { id: '1' },
+  events: {
+    on: jest.fn(),
+  },
+};
+
+jest.mock('next/router', () => ({
+  useRouter() {
+    return mockRouter;
+  },
+}));
+
 jest.mock('@hooks/useStrategies');
 jest.mock('@hooks/useWallet');
 
