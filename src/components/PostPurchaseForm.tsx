@@ -16,7 +16,7 @@ import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
 import GenerateYield from './GenerateYield';
-import Reinvest from './Reinvest';
+import { Reinvest } from './Reinvest';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });

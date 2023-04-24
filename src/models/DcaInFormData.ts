@@ -44,6 +44,7 @@ export const initialValues = {
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
   yieldOption: null,
+  reinvestStrategy: '',
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -383,6 +384,7 @@ export const postPurchaseValidationSchema = dcaSchema.pick([
   'autoStake',
   'autoStakeValidator',
   'yieldOption',
+  'reinvestStrategy',
 ]);
 export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 

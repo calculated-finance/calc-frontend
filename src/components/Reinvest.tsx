@@ -16,11 +16,18 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { FormNames } from '@hooks/useFormStore';
-import { getStrategyInitialDenom, getStrategyName, getStrategyResultingDenom } from '@helpers/strategy';
+import {
+  getStrategyInitialDenom,
+  getStrategyName,
+  getStrategyResultingDenom,
+  isStrategyCancelled,
+} from '@helpers/strategy';
 import useStrategies from '@hooks/useStrategies';
 import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
 import { ArrowRightIcon } from '@fusion-icons/react/interface';
+import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
+import { isEmpty } from 'lodash';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -68,7 +75,7 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
   );
 }
 
-export default function Reinvest() {
+export function Reinvest({ formName }: { formName: FormNames }) {
   const [field, meta, helpers] = useField({ name: 'reinvestStrategy' });
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -76,7 +83,21 @@ export default function Reinvest() {
     onChange: helpers.setValue,
   });
 
+  console.log(meta);
+
   const { data, isLoading } = useStrategies();
+  const { context } = useDcaInFormPostPurchase(formName);
+
+  const filteredStrategies = data?.vaults.filter((strategy: Strategy) => {
+    if (getStrategyInitialDenom(strategy) !== context?.resultingDenom) {
+      return false;
+    }
+
+    if (isStrategyCancelled(strategy)) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -88,10 +109,14 @@ export default function Reinvest() {
         <Center>
           <Spinner />
         </Center>
+      ) : isEmpty(filteredStrategies) ? (
+        <Stack {...getRootProps} maxH={200} overflow="auto">
+          <Center>No suitable strategies available</Center>
+        </Stack>
       ) : (
         <Stack {...getRootProps} maxH={200} overflow="auto">
-          {data?.vaults.map((strategy: Strategy) => {
-            const radio = getRadioProps({ value: strategy.id });
+          {filteredStrategies?.map((strategy: Strategy) => {
+            const radio = getRadioProps({ value: strategy.id.toString() });
             return <StrategyOption key={strategy.id} {...radio} strategy={strategy} />;
           })}
         </Stack>
