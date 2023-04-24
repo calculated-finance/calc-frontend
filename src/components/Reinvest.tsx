@@ -109,8 +109,6 @@ export function Reinvest({ formName }: { formName: FormNames }) {
     onChange: helpers.setValue,
   });
 
-  console.log(meta);
-
   const { data, isLoading } = useStrategies();
   const { context } = useDcaInFormPostPurchase(formName);
 
