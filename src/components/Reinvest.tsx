@@ -13,6 +13,14 @@ import {
   useRadioGroup,
   Center,
   HStack,
+  Link,
+  Popover,
+  PopoverTrigger,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  IconButton,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { FormNames } from '@hooks/useFormStore';
@@ -28,6 +36,7 @@ import Icon from '@components/Icon';
 import { ArrowRightIcon } from '@fusion-icons/react/interface';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import { isEmpty } from 'lodash';
+import { InfoOutlineIcon } from '@chakra-ui/icons';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -40,38 +49,55 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
   const checkbox = getRadioProps();
 
   return (
-    <Box as="label" {...htmlProps}>
-      <input {...input} />
-      <Box
-        {...checkbox}
-        borderWidth={1}
-        py={4}
-        px={6}
-        borderRadius="2xl"
-        w="full"
-        _hover={{ borderColor: 'grey', cursor: 'pointer' }}
-        _checked={{
-          borderColor: 'brand.200',
-        }}
-        _focusVisible={{
-          boxShadow: 'outline',
-        }}
-      >
-        <Box {...getLabelProps()}>
-          <Flex justify="space-between" align="center" gap={4}>
-            <HStack spacing={1}>
-              <DenomIcon showTooltip denomName={getStrategyInitialDenom(strategy)} />
-              <Icon as={ArrowRightIcon} stroke="grey" />
-              <DenomIcon showTooltip denomName={getStrategyResultingDenom(strategy)} />
-            </HStack>
-            <Text flexGrow={1} fontSize="sm">
-              {getStrategyName(strategy)}
-            </Text>
-            <StrategyStatusBadge strategy={strategy} />
-          </Flex>
+    <Flex align="center" justify="space-between" gap={3} w="full">
+      <Box as="label" {...htmlProps} w="full">
+        <input {...input} />
+        <Box
+          {...checkbox}
+          borderWidth={1}
+          py={4}
+          px={6}
+          borderRadius="2xl"
+          w="full"
+          _hover={{ borderColor: 'grey', cursor: 'pointer' }}
+          _checked={{
+            borderColor: 'brand.200',
+          }}
+          _focusVisible={{
+            boxShadow: 'outline',
+          }}
+        >
+          <Box {...getLabelProps()}>
+            <Flex justify="space-between" align="center" gap={4}>
+              <HStack spacing={1}>
+                <DenomIcon showTooltip denomName={getStrategyInitialDenom(strategy)} />
+                <Icon as={ArrowRightIcon} stroke="grey" />
+                <DenomIcon showTooltip denomName={getStrategyResultingDenom(strategy)} />
+              </HStack>
+              <Text flexGrow={1} fontSize="sm">
+                {getStrategyName(strategy)}
+              </Text>
+              <StrategyStatusBadge strategy={strategy} />
+            </Flex>
+          </Box>
         </Box>
       </Box>
-    </Box>
+      <Popover>
+        <PopoverTrigger>
+          <IconButton colorScheme="blue" icon={<InfoOutlineIcon />} aria-label="More details" variant="ghost" />
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody>
+            <Text fontSize="sm">{getStrategyName(strategy)}</Text>
+            <Link isExternal href={`/strategies/details/?id=${strategy.id}`}>
+              More details
+            </Link>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    </Flex>
   );
 }
 

@@ -43,8 +43,11 @@ function getCallbackDestinations(
   recipientAccount: string | null | undefined,
   yieldOption: string | null | undefined,
   senderAddress: string,
+  reinvestStrategy: string | null | undefined,
 ) {
   const destinations = [] as (Destination | OsmosisDestination)[];
+
+  const { chain } = useChainStore.getState();
 
   if (autoStakeValidator) {
     destinations.push({
@@ -65,6 +68,20 @@ function getCallbackDestinations(
     destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
   }
 
+  if (reinvestStrategy) {
+    const msg = {
+      deposit: {
+        vault_id: reinvestStrategy,
+        address: senderAddress,
+      },
+    };
+    destinations.push({
+      address: getChainContractAddress(chain),
+      allocation: '1.0',
+      msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
+    });
+  }
+
   if (yieldOption) {
     if (yieldOption === 'mars') {
       const msg = {
@@ -72,7 +89,6 @@ function getCallbackDestinations(
           on_behalf_of: senderAddress,
         },
       };
-      console.log(msg);
       destinations.push({
         address: getMarsAddress(),
         allocation: '1.0',
@@ -183,7 +199,13 @@ export function buildCreateVaultParamsDCA(
 
   const destinations =
     chain === Chains.Osmosis
-      ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
+      ? getCallbackDestinations(
+          state.autoStakeValidator,
+          state.recipientAccount,
+          state.yieldOption,
+          senderAddress,
+          state.reinvestStrategy,
+        )
       : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
