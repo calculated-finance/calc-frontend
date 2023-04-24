@@ -306,6 +306,14 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  reinvestStrategy: Yup.string()
+    .label('Reinvest Strategy')
+    .nullable()
+    .when('postPurchaseOption', {
+      is: PostPurchaseOptions.Reinvest,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
 
   strategyDuration: Yup.number()
     .label('Strategy Duration')
@@ -361,6 +369,7 @@ export const dcaSchema = Yup.object({
   autoStakeValidator: allSchema.autoStakeValidator,
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
+  reinvestStrategy: allSchema.reinvestStrategy,
 });
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
