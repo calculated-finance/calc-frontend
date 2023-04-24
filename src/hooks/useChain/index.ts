@@ -1,7 +1,8 @@
 import { useFormStore } from '@hooks/useFormStore';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
 export enum Chains {
   Kujira = 'Kujira',
@@ -29,13 +30,25 @@ export const useChainStore = create<ChainState>()(
 );
 
 export const useChain = () => {
-  const result = useChainStore();
+  const router = useRouter();
+  const chain = useChainStore((state) => state.chain);
+  const setChain = useChainStore((state) => state.setChain);
 
   const [data, setData] = useState<ChainState>();
 
   useEffect(() => {
-    setData(result);
-  }, [result]);
+    if (router.isReady) {
+      const { chain: queryParamChain, ...otherParams } = router.query;
+      if (queryParamChain) {
+        setChain(queryParamChain as Chains);
+        router.replace({
+          pathname: router.pathname,
+          query: otherParams,
+        });
+      }
+      setData({ chain, setChain });
+    }
+  }, [router, setChain, chain]);
 
   return data || ({} as ChainState);
 };

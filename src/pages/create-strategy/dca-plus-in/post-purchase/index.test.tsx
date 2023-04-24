@@ -21,6 +21,7 @@ const mockKujiraQuery = {
 };
 
 const mockRouter = {
+  isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-in/post-purchase',
   query: { id: '1' },
