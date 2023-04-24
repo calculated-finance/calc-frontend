@@ -49,13 +49,12 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexName, getOsmosisWebUrl } from '@helpers/chains';
+import { getChainDexName, getMarsAddress, getMarsUrl, getOsmosisWebUrl } from '@helpers/chains';
 import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
 import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
-import { OsmosisPair } from '@models/Pair';
 import { TransactionType } from '@components/TransactionType';
 import { CancelButton } from './CancelButton';
 
@@ -348,9 +347,17 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                     <Heading size="xs">Sending to </Heading>
                   </GridItem>
                   <GridItem colSpan={2}>
-                    <Text fontSize="sm" data-testid="strategy-receiving-address">
-                      {destinations[0].address}
-                    </Text>
+                    {destinations[0].address === getMarsAddress() ? (
+                      <ChakraLink isExternal href={getMarsUrl()}>
+                        <Text fontSize="sm" data-testid="strategy-receiving-address">
+                          Mars
+                        </Text>
+                      </ChakraLink>
+                    ) : (
+                      <Text fontSize="sm" data-testid="strategy-receiving-address">
+                        {destinations[0].address}
+                      </Text>
+                    )}
                   </GridItem>
                 </>
               )

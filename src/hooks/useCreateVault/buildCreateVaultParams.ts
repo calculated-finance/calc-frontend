@@ -14,7 +14,7 @@ import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
-import { getChainContractAddress } from '@helpers/chains';
+import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -65,28 +65,26 @@ function getCallbackDestinations(
     destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
   }
 
-  // if (yieldOption) {
-  //   destinations.push({
-  //     address: senderAddress,
-  //     allocation: '1',
-  //     action: {
-  //       z_provide_liquidity: {
-  //         duration: 'one_week',
-  //         pool_id: Number(yieldOption),
-  //       },
-  //     },
-  //   });
-  // }
+  if (yieldOption) {
+    if (yieldOption === 'mars') {
+      const msg = {
+        deposit: {
+          on_behalf_of: senderAddress,
+        },
+      };
+      console.log(msg);
+      destinations.push({
+        address: getMarsAddress(),
+        allocation: '1.0',
+        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
+      });
+    }
+  }
 
   return destinations.length ? destinations : undefined;
 }
 
-function getDestinations(
-  autoStakeValidator: string | null | undefined,
-  recipientAccount: string | null | undefined,
-  yieldOption: string | null | undefined,
-  senderAddress: string,
-) {
+function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
   const destinations = [] as (Destination | OsmosisDestination)[];
 
   if (autoStakeValidator) {
@@ -186,7 +184,7 @@ export function buildCreateVaultParamsDCA(
   const destinations =
     chain === Chains.Osmosis
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
-      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+      : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
     chain === Chains.Osmosis
@@ -241,7 +239,7 @@ export function buildCreateVaultParamsDCAPlus(
   const destinations =
     chain === Chains.Osmosis
       ? getCallbackDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress)
-      : getDestinations(state.autoStakeValidator, state.recipientAccount, state.yieldOption, senderAddress);
+      : getDestinations(state.autoStakeValidator, state.recipientAccount);
 
   const pairAddressOrTargetDenom =
     chain === Chains.Osmosis
