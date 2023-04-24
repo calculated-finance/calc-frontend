@@ -96,6 +96,7 @@ describe('DCA Out post-purchase page', () => {
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
         recipientAccount: 'kujira000000000000000000000000000000000000000',
+        yieldOption: null,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
@@ -122,6 +123,7 @@ describe('DCA Out post-purchase page', () => {
         postPurchaseOption: 'sendToWallet',
         recipientAccount: '',
         sendToWallet: 'yes',
+        yieldOption: null,
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
