@@ -2,6 +2,11 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getCompletedEvents } from '@helpers/getCompletedEvents';
+import DenomIcon from '@components/DenomIcon';
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import { TransactionType } from '@components/TransactionType';
+import usePrice from '@hooks/usePrice';
+import { Chains, useChain } from '@hooks/useChain';
 
 type EventWithAccumulation = {
   time: Date;
@@ -75,6 +80,9 @@ export function getChartDataSwaps(
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
   includeLabel: boolean,
+  initialDenom: any,
+  resultingDenom: any,
+  transactionType: TransactionType,
 ) {
   const completedEvents = getCompletedEvents(events);
   if (!completedEvents || !fiatPrices || !displayPrices) {
@@ -86,6 +94,18 @@ export function getChartDataSwaps(
     const date = new Date(event.time);
     const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
     const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
+    const initialDenomName = getDenomInfo(initialDenom).name;
+    const resultingDenomName = getDenomInfo(resultingDenom).name;
+
+    const { chain } = useChain();
+    const { price, pairAddress, isLoading } = usePrice(
+      resultingDenom,
+      initialDenom,
+      transactionType,
+      chain === Chains.Kujira,
+    );
+    const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
+    const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
     if (currentPriceInTime === null) {
       return null;
@@ -94,7 +114,11 @@ export function getChartDataSwaps(
       date,
       price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       label: includeLabel
-        ? `Buy: ${event.swapDenom} \n Price: $${Number(currentDisplayPriceInTime).toFixed(2)} USD \n Date: ${date
+        ? `${initialDenomName} ➡️ ${resultingDenomName} \n Accumulated: ${event.accumulation.toFixed(
+            2,
+          )} ${resultingDenomName} \n 
+          1 ${initialDenomName} = ${price} ${resultingDenomName} \n
+          Price: $${Number(currentDisplayPriceInTime).toFixed(2)} USD \n Date: ${date
             .toLocaleDateString('en-AU', {
               day: '2-digit',
               month: 'short',
@@ -111,6 +135,7 @@ export function getChartDataSwaps(
 export function getChartData(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  transactionType: TransactionType,
 ) {
   const completedEvents = getCompletedEvents(events);
 
@@ -127,7 +152,7 @@ export function getChartData(
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false) || [])];
+  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false, transactionType) || [])];
 }
 
 export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {

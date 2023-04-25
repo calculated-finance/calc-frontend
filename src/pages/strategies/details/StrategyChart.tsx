@@ -13,12 +13,16 @@ import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
+import { TransactionType } from '@components/TransactionType';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 
-export function StrategyChart({ strategy }: { strategy: Strategy }) {
+export function StrategyChart(
+  { strategy }: { strategy: Strategy },
+  { transactionType }: { transactionType: TransactionType },
+) {
   const [days, setDays] = useState('3');
 
   const elementRef = useRef<HTMLDivElement>(null);
@@ -34,8 +38,16 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
 
-  const chartData = getChartData(events, coingeckoData?.prices);
-  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices, true);
+  const chartData = getChartData(events, coingeckoData?.prices, transactionType);
+  const swapsData = getChartDataSwaps(
+    events,
+    coingeckoData?.prices,
+    displayPrices,
+    true,
+    initialDenom,
+    resultingDenom,
+    transactionType,
+  );
 
   return (
     <GridItem colSpan={6}>
