@@ -75,7 +75,7 @@ export function getChartDataSwaps(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  includeLabel: boolean,
+  includeLabel: boolean | undefined,
   price: string | undefined,
   priceInDenomName: string,
   priceOfDenomName: string,
@@ -136,7 +136,10 @@ export function getChartData(
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false, transactionType) || [])];
+  return [
+    ...chartData,
+    ...(getChartDataSwaps(events, fiatPrices, undefined, undefined, transactionType, '', '') || []),
+  ];
 }
 
 export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
