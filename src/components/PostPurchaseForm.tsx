@@ -16,10 +16,12 @@ import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
 import GenerateYield from './GenerateYield';
+import { Reinvest } from './Reinvest';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
   const { chain } = useChain();
+
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
       value: PostPurchaseOptions.SendToWallet,
@@ -32,6 +34,12 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       label: 'Stake',
       supported: autoStakeSupported,
       enabled: true,
+    },
+    {
+      value: PostPurchaseOptions.Reinvest,
+      label: 'Reinvest',
+      supported: true,
+      enabled: chain === Chains.Osmosis,
     },
     {
       value: PostPurchaseOptions.GenerateYield,
@@ -124,6 +132,11 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
                   </>
                 )}
               </Stack>
+            </Box>
+          </Collapse>
+          <Collapse in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
+            <Box m="px" minH={250}>
+              {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
             </Box>
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>

@@ -44,6 +44,7 @@ export const initialValues = {
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
   yieldOption: null,
+  reinvestStrategy: '',
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -306,6 +307,14 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  reinvestStrategy: Yup.string()
+    .label('Reinvest Strategy')
+    .nullable()
+    .when('postPurchaseOption', {
+      is: PostPurchaseOptions.Reinvest,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
 
   strategyDuration: Yup.number()
     .label('Strategy Duration')
@@ -361,6 +370,7 @@ export const dcaSchema = Yup.object({
   autoStakeValidator: allSchema.autoStakeValidator,
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
+  reinvestStrategy: allSchema.reinvestStrategy,
 });
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
@@ -374,6 +384,7 @@ export const postPurchaseValidationSchema = dcaSchema.pick([
   'autoStake',
   'autoStakeValidator',
   'yieldOption',
+  'reinvestStrategy',
 ]);
 export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
 
