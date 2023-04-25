@@ -119,7 +119,6 @@ export function getChartDataSwaps(
 export function getChartData(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  transactionType: TransactionType,
 ) {
   const completedEvents = getCompletedEvents(events);
 
@@ -136,10 +135,7 @@ export function getChartData(
       price[0],
     ).toLocaleTimeString()})`,
   }));
-  return [
-    ...chartData,
-    ...(getChartDataSwaps(events, fiatPrices, undefined, undefined, transactionType, '', '') || []),
-  ];
+  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, undefined, undefined, '', '', '') || [])];
 }
 
 export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
