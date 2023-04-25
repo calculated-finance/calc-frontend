@@ -1,4 +1,4 @@
-import { Heading, GridItem, Box, Center } from '@chakra-ui/react';
+import { GridItem, Box, Center } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
@@ -14,6 +14,9 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { TransactionType } from '@components/TransactionType';
+import { Chains, useChain } from '@hooks/useChain';
+import usePrice from '@hooks/usePrice';
+import getDenomInfo from '@utils/getDenomInfo';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
@@ -38,15 +41,24 @@ export function StrategyChart(
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
 
+  const { chain } = useChain();
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType, chain === Chains.Kujira);
+
+  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
+  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
+
+  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
+  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
+
   const chartData = getChartData(events, coingeckoData?.prices, transactionType);
   const swapsData = getChartDataSwaps(
     events,
     coingeckoData?.prices,
     displayPrices,
     true,
-    initialDenom,
-    resultingDenom,
-    transactionType,
+    price,
+    priceInDenomName,
+    priceOfDenomName,
   );
 
   return (
