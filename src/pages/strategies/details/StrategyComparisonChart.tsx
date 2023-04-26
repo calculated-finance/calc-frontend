@@ -17,7 +17,6 @@ import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertT
 import { Denom } from '@models/Denom';
 import { getDenomName } from '@utils/getDenomInfo';
 import Spinner from '@components/Spinner';
-import { CustomToolTip } from '@components/CustomToolTip';
 import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
 import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
