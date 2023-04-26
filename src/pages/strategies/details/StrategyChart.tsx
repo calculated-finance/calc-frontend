@@ -13,9 +13,8 @@ import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
+import { formatFiat } from '@helpers/format/formatFiat';
 import { TransactionType } from '@components/TransactionType';
-import { Chains, useChain } from '@hooks/useChain';
-import usePrice from '@hooks/usePrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
@@ -41,25 +40,29 @@ export function StrategyChart(
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
 
-  const { chain } = useChain();
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType, chain === Chains.Kujira);
-
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
   const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
   const { name: priceInDenomName } = getDenomInfo(priceInDenom);
 
-  const chartData = getChartData(events, coingeckoData?.prices);
-  const swapsData = getChartDataSwaps(
-    events,
-    coingeckoData?.prices,
-    displayPrices,
-    true,
-    price,
-    priceInDenomName,
-    priceOfDenomName,
-  );
+  const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
+  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+
+  const swapsDataWithLabel = swapsData?.map((swap) => ({
+    ...swap,
+    label: `${priceOfDenomName} ➡️ ${priceInDenomName} \n Accumulated: ${swap?.event.accumulation.toFixed(2)} ${
+      swap?.event.swapDenom
+    } \n 
+       Date: ${swap?.date
+         .toLocaleDateString('en-AU', {
+           day: '2-digit',
+           month: 'short',
+           year: '2-digit',
+         })
+         .replace(',', '')} \n 1 ${priceInDenomName}  = ${formatFiat(swap?.currentPrice || 0)}
+         `,
+  }));
 
   return (
     <GridItem colSpan={6}>
@@ -115,9 +118,9 @@ export function StrategyChart(
               <VictoryScatter
                 style={{ data: { fill: '#1AEFAF' } }}
                 size={5}
-                data={swapsData}
+                data={swapsDataWithLabel}
                 x="date"
-                y="price"
+                y="marketValue"
                 labelComponent={<VictoryTooltip />}
               />
               <VictoryArea
@@ -129,7 +132,7 @@ export function StrategyChart(
                 interpolation="step"
                 labelComponent={<VictoryTooltip />}
                 x="date"
-                y="price"
+                y="marketValue"
               />
             </VictoryChart>
           )}

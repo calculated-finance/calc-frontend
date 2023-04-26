@@ -65,53 +65,73 @@ const mockPrices = [
 
 describe('getChartData', () => {
   it('should return null if no events', () => {
-    const result = getChartData(undefined, undefined);
+    const result = getChartData(undefined, undefined, undefined);
     expect(result).toBeNull();
   });
   it('should return null if no coingeckoData', () => {
-    const result = getChartData([], undefined);
+    const result = getChartData([], undefined, []);
     expect(result).toBeNull();
   });
   it('should return empty array if no completed events', () => {
-    const result = getChartData([], []);
+    const result = getChartData([], [], []);
     expect(result).toEqual([]);
   });
 
   it('should return chart data', () => {
-    const result = getChartData([buildEvent(2, 10), buildEvent(4, 12)], mockPrices);
+    const result = getChartData([buildEvent(2, 10), buildEvent(4, 12)], mockPrices, mockPrices);
     expect(result).toEqual([
       {
         date: new Date('2021-01-01T00:30:00.000Z'),
-        price: 0,
+        marketValue: 0,
         label: '$0.00 (12:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T01:30:00.000Z'),
-        price: 0,
+        marketValue: 0,
         label: '$0.00 (1:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T02:30:00.000Z'),
-        price: 10,
+        marketValue: 10,
         label: '$10.00 (2:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T03:30:00.000Z'),
-        price: 30,
+        marketValue: 30,
         label: '$30.00 (3:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T04:30:00.000Z'),
-        price: 44,
+        marketValue: 44,
         label: '$44.00 (4:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T05:30:00.000Z'),
-        price: 22,
+        marketValue: 22,
         label: '$22.00 (5:30:00 AM)',
       },
-      { date: new Date('2021-01-01T02:00:00.000Z'), price: 20, label: undefined },
-      { date: new Date('2021-01-01T04:00:00.000Z'), price: 66, label: undefined },
+      {
+        currentPrice: 2,
+        date: new Date('2021-01-01T02:00:00.000Z'),
+        marketValue: 20,
+        event: {
+          time: new Date('2021-01-01T02:00:00.000Z'),
+          accumulation: 9.999999,
+          swapAmount: 9.999999,
+          swapDenom: 'axlUSDC',
+        },
+      },
+      {
+        currentPrice: 3,
+        date: new Date('2021-01-01T04:00:00.000Z'),
+        marketValue: 66,
+        event: {
+          time: new Date('2021-01-01T04:00:00.000Z'),
+          accumulation: 21.999998,
+          swapAmount: 11.999999,
+          swapDenom: 'axlUSDC',
+        },
+      },
     ]);
   });
 
@@ -119,24 +139,35 @@ describe('getChartData', () => {
     const result = getChartData(
       [buildEvent(2, 10), buildEvent(4, 12)],
       [buildPrice(3, 3), buildPrice(4, 2), buildPrice(5, 1)],
+      [buildPrice(3, 3), buildPrice(4, 2), buildPrice(5, 1)],
     );
     expect(result).toEqual([
       {
         date: new Date('2021-01-01T03:30:00.000Z'),
-        price: 30,
+        marketValue: 30,
         label: '$30.00 (3:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T04:30:00.000Z'),
-        price: 44,
+        marketValue: 44,
         label: '$44.00 (4:30:00 AM)',
       },
       {
         date: new Date('2021-01-01T05:30:00.000Z'),
-        price: 22,
+        marketValue: 22,
         label: '$22.00 (5:30:00 AM)',
       },
-      { date: new Date('2021-01-01T04:00:00.000Z'), price: 66, label: undefined },
+      {
+        currentPrice: 3,
+        date: new Date('2021-01-01T04:00:00.000Z'),
+        marketValue: 66,
+        event: {
+          time: new Date('2021-01-01T04:00:00.000Z'),
+          accumulation: 21.999998,
+          swapAmount: 11.999999,
+          swapDenom: 'axlUSDC',
+        },
+      },
     ]);
   });
 });
