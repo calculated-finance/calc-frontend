@@ -12,9 +12,9 @@ import {
 } from 'src/constants';
 
 const osmoTestnetConfig = {
-  chainId: 'osmo-test-4',
-  chainName: 'Osmosis Testnet',
-  rpc: 'https://osmosis-testnet-rpc.allthatnode.com:26657',
+  chainId: 'osmo-test-5',
+  chainName: 'Osmosis Testnet 5',
+  rpc: 'https://osmosis-testnet-rpc.polkachu.com/',
   rest: 'https://lcd-test.osmosis.zone',
   bip44: {
     coinType: 118,
@@ -91,9 +91,9 @@ export function getChainEndpoint(chain: Chains) {
 export function getChainContractAddress(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {
-      return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
+      return 'osmo1fventeva948ue0fzhp6xselr522rnqwger9wg7r0g9f4jemsqh6sz3zukw';
     }
-    return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
+    return 'osmo1fventeva948ue0fzhp6xselr522rnqwger9wg7r0g9f4jemsqh6sz3zukw';
   }
 
   return CONTRACT_ADDRESS;

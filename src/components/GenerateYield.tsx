@@ -19,11 +19,8 @@ import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import { FormNames } from '@hooks/useFormStore';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 import { getDenomName } from '@utils/getDenomInfo';
 import { getMarsAddress } from '@helpers/chains';
-import { Chains } from '@hooks/useChain';
-import { useEffect } from 'react';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 
