@@ -50,7 +50,7 @@ export function StrategyChart(
   const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
   const { name: priceInDenomName } = getDenomInfo(priceInDenom);
 
-  const chartData = getChartData(events, coingeckoData?.prices, transactionType);
+  const chartData = getChartData(events, coingeckoData?.prices);
   const swapsData = getChartDataSwaps(
     events,
     coingeckoData?.prices,
