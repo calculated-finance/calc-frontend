@@ -12,7 +12,6 @@ import {
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
-import { CustomToolTip } from '@components/CustomToolTip';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { formatFiat } from '@helpers/format/formatFiat';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -20,6 +19,24 @@ import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } fro
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
+
+function CustomLabel(props: any) {
+  return (
+    <g>
+      <VictoryTooltip
+        {...props}
+        flyoutStyle={{
+          fill: '#1B202B',
+          stroke: 'none',
+          filter: 'drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))',
+        }}
+        cornerRadius={10}
+        style={{ fill: 'white', textAnchor: 'left', fontSize: 10 }}
+        flyoutPadding={16}
+      />
+    </g>
+  );
+}
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');
@@ -121,18 +138,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 data={swapsDataWithLabel}
                 x="date"
                 y="marketValue"
-                labelComponent={
-                  <VictoryTooltip
-                    flyoutStyle={{
-                      fill: '#1B202B',
-                      stroke: 'none',
-                      filter: 'drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))',
-                    }}
-                    cornerRadius={10}
-                    style={{ fill: 'white' }}
-                    flyoutPadding={16}
-                  />
-                }
+                labelComponent={<CustomLabel props={swapsData} />}
               />
               <VictoryArea
                 style={{
@@ -140,8 +146,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }}
                 data={chartData}
                 standalone={false}
-                interpolation="natural"
-                labelComponent={<VictoryTooltip />}
+                labelComponent={<CustomLabel props={swapsData} />}
                 x="date"
                 y="marketValue"
               />
