@@ -7,16 +7,16 @@ type AccumulatedSwapEvent = {
   swapEvent: SwapEvent | null;
 };
 
-export function buildSwapEventsWithAccumulation(swapEvents: SwapEvent[], creationDate: Date) {
-  // create initial event for creation, if in range
-
+export function buildSwapEventsWithAccumulation(swapEvents: SwapEvent[], creationDate: Date | null) {
   const swapEventsWithAccumulation: AccumulatedSwapEvent[] = [];
 
-  swapEventsWithAccumulation.push({
-    time: creationDate,
-    total: 0,
-    swapEvent: null,
-  });
+  if (creationDate) {
+    swapEventsWithAccumulation.push({
+      time: creationDate,
+      total: 0,
+      swapEvent: null,
+    });
+  }
 
   swapEvents.forEach((swapEvent) => {
     const previousEvent = swapEventsWithAccumulation[swapEventsWithAccumulation.length - 1];
@@ -62,10 +62,6 @@ export function convertDcaPlusEvents(events: StrategyEvent[] | undefined) {
   const creationDate = getCreationDate(events);
   const swapEvents = events.map(createDcaPlusSwapEvent).filter((event) => event !== null) as SwapEvent[];
 
-  if (!creationDate) {
-    return [];
-  }
-
   return buildSwapEventsWithAccumulation(swapEvents, creationDate);
 }
 
@@ -76,10 +72,6 @@ export function convertTradEvents(events: StrategyEvent[] | undefined) {
 
   const creationDate = getCreationDate(events);
   const swapEvents = events.map(createTradSwapEvent).filter((event) => event !== null) as SwapEvent[];
-
-  if (!creationDate) {
-    return [];
-  }
 
   return buildSwapEventsWithAccumulation(swapEvents, creationDate);
 }

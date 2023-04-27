@@ -51,6 +51,7 @@ export function createTradSwapEvent(strategyEvent: StrategyEvent): SwapEvent | n
 export function getCreationDate(strategyEvents: StrategyEvent[]) {
   const creationEvent = strategyEvents.find((event) => 'dca_vault_created' in event.data);
 
+  console.log(strategyEvents);
   if (!creationEvent) {
     return null;
   }
