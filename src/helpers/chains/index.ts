@@ -120,10 +120,7 @@ export function getChainStakingRouterContractAddress(chain: Chains) {
 
 export function getChainId(chain: Chains) {
   if (chain === Chains.Osmosis) {
-    if (isMainnet()) {
-      return 'osmo-test-4';
-    }
-    return 'osmo-test-4';
+    return getChainInfo(chain).chainId;
   }
   return CHAIN_ID;
 }
