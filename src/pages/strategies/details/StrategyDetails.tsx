@@ -26,7 +26,6 @@ import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
-import { isAutoStaking } from '@helpers/isAutoStaking';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {

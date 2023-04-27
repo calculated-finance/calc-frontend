@@ -50,6 +50,8 @@ function Page() {
     goToStep(0);
   };
 
+  console.log(state);
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>

@@ -3,8 +3,9 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 
-export function SummaryYourDeposit({ state, strategyType }: { state: any; strategyType: StrategyTypes }) {
+export function SummaryYourDeposit({ state, strategyType }: { state: DcaFormState; strategyType: StrategyTypes }) {
   const { initialDenom, initialDeposit } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);

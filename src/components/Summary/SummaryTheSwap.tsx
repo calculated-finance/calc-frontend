@@ -5,9 +5,10 @@ import totalExecutions from 'src/utils/totalExecutions';
 import BadgeButton from '@components/BadgeButton';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwap({ state }: any) {
+export function SummaryTheSwap({ state }: { state: DcaInFormDataAll }) {
   const { initialDenom, resultingDenom, initialDeposit, swapAmount, executionInterval } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);

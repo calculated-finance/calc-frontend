@@ -5,6 +5,7 @@ import BadgeButton from '@components/BadgeButton';
 import useValidator from '@hooks/useValidator';
 import useStrategy from '@hooks/useStrategy';
 import { getStrategyName } from '@helpers/strategy';
+import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
   const { data: strategy, isLoading } = useStrategy(reinvestStrategy);
@@ -24,7 +25,7 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
   );
 }
 
-export function SummaryAfterEachSwap({ state }: any) {
+export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
   const { resultingDenom, autoStakeValidator, recipientAccount, yieldOption, reinvestStrategy } = state;
 
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);

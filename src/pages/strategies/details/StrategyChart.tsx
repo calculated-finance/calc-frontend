@@ -1,4 +1,4 @@
-import { Heading, GridItem, Box, Center } from '@chakra-ui/react';
+import { GridItem, Box, Center } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
@@ -36,7 +36,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   return (
     <GridItem colSpan={6}>
       <Box layerStyle="panel" position="relative">
-        {events && <StrategyChartStats strategy={strategy} strategyEvents={events} />}
+        {events && <StrategyChartStats strategy={strategy} />}
         <Box p={6} position="absolute" top={0} right={0}>
           <DaysRadio value={days} onChange={setDays} />
         </Box>

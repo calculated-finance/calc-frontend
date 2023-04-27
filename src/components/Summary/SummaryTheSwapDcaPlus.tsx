@@ -5,8 +5,7 @@ import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getSwapRange } from '@helpers/ml/getSwapRange';
-import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
-import { SummaryTriggerInfo } from './SummaryTriggerInfo';
+import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, strategyDuration, initialDeposit } = state;
@@ -22,8 +21,7 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
     <Box data-testid="summary-the-swap-dca-plus">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <SummaryTriggerInfo state={{ startImmediately: StartImmediatelyValues.Yes, ...state }} />, CALC will swap
-        between{' '}
+        <ImmediateTriggerInfo />, CALC will swap between{' '}
         <BadgeButton url="customise">
           <Text>
             {minSwap} {initialDenomName}

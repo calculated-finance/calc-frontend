@@ -2,9 +2,9 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
-import { initialValues } from '@models/DcaInFormData';
+import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 
-export function SummaryWhileSwapping({ state }: any) {
+export function SummaryWhileSwapping({ state }: { state: DcaInFormDataAll }) {
   const { initialDenom, resultingDenom, priceThresholdValue, slippageTolerance } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
