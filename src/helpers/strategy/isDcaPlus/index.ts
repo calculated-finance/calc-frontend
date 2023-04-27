@@ -18,7 +18,7 @@ export function getDcaPlusConfig(strategy: Strategy | StrategyOsmosis) {
         osmosisStrategy.performance_assessment_strategy?.compare_to_standard_dca.swapped_amount,
       escrow_level: osmosisStrategy.escrow_level,
       escrowed_balance: osmosisStrategy.escrowed_amount,
-      model_id: osmosisStrategy.swap_adjustment_strategy?.dca_plus.model_id,
+      model_id: osmosisStrategy.swap_adjustment_strategy?.risk_weighted_average.model_id,
     };
   }
 
