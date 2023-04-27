@@ -39,13 +39,13 @@ export default function useDexFee(
     if (route) {
       if (route.length === 1) {
         const pool = pools?.find((p) => p.id.toNumber() === route[0]);
-        const swapFee = Number(pool?.poolParams?.swapFee) / 10 ** 18;
+        const swapFee = Number(pool?.poolParams?.swapFee || 0) / 10 ** 18;
         return { dexFee: swapFee };
       }
       let osmoCount = 0;
       const dexFee = route.reduce((totalFee, poolId) => {
         const pool = pools?.find((p) => p.id.toNumber() === poolId);
-        const swapFee = Number(pool?.poolParams?.swapFee) / 10 ** 18;
+        const swapFee = Number(pool?.poolParams?.swapFee || 0) / 10 ** 18;
         const assets = pool?.poolAssets;
 
         if (assets?.find((asset) => asset.token?.denom === 'uosmo')) {
