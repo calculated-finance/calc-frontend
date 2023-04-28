@@ -2,10 +2,20 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
-import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
+import { initialValues } from '@models/DcaInFormData';
 
-export function SummaryWhileSwapping({ state }: { state: DcaInFormDataAll }) {
-  const { initialDenom, resultingDenom, priceThresholdValue, slippageTolerance } = state;
+export function SummaryWhileSwapping({
+  initialDenom,
+  resultingDenom,
+  priceThresholdValue,
+  slippageTolerance,
+}: {
+  initialDenom: string;
+  resultingDenom: string;
+  priceThresholdValue: number | null | undefined;
+  slippageTolerance: number | null | undefined;
+}) {
+  // const { initialDenom, resultingDenom, priceThresholdValue, slippageTolerance } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);

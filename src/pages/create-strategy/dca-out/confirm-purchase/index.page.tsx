@@ -62,7 +62,12 @@ function Page() {
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
             <SummaryTheSwap state={state} />
-            <SummaryWhileSwapping state={state} />
+            <SummaryWhileSwapping
+              initialDenom={state.initialDenom}
+              resultingDenom={state.resultingDenom}
+              priceThresholdValue={state.priceThresholdValue}
+              slippageTolerance={state.slippageTolerance}
+            />
             <SummaryAfterEachSwap state={state} />
             <Fees formName={FormNames.DcaOut} transactionType={TransactionType.Sell} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />

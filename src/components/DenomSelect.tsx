@@ -38,10 +38,10 @@ function DenomOption({
 
 function getDenomOptionComponent(rightLabel?: string, showPromotion?: boolean) {
   // eslint-disable-next-line func-names
-  return function ({ children: childrenProp, data, isSelected, ...props }: any) {
+  return function ({ children: childrenProp, denom, isSelected, ...props }: OptionProps & { denom: Denom }) {
     return (
       <DenomOption
-        denom={data.value}
+        denom={denom}
         isSelected={isSelected}
         rightLabel={rightLabel}
         showPromotion={showPromotion}
