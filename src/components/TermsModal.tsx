@@ -14,7 +14,6 @@ import {
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import { Form, Formik } from 'formik';
 import Submit from '@components/Submit';
-import { useChain } from '@hooks/useChain';
 
 export type TermsModalProps = {
   onSubmit?: () => void;
@@ -26,7 +25,6 @@ type AgreementForm = {
 };
 
 export function TermsModal({ isOpen, onClose, onSubmit, showCheckbox }: TermsModalProps) {
-  const { chain } = useChain();
   const validate = (values: AgreementForm) => {
     if (!values.acceptedAgreement && showCheckbox) {
       return { acceptedAgreement: 'You must accept the terms and conditions before continuing.' };

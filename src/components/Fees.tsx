@@ -21,9 +21,6 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
-import usePairs from '@hooks/usePairs';
-import { findPair } from '@helpers/findPair';
-import { OsmosisPair } from '@models/Pair';
 import { getChainDexName } from '@helpers/chains';
 import { TransactionType } from './TransactionType';
 

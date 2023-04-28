@@ -86,7 +86,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { data: pools } = useOsmosisPools();
-  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig(strategy)?.pool_id);
+  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig()?.pool_id);
   return pool ? (
     <ChakraLink isExternal href={`${getOsmosisWebUrl()}/pool/${pool.id}`}>
       <HStack>
@@ -328,7 +328,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </Text>
                 </GridItem>
               </>
-            ) : getStrategyProvideLiquidityConfig(strategy) ? (
+            ) : getStrategyProvideLiquidityConfig() ? (
               <>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Providing liquidity to</Heading>

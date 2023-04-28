@@ -1,4 +1,4 @@
-import { Link, ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/react';
 import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
