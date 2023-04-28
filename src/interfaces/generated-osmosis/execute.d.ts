@@ -36,6 +36,12 @@ export type ExecuteMsg =
       };
     }
   | {
+      update_vault: {
+        label?: string | null;
+        vault_id: Uint128;
+      };
+    }
+  | {
       cancel_vault: {
         vault_id: Uint128;
       };
@@ -47,11 +53,11 @@ export type ExecuteMsg =
     }
   | {
       update_config: {
-        dca_plus_escrow_level?: Decimal | null;
         delegation_fee_percent?: Decimal | null;
         fee_collectors?: FeeCollector[] | null;
         page_limit?: number | null;
         paused?: boolean | null;
+        risk_weighted_average_escrow_level?: Decimal | null;
         swap_fee_percent?: Decimal | null;
       };
     }

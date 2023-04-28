@@ -55,7 +55,7 @@ export type QueryMsg =
       get_custom_swap_fees: {};
     }
   | {
-      get_dca_plus_performance: {
+      get_vault_performance: {
         vault_id: Uint128;
       };
     }
