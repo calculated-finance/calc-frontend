@@ -1,21 +1,13 @@
 import { Stat, StatNumber, Stack, StatLabel, StatHelpText, StatArrow } from '@chakra-ui/react';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Strategy } from '@hooks/useStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
-import { OsmosisPair } from '@models/Pair';
 import { TransactionType } from '@components/TransactionType';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
-export function StrategyChartStats({
-  strategy,
-  strategyEvents,
-}: {
-  strategy: Strategy;
-  strategyEvents: StrategyEvent[];
-}) {
+export function StrategyChartStats({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);

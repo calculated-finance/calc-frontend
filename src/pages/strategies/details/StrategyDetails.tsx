@@ -26,7 +26,6 @@ import useValidator from '@hooks/useValidator';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
-import { isAutoStaking } from '@helpers/isAutoStaking';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {
@@ -87,7 +86,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { data: pools } = useOsmosisPools();
-  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig(strategy)?.pool_id);
+  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig()?.pool_id);
   return pool ? (
     <ChakraLink isExternal href={`${getOsmosisWebUrl()}/pool/${pool.id}`}>
       <HStack>
@@ -329,7 +328,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </Text>
                 </GridItem>
               </>
-            ) : getStrategyProvideLiquidityConfig(strategy) ? (
+            ) : getStrategyProvideLiquidityConfig() ? (
               <>
                 <GridItem colSpan={1}>
                   <Heading size="xs">Providing liquidity to</Heading>

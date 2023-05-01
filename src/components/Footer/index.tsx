@@ -1,4 +1,4 @@
-import { Link, Stack, Text } from '@chakra-ui/react';
+import { Link, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { TwitterIcon, DiscordIcon, TelegramIcon } from '@fusion-icons/react/interface';
 import { CALC_TELEGRAM_URL } from 'src/constants';

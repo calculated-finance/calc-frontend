@@ -49,7 +49,6 @@ function Page() {
     actions.resetAction();
     goToStep(0);
   };
-
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
@@ -66,7 +65,12 @@ function Page() {
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
             <SummaryTheSwapDcaPlus state={state} />
-            <SummaryWhileSwapping state={state} />
+            <SummaryWhileSwapping
+              initialDenom={state.initialDenom}
+              resultingDenom={state.resultingDenom}
+              priceThresholdValue={undefined}
+              slippageTolerance={state.slippageTolerance}
+            />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
             <FeesDcaPlus formName={FormNames.DcaPlusOut} transactionType={TransactionType.Sell} />

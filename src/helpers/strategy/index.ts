@@ -1,4 +1,4 @@
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -6,8 +6,7 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
-import { Chains, useChainStore } from '@hooks/useChain';
-import { LockableDuration, Destination } from 'src/interfaces/generated-osmosis/execute';
+import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -235,7 +234,7 @@ export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
 }
 
-export function getStrategyProvideLiquidityConfig(strategy: Strategy | StrategyOsmosis):
+export function getStrategyProvideLiquidityConfig():
   | {
       duration: LockableDuration;
       pool_id: number;

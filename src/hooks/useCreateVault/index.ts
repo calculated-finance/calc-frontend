@@ -92,7 +92,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
       throw Error('No pairs found');
     }
 
-    const { autoStakeValidator, yieldOption } = state;
+    const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
       msgs.push(getGrantMsg(senderAddress, chain));

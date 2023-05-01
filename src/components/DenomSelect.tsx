@@ -1,4 +1,4 @@
-import { Badge, Flex, HStack, Spacer, Text } from '@chakra-ui/react';
+import { Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -16,37 +16,28 @@ function DenomSelectLabel({ denom }: { denom: Denom }) {
 }
 
 function DenomOption({
-  denom,
   showPromotion,
   isSelected,
   rightLabel,
   children,
   ...optionProps
-}: OptionProps & { denom: Denom; rightLabel?: string; showPromotion?: boolean }) {
-  const { promotion } = getDenomInfo(denom);
+}: OptionProps & { rightLabel?: string; showPromotion?: boolean }) {
   return (
     <chakraComponents.Option isSelected={isSelected} {...optionProps}>
       <Flex alignItems="center" w="full">
         {children}
         <Spacer />
-        {showPromotion && promotion && !rightLabel && <Badge colorScheme={isSelected ? 'abyss' : 'blue'}>PROMO</Badge>}
         {rightLabel && <Text fontSize="xs">{rightLabel}</Text>}
       </Flex>
     </chakraComponents.Option>
   );
 }
 
-function getDenomOptionComponent(rightLabel?: string, showPromotion?: boolean) {
+function getDenomOptionComponent(rightLabel?: string) {
   // eslint-disable-next-line func-names
-  return function ({ children: childrenProp, data, isSelected, ...props }: any) {
+  return function ({ children: childrenProp, isSelected, ...props }: OptionProps) {
     return (
-      <DenomOption
-        denom={data.value}
-        isSelected={isSelected}
-        rightLabel={rightLabel}
-        showPromotion={showPromotion}
-        {...props}
-      >
+      <DenomOption isSelected={isSelected} rightLabel={rightLabel} {...props}>
         {childrenProp}
       </DenomOption>
     );
@@ -56,11 +47,10 @@ function getDenomOptionComponent(rightLabel?: string, showPromotion?: boolean) {
 export function DenomSelect({
   denoms,
   optionLabel,
-  showPromotion = false,
   ...selectProps
 }: { denoms: Denom[]; optionLabel?: string; showPromotion?: boolean } & Omit<SelectProps, 'options'>) {
   const customComponents = () => ({
-    Option: getDenomOptionComponent(optionLabel, showPromotion),
+    Option: getDenomOptionComponent(optionLabel),
   });
   const pairsOptions = denoms.map((denom) => ({
     value: denom,
