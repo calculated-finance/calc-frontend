@@ -1,4 +1,4 @@
-import { Heading, Text, HStack, Flex } from '@chakra-ui/react';
+import { Heading, Text, HStack, Flex, Stack, Icon, Box } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
@@ -11,22 +11,26 @@ import {
   isStrategyOperating,
   isBuyStrategy,
 } from '@helpers/strategy';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
-    <HStack spacing={5}>
+    <Flex justify="space-between" gap={2} align="center" w="full">
       <HStack>
         <DenomIcon size={5} denomName={initialDenom} />
         <Text>{initialDenomName}</Text>
       </HStack>
-      <Lottie animationData={arrow} loop height="100%" />
+      <Flex display={{ base: 'none', lg: 'initial' }} flexShrink={1}>
+        <Box as={Lottie} animationData={arrow} loop w={{ base: 16, lg: 120, xl: 'initial' }} />
+      </Flex>
+      <Icon as={ArrowForwardIcon} display={{ lg: 'none' }} />
       <HStack>
         <DenomIcon size={5} denomName={resultingDenom} />
         <Text>{resultingDenomName}</Text>
       </HStack>
-    </HStack>
+    </Flex>
   );
 }
 
@@ -88,16 +92,19 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
     }
   }
   return nextSwapInfo ? (
-    <HStack mb={8} py={4} px={8} layerStyle="panel" spacing={8}>
-      <HStack spacing={4} w="50%">
-        <Heading size="xs">Next swap:</Heading>
-        <Text fontSize="sm" data-testid="next-swap-info">
+    <Stack mb={8} py={4} px={8} layerStyle="panel" direction={{ base: 'column', sm: 'row' }} spacing={4}>
+      <HStack spacing={4} w={{ sm: '50%' }}>
+        <Heading size="xs" whiteSpace={{ base: 'nowrap', sm: 'normal' }}>
+          Next swap:
+        </Heading>
+        <Text whiteSpace={{ base: 'nowrap', sm: 'normal' }} fontSize="sm" data-testid="next-swap-info">
           {nextSwapInfo}
         </Text>
       </HStack>
-      <Flex w="50%">
+
+      <Flex w={{ sm: '50%' }}>
         <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
       </Flex>
-    </HStack>
+    </Stack>
   ) : null;
 }
