@@ -44,7 +44,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
     {
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
-      supported: false,
+      supported: true,
       enabled: chain === Chains.Osmosis,
     },
   ].filter((option) => option.enabled);
