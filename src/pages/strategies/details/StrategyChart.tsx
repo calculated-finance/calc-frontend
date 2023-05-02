@@ -14,17 +14,13 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 
-export function StrategyChart(
-  { strategy }: { strategy: Strategy },
-  { transactionType }: { transactionType: TransactionType },
-) {
+export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');
 
   const elementRef = useRef<HTMLDivElement>(null);
@@ -40,8 +36,8 @@ export function StrategyChart(
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
 
-  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
-  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
+  const priceOfDenom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+  const priceInDenom = isBuyStrategy(strategy) ? initialDenom : resultingDenom;
 
   const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
   const { name: priceInDenomName } = getDenomInfo(priceInDenom);
@@ -60,7 +56,7 @@ export function StrategyChart(
            month: 'short',
            year: '2-digit',
          })
-         .replace(',', '')} \n 1 ${priceInDenomName}  = ${formatFiat(swap?.currentPrice || 0)}
+         .replace(',', '')} \n 1 ${priceOfDenomName}  = ${formatFiat(swap?.currentPrice || 0)}
          `,
   }));
 

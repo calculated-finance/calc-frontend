@@ -85,6 +85,7 @@ export function getChartDataSwaps(
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
     const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
+    const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
 
     if (currentPriceInTime === null) {
       return null;
@@ -92,7 +93,7 @@ export function getChartDataSwaps(
     return {
       date,
       marketValue: Number((event.accumulation * currentPriceInTime).toFixed(2)),
-      currentPrice: currentPriceInTime,
+      currentPrice: currentDisplayPriceInTime,
       event,
     };
   });
