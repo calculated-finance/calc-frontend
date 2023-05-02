@@ -49,7 +49,8 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={dcaPlusInSteps} isLoading reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } = pairs.find((pair) => pair.address === router.query.pair) || {};
+  const { quote_denom, base_denom } =
+    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
     initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
