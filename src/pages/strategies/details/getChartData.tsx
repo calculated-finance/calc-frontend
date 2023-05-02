@@ -73,10 +73,11 @@ export const findCurrentAmountInTime = (time: number, events: EventWithAccumulat
 export function getChartDataSwaps(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  includeLabel: boolean,
+  displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
 ) {
   const completedEvents = getCompletedEvents(events);
-  if (!completedEvents || !fiatPrices) {
+
+  if (!completedEvents || !fiatPrices || !displayPrices) {
     return null;
   }
   const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
@@ -84,15 +85,16 @@ export function getChartDataSwaps(
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
     const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
+    const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
+
     if (currentPriceInTime === null) {
       return null;
     }
     return {
       date,
-      price: Number((event.accumulation * currentPriceInTime).toFixed(2)),
-      label: includeLabel
-        ? `Received ${Number(event.swapAmount.toFixed(4))} ${event.swapDenom} at ${date.toLocaleTimeString()}`
-        : undefined,
+      marketValue: Number((event.accumulation * currentPriceInTime).toFixed(2)),
+      currentPrice: currentDisplayPriceInTime,
+      event,
     };
   });
 
@@ -102,6 +104,7 @@ export function getChartDataSwaps(
 export function getChartData(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
 ) {
   const completedEvents = getCompletedEvents(events);
 
@@ -113,12 +116,12 @@ export function getChartData(
 
   const chartData = fiatPrices?.map((price) => ({
     date: new Date(price[0]),
-    price: Number((price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)),
-    label: `$${(price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)} (${new Date(
-      price[0],
-    ).toLocaleTimeString()})`,
+    marketValue: Number((price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)),
+    label: `$${(price[1] * findCurrentAmountInTime(price[0], eventsWithAccumulation)).toFixed(2)} (${new Date(price[0])
+      .toLocaleTimeString()
+      .replace(/\b([ap]m)\b/gi, (match) => match.toUpperCase())})`,
   }));
-  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, false) || [])];
+  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, displayPrices) || [])];
 }
 
 export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {
