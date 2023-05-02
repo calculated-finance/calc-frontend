@@ -144,7 +144,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                 <Text>Fees automatically deducted from each swap:</Text>
                 {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
                 <Text>
-                  {getChainDexName(chain)} fee: {getPrettyFee(100, dexFee)}%
+                  {chain === Chains.Osmosis ? 'Osmosis swap' : 'Kujira'} fee: {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>

@@ -59,7 +59,8 @@ function Page() {
   }
   const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile);
 
-  const { quote_denom, base_denom } = pairs.find((pair) => pair.address === router.query.pair) || {};
+  const { quote_denom, base_denom } =
+    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
     initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,

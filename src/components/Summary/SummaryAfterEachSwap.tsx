@@ -1,15 +1,10 @@
-import { Box, Spinner, Text } from '@chakra-ui/react';
+import { Box, Code, Spinner, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import useValidator from '@hooks/useValidator';
 import useStrategy from '@hooks/useStrategy';
-import {
-  getStrategyExecutionInterval,
-  getStrategyName,
-  getStrategyResultingDenom,
-  getStrategyType,
-} from '@helpers/strategy';
+import { getStrategyExecutionInterval, getStrategyResultingDenom, getStrategyType } from '@helpers/strategy';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
@@ -30,6 +25,9 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
           {getStrategyExecutionInterval(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}{' '}
           {getStrategyType(strategy)} strategy
         </Text>
+        <Code bg="abyss.200" fontSize="xx-small">
+          id: {strategy.id}
+        </Code>
       </BadgeButton>
     </>
   );
