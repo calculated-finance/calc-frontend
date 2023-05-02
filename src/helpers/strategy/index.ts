@@ -1,4 +1,4 @@
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -237,6 +237,28 @@ export function getAverageSellPrice(strategy: Vault, dexFee: number) {
 
 export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
+}
+
+export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
+  const { destinations } = strategy;
+  const [destination] = destinations;
+  const { msg } = destination;
+  if (msg) {
+    // decode base64
+    const decodedMsg = Buffer.from(msg, 'base64').toString('ascii');
+    // parse json
+    const parsedMsg = JSON.parse(decodedMsg);
+    return parsedMsg;
+  }
+  return null;
+}
+
+export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis) {
+  const postSwapDetails = getStrategyPostSwapDetails(strategy);
+  if (postSwapDetails && 'deposit' in postSwapDetails) {
+    return postSwapDetails.deposit.vault_id;
+  }
+  return undefined;
 }
 
 export function getStrategyProvideLiquidityConfig():

@@ -1,4 +1,4 @@
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { ExternalLinkIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -13,6 +13,7 @@ import {
   Tooltip,
   Spinner as ChakraSpinner,
   Link as ChakraLink,
+  Icon,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -44,11 +45,19 @@ import {
   getStrategyProvideLiquidityConfig,
   isBuyStrategy,
   getStrategyExecutionInterval,
+  getStrategyPostSwapDetails,
+  getStrategyReinvestStrategyId,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexName, getMarsAddress, getMarsUrl, getOsmosisWebUrl } from '@helpers/chains';
+import {
+  getChainContractAddress,
+  getChainDexName,
+  getMarsAddress,
+  getMarsUrl,
+  getOsmosisWebUrl,
+} from '@helpers/chains';
 import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
@@ -56,6 +65,8 @@ import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
+import useStrategy from '@hooks/useStrategy';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -172,13 +183,128 @@ function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
   };
 }
 
-export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
+function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
+  const id = getStrategyReinvestStrategyId(strategy);
+  const { data } = useStrategy(id);
+
+  const { vault: reinvestStrategy } = data || {};
+
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Reinvesting into</Heading>
+      </GridItem>
+      <GridItem colSpan={2}>
+        {!reinvestStrategy ? (
+          <ChakraSpinner size="xs" />
+        ) : (
+          <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
+            <Text fontSize="sm" data-testid="strategy-receiving-address">
+              Your {getStrategyExecutionInterval(reinvestStrategy)}{' '}
+              {getDenomName(getStrategyResultingDenom(reinvestStrategy))} {getStrategyType(reinvestStrategy)} strategy{' '}
+              <Icon as={ExternalLinkIcon} />
+            </Text>
+          </ChakraLink>
+        )}
+      </GridItem>
+    </>
+  );
+}
+
+function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+  const { destinations } = strategy;
+  const { chain } = useChain();
+
   const { address } = useWallet();
 
   const { validatorAddress } = usePostSwapCallback(strategy);
 
   const { validator, isLoading } = useValidator(validatorAddress);
 
+  if (validator) {
+    return (
+      <>
+        <GridItem colSpan={1}>
+          <Heading size="xs">Auto staking status</Heading>
+        </GridItem>
+        <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
+          <Badge colorScheme="green">Active</Badge>
+        </GridItem>
+        <GridItem colSpan={1}>
+          <Heading size="xs">Validator name</Heading>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <Text fontSize="sm" data-testid="strategy-validator-name">
+            {isLoading ? <Spinner /> : validator?.description?.moniker}
+          </Text>
+        </GridItem>
+      </>
+    );
+  }
+
+  if (getStrategyProvideLiquidityConfig()) {
+    return (
+      <>
+        <GridItem colSpan={1}>
+          <Heading size="xs">Providing liquidity to</Heading>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <Text fontSize="sm" data-testid="strategy-receiving-address">
+            <LiquidityPool strategy={strategy} />
+          </Text>
+        </GridItem>
+      </>
+    );
+  }
+
+  if (destinations[0].address === getMarsAddress()) {
+    return (
+      <>
+        <GridItem colSpan={1}>
+          <Heading size="xs">Depositing to</Heading>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <ChakraLink isExternal href={getMarsUrl()}>
+            <Text fontSize="sm" data-testid="strategy-receiving-address">
+              Mars
+            </Text>
+          </ChakraLink>
+        </GridItem>
+      </>
+    );
+  }
+
+  if (destinations[0].address === getChainContractAddress(chain)) {
+    return <ReinvestDetails strategy={strategy as StrategyOsmosis} />;
+  }
+
+  if (destinations[0].address !== address) {
+    return (
+      <>
+        <GridItem colSpan={1}>
+          <Heading size="xs">Sending to </Heading>
+        </GridItem>
+        <GridItem colSpan={2}>
+          {destinations[0].address === getMarsAddress() ? (
+            <ChakraLink isExternal href={getMarsUrl()}>
+              <Text fontSize="sm" data-testid="strategy-receiving-address">
+                Mars
+              </Text>
+            </ChakraLink>
+          ) : (
+            <Text fontSize="sm" data-testid="strategy-receiving-address">
+              {destinations[0].address}
+            </Text>
+          )}
+        </GridItem>
+      </>
+    );
+  }
+
+  return null;
+}
+
+export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -311,57 +437,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </Link>
             </Flex>
           </GridItem>
-          {Boolean(destinations.length) &&
-            (validator ? (
-              <>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Auto staking status</Heading>
-                </GridItem>
-                <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
-                  <Badge colorScheme="green">Active</Badge>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Validator name</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm" data-testid="strategy-validator-name">
-                    {isLoading ? <Spinner /> : validator?.description?.moniker}
-                  </Text>
-                </GridItem>
-              </>
-            ) : getStrategyProvideLiquidityConfig() ? (
-              <>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Providing liquidity to</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm" data-testid="strategy-receiving-address">
-                    <LiquidityPool strategy={strategy} />
-                  </Text>
-                </GridItem>
-              </>
-            ) : (
-              destinations[0].address !== address && (
-                <>
-                  <GridItem colSpan={1}>
-                    <Heading size="xs">Sending to </Heading>
-                  </GridItem>
-                  <GridItem colSpan={2}>
-                    {destinations[0].address === getMarsAddress() ? (
-                      <ChakraLink isExternal href={getMarsUrl()}>
-                        <Text fontSize="sm" data-testid="strategy-receiving-address">
-                          Mars
-                        </Text>
-                      </ChakraLink>
-                    ) : (
-                      <Text fontSize="sm" data-testid="strategy-receiving-address">
-                        {destinations[0].address}
-                      </Text>
-                    )}
-                  </GridItem>
-                </>
-              )
-            ))}
+          {Boolean(destinations.length) && <DestinationDetails strategy={strategy} />}
         </Grid>
       </Box>
     </GridItem>
