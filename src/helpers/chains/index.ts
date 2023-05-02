@@ -12,9 +12,9 @@ import {
 } from 'src/constants';
 
 const osmoTestnetConfig = {
-  chainId: 'osmo-test-5',
-  chainName: 'Osmosis Testnet 5',
-  rpc: 'https://osmosis-testnet-rpc.polkachu.com/',
+  chainId: 'osmo-test-4',
+  chainName: 'Osmosis Testnet',
+  rpc: 'https://rpc-test.osmosis.zone',
   rest: 'https://lcd-test.osmosis.zone',
   bip44: {
     coinType: 118,
@@ -91,9 +91,9 @@ export function getChainEndpoint(chain: Chains) {
 export function getChainContractAddress(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {
-      return 'osmo1fventeva948ue0fzhp6xselr522rnqwger9wg7r0g9f4jemsqh6sz3zukw';
+      return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
     }
-    return 'osmo1fventeva948ue0fzhp6xselr522rnqwger9wg7r0g9f4jemsqh6sz3zukw';
+    return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
   }
 
   return CONTRACT_ADDRESS;
@@ -156,7 +156,7 @@ export function getOsmosisWebUrl() {
 export function getMarsAddress() {
   return isMainnet()
     ? 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg'
-    : 'osmo123hmtzs75njx8kfc58kk72llhf0g5gx47qh7unapw80kwcw8cgxqaw65pz';
+    : 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36';
 }
 
 export function getMarsUrl() {
