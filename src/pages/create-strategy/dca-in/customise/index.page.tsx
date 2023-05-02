@@ -1,4 +1,4 @@
-import { Collapse, Stack, Box } from '@chakra-ui/react';
+import { Box, Stack, Collapse } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -7,19 +7,19 @@ import { Form, Formik } from 'formik';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
+import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import ExecutionInterval from '@components/ExecutionInterval';
 import DcaDiagram from '@components/DcaDiagram';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
+import PriceThreshold from '@components/PriceThreshold';
 import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
+import SlippageTolerance from '@components/SlippageTolerance';
 import steps from 'src/formConfig/dcaIn';
 import { InvalidData } from '@components/InvalidData';
-import { FormNames } from '@hooks/useFormStore';
-import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import { TriggerForm } from '@components/TriggerForm';
-import ExecutionInterval from '@components/ExecutionInterval';
 import SwapAmount from '@components/SwapAmount';
-import PriceThreshold from '@components/PriceThreshold';
-import SlippageTolerance from '@components/SlippageTolerance';
-import { TransactionType } from '@components/TransactionType';
+import { TriggerForm } from '@components/TriggerForm';
+import { FormNames } from '@hooks/useFormStore';
 
 function DcaInStep2() {
   const { actions, state } = useStep2Form(FormNames.DcaIn);
@@ -52,7 +52,6 @@ function DcaInStep2() {
   };
 
   const initialValues = state.step2;
-  console.log(state.step1);
 
   return (
     <Formik
@@ -78,9 +77,7 @@ function DcaInStep2() {
                 <AdvancedSettingsSwitch />
                 <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaIn} />
                 <ExecutionInterval />
-                {/* <CustomInterval /> */}
                 <SwapAmount step1State={state.step1} />
-                {/* <SwapIntervals step1State={state.step1} /> */}
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <PriceThreshold
