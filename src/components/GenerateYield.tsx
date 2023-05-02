@@ -158,7 +158,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Strategy</FormLabel>
-      <FormHelperText pb={4}>CALC uses AuthZ to deploy the post swap capital on your behalf.</FormHelperText>
+      <FormHelperText pb={4}>CALC can deploy post swap capital on your behalf.</FormHelperText>
       {isLoading ? (
         <Center>
           <Spinner />

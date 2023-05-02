@@ -55,13 +55,18 @@ export function getStrategyResultingDenom(strategy: Strategy): Denom {
   return strategy.received_amount.denom;
 }
 
+export function getStrategyExecutionInterval(strategy: Strategy) {
+  const { time_interval } = strategy;
+  return executionIntervalLabel[time_interval];
+}
+
 export function getStrategyName(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  return `${getDenomInfo(initialDenom).name} to ${getDenomInfo(resultingDenom).name} - ${
-    executionIntervalLabel[strategy.time_interval]
-  }`;
+  return `${getDenomInfo(initialDenom).name} to ${getDenomInfo(resultingDenom).name} - ${getStrategyExecutionInterval(
+    strategy,
+  )}`;
 }
 
 export function getSlippageTolerance(strategy: Strategy) {

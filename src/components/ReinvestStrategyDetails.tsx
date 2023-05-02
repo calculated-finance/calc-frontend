@@ -1,33 +1,10 @@
-import { PlusSquareIcon } from '@chakra-ui/icons';
-import {
-  Heading,
-  Grid,
-  GridItem,
-  Box,
-  Text,
-  Divider,
-  Badge,
-  Flex,
-  Button,
-  HStack,
-  Tooltip,
-  Spinner as ChakraSpinner,
-  Link as ChakraLink,
-} from '@chakra-ui/react';
-import CalcIcon from '@components/Icon';
-import Spinner from '@components/Spinner';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Tooltip } from '@chakra-ui/react';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
-import Link from 'next/link';
-import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
-import { useWallet } from '@hooks/useWallet';
-import useValidator from '@hooks/useValidator';
-import useStrategyEvents from '@hooks/useStrategyEvents';
+import { Strategy } from '@hooks/useStrategies';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
-import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -35,28 +12,21 @@ import {
   getStrategyStartDate,
   isStrategyCancelled,
   getStrategyName,
-  getStrategyEndDate,
   getSlippageTolerance,
   getPriceCeilingFloor,
   getConvertedSwapAmount,
   isStrategyAutoStaking,
-  isStrategyOperating,
-  getStrategyProvideLiquidityConfig,
   isBuyStrategy,
   getStrategyExecutionInterval,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
-import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexName, getMarsAddress, getMarsUrl, getOsmosisWebUrl } from '@helpers/chains';
-import { Chains, useChain } from '@hooks/useChain';
-import { useOsmosisPools } from '@hooks/useOsmosisPools';
-import { PoolDenomIcons } from '@components/PoolDenomIcons';
-import { PoolDescription } from '@components/PoolDescription';
+import { getEscrowAmount, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
+import { getChainDexName } from '@helpers/chains';
+import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
   return (
@@ -82,23 +52,6 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
         </Text>
       </GridItem>
     </>
-  );
-}
-
-function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
-  const { data: pools } = useOsmosisPools();
-  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig()?.pool_id);
-  return pool ? (
-    <ChakraLink isExternal href={`${getOsmosisWebUrl()}/pool/${pool.id}`}>
-      <HStack>
-        <PoolDenomIcons pool={pool} />
-        <Text>
-          <PoolDescription pool={pool} />
-        </Text>
-      </HStack>
-    </ChakraLink>
-  ) : (
-    <ChakraSpinner size="xs" />
   );
 }
 
@@ -147,39 +100,8 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
-  const { chain } = useChain();
-  if (chain === Chains.Kujira) {
-    return {
-      validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
-    };
-  }
-  if (strategy.destinations.length) {
-    const [destination] = (strategy as StrategyOsmosis).destinations;
-    const { msg } = destination;
-    if (msg) {
-      const decoded = Buffer.from(msg, 'base64').toString('ascii');
-      if (decoded) {
-        const parsed = JSON.parse(decoded);
-        return {
-          validatorAddress: parsed?.z_delegate?.validator_address,
-        };
-      }
-    }
-  }
-  return {
-    validatorAddress: null,
-  };
-}
-
-export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { address } = useWallet();
-
-  const { validatorAddress } = usePostSwapCallback(strategy);
-
-  const { validator, isLoading } = useValidator(validatorAddress);
-
-  const { balance, destinations } = strategy;
+export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
+  const { time_interval, balance } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
@@ -189,14 +111,9 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const startDate = getStrategyStartDate(strategy);
 
-  const { data: events } = useStrategyEvents(strategy.id);
-
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
-      <Heading pb={4} size="md">
-        Strategy details
-      </Heading>
-      <Box px={8} py={6} layerStyle="panel">
+      <Box px={8} py={6} bg="abyss.200" p={4} fontSize="sm" borderRadius="xl" borderWidth={1} borderColor="slateGrey">
         <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
           <GridItem colSpan={1}>
             <Heading size="xs">Strategy status</Heading>
@@ -205,9 +122,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             <StrategyStatusBadge strategy={strategy} />
           </GridItem>
           <GridItem colSpan={1} visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
-            <Flex justifyContent="end">
-              <CancelButton strategy={strategy} />
-            </Flex>
+            <Flex justifyContent="end" />
           </GridItem>
           <GridItem colSpan={1}>
             <Heading size="xs">Strategy name</Heading>
@@ -234,21 +149,6 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-start-date">
               {startDate}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Estimated strategy end date</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-              {isDcaPlus(strategy) && isStrategyOperating(strategy) ? (
-                <>
-                  Between {getStrategyEndDateRange(strategy, events).min} and{' '}
-                  {getStrategyEndDateRange(strategy, events).max}
-                </>
-              ) : (
-                getStrategyEndDate(strategy, events)
-              )}
             </Text>
           </GridItem>
           <GridItem colSpan={1}>
@@ -297,71 +197,6 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
-          <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
-            <Flex justify="end">
-              <Link href={generateStrategyTopUpUrl(strategy.id)}>
-                <Button
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="brand"
-                  leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                >
-                  Add more funds
-                </Button>
-              </Link>
-            </Flex>
-          </GridItem>
-          {Boolean(destinations.length) &&
-            (validator ? (
-              <>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Auto staking status</Heading>
-                </GridItem>
-                <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
-                  <Badge colorScheme="green">Active</Badge>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Validator name</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm" data-testid="strategy-validator-name">
-                    {isLoading ? <Spinner /> : validator?.description?.moniker}
-                  </Text>
-                </GridItem>
-              </>
-            ) : getStrategyProvideLiquidityConfig() ? (
-              <>
-                <GridItem colSpan={1}>
-                  <Heading size="xs">Providing liquidity to</Heading>
-                </GridItem>
-                <GridItem colSpan={2}>
-                  <Text fontSize="sm" data-testid="strategy-receiving-address">
-                    <LiquidityPool strategy={strategy} />
-                  </Text>
-                </GridItem>
-              </>
-            ) : (
-              destinations[0].address !== address && (
-                <>
-                  <GridItem colSpan={1}>
-                    <Heading size="xs">Sending to </Heading>
-                  </GridItem>
-                  <GridItem colSpan={2}>
-                    {destinations[0].address === getMarsAddress() ? (
-                      <ChakraLink isExternal href={getMarsUrl()}>
-                        <Text fontSize="sm" data-testid="strategy-receiving-address">
-                          Mars
-                        </Text>
-                      </ChakraLink>
-                    ) : (
-                      <Text fontSize="sm" data-testid="strategy-receiving-address">
-                        {destinations[0].address}
-                      </Text>
-                    )}
-                  </GridItem>
-                </>
-              )
-            ))}
         </Grid>
       </Box>
     </GridItem>

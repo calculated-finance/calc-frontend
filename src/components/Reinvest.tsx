@@ -13,33 +13,61 @@ import {
   useRadioGroup,
   Center,
   HStack,
-  Link,
-  Popover,
-  PopoverTrigger,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
   IconButton,
+  ModalProps,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Button,
+  Link,
+  Code,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { FormNames } from '@hooks/useFormStore';
 import {
+  getStrategyExecutionInterval,
   getStrategyInitialDenom,
-  getStrategyName,
   getStrategyResultingDenom,
+  getStrategyType,
   isStrategyCancelled,
 } from '@helpers/strategy';
 import useStrategies from '@hooks/useStrategies';
 import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
-import { ArrowRightIcon } from '@fusion-icons/react/interface';
+import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
+import { ReinvestStrategyDetails } from './ReinvestStrategyDetails';
+
+function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & Omit<ModalProps, 'children'>) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Strategy details</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack justify="center" gap={6} align="center">
+            <ReinvestStrategyDetails strategy={strategy} />
+            <Link isExternal href={`/strategies/details/?id=${strategy.id}`}>
+              <Button variant="outline" rightIcon={<Icon as={BoxedExportIcon} stroke="brand.200" fontSize="md" />}>
+                More details
+              </Button>
+            </Link>
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
 
 function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy }) {
   const { getInputProps, getRadioProps, htmlProps, getLabelProps } = useRadio(props);
@@ -47,6 +75,9 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
 
   const input = getInputProps();
   const checkbox = getRadioProps();
+
+  // useDisclosure
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex align="center" justify="space-between" gap={3} w="full">
@@ -56,7 +87,7 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
           {...checkbox}
           borderWidth={1}
           py={4}
-          px={6}
+          px={4}
           borderRadius="2xl"
           w="full"
           _hover={{ borderColor: 'grey', cursor: 'pointer' }}
@@ -68,35 +99,37 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
           }}
         >
           <Box {...getLabelProps()}>
-            <Flex justify="space-between" align="center" gap={4}>
+            <Flex justify="space-between" align="center" gap={4} fontSize="xs">
               <HStack spacing={1}>
                 <DenomIcon showTooltip denomName={getStrategyInitialDenom(strategy)} />
                 <Icon as={ArrowRightIcon} stroke="grey" />
                 <DenomIcon showTooltip denomName={getStrategyResultingDenom(strategy)} />
               </HStack>
-              <Text flexGrow={1} fontSize="sm">
-                {getStrategyName(strategy)}
-              </Text>
-              <StrategyStatusBadge strategy={strategy} />
+              <HStack flexGrow={1} align="center">
+                <Text>
+                  {getStrategyType(strategy)} - {getStrategyExecutionInterval(strategy)}{' '}
+                </Text>
+                <Code bg="abyss.200" fontSize="xx-small">
+                  id: {strategy.id}
+                </Code>
+              </HStack>
+
+              <HStack spacing={2}>
+                <StrategyStatusBadge strategy={strategy} />
+                <IconButton
+                  colorScheme="blue"
+                  icon={<InfoOutlineIcon />}
+                  aria-label="More details"
+                  variant="ghost"
+                  onClick={onOpen}
+                />
+              </HStack>
             </Flex>
           </Box>
         </Box>
       </Box>
-      <Popover>
-        <PopoverTrigger>
-          <IconButton colorScheme="blue" icon={<InfoOutlineIcon />} aria-label="More details" variant="ghost" />
-        </PopoverTrigger>
-        <PopoverContent>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverBody>
-            <Text fontSize="sm">{getStrategyName(strategy)}</Text>
-            <Link isExternal href={`/strategies/details/?id=${strategy.id}`}>
-              More details
-            </Link>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
+
+      <StrategyModal strategy={strategy} isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 }
@@ -112,16 +145,18 @@ export function Reinvest({ formName }: { formName: FormNames }) {
   const { data, isLoading } = useStrategies();
   const { context } = useDcaInFormPostPurchase(formName);
 
-  const filteredStrategies = data?.vaults.filter((strategy: Strategy) => {
-    if (getStrategyInitialDenom(strategy) !== context?.resultingDenom) {
-      return false;
-    }
+  const filteredStrategies = data?.vaults
+    .sort((a, b) => Number(b.id) - Number(a.id))
+    .filter((strategy: Strategy) => {
+      if (getStrategyInitialDenom(strategy) !== context?.resultingDenom) {
+        return false;
+      }
 
-    if (isStrategyCancelled(strategy)) {
-      return false;
-    }
-    return true;
-  });
+      if (isStrategyCancelled(strategy)) {
+        return false;
+      }
+      return true;
+    });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -138,7 +173,7 @@ export function Reinvest({ formName }: { formName: FormNames }) {
           <Center>No suitable strategies available</Center>
         </Stack>
       ) : (
-        <Stack {...getRootProps} maxH={200} overflow="auto">
+        <Stack {...getRootProps} maxH={220} overflow="auto">
           {filteredStrategies?.map((strategy: Strategy) => {
             const radio = getRadioProps({ value: strategy.id.toString() });
             return <StrategyOption key={strategy.id} {...radio} strategy={strategy} />;
