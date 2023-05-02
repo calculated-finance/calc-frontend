@@ -1,25 +1,35 @@
 import { Box, Spinner, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import useValidator from '@hooks/useValidator';
 import useStrategy from '@hooks/useStrategy';
-import { getStrategyName } from '@helpers/strategy';
+import {
+  getStrategyExecutionInterval,
+  getStrategyName,
+  getStrategyResultingDenom,
+  getStrategyType,
+} from '@helpers/strategy';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
-  const { data: strategy, isLoading } = useStrategy(reinvestStrategy);
+  const { data, isLoading } = useStrategy(reinvestStrategy);
   if (isLoading) {
     return <Spinner size="xs" />;
   }
-  if (!strategy) {
+  if (!data) {
     return null;
   }
+
+  const { vault: strategy } = data;
   return (
     <>
-      After each swap, CALC will automatically send the funds your tokens to your strategy{' '}
+      After each swap, CALC will automatically reinvest those tokens into your{' '}
       <BadgeButton url="post-purchase">
-        <Text>{getStrategyName(strategy.vault)}</Text>
+        <Text>
+          {getStrategyExecutionInterval(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}{' '}
+          {getStrategyType(strategy)} strategy
+        </Text>
       </BadgeButton>
     </>
   );
