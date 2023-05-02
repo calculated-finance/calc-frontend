@@ -31,7 +31,7 @@ function CustomLabel(props: any) {
           filter: 'drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))',
         }}
         cornerRadius={10}
-        style={{ fill: 'white', textAnchor: 'left', fontSize: 10 }}
+        style={{ fill: 'white', textAnchor: 'left', fontSize: 12 }}
         flyoutPadding={16}
       />
     </g>
