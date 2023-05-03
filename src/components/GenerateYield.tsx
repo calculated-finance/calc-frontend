@@ -13,6 +13,8 @@ import {
   useRadioGroup,
   Center,
   Tooltip,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
@@ -86,7 +88,7 @@ function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { 
           {...checkbox}
           borderWidth={1}
           py={4}
-          px={6}
+          px={3}
           borderRadius="2xl"
           w="full"
           _hover={{ borderColor: 'grey', cursor: 'pointer' }}
@@ -102,13 +104,19 @@ function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { 
           }}
         >
           <Box {...getLabelProps()}>
-            <Flex justify="space-between" align="center" gap={4}>
-              <DenomIcon denomName={resultingDenom} />
-              <Text flexGrow={1} fontSize="sm">
-                Loan {getDenomName(resultingDenom)} on Mars
-              </Text>
-              <Text>{0.1 * 100}%</Text>
-            </Flex>
+            <Grid templateColumns="repeat(8, 1fr)">
+              <GridItem colSpan={1} verticalAlign="center" textAlign="center">
+                <Box mt="px">
+                  <DenomIcon denomName={resultingDenom} />
+                </Box>
+              </GridItem>
+              <GridItem colSpan={5}>
+                <Text fontSize="sm">Loan {getDenomName(resultingDenom)} on Mars</Text>
+              </GridItem>
+              <GridItem colSpan={2} textAlign="right">
+                <Text>~{0.1 * 100}%</Text>
+              </GridItem>
+            </Grid>
           </Box>
         </Box>
       </Box>
@@ -163,10 +171,25 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
         <Center>
           <Spinner />
         </Center>
+      ) : marsEnabled ? (
+        <>
+          <Grid textStyle="body-xs" templateColumns="repeat(8, 1fr)" gap={4} mb={4} textDecoration="underline" px={3}>
+            <GridItem colSpan={1}>
+              <Text>Asset</Text>
+            </GridItem>
+            <GridItem colSpan={5}>
+              <Text flexGrow={1}>Action</Text>
+            </GridItem>
+            <GridItem colSpan={2} textAlign="right">
+              <Text>Expected APR</Text>
+            </GridItem>
+          </Grid>
+          <Stack {...getRootProps} maxH={200} overflow="auto">
+            <MarsOption {...marsRadio} resultingDenom={resultingDenom!} isDisabled={!marsEnabled} />
+          </Stack>
+        </>
       ) : (
-        <Stack {...getRootProps} maxH={200} overflow="auto">
-          <MarsOption {...marsRadio} resultingDenom={resultingDenom!} isDisabled={!marsEnabled} />
-        </Stack>
+        <Center>No yield strategies available for {getDenomName(resultingDenom!)} yet.</Center>
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

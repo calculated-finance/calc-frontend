@@ -79,9 +79,9 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
         )}
         {yieldOption === 'mars' && (
           <>
-            After each swap, CALC will automatically loan your tokens to{' '}
+            After each swap, CALC will automatically deposit your tokens into{' '}
             <BadgeButton url="post-purchase">
-              <Text>Mars</Text>
+              <Text>Mars Lend</Text>
             </BadgeButton>
           </>
         )}

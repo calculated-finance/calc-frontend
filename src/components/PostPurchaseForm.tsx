@@ -1,13 +1,10 @@
 import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
-import { useState } from 'react';
 import getDenomInfo from '@utils/getDenomInfo';
 import RecipientAccount from '@components/RecipientAccount';
 import SendToWalletValues from '@models/SendToWalletValues';
-import AutoStakeValues from '@models/AutoStakeValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
-import { AutoStake, DummyAutoStake } from '@components/AutoStake';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
@@ -81,14 +78,11 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
 }
 
 export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
-  const [dummyAutoStake, setDummyAutoStake] = useState(AutoStakeValues.No);
-
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
   const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
-  const [{ value: autoStakeValue }] = useField('autoStake');
   const [{ value: postPurchaseOption }] = useField('postPurchaseOption');
 
   return (
@@ -110,37 +104,13 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
           </Collapse>
 
           <Collapse in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-            <Box m="px">
-              <Stack>
-                {stakeingUnsupported ? (
-                  <>
-                    <DummyAutoStake value={dummyAutoStake} onChange={setDummyAutoStake} formName={formName} />
-                    <Collapse in={dummyAutoStake === AutoStakeValues.Yes}>
-                      <Box m="px">
-                        <DummyAutoStakeValidator />
-                      </Box>
-                    </Collapse>
-                  </>
-                ) : (
-                  <>
-                    <AutoStake formName={formName} />
-                    <Collapse in={autoStakeValue === AutoStakeValues.Yes}>
-                      <Box m="px">
-                        <AutoStakeValidator />
-                      </Box>
-                    </Collapse>
-                  </>
-                )}
-              </Stack>
-            </Box>
+            <Box m="px">{stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}</Box>
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
-            <Box m="px" minH={250}>
-              {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
-            </Box>
+            <Box m="px">{postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}</Box>
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
-            <Box m="px" minH={250}>
+            <Box m="px">
               {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
             </Box>
           </Collapse>

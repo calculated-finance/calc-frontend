@@ -13,11 +13,6 @@ export function Autostaking() {
         CALC even uses the AuthZ module which means the assets are staked on YOUR behalf in YOUR wallet. You will see
         the balance staked to your wallet after every swap.
       </Text>
-
-      <Text>
-        Auto-compounding functionality will be added in Q1 2023 taking your returns to the next level by reinvesting the
-        rewards every few hours. CALC will also add the ability to choose multiple validators in the near future.
-      </Text>
     </Stack>
   );
 }

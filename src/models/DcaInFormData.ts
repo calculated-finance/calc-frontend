@@ -38,7 +38,6 @@ export const initialValues = {
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
   sendToWallet: SendToWalletValues.Yes,
-  autoStake: AutoStakeValues.No,
   recipientAccount: '',
   autoStakeValidator: '',
   strategyDuration: 60,
@@ -278,24 +277,11 @@ export const allSchema = {
         return value?.startsWith(getChainAddressPrefix(useChainStore.getState().chain));
       },
     }),
-  autoStake: Yup.mixed<AutoStakeValues>()
-    .oneOf(Object.values(AutoStakeValues))
-    .required()
-    .when('sendToWallet', {
-      is: SendToWalletValues.No,
-      then: (schema) => schema.transform(() => AutoStakeValues.No),
-    })
-    .when('postPurchaseOption', {
-      is: PostPurchaseOptions.Stake,
-      then: (schema) => schema,
-      otherwise: (schema) => schema.transform(() => AutoStakeValues.No),
-    }),
   autoStakeValidator: Yup.string()
     .label('Validator')
     .nullable()
-    .when(['autoStake', 'sendToWallet'], {
-      is: (autoStake: AutoStakeValues, sendToWallet: SendToWalletValues) =>
-        autoStake === AutoStakeValues.Yes && sendToWallet === SendToWalletValues.Yes,
+    .when(['postPurchaseOption'], {
+      is: PostPurchaseOptions.Stake,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
@@ -366,7 +352,6 @@ export const dcaSchema = Yup.object({
   priceThresholdValue: allSchema.priceThresholdValue,
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
-  autoStake: allSchema.autoStake,
   autoStakeValidator: allSchema.autoStakeValidator,
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
@@ -381,7 +366,6 @@ export const postPurchaseValidationSchema = dcaSchema.pick([
   'postPurchaseOption',
   'sendToWallet',
   'recipientAccount',
-  'autoStake',
   'autoStakeValidator',
   'yieldOption',
   'reinvestStrategy',
