@@ -49,7 +49,6 @@ const mockStateMachine = {
       startPrice: null,
       swapAmount: 1,
       triggerType: 'date',
-      autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
       sendToWallet: 'yes',

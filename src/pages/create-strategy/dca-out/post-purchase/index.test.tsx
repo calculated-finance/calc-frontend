@@ -92,7 +92,6 @@ describe('DCA Out post-purchase page', () => {
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        autoStake: 'no',
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
@@ -120,7 +119,6 @@ describe('DCA Out post-purchase page', () => {
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        autoStake: 'no',
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
         recipientAccount: '',

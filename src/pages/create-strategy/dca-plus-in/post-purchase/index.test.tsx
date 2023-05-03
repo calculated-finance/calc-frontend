@@ -110,7 +110,6 @@ describe('DCA In post-purchase page', () => {
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        autoStake: 'no',
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
@@ -133,7 +132,6 @@ describe('DCA In post-purchase page', () => {
       await renderTarget();
 
       await waitFor(() => userEvent.click(screen.getAllByText(/Stake/)[0]), { timeout: 10000 });
-      await waitFor(() => userEvent.click(screen.getAllByText(/Yes/)[1]), { timeout: 16000 });
 
       const select = await waitFor(() => screen.getByLabelText('Choose Validator'), { timeout: 10000 });
       selectEvent.select(select, ['test']);
@@ -146,7 +144,6 @@ describe('DCA In post-purchase page', () => {
       });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        autoStake: 'yes',
         autoStakeValidator: 'kujiravalopertestvalidator',
         postPurchaseOption: 'stake',
         recipientAccount: '',
@@ -172,7 +169,6 @@ describe('DCA In post-purchase page', () => {
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        autoStake: 'no',
         autoStakeValidator: null,
         recipientAccount: '',
         postPurchaseOption: 'sendToWallet',

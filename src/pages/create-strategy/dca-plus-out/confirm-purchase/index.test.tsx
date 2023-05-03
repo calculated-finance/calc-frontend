@@ -38,7 +38,6 @@ const mockStateMachine = {
       initialDeposit: '30',
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: false,
-      autoStake: 'no',
       autoStakeValidator: null,
       recipientAccount: null,
       sendToWallet: 'yes',

@@ -36,7 +36,6 @@ export const dcaPlusSchema = Yup.object({
   slippageTolerance: allSchema.slippageTolerance,
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
-  autoStake: allSchema.autoStake,
   autoStakeValidator: allSchema.autoStakeValidator,
   strategyDuration: allSchema.strategyDuration,
   postPurchaseOption: allSchema.postPurchaseOption,
@@ -53,7 +52,6 @@ export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
 export const DcaPlusPostPurchaseFormSchema = dcaPlusSchema.pick([
   'sendToWallet',
   'recipientAccount',
-  'autoStake',
   'autoStakeValidator',
   'postPurchaseOption',
   'yieldOption',
