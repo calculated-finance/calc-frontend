@@ -26,7 +26,7 @@ export default function Banner() {
         color="white"
         ref={ref}
       >
-        <Box ref={ref} borderWidth={2} borderColor="green.200" borderRadius="xl" py={{ base: '4', md: '2.5' }} px={5}>
+        <Box ref={ref} py={{ base: '4', md: '3' }} px={5}>
           <CloseButton
             color="green.200"
             display={{ md: 'none' }}
