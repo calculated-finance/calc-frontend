@@ -170,7 +170,7 @@ export function Reinvest({ formName }: { formName: FormNames }) {
           <Spinner />
         </Center>
       ) : isEmpty(filteredStrategies) ? (
-        <Stack {...getRootProps} maxH={200} overflow="auto">
+        <Stack>
           <Center>No suitable strategies available</Center>
         </Stack>
       ) : (

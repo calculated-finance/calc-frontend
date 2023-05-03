@@ -171,7 +171,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
         <Center>
           <Spinner />
         </Center>
-      ) : (
+      ) : marsEnabled ? (
         <>
           <Grid textStyle="body-xs" templateColumns="repeat(8, 1fr)" gap={4} mb={4} textDecoration="underline" px={3}>
             <GridItem colSpan={1}>
@@ -188,6 +188,8 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
             <MarsOption {...marsRadio} resultingDenom={resultingDenom!} isDisabled={!marsEnabled} />
           </Stack>
         </>
+      ) : (
+        <Center>No yield strategies available for {getDenomName(resultingDenom!)} yet.</Center>
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
