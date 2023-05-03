@@ -34,7 +34,6 @@ function InfoPanel() {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text textStyle="body">
-          {/* dash */}
           Stay ice cold and calculated by using Calculated Finance &ndash; the smartest way to enter and exit positions
           &ndash; complimented with pre- and post-swap automation to save time and counter emotional decision-making.
         </Text>
