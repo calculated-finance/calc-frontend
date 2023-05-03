@@ -107,12 +107,10 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
             <Box m="px">{stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}</Box>
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
-            <Box m="px" minH={250}>
-              {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
-            </Box>
+            <Box m="px">{postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}</Box>
           </Collapse>
           <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
-            <Box m="px" minH={250}>
+            <Box m="px">
               {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
             </Box>
           </Collapse>
