@@ -76,7 +76,7 @@ describe('top panel', () => {
           </QueryClientProvider>,
         );
 
-        expect(screen.getByText(/Awesome - you have a DCA strategy active!/)).toBeInTheDocument();
+        expect(screen.getByText(/Awesome - you have a calculated strategy active!/)).toBeInTheDocument();
         expect(screen.getByText(/Top up my strategy/)).toHaveAttribute('href', '/strategies/top-up?id=1');
         expect(screen.getByText(/Review performance/)).toHaveAttribute('href', '/strategies/details?id=1');
       });
