@@ -65,9 +65,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
-    label: `${priceOfDenomName} ➡️ ${priceInDenomName}\n Received ${Number(swap?.event.swapAmount.toFixed(2))} ${
+    label: `${priceOfDenomName} ➡️ ${priceInDenomName}\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
-    } \n Accumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom} \n 
+    } \nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom} \n 
        Date: ${swap?.date
          .toLocaleDateString('en-AU', {
            day: '2-digit',
