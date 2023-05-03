@@ -235,7 +235,7 @@ function CreateStrategy() {
       <Stack spacing={2}>
         <Heading size="lg">Set up a smart swap strategy</Heading>
         <Text textStyle="body">
-          The smartest way to enter and exit positions, complimented by pre- and post-swap automation to save time and
+          The smartest way to enter and exit positions, complimented with pre- and post-swap automation to save time and
           counter emotional decision making.
         </Text>
       </Stack>
