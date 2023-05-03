@@ -20,6 +20,24 @@ import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 
+function CustomLabel(props: any) {
+  return (
+    <g>
+      <VictoryTooltip
+        {...props}
+        flyoutStyle={{
+          fill: '#1B202B',
+          stroke: 'none',
+          filter: 'drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25))',
+        }}
+        cornerRadius={10}
+        style={{ fill: 'white', textAnchor: 'left', fontSize: 12 }}
+        flyoutPadding={16}
+      />
+    </g>
+  );
+}
+
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const [days, setDays] = useState('3');
 
@@ -47,9 +65,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
-    label: `${priceOfDenomName} ➡️ ${priceInDenomName} \n Accumulated: ${swap?.event.accumulation.toFixed(2)} ${
+    label: `${priceOfDenomName} ➡️ ${priceInDenomName}\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
-    } \n 
+    } \nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom} \n 
        Date: ${swap?.date
          .toLocaleDateString('en-AU', {
            day: '2-digit',
@@ -112,12 +130,15 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }
               />
               <VictoryScatter
-                style={{ data: { fill: '#1AEFAF' } }}
-                size={5}
+                style={{
+                  data: { fill: '#1AEFAF', stroke: 'white', strokeWidth: 1 },
+                  labels: { fill: 'white', fontSize: 6 },
+                }}
+                size={6}
                 data={swapsDataWithLabel}
                 x="date"
                 y="marketValue"
-                labelComponent={<VictoryTooltip />}
+                labelComponent={<CustomLabel props={swapsData} />}
               />
               <VictoryArea
                 style={{
@@ -125,8 +146,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }}
                 data={chartData}
                 standalone={false}
-                interpolation="step"
-                labelComponent={<VictoryTooltip />}
+                labelComponent={<CustomLabel props={swapsData} />}
                 x="date"
                 y="marketValue"
               />
