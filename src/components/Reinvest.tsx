@@ -162,7 +162,8 @@ export function Reinvest({ formName }: { formName: FormNames }) {
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose another CALC strategy</FormLabel>
       <FormHelperText pb={4}>
-        Please note, you must have an active, scheduled or completed strategy. Cancelled strategies do not show up.{' '}
+        You can choose from the below compatible strategies that you currently have. Cancelled strategies will not show
+        up.
       </FormHelperText>
       {isLoading ? (
         <Center>
