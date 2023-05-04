@@ -72,7 +72,7 @@ describe('Home', () => {
     describe('when no active strategies exist', () => {
       it('shows info panel', async () => {
         await renderTarget();
-        expect(screen.getByText(/Dollar-cost averaging/)).toBeInTheDocument();
+        expect(screen.getByText(/Stay ice cold/)).toBeInTheDocument();
       });
       it('does not show warning panel', async () => {
         await renderTarget();
