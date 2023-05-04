@@ -233,8 +233,11 @@ function CreateStrategy() {
   return (
     <Stack direction="column" spacing={8}>
       <Stack spacing={2}>
-        <Heading size="lg">Set up an investment strategy</Heading>
-        <Text textStyle="body">Save time by automating your investing and profit-taking with CALC.</Text>
+        <Heading size="lg">Set up a smart swap strategy</Heading>
+        <Text textStyle="body">
+          The smartest way to enter and exit positions, complimented with pre- and post-swap automation to save time and
+          counter emotional decision making.
+        </Text>
       </Stack>
 
       <Strategies />

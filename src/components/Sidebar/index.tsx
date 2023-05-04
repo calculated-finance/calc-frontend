@@ -67,7 +67,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         borderColor={isActive ? 'brand.200' : 'transparent'}
         role="group"
         cursor="pointer"
-        color={isActive ? 'brand.200' : '#D5F8F9'}
+        color={isActive ? 'brand.200' : 'blue.200'}
         _hover={{
           bg: 'navy',
           boxShadow: 'inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)',

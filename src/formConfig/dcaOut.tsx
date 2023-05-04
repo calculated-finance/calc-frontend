@@ -15,7 +15,7 @@ const dcaOutSteps: StepConfig[] = [
         </Text>
 
         <Text>
-          This is estimated to be Q1 2023 but may happen sooner. Please follow{' '}
+          This is estimated to be Q4 2023 but may happen sooner. Please follow{' '}
           <Link isExternal href="https://twitter.com/CALC_Finance">
             @CALC_finance
           </Link>{' '}

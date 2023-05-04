@@ -83,7 +83,7 @@ function ActiveWithOne() {
         </Text>
       </HStack>
       <Stack spacing={1}>
-        <Heading size="md">Awesome - you have a DCA strategy active!</Heading>
+        <Heading size="md">Awesome - you have a calculated strategy active!</Heading>
         <Text fontSize="sm">
           Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
           CALC is empowering investors with the tools to make investing emotionless.
