@@ -74,7 +74,11 @@ import DenomIcon from './DenomIcon';
 //   );
 // }
 
-function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { resultingDenom: string }) {
+function MarsOption({
+  resultingDenom,
+  marsData,
+  ...props
+}: UseRadioProps & FlexProps & { resultingDenom: string; marsData: any }) {
   const { getInputProps, getRadioProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();
@@ -114,7 +118,7 @@ function MarsOption({ resultingDenom, ...props }: UseRadioProps & FlexProps & { 
                 <Text fontSize="sm">Loan {getDenomName(resultingDenom)} on Mars</Text>
               </GridItem>
               <GridItem colSpan={2} textAlign="right">
-                <Text>~{0.1 * 100}%</Text>
+                <Text>~{Number((Number(marsData?.liquidity_rate) * 100).toFixed(2))}%</Text>
               </GridItem>
             </Grid>
           </Box>
@@ -153,7 +157,8 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
 
   const { data, isLoading } = useMars(context?.resultingDenom);
 
-  const marsEnabled = data?.find((market: any) => market.denom === resultingDenom);
+  const marsData = data?.find((market: any) => market.denom === resultingDenom);
+  const marsEnabled = Boolean(marsData);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -185,7 +190,7 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
             </GridItem>
           </Grid>
           <Stack {...getRootProps} maxH={200} overflow="auto">
-            <MarsOption {...marsRadio} resultingDenom={resultingDenom!} isDisabled={!marsEnabled} />
+            <MarsOption {...marsRadio} resultingDenom={resultingDenom!} marsData={marsData} />
           </Stack>
         </>
       ) : (
