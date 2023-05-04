@@ -31,7 +31,7 @@ const useBalances = () => {
   return {
     data: {
       ...data,
-      balances: data?.filter((balance: Coin) => SUPPORTED_DENOMS.includes(balance.denom)) || [],
+      balances: data?.filter((balance: Coin) => SUPPORTED_DENOMS.includes(balance.denom)) || undefined,
     },
     ...other,
   };
