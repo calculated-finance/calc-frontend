@@ -4,6 +4,7 @@ import Radio from '@components/Radio';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
+import { Chains, useChain } from '@hooks/useChain';
 
 const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = [
   {
@@ -18,6 +19,7 @@ const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = 
 
 export default function StartImmediately() {
   const [field, , helpers] = useField({ name: 'startImmediately' });
+  const { chain } = useChain();
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -40,7 +42,7 @@ export default function StartImmediately() {
             );
           })}
         </Radio>
-        <TriggerType />
+        {chain !== Chains.Osmosis && <TriggerType />}
       </HStack>
     </FormControl>
   );
