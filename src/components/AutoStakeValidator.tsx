@@ -15,12 +15,13 @@ import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import Select from './Select';
 
 export function DummyAutoStakeValidator() {
+  const [field, meta] = useField({ name: 'autoStakeValidator' });
   return (
-    <Box w="full" h="full" position="relative">
-      <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="1px">
-        <Heading size="xs">Cross chain staking coming soon</Heading>
-      </Center>
-      <FormControl isDisabled>
+    <FormControl isDisabled isInvalid={Boolean(meta.touched && meta.error)}>
+      <Box w="full" h="full" position="relative">
+        <Center h="full" w="full" zIndex={10} position="absolute" backdropFilter="auto" backdropBlur="1px">
+          <Heading size="xs">Cross chain staking coming soon</Heading>
+        </Center>
         <FormLabel>Choose Validator</FormLabel>
         <FormHelperText>
           <Text textStyle="body-xs">
@@ -29,8 +30,10 @@ export function DummyAutoStakeValidator() {
           </Text>
         </FormHelperText>
         <Select value="" onChange={() => null} options={[]} placeholder="Select or search for validator" />
-      </FormControl>
-    </Box>
+      </Box>
+
+      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+    </FormControl>
   );
 }
 

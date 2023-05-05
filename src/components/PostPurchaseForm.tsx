@@ -1,5 +1,5 @@
 import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
-import { Form, useField } from 'formik';
+import { Form, useField, useFormikContext } from 'formik';
 import Submit from '@components/Submit';
 import getDenomInfo from '@utils/getDenomInfo';
 import RecipientAccount from '@components/RecipientAccount';
@@ -9,6 +9,7 @@ import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
@@ -77,6 +78,10 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
   );
 }
 
+function CollapseWithRender({ in: inProp, children }: { in: boolean } & ChildrenProp) {
+  return <Collapse in={inProp}>{inProp && <Box m="px">{children}</Box>}</Collapse>;
+}
+
 export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
@@ -90,30 +95,24 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
       <Stack direction="column" spacing={6}>
         <PostPurchaseOptionRadio autoStakeSupported={stakeingPossible} />
         <Box>
-          <Collapse in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
-            <Box m="px">
-              <Stack>
-                <DcaInSendToWallet formName={formName} />
-                <Collapse in={sendToWalletValue === SendToWalletValues.No}>
-                  <Box m="px">
-                    <RecipientAccount />
-                  </Box>
-                </Collapse>
-              </Stack>
-            </Box>
-          </Collapse>
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
+            <Stack>
+              <DcaInSendToWallet formName={formName} />
+              <CollapseWithRender in={sendToWalletValue === SendToWalletValues.No}>
+                <RecipientAccount />
+              </CollapseWithRender>
+            </Stack>
+          </CollapseWithRender>
 
-          <Collapse in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-            <Box m="px">{stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}</Box>
-          </Collapse>
-          <Collapse in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
-            <Box m="px">{postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}</Box>
-          </Collapse>
-          <Collapse in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
-            <Box m="px">
-              {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
-            </Box>
-          </Collapse>
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
+            {stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}
+          </CollapseWithRender>
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
+            {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
+          </CollapseWithRender>
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
+            {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
+          </CollapseWithRender>
         </Box>
 
         <Submit>Next</Submit>
