@@ -20,3 +20,6 @@ infrastructure/**/*.zip
 
 # Local Netlify folder
 .netlify
+
+# Sentry Auth Token
+.sentryclirc
