@@ -151,7 +151,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
+export function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
   const { chain } = useChain();
   if (chain === Chains.Kujira) {
     return {

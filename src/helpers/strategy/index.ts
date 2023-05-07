@@ -7,6 +7,9 @@ import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
 import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
+import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
+import { Chains } from '@hooks/useChain';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -251,6 +254,48 @@ export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
     return parsedMsg;
   }
   return null;
+}
+
+export function getStrategyValidatorAddress(strategy: StrategyOsmosis) {
+  const { z_delegate } = getStrategyPostSwapDetails(strategy) || {};
+  if (z_delegate) {
+    return z_delegate.validator_address;
+  }
+  return undefined;
+}
+
+export function getStrategyPostSwapType(strategy: StrategyOsmosis, chain: Chains) {
+  const { destinations } = strategy;
+  const [destination] = destinations;
+
+  if (destination.address === getMarsAddress()) {
+    return PostPurchaseOptions.GenerateYield;
+  }
+
+  if (destination.address === getChainContractAddress(chain)) {
+    return PostPurchaseOptions.Reinvest;
+  }
+
+  if (getStrategyValidatorAddress(strategy)) {
+    return PostPurchaseOptions.Stake;
+  }
+
+  return PostPurchaseOptions.SendToWallet;
+}
+
+export function getStrategyPostSwapSendToAnotherWallet(
+  strategy: StrategyOsmosis,
+  chain: Chains,
+  address: string | undefined,
+) {
+  const { destinations } = strategy;
+  if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
+    const [destination] = destinations;
+    if (destination.address !== address) {
+      return destination.address;
+    }
+  }
+  return undefined;
 }
 
 export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis) {

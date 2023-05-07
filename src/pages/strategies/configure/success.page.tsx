@@ -1,4 +1,4 @@
-import { Button, Stack, Text, Image, Divider, Heading } from '@chakra-ui/react';
+import { Button, Stack, Text, Image, Divider } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
@@ -6,14 +6,12 @@ import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getDenomName } from '@helpers/getDenomName';
-import { getStrategyInitialDenom } from '@helpers/strategy';
 import { configureSteps } from './index.page';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  const { strategyId, timeSaved } = query;
+  const { strategyId } = query;
 
   const { data, isLoading } = useStrategy(strategyId as string);
 
@@ -29,8 +27,6 @@ function Success() {
       </NewStrategyModal>
     );
   }
-
-  const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));
 
   return (
     <NewStrategyModal>

@@ -3,7 +3,7 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import { ExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
+import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
@@ -24,7 +24,7 @@ export function useConfigureStrategy() {
 
   const { chain } = useChain();
 
-  return useMutation<ExecuteResult, Error, ConfigureVariables>(({ values, strategy }) => {
+  return useMutation<DeliverTxResponse, Error, ConfigureVariables>(({ values, strategy }) => {
     if (isNil(address)) {
       throw new Error('address is null or empty');
     }
