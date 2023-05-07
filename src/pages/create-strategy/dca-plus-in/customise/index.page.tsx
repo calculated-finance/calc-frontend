@@ -14,8 +14,6 @@ import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDCAPlusStep2Form } from '@hooks/useDcaPlusForm';
 import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
-import { TriggerForm } from '@components/TriggerForm';
-import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';

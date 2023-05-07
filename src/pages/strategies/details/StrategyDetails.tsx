@@ -89,7 +89,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function LiquidityPool({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+function LiquidityPool() {
   const { data: pools } = useOsmosisPools();
   const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig()?.pool_id);
   return pool ? (

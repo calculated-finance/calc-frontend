@@ -27,7 +27,6 @@ import {
   Code,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { FormNames } from '@hooks/useFormStore';
 import {
   getStrategyExecutionInterval,
   getStrategyInitialDenom,
@@ -39,7 +38,6 @@ import useStrategies from '@hooks/useStrategies';
 import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { Denom } from '@models/Denom';

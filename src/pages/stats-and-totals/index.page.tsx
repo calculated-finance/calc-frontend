@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Divider, Grid, GridItem, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -9,8 +9,6 @@ import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy } from '@hooks/useStrategies';
-import { VaultStatus } from 'src/interfaces/generated/query';
-import { TimeInterval } from 'src/interfaces/generated/execute';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
@@ -73,33 +71,6 @@ function getStrategiesByStatus(allStrategies: Strategy[], status: string) {
   return { strategiesByStatus, percentage };
 }
 
-function StrategiesStatusItem({ status }: { status: Strategy['status'] }) {
-  const { data: allStrategies } = useAdminStrategies();
-  if (!allStrategies?.length) {
-    return null;
-  }
-  if (allStrategies?.length === 0) {
-    return null;
-  }
-  const { strategiesByStatus, percentage } = getStrategiesByStatus(allStrategies, status);
-
-  return (
-    <>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1} textTransform="capitalize">
-          {status}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs"> {strategiesByStatus.length}</Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{percentage}%</Text>
-      </GridItem>
-    </>
-  );
-}
-
 function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: string) {
   const strategiesByTimeInterval = allStrategies.filter((strategy) => strategy.time_interval === timeInterval) || [];
   const percentage = (Number(strategiesByTimeInterval.length / allStrategies.length) * 100).toFixed(2);
@@ -112,86 +83,11 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
   return { strategiesByType, percentage };
 }
 
-function StrategiesTimeIntervalItem({ timeInterval }: { timeInterval: Strategy['time_interval'] }) {
-  const { data: allStrategies } = useAdminStrategies();
-  if (!allStrategies?.length) {
-    return null;
-  }
-  if (allStrategies.length === 0) {
-    return null;
-  }
-  const { strategiesByTimeInterval, percentage } = getStrategiesByTimeInterval(allStrategies, timeInterval);
-
-  return (
-    <>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1} textTransform="capitalize">
-          {timeInterval}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs"> {strategiesByTimeInterval.length}</Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{percentage}%</Text>
-      </GridItem>
-    </>
-  );
-}
-
-function StrategiesStatusList() {
-  return (
-    <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1}>
-          Status
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">Count</Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">Percentage</Text>
-      </GridItem>
-      <GridItem colSpan={3}>
-        <Divider />
-      </GridItem>
-      {['scheduled', 'active', 'inactive', 'cancelled'].map((status: string) => (
-        <StrategiesStatusItem status={status as VaultStatus} />
-      ))}
-    </Grid>
-  );
-}
-
-function StrategiesTimeIntervalList() {
-  return (
-    <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1}>
-          Status
-        </Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">Count</Text>
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Text textStyle="body-xs">Percentage</Text>
-      </GridItem>
-      <GridItem colSpan={3}>
-        <Divider />
-      </GridItem>
-      {['hourly', 'daily', 'weekly', 'monthly'].map((timeInterval: string) => (
-        <StrategiesTimeIntervalItem timeInterval={timeInterval as TimeInterval} />
-      ))}
-    </Grid>
-  );
-}
-
 export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
       ?.filter((coin) => SUPPORTED_DENOMS.includes(coin.denom))
-      .map((balance, acc) => {
+      .map((balance) => {
         const { conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatAmount = denomConvertedAmount * fiatPrices[coingeckoId].usd;

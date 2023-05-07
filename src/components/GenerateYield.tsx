@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   FlexProps,
   FormControl,
   FormErrorMessage,
@@ -17,8 +16,6 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
-import { FormNames } from '@hooks/useFormStore';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { getDenomName } from '@utils/getDenomInfo';

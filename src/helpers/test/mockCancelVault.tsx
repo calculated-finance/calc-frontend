@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
-import { CONTRACT_ADDRESS } from 'src/constants';
 import { encode } from '../encode';
 
 const defaultMsg = {
