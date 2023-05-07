@@ -17,58 +17,78 @@ import {
   GridItem,
   Stack,
   Code,
+  Tooltip,
 } from '@chakra-ui/react';
+import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { Denom } from '@models/Denom';
+import YesNoValues from '@models/YesNoValues';
 import { getDenomName } from '@utils/getDenomInfo';
 import { useField } from 'formik';
+import { TransactionType } from './TransactionType';
 
-function WeightsGrid({ swapAmount, swapMultiplier }: { swapAmount: number; swapMultiplier: number }) {
-  const calcSwapFromPriceDelta = (priceDelta: number) =>
-    (Number(swapAmount) * (1 - priceDelta * Number(swapMultiplier))).toFixed(1);
+const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
+
+function WeightsGrid({
+  swapAmount,
+  swapMultiplier,
+  transactionType,
+}: {
+  swapAmount: number;
+  swapMultiplier: number;
+  transactionType: TransactionType;
+}) {
+  const [{ value: applyMultiplier }] = useField({ name: 'applyMultiplier' });
+
+  const swapAmountSafe = swapAmount ?? 0;
+  const calcSwapFromPriceDelta = (priceDelta: number) => {
+    const weightDisabled =
+      applyMultiplier === YesNoValues.No && (transactionType === TransactionType.Buy ? priceDelta > 0 : priceDelta < 0);
+    const value = weightDisabled ? swapAmountSafe : swapAmountSafe * (1 - priceDelta * swapMultiplier);
+
+    if (value < 0) {
+      return 0;
+    }
+    if (value > 1000000000) {
+      return `${Number((value / 1000000000).toFixed(2))}b`;
+    }
+    if (value > 1000000) {
+      return `${Number((value / 1000000).toFixed(2))}m`;
+    }
+    if (value > 1000) {
+      return `${Number((value / 1000).toFixed(2))}k`;
+    }
+    return Number(value.toFixed(2));
+  };
 
   return (
     <Grid templateColumns="repeat(12, 1fr)" columnGap={2} rowGap={3}>
       <GridItem colSpan={3}>Price Delta</GridItem>
-      <GridItem color="red.200" colSpan={1}>
-        -50%
-      </GridItem>
-      <GridItem color="red.200" colSpan={1}>
-        -10%
-      </GridItem>
-      <GridItem color="red.200" colSpan={1}>
-        -5%
-      </GridItem>
-      <GridItem color="red.200" colSpan={1}>
-        -1%
-      </GridItem>
-      <GridItem colSpan={1}>0%</GridItem>
-      <GridItem color="green.200" colSpan={1}>
-        +1%
-      </GridItem>
-      <GridItem color="green.200" colSpan={1}>
-        +5%
-      </GridItem>
-      <GridItem color="green.200" colSpan={1}>
-        +10%
-      </GridItem>
-      <GridItem color="green.200" colSpan={1}>
-        +50%
-      </GridItem>
+      {weights.map((weight) => {
+        const color = weight > 0 ? 'green.200' : weight < 0 ? 'red.200' : undefined;
+        return (
+          <GridItem colSpan={1} key={weight} color={color}>
+            {formatSignedPercentage(weight, '')}
+          </GridItem>
+        );
+      })}
+
       <GridItem colSpan={3}>Buy amount:</GridItem>
-      <GridItem colSpan={1}>{calcSwapFromPriceDelta(-0.5)}</GridItem>
-      <GridItem colSpan={1}>{calcSwapFromPriceDelta(-0.1)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(-0.05)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(-0.01)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(0)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(0.01)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(0.05)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(0.1)}</GridItem>
-      <GridItem colSpan={1}> {calcSwapFromPriceDelta(0.5)}</GridItem>
+      {weights.map((weight) => (
+        <GridItem colSpan={1} key={weight}>
+          {calcSwapFromPriceDelta(weight)}
+        </GridItem>
+      ))}
     </Grid>
   );
 }
 
-export default function SwapMultiplier({ initialDenom }: { initialDenom: Denom }) {
+export default function SwapMultiplier({
+  initialDenom,
+  transactionType,
+}: {
+  initialDenom: Denom;
+  transactionType: TransactionType;
+}) {
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
 
   const [{ value: swapAmount }] = useField({ name: 'swapAmount' });
@@ -87,12 +107,14 @@ export default function SwapMultiplier({ initialDenom }: { initialDenom: Denom }
         <Spacer />
         10x
       </Flex>
-      <Slider value={value} onChange={setValue} min={0.1} max={10} step={0.1}>
+      <Slider value={value} onChange={setValue} min={0.1} max={10} step={0.1} mb={2}>
         <SliderTrack bg="white">
           <Box position="relative" right={10} />
           <SliderFilledTrack bg="blue.200" />
         </SliderTrack>
-        <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
+        <Tooltip bg="abyss.200" color="white" placement="top" label={value}>
+          <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
+        </Tooltip>
       </Slider>
 
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -112,7 +134,7 @@ export default function SwapMultiplier({ initialDenom }: { initialDenom: Denom }
             </Text>
           </HStack>
           <Divider borderWidth={1} />
-          <WeightsGrid swapAmount={swapAmount} swapMultiplier={value} />
+          <WeightsGrid swapAmount={swapAmount} swapMultiplier={value} transactionType={transactionType} />
         </Stack>
       </FormHelperText>
     </FormControl>
