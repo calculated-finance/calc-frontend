@@ -1,5 +1,5 @@
 import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
-import { Form, useField, useFormikContext } from 'formik';
+import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import getDenomInfo from '@utils/getDenomInfo';
 import RecipientAccount from '@components/RecipientAccount';
@@ -7,7 +7,6 @@ import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
-import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import RadioCard from './RadioCard';
