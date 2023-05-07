@@ -20,16 +20,24 @@ import FeesWeightedScale from '@components/FeesWeightedScale';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
+import { StepConfig } from '@formConfig/StepConfig';
 
-function Page() {
-  const { state, actions } = useWeightedScaleConfirmForm(FormNames.WeightedScaleIn);
+function WeightedScaleSummaryPage({
+  formName,
+  steps,
+  transactionType,
+  strategyType,
+}: {
+  formName: FormNames;
+  steps: StepConfig[];
+  transactionType: TransactionType;
+  strategyType: StrategyTypes;
+}) {
+  const { state, actions } = useWeightedScaleConfirmForm(formName);
   const { isPageLoading } = usePageLoad();
-  const { nextStep, goToStep } = useSteps(weightedScaleInSteps);
+  const { nextStep, goToStep } = useSteps(steps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(
-    FormNames.WeightedScaleIn,
-    TransactionType.Buy,
-  );
+  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
@@ -52,10 +60,10 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={weightedScaleInSteps} resetForm={actions.resetAction}>
+      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={weightedScaleInSteps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
@@ -64,7 +72,7 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.WeightedScaleIn} />
+            <SummaryYourDeposit state={state} strategyType={strategyType} />
             <SummaryTheSwapWeightedScale state={state} />
             <SummaryWhileSwapping
               initialDenom={state.initialDenom}
@@ -73,14 +81,14 @@ function Page() {
               slippageTolerance={state.slippageTolerance}
             />
             <WeightSummary
-              transactionType={TransactionType.Buy}
+              transactionType={transactionType}
               applyMultiplier={state.applyMultiplier}
               swapMultiplier={state.swapMultiplier}
               swapAmount={state.swapAmount}
             />
             <SummaryAfterEachSwap state={state} />
 
-            <FeesWeightedScale formName={FormNames.WeightedScaleIn} transactionType={TransactionType.Buy} />
+            <FeesWeightedScale formName={formName} transactionType={transactionType} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
@@ -88,6 +96,17 @@ function Page() {
         )}
       </NewStrategyModalBody>
     </NewStrategyModal>
+  );
+}
+
+function Page() {
+  return (
+    <WeightedScaleSummaryPage
+      formName={FormNames.WeightedScaleIn}
+      steps={weightedScaleInSteps}
+      transactionType={TransactionType.Buy}
+      strategyType={StrategyTypes.WeightedScaleIn}
+    />
   );
 }
 Page.getLayout = getFlowLayout;
