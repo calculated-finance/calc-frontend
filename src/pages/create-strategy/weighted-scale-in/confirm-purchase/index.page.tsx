@@ -19,6 +19,7 @@ import { SummaryTheSwapWeightedScale } from '@components/Summary/SummaryTheSwapW
 import FeesWeightedScale from '@components/FeesWeightedScale';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '@helpers/getTimeSaved';
+import { WeightSummary } from '@components/WeightSummary';
 
 function Page() {
   const { state, actions } = useWeightedScaleConfirmForm(FormNames.WeightedScaleIn);
@@ -71,7 +72,14 @@ function Page() {
               priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
             />
+            <WeightSummary
+              transactionType={TransactionType.Buy}
+              applyMultiplier={state.applyMultiplier}
+              swapMultiplier={state.swapMultiplier}
+              swapAmount={state.swapAmount}
+            />
             <SummaryAfterEachSwap state={state} />
+
             <FeesWeightedScale formName={FormNames.WeightedScaleIn} transactionType={TransactionType.Buy} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>

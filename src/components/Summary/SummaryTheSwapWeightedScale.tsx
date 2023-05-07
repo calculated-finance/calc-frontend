@@ -5,7 +5,7 @@ import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
-import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
+import { ImmediateTriggerInfo, SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue, executionInterval } = state;
@@ -17,7 +17,7 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
     <Box data-testid="summary-the-swap-dca-plus">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <ImmediateTriggerInfo />, CALC will swap the amount of{' '}
+        <SummaryTriggerInfo state={state} />, CALC will swap the amount of{' '}
         <BadgeButton url="customise">
           <Code color="none" bg="none">
             {swapAmount} {initialDenomName}
