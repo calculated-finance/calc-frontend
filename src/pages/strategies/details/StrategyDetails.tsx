@@ -178,8 +178,8 @@ export function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
 
 function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
-  return chain === Chains.Osmosis ? (
-    <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
+  return (
+    <GridItem visibility={isStrategyCancelled(strategy) || chain !== Chains.Osmosis ? 'hidden' : 'visible'}>
       <Flex justify="end">
         <Link href={generateStrategyConfigureUrl(strategy.id)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
@@ -188,7 +188,7 @@ function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis })
         </Link>
       </Flex>
     </GridItem>
-  ) : null;
+  );
 }
 
 function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
