@@ -219,7 +219,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAIn) {
+        if (strategyType !== StrategyTypes.DCAIn && strategyType !== StrategyTypes.WeightedScaleIn) {
           return true;
         }
         return value >= startPrice;
@@ -236,7 +236,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAOut) {
+        if (strategyType !== StrategyTypes.DCAOut && strategyType !== StrategyTypes.WeightedScaleOut) {
           return true;
         }
         return value <= startPrice;

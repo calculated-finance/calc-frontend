@@ -4,4 +4,5 @@ export enum StrategyTypes {
   DCAPlusIn = 'DCA+ In',
   DCAPlusOut = 'DCA+ Out',
   WeightedScaleIn = 'Weighted Scale In',
+  WeightedScaleOut = 'Weighted Scale Out',
 }

@@ -23,15 +23,28 @@ import ApplyMultiplier from '@components/ApplyMultiplier';
 import BasePrice from '@components/BasePrice';
 import { TransactionType } from '@components/TransactionType';
 import { TriggerForm } from '@components/TriggerForm';
+import { StepConfig } from '@formConfig/StepConfig';
+import { AnySchema } from 'yup';
 
-function Page() {
-  const { actions, state } = useWeightedScaleStep2Form(FormNames.WeightedScaleIn);
-  const steps = weightedScaleInSteps;
+function WeightedScaleCustomisePage({
+  formName,
+  steps,
+  strategyType,
+  transactionType,
+  formSchema,
+}: {
+  formName: FormNames;
+  steps: StepConfig[];
+  strategyType: StrategyTypes;
+  transactionType: TransactionType;
+  formSchema: AnySchema;
+}) {
+  const { actions, state } = useWeightedScaleStep2Form(formName);
 
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(WeightedScaleCustomiseFormSchema, {
+  const { validate } = useValidation(formSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.WeightedScaleIn,
+    strategyType,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -82,12 +95,12 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.WeightedScaleIn} />
+                <TriggerForm transactionType={transactionType} formName={formName} />
                 <ExecutionInterval />
                 <BaseSwapAmount step1State={state.step1} />
-                <SwapMultiplier initialDenom={state.step1.initialDenom} transactionType={TransactionType.Buy} />
+                <SwapMultiplier initialDenom={state.step1.initialDenom} transactionType={transactionType} />
                 <ApplyMultiplier />
-                <BasePrice formName={FormNames.WeightedScaleIn} transactionType={TransactionType.Buy} />
+                <BasePrice formName={formName} transactionType={transactionType} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
                     <SlippageTolerance />
@@ -100,6 +113,18 @@ function Page() {
         </NewStrategyModal>
       )}
     </Formik>
+  );
+}
+
+function Page() {
+  return (
+    <WeightedScaleCustomisePage
+      formName={FormNames.WeightedScaleIn}
+      steps={weightedScaleInSteps}
+      strategyType={StrategyTypes.WeightedScaleIn}
+      transactionType={TransactionType.Buy}
+      formSchema={WeightedScaleCustomiseFormSchema}
+    />
   );
 }
 
