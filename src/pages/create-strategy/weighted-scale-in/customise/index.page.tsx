@@ -85,7 +85,7 @@ function Page() {
                 <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.WeightedScaleIn} />
                 <ExecutionInterval />
                 <BaseSwapAmount step1State={state.step1} />
-                <SwapMultiplier />
+                <SwapMultiplier initialDenom={state.step1.initialDenom} />
                 <ApplyMultiplier />
                 <BasePrice formName={FormNames.WeightedScaleIn} transactionType={TransactionType.Buy} />
                 <Collapse in={values.advancedSettings}>
