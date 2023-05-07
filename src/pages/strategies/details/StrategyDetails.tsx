@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, PlusSquareIcon } from '@chakra-ui/icons';
+import { CopyIcon, ExternalLinkIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -14,9 +14,10 @@ import {
   Spinner as ChakraSpinner,
   Link as ChakraLink,
   Icon,
+  useClipboard,
+  useToast,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import Spinner from '@components/Spinner';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
@@ -60,6 +61,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import useStrategy from '@hooks/useStrategy';
 import { HiOutlineCube } from 'react-icons/hi';
 import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrategyConfigureUrl';
+import { truncate } from '@components/CosmosWallet';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -154,8 +156,13 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 export function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
   const { chain } = useChain();
   if (chain === Chains.Kujira) {
+    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
+      return {
+        validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
+      };
+    }
     return {
-      validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
+      validatorAddress: null,
     };
   }
   if (strategy.destinations.length) {
@@ -218,6 +225,31 @@ function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   );
 }
 
+function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+  const { validatorAddress } = usePostSwapCallback(strategy);
+  const { validator, isLoading } = useValidator(validatorAddress);
+
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Auto staking status</Heading>
+      </GridItem>
+      <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
+        <Badge colorScheme="green">Active</Badge>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Validator name</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm" data-testid="strategy-validator-name">
+          {isLoading ? <ChakraSpinner size="sm" /> : validator?.description?.moniker}
+        </Text>
+      </GridItem>
+      <ConfigureButton strategy={strategy} />
+    </>
+  );
+}
+
 function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { destinations } = strategy;
   const { chain } = useChain();
@@ -225,29 +257,23 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
   const { address } = useWallet();
 
   const { validatorAddress } = usePostSwapCallback(strategy);
+  const { onCopy } = useClipboard(destinations[0].address || '');
+  const toast = useToast();
 
-  const { validator, isLoading } = useValidator(validatorAddress);
+  const handleCopy = () => {
+    onCopy();
+    toast({
+      title: 'Address copied to clipboard',
+      position: 'top',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+      variant: 'subtle',
+    });
+  };
 
-  if (validator) {
-    return (
-      <>
-        <GridItem colSpan={1}>
-          <Heading size="xs">Auto staking status</Heading>
-        </GridItem>
-        <GridItem colSpan={2} data-testid="strategy-auto-staking-status">
-          <Badge colorScheme="green">Active</Badge>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Heading size="xs">Validator name</Heading>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Text fontSize="sm" data-testid="strategy-validator-name">
-            {isLoading ? <Spinner /> : validator?.description?.moniker}
-          </Text>
-        </GridItem>
-        <ConfigureButton strategy={strategy} />
-      </>
-    );
+  if (validatorAddress) {
+    return <ValidatorDetails strategy={strategy} />;
   }
 
   if (getStrategyProvideLiquidityConfig()) {
@@ -302,9 +328,16 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
               </Text>
             </ChakraLink>
           ) : (
-            <Text fontSize="sm" data-testid="strategy-receiving-address">
-              {destinations[0].address}
-            </Text>
+            <Button
+              variant="link"
+              colorScheme="blue"
+              rightIcon={<Icon as={CopyIcon} />}
+              fontSize="sm"
+              data-testid="strategy-receiving-address"
+              onClick={handleCopy}
+            >
+              {truncate(destinations[0].address)}
+            </Button>
           )}
         </GridItem>
         <ConfigureButton strategy={strategy} />

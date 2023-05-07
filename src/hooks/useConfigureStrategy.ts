@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
@@ -13,6 +13,7 @@ import { useChain } from './useChain';
 import { Strategy } from './useStrategies';
 import { getGrantMsg } from './useCreateVault/getGrantMsg';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
+import { STRATEGY_KEY } from './useStrategy';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;
@@ -24,47 +25,55 @@ export function useConfigureStrategy() {
 
   const { chain } = useChain();
 
-  return useMutation<DeliverTxResponse, Error, ConfigureVariables>(({ values, strategy }) => {
-    if (isNil(address)) {
-      throw new Error('address is null or empty');
-    }
-    if (!client) {
-      throw new Error('client is null or empty');
-    }
+  const queryClient = useQueryClient();
+  return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
+    ({ values, strategy }) => {
+      if (isNil(address)) {
+        throw new Error('address is null or empty');
+      }
+      if (!client) {
+        throw new Error('client is null or empty');
+      }
 
-    if (isNil(chain)) {
-      throw new Error('chain is null or empty');
-    }
+      if (isNil(chain)) {
+        throw new Error('chain is null or empty');
+      }
 
-    if (strategy.owner !== address) {
-      throw new Error('You are not the owner of this strategy');
-    }
+      if (strategy.owner !== address) {
+        throw new Error('You are not the owner of this strategy');
+      }
 
-    const msgs: EncodeObject[] = [];
+      const msgs: EncodeObject[] = [];
 
-    const { autoStakeValidator } = values;
+      const { autoStakeValidator } = values;
 
-    if (autoStakeValidator) {
-      msgs.push(getGrantMsg(address, chain));
-    }
+      if (autoStakeValidator) {
+        msgs.push(getGrantMsg(address, chain));
+      }
 
-    const updateVaultMsg = {
-      update_vault: {
-        destinations:
-          getCallbackDestinations(
-            chain,
-            values.autoStakeValidator,
-            values.recipientAccount,
-            values.yieldOption,
-            address,
-            values.reinvestStrategy,
-          ) || [],
-        vault_id: strategy.id,
+      const updateVaultMsg = {
+        update_vault: {
+          destinations:
+            getCallbackDestinations(
+              chain,
+              values.autoStakeValidator,
+              values.recipientAccount,
+              values.yieldOption,
+              address,
+              values.reinvestStrategy,
+            ) || [],
+          vault_id: strategy.id,
+        },
+      } as ExecuteMsg;
+
+      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
+
+      return client.signAndBroadcast(address, msgs, 'auto');
+    },
+    {
+      onSuccess: (data, { strategy }) => {
+        queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, strategy.id] });
       },
-    } as ExecuteMsg;
-
-    msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
-
-    return client.signAndBroadcast(address, msgs, 'auto');
-  });
+    },
+  );
 }

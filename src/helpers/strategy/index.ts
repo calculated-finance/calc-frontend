@@ -273,11 +273,10 @@ export function getStrategyPostSwapType(strategy: StrategyOsmosis, chain: Chains
   }
 
   if (destination.address === getChainContractAddress(chain)) {
+    if (getStrategyValidatorAddress(strategy)) {
+      return PostPurchaseOptions.Stake;
+    }
     return PostPurchaseOptions.Reinvest;
-  }
-
-  if (getStrategyValidatorAddress(strategy)) {
-    return PostPurchaseOptions.Stake;
   }
 
   return PostPurchaseOptions.SendToWallet;
