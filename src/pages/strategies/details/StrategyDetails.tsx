@@ -258,7 +258,7 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
         </GridItem>
         <GridItem colSpan={1}>
           <Text fontSize="sm" data-testid="strategy-receiving-address">
-            <LiquidityPool strategy={strategy} />
+            <LiquidityPool />
           </Text>
         </GridItem>
         <ConfigureButton strategy={strategy} />
