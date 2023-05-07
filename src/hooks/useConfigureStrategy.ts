@@ -7,7 +7,7 @@ import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
-import { getCallbackDestinations } from '@helpers/destinations';
+import { buildCallbackDestinations } from '@helpers/destinations';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChain } from './useChain';
 import { Strategy } from './useStrategies';
@@ -54,7 +54,7 @@ export function useConfigureStrategy() {
       const updateVaultMsg = {
         update_vault: {
           destinations:
-            getCallbackDestinations(
+            buildCallbackDestinations(
               chain,
               values.autoStakeValidator,
               values.recipientAccount,

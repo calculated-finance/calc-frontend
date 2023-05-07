@@ -6,10 +6,6 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
-import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
-import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
-import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import { Chains } from '@hooks/useChain';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -240,92 +236,4 @@ export function getAverageSellPrice(strategy: Vault, dexFee: number) {
 
 export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
-}
-
-export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
-  const { destinations } = strategy;
-  const [destination] = destinations;
-  const { msg } = destination;
-  if (msg) {
-    // decode base64
-    const decodedMsg = Buffer.from(msg, 'base64').toString('ascii');
-    // parse json
-    const parsedMsg = JSON.parse(decodedMsg);
-    return parsedMsg;
-  }
-  return null;
-}
-
-export function getStrategyValidatorAddress(strategy: StrategyOsmosis) {
-  const { z_delegate } = getStrategyPostSwapDetails(strategy) || {};
-  if (z_delegate) {
-    return z_delegate.validator_address;
-  }
-  return undefined;
-}
-
-export function getStrategyPostSwapType(strategy: StrategyOsmosis, chain: Chains) {
-  const { destinations } = strategy;
-  const [destination] = destinations;
-
-  if (destination.address === getMarsAddress()) {
-    return PostPurchaseOptions.GenerateYield;
-  }
-
-  if (destination.address === getChainContractAddress(chain)) {
-    if (getStrategyValidatorAddress(strategy)) {
-      return PostPurchaseOptions.Stake;
-    }
-    return PostPurchaseOptions.Reinvest;
-  }
-
-  return PostPurchaseOptions.SendToWallet;
-}
-
-export function getStrategyPostSwapSendToAnotherWallet(
-  strategy: StrategyOsmosis,
-  chain: Chains,
-  address: string | undefined,
-) {
-  const { destinations } = strategy;
-  if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
-    const [destination] = destinations;
-    if (destination.address !== address) {
-      return destination.address;
-    }
-  }
-  return undefined;
-}
-
-export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis) {
-  const postSwapDetails = getStrategyPostSwapDetails(strategy);
-  if (postSwapDetails && 'deposit' in postSwapDetails) {
-    return postSwapDetails.deposit.vault_id;
-  }
-  return undefined;
-}
-
-export function getStrategyProvideLiquidityConfig():
-  | {
-      duration: LockableDuration;
-      pool_id: number;
-    }
-  | undefined {
-  return undefined;
-  // const { destinations } = strategy;
-
-  // const provideLiquidityDestination = destinations?.find((destination: Destination) => {
-  //   if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
-  //     return true;
-  //   }
-  //   return false;
-  // });
-  // if (
-  //   provideLiquidityDestination &&
-  //   typeof provideLiquidityDestination.action === 'object' &&
-  //   'z_provide_liquidity' in provideLiquidityDestination.action
-  // ) {
-  //   return provideLiquidityDestination?.action.z_provide_liquidity;
-  // }
-  // return undefined;
 }

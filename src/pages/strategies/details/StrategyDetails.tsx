@@ -42,10 +42,8 @@ import {
   getConvertedSwapAmount,
   isStrategyAutoStaking,
   isStrategyOperating,
-  getStrategyProvideLiquidityConfig,
   isBuyStrategy,
   getStrategyExecutionInterval,
-  getStrategyReinvestStrategyId,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
@@ -62,6 +60,11 @@ import useStrategy from '@hooks/useStrategy';
 import { HiOutlineCube } from 'react-icons/hi';
 import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrategyConfigureUrl';
 import { truncate } from '@components/CosmosWallet';
+import {
+  getPostSwapCallback,
+  getStrategyProvideLiquidityConfig,
+  getStrategyReinvestStrategyId,
+} from '@helpers/destinations';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -153,36 +156,6 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   );
 }
 
-export function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
-  const { chain } = useChain();
-  if (chain === Chains.Kujira) {
-    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
-      return {
-        validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
-      };
-    }
-    return {
-      validatorAddress: null,
-    };
-  }
-  if (strategy.destinations.length) {
-    const [destination] = (strategy as StrategyOsmosis).destinations;
-    const { msg } = destination;
-    if (msg) {
-      const decoded = Buffer.from(msg, 'base64').toString('ascii');
-      if (decoded) {
-        const parsed = JSON.parse(decoded);
-        return {
-          validatorAddress: parsed?.z_delegate?.validator_address,
-        };
-      }
-    }
-  }
-  return {
-    validatorAddress: null,
-  };
-}
-
 function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
   return (
@@ -226,7 +199,8 @@ function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
 }
 
 function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
-  const { validatorAddress } = usePostSwapCallback(strategy);
+  const { chain } = useChain();
+  const { validatorAddress } = getPostSwapCallback(strategy, chain);
   const { validator, isLoading } = useValidator(validatorAddress);
 
   return (
@@ -256,7 +230,7 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
 
   const { address } = useWallet();
 
-  const { validatorAddress } = usePostSwapCallback(strategy);
+  const { validatorAddress } = getPostSwapCallback(strategy, chain);
   const { onCopy } = useClipboard(destinations[0].address || '');
   const toast = useToast();
 

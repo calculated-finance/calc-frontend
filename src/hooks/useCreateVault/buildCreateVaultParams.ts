@@ -14,7 +14,7 @@ import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
-import { getCallbackDestinations } from '@helpers/destinations';
+import { buildCallbackDestinations } from '@helpers/destinations';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -151,7 +151,7 @@ export function buildCreateVaultParamsDCA(
           transactionType,
         ),
         slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-        destinations: getCallbackDestinations(
+        destinations: buildCallbackDestinations(
           chain,
           state.autoStakeValidator,
           state.recipientAccount,
@@ -218,7 +218,7 @@ export function buildCreateVaultParamsDCAPlus(
         target_start_time_utc_seconds: undefined,
         target_receive_amount: undefined,
         slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-        destinations: getCallbackDestinations(
+        destinations: buildCallbackDestinations(
           chain,
           state.autoStakeValidator,
           state.recipientAccount,
