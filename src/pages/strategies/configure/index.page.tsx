@@ -134,7 +134,7 @@ function Page() {
   const { data, isLoading } = useStrategy(query?.id as string);
   const { chain } = useChain();
 
-  if (!data?.vault) {
+  if (!data?.vault || !chain) {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
