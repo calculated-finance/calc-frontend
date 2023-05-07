@@ -3769,7 +3769,7 @@
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/react@7.51.0":
+"@sentry/react@7.51.0", "@sentry/react@^7.51.0":
   version "7.51.0"
   resolved "https://registry.yarnpkg.com/@sentry/react/-/react-7.51.0.tgz#a6949cfcfc96b856fa21c19cf458e9d60200b81e"
   integrity sha512-w9fHVBbv4l3tGFa9YCV1m2ngUTnYxM/r6pO2Q8N9sjeWAk74sREm7fUjBJI24sdJFQJj0KhHNg0I1ZOA+uITyQ==

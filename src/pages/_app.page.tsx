@@ -15,6 +15,7 @@ import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
+import * as Sentry from '@sentry/react';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -22,6 +23,15 @@ type AppPropsWithLayout = AppProps & {
 
 // disable retries on testnet
 const queryClient = new QueryClient();
+
+Sentry.init({
+  dsn: 'https://aafc272787584d989a7a22a79348a4c2@o4505139619364864.ingest.sentry.io/4505139621462016',
+  integrations: [new Sentry.BrowserTracing()],
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
