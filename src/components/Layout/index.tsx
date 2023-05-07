@@ -75,6 +75,8 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   'dca-in': { label: 'DCA In', enabled: false },
   'dca-plus-in': { label: 'DCA+ In', enabled: false },
   'dca-plus-out': { label: 'DCA+ Out', enabled: false },
+  'weighted-scale-in': { label: 'Weighted Scale In', enabled: false },
+  'weighted-scale-out': { label: 'Weighted Scale Out', enabled: false },
   'dca-out': { label: 'DCA Out', enabled: false },
   strategies: { label: 'My strategies', enabled: true },
   'top-up': { label: 'Top up strategy', enabled: false },

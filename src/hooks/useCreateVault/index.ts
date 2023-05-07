@@ -14,6 +14,7 @@ import { Chains, useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { FormNames } from '@hooks/useFormStore';
 import { isMainnet } from '@utils/isMainnet';
+import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -119,6 +120,12 @@ export const useCreateVaultDca = (formName: FormNames, transactionType: Transact
 
 export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useDcaPlusConfirmForm(formName);
+
+  return useCreateVault(formName, transactionType, state);
+};
+
+export const useCreateVaultWeightedScale = (formName: FormNames, transactionType: TransactionType) => {
+  const { state } = useWeightedScaleConfirmForm(formName);
 
   return useCreateVault(formName, transactionType, state);
 };

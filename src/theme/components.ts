@@ -1,8 +1,7 @@
 const components = {
   Button: {
     // baseStyle: ({ theme }) => {
-    //   console.log(theme.components.Modal);
-    //   console.log(theme.components.Modal);
+    //   console.log(theme.components);
     //   return {
     //     borderRadius: 'lg',
     //     fontSize: 'sm',
@@ -95,6 +94,7 @@ const components = {
       helperText: {
         pb: 2,
         textStyle: 'body-xs',
+        fontSize: 'xs',
       },
     },
   },

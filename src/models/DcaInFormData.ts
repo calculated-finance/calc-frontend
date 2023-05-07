@@ -43,6 +43,10 @@ export const initialValues = {
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
   yieldOption: null,
   reinvestStrategy: '',
+  basePriceIsCurrentPrice: YesNoValues.Yes,
+  basePriceValue: null,
+  swapMultiplier: 1,
+  applyMultiplier: YesNoValues.Yes,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
