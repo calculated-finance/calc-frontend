@@ -21,6 +21,7 @@ import Submit from '@components/Submit';
 import { Chains, useChain } from '@hooks/useChain';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import SendToWalletValues from '@models/SendToWalletValues';
+import { useWallet } from '@hooks/useWallet';
 
 export const configureSteps: StepConfig[] = [
   {
@@ -36,19 +37,27 @@ export const configureSteps: StepConfig[] = [
   },
 ];
 
-function getExistingValues(strategy: StrategyOsmosis, chain: Chains): Partial<DcaInFormDataPostPurchase> {
+function getExistingValues(
+  strategy: StrategyOsmosis,
+  chain: Chains,
+  address: string,
+): Partial<DcaInFormDataPostPurchase> {
   const postPurchaseOption = getStrategyPostSwapType(strategy, chain);
   const { destinations } = strategy;
   const [destination] = destinations;
 
   if (postPurchaseOption === PostPurchaseOptions.SendToWallet) {
-    if (destination?.address) {
+    if (destination?.address !== address) {
       return {
         postPurchaseOption,
         sendToWallet: SendToWalletValues.No,
         recipientAccount: destination?.address,
       };
     }
+    return {
+      postPurchaseOption,
+      sendToWallet: SendToWalletValues.Yes,
+    };
   }
 
   if (postPurchaseOption === PostPurchaseOptions.Stake) {
@@ -118,7 +127,7 @@ function ConfigureForm({
             resultingDenom={resultingDenom}
             submitButton={
               <FormControl isInvalid={isError}>
-                <Submit>Confirm</Submit>
+                <Submit disabledUnlessDirty>Confirm</Submit>
                 <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
               </FormControl>
             }
@@ -133,8 +142,9 @@ function Page() {
   const { query } = useRouter();
   const { data, isLoading } = useStrategy(query?.id as string);
   const { chain } = useChain();
+  const { address } = useWallet();
 
-  if (!data?.vault || !chain) {
+  if (!data?.vault || !chain || !address) {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
@@ -155,7 +165,7 @@ function Page() {
     autoStakeValidator: initialValues.autoStakeValidator,
     yieldOption: initialValues.yieldOption,
     reinvestStrategy: initialValues.reinvestStrategy,
-    ...getExistingValues(data.vault as unknown as StrategyOsmosis, chain),
+    ...getExistingValues(data.vault as unknown as StrategyOsmosis, chain, address),
   };
 
   return (

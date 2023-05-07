@@ -70,7 +70,7 @@ async function renderTarget() {
   });
 }
 
-describe('Top up page', () => {
+describe('Configure page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -79,45 +79,21 @@ describe('Top up page', () => {
 
     await renderTarget();
 
-    expect(within(screen.getByTestId('strategy-modal-header')).getByText('Top Up Strategy')).toBeInTheDocument();
+    expect(within(screen.getByTestId('strategy-modal-header')).getByText('Configure Strategy')).toBeInTheDocument();
   });
-  it('renders remaining balance', async () => {
-    mockUseWallet(mockUseStrategy(), mockUpdate(), mockGetBalance());
-    await renderTarget();
-    screen.getByText('Remaining balance: 10 DEMO');
-  });
-  it('shows available funds', async () => {
-    mockUseWallet(mockUseStrategy(), mockUpdate(), mockGetBalance());
-
-    await renderTarget();
-    await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
-  });
-  describe('when available funds is clicked', () => {
-    it('fills the input with available funds', async () => {
-      mockUseWallet(mockUseStrategy(), mockUpdate(), mockGetBalance());
-
-      await renderTarget();
-      await waitFor(() => expect(screen.getByText('88.12')).toBeInTheDocument());
-      act(() => {
-        fireEvent.click(screen.getByText('88.12'));
-      });
-      expect(screen.getByTestId('top-up-input').getAttribute('value')).toBe('88.12');
-    });
-  });
-  describe('when valid top up amount is submitted', () => {
-    it('should successfully top up', async () => {
+  describe('when submitted', () => {
+    it('should successfully update', async () => {
       const execute = jest.fn();
       mockUseWallet(mockUseStrategy(), mockUpdate(execute), mockGetBalance());
 
       await renderTarget();
       act(() => {
-        fireEvent.change(screen.getByTestId('top-up-input'), { target: { value: '1' } });
         fireEvent.click(screen.getByTestId('submit-button'));
       });
       await waitFor(() => expect(execute).toHaveBeenCalled());
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
-          pathname: '/strategies/top-up/success',
+          pathname: '/strategies/configure/success',
           query: { strategyId: '1', timeSaved: 10 },
         }),
       );
@@ -137,23 +113,6 @@ describe('Top up page', () => {
       });
       await waitFor(() => expect(execute).toHaveBeenCalled());
       await waitFor(() => screen.getByText('Failed to top up strategy (Reason: test error)'));
-    });
-  });
-
-  describe('when invalid top up amount is submitted', () => {
-    const execute = jest.fn();
-    it('should show validation message', async () => {
-      mockUseWallet(mockUseStrategy(), mockUpdate(execute), mockGetBalance());
-
-      await renderTarget();
-      const input = await waitFor(() => screen.getByTestId('top-up-input'));
-      const button = await waitFor(() => screen.getByTestId('submit-button'));
-      await act(async () => {
-        await fireEvent.change(input, { target: { value: '100' } });
-        await fireEvent.click(button);
-      });
-      await waitFor(() => expect(execute).not.toHaveBeenCalled());
-      await waitFor(() => screen.getByText('Top up amount must be less than or equal to 88.12'));
     });
   });
 });
