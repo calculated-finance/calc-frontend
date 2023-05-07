@@ -5,13 +5,14 @@ import { Formik, FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
-import * as Yup from 'yup';
-import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import { Strategy } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
 import { PostPurchaseForm } from '@components/PostPurchaseForm';
-import { initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
+import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
+import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
+import { FormControl, FormErrorMessage } from '@chakra-ui/react';
+import Submit from '@components/Submit';
 
 export const steps: StepConfig[] = [
   {
@@ -31,19 +32,15 @@ function ConfigureForm({ strategy }: { strategy: Strategy }) {
   const { nextStep } = useSteps(steps);
   const { isPageLoading } = usePageLoad();
 
-  const { mutate, error, isError } = useTopUpStrategy();
+  const { mutate, error, isError } = useConfigureStrategy();
 
-  const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const validationSchema = postPurchaseValidationSchema;
 
-  const onSubmit = (
-    values: Yup.InferType<typeof validationSchema>,
-    { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
-  ) =>
+  const onSubmit = (values: DcaInFormDataPostPurchase, { setSubmitting }: FormikHelpers<DcaInFormDataPostPurchase>) =>
     mutate(
-      { values, initialDenom, strategy },
+      { values, strategy },
       {
         onSuccess: async () => {
           await nextStep({
@@ -70,7 +67,15 @@ function ConfigureForm({ strategy }: { strategy: Strategy }) {
     <Formik initialValues={configureStrategyInitialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isSubmitting}>
-          <PostPurchaseForm resultingDenom={resultingDenom} />
+          <PostPurchaseForm
+            resultingDenom={resultingDenom}
+            submitButton={
+              <FormControl isInvalid={isError}>
+                <Submit>Confirm</Submit>
+                <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
+              </FormControl>
+            }
+          />
         </NewStrategyModalBody>
       )}
     </Formik>

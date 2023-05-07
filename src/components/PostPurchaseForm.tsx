@@ -81,7 +81,13 @@ function CollapseWithRender({ in: inProp, children }: { in: boolean } & Children
   return <Collapse in={inProp}>{inProp && <Box m="px">{children}</Box>}</Collapse>;
 }
 
-export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) {
+export function PostPurchaseForm({
+  resultingDenom,
+  submitButton,
+}: {
+  resultingDenom: Denom;
+  submitButton?: JSX.Element;
+}) {
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
   const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
@@ -115,8 +121,7 @@ export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) 
             )}
           </CollapseWithRender>
         </Box>
-
-        <Submit>Next</Submit>
+        {submitButton || <Submit>Next</Submit>}
       </Stack>
     </Form>
   );
