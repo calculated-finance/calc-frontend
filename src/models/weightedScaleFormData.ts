@@ -55,6 +55,11 @@ export const weightedScaleSchema = Yup.object({
     }),
   swapMultiplier: Yup.number().required(),
   applyMultiplier: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
+  startImmediately: allSchema.startImmediately,
+  triggerType: allSchema.triggerType,
+  startDate: allSchema.startDate,
+  startPrice: allSchema.startPrice,
+  purchaseTime: allSchema.purchaseTime,
 });
 
 export const WeightedScaleAssetsFormSchema = weightedScaleSchema.pick([
@@ -64,6 +69,11 @@ export const WeightedScaleAssetsFormSchema = weightedScaleSchema.pick([
 ]);
 export const WeightedScaleCustomiseFormSchema = weightedScaleSchema.pick([
   'advancedSettings',
+  'startImmediately',
+  'triggerType',
+  'startDate',
+  'startPrice',
+  'purchaseTime',
   'executionInterval',
   'swapAmount',
   'basePriceIsCurrentPrice',

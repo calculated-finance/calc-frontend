@@ -16,14 +16,13 @@ import { useWeightedScaleStep2Form } from '@hooks/useWeightedScaleForm';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
-import StrategyDuration from '@components/StrategyDuration';
 import ExecutionInterval from '@components/ExecutionInterval';
-import SwapAmount from '@components/SwapAmount';
 import BaseSwapAmount from '@components/BaseSwapAmount';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
 import BasePrice from '@components/BasePrice';
 import { TransactionType } from '@components/TransactionType';
+import { TriggerForm } from '@components/TriggerForm';
 
 function Page() {
   const { actions, state } = useWeightedScaleStep2Form(FormNames.WeightedScaleIn);
@@ -83,6 +82,7 @@ function Page() {
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
+                <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.WeightedScaleIn} />
                 <ExecutionInterval />
                 <BaseSwapAmount step1State={state.step1} />
                 <SwapMultiplier />
