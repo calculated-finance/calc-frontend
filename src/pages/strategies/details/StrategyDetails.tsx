@@ -28,7 +28,6 @@ import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
-import { executionIntervalLabel } from '@helpers/executionIntervalDisplay';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -45,19 +44,12 @@ import {
   getStrategyProvideLiquidityConfig,
   isBuyStrategy,
   getStrategyExecutionInterval,
-  getStrategyPostSwapDetails,
   getStrategyReinvestStrategyId,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import {
-  getChainContractAddress,
-  getChainDexName,
-  getMarsAddress,
-  getMarsUrl,
-  getOsmosisWebUrl,
-} from '@helpers/chains';
+import { getChainContractAddress, getMarsAddress, getMarsUrl, getOsmosisWebUrl } from '@helpers/chains';
 import { Chains, useChain } from '@hooks/useChain';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { PoolDenomIcons } from '@components/PoolDenomIcons';
@@ -65,8 +57,9 @@ import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import useStrategy from '@hooks/useStrategy';
+import { HiOutlineCube } from 'react-icons/hi';
+import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrategyConfigureUrl';
 import { CancelButton } from './CancelButton';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
@@ -183,6 +176,21 @@ function usePostSwapCallback(strategy: Strategy | StrategyOsmosis) {
   };
 }
 
+function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+  const { chain } = useChain();
+  return chain === Chains.Osmosis ? (
+    <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
+      <Flex justify="end">
+        <Link href={generateStrategyConfigureUrl(strategy.id)}>
+          <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
+            Configure
+          </Button>
+        </Link>
+      </Flex>
+    </GridItem>
+  ) : null;
+}
+
 function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
@@ -194,19 +202,18 @@ function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
       <GridItem colSpan={1}>
         <Heading size="xs">Reinvesting into</Heading>
       </GridItem>
-      <GridItem colSpan={2}>
+      <GridItem colSpan={1}>
         {!reinvestStrategy ? (
           <ChakraSpinner size="xs" />
         ) : (
           <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
             <Text fontSize="sm" data-testid="strategy-receiving-address">
-              Your {getStrategyExecutionInterval(reinvestStrategy)}{' '}
-              {getDenomName(getStrategyResultingDenom(reinvestStrategy))} {getStrategyType(reinvestStrategy)} strategy{' '}
-              <Icon as={ExternalLinkIcon} />
+              Your {getDenomName(getStrategyResultingDenom(reinvestStrategy))} strategy <Icon as={ExternalLinkIcon} />
             </Text>
           </ChakraLink>
         )}
       </GridItem>
+      <ConfigureButton strategy={strategy} />
     </>
   );
 }
@@ -233,11 +240,12 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
         <GridItem colSpan={1}>
           <Heading size="xs">Validator name</Heading>
         </GridItem>
-        <GridItem colSpan={2}>
+        <GridItem colSpan={1}>
           <Text fontSize="sm" data-testid="strategy-validator-name">
             {isLoading ? <Spinner /> : validator?.description?.moniker}
           </Text>
         </GridItem>
+        <ConfigureButton strategy={strategy} />
       </>
     );
   }
@@ -248,11 +256,12 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
         <GridItem colSpan={1}>
           <Heading size="xs">Providing liquidity to</Heading>
         </GridItem>
-        <GridItem colSpan={2}>
+        <GridItem colSpan={1}>
           <Text fontSize="sm" data-testid="strategy-receiving-address">
             <LiquidityPool strategy={strategy} />
           </Text>
         </GridItem>
+        <ConfigureButton strategy={strategy} />
       </>
     );
   }
@@ -263,13 +272,14 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
         <GridItem colSpan={1}>
           <Heading size="xs">Depositing to</Heading>
         </GridItem>
-        <GridItem colSpan={2}>
+        <GridItem colSpan={1}>
           <ChakraLink isExternal href={getMarsUrl()}>
             <Text fontSize="sm" data-testid="strategy-receiving-address">
               Mars
             </Text>
           </ChakraLink>
         </GridItem>
+        <ConfigureButton strategy={strategy} />
       </>
     );
   }
@@ -284,7 +294,7 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
         <GridItem colSpan={1}>
           <Heading size="xs">Sending to </Heading>
         </GridItem>
-        <GridItem colSpan={2}>
+        <GridItem colSpan={1}>
           {destinations[0].address === getMarsAddress() ? (
             <ChakraLink isExternal href={getMarsUrl()}>
               <Text fontSize="sm" data-testid="strategy-receiving-address">
@@ -297,11 +307,22 @@ function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis
             </Text>
           )}
         </GridItem>
+        <ConfigureButton strategy={strategy} />
       </>
     );
   }
 
-  return null;
+  return chain === Chains.Osmosis ? (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Post-swap action</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Badge>None</Badge>
+      </GridItem>
+      <ConfigureButton strategy={strategy} />
+    </>
+  ) : null;
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {

@@ -10,9 +10,9 @@ export function encodeMsg(createVaultExecuteMsg: ExecuteMsg | ExecutMsgOsmosis) 
   return encoded_msg;
 }
 
-export function getCreateVaultExecuteMsg(
+export function getExecuteMsg(
   msg: ExecuteMsg | ExecutMsgOsmosis,
-  funds: Coin[],
+  funds: Coin[] | undefined,
   senderAddress: string,
   contractAddress: string,
 ): { typeUrl: string; value: MsgExecuteContract } {

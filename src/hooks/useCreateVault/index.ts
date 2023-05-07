@@ -19,7 +19,7 @@ import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
 import useFiatPrice from '../useFiatPrice';
 import { getGrantMsg } from './getGrantMsg';
-import { getCreateVaultExecuteMsg } from './getCreateVaultExecuteMsg';
+import { getExecuteMsg } from './getCreateVaultExecuteMsg';
 import { buildCreateVaultParams } from './buildCreateVaultParams';
 import { executeCreateVault } from './executeCreateVault';
 import { DcaFormState } from './DcaFormState';
@@ -102,7 +102,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 
-    msgs.push(getCreateVaultExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
+    msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
     const tokensToCoverFee = createStrategyFeeInTokens(price);
     msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));

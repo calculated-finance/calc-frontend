@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getDenomName } from '@helpers/getDenomName';
 import { getStrategyInitialDenom } from '@helpers/strategy';
-import { topUpSteps } from './index.page';
+import { configureSteps } from './index.page';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
@@ -20,10 +20,10 @@ function Success() {
   if (!data) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
+        <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={configureSteps}>
           Top Up Successful
         </NewStrategyModalHeader>
-        <NewStrategyModalBody isLoading={isLoading} stepsConfig={topUpSteps}>
+        <NewStrategyModalBody isLoading={isLoading} stepsConfig={configureSteps}>
           loading
         </NewStrategyModalBody>
       </NewStrategyModal>
@@ -34,24 +34,14 @@ function Success() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
-        Top Up Successful
+      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={configureSteps}>
+        Configuration Successful
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={topUpSteps}>
+      <NewStrategyModalBody stepsConfig={configureSteps}>
         <Stack spacing={6} alignItems="center">
-          <Image src="/images/congratulations.svg" />
-          <Image src="/images/fire.svg" />
-          <Text textAlign="center">
-            Your {initialDenomName} deposit was successful. Your vault has been topped up with new funds.
-          </Text>
-          <>
-            <Divider />
-            <Stack spacing={2} alignItems="center">
-              <Text>Plus, you have saved yourself an average of</Text>
-              <Heading size="md">{timeSaved} minutes</Heading>
-              <Text>and removed the emotions from your trades! 💪</Text>
-            </Stack>
-          </>
+          <Image src="/images/tick.svg" />
+          <Text textAlign="center">Post-swap action updated.</Text>
+          <Divider />
           <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
           </Link>

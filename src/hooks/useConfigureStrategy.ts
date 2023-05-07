@@ -8,8 +8,11 @@ import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { getCallbackDestinations } from '@helpers/destinations';
+import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChain } from './useChain';
 import { Strategy } from './useStrategies';
+import { getGrantMsg } from './useCreateVault/getGrantMsg';
+import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;
@@ -37,21 +40,31 @@ export function useConfigureStrategy() {
       throw new Error('You are not the owner of this strategy');
     }
 
-    const msg = {
+    const msgs: EncodeObject[] = [];
+
+    const { autoStakeValidator } = values;
+
+    if (autoStakeValidator) {
+      msgs.push(getGrantMsg(address, chain));
+    }
+
+    const updateVaultMsg = {
       update_vault: {
-        destinations: getCallbackDestinations(
-          chain,
-          values.autoStakeValidator,
-          values.recipientAccount,
-          values.yieldOption,
-          address,
-          values.reinvestStrategy,
-        ),
+        destinations:
+          getCallbackDestinations(
+            chain,
+            values.autoStakeValidator,
+            values.recipientAccount,
+            values.yieldOption,
+            address,
+            values.reinvestStrategy,
+          ) || [],
         vault_id: strategy.id,
       },
     } as ExecuteMsg;
 
-    const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined);
-    return result;
+    msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
+
+    return client.signAndBroadcast(address, msgs, 'auto');
   });
 }

@@ -14,7 +14,7 @@ import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
 
-export const steps: StepConfig[] = [
+export const configureSteps: StepConfig[] = [
   {
     href: '/strategies/configure',
     title: 'Configure Strategy',
@@ -29,7 +29,7 @@ export const steps: StepConfig[] = [
 ];
 
 function ConfigureForm({ strategy }: { strategy: Strategy }) {
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(configureSteps);
   const { isPageLoading } = usePageLoad();
 
   const { mutate, error, isError } = useConfigureStrategy();
@@ -38,9 +38,10 @@ function ConfigureForm({ strategy }: { strategy: Strategy }) {
 
   const validationSchema = postPurchaseValidationSchema;
 
-  const onSubmit = (values: DcaInFormDataPostPurchase, { setSubmitting }: FormikHelpers<DcaInFormDataPostPurchase>) =>
-    mutate(
-      { values, strategy },
+  const onSubmit = (values: DcaInFormDataPostPurchase, { setSubmitting }: FormikHelpers<DcaInFormDataPostPurchase>) => {
+    const validatedValues = postPurchaseValidationSchema.cast(values, { stripUnknown: true });
+    return mutate(
+      { values: validatedValues, strategy },
       {
         onSuccess: async () => {
           await nextStep({
@@ -52,6 +53,7 @@ function ConfigureForm({ strategy }: { strategy: Strategy }) {
         },
       },
     );
+  };
 
   const configureStrategyInitialValues = {
     postPurchaseOption: initialValues.postPurchaseOption,
@@ -66,7 +68,7 @@ function ConfigureForm({ strategy }: { strategy: Strategy }) {
     //  @ts-ignore
     <Formik initialValues={configureStrategyInitialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
-        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isSubmitting}>
+        <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading} isSigning={isSubmitting}>
           <PostPurchaseForm
             resultingDenom={resultingDenom}
             submitButton={
@@ -88,11 +90,11 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} showStepper={false}>
+      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
         Choose Funding &amp; Assets
       </NewStrategyModalHeader>
       {isLoading && (
-        <NewStrategyModalBody stepsConfig={steps} isLoading={isLoading}>
+        <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
           Loading
         </NewStrategyModalBody>
       )}

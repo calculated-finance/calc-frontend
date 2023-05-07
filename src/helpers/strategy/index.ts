@@ -37,7 +37,7 @@ export function isStrategyCompleted(strategy: Strategy) {
   return ['inactive'].includes(strategy.status);
 }
 
-export function isStrategyCancelled(strategy: Strategy) {
+export function isStrategyCancelled(strategy: Strategy | StrategyOsmosis) {
   return ['cancelled'].includes(strategy.status);
 }
 
