@@ -15,7 +15,7 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
-import { useChainStore } from '@hooks/useChain';
+import { Chains, useChainStore } from '@hooks/useChain';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
@@ -47,6 +47,13 @@ export const initialValues = {
   yieldOption: null,
   reinvestStrategy: '',
 };
+
+export function getInitialValues(chain: Chains) {
+  return {
+    ...initialValues,
+    executionInterval: chain === Chains.Osmosis ? '' : initialValues.executionInterval,
+  };
+}
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allSchema = {
@@ -139,20 +146,28 @@ export const allSchema = {
         return new Date() <= combineDateAndTime(startDate, value);
       },
     }),
-  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
+  executionInterval: Yup.mixed<ExecutionIntervals>(),
   executionIntervalIncrement: Yup.number()
     .label('Increment')
-    .required()
     .positive()
     .integer()
     .nullable()
+    .when('executionInterval', {
+      is: '',
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    })
     .transform((value, originalValue) => {
       if (originalValue === '') {
         return null;
       }
       return value;
     }),
-  executionIntervalPeriod: Yup.mixed<ExecutionIntervals>().required(),
+  executionIntervalPeriod: Yup.mixed<ExecutionIntervals>().when('executionInterval', {
+    is: '',
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.transform(() => null),
+  }),
 
   swapAmount: Yup.number()
     .label('Swap Amount')
