@@ -82,7 +82,7 @@ function CollapseWithRender({ in: inProp, children }: { in: boolean } & Children
   return <Collapse in={inProp}>{inProp && <Box m="px">{children}</Box>}</Collapse>;
 }
 
-export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
+export function PostPurchaseForm({ resultingDenom }: { resultingDenom: Denom }) {
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
   const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
@@ -97,7 +97,7 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
         <Box>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
             <Stack>
-              <DcaInSendToWallet formName={formName} />
+              <DcaInSendToWallet resultingDenom={resultingDenom} />
               <CollapseWithRender in={sendToWalletValue === SendToWalletValues.No}>
                 <RecipientAccount />
               </CollapseWithRender>
@@ -108,10 +108,12 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
             {stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
-            {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
+            {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest resultingDenom={resultingDenom} />}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
-            {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
+            {postPurchaseOption === PostPurchaseOptions.GenerateYield && (
+              <GenerateYield resultingDenom={resultingDenom} />
+            )}
           </CollapseWithRender>
         </Box>
 

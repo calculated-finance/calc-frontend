@@ -42,6 +42,7 @@ import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { Denom } from '@models/Denom';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -134,7 +135,7 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
   );
 }
 
-export function Reinvest({ formName }: { formName: FormNames }) {
+export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
   const [field, meta, helpers] = useField({ name: 'reinvestStrategy' });
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -143,12 +144,11 @@ export function Reinvest({ formName }: { formName: FormNames }) {
   });
 
   const { data, isLoading } = useStrategies();
-  const { context } = useDcaInFormPostPurchase(formName);
 
   const filteredStrategies = data?.vaults
     .sort((a, b) => Number(b.id) - Number(a.id))
     .filter((strategy: Strategy) => {
-      if (getStrategyInitialDenom(strategy) !== context?.resultingDenom) {
+      if (getStrategyInitialDenom(strategy) !== resultingDenom) {
         return false;
       }
 
