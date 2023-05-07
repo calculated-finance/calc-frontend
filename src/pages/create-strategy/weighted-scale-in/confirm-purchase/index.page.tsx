@@ -22,7 +22,7 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
 
-function WeightedScaleSummaryPage({
+export function WeightedScaleConfirmPage({
   formName,
   steps,
   transactionType,
@@ -101,7 +101,7 @@ function WeightedScaleSummaryPage({
 
 function Page() {
   return (
-    <WeightedScaleSummaryPage
+    <WeightedScaleConfirmPage
       formName={FormNames.WeightedScaleIn}
       steps={weightedScaleInSteps}
       transactionType={TransactionType.Buy}

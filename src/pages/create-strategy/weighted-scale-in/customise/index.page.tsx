@@ -26,7 +26,7 @@ import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 
-function WeightedScaleCustomisePage({
+export function WeightedScaleCustomisePage({
   formName,
   steps,
   strategyType,

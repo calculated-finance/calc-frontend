@@ -8,6 +8,7 @@ export enum FormNames {
   DcaPlusIn = 'dcaPlusIn',
   DcaPlusOut = 'dcaPlusOut',
   WeightedScaleIn = 'weightedScaleIn',
+  WeightedScaleOut = 'weightedScaleOut',
 }
 
 type IFormStore = {
