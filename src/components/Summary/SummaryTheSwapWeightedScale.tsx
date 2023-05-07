@@ -1,46 +1,49 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Code, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
-import { DcaPlusState } from '@models/dcaPlusFormData';
-import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
-import { getSwapRange } from '@helpers/ml/getSwapRange';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwapDcaWeightedScale({ state }: { state: DcaPlusState }) {
-  const { initialDenom, resultingDenom, strategyDuration, initialDeposit } = state;
+export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
+  const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue, executionInterval } = state;
 
-  const { name: initialDenomName, minimumSwapAmount } = getDenomInfo(initialDenom);
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
-
-  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
-
-  const { min: minSwap, max: maxSwap } = getSwapRange(swapAmount, strategyDuration, minimumSwapAmount) || {};
 
   return (
     <Box data-testid="summary-the-swap-dca-plus">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <ImmediateTriggerInfo />, CALC will swap between{' '}
+        <ImmediateTriggerInfo />, CALC will swap the amount of{' '}
+        <BadgeButton url="customise">
+          <Code color="none" bg="none">
+            {swapAmount} {initialDenomName}
+          </Code>
+          <DenomIcon denomName={initialDenom} />
+          <Code color="none" bg="none">
+            &times; (1 - price delta &times; {swapMultiplier}x
+          </Code>
+        </BadgeButton>
+        <br />
+        Where price delta is calculated from the base price of
         <BadgeButton url="customise">
           <Text>
-            {minSwap} {initialDenomName}
+            1 {resultingDenomName} = {basePriceValue} {initialDenomName}
           </Text>
-          <DenomIcon denomName={initialDenom} />
-        </BadgeButton>{' '}
-        and{' '}
-        <BadgeButton url="customise">
-          <Text>
-            {maxSwap} {initialDenomName}
-          </Text>
-          <DenomIcon denomName={initialDenom} />
-        </BadgeButton>{' '}
+        </BadgeButton>
         for{' '}
         <BadgeButton url="assets">
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />
         </BadgeButton>{' '}
-        every day based on market conditions, until the deposit is empty.
+        every{' '}
+        <BadgeButton url="customise">
+          <Text textTransform="capitalize">{executionIntervalDisplay[executionInterval as ExecutionIntervals][0]}</Text>
+        </BadgeButton>
+        , based on market conditions until the deposit is empty.
       </Text>
     </Box>
   );

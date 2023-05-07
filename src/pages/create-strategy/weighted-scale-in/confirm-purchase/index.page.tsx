@@ -16,10 +16,8 @@ import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import { FormikHelpers } from 'formik';
 import { SummaryTheSwapWeightedScale } from '@components/Summary/SummaryTheSwapWeightedScale';
-import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesWeightedScale from '@components/FeesWeightedScale';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 
 function Page() {
@@ -37,9 +35,7 @@ function Page() {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
-          timeSaved:
-            state &&
-            getTimeSaved(state.initialDeposit, getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration)),
+          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
         });
         actions.resetAction();
       },
@@ -76,7 +72,6 @@ function Page() {
               slippageTolerance={state.slippageTolerance}
             />
             <SummaryAfterEachSwap state={state} />
-            <SummaryBenchmark state={state} />
             <FeesWeightedScale formName={FormNames.WeightedScaleIn} transactionType={TransactionType.Buy} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>

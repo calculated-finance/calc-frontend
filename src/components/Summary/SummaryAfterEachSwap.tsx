@@ -54,7 +54,6 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
             <BadgeButton url="post-purchase">
               <Text>your wallet</Text>
             </BadgeButton>
-            .
           </>
         )}
         {autoStakeValidator && (

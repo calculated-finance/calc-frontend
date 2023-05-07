@@ -108,6 +108,7 @@ export const useWeightedScaleConfirmForm = (formName: FormNames) => {
       },
     };
   } catch (e) {
+    console.log(e);
     return {
       actions: {
         updateAction: updateAction(formName, address),

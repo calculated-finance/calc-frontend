@@ -25,13 +25,12 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { ChevronDownIcon, ChevronUpIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
-import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import { FormNames } from '@hooks/useFormStore';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
+import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -206,10 +205,10 @@ export default function FeesWeightedScale({
   formName: FormNames;
   transactionType: TransactionType;
 }) {
-  const { state } = useDcaPlusConfirmForm(formName);
+  const { state } = useWeightedScaleConfirmForm(formName);
   const { price } = useFiatPrice(state?.initialDenom);
 
-  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration, resultingDenom } = state || {};
+  const { initialDenom, autoStakeValidator, swapAmount, resultingDenom } = state || {};
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
@@ -218,8 +217,6 @@ export default function FeesWeightedScale({
   if (!state) {
     return null;
   }
-
-  const swapAmount = getSwapAmountFromDuration(initialDeposit!, strategyDuration!);
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
 
@@ -232,13 +229,13 @@ export default function FeesWeightedScale({
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+          {String.fromCharCode(8275)} {getPrettyFee(swapAmount!, dexFee)} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
         performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} dexFee={dexFee} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount!} price={price} dexFee={dexFee} />
     </Stack>
   );
 }

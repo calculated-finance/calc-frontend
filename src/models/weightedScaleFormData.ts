@@ -38,7 +38,6 @@ export const weightedScaleSchema = Yup.object({
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
   autoStakeValidator: allSchema.autoStakeValidator,
-  strategyDuration: allSchema.strategyDuration,
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
   reinvestStrategy: allSchema.reinvestStrategy,
