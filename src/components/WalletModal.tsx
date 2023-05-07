@@ -21,6 +21,7 @@ import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
 import { useWallet } from '@hooks/useWallet';
 import { useChain } from '@hooks/useChain';
+import { useLeap } from '@hooks/useLeap';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -35,6 +36,11 @@ function WalletModal() {
   }));
 
   const { isInstalled: isKeplrInstalled, connect: connectKeplr } = useKeplr((state) => ({
+    isInstalled: state.isInstalled,
+    connect: state.connect,
+  }));
+
+  const { isInstalled: isLeapInstalled, connect: connectLeap } = useLeap((state) => ({
     isInstalled: state.isInstalled,
     connect: state.connect,
   }));
@@ -54,6 +60,11 @@ function WalletModal() {
 
   const handleKeplrConnect = () => {
     connectKeplr(chain);
+    handleClose();
+  };
+
+  const handleLeapConnect = () => {
+    connectLeap(chain);
     handleClose();
   };
 
@@ -89,6 +100,15 @@ function WalletModal() {
                     icon="/images/station.svg"
                     isInstalled={isStationInstalled}
                     walletInstallLink="https://setup-station.terra.money/"
+                  />
+                )}
+                {featureFlags.leapEnabled && (
+                  <WalletListItem
+                    handleClick={handleLeapConnect}
+                    name="Leap Wallet"
+                    icon="/images/leap.svg"
+                    isInstalled={isLeapInstalled}
+                    walletInstallLink="https://www.leapwallet.io/download"
                   />
                 )}
 
