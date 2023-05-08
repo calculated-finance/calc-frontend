@@ -134,9 +134,7 @@ export function DestinationDetails({ strategy }: { strategy: Strategy | Strategy
         </GridItem>
         <GridItem colSpan={1}>
           <ChakraLink isExternal href={getMarsUrl()}>
-            <Text fontSize="sm" data-testid="strategy-receiving-address">
-              Mars
-            </Text>
+            <Text fontSize="sm">Mars</Text>
           </ChakraLink>
         </GridItem>
         <ConfigureButton strategy={strategy} />
@@ -155,24 +153,16 @@ export function DestinationDetails({ strategy }: { strategy: Strategy | Strategy
           <Heading size="xs">Sending to </Heading>
         </GridItem>
         <GridItem colSpan={1}>
-          {destinations[0].address === getMarsAddress() ? (
-            <ChakraLink isExternal href={getMarsUrl()}>
-              <Text fontSize="sm" data-testid="strategy-receiving-address">
-                Mars
-              </Text>
-            </ChakraLink>
-          ) : (
-            <Button
-              variant="link"
-              colorScheme="blue"
-              rightIcon={<Icon as={CopyIcon} />}
-              fontSize="sm"
-              data-testid="strategy-receiving-address"
-              onClick={handleCopy}
-            >
-              {truncate(destinations[0].address)}
-            </Button>
-          )}
+          <Button
+            variant="link"
+            colorScheme="blue"
+            rightIcon={<Icon as={CopyIcon} />}
+            fontSize="sm"
+            data-testid="strategy-receiving-address"
+            onClick={handleCopy}
+          >
+            {truncate(destinations[0].address)}
+          </Button>
         </GridItem>
         <ConfigureButton strategy={strategy} />
       </>
