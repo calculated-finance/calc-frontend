@@ -78,6 +78,7 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   'dca-out': { label: 'DCA Out', enabled: false },
   strategies: { label: 'My strategies', enabled: true },
   'top-up': { label: 'Top up strategy', enabled: false },
+  configure: { label: 'Configure strategy', enabled: false },
 };
 
 function FlowBreadcrumbs() {

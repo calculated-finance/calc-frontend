@@ -101,7 +101,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { time_interval, balance } = strategy;
+  const { balance } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 

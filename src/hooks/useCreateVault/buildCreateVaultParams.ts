@@ -14,7 +14,7 @@ import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
-import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { getCallbackDestinations } from '@helpers/destinations';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -36,68 +36,6 @@ function getReceiveAmount(
     return deconversion(Number((swapAmount / price).toFixed(significantFigures))).toString();
   }
   return deconversion(swapAmount * price).toString();
-}
-
-function getCallbackDestinations(
-  autoStakeValidator: string | null | undefined,
-  recipientAccount: string | null | undefined,
-  yieldOption: string | null | undefined,
-  senderAddress: string,
-  reinvestStrategy: string | null | undefined,
-) {
-  const destinations = [] as (Destination | OsmosisDestination)[];
-
-  const { chain } = useChainStore.getState();
-
-  if (autoStakeValidator) {
-    destinations.push({
-      address: getChainContractAddress(Chains.Osmosis),
-      allocation: '1.0',
-      msg: Buffer.from(
-        JSON.stringify({
-          z_delegate: {
-            delegator_address: senderAddress,
-            validator_address: autoStakeValidator,
-          },
-        }),
-      ).toString('base64'),
-    });
-  }
-
-  if (recipientAccount) {
-    destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
-  }
-
-  if (reinvestStrategy) {
-    const msg = {
-      deposit: {
-        vault_id: reinvestStrategy,
-        address: senderAddress,
-      },
-    };
-    destinations.push({
-      address: getChainContractAddress(chain),
-      allocation: '1.0',
-      msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
-    });
-  }
-
-  if (yieldOption) {
-    if (yieldOption === 'mars') {
-      const msg = {
-        deposit: {
-          on_behalf_of: senderAddress,
-        },
-      };
-      destinations.push({
-        address: getMarsAddress(),
-        allocation: '1.0',
-        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
-      });
-    }
-  }
-
-  return destinations.length ? destinations : undefined;
 }
 
 function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
@@ -214,6 +152,7 @@ export function buildCreateVaultParamsDCA(
         ),
         slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
         destinations: getCallbackDestinations(
+          chain,
           state.autoStakeValidator,
           state.recipientAccount,
           state.yieldOption,
@@ -280,6 +219,7 @@ export function buildCreateVaultParamsDCAPlus(
         target_receive_amount: undefined,
         slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
         destinations: getCallbackDestinations(
+          chain,
           state.autoStakeValidator,
           state.recipientAccount,
           state.yieldOption,

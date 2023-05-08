@@ -1,5 +1,5 @@
 import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
-import { Form, useField, useFormikContext } from 'formik';
+import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import getDenomInfo from '@utils/getDenomInfo';
 import RecipientAccount from '@components/RecipientAccount';
@@ -7,7 +7,6 @@ import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { Denom } from '@models/Denom';
-import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import RadioCard from './RadioCard';
@@ -82,7 +81,13 @@ function CollapseWithRender({ in: inProp, children }: { in: boolean } & Children
   return <Collapse in={inProp}>{inProp && <Box m="px">{children}</Box>}</Collapse>;
 }
 
-export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom: Denom; formName: FormNames }) {
+export function PostPurchaseForm({
+  resultingDenom,
+  submitButton,
+}: {
+  resultingDenom: Denom;
+  submitButton?: JSX.Element;
+}) {
   const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
 
   const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
@@ -97,7 +102,7 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
         <Box>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
             <Stack>
-              <DcaInSendToWallet formName={formName} />
+              <DcaInSendToWallet resultingDenom={resultingDenom} />
               <CollapseWithRender in={sendToWalletValue === SendToWalletValues.No}>
                 <RecipientAccount />
               </CollapseWithRender>
@@ -108,14 +113,15 @@ export function PostPurchaseForm({ resultingDenom, formName }: { resultingDenom:
             {stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
-            {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest formName={formName} />}
+            {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest resultingDenom={resultingDenom} />}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.GenerateYield}>
-            {postPurchaseOption === PostPurchaseOptions.GenerateYield && <GenerateYield formName={formName} />}
+            {postPurchaseOption === PostPurchaseOptions.GenerateYield && (
+              <GenerateYield resultingDenom={resultingDenom} />
+            )}
           </CollapseWithRender>
         </Box>
-
-        <Submit>Next</Submit>
+        {submitButton || <Submit>Next</Submit>}
       </Stack>
     </Form>
   );

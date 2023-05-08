@@ -15,7 +15,7 @@ import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import Select from './Select';
 
 export function DummyAutoStakeValidator() {
-  const [field, meta] = useField({ name: 'autoStakeValidator' });
+  const [, meta] = useField({ name: 'autoStakeValidator' });
   return (
     <FormControl isDisabled isInvalid={Boolean(meta.touched && meta.error)}>
       <Box w="full" h="full" position="relative">

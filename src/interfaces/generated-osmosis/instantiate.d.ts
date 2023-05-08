@@ -25,6 +25,7 @@ export type Decimal = string;
 export interface InstantiateMsg {
   admin: Addr;
   delegation_fee_percent: Decimal;
+  executors: Addr[];
   fee_collectors: FeeCollector[];
   page_limit: number;
   paused: boolean;

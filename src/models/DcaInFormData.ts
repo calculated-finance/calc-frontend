@@ -1,5 +1,4 @@
 import getDenomInfo from '@utils/getDenomInfo';
-import AutoStakeValues from 'src/models/AutoStakeValues';
 import SendToWalletValues from 'src/models/SendToWalletValues';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';

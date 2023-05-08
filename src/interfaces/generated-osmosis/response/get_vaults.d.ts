@@ -71,27 +71,35 @@ export type PerformanceAssessmentStrategy = {
     swapped_amount: Coin;
   };
 };
-export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
-export type SwapAdjustmentStrategy = {
-  risk_weighted_average: {
-    base_denom: BaseDenom;
-    model_id: number;
-    position_type: PositionType;
-  };
-};
-export type BaseDenom = "bitcoin";
-export type PositionType = "enter" | "exit";
+export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
+export type SwapAdjustmentStrategy =
+  | {
+      risk_weighted_average: {
+        base_denom: BaseDenom;
+        model_id: number;
+        position_type: PositionType;
+      };
+    }
+  | {
+      weighted_scale: {
+        base_receive_amount: Uint128;
+        increase_only: boolean;
+        multiplier: Decimal;
+      };
+    };
+export type BaseDenom = 'bitcoin';
+export type PositionType = 'enter' | 'exit';
 export type TimeInterval =
   | (
-      | "every_second"
-      | "every_minute"
-      | "half_hourly"
-      | "hourly"
-      | "half_daily"
-      | "daily"
-      | "weekly"
-      | "fortnightly"
-      | "monthly"
+      | 'every_second'
+      | 'every_minute'
+      | 'half_hourly'
+      | 'hourly'
+      | 'half_daily'
+      | 'daily'
+      | 'weekly'
+      | 'fortnightly'
+      | 'monthly'
     )
   | {
       custom: {

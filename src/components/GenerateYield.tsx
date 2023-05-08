@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   FlexProps,
   FormControl,
   FormErrorMessage,
@@ -17,12 +16,11 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useDcaInFormPostPurchase } from '@hooks/useDcaInForm';
-import { FormNames } from '@hooks/useFormStore';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { getDenomName } from '@utils/getDenomInfo';
 import { getMarsAddress } from '@helpers/chains';
+import { Denom } from '@models/Denom';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 
@@ -148,14 +146,9 @@ function useMars(resultingDenom: string | undefined) {
   );
 }
 
-export default function GenerateYield({ formName }: { formName: FormNames }) {
+export default function GenerateYield({ resultingDenom }: { resultingDenom: Denom }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
-
-  const { context } = useDcaInFormPostPurchase(formName);
-
-  const { resultingDenom } = context || {};
-
-  const { data, isLoading } = useMars(context?.resultingDenom);
+  const { data, isLoading } = useMars(resultingDenom);
 
   const marsData = data?.find((market: any) => market.denom === resultingDenom);
   const marsEnabled = Boolean(marsData);
@@ -190,11 +183,11 @@ export default function GenerateYield({ formName }: { formName: FormNames }) {
             </GridItem>
           </Grid>
           <Stack {...getRootProps} maxH={200} overflow="auto">
-            <MarsOption {...marsRadio} resultingDenom={resultingDenom!} marsData={marsData} />
+            <MarsOption {...marsRadio} resultingDenom={resultingDenom} marsData={marsData} />
           </Stack>
         </>
       ) : (
-        <Center>No yield strategies available for {getDenomName(resultingDenom!)} yet.</Center>
+        <Center>No yield strategies available for {getDenomName(resultingDenom)} yet.</Center>
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
