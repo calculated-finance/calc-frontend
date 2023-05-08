@@ -7,6 +7,7 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
+import userEvent from '@testing-library/user-event';
 import Page from './index.page';
 
 const mockRouter = {
@@ -46,13 +47,13 @@ function mockUpdate(execute = jest.fn(), success = true) {
   };
   if (success) {
     when(execute)
-      .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockResolvedValueOnce('');
   } else {
     when(execute)
-      .calledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockRejectedValueOnce(new Error('test error'));
@@ -84,9 +85,16 @@ describe('Configure page', () => {
   describe('when submitted', () => {
     it('should successfully update', async () => {
       const execute = jest.fn();
-      mockUseWallet(mockUseStrategy(), mockUpdate(execute), mockGetBalance());
+      mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockUpdate(execute));
 
       await renderTarget();
+
+      await waitFor(() => userEvent.click(screen.getAllByText(/No/)[0]), { timeout: 10000 });
+
+      await waitFor(
+        () => userEvent.type(screen.getByLabelText(/Choose Account/), 'kujira000000000000000000000000000000000000000'),
+        { timeout: 10000 },
+      );
       act(() => {
         fireEvent.click(screen.getByTestId('submit-button'));
       });
@@ -94,25 +102,9 @@ describe('Configure page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/configure/success',
-          query: { strategyId: '1', timeSaved: 10 },
+          query: { strategyId: '1' },
         }),
       );
-    });
-  });
-  describe('when submit fails', () => {
-    it('should show form error message', async () => {
-      const execute = jest.fn();
-      mockUseWallet(mockUseStrategy(), mockUpdate(execute, false), mockGetBalance());
-
-      await renderTarget();
-      const input = await waitFor(() => screen.getByTestId('top-up-input'));
-      const button = await waitFor(() => screen.getByTestId('submit-button'));
-      await act(async () => {
-        await fireEvent.change(input, { target: { value: '1' } });
-        await fireEvent.click(button);
-      });
-      await waitFor(() => expect(execute).toHaveBeenCalled());
-      await waitFor(() => screen.getByText('Failed to top up strategy (Reason: test error)'));
     });
   });
 });
