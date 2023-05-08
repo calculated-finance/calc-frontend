@@ -195,7 +195,7 @@ describe('buildCallbackDestinations', () => {
         ...kujiraStrategy,
         destinations: [
           {
-            address: getChainContractAddress(Chains.Kujira),
+            address: 'kujiravaloper1pshqems6hdka48gc56r2ykshyaarkt40hl0rlh',
             allocation: '1.0',
             action: 'z_delegate',
           },

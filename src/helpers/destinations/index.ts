@@ -1,4 +1,5 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { isAutoStaking } from '@helpers/isAutoStaking';
 import { Chains } from '@hooks/useChain';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -69,19 +70,22 @@ export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
   const [destination] = destinations;
   const { msg } = destination;
 
-  console.log('msg', msg);
   if (msg) {
-    // decode base64
     const decodedMsg = Buffer.from(msg, 'base64').toString('ascii');
-    // parse json
     const parsedMsg = JSON.parse(decodedMsg);
     return parsedMsg;
   }
   return null;
 }
 
-export function getStrategyValidatorAddress(strategy: StrategyOsmosis) {
-  const { z_delegate } = getStrategyPostSwapDetails(strategy) || {};
+export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy, chain: Chains) {
+  if (chain === Chains.Kujira) {
+    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
+      return strategy.destinations.length && strategy.destinations[0].address;
+    }
+    return undefined;
+  }
+  const { z_delegate } = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
   if (z_delegate) {
     return z_delegate.validator_address;
   }
@@ -93,20 +97,18 @@ export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, ch
   const [destination] = destinations;
 
   if (chain === Chains.Kujira) {
-    if (destination.address === getChainContractAddress(chain)) {
+    if (isAutoStaking((strategy as Strategy).destinations)) {
       return PostPurchaseOptions.Stake;
     }
     return PostPurchaseOptions.SendToWallet;
   }
-
-  const castedStrategy = strategy as StrategyOsmosis;
 
   if (destination.address === getMarsAddress()) {
     return PostPurchaseOptions.GenerateYield;
   }
 
   if (destination.address === getChainContractAddress(chain)) {
-    if (getStrategyValidatorAddress(castedStrategy)) {
+    if (getStrategyValidatorAddress(strategy, chain)) {
       return PostPurchaseOptions.Stake;
     }
     return PostPurchaseOptions.Reinvest;
@@ -161,33 +163,4 @@ export function getStrategyProvideLiquidityConfig():
   //   return provideLiquidityDestination?.action.z_provide_liquidity;
   // }
   // return undefined;
-}
-
-export function getPostSwapCallback(strategy: Strategy | StrategyOsmosis, chain: Chains) {
-  if (chain === Chains.Kujira) {
-    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
-      return {
-        validatorAddress: strategy.destinations.length && strategy.destinations[0].address,
-      };
-    }
-    return {
-      validatorAddress: null,
-    };
-  }
-  if (strategy.destinations.length) {
-    const [destination] = (strategy as StrategyOsmosis).destinations;
-    const { msg } = destination;
-    if (msg) {
-      const decoded = Buffer.from(msg, 'base64').toString('ascii');
-      if (decoded) {
-        const parsed = JSON.parse(decoded);
-        return {
-          validatorAddress: parsed?.z_delegate?.validator_address,
-        };
-      }
-    }
-  }
-  return {
-    validatorAddress: null,
-  };
 }

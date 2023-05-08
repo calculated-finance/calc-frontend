@@ -7,21 +7,15 @@ import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
-import {
-  getStrategyPostSwapType,
-  getStrategyReinvestStrategyId,
-  getStrategyResultingDenom,
-  getStrategyValidatorAddress,
-} from '@helpers/strategy';
+import { getStrategyResultingDenom } from '@helpers/strategy';
 import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
-import { Chains, useChain } from '@hooks/useChain';
-import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import SendToWalletValues from '@models/SendToWalletValues';
+import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
+import { getExistingValues } from './getExistingValues';
 
 export const configureSteps: StepConfig[] = [
   {
@@ -36,53 +30,6 @@ export const configureSteps: StepConfig[] = [
     successPage: true,
   },
 ];
-
-function getExistingValues(
-  strategy: StrategyOsmosis,
-  chain: Chains,
-  address: string,
-): Partial<DcaInFormDataPostPurchase> {
-  const postPurchaseOption = getStrategyPostSwapType(strategy, chain);
-  const { destinations } = strategy;
-  const [destination] = destinations;
-
-  if (postPurchaseOption === PostPurchaseOptions.SendToWallet) {
-    if (destination?.address !== address) {
-      return {
-        postPurchaseOption,
-        sendToWallet: SendToWalletValues.No,
-        recipientAccount: destination?.address,
-      };
-    }
-    return {
-      postPurchaseOption,
-      sendToWallet: SendToWalletValues.Yes,
-    };
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.Stake) {
-    return {
-      postPurchaseOption,
-      autoStakeValidator: getStrategyValidatorAddress(strategy),
-    };
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.Reinvest) {
-    return {
-      postPurchaseOption,
-      reinvestStrategy: getStrategyReinvestStrategyId(strategy),
-    };
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.GenerateYield) {
-    return {
-      postPurchaseOption,
-      yieldOption: 'mars',
-    };
-  }
-
-  return {};
-}
 
 function ConfigureForm({
   strategy,
