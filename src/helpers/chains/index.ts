@@ -7,7 +7,8 @@ import {
   CHAIN_ID,
   CONTRACT_ADDRESS,
   FEE_TAKER_ADDRESS,
-  RPC_ENDPOINT,
+  RPC_ENDPOINTS_KUJIRA,
+  RPC_ENDPOINTS_OSMOSIS,
   STAKING_ROUTER_CONTRACT_ADDRESS,
 } from 'src/constants';
 
@@ -83,9 +84,11 @@ export function getFeeCurrencies(chain: Chains) {
 
 export function getChainEndpoint(chain: Chains) {
   if (chain === Chains.Osmosis) {
-    return getChainInfo(chain).rpc;
+    return RPC_ENDPOINTS_OSMOSIS
+      .split(',')[0]
   }
-  return RPC_ENDPOINT;
+  return RPC_ENDPOINTS_KUJIRA
+    .split(',')[0]
 }
 
 export function getChainContractAddress(chain: Chains) {

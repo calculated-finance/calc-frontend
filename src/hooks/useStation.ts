@@ -1,7 +1,7 @@
 import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
 import { assertIsDeliverTxSuccess, DeliverTxResponse, StargateClient } from '@cosmjs/stargate';
 import { ConnectedWallet, ConnectType, getChainOptions, WalletController } from '@terra-money/wallet-controller';
-import { CHAIN_ID, RPC_ENDPOINT } from 'src/constants';
+import { CHAIN_ID, RPC_ENDPOINTS_KUJIRA } from 'src/constants';
 import { create } from 'zustand';
 import { Msg } from '@terra-money/feather.js';
 import { fromBech32, toBech32 } from '@cosmjs/encoding';
@@ -48,7 +48,9 @@ export const useStation = create<IWallet>()(
           chainID: CHAIN_ID,
         });
 
-        const stargate = await StargateClient.connect(RPC_ENDPOINT);
+        // should this be using getChainEndpoint?
+        // other clients get the chain passed into their hooks from the app.tsx init call
+        const stargate = await StargateClient.connect(RPC_ENDPOINTS_KUJIRA);
         const result = await stargate.broadcastTx(res.result.toBytes());
 
         assertIsDeliverTxSuccess(result);

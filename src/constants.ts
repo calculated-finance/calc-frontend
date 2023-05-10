@@ -6,7 +6,8 @@ export const CONTRACT_ADDRESS =
 export const STAKING_ROUTER_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS ||
   'kujira1n2jm3jrjzztjvdljwh549m8zx6w5v59svvta5kkysf5znr40af8qu0vpca';
-export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://test-rpc-kujira.mintthemoon.xyz';
+export const RPC_ENDPOINTS_KUJIRA = process.env.RPC_ENDPOINTS_KUJIRA || 'https://test-rpc-kujira.mintthemoon.xyz,https://kujira-testnet-rpc.polkachu.com'
+export const RPC_ENDPOINTS_OSMOSIS = process.env.RPC_ENDPOINTS_OSMOSIS || 'https://rpc-test.osmosis.zone';
 export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoon-4';
 export const FEE_TAKER_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
@@ -43,17 +44,17 @@ export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
-        extraTimeOptions: true,
-        squidIntegrationEnabled: true,
-        stationEnabled: false,
-        dcaPlusEnabled: true,
-      }
+      extraTimeOptions: true,
+      squidIntegrationEnabled: true,
+      stationEnabled: false,
+      dcaPlusEnabled: true,
+    }
     : {
-        extraTimeOptions: true,
-        squidIntegrationEnabled: true,
-        stationEnabled: false,
-        dcaPlusEnabled: true,
-      };
+      extraTimeOptions: true,
+      squidIntegrationEnabled: true,
+      stationEnabled: false,
+      dcaPlusEnabled: true,
+    };
 
 export const DEFAULT_PAGE_SIZE = 1000;
 
