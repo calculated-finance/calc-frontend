@@ -13,6 +13,7 @@ import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
+import { truncate } from '@components/CosmosWallet';
 import Page from './index.page';
 
 const mockRouter = {
@@ -360,7 +361,7 @@ describe('Detail page', () => {
 
           await renderTarget();
           await waitFor(() =>
-            expect(screen.getByTestId('strategy-receiving-address').textContent).toBe('kujiraotheraddress'),
+            expect(screen.getByTestId('strategy-receiving-address').textContent).toBe(truncate('kujiraotheraddress')),
           );
         });
       });

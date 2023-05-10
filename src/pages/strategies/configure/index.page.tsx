@@ -7,20 +7,15 @@ import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
-import {
-  getStrategyPostSwapType,
-  getStrategyReinvestStrategyId,
-  getStrategyResultingDenom,
-  getStrategyValidatorAddress,
-} from '@helpers/strategy';
+import { getStrategyResultingDenom } from '@helpers/strategy';
 import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
-import { Chains, useChain } from '@hooks/useChain';
-import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import SendToWalletValues from '@models/SendToWalletValues';
+import { useChain } from '@hooks/useChain';
+import { useWallet } from '@hooks/useWallet';
+import { getExistingValues } from './getExistingValues';
 
 export const configureSteps: StepConfig[] = [
   {
@@ -35,45 +30,6 @@ export const configureSteps: StepConfig[] = [
     successPage: true,
   },
 ];
-
-function getExistingValues(strategy: StrategyOsmosis, chain: Chains): Partial<DcaInFormDataPostPurchase> {
-  const postPurchaseOption = getStrategyPostSwapType(strategy, chain);
-  const { destinations } = strategy;
-  const [destination] = destinations;
-
-  if (postPurchaseOption === PostPurchaseOptions.SendToWallet) {
-    if (destination?.address) {
-      return {
-        postPurchaseOption,
-        sendToWallet: SendToWalletValues.No,
-        recipientAccount: destination?.address,
-      };
-    }
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.Stake) {
-    return {
-      postPurchaseOption,
-      autoStakeValidator: getStrategyValidatorAddress(strategy),
-    };
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.Reinvest) {
-    return {
-      postPurchaseOption,
-      reinvestStrategy: getStrategyReinvestStrategyId(strategy),
-    };
-  }
-
-  if (postPurchaseOption === PostPurchaseOptions.GenerateYield) {
-    return {
-      postPurchaseOption,
-      yieldOption: 'mars',
-    };
-  }
-
-  return {};
-}
 
 function ConfigureForm({
   strategy,
@@ -118,7 +74,7 @@ function ConfigureForm({
             resultingDenom={resultingDenom}
             submitButton={
               <FormControl isInvalid={isError}>
-                <Submit>Confirm</Submit>
+                <Submit disabledUnlessDirty>Confirm</Submit>
                 <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
               </FormControl>
             }
@@ -133,8 +89,9 @@ function Page() {
   const { query } = useRouter();
   const { data, isLoading } = useStrategy(query?.id as string);
   const { chain } = useChain();
+  const { address } = useWallet();
 
-  if (!data?.vault) {
+  if (!data?.vault || !chain || !address) {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
@@ -155,7 +112,7 @@ function Page() {
     autoStakeValidator: initialValues.autoStakeValidator,
     yieldOption: initialValues.yieldOption,
     reinvestStrategy: initialValues.reinvestStrategy,
-    ...getExistingValues(data.vault as unknown as StrategyOsmosis, chain),
+    ...getExistingValues(data.vault as unknown as StrategyOsmosis, chain, address),
   };
 
   return (

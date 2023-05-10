@@ -1,8 +1,11 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { isAutoStaking } from '@helpers/isAutoStaking';
 import { Chains } from '@hooks/useChain';
-import { Destination } from 'src/interfaces/generated-osmosis/execute';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
+import { Destination, LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 
-export function getCallbackDestinations(
+export function buildCallbackDestinations(
   chain: Chains,
   autoStakeValidator: string | null | undefined,
   recipientAccount: string | null | undefined,
@@ -60,4 +63,104 @@ export function getCallbackDestinations(
   }
 
   return destinations.length ? destinations : undefined;
+}
+
+export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
+  const { destinations } = strategy;
+  const [destination] = destinations;
+  const { msg } = destination;
+
+  if (msg) {
+    const decodedMsg = Buffer.from(msg, 'base64').toString('ascii');
+    const parsedMsg = JSON.parse(decodedMsg);
+    return parsedMsg;
+  }
+  return null;
+}
+
+export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy, chain: Chains) {
+  if (chain === Chains.Kujira) {
+    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
+      return strategy.destinations.length && strategy.destinations[0].address;
+    }
+    return undefined;
+  }
+  const { z_delegate } = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
+  if (z_delegate) {
+    return z_delegate.validator_address;
+  }
+  return undefined;
+}
+
+export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, chain: Chains) {
+  const { destinations } = strategy;
+  const [destination] = destinations;
+
+  if (chain === Chains.Kujira) {
+    if (isAutoStaking((strategy as Strategy).destinations)) {
+      return PostPurchaseOptions.Stake;
+    }
+    return PostPurchaseOptions.SendToWallet;
+  }
+
+  if (destination.address === getMarsAddress()) {
+    return PostPurchaseOptions.GenerateYield;
+  }
+
+  if (destination.address === getChainContractAddress(chain)) {
+    if (getStrategyValidatorAddress(strategy, chain)) {
+      return PostPurchaseOptions.Stake;
+    }
+    return PostPurchaseOptions.Reinvest;
+  }
+
+  return PostPurchaseOptions.SendToWallet;
+}
+
+export function getStrategyPostSwapSendToAnotherWallet(
+  strategy: StrategyOsmosis,
+  chain: Chains,
+  address: string | undefined,
+) {
+  const { destinations } = strategy;
+  if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
+    const [destination] = destinations;
+    if (destination.address !== address) {
+      return destination.address;
+    }
+  }
+  return undefined;
+}
+
+export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis) {
+  const postSwapDetails = getStrategyPostSwapDetails(strategy);
+  if (postSwapDetails && 'deposit' in postSwapDetails) {
+    return postSwapDetails.deposit.vault_id;
+  }
+  return undefined;
+}
+
+export function getStrategyProvideLiquidityConfig():
+  | {
+      duration: LockableDuration;
+      pool_id: number;
+    }
+  | undefined {
+  return undefined;
+  // const { destinations } = strategy;
+
+  // const provideLiquidityDestination = destinations?.find((destination: Destination) => {
+  //   if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
+  //     return true;
+  //   }
+  //   return false;
+  // });
+  // if (
+  //   provideLiquidityDestination &&
+  //   typeof provideLiquidityDestination.action === 'object' &&
+  //   'z_provide_liquidity' in provideLiquidityDestination.action
+  // ) {
+  //   return provideLiquidityDestination?.action.z_provide_liquidity;
+  // }
+  // return undefined;
 }

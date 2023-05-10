@@ -8,13 +8,15 @@ import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
+export const STRATEGY_KEY = 'strategy';
+
 export default function useStrategy(id?: Strategy['id']) {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   return useQueryWithNotification<VaultResponse>(
-    ['strategy', id, client, address],
+    [STRATEGY_KEY, id, client, address],
     async () => {
       if (!client) {
         throw new Error('No client');
