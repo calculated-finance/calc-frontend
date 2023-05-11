@@ -54,7 +54,6 @@ export default function BasePrice({ formName, transactionType }: BasePriceProps)
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>Set base price to current price?</FormLabel>
-      <FormHelperText>Current price: </FormHelperText>
       <BasePriceToggle />
       <Collapse in={priceThresholdField.value === YesNoValues.No}>
         <Box m="px" mt={3}>

@@ -64,11 +64,13 @@ export function WeightSummary({
   swapMultiplier,
   transactionType,
   applyMultiplier,
+  basePrice,
 }: {
   swapAmount: number;
   swapMultiplier: number;
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
+  basePrice: number | null;
 }) {
   return (
     <Box fontSize="10px" bg="abyss.200" p={4} borderRadius="md" color="white">
@@ -81,7 +83,7 @@ export function WeightSummary({
           <Text>
             Base price:{' '}
             <Text as="span" color="blue.200">
-              1 KUJI = 1.17 axlUSDC{' '}
+              {basePrice ?? 'Current price'}
             </Text>
           </Text>
         </HStack>

@@ -30,9 +30,13 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
         <br />
         Where price delta is calculated from the base price of
         <BadgeButton url="customise">
-          <Text>
-            1 {resultingDenomName} = {basePriceValue} {initialDenomName}
-          </Text>
+          {basePriceValue ? (
+            <Text>
+              1 {resultingDenomName} = {basePriceValue} {initialDenomName}
+            </Text>
+          ) : (
+            <Text>current price</Text>
+          )}
         </BadgeButton>
         for{' '}
         <BadgeButton url="assets">

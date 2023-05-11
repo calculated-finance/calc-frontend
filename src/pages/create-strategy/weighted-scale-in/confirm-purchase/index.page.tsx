@@ -85,6 +85,7 @@ export function WeightedScaleConfirmPage({
               applyMultiplier={state.applyMultiplier}
               swapMultiplier={state.swapMultiplier}
               swapAmount={state.swapAmount}
+              basePrice={state.basePriceValue}
             />
             <SummaryAfterEachSwap state={state} />
 
