@@ -1,19 +1,5 @@
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import {
-  Heading,
-  Grid,
-  GridItem,
-  Box,
-  Text,
-  Divider,
-  Badge,
-  Flex,
-  Button,
-  HStack,
-  Tooltip,
-  Spinner as ChakraSpinner,
-  Link as ChakraLink,
-} from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack, Tooltip } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
@@ -43,15 +29,12 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getOsmosisWebUrl } from '@helpers/chains';
 import { Chains, useChain } from '@hooks/useChain';
-import { useOsmosisPools } from '@hooks/useOsmosisPools';
-import { PoolDenomIcons } from '@components/PoolDenomIcons';
-import { PoolDescription } from '@components/PoolDescription';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { getStrategyProvideLiquidityConfig } from '@helpers/destinations';
+import { isNil } from 'lodash';
+import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -82,24 +65,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function LiquidityPool() {
-  const { data: pools } = useOsmosisPools();
-  const pool = pools?.find((p) => p.id.toNumber() === getStrategyProvideLiquidityConfig()?.pool_id);
-  return pool ? (
-    <ChakraLink isExternal href={`${getOsmosisWebUrl()}/pool/${pool.id}`}>
-      <HStack>
-        <PoolDenomIcons pool={pool} />
-        <Text>
-          <PoolDescription pool={pool} />
-        </Text>
-      </HStack>
-    </ChakraLink>
-  ) : (
-    <ChakraSpinner size="xs" />
-  );
-}
-
-function SwapEachCycle({ strategy }: { strategy: Strategy }) {
+export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
   const { chain } = useChain();
   const { dexFee } = useDexFee(
@@ -107,6 +73,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
     getStrategyResultingDenom(strategy),
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
+
   return (
     <>
       <GridItem colSpan={1}>
@@ -114,7 +81,7 @@ function SwapEachCycle({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={2}>
         <Text fontSize="sm" data-testid="strategy-swap-amount">
-          {isDcaPlus(strategy) ? (
+          {!isNil(min) && !isNil(max) ? (
             <>
               Between {min} and {max} {getDenomName(getStrategyInitialDenom(strategy))}
             </>
@@ -207,7 +174,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-              {isDcaPlus(strategy) && isStrategyOperating(strategy) ? (
+              {(isDcaPlus(strategy) || isWeightedScale(strategy)) && isStrategyOperating(strategy) ? (
                 <>
                   Between {getStrategyEndDateRange(strategy, events).min} and{' '}
                   {getStrategyEndDateRange(strategy, events).max}

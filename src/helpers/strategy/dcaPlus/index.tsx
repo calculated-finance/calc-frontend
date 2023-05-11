@@ -12,12 +12,14 @@ import getStrategyBalance, {
   getTotalSwapped,
   getStrategyEndDateFromRemainingExecutions,
   hasSwapFees,
+  isBuyStrategy,
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { findLast, isNil } from 'lodash';
+import { findLast, get, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
-import { getDcaPlusConfig } from '../isDcaPlus';
+import { getDcaPlusConfig, isDcaPlus } from '../isDcaPlus';
+import { getWeightedScaleConfig, isWeightedScale } from '../isWeightedScale';
 
 export function getStandardDcaTotalReceived(strategy: Strategy) {
   const { standard_dca_received_amount } = getDcaPlusConfig(strategy) || {};
@@ -97,11 +99,29 @@ export function getStrategyModel(strategy: Strategy) {
 }
 
 export function getStrategySwapRange(strategy: Strategy) {
-  const swapAmount = getConvertedSwapAmount(strategy);
-  const model = getStrategyModel(strategy);
+  if (isDcaPlus(strategy)) {
+    const swapAmount = getConvertedSwapAmount(strategy);
+    const model = getStrategyModel(strategy);
 
-  const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
-  return getSwapRangeFromModel(swapAmount, model, minimumSwapAmount);
+    const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
+    return getSwapRangeFromModel(swapAmount, model, minimumSwapAmount);
+  }
+  if (isWeightedScale(strategy)) {
+    const { multiplier, increase_only } = getWeightedScaleConfig(strategy) || {};
+    console.log(increase_only, multiplier);
+    return {
+      min:
+        isBuyStrategy(strategy) && !increase_only
+          ? getConvertedSwapAmount(strategy) * (1 - 0.5 * Number(multiplier))
+          : getConvertedSwapAmount(strategy),
+      max:
+        !isBuyStrategy(strategy) && !increase_only
+          ? getConvertedSwapAmount(strategy) * (1 + 0.5 * Number(multiplier))
+          : getConvertedSwapAmount(strategy),
+    };
+  }
+
+  return undefined;
 }
 
 export function getPerformanceFactor(performance: DcaPlusPerformanceResponse | undefined) {
@@ -125,11 +145,8 @@ export function getStandardDcaRemainingBalance(strategy: Strategy) {
 }
 
 export function getRemainingExecutionsRange(strategy: Strategy) {
-  const model = getStrategyModel(strategy);
-  const swapAmount = getConvertedSwapAmount(strategy);
-  const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
   const balance = getStrategyBalance(strategy);
-  const { min: minSwap, max: maxSwap } = getSwapRangeFromModel(swapAmount, model, minimumSwapAmount) || {};
+  const { min: minSwap, max: maxSwap } = getStrategySwapRange(strategy) || {};
   return {
     min: maxSwap && totalExecutions(balance, maxSwap),
     max: minSwap && totalExecutions(balance, minSwap),

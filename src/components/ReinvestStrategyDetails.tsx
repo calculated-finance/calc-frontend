@@ -1,10 +1,8 @@
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Tooltip } from '@chakra-ui/react';
-import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack } from '@chakra-ui/react';
+import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
-import { getPrettyFee } from '@helpers/getPrettyFee';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -14,91 +12,11 @@ import {
   getStrategyName,
   getSlippageTolerance,
   getPriceCeilingFloor,
-  getConvertedSwapAmount,
-  isStrategyAutoStaking,
-  isBuyStrategy,
   getStrategyExecutionInterval,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
-import { getEscrowAmount, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { getChainDexName } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
-import useDexFee from '@hooks/useDexFee';
-import { TransactionType } from '@components/TransactionType';
-import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-
-function Escrowed({ strategy }: { strategy: Strategy }) {
-  return (
-    <>
-      <GridItem colSpan={1}>
-        <Heading size="xs">
-          {' '}
-          <Tooltip
-            label={
-              <Text>
-                A maximum of 5% swap volume, this amount with be returned in full if DCA+ does not outperform
-                traditional DCA at the end of the strategy.
-              </Text>
-            }
-          >
-            Escrowed*
-          </Tooltip>
-        </Heading>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Text fontSize="sm" data-testid="strategy-escrow-amount">
-          {getEscrowAmount(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
-        </Text>
-      </GridItem>
-    </>
-  );
-}
-
-function SwapEachCycle({ strategy }: { strategy: Strategy }) {
-  const { min, max } = getStrategySwapRange(strategy) || {};
-  const { chain } = useChain();
-  const { dexFee } = useDexFee(
-    getStrategyInitialDenom(strategy),
-    getStrategyResultingDenom(strategy),
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
-  return (
-    <>
-      <GridItem colSpan={1}>
-        <Heading size="xs">Swap each cycle </Heading>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Text fontSize="sm" data-testid="strategy-swap-amount">
-          {isDcaPlus(strategy) ? (
-            <>
-              Between {min} and {max} {getDenomName(getStrategyInitialDenom(strategy))}
-            </>
-          ) : (
-            <>
-              {getConvertedSwapAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
-            </>
-          )}{' '}
-          -{' '}
-          <Tooltip
-            label={
-              <Box>
-                <Text>Fees automatically deducted from each swap:</Text>
-                {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
-                <Text>
-                  {getChainDexName(chain)} fee: {getPrettyFee(100, dexFee)}%
-                </Text>
-                {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
-              </Box>
-            }
-          >
-            fees*
-          </Tooltip>
-        </Text>
-      </GridItem>
-    </>
-  );
-}
+import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -160,7 +78,6 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
             </Text>
           </GridItem>
           <SwapEachCycle strategy={strategy} />
-          {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
           {Boolean(strategy.slippage_tolerance) && (
             <>
               <GridItem colSpan={1}>
