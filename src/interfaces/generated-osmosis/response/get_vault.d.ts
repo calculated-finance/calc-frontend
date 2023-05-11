@@ -128,7 +128,7 @@ export interface Vault {
   owner: Addr;
   performance_assessment_strategy?: PerformanceAssessmentStrategy | null;
   received_amount: Coin;
-  slippage_tolerance?: Decimal | null;
+  slippage_tolerance: Decimal;
   started_at?: Timestamp | null;
   status: VaultStatus;
   swap_adjustment_strategy?: SwapAdjustmentStrategy | null;

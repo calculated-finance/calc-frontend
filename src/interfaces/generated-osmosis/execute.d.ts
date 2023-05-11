@@ -54,6 +54,7 @@ export type ExecuteMsg =
     }
   | {
       update_config: {
+        default_slippage_tolerance?: Decimal | null;
         delegation_fee_percent?: Decimal | null;
         executors?: Addr[] | null;
         fee_collectors?: FeeCollector[] | null;
@@ -61,6 +62,7 @@ export type ExecuteMsg =
         paused?: boolean | null;
         risk_weighted_average_escrow_level?: Decimal | null;
         swap_fee_percent?: Decimal | null;
+        twap_period?: number | null;
       };
     }
   | {

@@ -15,6 +15,8 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
 import { buildCallbackDestinations } from '@helpers/destinations';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
+import YesNoValues from '@models/YesNoValues';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -111,6 +113,20 @@ function getTargetReceiveAmount(
   return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType, significantFigures);
 }
 
+function getBaseReceiveAmount(
+  initialDenom: Denom,
+  swapAmount: number,
+  basePrice: number | null | undefined,
+  resultingDenom: Denom,
+  transactionType: TransactionType,
+) {
+  const { priceConversion } =
+    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  return getReceiveAmount(priceConversion(basePrice), deconversion, swapAmount, transactionType, significantFigures);
+}
+
 function getSwapAmount(initialDenom: Denom, swapAmount: number) {
   const { deconversion } = getDenomInfo(initialDenom);
 
@@ -199,6 +215,53 @@ export function buildCreateVaultParamsDCA(
   return msg;
 }
 
+export function buildCreateVaultParamsWeightedScale(
+  state: WeightedScaleState,
+  transactionType: TransactionType,
+  senderAddress: string,
+) {
+  const { chain } = useChainStore.getState();
+  const msg = {
+    create_vault: {
+      label: '',
+      time_interval: getExecutionInterval(state.executionInterval),
+      target_denom: state.resultingDenom,
+      swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
+      target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
+      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
+      destinations: buildCallbackDestinations(
+        chain,
+        state.autoStakeValidator,
+        state.recipientAccount,
+        state.yieldOption,
+        senderAddress,
+        state.reinvestStrategy,
+      ),
+      target_receive_amount: getTargetReceiveAmount(
+        state.initialDenom,
+        state.swapAmount,
+        state.startPrice,
+        state.resultingDenom,
+        transactionType,
+      ),
+      swap_adjustment_strategy: {
+        weighted_scale: {
+          base_receive_amount: getBaseReceiveAmount(
+            state.initialDenom,
+            state.swapAmount,
+            state.basePriceValue,
+            state.resultingDenom,
+            transactionType,
+          ),
+          increase_only: state.applyMultiplier === YesNoValues.No,
+          multiplier: state.swapMultiplier.toString(),
+        },
+      },
+    },
+  } as OsmosisExecuteMsg;
+  return msg;
+}
+
 export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
   pairs: Pair[],
@@ -266,6 +329,10 @@ export function buildCreateVaultParams(
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
     return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress);
+  }
+
+  if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {
+    return buildCreateVaultParamsWeightedScale(state as WeightedScaleState, transactionType, senderAddress);
   }
 
   throw new Error('Invalid form type');

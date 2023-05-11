@@ -24,6 +24,7 @@ export type Decimal = string;
 
 export interface InstantiateMsg {
   admin: Addr;
+  default_slippage_tolerance: Decimal;
   delegation_fee_percent: Decimal;
   executors: Addr[];
   fee_collectors: FeeCollector[];
@@ -31,6 +32,7 @@ export interface InstantiateMsg {
   paused: boolean;
   risk_weighted_average_escrow_level: Decimal;
   swap_fee_percent: Decimal;
+  twap_period: number;
 }
 export interface FeeCollector {
   address: string;

@@ -10,12 +10,9 @@ import {
   SliderThumb,
   SliderTrack,
   Spacer,
-  Grid,
-  GridItem,
   Code,
   Tooltip,
 } from '@chakra-ui/react';
-import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { Denom } from '@models/Denom';
 import YesNoValues from '@models/YesNoValues';
 import { getDenomName } from '@utils/getDenomInfo';

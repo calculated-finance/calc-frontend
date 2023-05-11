@@ -70,7 +70,7 @@ export function WeightSummary({
   swapMultiplier: number;
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
-  basePrice: number | null;
+  basePrice: number | null | undefined;
 }) {
   return (
     <Box fontSize="10px" bg="abyss.200" p={4} borderRadius="md" color="white">

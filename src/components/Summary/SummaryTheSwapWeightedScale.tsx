@@ -24,7 +24,7 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
           </Code>
           <DenomIcon denomName={initialDenom} />
           <Code color="none" bg="none">
-            &times; (1 - price delta &times; {swapMultiplier}x
+            &times; (1 - price delta &times; {swapMultiplier})
           </Code>
         </BadgeButton>
         <br />
