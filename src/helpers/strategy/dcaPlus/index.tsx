@@ -108,15 +108,15 @@ export function getStrategySwapRange(strategy: Strategy) {
   }
   if (isWeightedScale(strategy)) {
     const { multiplier, increase_only } = getWeightedScaleConfig(strategy) || {};
-    console.log(increase_only, multiplier);
+    console.log(multiplier);
     return {
       min:
         isBuyStrategy(strategy) && !increase_only
-          ? getConvertedSwapAmount(strategy) * (1 - 0.5 * Number(multiplier))
+          ? Number((getConvertedSwapAmount(strategy) * (1 - 0.5 * Number(multiplier))).toFixed(6))
           : getConvertedSwapAmount(strategy),
       max:
         !isBuyStrategy(strategy) && !increase_only
-          ? getConvertedSwapAmount(strategy) * (1 + 0.5 * Number(multiplier))
+          ? Number((getConvertedSwapAmount(strategy) * (1 + 0.5 * Number(multiplier))).toFixed(6))
           : getConvertedSwapAmount(strategy),
     };
   }

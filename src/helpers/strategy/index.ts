@@ -105,7 +105,11 @@ export function getStrategyRemainingExecutions(strategy: Strategy) {
 }
 
 export function isBuyStrategy(strategy: Strategy) {
-  return getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAPlusIn;
+  return (
+    getStrategyType(strategy) === StrategyTypes.DCAIn ||
+    getStrategyType(strategy) === StrategyTypes.DCAPlusIn ||
+    getStrategyType(strategy) === StrategyTypes.WeightedScaleIn
+  );
 }
 
 export function getStrategyStartDate(strategy: Strategy) {
