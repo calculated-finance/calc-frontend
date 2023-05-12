@@ -5,6 +5,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import TriggerTypes from '@models/TriggerTypes';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
 
 export function ImmediateTriggerInfo() {
   return (
@@ -17,7 +18,7 @@ export function ImmediateTriggerInfo() {
   );
 }
 
-export function TimeTriggerInfo({ state }: { state: DcaInFormDataAll }) {
+export function TimeTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedScaleState }) {
   const { startDate, purchaseTime } = state;
 
   const zone = new Date().toLocaleTimeString('en-us', { timeZoneName: 'short' }).split(' ')[2];
@@ -51,7 +52,7 @@ export function TimeTriggerInfo({ state }: { state: DcaInFormDataAll }) {
   );
 }
 
-export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll }) {
+export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedScaleState }) {
   const { initialDenom, resultingDenom, startPrice } = state;
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
@@ -74,7 +75,7 @@ export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll }) {
   );
 }
 
-export function SummaryTriggerInfo({ state }: { state: DcaInFormDataAll }) {
+export function SummaryTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedScaleState }) {
   const { startImmediately, triggerType } = state;
 
   if (startImmediately === StartImmediatelyValues.Yes) {

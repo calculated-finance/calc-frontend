@@ -12,6 +12,7 @@ import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExe
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
 import { isDcaPlus } from './isDcaPlus';
+import { isWeightedScale } from './isWeightedScale';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {
@@ -85,6 +86,10 @@ export function getConvertedSwapAmount(strategy: Strategy) {
 export function getStrategyType(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
 
+  if (isWeightedScale(strategy)) {
+    return isDenomStable(initialDenom) ? StrategyTypes.WeightedScaleIn : StrategyTypes.WeightedScaleOut;
+  }
+
   if (isDcaPlus(strategy)) {
     return isDenomStable(initialDenom) ? StrategyTypes.DCAPlusIn : StrategyTypes.DCAPlusOut;
   }
@@ -100,7 +105,11 @@ export function getStrategyRemainingExecutions(strategy: Strategy) {
 }
 
 export function isBuyStrategy(strategy: Strategy) {
-  return getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAPlusIn;
+  return (
+    getStrategyType(strategy) === StrategyTypes.DCAIn ||
+    getStrategyType(strategy) === StrategyTypes.DCAPlusIn ||
+    getStrategyType(strategy) === StrategyTypes.WeightedScaleIn
+  );
 }
 
 export function getStrategyStartDate(strategy: Strategy) {

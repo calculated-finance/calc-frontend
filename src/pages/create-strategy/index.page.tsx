@@ -3,10 +3,12 @@ import Icon from '@components/Icon';
 import NextLink from 'next/link';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
+import { FiDivide } from 'react-icons/fi';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import useWhitelist from '@hooks/useWhitelist';
+import { Chains, useChain } from '@hooks/useChain';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -121,57 +123,88 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
 function Strategies() {
   const { index } = useFearAndGreed();
 
+  const { chain } = useChain();
+
   const { isWhitelisted } = useWhitelist();
 
   const showFearAndGreedAccumulate = index < 41;
   const showFearAndGreedProfit = index > 59;
 
-  const accumulationStratgies: StrategyCardProps[] = [
-    {
-      name: 'Standard DCA In',
-      description: 'Customise your own dollar-cost average buying strategy.',
-      icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
-      enabled: true,
-      href: StrategyUrls.DCAIn,
-      learnMoreHref: 'https://calculated.fi/standard-dca-in',
-    },
-    {
-      name: 'Algorithm DCA+ In',
-      description: 'Let our machine learning DCA algorithms invest for you.',
-      advanced: true,
-      href: StrategyUrls.DCAPlusIn,
-      enabled: isWhitelisted,
-      icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-      learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
-    },
-    {
+  function accumulationStratgies(): StrategyCardProps[] {
+    const strategies = [
+      {
+        name: 'Standard DCA In',
+        description: 'Customise your own dollar-cost average buying strategy.',
+        icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
+        enabled: true,
+        href: StrategyUrls.DCAIn,
+        learnMoreHref: 'https://calculated.fi/standard-dca-in',
+      },
+      {
+        name: 'Algorithm DCA+ In',
+        description: 'Let our machine learning DCA algorithms invest for you.',
+        advanced: true,
+        href: StrategyUrls.DCAPlusIn,
+        enabled: isWhitelisted,
+        icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+        learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
+      },
+    ] as StrategyCardProps[];
+
+    if (chain === Chains.Osmosis) {
+      strategies.push({
+        name: 'Weighted Scale In',
+        description: 'Buy more when the price is low, and less when the price is high.',
+        advanced: true,
+        enabled: true,
+        icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
+        href: StrategyUrls.WeightedScaleIn,
+        learnMoreHref: 'https://calculated.fi/weighted-scale-in',
+      });
+    }
+    strategies.push({
       name: 'Buy the Dip',
       description: 'Auto-buy after a specified % dip in your favourite asset.',
       advanced: true,
       icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
       learnMoreHref: 'https://calculated.fi/buy-the-dip',
-    },
-  ];
+    });
+    return strategies;
+  }
 
-  const takeProfitStrategies: StrategyCardProps[] = [
-    {
-      name: 'Standard DCA Out',
-      description: 'Dollar-cost average out of an asset with ease.',
-      icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
-      enabled: true,
-      href: StrategyUrls.DCAOut,
-      learnMoreHref: 'https://calculated.fi/standard-dca-out',
-    },
-    {
-      name: 'Algorithm DCA+ Out',
-      description: 'Let our machine learning DCA algorithms sell for you.',
-      advanced: true,
-      href: StrategyUrls.DCAPlusOut,
-      icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-      enabled: isWhitelisted,
-      learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
-    },
-    {
+  function takeProfitStrategies(): StrategyCardProps[] {
+    const strategies = [
+      {
+        name: 'Standard DCA Out',
+        description: 'Dollar-cost average out of an asset with ease.',
+        icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
+        enabled: true,
+        href: StrategyUrls.DCAOut,
+        learnMoreHref: 'https://calculated.fi/standard-dca-out',
+      },
+      {
+        name: 'Algorithm DCA+ Out',
+        description: 'Let our machine learning DCA algorithms sell for you.',
+        advanced: true,
+        href: StrategyUrls.DCAPlusOut,
+        icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
+        enabled: isWhitelisted,
+        learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
+      },
+    ] as StrategyCardProps[];
+
+    if (chain === Chains.Osmosis) {
+      strategies.push({
+        name: 'Weighted Scale Out',
+        description: 'Sell more when the price is high, and less when the price is low.',
+        advanced: true,
+        enabled: true,
+        href: StrategyUrls.WeightedScaleOut,
+        icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
+        learnMoreHref: 'https://calculated.fi/weighted-scale-in',
+      });
+    }
+    strategies.push({
       name: 'Auto-take Profit',
       description: 'Sell a certain % of an asset after it pumps a certain %.',
       advanced: true,
@@ -179,8 +212,10 @@ function Strategies() {
       icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
       enabled: false,
       learnMoreHref: 'https://calculated.fi/auto-take-profit',
-    },
-  ];
+    });
+
+    return strategies;
+  }
 
   return (
     <Stack direction="column" spacing={8}>
@@ -193,7 +228,7 @@ function Strategies() {
           Strategies that build a position in an asset.{' '}
         </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
-          {accumulationStratgies.map((strategy) => (
+          {accumulationStratgies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>
@@ -211,7 +246,7 @@ function Strategies() {
           Strategies that sell assets for profit.
         </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
-          {takeProfitStrategies.map((strategy) => (
+          {takeProfitStrategies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>

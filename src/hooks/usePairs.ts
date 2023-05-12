@@ -17,6 +17,9 @@ function isSupportedDenom(denom: Denom) {
 export function isSupportedDenomForDcaPlus(denom: Denom) {
   return SUPPORTED_DENOMS_FOR_DCA_PLUS.includes(denom) && isDenomVolatile(denom);
 }
+export function isSupportedDenomForWeightedScale(denom: Denom) {
+  return SUPPORTED_DENOMS.includes(denom);
+}
 
 function orderAlphabetically(denoms: Denom[]) {
   return denoms.sort((a, b) => {

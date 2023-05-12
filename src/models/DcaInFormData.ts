@@ -43,6 +43,10 @@ export const initialValues = {
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
   yieldOption: null,
   reinvestStrategy: '',
+  basePriceIsCurrentPrice: YesNoValues.Yes,
+  basePriceValue: null,
+  swapMultiplier: 1,
+  applyMultiplier: YesNoValues.Yes,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -215,7 +219,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAIn) {
+        if (strategyType !== StrategyTypes.DCAIn && strategyType !== StrategyTypes.WeightedScaleIn) {
           return true;
         }
         return value >= startPrice;
@@ -232,7 +236,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAOut) {
+        if (strategyType !== StrategyTypes.DCAOut && strategyType !== StrategyTypes.WeightedScaleOut) {
           return true;
         }
         return value <= startPrice;
