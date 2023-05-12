@@ -136,7 +136,6 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={1} data-testid="strategy-status">
             <StrategyStatusBadge strategy={strategy} />
-            ``
           </GridItem>
           <GridItem colSpan={1} visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
             <Flex justifyContent="end">
