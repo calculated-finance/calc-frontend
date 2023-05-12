@@ -129,7 +129,7 @@ export const osmosisStrategy = {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO
   },
-  slippage_tolerance: null,
+  slippage_tolerance: '0.01',
   started_at: '1',
   status: 'active',
   swap_adjustment_strategy: null,

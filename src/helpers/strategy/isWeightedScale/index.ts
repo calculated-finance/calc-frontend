@@ -21,6 +21,6 @@ export function getWeightedScaleConfig(strategy: Strategy | StrategyOsmosis) {
   };
 }
 
-export function isWeightedScale(strategy: Strategy) {
+export function isWeightedScale(strategy: Strategy | StrategyOsmosis) {
   return Boolean(getWeightedScaleConfig(strategy));
 }

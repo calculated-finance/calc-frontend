@@ -108,7 +108,6 @@ export function getStrategySwapRange(strategy: Strategy) {
   }
   if (isWeightedScale(strategy)) {
     const { multiplier, increase_only } = getWeightedScaleConfig(strategy) || {};
-    console.log(multiplier);
     return {
       min:
         isBuyStrategy(strategy) && !increase_only
