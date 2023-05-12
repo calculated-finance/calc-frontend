@@ -11,6 +11,8 @@ import { encode } from '@helpers/encode';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
+import TriggerTypes from '@models/TriggerTypes';
+import YesNoValues from '@models/YesNoValues';
 import Page from './index.page';
 
 const mockRouter = {
@@ -42,6 +44,16 @@ const mockStateMachine = {
       recipientAccount: null,
       sendToWallet: 'yes',
       strategyDuration: 30,
+      startImmediately: YesNoValues.Yes,
+      triggerType: TriggerTypes.Date,
+      priceThresholdEnabled: YesNoValues.No,
+      priceThresholdValue: null,
+      purchaseTime: '',
+      swapMultiplier: 1,
+      applyMultiplier: YesNoValues.Yes,
+      swapAmount: 1,
+      basePriceIsCurrentPrice: YesNoValues.Yes,
+      executionInterval: 'daily',
     },
   },
   actions: {
@@ -96,12 +108,7 @@ describe('DCA Plus Out confirm page', () => {
       const theSwap = screen.getByTestId('summary-the-swap-weighted-scale');
 
       within(theSwap).getByText('Immediately');
-      within(theSwap).getByText('OSMO');
-      within(theSwap).getByText('0.644 KUJI');
-      within(theSwap).getByText('1.474 KUJI');
-      const benchmark = screen.getByTestId('summary-benchmark');
-
-      within(benchmark).getByText('1 KUJI');
+      within(theSwap).getByText('× (1 - price delta × 1)');
     });
   });
 
@@ -111,13 +118,12 @@ describe('DCA Plus Out confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e866',
+          target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
-          target_start_time_utc_seconds: undefined,
-          destinations: undefined,
-          target_receive_amount: undefined,
           slippage_tolerance: '0.02',
-          use_dca_plus: true,
+          swap_adjustment_strategy: {
+            weighted_scale: { increase_only: false, multiplier: '1' },
+          },
         },
       };
 

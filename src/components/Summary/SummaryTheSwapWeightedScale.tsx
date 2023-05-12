@@ -14,7 +14,7 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
   return (
-    <Box data-testid="summary-the-swap-dca-plus">
+    <Box data-testid="summary-the-swap-weighted-scale">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
         <SummaryTriggerInfo state={state} />, CALC will swap the amount of{' '}

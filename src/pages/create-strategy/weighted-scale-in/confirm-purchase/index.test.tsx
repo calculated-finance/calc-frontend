@@ -11,6 +11,8 @@ import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { encode } from '@helpers/encode';
 import { useFormStore } from '@hooks/useFormStore';
+import YesNoValues from '@models/YesNoValues';
+import TriggerTypes from '@models/TriggerTypes';
 import Page from './index.page';
 
 const mockRouter = {
@@ -42,6 +44,16 @@ const mockStateMachine = {
       recipientAccount: null,
       sendToWallet: 'yes',
       strategyDuration: 30,
+      startImmediately: YesNoValues.Yes,
+      triggerType: TriggerTypes.Date,
+      priceThresholdEnabled: YesNoValues.No,
+      priceThresholdValue: null,
+      purchaseTime: '',
+      swapMultiplier: 1,
+      applyMultiplier: YesNoValues.Yes,
+      swapAmount: 1,
+      basePriceIsCurrentPrice: YesNoValues.Yes,
+      executionInterval: 'daily',
     },
   },
   actions: {
@@ -97,14 +109,7 @@ describe('Confirm page', () => {
       const theSwap = screen.getByTestId('summary-the-swap-weighted-scale');
 
       within(theSwap).getByText('Immediately');
-      within(theSwap).getByText('NBTC');
-      within(theSwap).getByText('0.644 USK');
-      within(theSwap).getByText('1.474 USK');
-
-      const benchmark = screen.getByTestId('summary-benchmark');
-
-      within(benchmark).getByText('1 USK');
-      within(benchmark).getByText('30 days');
+      within(theSwap).getByText('× (1 - price delta × 1)');
     });
   });
 
@@ -114,16 +119,15 @@ describe('Confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
+          target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
           swap_amount: '1000000',
-          target_start_time_utc_seconds: undefined,
-          minimum_receive_amount: undefined,
-          destinations: undefined,
-          target_receive_amount: undefined,
           slippage_tolerance: '0.02',
-          use_dca_plus: true,
+          swap_adjustment_strategy: {
+            weighted_scale: { increase_only: false, multiplier: '1' },
+          },
         },
       };
+
       const mockCreateStrategy = mockCreateVault([
         {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',

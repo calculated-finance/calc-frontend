@@ -107,13 +107,27 @@ describe('DCA Plus In customise page', () => {
 
       await renderTarget();
 
+      // enter swap amount
+      const input = await waitFor(() => screen.getByLabelText(/Set your base USK swap amount/));
+      await waitFor(() => userEvent.type(input, '1'), { timeout: 5000 });
+
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 5000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
-        strategyDuration: 60,
         slippageTolerance: 2,
+        applyMultiplier: 'yes',
+        basePriceIsCurrentPrice: 'yes',
+        basePriceValue: null,
+        executionInterval: 'daily',
+        purchaseTime: '',
+        startDate: null,
+        startImmediately: 'yes',
+        startPrice: null,
+        swapAmount: 1,
+        swapMultiplier: 1,
+        triggerType: 'date',
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
