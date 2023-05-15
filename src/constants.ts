@@ -19,7 +19,7 @@ export const CREATE_VAULT_FEE = 0.1; // 10c
 export const CANCEL_VAULT_FEE = 0.5; // $1
 export const ONE_MILLION = 1000000;
 export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
-export const SWAP_FEE = 0.005;
+export const SWAP_FEE = 0.01;
 export const DELEGATION_FEE = 0.0;
 export const FIN_TAKER_FEE = 0.0015;
 
