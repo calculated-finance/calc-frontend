@@ -8,7 +8,7 @@ import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyT
 import { Strategy } from '@hooks/useStrategies';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
+import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import {
   getStrategyInitialDenom,
@@ -95,7 +95,11 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
             label={
               <Box>
                 <Text>Fees automatically deducted from each swap:</Text>
-                {!isDcaPlus(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>}
+                {!isDcaPlus(strategy) && !isWeightedScale(strategy) ? (
+                  <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
+                ) : (
+                  isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
+                )}
                 <Text>
                   {chain === Chains.Osmosis ? 'Osmosis swap' : 'Kujira'} fee: {getPrettyFee(100, dexFee)}%
                 </Text>
