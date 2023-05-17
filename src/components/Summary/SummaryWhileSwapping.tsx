@@ -34,15 +34,15 @@ export function SummaryWhileSwapping({
         {Boolean(priceThresholdValue) && (
           <>
             <BadgeButton url="customise">
-              <Text>{resultingDenomName}</Text>
-              <DenomIcon denomName={resultingDenom} />
+              <Text>{initialDenomName}</Text>
+              <DenomIcon denomName={initialDenom} />
             </BadgeButton>{' '}
-            price is higher than{' '}
+            price is lower than{' '}
             <BadgeButton url="customise">
               <Text>
-                {priceThresholdValue} {initialDenomName}
+                {priceThresholdValue} {resultingDenomName}
               </Text>
-              <DenomIcon denomName={initialDenom} />
+              <DenomIcon denomName={resultingDenom} />
             </BadgeButton>{' '}
           </>
         )}

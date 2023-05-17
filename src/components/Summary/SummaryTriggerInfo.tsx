@@ -61,15 +61,15 @@ export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll | Weighted
     <>
       Starting when{' '}
       <BadgeButton url="customise">
-        <Text>{resultingDenomName}</Text>
-        <DenomIcon denomName={resultingDenom} />
+        <Text>1 {initialDenomName}</Text>
+        <DenomIcon denomName={initialDenom} />
         <Text pt={1} fontSize="xs">
-          &le;
+          &ge;
         </Text>
         <Text>
-          {startPrice} {initialDenomName}
+          {startPrice} {resultingDenomName}
         </Text>
-        <DenomIcon denomName={initialDenom} />
+        <DenomIcon denomName={resultingDenom} />
       </BadgeButton>
     </>
   );
