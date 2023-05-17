@@ -37,9 +37,15 @@ export function SummaryTheSwapWeightedScale({
         Where price delta is calculated from the base price of
         <BadgeButton url="customise">
           {basePriceValue ? (
-            <Text>
-              1 {resultingDenomName} = {basePriceValue} {initialDenomName}
-            </Text>
+            transactionType === 'buy' ? (
+              <Text>
+                1 {resultingDenomName} = {basePriceValue} {initialDenomName}
+              </Text>
+            ) : (
+              <Text>
+                1 {initialDenomName} = {basePriceValue} {resultingDenomName}
+              </Text>
+            )
           ) : (
             <Text>current price</Text>
           )}
