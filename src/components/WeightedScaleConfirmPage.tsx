@@ -78,6 +78,8 @@ export function WeightedScaleConfirmPage({
               swapMultiplier={state.swapMultiplier}
               swapAmount={state.swapAmount}
               basePrice={state.basePriceValue}
+              initialDenom={state.initialDenom}
+              resultingDenom={state.resultingDenom}
             />
             <SummaryWhileSwapping
               initialDenom={state.initialDenom}

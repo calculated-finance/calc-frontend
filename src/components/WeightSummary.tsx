@@ -1,6 +1,7 @@
 import { Box, HStack, Text, Divider, Stack, Grid, GridItem } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
+import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
 
 const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
@@ -65,13 +66,19 @@ export function WeightSummary({
   transactionType,
   applyMultiplier,
   basePrice,
+  initialDenom,
+  resultingDenom,
 }: {
+  initialDenom: string;
+  resultingDenom: string;
   swapAmount: number;
   swapMultiplier: number;
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
 }) {
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
     <Box fontSize="10px" bg="abyss.200" p={4} borderRadius="md" color="white">
       <Stack spacing={3}>
@@ -83,7 +90,7 @@ export function WeightSummary({
           <Text>
             Base Price:{' '}
             <Text as="span" color="blue.200">
-              {basePrice ?? 'Current price'}
+              {`1 ${resultingDenomName} = ${basePrice} ${initialDenomName}` ?? 'Current price'}
             </Text>
           </Text>
         </HStack>
