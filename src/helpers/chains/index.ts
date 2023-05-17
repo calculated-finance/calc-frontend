@@ -11,6 +11,52 @@ import {
   STAKING_ROUTER_CONTRACT_ADDRESS,
 } from 'src/constants';
 
+const osmoMainnetConfig = {
+  chainId: 'osmosis-1',
+  chainName: 'Osmosis Mainnet',
+  rpc: 'https://rpc.osmosis.zone',
+  rest: 'https://lcd.osmosis.zone',
+  bip44: {
+    coinType: 118,
+  },
+  bech32Config: {
+    bech32PrefixAccAddr: 'osmo',
+    bech32PrefixAccPub: 'osmopub',
+    bech32PrefixValAddr: 'osmovaloper',
+    bech32PrefixValPub: 'osmovaloperpub',
+    bech32PrefixConsAddr: 'osmovalcons',
+    bech32PrefixConsPub: 'osmovalconspub',
+  },
+  currencies: [
+    {
+      coinDenom: 'OSMO',
+      coinMinimalDenom: 'uosmo',
+      coinDecimals: 6,
+      coinGeckoId: 'osmosis',
+    },
+  ],
+  feeCurrencies: [
+    {
+      coinDenom: 'OSMO',
+      coinMinimalDenom: 'uosmo',
+      coinDecimals: 6,
+      coinGeckoId: 'osmosis',
+      gasPriceStep: {
+        low: 0.00125,
+        average: 0.0025,
+        high: 0.00375,
+      },
+    },
+  ],
+  stakeCurrency: {
+    coinDenom: 'OSMO',
+    coinMinimalDenom: 'uosmo',
+    coinDecimals: 6,
+    coinGeckoId: 'osmosis',
+  },
+  coinType: 118,
+} as ChainInfo;
+
 const osmoTestnetConfig = {
   chainId: 'osmo-test-4',
   chainName: 'Osmosis Testnet',
@@ -67,7 +113,7 @@ export function getGasPrice(chain: Chains) {
 export function getChainInfo(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {
-      return osmoTestnetConfig;
+      return osmoMainnetConfig;
     }
     return osmoTestnetConfig;
   }
@@ -102,7 +148,7 @@ export function getChainContractAddress(chain: Chains) {
 export function getChainFeeTakerAddress(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {
-      return 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54';
+      return 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest';
     }
     return 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54';
   }
