@@ -76,7 +76,7 @@ function Page() {
                 />
                 <AdvancedSettingsSwitch />
                 <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaOut} />
-                <ExecutionInterval />
+                <ExecutionInterval transactionType={TransactionType.Sell} />
                 <SwapAmount step1State={state.step1} isSell />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">

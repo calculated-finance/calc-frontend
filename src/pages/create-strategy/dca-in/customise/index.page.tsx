@@ -76,7 +76,7 @@ function DcaInStep2() {
                 />
                 <AdvancedSettingsSwitch />
                 <TriggerForm transactionType={TransactionType.Buy} formName={FormNames.DcaIn} />
-                <ExecutionInterval />
+                <ExecutionInterval transactionType={TransactionType.Buy} />
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
