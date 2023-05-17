@@ -46,6 +46,8 @@ function Page() {
     goToStep(0);
   };
 
+  const transactionType = TransactionType.Sell;
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
@@ -61,12 +63,13 @@ function Page() {
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
-            <SummaryTheSwap state={state} />
+            <SummaryTheSwap state={state} transactionType={transactionType} />
             <SummaryWhileSwapping
               initialDenom={state.initialDenom}
               resultingDenom={state.resultingDenom}
               priceThresholdValue={state.priceThresholdValue}
               slippageTolerance={state.slippageTolerance}
+              transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
             <Fees formName={FormNames.DcaOut} transactionType={TransactionType.Sell} />

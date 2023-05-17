@@ -73,9 +73,9 @@ export function WeightedScaleConfirmPage({
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={strategyType} />
-            <SummaryTheSwapWeightedScale state={state} />
+            <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
             <WeightSummary
-              transactionType={transactionType}
+              transactionType={TransactionType.Buy}
               applyMultiplier={state.applyMultiplier}
               swapMultiplier={state.swapMultiplier}
               swapAmount={state.swapAmount}
@@ -86,6 +86,7 @@ export function WeightedScaleConfirmPage({
               resultingDenom={state.resultingDenom}
               priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
+              transactionType={TransactionType.Buy}
             />
             <SummaryAfterEachSwap state={state} />
 

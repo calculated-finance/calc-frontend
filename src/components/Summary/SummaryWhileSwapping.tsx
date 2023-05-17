@@ -29,7 +29,6 @@ export function SummaryWhileSwapping({
 
   const showWhileSwapping = showSlippage || priceThresholdValue;
 
-  console.log(transactionType);
   return showWhileSwapping ? (
     <Box data-testid="summary-the-swap">
       <Text textStyle="body-xs">While swapping</Text>
