@@ -9,11 +9,13 @@ export function SummaryWhileSwapping({
   resultingDenom,
   priceThresholdValue,
   slippageTolerance,
+  transactionType,
 }: {
   initialDenom: string;
   resultingDenom: string;
   priceThresholdValue: number | null | undefined;
   slippageTolerance: number | null | undefined;
+  transactionType: string;
 }) {
   // const { initialDenom, resultingDenom, priceThresholdValue, slippageTolerance } = state;
 
@@ -26,12 +28,28 @@ export function SummaryWhileSwapping({
     slippageTolerance !== initialValues.slippageTolerance;
 
   const showWhileSwapping = showSlippage || priceThresholdValue;
+
+  console.log(transactionType);
   return showWhileSwapping ? (
     <Box data-testid="summary-the-swap">
       <Text textStyle="body-xs">While swapping</Text>
       <Text lineHeight={8}>
         If the{' '}
-        {Boolean(priceThresholdValue) && (
+        {Boolean(priceThresholdValue) && transactionType === 'buy' ? (
+          <>
+            <BadgeButton url="customise">
+              <Text>{resultingDenomName}</Text>
+              <DenomIcon denomName={resultingDenom} />
+            </BadgeButton>{' '}
+            price is higher than{' '}
+            <BadgeButton url="customise">
+              <Text>
+                {priceThresholdValue} {initialDenomName}
+              </Text>
+              <DenomIcon denomName={initialDenom} />
+            </BadgeButton>{' '}
+          </>
+        ) : (
           <>
             <BadgeButton url="customise">
               <Text>{initialDenomName}</Text>
