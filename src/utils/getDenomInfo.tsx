@@ -267,7 +267,37 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     significantFigures: 6,
     enabledInDcaPlus: false,
     stable: false,
-    pricePrecision: 3
+    pricePrecision: 3,
+  },
+  [MainnetDenoms.MNTA]: {
+    name: 'MNTA',
+    icon: '/images/denoms/mnta.png',
+    stakeable: true,
+    coingeckoId: 'mantadao',
+    significantFigures: 6,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 4,
+  },
+  [MainnetDenoms.ARB]: {
+    name: 'ARB',
+    icon: '/images/denoms/arb.svg',
+    stakeable: true,
+    coingeckoId: 'arbitrum',
+    significantFigures: 18,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 3,
+  },
+  [MainnetDenoms.CNTO]: {
+    name: 'CNTO',
+    // icon: '/images/denoms/arb.svg',
+    stakeable: true,
+    coingeckoId: 'ciento-exchange',
+    significantFigures: 18,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 3,
   },
 };
 
