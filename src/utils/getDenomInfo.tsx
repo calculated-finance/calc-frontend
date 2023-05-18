@@ -291,7 +291,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   },
   [MainnetDenoms.CNTO]: {
     name: 'CNTO',
-    // icon: '/images/denoms/arb.svg',
+    icon: '/images/denoms/cnto.svg',
     stakeable: true,
     coingeckoId: 'ciento-exchange',
     significantFigures: 18,
