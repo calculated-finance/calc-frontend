@@ -105,7 +105,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={chain === Chains.Osmosis ? '/images/osmoMascot.svg' : undefined}
+      bgImage={chain === Chains.Osmosis ? '/images/osmoMascot.svg' : '/images/kujiMascot.svg'}
       bgPosition="bottom"
       bgRepeat="no-repeat"
       {...rest}
