@@ -15,9 +15,9 @@ export default function ExecutionInterval() {
   return (
     <FormControl>
       {featureFlags.extraTimeOptions ? (
-        <FormLabel>I would like CALC to purchase for me every:</FormLabel>
+        <FormLabel>I would like CALC to swap for me every:</FormLabel>
       ) : (
-        <FormLabel>How often would you like CALC to purchase for you?</FormLabel>
+        <FormLabel>How often would you like CALC to swap for you?</FormLabel>
       )}
       <Radio {...getRootProps}>
         {executionIntervalData.map((option) => {
