@@ -49,7 +49,7 @@ export function WeightsGrid({
         );
       })}
 
-      <GridItem colSpan={3}>Buy amount:</GridItem>
+      <GridItem colSpan={3}>Swap Amount:</GridItem>
       {weights.map((weight) => (
         <GridItem colSpan={1} key={weight}>
           {calcSwapFromPriceDelta(weight)}
@@ -76,12 +76,12 @@ export function WeightSummary({
     <Box fontSize="10px" bg="abyss.200" p={4} borderRadius="md" color="white">
       <Stack spacing={3}>
         <HStack justify="space-between">
-          <Text>Base Buy: {swapAmount || 0} axlUSDC</Text>
+          <Text>Base Swap: {swapAmount || 0} axlUSDC</Text>
           <Text>|</Text>
           <Text>Multiplier: {swapMultiplier}</Text>
           <Text>|</Text>
           <Text>
-            Base price:{' '}
+            Base Price:{' '}
             <Text as="span" color="blue.200">
               {basePrice ?? 'Current price'}
             </Text>
