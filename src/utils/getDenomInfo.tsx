@@ -259,6 +259,16 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     stable: false,
     pricePrecision: 10,
   },
+  [MainnetDenoms.AKT]: {
+    name: 'AKT',
+    icon: '/images/denoms/akt.svg',
+    stakeable: true,
+    coingeckoId: 'akash-network',
+    significantFigures: 6,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 3
+  },
 };
 
 export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomInfo> = {
