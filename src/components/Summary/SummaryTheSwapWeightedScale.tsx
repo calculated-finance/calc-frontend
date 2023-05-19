@@ -5,6 +5,10 @@ import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
+import { Chains, useChain } from '@hooks/useChain';
+import usePrice from '@hooks/usePrice';
+import usePriceOsmosis from '@hooks/usePriceOsmosis';
+import { TransactionType } from '@components/TransactionType';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapWeightedScale({
@@ -12,12 +16,27 @@ export function SummaryTheSwapWeightedScale({
   transactionType,
 }: {
   state: WeightedScaleState;
-  transactionType: string;
+  transactionType: TransactionType;
 }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue, executionInterval } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+
+  const { chain } = useChain();
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType, chain === Chains.Kujira);
+  const { price: osmosisPrice } = usePriceOsmosis(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Osmosis,
+  );
+
+  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
+  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
+
+  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
+  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
 
   return (
     <Box data-testid="summary-the-swap-weighted-scale">
@@ -37,15 +56,9 @@ export function SummaryTheSwapWeightedScale({
         Where price delta is calculated from the base price of
         <BadgeButton url="customise">
           {basePriceValue ? (
-            transactionType === 'buy' ? (
-              <Text>
-                1 {resultingDenomName} = {basePriceValue} {initialDenomName}
-              </Text>
-            ) : (
-              <Text>
-                1 {initialDenomName} = {basePriceValue} {resultingDenomName}
-              </Text>
-            )
+            <Text>
+              1 {priceOfDenomName} = {price || osmosisPrice} {priceInDenomName}
+            </Text>
           ) : (
             <Text>current price</Text>
           )}
