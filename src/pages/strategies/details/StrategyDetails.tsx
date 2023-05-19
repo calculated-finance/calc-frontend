@@ -276,13 +276,15 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <Heading pb={4} size="md">
             Swap multiplier
           </Heading>
-          <WeightSummary
-            swapAmount={getConvertedSwapAmount(strategy)}
-            swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
-            transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
-            applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
-            basePrice={getBasePrice(strategy)}
-          />
+          <Box px={3} py={2} layerStyle="panel">
+            <WeightSummary
+              swapAmount={getConvertedSwapAmount(strategy)}
+              swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
+              transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
+              applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
+              basePrice={getBasePrice(strategy)}
+            />
+          </Box>
         </Box>
       </Stack>
     </GridItem>

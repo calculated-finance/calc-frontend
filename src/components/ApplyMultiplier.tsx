@@ -1,11 +1,25 @@
-import { FormControl, FormHelperText, FormLabel, useRadioGroup, HStack } from '@chakra-ui/react';
+import { FormControl, FormHelperText, FormLabel, useRadioGroup, Flex } from '@chakra-ui/react';
 import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
-import { Chains, useChain } from '@hooks/useChain';
+import YesNoValues from '@models/YesNoValues';
 import { yesNoData } from './PriceThreshold';
+import { TransactionType } from './TransactionType';
 
-export default function ApplyMultiplier() {
+function getHelperText(applyMultiplier: YesNoValues, transactionType: TransactionType) {
+  if (applyMultiplier === YesNoValues.Yes) {
+    if (transactionType === TransactionType.Buy) {
+      return 'The buy multiplier is applied when the price delta is + or -';
+    }
+    return 'The sell multiplier is applied when the price delta is + or -';
+  }
+  if (transactionType === TransactionType.Buy) {
+    return 'The buy multiplier is only applied when the price delta < 0%';
+  }
+  return 'The sell multiplier is only applied when the price delta > 0%';
+}
+
+export default function ApplyMultiplier({ transactionType }: { transactionType: TransactionType }) {
   const [field, , helpers] = useField({ name: 'applyMultiplier' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -17,8 +31,7 @@ export default function ApplyMultiplier() {
   return (
     <FormControl>
       <FormLabel>Apply multiplier to both price increases and decreases?</FormLabel>
-      <FormHelperText>CALC will swap less the higher the price goes, and more the lower.</FormHelperText>
-      <HStack>
+      <Flex align="center" gap={3}>
         <Radio {...getRootProps}>
           {yesNoData.map((option) => {
             const radio = getRadioProps({ value: option.value });
@@ -29,7 +42,8 @@ export default function ApplyMultiplier() {
             );
           })}
         </Radio>
-      </HStack>
+        <FormHelperText>{getHelperText(field.value, transactionType)}</FormHelperText>
+      </Flex>
     </FormControl>
   );
 }
