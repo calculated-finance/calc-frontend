@@ -219,8 +219,10 @@ export function buildCreateVaultParamsWeightedScale(
   state: WeightedScaleState,
   transactionType: TransactionType,
   senderAddress: string,
+  currentPrice: number,
 ) {
   const { chain } = useChainStore.getState();
+
   const msg = {
     create_vault: {
       label: '',
@@ -249,7 +251,7 @@ export function buildCreateVaultParamsWeightedScale(
           base_receive_amount: getBaseReceiveAmount(
             state.initialDenom,
             state.swapAmount,
-            state.basePriceValue,
+            state.basePriceValue || currentPrice,
             state.resultingDenom,
             transactionType,
           ),
@@ -322,6 +324,7 @@ export function buildCreateVaultParams(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
+  currentPrice: number,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
     return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
@@ -332,7 +335,12 @@ export function buildCreateVaultParams(
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {
-    return buildCreateVaultParamsWeightedScale(state as WeightedScaleState, transactionType, senderAddress);
+    return buildCreateVaultParamsWeightedScale(
+      state as WeightedScaleState,
+      transactionType,
+      senderAddress,
+      currentPrice,
+    );
   }
 
   throw new Error('Invalid form type');

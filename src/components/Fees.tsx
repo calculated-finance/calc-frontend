@@ -10,18 +10,22 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
-import { CREATE_VAULT_FEE, DELEGATION_FEE, SWAP_FEE } from 'src/constants';
+import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
+import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -30,12 +34,16 @@ function FeeBreakdown({
   price,
   applyPromo,
   dexFee,
+  swapFee,
+  excludeDepositFee,
 }: {
   initialDenomName: string;
   swapAmount: number;
   price: number;
   applyPromo: boolean;
   dexFee: number;
+  swapFee: number;
+  excludeDepositFee: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   const { chain } = useChain();
@@ -69,16 +77,38 @@ function FeeBreakdown({
 
         <Collapse in={isOpen}>
           <Flex flexDirection="row" px={2} pb={4} mt={0} gap={3}>
-            <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs">Once off</Heading>
+            <Flex flexGrow={10} flexDirection="column">
+              <Heading size="xs">Deposit fee</Heading>
               <Stack spacing={0}>
                 <Flex>
                   <Text textStyle="body-xs">Transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs" as="span">
-                    {' '}
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
+                  {excludeDepositFee ? (
+                    <Text textStyle="body-xs">Free</Text>
+                  ) : (
+                    <Text textStyle="body-xs" as="span">
+                      {' '}
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
+                    </Text>
+                  )}
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                  <Spacer />
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                  <Spacer />
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
                   </Text>
                 </Flex>
                 <Flex>
@@ -86,10 +116,16 @@ function FeeBreakdown({
                     Total fees and tax:
                   </Text>
                   <Spacer />
-                  <Text textStyle="body-xs" textColor="white" as="span">
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
-                  </Text>
+                  {excludeDepositFee ? (
+                    <Text textStyle="body-xs" textColor="white">
+                      Free
+                    </Text>
+                  ) : (
+                    <Text textStyle="body-xs" textColor="white" as="span">
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
+                    </Text>
+                  )}
                 </Flex>
               </Stack>
             </Flex>
@@ -106,7 +142,7 @@ function FeeBreakdown({
                       </Text>
                     ) : (
                       <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, SWAP_FEE)} {initialDenomName}
+                        {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
                       </Text>
                     )}
                   </Flex>
@@ -122,7 +158,7 @@ function FeeBreakdown({
                         </Text>
                       ) : (
                         <Text textStyle="body-xs">
-                          {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                          {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
                         </Text>
                       )}
                     </Flex>
@@ -135,7 +171,7 @@ function FeeBreakdown({
                         </Text>
                       ) : (
                         <Text textStyle="body-xs">
-                          {getPrettyFee(swapAmount, SWAP_FEE / 2)} {initialDenomName}
+                          {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
                         </Text>
                       )}
                     </Flex>
@@ -147,7 +183,7 @@ function FeeBreakdown({
                   <Text textStyle="body-xs">Free</Text>
                 </Flex>
                 <Flex>
-                  <Text textStyle="body-xs">{getChainDexName(chain)} transaction fees:</Text>
+                  <Text textStyle="body-xs">{getChainDexName(chain)} txn fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
                     {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
@@ -159,7 +195,7 @@ function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, (applyPromo ? 0 : SWAP_FEE) + dexFee)} {initialDenomName}
+                    {getPrettyFee(swapAmount, (applyPromo ? 0 : swapFee) + dexFee)} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -171,8 +207,19 @@ function FeeBreakdown({
   );
 }
 
-export default function Fees({ formName, transactionType }: { formName: FormNames; transactionType: TransactionType }) {
-  const { state } = useConfirmForm(formName);
+export default function Fees({
+  state,
+  transactionType,
+  swapFee,
+  swapFeeTooltip,
+  excludeDepositFee = false,
+}: {
+  state: DcaInFormDataAll | WeightedScaleState;
+  transactionType: TransactionType;
+  swapFee: number;
+  swapFeeTooltip?: string;
+  excludeDepositFee?: boolean;
+}) {
   const { price } = useFiatPrice(state?.initialDenom);
 
   const { initialDenom, autoStakeValidator, swapAmount, resultingDenom } = state || {};
@@ -193,14 +240,22 @@ export default function Fees({ formName, transactionType }: { formName: FormName
   return (
     <Stack spacing={0}>
       <Text textStyle="body-xs" as="span">
-        Deposit fee{' '}
-        <Text as="span" textColor="white">
-          {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
-        </Text>{' '}
-        +{' '}
-        <Text as="span" textColor="white">
-          {String.fromCharCode(8275)} {getPrettyFee(swapAmount!, SWAP_FEE + dexFee)} {initialDenomName}
-        </Text>
+        {!excludeDepositFee ? (
+          <>
+            Deposit fee{' '}
+            <Text as="span" textColor="white">
+              {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
+            </Text>{' '}
+            +{' '}
+          </>
+        ) : (
+          <>Fees: </>
+        )}
+        <Tooltip label={swapFeeTooltip} placement="top">
+          <Text as="span" textColor="white">
+            {String.fromCharCode(8275)} {getPrettyFee(swapAmount!, swapFee + dexFee)} {initialDenomName}
+          </Text>
+        </Tooltip>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
 
@@ -210,6 +265,8 @@ export default function Fees({ formName, transactionType }: { formName: FormName
         price={price}
         applyPromo={applyPromo}
         dexFee={dexFee}
+        swapFee={swapFee}
+        excludeDepositFee={excludeDepositFee}
       />
     </Stack>
   );

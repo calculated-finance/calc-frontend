@@ -17,6 +17,7 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
+import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -77,7 +78,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {getStrategyExecutionInterval(strategy)}
             </Text>
           </GridItem>
-          <SwapEachCycle strategy={strategy} />
+          {!isWeightedScale && <SwapEachCycle strategy={strategy} />}
           {Boolean(strategy.slippage_tolerance) && (
             <>
               <GridItem colSpan={1}>

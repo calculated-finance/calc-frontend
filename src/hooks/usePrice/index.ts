@@ -1,24 +1,15 @@
-import { isNumber, max } from 'lodash';
+import { max } from 'lodash';
 import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
 import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { Chains, useChain } from '@hooks/useChain';
+import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import usePairs from '../usePairs';
 import useQueryWithNotification from '../useQueryWithNotification';
-
-export function safeInvert(value: number) {
-  if (!value) {
-    return 0;
-  }
-
-  if (!isNumber(value)) {
-    return 0;
-  }
-
-  return 1 / value;
-}
+import { safeInvert } from './safeInvert';
 
 function calculatePrice(result: BookResponse, initialDenom: Denom, transactionType: TransactionType) {
   const quotePriceInfo = result.quote[0];
@@ -67,8 +58,8 @@ export default function usePrice(
   resultingDenom: Denom | undefined,
   initialDenom: Denom | undefined,
   transactionType: TransactionType,
-  enabled = true,
 ) {
+  const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   const { data: pairsData } = usePairs();
@@ -86,9 +77,16 @@ export default function usePrice(
       return result;
     },
     {
-      enabled: !!client && !!pair && enabled,
+      enabled: !!client && !!pair && chain === Chains.Kujira,
     },
   );
+
+  const osmosisPrice = usePriceOsmosis(resultingDenom, initialDenom, transactionType, chain === Chains.Osmosis);
+
+  if (chain === Chains.Osmosis) {
+    return osmosisPrice;
+  }
+
   const price = data && calculatePrice(data, initialDenom!, transactionType);
 
   const pricePrecision = max([getDenomInfo(initialDenom).pricePrecision, getDenomInfo(resultingDenom).pricePrecision]);

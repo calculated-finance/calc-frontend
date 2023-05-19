@@ -15,6 +15,7 @@ import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chain
 import { FormNames } from '@hooks/useFormStore';
 import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
+import usePrice from '@hooks/usePrice';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -56,7 +57,12 @@ function getFee() {
   return FEE;
 }
 
-const useCreateVault = (formName: FormNames, transactionType: TransactionType, state: DcaFormState | undefined) => {
+const useCreateVault = (
+  formName: FormNames,
+  transactionType: TransactionType,
+  state: DcaFormState | undefined,
+  excludeCreationFee: boolean,
+) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
@@ -65,6 +71,7 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
   const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
+  const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
@@ -93,20 +100,33 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
       throw Error('No pairs found');
     }
 
+    if (!price) {
+      throw Error('No price data found');
+    }
+
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
       msgs.push(getGrantMsg(senderAddress, chain));
     }
 
-    const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress);
+    const createVaultMsg = buildCreateVaultParams(
+      formName,
+      state,
+      pairs,
+      transactionType,
+      senderAddress,
+      Number(dexPrice),
+    );
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 
     msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
-    const tokensToCoverFee = createStrategyFeeInTokens(price);
-    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+    if (!excludeCreationFee) {
+      const tokensToCoverFee = createStrategyFeeInTokens(price);
+      msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+    }
 
     return executeCreateVault(client, senderAddress, msgs, fee);
   });
@@ -115,17 +135,17 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 export const useCreateVaultDca = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, false);
 };
 
 export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useDcaPlusConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, false);
 };
 
 export const useCreateVaultWeightedScale = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useWeightedScaleConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, true);
 };

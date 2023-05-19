@@ -105,10 +105,9 @@ export function WeightedScaleCustomisePage({
                   resultingDenom={state.step1.resultingDenom}
                   transactionType={transactionType}
                 />
-                <ApplyMultiplier />
                 <BasePrice formName={formName} transactionType={transactionType} />
                 <Collapse in={values.advancedSettings}>
-                  <ApplyMultiplier />
+                  <ApplyMultiplier transactionType={transactionType} />
                   <BasePrice formName={formName} transactionType={transactionType} />
                   <Box m="px">
                     <SlippageTolerance />
