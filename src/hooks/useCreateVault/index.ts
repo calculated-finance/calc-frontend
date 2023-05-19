@@ -15,6 +15,7 @@ import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chain
 import { FormNames } from '@hooks/useFormStore';
 import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
+import usePrice from '@hooks/usePrice';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -70,6 +71,8 @@ const useCreateVault = (
   const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
+  const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
+  console.log(transactionType);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
@@ -98,13 +101,24 @@ const useCreateVault = (
       throw Error('No pairs found');
     }
 
+    if (!price) {
+      throw Error('No price data found');
+    }
+
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
       msgs.push(getGrantMsg(senderAddress, chain));
     }
 
-    const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress);
+    const createVaultMsg = buildCreateVaultParams(
+      formName,
+      state,
+      pairs,
+      transactionType,
+      senderAddress,
+      Number(dexPrice),
+    );
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);
 
