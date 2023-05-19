@@ -78,7 +78,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {getStrategyExecutionInterval(strategy)}
             </Text>
           </GridItem>
-          {!isWeightedScale && <SwapEachCycle strategy={strategy} />}
+          {!isWeightedScale(strategy) && <SwapEachCycle strategy={strategy} />}
           {Boolean(strategy.slippage_tolerance) && (
             <>
               <GridItem colSpan={1}>
