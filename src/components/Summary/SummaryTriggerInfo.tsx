@@ -52,7 +52,13 @@ export function TimeTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedS
   );
 }
 
-export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedScaleState }) {
+export function PriceTriggerInfo({
+  state,
+  transactionType,
+}: {
+  state: DcaInFormDataAll | WeightedScaleState;
+  transactionType: string;
+}) {
   const { initialDenom, resultingDenom, startPrice } = state;
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
@@ -61,21 +67,44 @@ export function PriceTriggerInfo({ state }: { state: DcaInFormDataAll | Weighted
     <>
       Starting when{' '}
       <BadgeButton url="customise">
-        <Text>{resultingDenomName}</Text>
-        <DenomIcon denomName={resultingDenom} />
-        <Text pt={1} fontSize="xs">
-          &le;
-        </Text>
-        <Text>
-          {startPrice} {initialDenomName}
-        </Text>
-        <DenomIcon denomName={initialDenom} />
+        {transactionType === 'buy' ? (
+          <>
+            {' '}
+            <Text>{resultingDenomName}</Text>
+            <DenomIcon denomName={resultingDenom} />
+            <Text pt={1} fontSize="xs">
+              &le;
+            </Text>
+            <Text>
+              {startPrice} {initialDenomName}
+            </Text>
+            <DenomIcon denomName={initialDenom} />
+          </>
+        ) : (
+          <>
+            <Text>1 {initialDenomName}</Text>
+            <DenomIcon denomName={initialDenom} />
+            <Text pt={1} fontSize="xs">
+              &ge;
+            </Text>
+            <Text>
+              {startPrice} {resultingDenomName}
+            </Text>
+            <DenomIcon denomName={resultingDenom} />
+          </>
+        )}
       </BadgeButton>
     </>
   );
 }
 
-export function SummaryTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedScaleState }) {
+export function SummaryTriggerInfo({
+  state,
+  transactionType,
+}: {
+  state: DcaInFormDataAll | WeightedScaleState;
+  transactionType: string;
+}) {
   const { startImmediately, triggerType } = state;
 
   if (startImmediately === StartImmediatelyValues.Yes) {
@@ -84,5 +113,5 @@ export function SummaryTriggerInfo({ state }: { state: DcaInFormDataAll | Weight
   if (triggerType === TriggerTypes.Date) {
     return <TimeTriggerInfo state={state} />;
   }
-  return <PriceTriggerInfo state={state} />;
+  return <PriceTriggerInfo state={state} transactionType={transactionType} />;
 }

@@ -8,7 +8,7 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwap({ state }: { state: DcaInFormDataAll }) {
+export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
   const { initialDenom, resultingDenom, initialDeposit, swapAmount, executionInterval } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -22,7 +22,7 @@ export function SummaryTheSwap({ state }: { state: DcaInFormDataAll }) {
     <Box data-testid="summary-the-swap">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <SummaryTriggerInfo state={state} />, CALC will swap{' '}
+        <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
             {String.fromCharCode(8275)} {swapAmount} {initialDenomName}

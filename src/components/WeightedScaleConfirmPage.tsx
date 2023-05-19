@@ -1,31 +1,41 @@
 import { Divider, Stack } from '@chakra-ui/react';
-import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
-import { useCreateVaultDca } from '@hooks/useCreateVault';
+import { FormNames } from 'src/hooks/useFormStore';
+import { useCreateVaultWeightedScale } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
-import { FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
-import { SummaryTheSwap } from '@components/Summary/SummaryTheSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
+import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
+import { FormikHelpers } from 'formik';
+import { SummaryTheSwapWeightedScale } from '@components/Summary/SummaryTheSwapWeightedScale';
+import FeesWeightedScale from '@components/FeesWeightedScale';
 import { StrategyTypes } from '@models/StrategyTypes';
-import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
-import dcaOutSteps from '@formConfig/dcaOut';
-import { FormNames } from '@hooks/useFormStore';
+import { WeightSummary } from '@components/WeightSummary';
+import { StepConfig } from '@formConfig/StepConfig';
 
-function Page() {
-  const { state, actions } = useConfirmForm(FormNames.DcaOut);
+export function WeightedScaleConfirmPage({
+  formName,
+  steps,
+  transactionType,
+  strategyType,
+}: {
+  formName: FormNames;
+  steps: StepConfig[];
+  transactionType: TransactionType;
+  strategyType: StrategyTypes;
+}) {
+  const { state, actions } = useWeightedScaleConfirmForm(formName);
   const { isPageLoading } = usePageLoad();
-  const { nextStep, goToStep } = useSteps(dcaOutSteps);
+  const { nextStep, goToStep } = useSteps(steps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
+  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
@@ -46,14 +56,12 @@ function Page() {
     goToStep(0);
   };
 
-  const transactionType = TransactionType.Sell;
-
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
+      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
@@ -62,17 +70,25 @@ function Page() {
               initialDeposit={state.initialDeposit}
             />
             <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
-            <SummaryTheSwap state={state} transactionType={transactionType} />
+            <SummaryYourDeposit state={state} strategyType={strategyType} />
+            <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
+            <WeightSummary
+              transactionType={transactionType}
+              applyMultiplier={state.applyMultiplier}
+              swapMultiplier={state.swapMultiplier}
+              swapAmount={state.swapAmount}
+              basePrice={state.basePriceValue}
+            />
             <SummaryWhileSwapping
               initialDenom={state.initialDenom}
               resultingDenom={state.resultingDenom}
-              priceThresholdValue={state.priceThresholdValue}
+              priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
               transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
-            <Fees formName={FormNames.DcaOut} transactionType={TransactionType.Sell} />
+
+            <FeesWeightedScale formName={formName} transactionType={transactionType} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
@@ -82,6 +98,3 @@ function Page() {
     </NewStrategyModal>
   );
 }
-Page.getLayout = getFlowLayout;
-
-export default Page;

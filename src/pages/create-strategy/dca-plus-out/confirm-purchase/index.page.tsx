@@ -49,6 +49,8 @@ function Page() {
     actions.resetAction();
     goToStep(0);
   };
+
+  const transactionType = TransactionType.Sell;
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
@@ -66,6 +68,7 @@ function Page() {
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
             <SummaryTheSwapDcaPlus state={state} />
             <SummaryWhileSwapping
+              transactionType={transactionType}
               initialDenom={state.initialDenom}
               resultingDenom={state.resultingDenom}
               priceThresholdValue={undefined}
