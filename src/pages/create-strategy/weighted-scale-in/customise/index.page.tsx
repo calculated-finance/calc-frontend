@@ -100,7 +100,13 @@ export function WeightedScaleCustomisePage({
                 </Collapse>
                 <ExecutionInterval />
                 <BaseSwapAmount step1State={state.step1} />
-                <SwapMultiplier initialDenom={state.step1.initialDenom} transactionType={transactionType} />
+                <SwapMultiplier
+                  initialDenom={state.step1.initialDenom}
+                  resultingDenom={state.step1.resultingDenom}
+                  transactionType={transactionType}
+                />
+                <ApplyMultiplier />
+                <BasePrice formName={formName} transactionType={transactionType} />
                 <Collapse in={values.advancedSettings}>
                   <ApplyMultiplier />
                   <BasePrice formName={formName} transactionType={transactionType} />

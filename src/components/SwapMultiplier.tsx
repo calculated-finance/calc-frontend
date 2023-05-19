@@ -22,9 +22,11 @@ import { WeightSummary } from './WeightSummary';
 
 export default function SwapMultiplier({
   initialDenom,
+  resultingDenom,
   transactionType,
 }: {
   initialDenom: Denom;
+  resultingDenom: Denom;
   transactionType: TransactionType;
 }) {
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
@@ -67,6 +69,8 @@ export default function SwapMultiplier({
         swapMultiplier={value}
         swapAmount={swapAmount}
         basePrice={basePriceIsCurrentPrice === YesNoValues.No ? basePrice : null}
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
       />
     </FormControl>
   );
