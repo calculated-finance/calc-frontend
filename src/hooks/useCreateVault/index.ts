@@ -72,7 +72,6 @@ const useCreateVault = (
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
-  console.log(transactionType);
 
   return useMutation<Strategy['id'], Error>(() => {
     if (!state) {
