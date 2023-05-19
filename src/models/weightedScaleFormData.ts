@@ -17,7 +17,13 @@ export const weightedScaleSchema = Yup.object({
   reinvestStrategy: allSchema.reinvestStrategy,
   executionInterval: allSchema.executionInterval,
   swapAmount: allSchema.swapAmount,
-  basePriceIsCurrentPrice: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
+  basePriceIsCurrentPrice: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .required()
+    .when('advancedSettings', {
+      is: false,
+      then: (schema) => schema.transform(() => YesNoValues.Yes),
+    }),
   basePriceValue: Yup.number()
     .nullable()
     .label('Base Price')
@@ -29,7 +35,10 @@ export const weightedScaleSchema = Yup.object({
     }),
   swapMultiplier: Yup.number().required(),
   applyMultiplier: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
-  startImmediately: allSchema.startImmediately,
+  startImmediately: allSchema.startImmediately.when('advancedSettings', {
+    is: false,
+    then: (schema) => schema.transform(() => YesNoValues.Yes),
+  }),
   triggerType: allSchema.triggerType,
   startDate: allSchema.startDate,
   startPrice: allSchema.startPrice,
