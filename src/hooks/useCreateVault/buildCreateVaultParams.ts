@@ -223,8 +223,6 @@ export function buildCreateVaultParamsWeightedScale(
 ) {
   const { chain } = useChainStore.getState();
 
-  console.log(currentPrice);
-
   const msg = {
     create_vault: {
       label: '',

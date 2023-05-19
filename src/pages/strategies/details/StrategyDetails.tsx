@@ -283,6 +283,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
               applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
               basePrice={getBasePrice(strategy)}
+              initialDenom={getStrategyInitialDenom(strategy)}
+              resultingDenom={getStrategyResultingDenom(strategy)}
             />
           </Box>
         </Box>

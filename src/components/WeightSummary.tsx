@@ -3,9 +3,7 @@ import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Chains, useChain } from '@hooks/useChain';
 import usePrice from '@hooks/usePrice';
-import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { isNil } from 'lodash';
 import { TransactionType } from './TransactionType';
 
@@ -18,7 +16,6 @@ export function WeightsGrid({
   applyMultiplier,
   basePrice,
   price,
-  osmosisPrice,
 }: {
   swapAmount: number;
   swapMultiplier: number;
@@ -26,7 +23,6 @@ export function WeightsGrid({
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
   price: string | undefined;
-  osmosisPrice: string | undefined;
 }) {
   const swapAmountSafe = swapAmount ?? 0;
   const calcSwapFromPriceDelta = (priceDelta: number) => {
@@ -55,7 +51,7 @@ export function WeightsGrid({
     <Grid templateColumns="repeat(12, 1fr)" columnGap={2} rowGap={3}>
       <GridItem colSpan={3}>Price (USD) $</GridItem>
       {weights.map((weight) => {
-        const displayPrice = basePrice || price || osmosisPrice;
+        const displayPrice = basePrice || price;
         return (
           <GridItem colSpan={1} key={weight}>
             {(Number(displayPrice) + Number(displayPrice) * weight).toFixed(2)}
@@ -100,14 +96,7 @@ export function WeightSummary({
   initialDenom: Denom;
   resultingDenom: Denom;
 }) {
-  const { chain } = useChain();
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType, chain === Chains.Kujira);
-  const { price: osmosisPrice } = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Osmosis,
-  );
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -126,7 +115,7 @@ export function WeightSummary({
           <Text>
             Base Price:{' '}
             <Text as="span" color="blue.200">
-              {`1 ${priceOfDenomName} = ${isNil(basePrice) ? price || osmosisPrice : basePrice} ${priceInDenomName}`}
+              {`1 ${priceOfDenomName} = ${isNil(basePrice) ? price : basePrice} ${priceInDenomName}`}
             </Text>
           </Text>
         </HStack>
@@ -138,7 +127,6 @@ export function WeightSummary({
           applyMultiplier={applyMultiplier}
           basePrice={basePrice}
           price={price}
-          osmosisPrice={osmosisPrice}
         />
       </Stack>
     </Box>
