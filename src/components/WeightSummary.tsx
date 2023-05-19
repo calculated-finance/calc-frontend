@@ -32,7 +32,9 @@ export function WeightsGrid({
   const calcSwapFromPriceDelta = (priceDelta: number) => {
     const weightDisabled =
       applyMultiplier === YesNoValues.No && (transactionType === TransactionType.Buy ? priceDelta > 0 : priceDelta < 0);
-    const value = weightDisabled ? swapAmountSafe : swapAmountSafe * (1 - priceDelta * swapMultiplier);
+
+    const buySellPriceDelta = transactionType === TransactionType.Buy ? priceDelta : -priceDelta;
+    const value = weightDisabled ? swapAmountSafe : swapAmountSafe * (1 - buySellPriceDelta * swapMultiplier);
 
     if (value < 0) {
       return 0;
