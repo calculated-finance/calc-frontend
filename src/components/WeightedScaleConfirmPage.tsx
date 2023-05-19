@@ -94,7 +94,8 @@ export function WeightedScaleConfirmPage({
               state={state}
               transactionType={transactionType}
               swapFee={SWAP_FEE_WS}
-              swapFeeTooltip="This will be 1% of the resulting swap amount, shown here as 1% of the base swap."
+              swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
+              excludeDepositFee
             />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>

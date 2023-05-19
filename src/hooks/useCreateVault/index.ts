@@ -56,7 +56,12 @@ function getFee() {
   return FEE;
 }
 
-const useCreateVault = (formName: FormNames, transactionType: TransactionType, state: DcaFormState | undefined) => {
+const useCreateVault = (
+  formName: FormNames,
+  transactionType: TransactionType,
+  state: DcaFormState | undefined,
+  excludeCreationFee: boolean,
+) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
@@ -105,8 +110,10 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 
     msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
-    const tokensToCoverFee = createStrategyFeeInTokens(price);
-    msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+    if (!excludeCreationFee) {
+      const tokensToCoverFee = createStrategyFeeInTokens(price);
+      msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+    }
 
     return executeCreateVault(client, senderAddress, msgs, fee);
   });
@@ -115,17 +122,17 @@ const useCreateVault = (formName: FormNames, transactionType: TransactionType, s
 export const useCreateVaultDca = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, false);
 };
 
 export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useDcaPlusConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, false);
 };
 
 export const useCreateVaultWeightedScale = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useWeightedScaleConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state);
+  return useCreateVault(formName, transactionType, state, true);
 };

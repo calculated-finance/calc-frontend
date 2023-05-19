@@ -80,7 +80,7 @@ function FeeBreakdown({
           <Stack direction="column" px={2} pb={4}>
             <Flex flexDirection="row" mt={0} gap={3}>
               <Flex flexGrow={1} flexDirection="column">
-                <Heading size="xs">Once off</Heading>
+                <Heading size="xs">Deposit fee</Heading>
                 <Stack spacing={0}>
                   <Flex>
                     <Text textStyle="body-xs">Transaction fees:</Text>
