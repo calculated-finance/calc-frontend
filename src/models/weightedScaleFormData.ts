@@ -34,7 +34,13 @@ export const weightedScaleSchema = Yup.object({
       otherwise: (schema) => schema.transform(() => null),
     }),
   swapMultiplier: Yup.number().required(),
-  applyMultiplier: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
+  applyMultiplier: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .required()
+    .when('advancedSettings', {
+      is: false,
+      then: (schema) => schema.transform(() => YesNoValues.Yes),
+    }),
   startImmediately: allSchema.startImmediately.when('advancedSettings', {
     is: false,
     then: (schema) => schema.transform(() => YesNoValues.Yes),
