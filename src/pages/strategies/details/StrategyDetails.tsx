@@ -1,5 +1,18 @@
 import { PlusSquareIcon } from '@chakra-ui/icons';
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, Button, HStack, Tooltip } from '@chakra-ui/react';
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Box,
+  Text,
+  Divider,
+  Badge,
+  Flex,
+  Button,
+  HStack,
+  Tooltip,
+  Stack,
+} from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
@@ -25,6 +38,7 @@ import {
   isStrategyOperating,
   isBuyStrategy,
   getStrategyExecutionInterval,
+  getBasePrice,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
@@ -34,7 +48,9 @@ import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isNil } from 'lodash';
-import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import { WeightSummary } from '@components/WeightSummary';
+import YesNoValues from '@models/YesNoValues';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -130,127 +146,145 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
-      <Heading pb={4} size="md">
-        Strategy details
-      </Heading>
-      <Box px={8} py={6} layerStyle="panel">
-        <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
-          <GridItem colSpan={1}>
-            <Heading size="xs">Strategy status</Heading>
-          </GridItem>
-          <GridItem colSpan={1} data-testid="strategy-status">
-            <StrategyStatusBadge strategy={strategy} />
-          </GridItem>
-          <GridItem colSpan={1} visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
-            <Flex justifyContent="end">
-              <CancelButton strategy={strategy} />
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Strategy name</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-name">
-              {getStrategyName(strategy)}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={3}>
-            <Divider />
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Strategy type</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-type">
-              {strategyType}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Strategy start date</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-start-date">
-              {startDate}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Estimated strategy end date</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-              {(isDcaPlus(strategy) || isWeightedScale(strategy)) && isStrategyOperating(strategy) ? (
-                <>
-                  Between {getStrategyEndDateRange(strategy, events).min} and{' '}
-                  {getStrategyEndDateRange(strategy, events).max}
-                </>
-              ) : (
-                getStrategyEndDate(strategy, events)
-              )}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Investment cycle</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-investment-cycle">
-              {getStrategyExecutionInterval(strategy)}
-            </Text>
-          </GridItem>
-          <SwapEachCycle strategy={strategy} />
-          {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
-          {Boolean(strategy.slippage_tolerance) && (
-            <>
+      <Stack spacing={6}>
+        <Box>
+          <Heading pb={4} size="md">
+            Strategy details
+          </Heading>
+          <Box px={8} py={6} layerStyle="panel">
+            <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
               <GridItem colSpan={1}>
-                <Heading size="xs">Slippage tolerance</Heading>
+                <Heading size="xs">Strategy status</Heading>
+              </GridItem>
+              <GridItem colSpan={1} data-testid="strategy-status">
+                <StrategyStatusBadge strategy={strategy} />
+              </GridItem>
+              <GridItem colSpan={1} visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
+                <Flex justifyContent="end">
+                  <CancelButton strategy={strategy} />
+                </Flex>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy name</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
-                  {getSlippageTolerance(strategy)}
+                <Text fontSize="sm" data-testid="strategy-name">
+                  {getStrategyName(strategy)}
                 </Text>
               </GridItem>
-            </>
-          )}
-          {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
-            <>
+              <GridItem colSpan={3}>
+                <Divider />
+              </GridItem>
               <GridItem colSpan={1}>
-                <Heading size="xs">{strategyType === StrategyTypes.DCAIn ? 'Price ceiling' : 'Price floor'}</Heading>
+                <Heading size="xs">Strategy type</Heading>
               </GridItem>
               <GridItem colSpan={2}>
-                <HStack>
-                  <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy)}{' '}
-                    {getDenomInfo(strategyType === StrategyTypes.DCAIn ? initialDenom : resultingDenom).name}
-                  </Text>
-                  <Badge colorScheme="green">Set</Badge>
-                </HStack>
+                <Text fontSize="sm" data-testid="strategy-type">
+                  {strategyType}
+                </Text>
               </GridItem>
-            </>
-          )}
-          <GridItem colSpan={1}>
-            <Heading size="xs">Current amount in vault</Heading>
-          </GridItem>
-          <GridItem colSpan={1}>
-            <Text fontSize="sm" data-testid="strategy-current-balance">
-              {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
-            </Text>
-          </GridItem>
-          <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
-            <Flex justify="end">
-              <Link href={generateStrategyTopUpUrl(strategy.id)}>
-                <Button
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="brand"
-                  leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                >
-                  Add more funds
-                </Button>
-              </Link>
-            </Flex>
-          </GridItem>
-          {Boolean(destinations.length) && <DestinationDetails strategy={strategy} />}
-        </Grid>
-      </Box>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy start date</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" data-testid="strategy-start-date">
+                  {startDate}
+                </Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Estimated strategy end date</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" data-testid="estimated-strategy-end-date">
+                  {(isDcaPlus(strategy) || isWeightedScale(strategy)) && isStrategyOperating(strategy) ? (
+                    <>
+                      Between {getStrategyEndDateRange(strategy, events).min} and{' '}
+                      {getStrategyEndDateRange(strategy, events).max}
+                    </>
+                  ) : (
+                    getStrategyEndDate(strategy, events)
+                  )}
+                </Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Investment cycle</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Text fontSize="sm" data-testid="strategy-investment-cycle">
+                  {getStrategyExecutionInterval(strategy)}
+                </Text>
+              </GridItem>
+              <SwapEachCycle strategy={strategy} />
+              {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
+              {Boolean(strategy.slippage_tolerance) && (
+                <>
+                  <GridItem colSpan={1}>
+                    <Heading size="xs">Slippage tolerance</Heading>
+                  </GridItem>
+                  <GridItem colSpan={2}>
+                    <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
+                      {getSlippageTolerance(strategy)}
+                    </Text>
+                  </GridItem>
+                </>
+              )}
+              {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
+                <>
+                  <GridItem colSpan={1}>
+                    <Heading size="xs">
+                      {strategyType === StrategyTypes.DCAIn ? 'Price ceiling' : 'Price floor'}
+                    </Heading>
+                  </GridItem>
+                  <GridItem colSpan={2}>
+                    <HStack>
+                      <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
+                        {getPriceCeilingFloor(strategy)}{' '}
+                        {getDenomInfo(strategyType === StrategyTypes.DCAIn ? initialDenom : resultingDenom).name}
+                      </Text>
+                      <Badge colorScheme="green">Set</Badge>
+                    </HStack>
+                  </GridItem>
+                </>
+              )}
+              <GridItem colSpan={1}>
+                <Heading size="xs">Current amount in vault</Heading>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Text fontSize="sm" data-testid="strategy-current-balance">
+                  {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+                </Text>
+              </GridItem>
+              <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
+                <Flex justify="end">
+                  <Link href={generateStrategyTopUpUrl(strategy.id)}>
+                    <Button
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="brand"
+                      leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                    >
+                      Add more funds
+                    </Button>
+                  </Link>
+                </Flex>
+              </GridItem>
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} />}
+            </Grid>
+          </Box>
+        </Box>
+        <Box>
+          <Heading pb={4} size="md">
+            Swap multiplier
+          </Heading>
+          <WeightSummary
+            swapAmount={getConvertedSwapAmount(strategy)}
+            swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
+            transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
+            applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
+            basePrice={getBasePrice(strategy)}
+          />
+        </Box>
+      </Stack>
     </GridItem>
   );
 }
