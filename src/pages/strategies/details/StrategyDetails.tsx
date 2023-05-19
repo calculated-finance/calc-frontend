@@ -214,7 +214,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   {getStrategyExecutionInterval(strategy)}
                 </Text>
               </GridItem>
-              <SwapEachCycle strategy={strategy} />
+              {!isWeightedScale && <SwapEachCycle strategy={strategy} />}
               {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
               {Boolean(strategy.slippage_tolerance) && (
                 <>
@@ -272,22 +272,24 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             </Grid>
           </Box>
         </Box>
-        <Box>
-          <Heading pb={4} size="md">
-            Swap multiplier
-          </Heading>
-          <Box px={3} py={2} layerStyle="panel">
-            <WeightSummary
-              swapAmount={getConvertedSwapAmount(strategy)}
-              swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
-              transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
-              applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
-              basePrice={getBasePrice(strategy)}
-              initialDenom={getStrategyInitialDenom(strategy)}
-              resultingDenom={getStrategyResultingDenom(strategy)}
-            />
+        {isWeightedScale(strategy) && (
+          <Box>
+            <Heading pb={4} size="md">
+              Swap multiplier
+            </Heading>
+            <Box px={3} py={2} layerStyle="panel">
+              <WeightSummary
+                swapAmount={getConvertedSwapAmount(strategy)}
+                swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
+                transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
+                applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
+                basePrice={getBasePrice(strategy)}
+                initialDenom={getStrategyInitialDenom(strategy)}
+                resultingDenom={getStrategyResultingDenom(strategy)}
+              />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Stack>
     </GridItem>
   );
