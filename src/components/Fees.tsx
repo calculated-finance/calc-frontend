@@ -35,6 +35,7 @@ function FeeBreakdown({
   applyPromo,
   dexFee,
   swapFee,
+  excludeDepositFee,
 }: {
   initialDenomName: string;
   swapAmount: number;
@@ -42,6 +43,7 @@ function FeeBreakdown({
   applyPromo: boolean;
   dexFee: number;
   swapFee: number;
+  excludeDepositFee: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
   const { chain } = useChain();
@@ -75,16 +77,38 @@ function FeeBreakdown({
 
         <Collapse in={isOpen}>
           <Flex flexDirection="row" px={2} pb={4} mt={0} gap={3}>
-            <Flex flexGrow={1} flexDirection="column">
-              <Heading size="xs">Once off</Heading>
+            <Flex flexGrow={10} flexDirection="column">
+              <Heading size="xs">Deposit fee</Heading>
               <Stack spacing={0}>
                 <Flex>
                   <Text textStyle="body-xs">Transaction fees:</Text>
                   <Spacer />
-                  <Text textStyle="body-xs" as="span">
-                    {' '}
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
+                  {excludeDepositFee ? (
+                    <Text textStyle="body-xs">Free</Text>
+                  ) : (
+                    <Text textStyle="body-xs" as="span">
+                      {' '}
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
+                    </Text>
+                  )}
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                  <Spacer />
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                </Flex>
+                <Flex>
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
+                  </Text>
+                  <Spacer />
+                  <Text textStyle="body-xs" color="abyss.200">
+                    -
                   </Text>
                 </Flex>
                 <Flex>
@@ -92,10 +116,16 @@ function FeeBreakdown({
                     Total fees and tax:
                   </Text>
                   <Spacer />
-                  <Text textStyle="body-xs" textColor="white" as="span">
-                    {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                    {initialDenomName}
-                  </Text>
+                  {excludeDepositFee ? (
+                    <Text textStyle="body-xs" textColor="white">
+                      Free
+                    </Text>
+                  ) : (
+                    <Text textStyle="body-xs" textColor="white" as="span">
+                      {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
+                      {initialDenomName}
+                    </Text>
+                  )}
                 </Flex>
               </Stack>
             </Flex>
@@ -182,11 +212,13 @@ export default function Fees({
   transactionType,
   swapFee,
   swapFeeTooltip,
+  excludeDepositFee = false,
 }: {
   state: DcaInFormDataAll | WeightedScaleState;
   transactionType: TransactionType;
   swapFee: number;
   swapFeeTooltip?: string;
+  excludeDepositFee?: boolean;
 }) {
   const { price } = useFiatPrice(state?.initialDenom);
 
@@ -208,11 +240,17 @@ export default function Fees({
   return (
     <Stack spacing={0}>
       <Text textStyle="body-xs" as="span">
-        Deposit fee{' '}
-        <Text as="span" textColor="white">
-          {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
-        </Text>{' '}
-        +{' '}
+        {!excludeDepositFee ? (
+          <>
+            Deposit fee{' '}
+            <Text as="span" textColor="white">
+              {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
+            </Text>{' '}
+            +{' '}
+          </>
+        ) : (
+          <>Fees: </>
+        )}
         <Tooltip label={swapFeeTooltip} placement="top">
           <Text as="span" textColor="white">
             {String.fromCharCode(8275)} {getPrettyFee(swapAmount!, swapFee + dexFee)} {initialDenomName}
@@ -228,6 +266,7 @@ export default function Fees({
         applyPromo={applyPromo}
         dexFee={dexFee}
         swapFee={swapFee}
+        excludeDepositFee={excludeDepositFee}
       />
     </Stack>
   );
