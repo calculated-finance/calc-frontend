@@ -90,6 +90,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
 
+  console.log('yo');
+
   return (
     <>
       <GridItem colSpan={1}>
@@ -143,6 +145,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const startDate = getStrategyStartDate(strategy);
 
   const { data: events } = useStrategyEvents(strategy.id);
+
+  console.log(!isWeightedScale(strategy));
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
@@ -214,7 +218,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   {getStrategyExecutionInterval(strategy)}
                 </Text>
               </GridItem>
-              {!isWeightedScale && <SwapEachCycle strategy={strategy} />}
+              {!isWeightedScale(strategy) && <SwapEachCycle strategy={strategy} />}
               {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
               {Boolean(strategy.slippage_tolerance) && (
                 <>
