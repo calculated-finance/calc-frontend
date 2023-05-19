@@ -114,7 +114,7 @@ export function WeightSummary({
   const { name: priceInDenomName } = getDenomInfo(priceInDenom);
 
   return (
-    <Box fontSize="10px" bg="abyss.200" p={4} borderRadius="md" color="white">
+    <Box fontSize="10px" bg="deepHorizon" p={4} borderRadius="md" color="white">
       <Stack spacing={3}>
         <HStack justify="space-between">
           <Text>Base Swap: {swapAmount || 0} axlUSDC</Text>

@@ -12,7 +12,7 @@ import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExe
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
 import { isDcaPlus } from './isDcaPlus';
-import { isWeightedScale } from './isWeightedScale';
+import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {
@@ -192,11 +192,7 @@ export function isStrategyAutoStaking(strategy: Strategy) {
   return isAutoStaking(strategy.destinations);
 }
 
-export function getPriceCeilingFloor(strategy: Vault) {
-  if (!strategy.minimum_receive_amount) {
-    return undefined;
-  }
-
+export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) {
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
@@ -204,10 +200,27 @@ export function getPriceCeilingFloor(strategy: Vault) {
     : getDenomInfo(initialDenom);
 
   const price = isBuyStrategy(strategy)
-    ? parseFloat(strategy.swap_amount) / parseFloat(strategy.minimum_receive_amount)
-    : parseFloat(strategy.minimum_receive_amount) / parseFloat(strategy.swap_amount);
+    ? parseFloat(strategy.swap_amount) / parseFloat(receiveAmount)
+    : parseFloat(receiveAmount) / parseFloat(strategy.swap_amount);
 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
+}
+
+export function getPriceCeilingFloor(strategy: Vault) {
+  if (!strategy.minimum_receive_amount) {
+    return undefined;
+  }
+
+  return convertReceiveAmount(strategy, strategy.minimum_receive_amount);
+}
+
+export function getBasePrice(strategy: Vault) {
+  const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
+  if (!base_receive_amount) {
+    return undefined;
+  }
+
+  return convertReceiveAmount(strategy, base_receive_amount);
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
