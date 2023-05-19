@@ -95,13 +95,15 @@ export function WeightedScaleCustomisePage({
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={transactionType} formName={formName} />
+                <Collapse in={values.advancedSettings}>
+                  <TriggerForm transactionType={transactionType} formName={formName} />
+                </Collapse>
                 <ExecutionInterval />
                 <BaseSwapAmount step1State={state.step1} />
                 <SwapMultiplier initialDenom={state.step1.initialDenom} transactionType={transactionType} />
-                <ApplyMultiplier />
-                <BasePrice formName={formName} transactionType={transactionType} />
                 <Collapse in={values.advancedSettings}>
+                  <ApplyMultiplier />
+                  <BasePrice formName={formName} transactionType={transactionType} />
                   <Box m="px">
                     <SlippageTolerance />
                   </Box>
