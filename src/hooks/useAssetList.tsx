@@ -8,14 +8,11 @@ export function findAsset(assets: Asset[], denom: string | undefined) {
 }
 
 export function useAssetList(): { isLoading: any; error: any; data: any } {
+  const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
 
-  const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main'
-
-  const chainIdentifier = isMainnet() ? 'osmosis-1/osmosis-1' : 'osmo-test-4/osmo-test-4'
+  const chainIdentifier = isMainnet() ? 'osmosis-1/osmosis-1' : 'osmo-test-5/osmo-test-5';
 
   return useQueryWithNotification<AssetList>(['assetList'], () =>
-    fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`).then(
-      (res) => res.json(),
-    ),
+    fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`).then((res) => res.json()),
   );
 }

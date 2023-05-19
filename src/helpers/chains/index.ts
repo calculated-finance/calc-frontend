@@ -58,9 +58,9 @@ const osmoMainnetConfig = {
 } as ChainInfo;
 
 const osmoTestnetConfig = {
-  chainId: 'osmo-test-4',
+  chainId: 'osmo-test-5',
   chainName: 'Osmosis Testnet',
-  rpc: 'https://rpc-test.osmosis.zone',
+  rpc: 'https://rpc.osmotest5.osmosis.zone:443',
   rest: 'https://lcd-test.osmosis.zone',
   bip44: {
     coinType: 118,
@@ -139,7 +139,7 @@ export function getChainContractAddress(chain: Chains) {
     if (isMainnet()) {
       return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
     }
-    return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
+    return 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f';
   }
 
   return CONTRACT_ADDRESS;
@@ -202,7 +202,7 @@ export function getOsmosisWebUrl() {
 export function getMarsAddress() {
   return isMainnet()
     ? 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg'
-    : 'osmo1t0dl6r27phqetfu0geaxrng0u9zn8qgrdwztapt5xr32adtwptaq6vwg36';
+    : 'osmo1dl4rylasnd7mtfzlkdqn2gr0ss4gvyykpvr6d7t5ylzf6z535n9s5jjt8u';
 }
 
 export function getMarsUrl() {
