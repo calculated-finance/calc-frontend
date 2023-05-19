@@ -24,7 +24,7 @@ export function SummaryTheSwapWeightedScale({
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
   const { chain } = useChain();
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType, chain === Chains.Kujira);
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
   const { price: osmosisPrice } = usePriceOsmosis(
     resultingDenom,
     initialDenom,
