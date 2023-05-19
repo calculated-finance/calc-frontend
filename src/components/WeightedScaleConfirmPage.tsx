@@ -14,11 +14,12 @@ import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import { FormikHelpers } from 'formik';
 import { SummaryTheSwapWeightedScale } from '@components/Summary/SummaryTheSwapWeightedScale';
-import FeesWeightedScale from '@components/FeesWeightedScale';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
+import { SWAP_FEE_WS } from 'src/constants';
+import Fees from './Fees';
 
 export function WeightedScaleConfirmPage({
   formName,
@@ -89,8 +90,12 @@ export function WeightedScaleConfirmPage({
               transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
-
-            <FeesWeightedScale formName={formName} transactionType={transactionType} />
+            <Fees
+              state={state}
+              transactionType={transactionType}
+              swapFee={SWAP_FEE_WS}
+              swapFeeTooltip="This will be 1% of the resulting swap amount, shown here as 1% of the base swap."
+            />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
