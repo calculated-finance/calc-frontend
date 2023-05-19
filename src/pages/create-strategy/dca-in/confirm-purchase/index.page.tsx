@@ -19,6 +19,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames } from '@hooks/useFormStore';
+import { SWAP_FEE } from 'src/constants';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
@@ -72,7 +73,7 @@ function Page() {
               transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
-            <Fees formName={FormNames.DcaIn} transactionType={TransactionType.Buy} />
+            <Fees state={state} transactionType={TransactionType.Buy} swapFee={SWAP_FEE} />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
