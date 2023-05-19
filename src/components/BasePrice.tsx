@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Collapse, Box } from '@chakra-ui/react';
+import { FormControl, FormLabel, HStack, useRadioGroup, Collapse, Box } from '@chakra-ui/react';
 import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
