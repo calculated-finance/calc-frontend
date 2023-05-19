@@ -17,7 +17,6 @@ import { Denom } from '@models/Denom';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { Chains, useChain } from '@hooks/useChain';
-import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { TransactionType } from './TransactionType';
 
@@ -39,18 +38,7 @@ export function DenomPriceInput({
   onChange: (value: number | undefined) => void;
 } & InputProps) {
   const { chain } = useChain();
-  const { price, pairAddress, isLoading } = usePrice(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Kujira,
-  );
-  const { price: osmosisPrice, isLoading: osmosisIsLoading } = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Osmosis,
-  );
+  const { price, pairAddress, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -87,7 +75,7 @@ export function DenomPriceInput({
           onValueChange={handleChange}
           value={value as number}
           defaultValue={defaultValue as number}
-          placeholder={`${price || osmosisPrice} ${priceInDenomName}`}
+          placeholder={`${price} ${priceInDenomName}`}
           {...inputProps}
         />
       </InputGroup>
@@ -109,8 +97,8 @@ export function DenomPriceInput({
               getDenomInfo(priceInDenom).osmosisId
             }`}
           >
-            <Button variant="link" fontWeight="normal" isLoading={osmosisIsLoading} colorScheme="blue">
-              Current price: 1 {priceOfDenomName} = {osmosisPrice} {priceInDenomName}
+            <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
+              Current price: 1 {priceOfDenomName} = {price} {priceInDenomName}
             </Button>
           </Link>
         </FormHelperText>
