@@ -3,7 +3,7 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import { WeightedScaleConfirmPage } from '../../weighted-scale-in/confirm-purchase/index.page';
+import { WeightedScaleConfirmPage } from '@components/WeightedScaleConfirmPage';
 
 function Page() {
   return (
