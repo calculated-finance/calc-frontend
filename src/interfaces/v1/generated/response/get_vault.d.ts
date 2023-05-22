@@ -61,7 +61,18 @@ export type PostExecutionAction = 'send' | 'z_delegate';
  */
 export type Addr = string;
 export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
-export type TimeInterval = 'half_hourly' | 'hourly' | 'half_daily' | 'daily' | 'weekly' | 'fortnightly' | 'monthly';
+export type TimeInterval =
+  | 'minute'
+  | 'half_hourly'
+  | 'hourly'
+  | 'hour'
+  | 'half_daily'
+  | 'daily'
+  | 'day'
+  | 'weekly'
+  | 'week'
+  | 'fortnightly'
+  | 'monthly';
 export type TriggerConfiguration =
   | {
       time: {
