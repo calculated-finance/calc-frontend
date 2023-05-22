@@ -34,7 +34,7 @@ export const initialValues = {
 
   executionInterval: 'daily',
   executionIntervalIncrement: 1,
-  executionIntervalPeriod: 'day',
+  // executionIntervalPeriod: 'day',
   swapAmount: null,
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
@@ -152,22 +152,22 @@ export const allSchema = {
     .positive()
     .integer()
     .nullable()
-    .when('executionInterval', {
-      is: '',
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
-    })
+    // .when('executionInterval', {
+    //   is: '',
+    //   then: (schema) => schema.required(),
+    //   otherwise: (schema) => schema.transform(() => null),
+    // })
     .transform((value, originalValue) => {
       if (originalValue === '') {
         return null;
       }
       return value;
     }),
-  executionIntervalPeriod: Yup.mixed<ExecutionIntervals>().when('executionInterval', {
-    is: '',
-    then: (schema) => schema.required(),
-    otherwise: (schema) => schema.transform(() => null),
-  }),
+  // executionIntervalPeriod: Yup.mixed<ExecutionIntervals>().when('executionInterval', {
+  //   is: '',
+  //   then: (schema) => schema.required(),
+  //   otherwise: (schema) => schema.transform(() => null),
+  // }),
 
   swapAmount: Yup.number()
     .label('Swap Amount')
@@ -378,7 +378,7 @@ export const dcaSchema = Yup.object({
   purchaseTime: allSchema.purchaseTime,
   executionInterval: allSchema.executionInterval,
   executionIntervalIncrement: allSchema.executionIntervalIncrement,
-  executionIntervalPeriod: allSchema.executionIntervalPeriod,
+  // executionIntervalPeriod: allSchema.executionIntervalPeriod,
   swapAmount: allSchema.swapAmount,
   slippageTolerance: allSchema.slippageTolerance,
   priceThresholdEnabled: allSchema.priceThresholdEnabled,
@@ -414,7 +414,7 @@ export const step2ValidationSchema = dcaSchema.pick([
   'purchaseTime',
   'executionInterval',
   'executionIntervalIncrement',
-  'executionIntervalPeriod',
+  // 'executionIntervalPeriod',
   'swapAmount',
   'slippageTolerance',
   'priceThresholdEnabled',
