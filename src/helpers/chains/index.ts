@@ -59,9 +59,9 @@ const osmoMainnetConfig = {
 
 const osmoTestnetConfig = {
   chainId: 'osmo-test-5',
-  chainName: 'Osmosis Testnet 5',
-  rpc: 'https://rpc.osmotest5.osmosis.zone:443',
-  rest: 'https://lcd-test.osmosis.zone',
+  chainName: 'Osmosis (osmo-test-5)',
+  rpc: 'https://rpc.osmotest5.osmosis.zone',
+  rest: 'https://lcd.osmotest5.osmosis.zone',
   bip44: {
     coinType: 118,
   },
