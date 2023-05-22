@@ -28,6 +28,8 @@ function Page() {
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
 
+  console.log('cheese increment:', state);
+
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(undefined, {
       onSuccess: async (strategyId) => {

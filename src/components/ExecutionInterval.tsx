@@ -66,7 +66,7 @@ function ExecutionIntervalCustom() {
   const [{ onChange, ...incrementField }, incrementMeta, incrementHelpers] = useField({
     name: 'executionIntervalIncrement',
   });
-  const [periodField, periodMeta, periodHelpers] = useField({ name: 'executionIntervalPeriod' });
+  const [periodField, periodMeta, periodHelpers] = useField({ name: 'executionInterval' });
 
   return (
     <FormControl>
