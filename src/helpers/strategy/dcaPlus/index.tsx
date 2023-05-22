@@ -14,7 +14,7 @@ import getStrategyBalance, {
   hasSwapFees,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+import { DcaPlusPerformanceResponse } from 'src/interfaces/v1/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, get, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';

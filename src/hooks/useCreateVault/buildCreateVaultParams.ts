@@ -1,7 +1,7 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
+import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/v1/generated/execute';
 import {
   Destination as OsmosisDestination,
   ExecuteMsg as OsmosisExecuteMsg,

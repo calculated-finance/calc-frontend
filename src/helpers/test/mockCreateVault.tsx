@@ -2,7 +2,7 @@
 import { when } from 'jest-when';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
-import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
 import { encode } from '../encode';
 
 export function mockStrategy(data?: Partial<Strategy>) {

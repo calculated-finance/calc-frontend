@@ -1,7 +1,7 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/generated/query';
+import { QueryMsg } from 'src/interfaces/v1/generated/query';
 import { QueryMsg as QueryMsgOsmosis } from 'src/interfaces/generated-osmosis/query';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+import { DcaPlusPerformanceResponse } from 'src/interfaces/v1/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';

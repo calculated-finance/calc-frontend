@@ -1,5 +1,5 @@
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis } from '@models/Denom';
-import { Coin } from 'src/interfaces/generated/response/get_vaults_by_address';
+import { Coin } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { isMainnet } from './isMainnet';
 
 type DenomInfo = {
