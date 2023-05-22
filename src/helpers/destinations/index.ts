@@ -1,5 +1,6 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { isAutoStaking } from '@helpers/isAutoStaking';
+import { isStrategyV2 } from '@helpers/strategy/isStrategyV2';
 import { Chains } from '@hooks/useChain';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -17,7 +18,7 @@ export function buildCallbackDestinations(
 
   if (autoStakeValidator) {
     destinations.push({
-      address: getChainContractAddress(Chains.Osmosis),
+      address: getChainContractAddress(chain),
       allocation: '1.0',
       msg: Buffer.from(
         JSON.stringify({
@@ -79,7 +80,7 @@ export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
 }
 
 export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy, chain: Chains) {
-  if (chain === Chains.Kujira) {
+  if (chain === Chains.Kujira && !isStrategyV2(strategy)) {
     if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
       return strategy.destinations.length && strategy.destinations[0].address;
     }
@@ -96,7 +97,7 @@ export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, ch
   const { destinations } = strategy;
   const [destination] = destinations;
 
-  if (chain === Chains.Kujira) {
+  if (chain === Chains.Kujira && !isStrategyV2(strategy)) {
     if (isAutoStaking((strategy as Strategy).destinations)) {
       return PostPurchaseOptions.Stake;
     }

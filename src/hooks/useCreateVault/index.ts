@@ -16,6 +16,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
+import { useVersion } from '@hooks/useVersion';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -68,6 +69,8 @@ const useCreateVault = (
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
 
+  const version = useVersion();
+
   const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
@@ -104,6 +107,10 @@ const useCreateVault = (
       throw Error('No price data found');
     }
 
+    if (!version) {
+      throw Error('No version found');
+    }
+
     const { autoStakeValidator } = state;
 
     if (autoStakeValidator) {
@@ -117,6 +124,7 @@ const useCreateVault = (
       transactionType,
       senderAddress,
       Number(dexPrice),
+      version,
     );
 
     const funds = getFunds(state.initialDenom, state.initialDeposit);

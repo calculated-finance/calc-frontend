@@ -44,13 +44,6 @@ export type Timestamp = Uint64;
  */
 export type Uint64 = string;
 /**
- * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
- *
- * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
- */
-export type Decimal = string;
-export type PostExecutionAction = "send" | "z_delegate";
-/**
  * A human readable address.
  *
  * In Cosmos, this is typically bech32 encoded. But for multi-chain smart contracts no assumptions should be made other than being UTF-8 encoded and of reasonable length.
@@ -60,17 +53,59 @@ export type PostExecutionAction = "send" | "z_delegate";
  * This type is immutable. If you really need to mutate it (Really? Are you sure?), create a mutable copy using `let mut mutable = Addr::to_string()` and operate on that `String` instance.
  */
 export type Addr = string;
+/**
+ * A fixed-point decimal value with 18 fractional digits, i.e. Decimal(1_000_000_000_000_000_000) == 1.0
+ *
+ * The greatest possible value that can be represented is 340282366920938463463.374607431768211455 (which is (2^128 - 1) / 10^18)
+ */
+export type Decimal = string;
+/**
+ * Binary is a wrapper around Vec<u8> to add base64 de/serialization with serde. It also adds some helper methods to help encode inline.
+ *
+ * This is only needed as serde-json-{core,wasm} has a horrible encoding for Vec<u8>. See also <https://github.com/CosmWasm/cosmwasm/blob/main/docs/MESSAGE_TYPES.md>.
+ */
+export type Binary = string;
+export type PerformanceAssessmentStrategy = {
+  compare_to_standard_dca: {
+    received_amount: Coin;
+    swapped_amount: Coin;
+  };
+};
 export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
+export type SwapAdjustmentStrategy =
+  | {
+      risk_weighted_average: {
+        base_denom: BaseDenom;
+        model_id: number;
+        position_type: PositionType;
+      };
+    }
+  | {
+      weighted_scale: {
+        base_receive_amount: Uint128;
+        increase_only: boolean;
+        multiplier: Decimal;
+      };
+    };
+export type BaseDenom = "bitcoin";
+export type PositionType = "enter" | "exit";
 export type TimeInterval =
-  | "every_second"
-  | "every_minute"
-  | "half_hourly"
-  | "hourly"
-  | "half_daily"
-  | "daily"
-  | "weekly"
-  | "fortnightly"
-  | "monthly";
+  | (
+      | "every_second"
+      | "every_minute"
+      | "half_hourly"
+      | "hourly"
+      | "half_daily"
+      | "daily"
+      | "weekly"
+      | "fortnightly"
+      | "monthly"
+    )
+  | {
+      custom: {
+        seconds: number;
+      };
+    };
 export type TriggerConfiguration =
   | {
       time: {
@@ -78,17 +113,11 @@ export type TriggerConfiguration =
       };
     }
   | {
-      fin_limit_order: {
+      price: {
         order_idx?: Uint128 | null;
-        target_price: Decimal256;
+        target_price: Decimal;
       };
     };
-/**
- * A fixed-point decimal value with 18 fractional digits, i.e. Decimal256(1_000_000_000_000_000_000) == 1.0
- *
- * The greatest possible value that can be represented is 115792089237316195423570985008687907853269984665640564039457.584007913129639935 (which is (2^256 - 1) / 10^18)
- */
-export type Decimal256 = string;
 
 export interface VaultsResponse {
   vaults: Vault[];
@@ -96,19 +125,23 @@ export interface VaultsResponse {
 export interface Vault {
   balance: Coin;
   created_at: Timestamp;
-  dca_plus_config?: DcaPlusConfig | null;
+  deposited_amount: Coin;
   destinations: Destination[];
+  escrow_level: Decimal;
+  escrowed_amount: Coin;
   id: Uint128;
   label?: string | null;
   minimum_receive_amount?: Uint128 | null;
   owner: Addr;
-  pair: Pair;
+  performance_assessment_strategy?: PerformanceAssessmentStrategy | null;
   received_amount: Coin;
-  slippage_tolerance?: Decimal | null;
+  slippage_tolerance: Decimal;
   started_at?: Timestamp | null;
   status: VaultStatus;
+  swap_adjustment_strategy?: SwapAdjustmentStrategy | null;
   swap_amount: Uint128;
   swapped_amount: Coin;
+  target_denom: string;
   time_interval: TimeInterval;
   trigger?: TriggerConfiguration | null;
 }
@@ -117,22 +150,8 @@ export interface Coin {
   denom: string;
   [k: string]: unknown;
 }
-export interface DcaPlusConfig {
-  escrow_level: Decimal;
-  escrowed_balance: Coin;
-  model_id: number;
-  standard_dca_received_amount: Coin;
-  standard_dca_swapped_amount: Coin;
-  total_deposit: Coin;
-  [k: string]: unknown;
-}
 export interface Destination {
-  action: PostExecutionAction;
   address: Addr;
   allocation: Decimal;
-}
-export interface Pair {
-  address: Addr;
-  base_denom: string;
-  quote_denom: string;
+  msg?: Binary | null;
 }

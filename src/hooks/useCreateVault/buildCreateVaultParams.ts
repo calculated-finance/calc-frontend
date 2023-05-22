@@ -13,10 +13,11 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
-import { Chains, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
+import { Version } from '@hooks/useVersion';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -148,10 +149,13 @@ export function buildCreateVaultParamsDCA(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
+  version: Version,
 ) {
   const { chain } = useChainStore.getState();
 
-  if (chain === Chains.Osmosis) {
+  console.log(version);
+
+  if (version === 'v2') {
     const msg = {
       create_vault: {
         label: '',
@@ -268,12 +272,13 @@ export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
   pairs: Pair[],
   senderAddress: string,
+  version: Version,
 ): ExecuteMsg | OsmosisExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
 
   const { chain } = useChainStore.getState();
 
-  if (chain === Chains.Osmosis) {
+  if (version === 'v2') {
     const msg = {
       create_vault: {
         label: '',
@@ -325,13 +330,14 @@ export function buildCreateVaultParams(
   transactionType: TransactionType,
   senderAddress: string,
   currentPrice: number,
+  version: Version,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
-    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
+    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress, version);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress, version);
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {

@@ -24,13 +24,16 @@ export type Decimal = string;
 
 export interface InstantiateMsg {
   admin: Addr;
-  dca_plus_escrow_level: Decimal;
-  delegation_fee_percent: Decimal;
+  automation_fee_percent: Decimal;
+  default_page_limit: number;
+  default_slippage_tolerance: Decimal;
+  default_swap_fee_percent: Decimal;
+  executors: Addr[];
   fee_collectors: FeeCollector[];
-  page_limit: number;
   paused: boolean;
-  staking_router_address: Addr;
-  swap_fee_percent: Decimal;
+  risk_weighted_average_escrow_level: Decimal;
+  twap_period: number;
+  weighted_scale_swap_fee_percent: Decimal;
 }
 export interface FeeCollector {
   address: string;

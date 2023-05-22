@@ -11,8 +11,8 @@ import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
-import { isDcaPlus } from './isDcaPlus';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
+import { isDcaPlus } from './isDcaPlus';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {

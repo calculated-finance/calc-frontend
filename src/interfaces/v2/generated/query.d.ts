@@ -38,6 +38,7 @@ export type QueryMsg =
   | {
       get_vaults: {
         limit?: number | null;
+        reverse?: boolean | null;
         start_after?: Uint128 | null;
       };
     }
@@ -45,12 +46,14 @@ export type QueryMsg =
       get_events_by_resource_id: {
         limit?: number | null;
         resource_id: Uint128;
+        reverse?: boolean | null;
         start_after?: number | null;
       };
     }
   | {
       get_events: {
         limit?: number | null;
+        reverse?: boolean | null;
         start_after?: number | null;
       };
     }
@@ -58,14 +61,7 @@ export type QueryMsg =
       get_custom_swap_fees: {};
     }
   | {
-      get_data_fixes_by_resource_id: {
-        limit?: number | null;
-        resource_id: Uint128;
-        start_after?: number | null;
-      };
-    }
-  | {
-      get_dca_plus_performance: {
+      get_vault_performance: {
         vault_id: Uint128;
       };
     }

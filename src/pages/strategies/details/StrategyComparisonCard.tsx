@@ -65,7 +65,7 @@ function DifferenceComparison({ strategy, performanceFactor }: { strategy: Strat
 }
 
 export function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
-  const { data: performance, isLoading } = useDcaPlusPerformance(strategy.id, isDcaPlus(strategy));
+  const { data: performance, isLoading } = useDcaPlusPerformance(strategy, isDcaPlus(strategy));
 
   const numberPastSwaps = getNumberOfPastSwaps(strategy);
 
