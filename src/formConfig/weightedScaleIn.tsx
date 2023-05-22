@@ -1,6 +1,6 @@
 import { Autostaking } from '@components/helpContent/Autostaking';
-import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { contentData } from 'src/constants';
+import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
 import { StepConfig } from './StepConfig';
 
 export const weightedScaleInSteps: StepConfig[] = [
@@ -11,8 +11,8 @@ export const weightedScaleInSteps: StepConfig[] = [
   {
     href: '/create-strategy/weighted-scale-in/customise',
     title: contentData.dcaIn.customise.title,
-    footerText: 'What does outperform probability mean?',
-    helpContent: <OutperformProbability />,
+    footerText: 'How does the swap multiplier work?',
+    helpContent: <SwapMultiplierHelp />,
   },
   {
     href: '/create-strategy/weighted-scale-in/post-purchase',
