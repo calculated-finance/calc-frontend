@@ -1,6 +1,8 @@
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { isMainnet } from './isMainnet';
+import { Chains, useChainStore } from '@hooks/useChain';
+import { useAssetListStore } from '@hooks/useCachedAssetList';
 
 type DenomInfo = {
   name: string;
@@ -405,10 +407,46 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
 };
 
 const getDenomInfo = (denom?: string) => {
+  // if osmosis blah adapter to current properties
+  // use zustand to get chain id
+  // use chain store?   const { chain } = useChainStore.getState(); do this if iyt works
+  // test with 3g
+  const { chain } = useChainStore.getState();
+
+  const { assetList } = useAssetListStore.getState();
+
   if (!denom) {
-    return defaultDenom;
+    return {
+      
+    };
   }
-  if (isMainnet()) {
+  if (!isMainnet() && chain === Chains.Osmosis && assetList?.assets) {
+
+    // map asset list to denom info
+    const asset = assetList.assets.find((asset) => asset.base === denom);
+
+    if (!asset) {
+      return defaultDenom;
+    }
+
+    const mapTo = {} as DenomInfo
+
+    mapTo.name = asset.name;
+    // mapTo.icon = asset.logo_URIs?.png; // should have svg as fallback
+    // mapTo.stakeable = false;
+    // mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
+    // mapTo.significantFigures = asset.
+    // mapTo.osmosisId = asset.osmosisId;
+    // mapTo.enabledInDcaPlus = asset.enabledInDcaPlus;
+
+    return {
+      ...defaultDenom,
+      ...mainnetDenoms[denom as MainnetDenoms],
+      ...mapTo
+    };
+  }
+  // second comparison is not needed but just being explicit
+  if (isMainnet() && chain === Chains.Kujira) {
     return {
       ...defaultDenom,
       ...mainnetDenoms[denom as MainnetDenoms],

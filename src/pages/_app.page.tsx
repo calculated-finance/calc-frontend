@@ -17,6 +17,7 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
+import { useCachedAssetList } from '@hooks/useCachedAssetList';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -54,6 +55,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
 
   const { chain } = useChain();
+
+  // set asset list using zustand
+  useCachedAssetList();
 
   useEffect(() => {
     if (featureFlags.stationEnabled) {
