@@ -15,9 +15,9 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
-import { DcaFormState } from './DcaFormState';
 import { featureFlags } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -187,7 +187,7 @@ function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: 
   return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
 
-function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
+export function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
   const conversion = [
     executionInterval === 'minute' && 60,
     executionInterval === 'hourly' && 60 * 60,
