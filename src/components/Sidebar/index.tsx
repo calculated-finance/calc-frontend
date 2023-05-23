@@ -81,7 +81,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
             mr="5"
             width="16px"
             height="16px"
-            stroke={isActive ? 'brand.200' : '#D5F8F9'}
+            stroke={isActive ? 'brand.200' : 'blue.200'}
             _groupHover={{
               stroke: isActive ? 'brand.200' : 'white',
             }}
