@@ -49,6 +49,7 @@ export const featureFlags =
         stationEnabled: false,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: false,
+        customTimeIntervalEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -56,6 +57,7 @@ export const featureFlags =
         stationEnabled: false,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: true,
+        customTimeIntervalEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

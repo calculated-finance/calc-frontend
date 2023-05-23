@@ -1,6 +1,7 @@
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 const executionIntervalDisplay: Record<ExecutionIntervals, [string, string]> = {
+  minute: ['minute', 'minutes'],
   half_hourly: ['half hour', 'half hours'],
   hourly: ['hour', 'hours'],
   daily: ['day', 'days'],
@@ -11,6 +12,7 @@ const executionIntervalDisplay: Record<ExecutionIntervals, [string, string]> = {
 };
 
 export const executionIntervalLabel: Record<ExecutionIntervals, string> = {
+  minute: 'Every minute',
   half_hourly: 'Half-hourly',
   hourly: 'Hourly',
   daily: 'Daily',
