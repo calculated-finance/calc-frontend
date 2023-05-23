@@ -153,8 +153,6 @@ export function buildCreateVaultParamsDCA(
 ) {
   const { chain } = useChainStore.getState();
 
-  console.log(version);
-
   if (version === 'v2') {
     const msg = {
       create_vault: {

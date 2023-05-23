@@ -55,7 +55,7 @@ export const featureFlags =
         squidIntegrationEnabled: true,
         stationEnabled: false,
         dcaPlusEnabled: true,
-        isKujiraV2Enabled: true,
+        isKujiraV2Enabled: false,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

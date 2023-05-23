@@ -23,7 +23,6 @@ export function useVersion(): Version | undefined {
         get_config: {},
       } as QueryMsg);
 
-      console.log(result);
       return result;
     },
     {
