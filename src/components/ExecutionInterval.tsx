@@ -68,8 +68,6 @@ function ExecutionIntervalCustom() {
   });
   const [periodField, periodMeta, periodHelpers] = useField({ name: 'executionInterval' });
 
-  console.log(incrementField, periodField);
-
   return (
     <FormControl>
       <FormLabel>CALC will swap for you, every:</FormLabel>
