@@ -6,6 +6,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { VaultResponse } from 'src/interfaces/v1/generated/response/get_vault';
 import { QueryMsg } from 'src/interfaces/v1/generated/query';
 import { GET_EVENTS_LIMIT } from '@hooks/useStrategyEvents';
+import pairs from 'src/fixtures/pairs';
 
 export function mockStrategy(data?: Partial<Strategy>) {
   return {
@@ -34,5 +35,11 @@ export function mockUseStrategy(data: Partial<VaultResponse> = {}) {
       },
     } as QueryMsg)
     .mockResolvedValue({ events: [] });
+
+  when(queryContractSmart)
+    .calledWith(CONTRACT_ADDRESS, {
+      get_config: {},
+    })
+    .mockResolvedValue({ pairs });
   return queryContractSmart;
 }
