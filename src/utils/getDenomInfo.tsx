@@ -1,8 +1,8 @@
-import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis } from '@models/Denom';
+import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
-import { isMainnet } from './isMainnet';
 import { Chains, useChainStore } from '@hooks/useChain';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
+import { isMainnet } from './isMainnet';
 
 type DenomInfo = {
   name: string;
@@ -406,6 +406,16 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
   },
 };
 
+const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL];
+const stableDenomsMainnet = [MainnetDenomsOsmosis.AXL];
+
+function isDenomInStablesList(denom: Denom) {
+  if (isMainnet()) {
+    return stableDenomsMainnet.includes(denom);
+  }
+  return stableDenomsTestnet.includes(denom);
+}
+
 const getDenomInfo = (denom?: string) => {
   // if osmosis blah adapter to current properties
   // use zustand to get chain id
@@ -417,7 +427,7 @@ const getDenomInfo = (denom?: string) => {
 
   if (chain === Chains.Osmosis && assetList?.assets) {
     // map asset list to denom info
-    const asset = assetList.assets.find((asset) => asset.base === denom);
+    const asset = assetList.assets.find((a) => a.base === denom);
 
     if (!asset) {
       return defaultDenom;
@@ -425,13 +435,20 @@ const getDenomInfo = (denom?: string) => {
 
     const mapTo = {} as DenomInfo;
 
-    mapTo.name = `${asset.name}`;
+    mapTo.name = asset.symbol;
     mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
-    // mapTo.stakeable = false;
-    // mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
-    // mapTo.significantFigures = asset.
-    // mapTo.osmosisId = asset.osmosisId;
-    // mapTo.enabledInDcaPlus = asset.enabledInDcaPlus;
+    mapTo.stakeable = !isDenomInStablesList(denom as Denom);
+    mapTo.stable = isDenomInStablesList(denom as Denom);
+    mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
+    mapTo.significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
+    mapTo.osmosisId = asset.symbol;
+    mapTo.enabledInDcaPlus = true; // TODO: Need to use a whitelist of assets that are supported in DCA Plus;
+    mapTo.stakeableAndSupported = denom === 'uosmo';
+
+    if (mapTo.significantFigures !== 6) {
+      mapTo.conversion = (value: number) => value / 10 ** mapTo.significantFigures;
+      mapTo.deconversion = (value: number) => Math.round(value * 10 ** mapTo.significantFigures);
+    }
 
     if (isMainnet()) {
       return {
