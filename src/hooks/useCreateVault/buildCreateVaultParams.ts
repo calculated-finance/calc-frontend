@@ -142,7 +142,7 @@ function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: 
   return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
 
-function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
+export function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
   const conversion = [
     executionInterval === 'minute' && 60,
     executionInterval === 'hourly' && 60 * 60,
