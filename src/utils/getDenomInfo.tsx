@@ -415,13 +415,7 @@ const getDenomInfo = (denom?: string) => {
 
   const { assetList } = useAssetListStore.getState();
 
-  if (!denom) {
-    return {
-      
-    };
-  }
-  if (!isMainnet() && chain === Chains.Osmosis && assetList?.assets) {
-
+  if (chain === Chains.Osmosis && assetList?.assets) {
     // map asset list to denom info
     const asset = assetList.assets.find((asset) => asset.base === denom);
 
@@ -429,20 +423,27 @@ const getDenomInfo = (denom?: string) => {
       return defaultDenom;
     }
 
-    const mapTo = {} as DenomInfo
+    const mapTo = {} as DenomInfo;
 
-    mapTo.name = asset.name;
-    // mapTo.icon = asset.logo_URIs?.png; // should have svg as fallback
+    mapTo.name = `${asset.name}`;
+    mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
     // mapTo.stakeable = false;
     // mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
     // mapTo.significantFigures = asset.
     // mapTo.osmosisId = asset.osmosisId;
     // mapTo.enabledInDcaPlus = asset.enabledInDcaPlus;
 
+    if (isMainnet()) {
+      return {
+        ...defaultDenom,
+        ...mainnetDenoms[denom as MainnetDenoms],
+        ...mapTo,
+      };
+    }
     return {
       ...defaultDenom,
-      ...mainnetDenoms[denom as MainnetDenoms],
-      ...mapTo
+      ...testnetDenoms[denom as TestnetDenoms],
+      ...mapTo,
     };
   }
   // second comparison is not needed but just being explicit

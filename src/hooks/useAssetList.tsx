@@ -12,7 +12,12 @@ export function useAssetList(): { isLoading: any; error: any; data: any } {
 
   const chainIdentifier = isMainnet() ? 'osmosis-1/osmosis-1' : 'osmo-test-5/osmo-test-5';
 
-  return useQueryWithNotification<AssetList>(['assetList'], () =>
-    fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`).then((res) => res.json()),
+  return useQueryWithNotification<AssetList>(
+    ['assetList'],
+    () => fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`).then((res) => res.json()),
+    {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+    },
   );
 }
