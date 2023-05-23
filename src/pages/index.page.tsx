@@ -178,7 +178,10 @@ function TotalInvestment() {
         <Divider display={['flex', null, 'none']} />
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            ${Math.floor(totalSwappedTotal / 1000)}k <Text fontSize="md">total swapped (USD)</Text>
+            {Math.floor(totalSwappedTotal / 1000) < 1000
+              ? `$${Math.floor(totalSwappedTotal / 1000)}k`
+              : `$${(Math.floor(totalSwappedTotal / 1000) / 10 ** 3).toFixed(3)}m`}
+            <Text fontSize="md">total swapped (USD)</Text>
           </Heading>
         </Stack>
       </Flex>
