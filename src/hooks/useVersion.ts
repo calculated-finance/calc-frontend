@@ -22,6 +22,8 @@ export function useVersion(): Version | undefined {
       const result = await client.queryContractSmart(getChainContractAddress(chain!), {
         get_config: {},
       } as QueryMsg);
+
+      console.log(result);
       return result;
     },
     {
