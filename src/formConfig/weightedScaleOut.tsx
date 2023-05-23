@@ -1,5 +1,5 @@
 import { Stack, Text } from '@chakra-ui/react';
-import { OutperformProbability } from '@components/helpContent/OutperformProbability';
+import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const weightedScaleOutSteps: StepConfig[] = [
@@ -10,8 +10,8 @@ const weightedScaleOutSteps: StepConfig[] = [
   {
     href: '/create-strategy/weighted-scale-out/customise',
     title: 'Customise Strategy',
-    footerText: 'What does outperform probability mean?',
-    helpContent: <OutperformProbability />,
+    footerText: 'How does the swap multiplier work?',
+    helpContent: <SwapMultiplierHelp />,
   },
   {
     href: '/create-strategy/weighted-scale-out/post-purchase',
