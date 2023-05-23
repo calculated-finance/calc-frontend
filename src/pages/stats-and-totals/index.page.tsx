@@ -5,7 +5,6 @@ import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy } from '@hooks/useStrategies';
@@ -24,6 +23,7 @@ import { Vault } from 'src/interfaces/v1/generated/response/get_vaults';
 import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -33,8 +33,8 @@ function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
     .toFixed(6);
 }
 
-export function getTotalSwapped(strategies: Strategy[]) {
-  const totalSwapped = SUPPORTED_DENOMS.map(
+export function getTotalSwapped(strategies: Strategy[], supportedDenoms: string[]) {
+  const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
         denom,
@@ -53,8 +53,8 @@ function getTotalReceivedForDenom(denom: string, strategies: Strategy[]) {
     .toFixed(6);
 }
 
-function getTotalReceived(strategies: Strategy[]) {
-  const totalSwapped = SUPPORTED_DENOMS.map(
+function getTotalReceived(strategies: Strategy[], supportedDenoms: string[]) {
+  const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
         denom,
@@ -83,10 +83,10 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any) {
+export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: string[]) {
   return (
     coins
-      ?.filter((coin) => SUPPORTED_DENOMS.includes(coin.denom))
+      ?.filter((coin) => supportedDenoms.includes(coin.denom))
       .map((balance) => {
         const { conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
@@ -256,9 +256,10 @@ export function uniqueAddresses(allStrategies: Vault[] | undefined) {
 
 function Page() {
   const { chain } = useChain();
+  const supportedDenoms = useSupportedDenoms();
   const { balances: contractBalances } = useAdminBalances(getChainContractAddress(chain));
   const { balances: feeTakerBalances } = useAdminBalances(getChainFeeTakerAddress(chain));
-  const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
+  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
   const { data: allStrategies } = useAdminStrategies();
 
@@ -267,15 +268,15 @@ function Page() {
   if (!fiatPrices || !allStrategies) {
     return null;
   }
-  const totalInContract = totalFromCoins(contractBalances, fiatPrices);
+  const totalInContract = totalFromCoins(contractBalances, fiatPrices, supportedDenoms);
 
-  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices);
+  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices, supportedDenoms);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies);
-  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices);
+  const totalReceivedAmounts = getTotalReceived(allStrategies, supportedDenoms);
+  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices, supportedDenoms);
 
   const ThirtyDaysFromNow = new Date();
   ThirtyDaysFromNow.setDate(ThirtyDaysFromNow.getDate() + 30);

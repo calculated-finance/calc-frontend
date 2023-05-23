@@ -1,16 +1,18 @@
 import { useWallet } from '@hooks/useWallet';
 import { Coin } from '@cosmjs/stargate';
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useKujira } from './useKujira';
 import { Chains, useChain } from './useChain';
 import { useOsmosis } from './useOsmosis';
+import { useSupportedDenoms } from './useSupportedDenoms';
 
 const useBalances = () => {
   const { address } = useWallet();
   const kujiraQuery = useKujira((state) => state.query);
   const osmosisQuery = useOsmosis((state) => state.query);
   const { chain } = useChain();
+
+  const supportedDenoms = useSupportedDenoms();
 
   const { data, ...other } = useQueryWithNotification(
     ['balances', address, chain],
@@ -31,7 +33,7 @@ const useBalances = () => {
   return {
     data: {
       ...data,
-      balances: data?.filter((balance: Coin) => SUPPORTED_DENOMS.includes(balance.denom)) || undefined,
+      balances: data?.filter((balance: Coin) => supportedDenoms.includes(balance.denom)) || undefined,
     },
     ...other,
   };

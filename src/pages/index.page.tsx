@@ -19,13 +19,13 @@ import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { Chains, useChain } from '@hooks/useChain';
+import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -147,7 +147,8 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
-  const { data: fiatPrices } = useFiatPrice(SUPPORTED_DENOMS[0]);
+  const supportedDenoms = useSupportedDenoms();
+  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
   const { data } = useAdminStrategies();
   const { connected } = useWallet();
   const { chain } = useChain();
@@ -160,8 +161,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(data);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
+  const totalSwappedAmounts = getTotalSwapped(data, supportedDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
   const strategiesCount = data.length;
 
   const formattedValue =

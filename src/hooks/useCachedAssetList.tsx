@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useAssetList } from './useAssetList';
+import { Chains, useChain } from './useChain';
 
 type AssetListState = {
   assetList: AssetList | null;
@@ -16,14 +17,15 @@ export const useAssetListStore = create<AssetListState>()((set) => ({
 }));
 
 export function useCachedAssetList() {
+  const { chain } = useChain();
   const setAssetList = useAssetListStore((state) => state.setAssetList);
   const { data } = useAssetList();
 
   useEffect(() => {
-    if (data) {
+    if (data && chain === Chains.Osmosis) {
       setAssetList(data);
     }
-  }, [data, setAssetList]);
+  }, [data, chain, setAssetList]);
 
   return data || ({} as AssetListState);
 }
