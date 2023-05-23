@@ -7,6 +7,7 @@ import { FiDivide } from 'react-icons/fi';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
+import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import useWhitelist from '@hooks/useWhitelist';
 import { Chains, useChain } from '@hooks/useChain';
 import StrategyUrls from './StrategyUrls';
@@ -151,7 +152,7 @@ function Strategies() {
       },
     ] as StrategyCardProps[];
 
-    if (chain === Chains.Osmosis) {
+    if (isV2Enabled(chain)) {
       strategies.push({
         name: 'Weighted Scale In',
         description: 'Buy more when the price is low, and less when the price is high.',
