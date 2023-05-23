@@ -34,7 +34,6 @@ export const initialValues = {
 
   executionInterval: 'daily',
   executionIntervalIncrement: 1,
-  // executionIntervalPeriod: 'day',
   swapAmount: null,
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
@@ -163,11 +162,6 @@ export const allSchema = {
       }
       return value;
     }),
-  // executionIntervalPeriod: Yup.mixed<ExecutionIntervals>().when('executionInterval', {
-  //   is: '',
-  //   then: (schema) => schema.required(),
-  //   otherwise: (schema) => schema.transform(() => null),
-  // }),
 
   swapAmount: Yup.number()
     .label('Swap Amount')

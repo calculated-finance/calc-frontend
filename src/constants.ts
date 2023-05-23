@@ -47,12 +47,14 @@ export const featureFlags =
         squidIntegrationEnabled: true,
         stationEnabled: false,
         dcaPlusEnabled: true,
+        customTimeIntervalEnabled: false,
       }
     : {
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
         dcaPlusEnabled: true,
+        customTimeIntervalEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

@@ -1,7 +1,7 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/generated/execute';
+import { Destination, ExecuteMsg } from 'src/interfaces/generated/execute';
 import {
   Destination as OsmosisDestination,
   ExecuteMsg as OsmosisExecuteMsg,
@@ -16,6 +16,8 @@ import { FormNames } from '@hooks/useFormStore';
 import { Chains, useChainStore } from '@hooks/useChain';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { DcaFormState } from './DcaFormState';
+import { featureFlags } from 'src/constants';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -185,7 +187,23 @@ function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: 
   return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
 
-function getExecutionInterval(executionInterval: TimeInterval) {
+function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
+  const conversion = [
+    executionInterval === 'minute' && 60,
+    executionInterval === 'hourly' && 60 * 60,
+    executionInterval === 'daily' && 60 * 60 * 24,
+    executionInterval === 'weekly' && 60 * 60 * 24 * 7,
+  ];
+  const seconds = conversion.filter((el) => typeof el === 'number');
+
+  if (featureFlags.customTimeIntervalEnabled) {
+    return {
+      custom: {
+        seconds: seconds * executionIntervalIncrement,
+      },
+    };
+  }
+
   return executionInterval;
 }
 
@@ -201,7 +219,7 @@ export function buildCreateVaultParamsDCA(
     const msg = {
       create_vault: {
         label: '',
-        time_interval: getExecutionInterval(state.executionInterval),
+        time_interval: getExecutionInterval(state.executionInterval, state.executionIntervalIncrement),
         target_denom: state.resultingDenom,
         swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
         target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
