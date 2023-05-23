@@ -57,9 +57,9 @@ function TimePeriodOption({ label, icon }: { label: string; icon: any }) {
 }
 const timePeriodOptions = [
   { value: 'minute', label: <TimePeriodOption label="Minute(s)" icon={<FiClock />} /> },
-  { value: 'hour', label: <TimePeriodOption label="Hour(s)" icon={<FiClock />} /> },
-  { value: 'day', label: <TimePeriodOption label="Day(s)" icon={<FiCalendar />} /> },
-  { value: 'week', label: <TimePeriodOption label="Week(s)" icon={<FiCalendar />} /> },
+  { value: 'hourly', label: <TimePeriodOption label="Hour(s)" icon={<FiClock />} /> },
+  { value: 'daily', label: <TimePeriodOption label="Day(s)" icon={<FiCalendar />} /> },
+  { value: 'weekly', label: <TimePeriodOption label="Week(s)" icon={<FiCalendar />} /> },
 ];
 
 function ExecutionIntervalCustom() {
@@ -67,6 +67,8 @@ function ExecutionIntervalCustom() {
     name: 'executionIntervalIncrement',
   });
   const [periodField, periodMeta, periodHelpers] = useField({ name: 'executionInterval' });
+
+  console.log(incrementField, periodField);
 
   return (
     <FormControl>
