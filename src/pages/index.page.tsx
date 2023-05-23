@@ -164,6 +164,9 @@ function TotalInvestment() {
   const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices);
   const strategiesCount = data.length;
 
+  const formattedValue =
+    totalSwappedTotal >= 1000000 ? `$${(totalSwappedTotal / 1000000).toFixed(3)}m` : `$${totalSwappedTotal / 1000}k`;
+
   return (
     <Stack layerStyle="panel" p={8} h="full" spacing={6}>
       <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
@@ -178,9 +181,7 @@ function TotalInvestment() {
         <Divider display={['flex', null, 'none']} />
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {Math.floor(totalSwappedTotal / 1000) < 1000
-              ? `$${Math.floor(totalSwappedTotal / 1000)}k`
-              : `$${(Math.floor(totalSwappedTotal / 1000) / 10 ** 3).toFixed(3)}m`}
+            {formattedValue}
             <Text fontSize="md">total swapped (USD)</Text>
           </Heading>
         </Stack>
