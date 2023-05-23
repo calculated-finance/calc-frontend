@@ -1,26 +1,28 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/generated/query';
+import { QueryMsg } from 'src/interfaces/v1/generated/query';
 import { QueryMsg as QueryMsgOsmosis } from 'src/interfaces/generated-osmosis/query';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/generated/response/get_dca_plus_performance';
+import { DcaPlusPerformanceResponse } from 'src/interfaces/v1/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { useVersion } from './useVersion';
 
 export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
+  const version = useVersion();
 
   return useQueryWithNotification<DcaPlusPerformanceResponse>(
-    ['strategy-dca-plus-performance', id, client, address],
+    ['strategy-dca-plus-performance', id, client, address, version],
     async () => {
       if (!client) {
         throw new Error('No client');
       }
       const msg =
-        chain === Chains.Osmosis
+        version === 'v2'
           ? ({
               get_vault_performance: {
                 vault_id: id,
@@ -36,7 +38,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && !!enabled && !!chain,
+      enabled: !!client && !!id && !!address && !!enabled && !!chain && !!version,
     },
   );
 }

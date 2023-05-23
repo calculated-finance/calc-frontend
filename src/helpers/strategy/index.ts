@@ -5,14 +5,14 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
-import { Vault } from 'src/interfaces/generated/response/get_vaults_by_address';
+import { Vault } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
 import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateFromStrategyEvents';
 import { isAutoStaking } from '../isAutoStaking';
-import { isDcaPlus } from './isDcaPlus';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
+import { isDcaPlus } from './isDcaPlus';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {

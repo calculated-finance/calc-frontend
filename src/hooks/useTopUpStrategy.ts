@@ -3,7 +3,7 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { Denom } from '@models/Denom';
 import { isNil } from 'lodash';

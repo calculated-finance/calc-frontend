@@ -27,6 +27,7 @@ import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrat
 import { isStrategyCancelled, getStrategyResultingDenom } from '@helpers/strategy';
 import useStrategy from '@hooks/useStrategy';
 import useValidator from '@hooks/useValidator';
+import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import Link from 'next/link';
@@ -34,7 +35,7 @@ import Link from 'next/link';
 export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
   return (
-    <GridItem visibility={isStrategyCancelled(strategy) || chain !== Chains.Osmosis ? 'hidden' : 'visible'}>
+    <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain) ? 'hidden' : 'visible'}>
       <Flex justify="end">
         <Link href={generateStrategyConfigureUrl(strategy.id)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>

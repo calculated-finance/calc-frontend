@@ -20,7 +20,7 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { Vault } from 'src/interfaces/generated/response/get_vaults';
+import { Vault } from 'src/interfaces/v1/generated/response/get_vaults';
 import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';

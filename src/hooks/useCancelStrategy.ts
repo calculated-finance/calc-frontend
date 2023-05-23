@@ -7,7 +7,7 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { CANCEL_VAULT_FEE, ONE_MILLION } from 'src/constants';
 import { encode } from '@helpers/encode';
 import { getFeeMessage } from '@helpers/getFeeMessage';
-import { ExecuteMsg } from 'src/interfaces/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import useFiatPrice from './useFiatPrice';
 import { Strategy } from './useStrategies';

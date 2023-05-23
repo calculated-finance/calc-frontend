@@ -1,38 +1,43 @@
 import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v1/generated/query';
-import { VaultResponse } from 'src/interfaces/v1/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
+import { Config, ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
 import useQueryWithNotification from './useQueryWithNotification';
-import { Strategy } from './useStrategies';
-import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
-export const STRATEGY_KEY = 'strategy';
+export type Version = 'v1' | 'v2';
 
-export default function useStrategy(id?: Strategy['id']) {
+export function useVersion(): Version | undefined {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<VaultResponse>(
-    [STRATEGY_KEY, id, client, address],
+  const { data } = useQueryWithNotification<ConfigResponse>(
+    ['config', chain, client],
     async () => {
       if (!client) {
         throw new Error('No client');
       }
       const result = await client.queryContractSmart(getChainContractAddress(chain!), {
-        get_vault: {
-          vault_id: id,
-        },
+        get_config: {},
       } as QueryMsg);
-      if (result.vault.owner !== address && !isAddressAdmin(address)) {
-        throw new Error('Strategy not found');
-      }
+
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && !!chain,
+      enabled: !!client && !!address && !!chain,
     },
   );
+
+  if (!data) {
+    return undefined;
+  }
+
+  const { config } = data;
+
+  if (config && 'twap_period' in config) {
+    return 'v2';
+  }
+  return 'v1';
 }

@@ -1,4 +1,4 @@
-import { Vault } from 'src/interfaces/generated/response/get_vault';
+import { Vault } from 'src/interfaces/v1/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';

@@ -1,10 +1,9 @@
-import { useChainStore, Chains } from '@hooks/useChain';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { isNil } from 'lodash';
+import { isStrategyV2 } from '../isStrategyV2';
 
 export function getDcaPlusConfig(strategy: Strategy | StrategyOsmosis) {
-  const { chain } = useChainStore.getState();
-  if (chain === Chains.Osmosis) {
+  if (isStrategyV2(strategy)) {
     const osmosisStrategy = strategy as StrategyOsmosis;
 
     if (isNil(osmosisStrategy.performance_assessment_strategy) || isNil(osmosisStrategy.swap_adjustment_strategy)) {

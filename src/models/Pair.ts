@@ -1,4 +1,4 @@
-import { Pair as GeneratedPair } from 'src/interfaces/generated/response/get_pairs';
+import { Pair as GeneratedPair } from 'src/interfaces/v1/generated/response/get_pairs';
 import { Pair as GeneratedOsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 
 export type Pair = GeneratedPair;

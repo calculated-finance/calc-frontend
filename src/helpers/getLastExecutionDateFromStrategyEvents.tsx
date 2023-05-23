@@ -1,4 +1,4 @@
-import { Event } from 'src/interfaces/generated/response/get_events_by_resource_id';
+import { Event } from 'src/interfaces/v1/generated/response/get_events_by_resource_id';
 import { findLast } from 'lodash';
 
 export function getLastExecutionDateFromStrategyEvents(events: Event[]) {

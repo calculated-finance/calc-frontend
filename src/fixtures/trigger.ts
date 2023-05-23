@@ -1,4 +1,4 @@
-import { TriggerConfiguration } from 'src/interfaces/generated/response/get_vaults_by_address';
+import { TriggerConfiguration } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 
 // new date may 22nd 2022 at 5pm
 const targetTime = new Date(2022, 4, 22, 17, 0, 0, 0).getTime();

@@ -2,20 +2,13 @@
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import pairs from 'src/fixtures/pairs';
-import config from 'src/fixtures/config';
 
 export function mockGetPairs() {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
     .calledWith(CONTRACT_ADDRESS, {
-      get_pairs: {},
-    })
-    .mockResolvedValue({ pairs });
-
-  when(queryContractSmart)
-    .calledWith(CONTRACT_ADDRESS, {
       get_config: {},
     })
-    .mockResolvedValue({ config });
+    .mockResolvedValue({ pairs });
   return queryContractSmart;
 }
