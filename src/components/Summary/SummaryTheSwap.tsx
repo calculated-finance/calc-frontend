@@ -9,7 +9,8 @@ import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
-  const { initialDenom, resultingDenom, initialDeposit, swapAmount, executionInterval } = state;
+  const { initialDenom, resultingDenom, initialDeposit, swapAmount, executionInterval, executionIntervalIncrement } =
+    state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
@@ -17,6 +18,10 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+  const displayCustomExecutionInterval =
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][
+      executions * executionIntervalIncrement > 1 ? 1 : 0
+    ];
 
   return (
     <Box data-testid="summary-the-swap">
@@ -36,12 +41,20 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
         </BadgeButton>{' '}
         every{' '}
         <BadgeButton url="customise">
-          <Text textTransform="capitalize">{executionIntervalDisplay[executionInterval as ExecutionIntervals][0]}</Text>
+          <Text>
+            {!executionIntervalIncrement
+              ? executionIntervalDisplay[executionInterval as ExecutionIntervals][0]
+              : `${executionIntervalIncrement} ${displayCustomExecutionInterval}`}
+          </Text>
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="customise">
           <Text>
-            {executions} {displayExecutionInterval}
+            {!executionIntervalIncrement
+              ? `${executions} ${displayExecutionInterval}`
+              : swapAmount === initialDeposit
+              ? '1 cycle'
+              : `${executions * executionIntervalIncrement} ${displayCustomExecutionInterval}`}
           </Text>
         </BadgeButton>{' '}
         .
