@@ -9,7 +9,17 @@ import { TriggerConfiguration as TriggerConfigurationV2 } from 'src/interfaces/v
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { Pair } from '@models/Pair';
-import { DELEGATION_FEE, SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_WEEK, SWAP_FEE } from 'src/constants';
+import {
+  DAYS_IN_A_WEEK,
+  DELEGATION_FEE,
+  HOURS_IN_A_DAY,
+  MINUTES_IN_A_HOUR,
+  SECONDS_IN_A_DAY,
+  SECONDS_IN_A_HOUR,
+  SECONDS_IN_A_MINUTE,
+  SECONDS_IN_A_WEEK,
+  SWAP_FEE,
+} from 'src/constants';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -64,15 +74,15 @@ export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosi
     const { custom } = strategy.time_interval;
     if (custom) {
       if (custom.seconds % SECONDS_IN_A_WEEK === 0) {
-        const days = Math.floor(custom.seconds / SECONDS_IN_A_DAY / 7);
+        const days = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
         return `${days} Week`;
       }
       if (custom.seconds % SECONDS_IN_A_DAY === 0) {
-        const hours = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / 24);
+        const hours = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
         return `${hours} Day`;
       }
       if (custom.seconds % SECONDS_IN_A_HOUR === 0) {
-        const minutes = Math.floor(custom.seconds / 60 / 60);
+        const minutes = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE / MINUTES_IN_A_HOUR);
         return `${minutes} Hour`;
       }
       if (custom.seconds % 60 === 0) {

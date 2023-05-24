@@ -45,6 +45,11 @@ export const SECONDS_IN_A_HOUR = 3600;
 export const SECONDS_IN_A_DAY = 86400;
 export const SECONDS_IN_A_WEEK = 604800;
 
+export const DAYS_IN_A_WEEK = 7;
+export const HOURS_IN_A_DAY = 24;
+export const MINUTES_IN_A_HOUR = 60;
+export const SECONDS_IN_A_MINUTE = 60;
+
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
