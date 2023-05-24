@@ -13,6 +13,7 @@ import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
 import TriggerTypes from '@models/TriggerTypes';
 import YesNoValues from '@models/YesNoValues';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import Page from './index.page';
 
 const mockRouter = {
@@ -131,7 +132,7 @@ describe('DCA Plus Out confirm page', () => {
         {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
           value: {
-            contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+            contract: CONTRACT_ADDRESS,
             funds: [
               {
                 amount: '30000000',

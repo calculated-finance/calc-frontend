@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import { encode } from '../encode';
 
 const defaultMsg = {
@@ -13,7 +14,7 @@ const msgs = [
     typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: {
       sender: 'kujitestwallet',
-      contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+      contract: CONTRACT_ADDRESS,
       msg: encode(defaultMsg),
       funds: [],
     },

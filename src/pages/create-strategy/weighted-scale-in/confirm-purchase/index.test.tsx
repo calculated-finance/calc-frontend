@@ -13,6 +13,7 @@ import { encode } from '@helpers/encode';
 import { useFormStore } from '@hooks/useFormStore';
 import YesNoValues from '@models/YesNoValues';
 import TriggerTypes from '@models/TriggerTypes';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import Page from './index.page';
 
 const mockRouter = {
@@ -132,7 +133,7 @@ describe('Confirm page', () => {
         {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
           value: {
-            contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+            contract: CONTRACT_ADDRESS,
             funds: [
               {
                 amount: '30000000',

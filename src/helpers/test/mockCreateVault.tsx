@@ -3,6 +3,7 @@ import { when } from 'jest-when';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import { encode } from '../encode';
 
 export function mockStrategy(data?: Partial<Strategy>) {
@@ -29,7 +30,7 @@ const defaultMsgs = [
   {
     typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: {
-      contract: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+      contract: CONTRACT_ADDRESS,
       funds: [
         { amount: '1000000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
       ],
@@ -64,7 +65,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
               attributes: [
                 {
                   key: 'receiver',
-                  value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+                  value: CONTRACT_ADDRESS,
                 },
                 {
                   key: 'amount',
@@ -90,7 +91,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
               attributes: [
                 {
                   key: '_contract_address',
-                  value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+                  value: CONTRACT_ADDRESS,
                 },
               ],
             },
@@ -116,7 +117,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
               attributes: [
                 {
                   key: 'recipient',
-                  value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+                  value: CONTRACT_ADDRESS,
                 },
                 {
                   key: 'sender',
@@ -133,7 +134,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
               attributes: [
                 {
                   key: '_contract_address',
-                  value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+                  value: CONTRACT_ADDRESS,
                 },
                 {
                   key: 'method',
@@ -278,7 +279,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
           attributes: [
             {
               key: 'receiver',
-              value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+              value: CONTRACT_ADDRESS,
             },
             {
               key: 'amount',
@@ -291,7 +292,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
           attributes: [
             {
               key: 'recipient',
-              value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+              value: CONTRACT_ADDRESS,
             },
             {
               key: 'sender',
@@ -308,7 +309,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
           attributes: [
             {
               key: '_contract_address',
-              value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+              value: CONTRACT_ADDRESS,
             },
           ],
         },
@@ -317,7 +318,7 @@ export function mockCreateVault(msgs = defaultMsgs) {
           attributes: [
             {
               key: '_contract_address',
-              value: 'kujira18g945dfs4jp8zfu428zfkjz0r4sasnxnsnye5m6dznvmgrlcecpsyrwp7c',
+              value: CONTRACT_ADDRESS,
             },
             {
               key: 'method',
