@@ -41,6 +41,10 @@ export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
 export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
+export const SECONDS_IN_A_HOUR = 3600;
+export const SECONDS_IN_A_DAY = 86400;
+export const SECONDS_IN_A_WEEK = 604800;
+
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
