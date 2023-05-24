@@ -72,21 +72,24 @@ export function getStrategyResultingDenom(strategy: Strategy): Denom {
 export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
   if (strategy.time_interval instanceof Object) {
     const { custom } = strategy.time_interval;
+
+    const weeks = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
+    const days = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
+    const hours = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE / MINUTES_IN_A_HOUR);
+    const minutes = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE);
+
     if (custom) {
       if (custom.seconds % SECONDS_IN_A_WEEK === 0) {
-        const days = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
-        return `${days} Week`;
+        return `${weeks} Week`;
       }
       if (custom.seconds % SECONDS_IN_A_DAY === 0) {
-        const hours = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
-        return `${hours} Day`;
+        return `${days} Day`;
       }
       if (custom.seconds % SECONDS_IN_A_HOUR === 0) {
-        const minutes = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE / MINUTES_IN_A_HOUR);
-        return `${minutes} Hour`;
+        return `${hours} Hour`;
       }
       if (custom.seconds % SECONDS_IN_A_MINUTE === 0) {
-        return 'Minute';
+        return `${minutes} Minute`;
       }
     }
   }
