@@ -165,7 +165,9 @@ function TotalInvestment() {
   const strategiesCount = data.length;
 
   const formattedValue =
-    totalSwappedTotal >= 1000000 ? `$${(totalSwappedTotal / 1000000).toFixed(3)}m` : `$${totalSwappedTotal / 1000}k`;
+    totalSwappedTotal >= 1000000
+      ? `$${(totalSwappedTotal / 1000000).toFixed(3)}m`
+      : `$${Math.floor(totalSwappedTotal / 1000)}k`;
 
   return (
     <Stack layerStyle="panel" p={8} h="full" spacing={6}>
