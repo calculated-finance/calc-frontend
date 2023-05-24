@@ -4,12 +4,12 @@ import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { TriggerConfiguration as TriggerConfigurationV2 } from 'src/interfaces/v2/generated/response/get_vault';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { Pair } from '@models/Pair';
+import { DELEGATION_FEE, SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_WEEK, SWAP_FEE } from 'src/constants';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -59,8 +59,29 @@ export function getStrategyResultingDenom(strategy: Strategy): Denom {
   return strategy.received_amount.denom;
 }
 
-export function getStrategyExecutionInterval(strategy: Strategy) {
-  const { time_interval } = strategy;
+export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
+  if (strategy.time_interval instanceof Object) {
+    const { custom } = strategy.time_interval;
+    if (custom) {
+      if (custom.seconds % SECONDS_IN_A_WEEK === 0) {
+        const days = Math.floor(custom.seconds / SECONDS_IN_A_DAY / 7);
+        return `${days} Week`;
+      }
+      if (custom.seconds % SECONDS_IN_A_DAY === 0) {
+        const hours = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / 24);
+        return `${hours} Day`;
+      }
+      if (custom.seconds % SECONDS_IN_A_HOUR === 0) {
+        const minutes = Math.floor(custom.seconds / 60 / 60);
+        return `${minutes} Hour`;
+      }
+      if (custom.seconds % 60 === 0) {
+        return 'Minute';
+      }
+    }
+  }
+  const { time_interval } = strategy as Strategy;
+
   return executionIntervalLabel[time_interval];
 }
 
