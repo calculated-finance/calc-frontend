@@ -1,5 +1,6 @@
 import { useToast } from '@chakra-ui/react';
 import { QueryFunction, QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import * as Sentry from '@sentry/react';
 
 export default function useQueryWithNotification<TQueryFnData = unknown>(
   queryKey: QueryKey,
@@ -7,11 +8,12 @@ export default function useQueryWithNotification<TQueryFnData = unknown>(
   options: UseQueryOptions<TQueryFnData, Error> = {},
 ) {
   const toast = useToast();
-  const label = queryKey[0];
+  const label = queryKey[0] as string;
 
   return useQuery<TQueryFnData, Error>(queryKey, queryFn, {
     ...options,
     onError: (error: Error) => {
+      Sentry.captureException(error, { tags: { queryKey: label } });
       toast({
         title: 'Something went wrong',
         position: 'top-right',
