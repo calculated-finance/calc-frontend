@@ -17,7 +17,7 @@ import { useChainStore } from '@hooks/useChain';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
-import { Version } from '@hooks/useVersion';
+import { Version } from '@hooks/Version';
 import { DcaFormState } from './DcaFormState';
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
