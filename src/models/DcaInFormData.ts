@@ -151,11 +151,6 @@ export const allSchema = {
     .positive()
     .integer()
     .nullable()
-    // .when('executionInterval', {
-    //   is: '',
-    //   then: (schema) => schema.required(),
-    //   otherwise: (schema) => schema.transform(() => null),
-    // })
     .transform((value, originalValue) => {
       if (originalValue === '') {
         return null;

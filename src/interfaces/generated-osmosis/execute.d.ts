@@ -170,6 +170,7 @@ export type TimeInterval =
         seconds: number;
       };
     };
+
 export type SwapAdjustmentStrategy = {
   risk_weighted_average: {
     base_denom: BaseDenom;

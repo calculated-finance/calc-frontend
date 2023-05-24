@@ -60,10 +60,13 @@ export default function SwapAmount({
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
       ) : (
-        <FormHelperText color="brand.200" fontSize="xs">
-          A total of {executions} swaps will take place over {executions * executionIntervalIncrement}{' '}
-          {displayCustomExecutionInterval}.
-        </FormHelperText>
+        Boolean(field.value) &&
+        !meta.error && (
+          <FormHelperText color="brand.200" fontSize="xs">
+            A total of {executions} swaps will take place over {executions * executionIntervalIncrement}{' '}
+            {displayCustomExecutionInterval}.
+          </FormHelperText>
+        )
       )}
     </FormControl>
   );
