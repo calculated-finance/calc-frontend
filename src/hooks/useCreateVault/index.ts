@@ -18,6 +18,7 @@ import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
 import { useVersion } from '@hooks/useVersion';
 import * as Sentry from '@sentry/react';
+import useStrategy from '@hooks/useStrategy';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -70,6 +71,8 @@ const useCreateVault = (
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
 
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
+
   const version = useVersion();
 
   const fee = chain === Chains.Osmosis ? getFee() : 'auto';
@@ -111,6 +114,10 @@ const useCreateVault = (
 
       if (!version) {
         throw Error('No version found');
+      }
+
+      if (reinvestStrategyData && reinvestStrategyData.vault.owner !== senderAddress) {
+        throw new Error('Reinvest strategy does not belong to user.');
       }
 
       const { autoStakeValidator } = state;
