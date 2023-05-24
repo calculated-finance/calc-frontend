@@ -16,6 +16,7 @@ import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
+import { isMainnet } from '@utils/isMainnet';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -32,6 +33,7 @@ Sentry.init({
   // Session Replay
   replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  environment: isMainnet() ? 'production' : 'test',
 });
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
