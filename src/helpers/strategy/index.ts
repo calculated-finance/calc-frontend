@@ -85,7 +85,7 @@ export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosi
         const minutes = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE / MINUTES_IN_A_HOUR);
         return `${minutes} Hour`;
       }
-      if (custom.seconds % 60 === 0) {
+      if (custom.seconds % SECONDS_IN_A_MINUTE === 0) {
         return 'Minute';
       }
     }
