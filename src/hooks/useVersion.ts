@@ -1,12 +1,11 @@
 import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v1/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
-import { Config, ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
+import { ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
-
-export type Version = 'v1' | 'v2';
+import { Version } from './Version';
 
 export function useVersion(): Version | undefined {
   const { address } = useWallet();

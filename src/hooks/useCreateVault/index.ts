@@ -116,7 +116,7 @@ const useCreateVault = (
       const { autoStakeValidator } = state;
 
       if (autoStakeValidator) {
-        msgs.push(getGrantMsg(senderAddress, chain));
+        msgs.push(getGrantMsg(senderAddress, chain, version));
       }
 
       const createVaultMsg = buildCreateVaultParams(

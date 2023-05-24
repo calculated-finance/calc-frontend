@@ -1,5 +1,6 @@
 import { GasPrice } from '@cosmjs/stargate';
 import { Chains } from '@hooks/useChain';
+import { Version } from '@hooks/Version';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
@@ -156,8 +157,8 @@ export function getChainFeeTakerAddress(chain: Chains) {
   return FEE_TAKER_ADDRESS;
 }
 
-export function getChainStakingRouterContractAddress(chain: Chains) {
-  if (chain === Chains.Osmosis) {
+export function getChainStakingRouterContractAddress(chain: Chains, version: Version) {
+  if (chain === Chains.Osmosis || version === 'v2') {
     return getChainContractAddress(chain);
   }
 
