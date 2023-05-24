@@ -17,6 +17,7 @@ import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
 import { useVersion } from '@hooks/useVersion';
+import * as Sentry from '@sentry/react';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -76,68 +77,75 @@ const useCreateVault = (
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
 
-  return useMutation<Strategy['id'], Error>(() => {
-    if (!state) {
-      throw new Error('No state');
-    }
+  return useMutation<Strategy['id'], Error>(
+    () => {
+      if (!state) {
+        throw new Error('No state');
+      }
 
-    if (!price) {
-      throw new Error('No fiat price');
-    }
+      if (!price) {
+        throw new Error('No fiat price');
+      }
 
-    if (!client) {
-      throw Error('Invalid client');
-    }
+      if (!client) {
+        throw Error('Invalid client');
+      }
 
-    if (!chain) {
-      throw Error('Invalid chain');
-    }
+      if (!chain) {
+        throw Error('Invalid chain');
+      }
 
-    if (!senderAddress) {
-      throw Error('Invalid sender address');
-    }
+      if (!senderAddress) {
+        throw Error('Invalid sender address');
+      }
 
-    const { pairs } = pairsData || {};
+      const { pairs } = pairsData || {};
 
-    if (!pairs) {
-      throw Error('No pairs found');
-    }
+      if (!pairs) {
+        throw Error('No pairs found');
+      }
 
-    if (!price) {
-      throw Error('No price data found');
-    }
+      if (!price) {
+        throw Error('No price data found');
+      }
 
-    if (!version) {
-      throw Error('No version found');
-    }
+      if (!version) {
+        throw Error('No version found');
+      }
 
-    const { autoStakeValidator } = state;
+      const { autoStakeValidator } = state;
 
-    if (autoStakeValidator) {
-      msgs.push(getGrantMsg(senderAddress, chain));
-    }
+      if (autoStakeValidator) {
+        msgs.push(getGrantMsg(senderAddress, chain));
+      }
 
-    const createVaultMsg = buildCreateVaultParams(
-      formName,
-      state,
-      pairs,
-      transactionType,
-      senderAddress,
-      Number(dexPrice),
-      version,
-    );
+      const createVaultMsg = buildCreateVaultParams(
+        formName,
+        state,
+        pairs,
+        transactionType,
+        senderAddress,
+        Number(dexPrice),
+        version,
+      );
 
-    const funds = getFunds(state.initialDenom, state.initialDeposit);
+      const funds = getFunds(state.initialDenom, state.initialDeposit);
 
-    msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
+      msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
-    if (!excludeCreationFee) {
-      const tokensToCoverFee = createStrategyFeeInTokens(price);
-      msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
-    }
+      if (!excludeCreationFee) {
+        const tokensToCoverFee = createStrategyFeeInTokens(price);
+        msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+      }
 
-    return executeCreateVault(client, senderAddress, msgs, fee);
-  });
+      return executeCreateVault(client, senderAddress, msgs, fee);
+    },
+    {
+      onError: (error) => {
+        Sentry.captureException(error, { tags: { chain } });
+      },
+    },
+  );
 };
 
 export const useCreateVaultDca = (formName: FormNames, transactionType: TransactionType) => {

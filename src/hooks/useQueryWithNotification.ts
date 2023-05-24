@@ -8,12 +8,12 @@ export default function useQueryWithNotification<TQueryFnData = unknown>(
   options: UseQueryOptions<TQueryFnData, Error> = {},
 ) {
   const toast = useToast();
-  const label = queryKey[0];
+  const label = queryKey[0] as string;
 
   return useQuery<TQueryFnData, Error>(queryKey, queryFn, {
     ...options,
     onError: (error: Error) => {
-      Sentry.captureException(error, { queryKey });
+      Sentry.captureException(error, { tags: { queryKey: label } });
       toast({
         title: 'Something went wrong',
         position: 'top-right',
