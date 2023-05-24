@@ -170,7 +170,7 @@ export function DestinationDetails({ strategy }: { strategy: Strategy | Strategy
     );
   }
 
-  return chain === Chains.Osmosis ? (
+  return isV2Enabled(chain) ? (
     <>
       <GridItem colSpan={1}>
         <Heading size="xs">Post-swap action</Heading>
