@@ -148,7 +148,7 @@ export const allSchema = {
         return new Date() <= combineDateAndTime(startDate, value);
       },
     }),
-  executionInterval: Yup.mixed<ExecutionIntervals>(),
+  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
   executionIntervalIncrement: Yup.number()
     .label('Increment')
     .positive()
@@ -370,7 +370,6 @@ export const dcaSchema = Yup.object({
   purchaseTime: allSchema.purchaseTime,
   executionInterval: allSchema.executionInterval,
   executionIntervalIncrement: allSchema.executionIntervalIncrement,
-  // executionIntervalPeriod: allSchema.executionIntervalPeriod,
   swapAmount: allSchema.swapAmount,
   slippageTolerance: allSchema.slippageTolerance,
   priceThresholdEnabled: allSchema.priceThresholdEnabled,
@@ -406,7 +405,6 @@ export const step2ValidationSchema = dcaSchema.pick([
   'purchaseTime',
   'executionInterval',
   'executionIntervalIncrement',
-  // 'executionIntervalPeriod',
   'swapAmount',
   'slippageTolerance',
   'priceThresholdEnabled',

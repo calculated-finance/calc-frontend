@@ -6,22 +6,68 @@ import BadgeButton from '@components/BadgeButton';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { isNil } from 'lodash';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
-  const { initialDenom, resultingDenom, initialDeposit, swapAmount, executionInterval, executionIntervalIncrement } =
-    state;
+function customExecutionInterval(
+  increment: number | null | undefined,
+  interval: ExecutionIntervals,
+  executions: number,
+) {
+  if (!isNil(increment) && increment > 0) {
+    const displayCustomExecutionInterval =
+      executionIntervalDisplay[interval as ExecutionIntervals][executions * increment > 1 ? 1 : 0];
+    return displayCustomExecutionInterval;
+  }
+  return null;
+}
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+function IncrementAndInterval({ state }: { state: DcaInFormDataAll }) {
+  const { initialDeposit, swapAmount, executionIntervalIncrement, executionInterval } = state;
 
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
-  const displayCustomExecutionInterval =
-    executionIntervalDisplay[executionInterval as ExecutionIntervals][
-      executions * executionIntervalIncrement > 1 ? 1 : 0
-    ];
+
+  if (!executionIntervalIncrement) {
+    return (
+      <>
+        <BadgeButton url="customise">
+          <Text>{executionIntervalDisplay[executionInterval as ExecutionIntervals][0]}</Text>
+        </BadgeButton>{' '}
+        for{' '}
+        <BadgeButton url="customise">
+          <Text>
+            {executions} {displayExecutionInterval}
+          </Text>
+        </BadgeButton>{' '}
+      </>
+    );
+  }
+
+  const customInterval = customExecutionInterval(executionIntervalIncrement, executionInterval, executions);
+
+  return (
+    <>
+      <BadgeButton url="customise">
+        <Text>
+          {executionIntervalIncrement} {customInterval}
+        </Text>
+      </BadgeButton>{' '}
+      for{' '}
+      <BadgeButton url="customise">
+        <Text>
+          {swapAmount === initialDeposit ? '1 cycle' : `${executions * executionIntervalIncrement} ${customInterval}`}
+        </Text>
+      </BadgeButton>{' '}
+    </>
+  );
+}
+
+export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
+  const { initialDenom, resultingDenom, swapAmount } = state;
+  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
   return (
     <Box data-testid="summary-the-swap">
@@ -39,25 +85,7 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />
         </BadgeButton>{' '}
-        every{' '}
-        <BadgeButton url="customise">
-          <Text>
-            {!executionIntervalIncrement
-              ? executionIntervalDisplay[executionInterval as ExecutionIntervals][0]
-              : `${executionIntervalIncrement} ${displayCustomExecutionInterval}`}
-          </Text>
-        </BadgeButton>{' '}
-        for{' '}
-        <BadgeButton url="customise">
-          <Text>
-            {!executionIntervalIncrement
-              ? `${executions} ${displayExecutionInterval}`
-              : swapAmount === initialDeposit
-              ? '1 cycle'
-              : `${executions * executionIntervalIncrement} ${displayCustomExecutionInterval}`}
-          </Text>
-        </BadgeButton>{' '}
-        .
+        every <IncrementAndInterval state={state} />.
       </Text>
     </Box>
   );
