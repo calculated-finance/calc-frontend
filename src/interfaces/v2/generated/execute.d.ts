@@ -108,6 +108,14 @@ export type ExecuteMsg =
       };
     }
   | {
+      old_z_delegate: {
+        amount: Uint128;
+        delegator_address: Addr;
+        denom: string;
+        validator_address: Addr;
+      };
+    }
+  | {
       migrate_vaults: {
         limit: number;
       };
