@@ -86,10 +86,15 @@ export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy
     }
     return undefined;
   }
-  const { z_delegate } = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
-  if (z_delegate) {
-    return z_delegate.validator_address;
+  const postSwapDetails = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
+  if (postSwapDetails?.z_delegate) {
+    return postSwapDetails.z_delegate.validator_address;
   }
+
+  if (postSwapDetails?.old_z_delegate) {
+    return postSwapDetails.old_z_delegate.validator_address;
+  }
+
   return undefined;
 }
 

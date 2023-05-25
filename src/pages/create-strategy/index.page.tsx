@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import useWhitelist from '@hooks/useWhitelist';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -194,7 +194,7 @@ function Strategies() {
       },
     ] as StrategyCardProps[];
 
-    if (chain === Chains.Osmosis) {
+    if (isV2Enabled(chain)) {
       strategies.push({
         name: 'Weighted Scale Out',
         description: 'Sell more when the price is high, and less when the price is low.',

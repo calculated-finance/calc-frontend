@@ -14,8 +14,8 @@ import {
 } from '@chakra-ui/react';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
-import { getMarsAddress, getMarsUrl } from '@helpers/chains';
-import { Chains, useChain } from '@hooks/useChain';
+import { getMarsUrl } from '@helpers/chains';
+import { useChain } from '@hooks/useChain';
 import { truncate } from '@components/CosmosWallet';
 import {
   getStrategyPostSwapType,
