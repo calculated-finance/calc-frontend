@@ -3,7 +3,7 @@ import { NumberFormatValues, NumericFormat } from 'react-number-format';
 
 type NumberInputProps = {
   onChange: (value: number | null) => void;
-  decimalScale: number;
+  decimalScale?: number;
 } & Omit<InputProps, 'onChange'>;
 
 export default function NumberInput({ value, onChange, type, defaultValue, ...props }: NumberInputProps) {
