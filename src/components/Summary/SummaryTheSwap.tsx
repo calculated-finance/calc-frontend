@@ -26,10 +26,10 @@ function IncrementAndInterval({ state }: { state: DcaInFormDataAll }) {
   const { initialDeposit, swapAmount, executionIntervalIncrement, executionInterval } = state;
 
   const executions = totalExecutions(initialDeposit, swapAmount);
-  const displayExecutionInterval =
-    executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
   if (!executionIntervalIncrement) {
+    const displayExecutionInterval =
+      executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
     return (
       <>
         <BadgeButton url="customise">

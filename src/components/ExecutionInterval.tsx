@@ -12,13 +12,14 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { executionIntervalData } from '@helpers/executionIntervalData';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { featureFlags } from 'src/constants';
 import Radio from './Radio';
 import RadioCard from './RadioCard';
 import NumberInput from './NumberInput';
 import Select from './Select';
+import { isV2Enabled } from '@helpers/version/isV2Enabled';
 
 function ExecutionIntervalLegacy() {
   const [field, , helpers] = useField({ name: 'executionInterval' });
@@ -104,7 +105,8 @@ function ExecutionIntervalCustom() {
 
 export default function ExecutionInterval() {
   const { chain } = useChain();
-  if (chain === Chains.Osmosis) {
+
+  if (isV2Enabled(chain) && featureFlags.customTimeIntervalEnabled) {
     return <ExecutionIntervalCustom />;
   }
   return <ExecutionIntervalLegacy />;

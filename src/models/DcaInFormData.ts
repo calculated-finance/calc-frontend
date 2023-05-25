@@ -14,7 +14,7 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
-import { Chains, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
@@ -49,13 +49,6 @@ export const initialValues = {
   swapMultiplier: 1,
   applyMultiplier: YesNoValues.Yes,
 };
-
-export function getInitialValues(chain: Chains) {
-  return {
-    ...initialValues,
-    executionInterval: chain === Chains.Osmosis ? '' : initialValues.executionInterval,
-  };
-}
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allSchema = {
