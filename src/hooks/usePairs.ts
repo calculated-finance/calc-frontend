@@ -8,7 +8,10 @@ import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
-const hiddenPairs = [] as string[];
+const hiddenPairs = [
+  'kujira13l8gwanf37938wgfv5yktmfzxjwaj4ysn4gl96vj78xcqqxlcrgssfl797', // not sure what this is
+  'kujira1uvqk5vj9vn4gjemrp0myz4ku49aaemulgaqw7pfe0nuvfwp3gukq64r3ws', // ampLuna - usk pair
+] as string[];
 
 export function isSupportedDenomForDcaPlus(denom: Denom) {
   return SUPPORTED_DENOMS_FOR_DCA_PLUS.includes(denom) && isDenomVolatile(denom);
@@ -59,6 +62,7 @@ export default function usePairs() {
       const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
         get_pairs: {},
       });
+      console.log('pairs', result);
       return result;
     },
     {
