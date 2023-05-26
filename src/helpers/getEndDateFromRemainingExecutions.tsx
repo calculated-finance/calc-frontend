@@ -1,7 +1,11 @@
 import { Strategy } from '@hooks/useStrategies';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 export function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, remainingExecutions: number) {
-  switch (strategy.time_interval) {
+  switch (strategy.time_interval as ExecutionIntervals) {
+    case 'minute':
+      startDate.setMinutes(startDate.getMinutes() + 60 * remainingExecutions);
+      break;
     case 'half_hourly':
       startDate.setMinutes(startDate.getMinutes() + 30 * remainingExecutions);
       break;
