@@ -90,6 +90,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
     getStrategyResultingDenom(strategy),
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
+
   return (
     <>
       <GridItem colSpan={1}>

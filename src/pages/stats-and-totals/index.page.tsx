@@ -136,8 +136,10 @@ const timeIntervalMap = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  const timeFunction = timeIntervalMap[strategy.time_interval] || (() => 0);
-  return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
+  // const timeFunction = timeIntervalMap[strategy.time_interval] || (() => 0);
+  // return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
+
+  return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
 }
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {

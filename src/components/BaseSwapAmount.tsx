@@ -10,6 +10,7 @@ import { DenomInput } from './DenomInput';
 export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDataStep1; isSell?: boolean }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
+  const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
 
   const { initialDeposit } = step1State;
 
@@ -20,6 +21,11 @@ export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDa
   const executions = totalExecutions(step1State.initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+
+  const displayCustomExecutionInterval =
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][
+      executions * executionIntervalIncrement > 1 ? 1 : 0
+    ];
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -40,10 +46,18 @@ export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDa
       </FormHelperText>
       <DenomInput denom={step1State.initialDenom} onChange={helpers.setValue} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(field.value) && !meta.error && (
+      {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">
           With no price change, {executions} swaps over {executions} {displayExecutionInterval}.
         </FormHelperText>
+      ) : (
+        Boolean(field.value) &&
+        !meta.error && (
+          <FormHelperText color="brand.200" fontSize="xs">
+            With no price change, {executions} swaps over {executions * executionIntervalIncrement}{' '}
+            {displayCustomExecutionInterval}.
+          </FormHelperText>
+        )
       )}
     </FormControl>
   );

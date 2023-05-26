@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 
 import { allSchema } from './DcaInFormData';
 import YesNoValues from './YesNoValues';
+import { ExecutionIntervals } from './ExecutionIntervals';
 
 export const weightedScaleSchema = Yup.object({
   resultingDenom: allSchema.resultingDenom,
@@ -15,7 +16,19 @@ export const weightedScaleSchema = Yup.object({
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
   reinvestStrategy: allSchema.reinvestStrategy,
-  executionInterval: allSchema.executionInterval,
+  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
+  executionIntervalIncrement: Yup.number()
+    .label('Increment')
+    .positive()
+    .integer()
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    }),
+
   swapAmount: allSchema.swapAmount,
   basePriceIsCurrentPrice: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))

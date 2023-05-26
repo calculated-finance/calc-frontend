@@ -257,12 +257,12 @@ export function buildCreateVaultParamsWeightedScale(
   currentPrice: number,
 ) {
   const { chain } = useChainStore.getState();
-  const { executionInterval } = state;
+  const { executionInterval, executionIntervalIncrement } = state;
 
   const msg = {
     create_vault: {
       label: '',
-      time_interval: getExecutionInterval(executionInterval, null),
+      time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
       target_denom: state.resultingDenom,
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
