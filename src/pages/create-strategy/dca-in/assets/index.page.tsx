@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenomsFromQuoteDenom, uniqueQuoteDenomsFromBaseDenom } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -15,6 +15,17 @@ import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
+import { Denom } from '@models/Denom';
+import { Pair } from '@models/Pair';
+
+function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+  return Array.from(
+    new Set([
+      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+    ]),
+  );
+}
 
 function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
@@ -62,7 +73,7 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={uniqueBaseDenomsFromQuoteDenom(values.initialDenom, pairs)} />
+              <DCAInResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
               <Submit>Next</Submit>
             </Stack>
           </Form>
