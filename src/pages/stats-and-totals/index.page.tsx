@@ -135,6 +135,8 @@ const timeIntervalMap = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
+  console.log(strategy);
+
   return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
 }
 
