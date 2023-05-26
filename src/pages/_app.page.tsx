@@ -17,6 +17,7 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
+import { AssetListWrapper } from '@hooks/useCachedAssetList';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -94,7 +95,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ChakraProvider theme={theme}>
         <CalcWalletModalProvider>
-          <QueryClientProvider client={queryClient}>{getLayout(<Component {...pageProps} />)}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <AssetListWrapper>{getLayout(<Component {...pageProps} />)}</AssetListWrapper>
+          </QueryClientProvider>
         </CalcWalletModalProvider>
       </ChakraProvider>
     </>

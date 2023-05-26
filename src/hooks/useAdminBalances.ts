@@ -1,14 +1,16 @@
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { Coin } from '@cosmjs/proto-signing';
 import { useKujira } from './useKujira';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain, Chains } from './useChain';
 import { useOsmosis } from './useOsmosis';
+import { useSupportedDenoms } from './useSupportedDenoms';
 
 const useAdminBalances = (address: string) => {
   const kujiraQuery = useKujira((state) => state.query);
   const osmosisQuery = useOsmosis((state) => state.query);
   const { chain } = useChain();
+
+  const supportedDenoms = useSupportedDenoms();
 
   const result = useQueryWithNotification(
     ['admin-balances', address, chain],
@@ -27,7 +29,7 @@ const useAdminBalances = (address: string) => {
   );
 
   return {
-    balances: result.data?.filter((balance: Coin) => SUPPORTED_DENOMS.includes(balance.denom)),
+    balances: result.data?.filter((balance: Coin) => supportedDenoms.includes(balance.denom)),
     ...result,
   };
 };

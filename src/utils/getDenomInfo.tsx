@@ -1,5 +1,7 @@
-import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis } from '@models/Denom';
+import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
+import { Chains, useChainStore } from '@hooks/useChain';
+import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isMainnet } from './isMainnet';
 
 type DenomInfo = {
@@ -309,7 +311,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   },
 };
 
-export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomInfo> = {
+export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
@@ -364,51 +366,105 @@ export const testnetDenoms: Record<TestnetDenoms | TestnetDenomsOsmosis, DenomIn
     significantFigures: 6,
     enabledInDcaPlus: true,
   },
-  [TestnetDenomsOsmosis.OSMO]: {
-    name: 'OSMO',
-    icon: '/images/denoms/osmo.svg',
-    stakeable: true,
-    stakeableAndSupported: true,
-    coingeckoId: 'osmosis',
-    significantFigures: 6,
-    osmosisId: 'OSMO',
-    enabledInDcaPlus: true,
-  },
-  [TestnetDenomsOsmosis.AXL]: {
-    name: 'axlUSDC',
-    icon: '/images/denoms/axl.svg',
-    stakeable: false,
-    stable: true,
-    coingeckoId: 'usd-coin',
-    significantFigures: 6,
-    osmosisId: 'aUSDC',
-    enabledInDcaPlus: true,
-  },
-  [TestnetDenomsOsmosis.ATOM]: {
-    name: 'ATOM',
-    icon: '/images/denoms/atom.svg',
-    osmosisId: 'ATOM',
-    stakeable: true,
-    coingeckoId: 'cosmos',
-    significantFigures: 6,
-    enabledInDcaPlus: true,
-  },
-  [TestnetDenomsOsmosis.ION]: {
-    name: 'ION',
-    icon: '/images/denoms/ion.svg',
-    osmosisId: 'ION',
-    stakeable: true,
-    coingeckoId: 'ion',
-    significantFigures: 6,
-    enabledInDcaPlus: true,
-  },
+  // [TestnetDenomsOsmosis.OSMO]: {
+  //   name: 'OSMO',
+  //   icon: '/images/denoms/osmo.svg',
+  //   stakeable: true,
+  //   stakeableAndSupported: true,
+  //   coingeckoId: 'osmosis',
+  //   significantFigures: 6,
+  //   osmosisId: 'OSMO',
+  //   enabledInDcaPlus: true,
+  // },
+  // [TestnetDenomsOsmosis.AXL]: {
+  //   name: 'axlUSDC',
+  //   icon: '/images/denoms/axl.svg',
+  //   stakeable: false,
+  //   stable: true,
+  //   coingeckoId: 'usd-coin',
+  //   significantFigures: 6,
+  //   osmosisId: 'aUSDC',
+  //   enabledInDcaPlus: true,
+  // },
+  // [TestnetDenomsOsmosis.ATOM]: {
+  //   name: 'ATOM',
+  //   icon: '/images/denoms/atom.svg',
+  //   osmosisId: 'ATOM',
+  //   stakeable: true,
+  //   coingeckoId: 'cosmos',
+  //   significantFigures: 6,
+  //   enabledInDcaPlus: true,
+  // },
+  // [TestnetDenomsOsmosis.ION]: {
+  //   name: 'ION',
+  //   icon: '/images/denoms/ion.svg',
+  //   osmosisId: 'ION',
+  //   stakeable: true,
+  //   coingeckoId: 'ion',
+  //   significantFigures: 6,
+  //   enabledInDcaPlus: true,
+  // },
 };
 
-const getDenomInfo = (denom?: string) => {
-  if (!denom) {
-    return defaultDenom;
-  }
+const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL.toString()];
+const stableDenomsMainnet = [MainnetDenomsOsmosis.AXL.toString()];
+
+function isDenomInStablesList(denom: Denom) {
   if (isMainnet()) {
+    return stableDenomsMainnet.includes(denom);
+  }
+  return stableDenomsTestnet.includes(denom);
+}
+
+const getDenomInfo = (denom?: string) => {
+  // if osmosis blah adapter to current properties
+  // use zustand to get chain id
+  // use chain store?   const { chain } = useChainStore.getState(); do this if iyt works
+  // test with 3g
+  const { chain } = useChainStore.getState();
+
+  const { assetList } = useAssetListStore.getState();
+
+  if (chain === Chains.Osmosis && assetList?.assets) {
+    // map asset list to denom info
+    const asset = assetList.assets.find((a) => a.base === denom);
+
+    if (!asset) {
+      return defaultDenom;
+    }
+
+    const mapTo = {} as DenomInfo;
+
+    mapTo.name = asset.symbol;
+    mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
+    mapTo.stakeable = !isDenomInStablesList(denom as Denom);
+    mapTo.stable = isDenomInStablesList(denom as Denom);
+    mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
+    mapTo.significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
+    mapTo.osmosisId = asset.symbol;
+    mapTo.enabledInDcaPlus = true; // TODO: Need to use a whitelist of assets that are supported in DCA Plus;
+    mapTo.stakeableAndSupported = denom === 'uosmo';
+
+    if (mapTo.significantFigures !== 6) {
+      mapTo.conversion = (value: number) => value / 10 ** mapTo.significantFigures;
+      mapTo.deconversion = (value: number) => Math.round(value * 10 ** mapTo.significantFigures);
+    }
+
+    if (isMainnet()) {
+      return {
+        ...defaultDenom,
+        ...mainnetDenoms[denom as MainnetDenoms],
+        ...mapTo,
+      };
+    }
+    return {
+      ...defaultDenom,
+      ...testnetDenoms[denom as TestnetDenoms],
+      ...mapTo,
+    };
+  }
+  // second comparison is not needed but just being explicit
+  if (isMainnet() && chain === Chains.Kujira) {
     return {
       ...defaultDenom,
       ...mainnetDenoms[denom as MainnetDenoms],
