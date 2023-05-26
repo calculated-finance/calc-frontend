@@ -19,6 +19,7 @@ import usePrice from '@hooks/usePrice';
 import { useVersion } from '@hooks/useVersion';
 import * as Sentry from '@sentry/react';
 import useStrategy from '@hooks/useStrategy';
+import { isNil } from 'lodash';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -114,6 +115,10 @@ const useCreateVault = (
 
       if (!version) {
         throw Error('No version found');
+      }
+
+      if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
+        throw new Error('Invalid reinvest strategy.');
       }
 
       if (reinvestStrategyData && reinvestStrategyData.vault.owner !== senderAddress) {
