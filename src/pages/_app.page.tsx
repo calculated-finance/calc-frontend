@@ -3,7 +3,7 @@ import '@fontsource/karla';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import theme from 'src/theme';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Box, Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
@@ -94,11 +94,21 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>CALC - Calculated Finance</title>
       </Head>
       <ChakraProvider theme={theme}>
-        <CalcWalletModalProvider>
-          <QueryClientProvider client={queryClient}>
-            <AssetListWrapper>{getLayout(<Component {...pageProps} />)}</AssetListWrapper>
-          </QueryClientProvider>
-        </CalcWalletModalProvider>
+        <Sentry.ErrorBoundary
+          fallback={
+            <Center m={8} layerStyle="panel" p={8} flexDirection="column" gap={6}>
+              <Heading size="lg">Something went wrong</Heading>
+              <Image w={28} h={28} src="/images/notConnected.png" />
+              <Text>Please try again in a new session</Text>
+            </Center>
+          }
+        >
+          <CalcWalletModalProvider>
+            <QueryClientProvider client={queryClient}>
+              <AssetListWrapper>{getLayout(<Component {...pageProps} />)}</AssetListWrapper>
+            </QueryClientProvider>
+          </CalcWalletModalProvider>
+        </Sentry.ErrorBoundary>
       </ChakraProvider>
     </>
   );
