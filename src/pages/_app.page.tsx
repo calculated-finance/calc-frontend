@@ -17,7 +17,6 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
-import { useCachedAssetList } from '@hooks/useCachedAssetList';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 
 type AppPropsWithLayout = AppProps & {
