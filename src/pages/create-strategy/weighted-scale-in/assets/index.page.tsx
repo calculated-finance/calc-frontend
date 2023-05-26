@@ -2,7 +2,11 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
-import usePairs, { isSupportedDenomForWeightedScale, uniqueBaseDenomsFromQuoteDenom } from '@hooks/usePairs';
+import usePairs, {
+  isSupportedDenomForWeightedScale,
+  uniqueBaseDenomsFromQuoteDenom,
+  uniqueQuoteDenomsFromBaseDenom,
+} from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -18,6 +22,17 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import useWhitelist from '@hooks/useWhitelist';
 import { WhitelistModal } from '@components/WhitelistModal';
 import { useRouter } from 'next/router';
+import { Pair } from '@models/Pair';
+import { Denom } from '@models/Denom';
+
+function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+  return Array.from(
+    new Set([
+      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+    ]),
+  );
+}
 
 function DcaIn() {
   const { actions, state } = useWeightedScaleAssetsForm(FormNames.WeightedScaleIn);
@@ -71,9 +86,7 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={uniqueBaseDenomsFromQuoteDenom(values.initialDenom, pairs).filter(
-                  isSupportedDenomForWeightedScale,
-                )}
+                denoms={getResultingDenoms(pairs, values.initialDenom).filter(isSupportedDenomForWeightedScale)}
               />
               <Submit>Next</Submit>
             </Stack>

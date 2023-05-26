@@ -3,10 +3,6 @@ import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
 
 export function findPair(pairs: Pair[], resultingDenom: Denom, initialDenom: Denom): Pair | undefined {
-  if (isDenomStable(initialDenom)) {
-    return pairs?.find((pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom);
-  }
-
   const initialAsQuote = pairs?.find(
     (pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom,
   );

@@ -20,6 +20,7 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
   // case 1: we are going quote -> base
   // check if initialDenom is the quote denom of the pair
   const { offer_denom } = quotePriceInfo;
+
   const { offer_denom: baseOfferDenom } = basePriceInfo;
   let priceDeconversion;
   if ('native' in baseOfferDenom) {
@@ -51,6 +52,9 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
 
   // case 2: we are going base -> quote
   // return the price of the base
+  if (transactionType === 'buy') {
+    return safeInvert(priceDeconversion(Number(quotePriceInfo.quote_price)));
+  }
   return priceDeconversion(Number(quotePriceInfo.quote_price));
 }
 

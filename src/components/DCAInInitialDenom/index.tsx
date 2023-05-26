@@ -9,7 +9,7 @@ import {
   Text,
   Center,
 } from '@chakra-ui/react';
-import usePairs, { uniqueQuoteDenoms } from '@hooks/usePairs';
+import usePairs, { uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
@@ -25,7 +25,7 @@ export default function DCAInInitialDenom() {
     return null;
   }
 
-  const denoms = uniqueQuoteDenoms(pairs).filter(isDenomStable);
+  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomStable);
 
   const { promotion } = getDenomInfo(field.value);
 
