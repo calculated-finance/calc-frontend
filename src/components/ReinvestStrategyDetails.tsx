@@ -18,6 +18,7 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import usePairs from '@hooks/usePairs';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -27,8 +28,9 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const initialDenomValue = new DenomValue(balance);
 
   const strategyType = getStrategyType(strategy);
+  const { data: pairsData } = usePairs();
 
-  const startDate = getStrategyStartDate(strategy);
+  const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>

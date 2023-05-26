@@ -10,8 +10,10 @@ import {
   getStrategyResultingDenom,
   isStrategyOperating,
   isBuyStrategy,
+  getTargetPrice,
 } from '@helpers/strategy';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import usePairs from '@hooks/usePairs';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
   const { name: initialDenomName } = getDenomInfo(initialDenom);
@@ -42,13 +44,15 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
+  const { data: pairsData } = usePairs();
+
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { time, fin_limit_order } = trigger || {};
+    const { time } = trigger || {};
     const targetTime = time?.target_time;
 
-    const targetPrice = fin_limit_order?.target_price;
+    const targetPrice = getTargetPrice(strategy, pairsData?.pairs);
 
     if (isStrategyOperating(strategy)) {
       if (targetTime) {
@@ -71,7 +75,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
         const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
           ? getDenomInfo(resultingDenom)
           : getDenomInfo(initialDenom);
-        const convertedPrice = Number(priceDeconversion(Number(targetPrice)).toFixed(pricePrecision));
+        const convertedPrice = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
 
         if (isBuyStrategy(strategy)) {
           nextSwapInfo = (

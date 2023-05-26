@@ -15,6 +15,10 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
   const quotePriceInfo = result.quote[0];
   const basePriceInfo = result.base[0];
 
+  if (!quotePriceInfo || !basePriceInfo) {
+    return 0;
+  }
+
   // TODO: change this to look at pair instead
 
   // case 1: we are going quote -> base

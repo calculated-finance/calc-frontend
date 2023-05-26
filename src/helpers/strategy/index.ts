@@ -6,6 +6,10 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
+import { TriggerConfiguration as TriggerConfigurationV2 } from 'src/interfaces/v2/generated/response/get_vault';
+import { safeInvert } from '@hooks/usePrice/safeInvert';
+import { findPair } from '@helpers/findPair';
+import { Pair } from '@models/Pair';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -112,15 +116,47 @@ export function isBuyStrategy(strategy: Strategy) {
   );
 }
 
-export function getStrategyStartDate(strategy: Strategy) {
+export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
   const { trigger } = strategy;
+
+  let target_price;
+
   if (trigger && 'fin_limit_order' in trigger) {
-    const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
-      ? getDenomInfo(getStrategyResultingDenom(strategy))
-      : getDenomInfo(getStrategyInitialDenom(strategy));
-    const price = Number(priceDeconversion(Number(trigger.fin_limit_order.target_price)).toFixed(pricePrecision));
+    target_price = trigger.fin_limit_order.target_price;
+  }
+
+  const triggerV2 = trigger as TriggerConfigurationV2;
+
+  if (trigger && 'price' in triggerV2) {
+    target_price = triggerV2.price.target_price;
+  }
+
+  if (target_price) {
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
+    const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
+    if (pair && pair.base_denom === getStrategyInitialDenom(strategy)) {
+      return safeInvert(Number(target_price));
+    }
+    return Number(target_price);
+  }
+
+  return null;
+}
+
+export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefined) {
+  const { trigger } = strategy;
+  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
+    ? getDenomInfo(getStrategyResultingDenom(strategy))
+    : getDenomInfo(getStrategyInitialDenom(strategy));
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
+
+  const targetPrice = getTargetPrice(strategy, pairs);
+
+  if (targetPrice) {
+    const price = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
+
     if (isBuyStrategy(strategy)) {
       return `When ${getDenomInfo(resultingDenom).name} hits ${price} ${getDenomInfo(initialDenom).name}`;
     }
