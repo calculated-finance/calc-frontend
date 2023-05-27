@@ -10,6 +10,7 @@ import { Denom } from '@models/Denom';
 import { Chains, useChain } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
+import { useWallet } from '@hooks/useWallet';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
@@ -19,6 +20,7 @@ import { Reinvest } from './Reinvest';
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
   const { chain } = useChain();
+  const { address } = useWallet();
 
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
@@ -37,7 +39,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.Reinvest,
       label: 'Reinvest',
       supported: true,
-      enabled: isV2Enabled(chain),
+      enabled: isV2Enabled(chain, address),
     },
     {
       value: PostPurchaseOptions.GenerateYield,

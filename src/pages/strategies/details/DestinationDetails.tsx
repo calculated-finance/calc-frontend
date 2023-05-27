@@ -34,8 +34,9 @@ import Link from 'next/link';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
+  const { address } = useWallet();
   return (
-    <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain) ? 'hidden' : 'visible'}>
+    <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain, address) ? 'hidden' : 'visible'}>
       <Flex justify="end">
         <Link href={generateStrategyConfigureUrl(strategy.id)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
@@ -170,7 +171,7 @@ export function DestinationDetails({ strategy }: { strategy: Strategy | Strategy
     );
   }
 
-  return isV2Enabled(chain) ? (
+  return isV2Enabled(chain, address) ? (
     <>
       <GridItem colSpan={1}>
         <Heading size="xs">Post-swap action</Heading>
