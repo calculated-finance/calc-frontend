@@ -10,6 +10,7 @@ import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import useWhitelist from '@hooks/useWhitelist';
 import { useChain } from '@hooks/useChain';
+import { useWallet } from '@hooks/useWallet';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -124,6 +125,8 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
 function Strategies() {
   const { index } = useFearAndGreed();
 
+  const { address } = useWallet();
+
   const { chain } = useChain();
 
   const { isWhitelisted } = useWhitelist();
@@ -152,7 +155,7 @@ function Strategies() {
       },
     ] as StrategyCardProps[];
 
-    if (isV2Enabled(chain)) {
+    if (isV2Enabled(chain, address)) {
       strategies.push({
         name: 'Weighted Scale In',
         description: 'Buy more when the price is low, and less when the price is high.',
@@ -163,13 +166,6 @@ function Strategies() {
         learnMoreHref: 'https://calculated.fi/weighted-scale-in',
       });
     }
-    strategies.push({
-      name: 'Buy the Dip',
-      description: 'Auto-buy after a specified % dip in your favourite asset.',
-      advanced: true,
-      icon: <Image src="/images/trendIcon.svg" width={8} height={8} />,
-      learnMoreHref: 'https://calculated.fi/buy-the-dip',
-    });
     return strategies;
   }
 
@@ -194,7 +190,7 @@ function Strategies() {
       },
     ] as StrategyCardProps[];
 
-    if (isV2Enabled(chain)) {
+    if (isV2Enabled(chain, address)) {
       strategies.push({
         name: 'Weighted Scale Out',
         description: 'Sell more when the price is high, and less when the price is low.',
@@ -205,15 +201,6 @@ function Strategies() {
         learnMoreHref: 'https://calculated.fi/weighted-scale-in',
       });
     }
-    strategies.push({
-      name: 'Auto-take Profit',
-      description: 'Sell a certain % of an asset after it pumps a certain %.',
-      advanced: true,
-
-      icon: <Image src="/images/dollarIcon.svg" width={8} height={8} />,
-      enabled: false,
-      learnMoreHref: 'https://calculated.fi/auto-take-profit',
-    });
 
     return strategies;
   }

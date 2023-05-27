@@ -1,5 +1,6 @@
 // usewhitelist
 
+import { isNil } from 'lodash';
 import { useWallet } from './useWallet';
 
 const admins = [
@@ -13,7 +14,7 @@ const admins = [
 ];
 
 export function isAddressAdmin(address: string | undefined | null) {
-  return address && admins.includes(address);
+  return !isNil(address) && admins.includes(address);
 }
 
 export function useAdmin() {
