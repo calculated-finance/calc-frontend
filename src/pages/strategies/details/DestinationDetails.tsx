@@ -11,6 +11,7 @@ import {
   useToast,
   Flex,
   Spinner,
+  Code,
 } from '@chakra-ui/react';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
@@ -65,7 +66,9 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
         ) : (
           <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
             <Text fontSize="sm" data-testid="strategy-receiving-address">
-              Your {getDenomName(getStrategyResultingDenom(reinvestStrategy))} strategy <Icon as={ExternalLinkIcon} />
+              <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
+                {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} | <ExternalLinkIcon />
+              </Code>{' '}
             </Text>
           </ChakraLink>
         )}
