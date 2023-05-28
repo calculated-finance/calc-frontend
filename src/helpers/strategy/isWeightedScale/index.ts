@@ -13,7 +13,7 @@ export function getWeightedScaleConfig(strategy: Strategy | StrategyOsmosis) {
   }
 
   const { base_receive_amount, increase_only, multiplier } = osmosisStrategy.swap_adjustment_strategy.weighted_scale;
-
+  
   return {
     base_receive_amount,
     increase_only,

@@ -35,7 +35,7 @@ export function getStrategyStatus(strategy: Strategy) {
   return strategy.status;
 }
 
-export function isStrategyOperating(strategy: Strategy) {
+export function isStrategyOperating(strategy: Strategy | StrategyOsmosis) {
   return ['active', 'scheduled'].includes(strategy.status);
 }
 
@@ -43,7 +43,7 @@ export function isStrategyActive(strategy: Strategy) {
   return ['active'].includes(strategy.status);
 }
 
-export function isStrategyScheduled(strategy: Strategy) {
+export function isStrategyScheduled(strategy: Strategy | StrategyOsmosis) {
   return ['scheduled'].includes(strategy.status);
 }
 
@@ -55,7 +55,7 @@ export function isStrategyCancelled(strategy: Strategy | StrategyOsmosis) {
   return ['cancelled'].includes(strategy.status);
 }
 
-export default function getStrategyBalance(strategy: Strategy) {
+export default function getStrategyBalance(strategy: Strategy | StrategyOsmosis) {
   const { balance } = strategy || {};
 
   return convertDenomFromCoin(balance);
@@ -111,12 +111,12 @@ export function getSlippageTolerance(strategy: Strategy) {
   return strategy.slippage_tolerance ? `${(parseFloat(strategy.slippage_tolerance) * 100).toFixed(2)}%` : '-';
 }
 
-export function getSwapAmount(strategy: Strategy) {
+export function getSwapAmount(strategy: Strategy | StrategyOsmosis) {
   const { swap_amount } = strategy || {};
   return Number(swap_amount);
 }
 
-export function getConvertedSwapAmount(strategy: Strategy) {
+export function getConvertedSwapAmount(strategy: Strategy | StrategyOsmosis) {
   const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
@@ -135,7 +135,7 @@ export function getStrategyType(strategy: Strategy) {
   return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }
 
-export function getStrategyRemainingExecutions(strategy: Strategy) {
+export function getStrategyRemainingExecutions(strategy: Strategy | StrategyOsmosis) {
   const balance = getStrategyBalance(strategy);
   const swapAmount = getConvertedSwapAmount(strategy);
 
@@ -215,7 +215,7 @@ export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefin
 }
 
 export function getStrategyEndDateFromRemainingExecutions(
-  strategy: Strategy,
+  strategy: Strategy | StrategyOsmosis,
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {
