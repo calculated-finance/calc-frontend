@@ -35,7 +35,7 @@ export function getStrategyStatus(strategy: Strategy) {
   return strategy.status;
 }
 
-export function isStrategyOperating(strategy: Strategy) {
+export function isStrategyOperating(strategy: Strategy | StrategyOsmosis) {
   return ['active', 'scheduled'].includes(strategy.status);
 }
 
@@ -43,7 +43,7 @@ export function isStrategyActive(strategy: Strategy) {
   return ['active'].includes(strategy.status);
 }
 
-export function isStrategyScheduled(strategy: Strategy) {
+export function isStrategyScheduled(strategy: Strategy | StrategyOsmosis) {
   return ['scheduled'].includes(strategy.status);
 }
 
@@ -215,7 +215,7 @@ export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefin
 }
 
 export function getStrategyEndDateFromRemainingExecutions(
-  strategy: Strategy,
+  strategy: Strategy | StrategyOsmosis,
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {
