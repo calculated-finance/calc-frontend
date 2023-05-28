@@ -17,18 +17,7 @@ export const weightedScaleSchema = Yup.object({
   yieldOption: allSchema.yieldOption,
   reinvestStrategy: allSchema.reinvestStrategy,
   executionInterval: Yup.mixed<ExecutionIntervals>().required(),
-  executionIntervalIncrement: Yup.number()
-    .label('Increment')
-    .positive()
-    .integer()
-    .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') {
-        return null;
-      }
-      return value;
-    }),
-
+  executionIntervalIncrement: allSchema.executionIntervalIncrement,
   swapAmount: allSchema.swapAmount,
   basePriceIsCurrentPrice: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
