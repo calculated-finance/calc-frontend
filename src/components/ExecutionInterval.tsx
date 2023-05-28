@@ -16,11 +16,11 @@ import { useChain } from '@hooks/useChain';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { featureFlags } from 'src/constants';
+import { useWallet } from '@hooks/useWallet';
 import Radio from './Radio';
 import RadioCard from './RadioCard';
 import NumberInput from './NumberInput';
 import Select from './Select';
-import { useWallet } from '@hooks/useWallet';
 
 function ExecutionIntervalLegacy() {
   const [field, , helpers] = useField({ name: 'executionInterval' });
