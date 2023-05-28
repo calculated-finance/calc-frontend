@@ -8,7 +8,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
@@ -134,8 +134,11 @@ const timeIntervalMap = {
   monthly: monthsUntil,
 };
 
-function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
+function getSwapCountForStrategyUntilDate(strategy: Strategy | StrategyOsmosis, date: Date) {
+  if (typeof strategy.time_interval === 'string') {
+    return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
+  }
+  return Math.min(strategy.time_interval.custom.seconds, getStrategyRemainingExecutions(strategy));
 }
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
