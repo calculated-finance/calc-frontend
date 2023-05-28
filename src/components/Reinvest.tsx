@@ -25,6 +25,7 @@ import {
   Button,
   Link,
   Code,
+  Image,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import {
@@ -158,18 +159,43 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>Choose another CALC strategy</FormLabel>
-      <FormHelperText pb={4}>
-        You can choose from the below compatible strategies that you currently have. Cancelled strategies will not show
-        up.
-      </FormHelperText>
+      {!isEmpty(filteredStrategies) ? (
+        <>
+          <FormLabel>Choose another CALC strategy</FormLabel>
+          <FormHelperText pb={4}>
+            You can choose from the below compatible strategies that you currently have. Cancelled strategies will not
+            show up.
+          </FormHelperText>
+        </>
+      ) : (
+        <>
+          <FormLabel>Want to loop your strategies?</FormLabel>
+          <FormHelperText pb={4}>
+            In order to loop strategies, you must have another strategy that matches the in-asset or out-asset. Then you
+            can automatically invest your earnings directly into another strategy - looping and taking profit.
+          </FormHelperText>
+          {/* <FormHelperText pb={4}>
+            In order to loop strategies, you must have another strategy that matches the in-asset or out-asset. Then you
+            can automatically invest your earnings directly into another strategy - looping and taking profit.
+          </FormHelperText> */}
+        </>
+      )}
       {isLoading ? (
         <Center>
           <Spinner />
         </Center>
       ) : isEmpty(filteredStrategies) ? (
         <Stack>
-          <Center>No suitable strategies available</Center>
+          <Center p={4}>No suitable strategies available</Center>
+
+          <FormHelperText color="brand.200" fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+            <HStack spacing={3}>
+              <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+              <Text>
+                Don&apos;t worry, you can configure and link strategies later, on the &apos;view performance&apos; page.
+              </Text>
+            </HStack>
+          </FormHelperText>
         </Stack>
       ) : (
         <Stack {...getRootProps} maxH={220} overflow="auto">
