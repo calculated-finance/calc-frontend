@@ -118,6 +118,7 @@ describe('DCA In customise page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
         executionInterval: 'daily',
+        executionIntervalIncrement: 1,
         priceThresholdEnabled: YesNoValues.No,
         priceThresholdValue: null,
         purchaseTime: '',
@@ -163,6 +164,7 @@ describe('DCA In customise page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: true,
         executionInterval: 'daily',
+        executionIntervalIncrement: 1,
         startPrice: null,
         swapAmount: 1,
         triggerType: 'date',
@@ -226,6 +228,7 @@ describe('DCA In customise page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: true,
         executionInterval: 'daily',
+        executionIntervalIncrement: 1,
         purchaseTime: '14:55',
         slippageTolerance: 21,
         startDate: '2022-11-03T00:00:00.000Z',
@@ -260,6 +263,7 @@ describe('DCA In customise page', () => {
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         advancedSettings: false,
         executionInterval: 'daily',
+        executionIntervalIncrement: 1,
         purchaseTime: '',
         slippageTolerance: 2,
         startDate: null,
