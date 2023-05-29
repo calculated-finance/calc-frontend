@@ -25,6 +25,7 @@ import { TransactionType } from '@components/TransactionType';
 import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
+import PriceThreshold from '@components/PriceThreshold';
 
 export function WeightedScaleCustomisePage({
   formName,
@@ -106,10 +107,13 @@ export function WeightedScaleCustomisePage({
                   transactionType={transactionType}
                 />
                 <Collapse in={values.advancedSettings}>
-                  <ApplyMultiplier transactionType={transactionType} />
-                  <BasePrice formName={formName} transactionType={transactionType} />
                   <Box m="px">
-                    <SlippageTolerance />
+                    <Stack spacing={4}>
+                      <ApplyMultiplier transactionType={transactionType} />
+                      <BasePrice formName={formName} transactionType={transactionType} />
+                      <PriceThreshold transactionType={transactionType} formName={formName} />
+                      <SlippageTolerance />
+                    </Stack>
                   </Box>
                 </Collapse>
                 <Submit>Next</Submit>

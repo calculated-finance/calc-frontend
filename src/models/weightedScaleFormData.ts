@@ -47,6 +47,8 @@ export const weightedScaleSchema = Yup.object({
     is: false,
     then: (schema) => schema.transform(() => YesNoValues.Yes),
   }),
+  priceThresholdEnabled: allSchema.priceThresholdEnabled,
+  priceThresholdValue: allSchema.priceThresholdValue,
   triggerType: allSchema.triggerType,
   startDate: allSchema.startDate,
   startPrice: allSchema.startPrice,
@@ -72,6 +74,8 @@ export const WeightedScaleCustomiseFormSchema = weightedScaleSchema.pick([
   'swapMultiplier',
   'applyMultiplier',
   'slippageTolerance',
+  'priceThresholdEnabled',
+  'priceThresholdValue',
 ]);
 export const WeightedScalePostPurchaseFormSchema = weightedScaleSchema.pick([
   'sendToWallet',

@@ -282,6 +282,13 @@ export function buildCreateVaultParamsWeightedScale(
         state.resultingDenom,
         transactionType,
       ),
+      minimum_receive_amount: getMinimumReceiveAmount(
+        state.initialDenom,
+        state.swapAmount,
+        state.priceThresholdValue,
+        state.resultingDenom,
+        transactionType,
+      ),
       swap_adjustment_strategy: {
         weighted_scale: {
           base_receive_amount: getBaseReceiveAmount(
