@@ -135,8 +135,6 @@ const useCreateVault = (
 
       const funds = getFunds(state.initialDenom, state.initialDeposit);
 
-      console.log(JSON.stringify(createVaultMsg));
-
       msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
 
       if (!excludeCreationFee) {
