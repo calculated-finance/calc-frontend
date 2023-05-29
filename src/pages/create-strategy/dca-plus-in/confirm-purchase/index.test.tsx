@@ -115,16 +115,14 @@ describe('DCA Plus In confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          target_denom: 'ukuji',
+          target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
           swap_amount: '1000000',
-          target_start_time_utc_seconds: undefined,
-          minimum_receive_amount: undefined,
-          destinations: undefined,
-          target_receive_amount: undefined,
           slippage_tolerance: '0.02',
-          use_dca_plus: true,
+          swap_adjustment_strategy: { risk_weighted_average: { base_denom: 'bitcoin' } },
+          performance_assessment_strategy: 'compare_to_standard_dca',
         },
       };
+
       const mockCreateStrategy = mockCreateVault([
         {
           typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',

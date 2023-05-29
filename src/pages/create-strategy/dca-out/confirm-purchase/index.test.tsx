@@ -120,7 +120,7 @@ describe('DCA Out confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
+          pair_address: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,
           minimum_receive_amount: undefined,
