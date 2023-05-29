@@ -14,6 +14,8 @@ import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { truncate } from '@components/CosmosWallet';
+import { toBase64 } from '@helpers/base64';
+import { CONTRACT_ADDRESS } from 'src/constants';
 import Page from './index.page';
 
 const mockRouter = {
@@ -263,7 +265,7 @@ describe('Detail page', () => {
       });
       describe('when slippage tolerance is null', () => {
         it('does not render slippage tolerance', async () => {
-          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: null }) }), mockCancelVault());
+          mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: undefined }) }), mockCancelVault());
 
           await renderTarget();
           await waitFor(() => expect(screen.queryByTestId('strategy-slippage-tolerance')).toBeNull());
@@ -302,7 +304,18 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'z_delegate' }],
+                destinations: [
+                  {
+                    address: CONTRACT_ADDRESS,
+                    allocation: '1',
+                    msg: toBase64({
+                      z_delegate: {
+                        validator_address: 'kujiravalopertestvalidator',
+                        delgator_address: 'delegator_address',
+                      },
+                    }),
+                  },
+                ],
               }),
             }),
             jest.fn(),
@@ -317,7 +330,18 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiravalopertestvalidator', allocation: '1', action: 'z_delegate' }],
+                destinations: [
+                  {
+                    address: CONTRACT_ADDRESS,
+                    allocation: '1',
+                    msg: toBase64({
+                      z_delegate: {
+                        validator_address: 'kujiravalopertestvalidator',
+                        delgator_address: 'delegator_address',
+                      },
+                    }),
+                  },
+                ],
               }),
             }),
             jest.fn(),
@@ -351,7 +375,12 @@ describe('Detail page', () => {
           mockUseWallet(
             mockUseStrategy({
               vault: mockStrategy({
-                destinations: [{ address: 'kujiraotheraddress', allocation: '1', action: 'z_delegate' }],
+                destinations: [
+                  {
+                    address: 'kujiraotheraddress',
+                    allocation: '1',
+                  },
+                ],
               }),
             }),
             jest.fn(),

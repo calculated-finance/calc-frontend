@@ -1,15 +1,6 @@
 export const mockStrategyEvents = {
   events: [
     {
-      id: 5434,
-      resource_id: '111',
-      timestamp: '1678756011252210815',
-      block_height: 10350442,
-      data: {
-        dca_vault_created: {},
-      },
-    },
-    {
       id: 5435,
       resource_id: '111',
       timestamp: '1678756011252210815',

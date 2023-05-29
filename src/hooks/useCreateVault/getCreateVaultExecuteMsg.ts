@@ -1,6 +1,6 @@
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
-import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { ExecuteMsg as ExecutMsgOsmosis } from 'src/interfaces/generated-osmosis/execute';
 
 export function encodeMsg(createVaultExecuteMsg: ExecuteMsg | ExecutMsgOsmosis) {

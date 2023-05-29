@@ -3,8 +3,8 @@ import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import strategy from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
-import { VaultResponse } from 'src/interfaces/v1/generated/response/get_vault';
-import { QueryMsg } from 'src/interfaces/v1/generated/query';
+import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
+import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { GET_EVENTS_LIMIT } from '@hooks/useStrategyEvents';
 import pairs from 'src/fixtures/pairs';
 

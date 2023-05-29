@@ -11,15 +11,19 @@ const dcaInStrategy = {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO
   },
+  escrow_level: '0',
+  escrowed_amount: {
+    denom: 'ukuji',
+    amount: '0',
+  },
 
   time_interval: 'weekly',
-  pair: {
-    address: 'kujira1suhgf5svhu4usrurvxzlgn54ksxmn8gljarjtxqnapv8kjnp4nrsqq4jjh',
-    base_denom: 'ukuji',
-    quote_denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+  deposited_amount: {
+    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+    amount: '10000000', // 10 DEMO
   },
+  target_denom: 'ukuji',
   swap_amount: '1000000', // 1 DEMO
-  slippage_tolerance: null,
   status: 'active',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
@@ -35,11 +39,11 @@ const dcaInStrategy = {
     {
       address: 'kujitestwallet',
       allocation: '1',
-      action: 'send',
     },
   ],
   trigger: mockTimeTrigger,
   dca_plus_config: null,
+  slippage_tolerance: '0.2',
 } as Strategy;
 
 export const dcaOutStrategy = {
@@ -52,13 +56,18 @@ export const dcaOutStrategy = {
   },
 
   time_interval: 'weekly',
-  pair: {
-    address: 'kujira1suhgf5svhu4usrurvxzlgn54ksxmn8gljarjtxqnapv8kjnp4nrsqq4jjh',
-    base_denom: 'ukuji',
-    quote_denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+  target_denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+  escrow_level: '0',
+  escrowed_amount: {
+    denom: 'ukuji',
+    amount: '0',
+  },
+  deposited_amount: {
+    denom: 'ukuji',
+    amount: '10000000',
   },
   swap_amount: '1000000',
-  slippage_tolerance: null,
+  slippage_tolerance: '0.2',
   status: 'active',
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
@@ -74,7 +83,6 @@ export const dcaOutStrategy = {
     {
       address: 'kujitestwallet',
       allocation: '1',
-      action: 'send',
     },
   ],
   dca_plus_config: null,

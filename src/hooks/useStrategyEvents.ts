@@ -1,14 +1,14 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/v1/generated/query';
 import {
   Event as GeneratedEvent,
   EventData as GeneratedEventData,
-} from 'src/interfaces/v1/generated/response/get_events_by_resource_id';
+} from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { QueryMsg } from '@models/index';
 
 export type StrategyEvent = GeneratedEvent;
 export type StrategyEventData = GeneratedEventData;

@@ -14,12 +14,12 @@ import getStrategyBalance, {
   hasSwapFees,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { DcaPlusPerformanceResponse } from 'src/interfaces/v1/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { getDcaPlusConfig, isDcaPlus } from '../isDcaPlus';
 import { getWeightedScaleConfig, isWeightedScale } from '../isWeightedScale';
+import { DcaPlusPerformanceResponse } from '@hooks/useDcaPlusPerformance';
 
 export function getStandardDcaTotalReceived(strategy: Strategy) {
   const { standard_dca_received_amount } = getDcaPlusConfig(strategy) || {};

@@ -1,5 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/v1/generated/query';
+import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
 import { ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
 import useQueryWithNotification from './useQueryWithNotification';

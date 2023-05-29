@@ -35,7 +35,7 @@ export function getExistingValues(
   if (postPurchaseOption === PostPurchaseOptions.Stake) {
     return {
       postPurchaseOption,
-      autoStakeValidator: getStrategyValidatorAddress(strategy, chain),
+      autoStakeValidator: getStrategyValidatorAddress(strategy),
     };
   }
 

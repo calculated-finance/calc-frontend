@@ -4,8 +4,7 @@ import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { Vault } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
-import { TriggerConfiguration as TriggerConfigurationV2 } from 'src/interfaces/v2/generated/response/get_vault';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { Pair } from '@models/Pair';
@@ -20,6 +19,7 @@ import {
   SECONDS_IN_A_WEEK,
   SWAP_FEE,
 } from 'src/constants';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -95,7 +95,7 @@ export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosi
   }
   const { time_interval } = strategy as Strategy;
 
-  return executionIntervalLabel[time_interval];
+  return executionIntervalLabel[time_interval as ExecutionIntervals];
 }
 
 export function getStrategyName(strategy: Strategy) {
@@ -155,14 +155,8 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
 
   let target_price;
 
-  if (trigger && 'fin_limit_order' in trigger) {
-    target_price = trigger.fin_limit_order.target_price;
-  }
-
-  const triggerV2 = trigger as TriggerConfigurationV2;
-
-  if (trigger && 'price' in triggerV2) {
-    target_price = triggerV2.price.target_price;
+  if (trigger && 'price' in trigger) {
+    target_price = trigger.price.target_price;
   }
 
   if (target_price) {

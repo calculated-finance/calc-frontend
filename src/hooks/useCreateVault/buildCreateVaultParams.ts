@@ -1,14 +1,10 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { Destination, ExecuteMsg } from 'src/interfaces/v1/generated/execute';
-import {
-  Destination as OsmosisDestination,
-  ExecuteMsg as OsmosisExecuteMsg,
-} from 'src/interfaces/generated-osmosis/execute';
+import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg as OsmosisExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
@@ -17,7 +13,6 @@ import { useChainStore } from '@hooks/useChain';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
-import { Version } from '@hooks/Version';
 import {
   SECONDS_IN_A_DAY,
   SECONDS_IN_A_HOUR,
@@ -29,7 +24,7 @@ import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaFormState } from './DcaFormState';
 
-const conversion = {
+const conversion: Record<ExecutionIntervals, number> = {
   minute: SECONDS_IN_A_MINUTE,
   half_hourly: SECONDS_IN_A_HOUR / 2,
   hourly: SECONDS_IN_A_HOUR,
@@ -61,20 +56,6 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
-function getDestinations(autoStakeValidator: string | null | undefined, recipientAccount: string | null | undefined) {
-  const destinations = [] as (Destination | OsmosisDestination)[];
-
-  if (autoStakeValidator) {
-    destinations.push({ address: autoStakeValidator, allocation: '1', action: 'z_delegate' });
-  }
-
-  if (recipientAccount) {
-    destinations.push({ address: recipientAccount, allocation: '1', action: 'send' });
-  }
-
-  return destinations.length ? destinations : undefined;
-}
-
 function getMinimumReceiveAmount(
   initialDenom: Denom,
   swapAmount: number,
@@ -99,15 +80,6 @@ function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTol
   return advancedSettings && slippageTolerance
     ? getSlippageWithoutTrailingZeros(slippageTolerance)
     : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance);
-}
-
-function getPairAddress(initialDenom: Denom, resultingDenom: Denom, pairs: Pair[]) {
-  const pairAddress = findPair(pairs, resultingDenom, initialDenom);
-
-  if (!pairAddress) {
-    throw new Error('Pair not found');
-  }
-  return pairAddress.address;
 }
 
 function getStartTime(startDate: Date | undefined, purchaseTime: string | undefined) {
@@ -180,53 +152,16 @@ export function buildCreateVaultParamsDCA(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
-  version: Version,
 ) {
   const { chain } = useChainStore.getState();
 
   const { executionInterval, executionIntervalIncrement } = state;
 
-  if (version === 'v2') {
-    const msg = {
-      create_vault: {
-        label: '',
-        time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
-        target_denom: state.resultingDenom,
-        swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
-        target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
-        minimum_receive_amount: getMinimumReceiveAmount(
-          state.initialDenom,
-          state.swapAmount,
-          state.priceThresholdValue,
-          state.resultingDenom,
-          transactionType,
-        ),
-        slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-        destinations: buildCallbackDestinations(
-          chain,
-          state.autoStakeValidator,
-          state.recipientAccount,
-          state.yieldOption,
-          senderAddress,
-          state.reinvestStrategy,
-        ),
-        target_receive_amount: getTargetReceiveAmount(
-          state.initialDenom,
-          state.swapAmount,
-          state.startPrice,
-          state.resultingDenom,
-          transactionType,
-        ),
-      },
-    } as OsmosisExecuteMsg;
-    return msg;
-  }
-
   const msg = {
     create_vault: {
       label: '',
-      time_interval: getExecutionInterval(state.executionInterval, executionIntervalIncrement),
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
+      target_denom: state.resultingDenom,
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       minimum_receive_amount: getMinimumReceiveAmount(
@@ -237,7 +172,14 @@ export function buildCreateVaultParamsDCA(
         transactionType,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
+      destinations: buildCallbackDestinations(
+        chain,
+        state.autoStakeValidator,
+        state.recipientAccount,
+        state.yieldOption,
+        senderAddress,
+        state.reinvestStrategy,
+      ),
       target_receive_amount: getTargetReceiveAmount(
         state.initialDenom,
         state.swapAmount,
@@ -246,7 +188,7 @@ export function buildCreateVaultParamsDCA(
         transactionType,
       ),
     },
-  } as ExecuteMsg;
+  } as OsmosisExecuteMsg;
   return msg;
 }
 
@@ -304,54 +246,36 @@ export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
   pairs: Pair[],
   senderAddress: string,
-  version: Version,
 ): ExecuteMsg | OsmosisExecuteMsg {
   const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
 
   const { chain } = useChainStore.getState();
 
-  if (version === 'v2') {
-    const msg = {
-      create_vault: {
-        label: '',
-        time_interval: 'daily',
-        target_denom: state.resultingDenom,
-        swap_amount: swapAmount.toString(),
-        target_start_time_utc_seconds: undefined,
-        target_receive_amount: undefined,
-        slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-        destinations: buildCallbackDestinations(
-          chain,
-          state.autoStakeValidator,
-          state.recipientAccount,
-          state.yieldOption,
-          senderAddress,
-          state.reinvestStrategy,
-        ),
-        swap_adjustment_strategy: {
-          risk_weighted_average: {
-            base_denom: 'bitcoin',
-          },
-        },
-        performance_assessment_strategy: 'compare_to_standard_dca',
-      },
-    } as OsmosisExecuteMsg;
-    return msg;
-  }
-
   const msg = {
     create_vault: {
       label: '',
       time_interval: 'daily',
-      pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
+      target_denom: state.resultingDenom,
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: getDestinations(state.autoStakeValidator, state.recipientAccount),
-      use_dca_plus: true,
+      destinations: buildCallbackDestinations(
+        chain,
+        state.autoStakeValidator,
+        state.recipientAccount,
+        state.yieldOption,
+        senderAddress,
+        state.reinvestStrategy,
+      ),
+      swap_adjustment_strategy: {
+        risk_weighted_average: {
+          base_denom: 'bitcoin',
+        },
+      },
+      performance_assessment_strategy: 'compare_to_standard_dca',
     },
-  } as ExecuteMsg;
+  } as OsmosisExecuteMsg;
   return msg;
 }
 
@@ -362,14 +286,13 @@ export function buildCreateVaultParams(
   transactionType: TransactionType,
   senderAddress: string,
   currentPrice: number,
-  version: Version,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
-    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress, version);
+    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress, version);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress);
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {

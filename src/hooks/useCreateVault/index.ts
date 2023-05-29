@@ -16,7 +16,6 @@ import { FormNames } from '@hooks/useFormStore';
 import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
-import { useVersion } from '@hooks/useVersion';
 import * as Sentry from '@sentry/react';
 import useStrategy from '@hooks/useStrategy';
 import { isNil } from 'lodash';
@@ -74,8 +73,6 @@ const useCreateVault = (
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
-  const version = useVersion();
-
   const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
@@ -113,10 +110,6 @@ const useCreateVault = (
         throw Error('No price data found');
       }
 
-      if (!version) {
-        throw Error('No version found');
-      }
-
       if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
         throw new Error('Invalid reinvest strategy.');
       }
@@ -128,7 +121,7 @@ const useCreateVault = (
       const { autoStakeValidator } = state;
 
       if (autoStakeValidator) {
-        msgs.push(getGrantMsg(senderAddress, chain, version));
+        msgs.push(getGrantMsg(senderAddress, chain));
       }
 
       const createVaultMsg = buildCreateVaultParams(
@@ -138,7 +131,6 @@ const useCreateVault = (
         transactionType,
         senderAddress,
         Number(dexPrice),
-        version,
       );
 
       const funds = getFunds(state.initialDenom, state.initialDeposit);
