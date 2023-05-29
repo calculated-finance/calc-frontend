@@ -53,7 +53,14 @@ function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & O
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Strategy details</ModalHeader>
+        <HStack alignSelf="center" whiteSpace="nowrap">
+          <Text fontSize="sm" data-testid="strategy-current-balance">
+            <Code bg="abyss.200" fontSize="xx-small" whiteSpace="nowrap">
+              id: {strategy.id}
+            </Code>
+          </Text>
+          <ModalHeader>Strategy details </ModalHeader>
+        </HStack>
         <ModalCloseButton />
         <ModalBody>
           <Stack justify="center" gap={6} align="center">
@@ -122,13 +129,15 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
                 <Text>
                   {getStrategyType(strategy)} - {getStrategyExecutionInterval(strategy)}{' '}
                 </Text>
-                <Code bg="abyss.200" fontSize="xx-small">
-                  id: {strategy.id}
-                </Code>
               </HStack>
 
               <HStack spacing={2}>
-                <StrategyStatusBadge strategy={strategy} />
+                <HStack spacing={1}>
+                  <StrategyStatusBadge strategy={strategy} />
+                  <Code bg="abyss.200" fontSize="xx-small" whiteSpace="nowrap">
+                    id: {strategy.id}
+                  </Code>
+                </HStack>
                 <IconButton
                   colorScheme="blue"
                   icon={<InfoOutlineIcon />}

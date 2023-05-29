@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
@@ -112,9 +112,19 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           <GridItem colSpan={1}>
             <Heading size="xs">Current amount in vault</Heading>
           </GridItem>
-          <GridItem colSpan={1}>
+          <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-current-balance">
               {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+            </Text>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Heading size="xs">Reinvesting into</Heading>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <Text fontSize="sm" data-testid="strategy-current-balance">
+              <Code bg="abyss.200" borderWidth={0.5} borderColor="grey.100" fontSize="small" whiteSpace="nowrap">
+                id: {strategy.id}
+              </Code>
             </Text>
           </GridItem>
         </Grid>
