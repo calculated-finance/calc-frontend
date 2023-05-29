@@ -1,5 +1,4 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { SUPPORTED_DENOMS_FOR_DCA_PLUS } from '@utils/SUPPORTED_DENOMS';
 import { PairsResponse } from 'src/interfaces/v1/generated/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
@@ -14,7 +13,8 @@ const hiddenPairs = [
 ] as string[];
 
 export function isSupportedDenomForDcaPlus(denom: Denom) {
-  return SUPPORTED_DENOMS_FOR_DCA_PLUS.includes(denom) && isDenomVolatile(denom);
+  const { enabledInDcaPlus } = getDenomInfo(denom);
+  return enabledInDcaPlus && isDenomVolatile(denom);
 }
 export function isSupportedDenomForWeightedScale(denom: Denom) {
   return true;
