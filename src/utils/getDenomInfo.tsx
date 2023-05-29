@@ -2,6 +2,7 @@ import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenom
 import { Coin } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { Chains, useChainStore } from '@hooks/useChain';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
+import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';
 
 type DenomInfo = {
@@ -310,6 +311,11 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     pricePrecision: 3,
   },
 };
+export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfo>> = {
+  [MainnetDenomsOsmosis.AXL]: {
+    coingeckoId: 'usd-coin',
+  },
+};
 
 export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
   [TestnetDenoms.Demo]: {
@@ -433,27 +439,28 @@ const getDenomInfo = (denom?: string) => {
       return defaultDenom;
     }
 
-    const mapTo = {} as DenomInfo;
+    const mapTo = {} as Partial<DenomInfo>;
 
     mapTo.name = asset.symbol;
     mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
     mapTo.stakeable = !isDenomInStablesList(denom as Denom);
     mapTo.stable = isDenomInStablesList(denom as Denom);
-    mapTo.coingeckoId = asset.coingecko_id!; // should have fallback
-    mapTo.significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
+    mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
     mapTo.osmosisId = asset.symbol;
     mapTo.enabledInDcaPlus = true; // TODO: Need to use a whitelist of assets that are supported in DCA Plus;
     mapTo.stakeableAndSupported = denom === 'uosmo';
+    const significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
+    mapTo.significantFigures = significantFigures;
 
-    if (mapTo.significantFigures !== 6) {
-      mapTo.conversion = (value: number) => value / 10 ** mapTo.significantFigures;
-      mapTo.deconversion = (value: number) => Math.round(value * 10 ** mapTo.significantFigures);
+    if (!isNil(significantFigures) && significantFigures !== 6) {
+      mapTo.conversion = (value: number) => value / 10 ** significantFigures;
+      mapTo.deconversion = (value: number) => Math.round(value * 10 ** significantFigures);
     }
 
     if (isMainnet()) {
       return {
         ...defaultDenom,
-        ...mainnetDenoms[denom as MainnetDenoms],
+        ...mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis],
         ...mapTo,
       };
     }

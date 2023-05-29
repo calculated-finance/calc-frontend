@@ -62,7 +62,6 @@ export default function usePairs() {
       const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
         get_pairs: {},
       });
-      console.log('pairs', result);
       return result;
     },
     {
