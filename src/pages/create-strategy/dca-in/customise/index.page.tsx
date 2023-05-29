@@ -80,12 +80,7 @@ function DcaInStep2() {
                 <SwapAmount step1State={state.step1} />
                 <Collapse in={values.advancedSettings}>
                   <Box m="px">
-                    <PriceThreshold
-                      transactionType={TransactionType.Buy}
-                      formName={FormNames.DcaIn}
-                      title="Set buy price ceiling?"
-                      description="CALC won't buy if the asset price exceeds this set value."
-                    />
+                    <PriceThreshold transactionType={TransactionType.Buy} formName={FormNames.DcaIn} />
                     <SlippageTolerance />
                   </Box>
                 </Collapse>
