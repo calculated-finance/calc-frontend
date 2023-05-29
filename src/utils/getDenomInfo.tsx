@@ -45,7 +45,7 @@ const defaultDenom = {
   pricePrecision: 3,
 };
 
-export const mainnetDenoms: Record<MainnetDenoms | MainnetDenomsOsmosis, DenomInfo> = {
+export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
   [MainnetDenoms.ATOM]: {
     name: 'ATOM',
     icon: '/images/denoms/atom.svg',
@@ -310,6 +310,8 @@ export const mainnetDenoms: Record<MainnetDenoms | MainnetDenomsOsmosis, DenomIn
     stable: false,
     pricePrecision: 3,
   },
+};
+export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfo>> = {
   [MainnetDenomsOsmosis.AXL]: {
     coingeckoId: 'usd-coin',
   },
@@ -439,13 +441,11 @@ const getDenomInfo = (denom?: string) => {
 
     const mapTo = {} as Partial<DenomInfo>;
 
-    console.log(asset);
-
     mapTo.name = asset.symbol;
     mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
     mapTo.stakeable = !isDenomInStablesList(denom as Denom);
     mapTo.stable = isDenomInStablesList(denom as Denom);
-    mapTo.coingeckoId = asset.coingecko_id || mainnetDenoms[denom as MainnetDenoms]?.coingeckoId || '';
+    mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
     mapTo.osmosisId = asset.symbol;
     mapTo.enabledInDcaPlus = true; // TODO: Need to use a whitelist of assets that are supported in DCA Plus;
     mapTo.stakeableAndSupported = denom === 'uosmo';
@@ -460,7 +460,7 @@ const getDenomInfo = (denom?: string) => {
     if (isMainnet()) {
       return {
         ...defaultDenom,
-        ...mainnetDenoms[denom as MainnetDenoms],
+        ...mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis],
         ...mapTo,
       };
     }
