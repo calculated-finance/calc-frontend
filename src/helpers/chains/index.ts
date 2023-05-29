@@ -138,7 +138,7 @@ export function getChainEndpoint(chain: Chains) {
 export function getChainContractAddress(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {
-      return 'osmo1yghmhdzvpz996vl5a0q9ha22r3lw5akgxtdced8ry25kywfnhseqnm7e3a';
+      return 'osmo1zacxlu90sl6j2zf90uctpddhfmux84ryrw794ywnlcwx2zeh5a4q67qtc9';
     }
     return 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f';
   }
