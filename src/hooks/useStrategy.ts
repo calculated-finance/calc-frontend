@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/v1/generated/query';
-import { VaultResponse } from 'src/interfaces/v1/generated/response/get_vault';
+import { QueryMsg } from 'src/interfaces/v2/generated/query';
+import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';

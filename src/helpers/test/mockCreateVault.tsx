@@ -2,7 +2,7 @@
 import { when } from 'jest-when';
 import mockStrategyData from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
-import { ExecuteMsg } from 'src/interfaces/v1/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { encode } from '../encode';
 
@@ -16,13 +16,9 @@ const defaultExecuteMsg: ExecuteMsg = {
   create_vault: {
     label: '',
     time_interval: 'daily',
-    pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
+    target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
     swap_amount: '1000000',
-    target_start_time_utc_seconds: undefined,
-    minimum_receive_amount: undefined,
     slippage_tolerance: '0.02',
-    destinations: undefined,
-    target_receive_amount: undefined,
   },
 };
 

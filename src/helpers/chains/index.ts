@@ -157,12 +157,8 @@ export function getChainFeeTakerAddress(chain: Chains) {
   return FEE_TAKER_ADDRESS;
 }
 
-export function getChainStakingRouterContractAddress(chain: Chains, version: Version) {
-  if (chain === Chains.Osmosis || version === 'v2') {
-    return getChainContractAddress(chain);
-  }
-
-  return STAKING_ROUTER_CONTRACT_ADDRESS;
+export function getChainStakingRouterContractAddress(chain: Chains) {
+  return getChainContractAddress(chain);
 }
 
 export function getChainId(chain: Chains) {

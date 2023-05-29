@@ -19,11 +19,11 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { Vault } from 'src/interfaces/v1/generated/response/get_vaults';
 import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
+import { TimeInterval } from 'src/interfaces/v2/generated/execute';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -123,15 +123,15 @@ function hoursUntil(date: Date) {
 }
 
 // map functions to time intervals
-const timeIntervalMap = {
-  every_second: () => 1,
-  every_minute: () => 1,
-  half_hourly: () => 30,
+const timeIntervalMap: Record<any, (date: Date) => number> = {
+  every_second: (date: Date) => 1,
+  every_minute: (date: Date) => 1,
+  half_hourly: (date: Date) => 30,
   hourly: hoursUntil,
-  half_daily: () => 12,
+  half_daily: (date: Date) => 12,
   daily: daysUntil,
   weekly: weeksUntil,
-  fortnightly: () => 2,
+  fortnightly: (date: Date) => 2,
   monthly: monthsUntil,
 };
 
@@ -256,7 +256,7 @@ function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
   });
 }
 
-export function uniqueAddresses(allStrategies: Vault[] | undefined) {
+export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
   return Array.from(new Set(allStrategies?.map((strategy) => strategy.owner) || []));
 }
 

@@ -1,5 +1,5 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { PairsResponse } from 'src/interfaces/v1/generated/response/get_pairs';
+import { PairsResponse } from 'src/interfaces/v2/generated/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';

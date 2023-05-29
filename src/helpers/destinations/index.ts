@@ -79,13 +79,7 @@ export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
   return null;
 }
 
-export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy, chain: Chains) {
-  if (chain === Chains.Kujira && !isStrategyV2(strategy)) {
-    if (strategy.destinations.length && (strategy as Strategy).destinations[0].action === 'z_delegate') {
-      return strategy.destinations.length && strategy.destinations[0].address;
-    }
-    return undefined;
-  }
+export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy) {
   const postSwapDetails = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
   if (postSwapDetails?.z_delegate) {
     return postSwapDetails.z_delegate.validator_address;
@@ -102,19 +96,12 @@ export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, ch
   const { destinations } = strategy;
   const [destination] = destinations;
 
-  if (chain === Chains.Kujira && !isStrategyV2(strategy)) {
-    if (isAutoStaking((strategy as Strategy).destinations)) {
-      return PostPurchaseOptions.Stake;
-    }
-    return PostPurchaseOptions.SendToWallet;
-  }
-
   if (destination.address === getMarsAddress()) {
     return PostPurchaseOptions.GenerateYield;
   }
 
   if (destination.address === getChainContractAddress(chain)) {
-    if (getStrategyValidatorAddress(strategy, chain)) {
+    if (getStrategyValidatorAddress(strategy)) {
       return PostPurchaseOptions.Stake;
     }
     return PostPurchaseOptions.Reinvest;

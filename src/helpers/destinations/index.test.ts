@@ -1,9 +1,9 @@
 import { Destination } from 'src/interfaces/generated-osmosis/execute';
 import { Chains } from '@hooks/useChain';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import kujiraStrategy, { osmosisStrategy as mockStrategy } from 'src/fixtures/strategy';
+import { osmosisStrategy as mockStrategy } from 'src/fixtures/strategy';
 import { buildCallbackDestinations, getStrategyPostSwapType } from '.';
 
 describe('buildCallbackDestinations', () => {
@@ -185,40 +185,6 @@ describe('buildCallbackDestinations', () => {
         ],
       };
       const chain = Chains.Osmosis;
-
-      const result = getStrategyPostSwapType(strategy, chain);
-      expect(result).toBe(PostPurchaseOptions.SendToWallet);
-    });
-
-    it('should return Stake if chain is Kujira and destination address is equal to Kujira Chain Contract Address', () => {
-      const strategy: Strategy = {
-        ...kujiraStrategy,
-        destinations: [
-          {
-            address: 'kujiravaloper1pshqems6hdka48gc56r2ykshyaarkt40hl0rlh',
-            allocation: '1.0',
-            action: 'z_delegate',
-          },
-        ],
-      };
-      const chain = Chains.Kujira;
-
-      const result = getStrategyPostSwapType(strategy, chain);
-      expect(result).toBe(PostPurchaseOptions.Stake);
-    });
-
-    it('should return SendToWallet if chain is Kujira and destination address is not equal to Kujira Chain Contract Address', () => {
-      const strategy: Strategy = {
-        ...kujiraStrategy,
-        destinations: [
-          {
-            address: 'address',
-            allocation: '1.0',
-            action: 'send',
-          },
-        ],
-      };
-      const chain = Chains.Kujira;
 
       const result = getStrategyPostSwapType(strategy, chain);
       expect(result).toBe(PostPurchaseOptions.SendToWallet);
