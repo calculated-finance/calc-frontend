@@ -1,7 +1,7 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { Destination, ExecuteMsg, TimeInterval } from 'src/interfaces/v1/generated/execute';
+import { Destination, ExecuteMsg } from 'src/interfaces/v1/generated/execute';
 import {
   Destination as OsmosisDestination,
   ExecuteMsg as OsmosisExecuteMsg,
@@ -18,7 +18,27 @@ import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
 import { Version } from '@hooks/Version';
+import {
+  SECONDS_IN_A_DAY,
+  SECONDS_IN_A_HOUR,
+  SECONDS_IN_A_MINUTE,
+  SECONDS_IN_A_WEEK,
+  featureFlags,
+} from 'src/constants';
+import { isNil } from 'lodash';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaFormState } from './DcaFormState';
+
+const conversion = {
+  minute: SECONDS_IN_A_MINUTE,
+  half_hourly: SECONDS_IN_A_HOUR / 2,
+  hourly: SECONDS_IN_A_HOUR,
+  half_daily: SECONDS_IN_A_DAY / 2,
+  daily: SECONDS_IN_A_DAY,
+  weekly: SECONDS_IN_A_WEEK,
+  fortnightly: SECONDS_IN_A_WEEK * 2,
+  monthly: SECONDS_IN_A_WEEK * 4,
+};
 
 function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -140,7 +160,18 @@ function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: 
   return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
 
-function getExecutionInterval(executionInterval: TimeInterval) {
+export function getExecutionInterval(
+  executionInterval: ExecutionIntervals,
+  executionIntervalIncrement: number | undefined | null,
+) {
+  if (featureFlags.customTimeIntervalEnabled && !isNil(executionIntervalIncrement) && executionIntervalIncrement > 0) {
+    return {
+      custom: {
+        seconds: executionIntervalIncrement * conversion[executionInterval],
+      },
+    };
+  }
+
   return executionInterval;
 }
 
@@ -153,11 +184,13 @@ export function buildCreateVaultParamsDCA(
 ) {
   const { chain } = useChainStore.getState();
 
+  const { executionInterval, executionIntervalIncrement } = state;
+
   if (version === 'v2') {
     const msg = {
       create_vault: {
         label: '',
-        time_interval: getExecutionInterval(state.executionInterval),
+        time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
         target_denom: state.resultingDenom,
         swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
         target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
@@ -192,7 +225,7 @@ export function buildCreateVaultParamsDCA(
   const msg = {
     create_vault: {
       label: '',
-      time_interval: getExecutionInterval(state.executionInterval),
+      time_interval: getExecutionInterval(state.executionInterval, executionIntervalIncrement),
       pair_address: getPairAddress(state.initialDenom, state.resultingDenom, pairs),
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
@@ -224,11 +257,12 @@ export function buildCreateVaultParamsWeightedScale(
   currentPrice: number,
 ) {
   const { chain } = useChainStore.getState();
+  const { executionInterval, executionIntervalIncrement } = state;
 
   const msg = {
     create_vault: {
       label: '',
-      time_interval: getExecutionInterval(state.executionInterval),
+      time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
       target_denom: state.resultingDenom,
       swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),

@@ -41,6 +41,15 @@ export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
 export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
+export const SECONDS_IN_A_HOUR = 3600;
+export const SECONDS_IN_A_DAY = 86400;
+export const SECONDS_IN_A_WEEK = 604800;
+
+export const DAYS_IN_A_WEEK = 7;
+export const HOURS_IN_A_DAY = 24;
+export const MINUTES_IN_A_HOUR = 60;
+export const SECONDS_IN_A_MINUTE = 60;
+
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
@@ -49,6 +58,7 @@ export const featureFlags =
         stationEnabled: false,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: false,
+        customTimeIntervalEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -56,6 +66,7 @@ export const featureFlags =
         stationEnabled: false,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: true,
+        customTimeIntervalEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

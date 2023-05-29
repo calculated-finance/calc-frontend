@@ -32,6 +32,7 @@ export const initialValues = {
   startPrice: null,
 
   executionInterval: 'daily',
+  executionIntervalIncrement: 1,
   swapAmount: null,
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
@@ -141,6 +142,18 @@ export const allSchema = {
       },
     }),
   executionInterval: Yup.mixed<ExecutionIntervals>().required(),
+  executionIntervalIncrement: Yup.number()
+    .label('Increment')
+    .positive()
+    .integer()
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    }),
+
   swapAmount: Yup.number()
     .label('Swap Amount')
     .required()
@@ -349,6 +362,7 @@ export const dcaSchema = Yup.object({
   startPrice: allSchema.startPrice,
   purchaseTime: allSchema.purchaseTime,
   executionInterval: allSchema.executionInterval,
+  executionIntervalIncrement: allSchema.executionIntervalIncrement,
   swapAmount: allSchema.swapAmount,
   slippageTolerance: allSchema.slippageTolerance,
   priceThresholdEnabled: allSchema.priceThresholdEnabled,
@@ -383,6 +397,7 @@ export const step2ValidationSchema = dcaSchema.pick([
   'startPrice',
   'purchaseTime',
   'executionInterval',
+  'executionIntervalIncrement',
   'swapAmount',
   'slippageTolerance',
   'priceThresholdEnabled',

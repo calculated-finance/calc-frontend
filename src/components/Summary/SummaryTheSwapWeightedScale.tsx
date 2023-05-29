@@ -3,13 +3,12 @@ import DenomIcon from '@components/DenomIcon';
 import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { Chains, useChain } from '@hooks/useChain';
 import usePrice from '@hooks/usePrice';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { TransactionType } from '@components/TransactionType';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
+import { IncrementAndInterval } from './IncrementAndInterval';
 
 export function SummaryTheSwapWeightedScale({
   state,
@@ -18,7 +17,7 @@ export function SummaryTheSwapWeightedScale({
   state: WeightedScaleState;
   transactionType: TransactionType;
 }) {
-  const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue, executionInterval } = state;
+  const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
 
   const { name: initialDenomName } = getDenomInfo(initialDenom);
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
@@ -64,11 +63,7 @@ export function SummaryTheSwapWeightedScale({
           <Text>{resultingDenomName}</Text>
           <DenomIcon denomName={resultingDenom} />
         </BadgeButton>{' '}
-        every{' '}
-        <BadgeButton url="customise">
-          <Text textTransform="capitalize">{executionIntervalDisplay[executionInterval as ExecutionIntervals][0]}</Text>
-        </BadgeButton>
-        , based on market conditions until the deposit is empty.
+        every <IncrementAndInterval state={state} />
       </Text>
     </Box>
   );

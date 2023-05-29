@@ -1,7 +1,22 @@
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
-export function getEndDateFromRemainingExecutions(strategy: Strategy, startDate: Date, remainingExecutions: number) {
-  switch (strategy.time_interval) {
+export function getEndDateFromRemainingExecutions(
+  strategy: Strategy | StrategyOsmosis,
+  startDate: Date,
+  remainingExecutions: number,
+): Date | undefined {
+  if (typeof strategy.time_interval === 'object') {
+    const customIncrements = strategy.time_interval.custom.seconds;
+    startDate.setSeconds(startDate.getSeconds() + customIncrements * remainingExecutions);
+
+    return startDate;
+  }
+
+  switch (strategy.time_interval as ExecutionIntervals) {
+    case 'minute':
+      startDate.setMinutes(startDate.getMinutes() * remainingExecutions);
+      break;
     case 'half_hourly':
       startDate.setMinutes(startDate.getMinutes() + 30 * remainingExecutions);
       break;

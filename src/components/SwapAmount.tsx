@@ -16,6 +16,7 @@ export default function SwapAmount({
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
+  const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
 
   const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
   const { name: resultingDenomName } = getDenomInfo(step1State.resultingDenom);
@@ -28,6 +29,10 @@ export default function SwapAmount({
   const executions = totalExecutions(step1State.initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+  const displayCustomExecutionInterval =
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][
+      executions * executionIntervalIncrement > 1 ? 1 : 0
+    ];
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -50,10 +55,18 @@ export default function SwapAmount({
       </FormHelperText>
       <DenomInput denom={step1State.initialDenom} onChange={helpers.setValue} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(field.value) && !meta.error && (
+      {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
+      ) : (
+        Boolean(field.value) &&
+        !meta.error && (
+          <FormHelperText color="brand.200" fontSize="xs">
+            A total of {executions} swaps will take place over {executions * executionIntervalIncrement}{' '}
+            {displayCustomExecutionInterval}.
+          </FormHelperText>
+        )
       )}
     </FormControl>
   );

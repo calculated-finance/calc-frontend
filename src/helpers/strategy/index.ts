@@ -4,12 +4,22 @@ import { Denom, Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { DELEGATION_FEE, SWAP_FEE } from 'src/constants';
 import { Vault } from 'src/interfaces/v1/generated/response/get_vaults_by_address';
 import { TriggerConfiguration as TriggerConfigurationV2 } from 'src/interfaces/v2/generated/response/get_vault';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { Pair } from '@models/Pair';
+import {
+  DAYS_IN_A_WEEK,
+  DELEGATION_FEE,
+  HOURS_IN_A_DAY,
+  MINUTES_IN_A_HOUR,
+  SECONDS_IN_A_DAY,
+  SECONDS_IN_A_HOUR,
+  SECONDS_IN_A_MINUTE,
+  SECONDS_IN_A_WEEK,
+  SWAP_FEE,
+} from 'src/constants';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -25,7 +35,7 @@ export function getStrategyStatus(strategy: Strategy) {
   return strategy.status;
 }
 
-export function isStrategyOperating(strategy: Strategy) {
+export function isStrategyOperating(strategy: Strategy | StrategyOsmosis) {
   return ['active', 'scheduled'].includes(strategy.status);
 }
 
@@ -33,7 +43,7 @@ export function isStrategyActive(strategy: Strategy) {
   return ['active'].includes(strategy.status);
 }
 
-export function isStrategyScheduled(strategy: Strategy) {
+export function isStrategyScheduled(strategy: Strategy | StrategyOsmosis) {
   return ['scheduled'].includes(strategy.status);
 }
 
@@ -45,7 +55,7 @@ export function isStrategyCancelled(strategy: Strategy | StrategyOsmosis) {
   return ['cancelled'].includes(strategy.status);
 }
 
-export default function getStrategyBalance(strategy: Strategy) {
+export default function getStrategyBalance(strategy: Strategy | StrategyOsmosis) {
   const { balance } = strategy || {};
 
   return convertDenomFromCoin(balance);
@@ -59,8 +69,32 @@ export function getStrategyResultingDenom(strategy: Strategy): Denom {
   return strategy.received_amount.denom;
 }
 
-export function getStrategyExecutionInterval(strategy: Strategy) {
-  const { time_interval } = strategy;
+export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
+  if (strategy.time_interval instanceof Object) {
+    const { custom } = strategy.time_interval;
+
+    const weeks = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
+    const days = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
+    const hours = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE / MINUTES_IN_A_HOUR);
+    const minutes = Math.floor(custom.seconds / SECONDS_IN_A_MINUTE);
+
+    if (custom) {
+      if (custom.seconds % SECONDS_IN_A_WEEK === 0) {
+        return `${weeks} Week`;
+      }
+      if (custom.seconds % SECONDS_IN_A_DAY === 0) {
+        return `${days} Day`;
+      }
+      if (custom.seconds % SECONDS_IN_A_HOUR === 0) {
+        return `${hours} Hour`;
+      }
+      if (custom.seconds % SECONDS_IN_A_MINUTE === 0) {
+        return `${minutes} Minute`;
+      }
+    }
+  }
+  const { time_interval } = strategy as Strategy;
+
   return executionIntervalLabel[time_interval];
 }
 
@@ -77,12 +111,12 @@ export function getSlippageTolerance(strategy: Strategy) {
   return strategy.slippage_tolerance ? `${(parseFloat(strategy.slippage_tolerance) * 100).toFixed(2)}%` : '-';
 }
 
-export function getSwapAmount(strategy: Strategy) {
+export function getSwapAmount(strategy: Strategy | StrategyOsmosis) {
   const { swap_amount } = strategy || {};
   return Number(swap_amount);
 }
 
-export function getConvertedSwapAmount(strategy: Strategy) {
+export function getConvertedSwapAmount(strategy: Strategy | StrategyOsmosis) {
   const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
@@ -101,7 +135,7 @@ export function getStrategyType(strategy: Strategy) {
   return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }
 
-export function getStrategyRemainingExecutions(strategy: Strategy) {
+export function getStrategyRemainingExecutions(strategy: Strategy | StrategyOsmosis) {
   const balance = getStrategyBalance(strategy);
   const swapAmount = getConvertedSwapAmount(strategy);
 
@@ -181,7 +215,7 @@ export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefin
 }
 
 export function getStrategyEndDateFromRemainingExecutions(
-  strategy: Strategy,
+  strategy: Strategy | StrategyOsmosis,
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {

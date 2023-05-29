@@ -16,7 +16,7 @@ import getStrategyBalance, {
 } from '@helpers/strategy';
 import { DcaPlusPerformanceResponse } from 'src/interfaces/v1/generated/response/get_dca_plus_performance';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
-import { findLast, get, isNil } from 'lodash';
+import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { getDcaPlusConfig, isDcaPlus } from '../isDcaPlus';
 import { getWeightedScaleConfig, isWeightedScale } from '../isWeightedScale';
@@ -108,15 +108,27 @@ export function getStrategySwapRange(strategy: Strategy) {
   }
   if (isWeightedScale(strategy)) {
     const { multiplier, increase_only } = getWeightedScaleConfig(strategy) || {};
+    const swapAmount = getConvertedSwapAmount(strategy);
+    if (isBuyStrategy(strategy)) {
+      const max = Number((swapAmount * (1 - 0.5 * Number(multiplier))).toFixed(6));
+      const min = Number((swapAmount * (1 + 0.5 * Number(multiplier))).toFixed(6));
+      const checkMin = min < 0 ? 0 : min;
+      const checkMax = max < 0 ? 0 : max;
+
+      return {
+        min: isBuyStrategy(strategy) && !increase_only ? checkMin : swapAmount,
+        max: !isBuyStrategy(strategy) && !increase_only ? checkMax : swapAmount,
+      };
+    }
+
+    const min = Number((swapAmount * (1 - 0.5 * Number(multiplier))).toFixed(6));
+    const max = Number((swapAmount * (1 + 0.5 * Number(multiplier))).toFixed(6));
+    const checkMin = min < 0 ? 0 : min;
+    const checkMax = max < 0 ? 0 : max;
+
     return {
-      min:
-        isBuyStrategy(strategy) && !increase_only
-          ? Number((getConvertedSwapAmount(strategy) * (1 - 0.5 * Number(multiplier))).toFixed(6))
-          : getConvertedSwapAmount(strategy),
-      max:
-        !isBuyStrategy(strategy) && !increase_only
-          ? Number((getConvertedSwapAmount(strategy) * (1 + 0.5 * Number(multiplier))).toFixed(6))
-          : getConvertedSwapAmount(strategy),
+      min: isBuyStrategy(strategy) && !increase_only ? checkMin : swapAmount,
+      max: !isBuyStrategy(strategy) && !increase_only ? checkMax : swapAmount,
     };
   }
 
@@ -146,6 +158,14 @@ export function getStandardDcaRemainingBalance(strategy: Strategy) {
 export function getRemainingExecutionsRange(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);
   const { min: minSwap, max: maxSwap } = getStrategySwapRange(strategy) || {};
+
+  if (isBuyStrategy(strategy) && isWeightedScale(strategy)) {
+    return {
+      min: minSwap && totalExecutions(balance, minSwap),
+      max: maxSwap && totalExecutions(balance, maxSwap),
+    };
+  }
+
   return {
     min: maxSwap && totalExecutions(balance, maxSwap),
     max: minSwap && totalExecutions(balance, minSwap),
