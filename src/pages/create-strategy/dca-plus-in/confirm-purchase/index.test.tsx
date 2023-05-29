@@ -115,7 +115,7 @@ describe('DCA Plus In confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          pair_address: 'kujira12cks8zuclf9339tnanpdd8z8ycf5ygdgy885sejc7kyhvryzfyzsvjpasw',
+          target_denom: 'ukuji',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,
           minimum_receive_amount: undefined,

@@ -112,7 +112,7 @@ describe('DCA Plus Out confirm page', () => {
         create_vault: {
           label: '',
           time_interval: 'daily',
-          pair_address: 'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e866',
+          target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,
           destinations: undefined,
