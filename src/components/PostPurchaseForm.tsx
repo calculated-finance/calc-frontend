@@ -1,4 +1,15 @@
-import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
+import {
+  Box,
+  Collapse,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  HStack,
+  Image,
+  Stack,
+  Text,
+  useRadioGroup,
+} from '@chakra-ui/react';
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import getDenomInfo from '@utils/getDenomInfo';
