@@ -15,7 +15,7 @@ export function getEndDateFromRemainingExecutions(
 
   switch (strategy.time_interval as ExecutionIntervals) {
     case 'minute':
-      startDate.setMinutes(startDate.getMinutes() * remainingExecutions);
+      startDate.setMinutes(startDate.getMinutes() + 60 * remainingExecutions);
       break;
     case 'half_hourly':
       startDate.setMinutes(startDate.getMinutes() + 30 * remainingExecutions);
