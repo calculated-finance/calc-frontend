@@ -25,6 +25,8 @@ import {
   Button,
   Link,
   Code,
+  Image,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import {
@@ -37,10 +39,10 @@ import {
 import useStrategies from '@hooks/useStrategies';
 import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
+import { Denom } from '@models/Denom';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { Denom } from '@models/Denom';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -65,6 +67,18 @@ function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & O
         </ModalBody>
       </ModalContent>
     </Modal>
+  );
+}
+
+function LoopingDiagram() {
+  return (
+    <Box pb={4}>
+      <Image src="/images/reinvest-diagram-lite.svg" alt="reinvest-diagram" />
+      <Text px={4}>
+        Here we see a strategy that enters an ATOM position. This strategy can only link to a strategy that is exiting
+        an ATOM position. Buy low, sell high, repeat.
+      </Text>
+    </Box>
   );
 }
 
@@ -158,18 +172,30 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>Choose another CALC strategy</FormLabel>
-      <FormHelperText pb={4}>
-        You can choose from the below compatible strategies that you currently have. Cancelled strategies will not show
-        up.
+      <FormLabel>Want to loop your strategies?</FormLabel>
+      <FormHelperText>
+        You can only loop into strategies that have compatible assets.{' '}
+        <Tooltip label={<LoopingDiagram />}>
+          <InfoOutlineIcon color="blue.200" />
+        </Tooltip>{' '}
       </FormHelperText>
+
+      {!isEmpty(filteredStrategies) && (
+        <>
+          <FormLabel>Choose another CALC strategy</FormLabel>
+          <FormHelperText pb={4}>
+            You can choose from the below compatible strategies that you currently have. Cancelled strategies will not
+            show up.
+          </FormHelperText>
+        </>
+      )}
       {isLoading ? (
         <Center>
           <Spinner />
         </Center>
       ) : isEmpty(filteredStrategies) ? (
         <Stack>
-          <Center>No suitable strategies available</Center>
+          <Center p={6}>No suitable strategies available</Center>
         </Stack>
       ) : (
         <Stack {...getRootProps} maxH={220} overflow="auto">
@@ -179,6 +205,16 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
           })}
         </Stack>
       )}
+      <FormHelperText color="brand.200" fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
+        {isEmpty(filteredStrategies) && <Image src="/images/reinvest-diagram.svg" alt="reinvest-diagram" mb={4} />}
+
+        <HStack spacing={3}>
+          <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
+          <Text>
+            Don&apos;t worry, you can configure and link strategies later, on the &apos;view performance&apos; page.
+          </Text>
+        </HStack>
+      </FormHelperText>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );
