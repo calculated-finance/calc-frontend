@@ -30,8 +30,8 @@ function InfoPanel(): JSX.Element {
       <Image src="/images/iceblock.svg" />
       <Flex alignItems="center">
         <Text textStyle="body">
-          Dollar-cost averaging is one of the easiest techniques to reduce the volatility risk of investing in crypto,
-          and it&apos;s a great way to practice buy-and-hold investing over a few cycles.
+          Remember, marketing material is typically designed to make you feel emotional and impulsive. Don&apos;t let
+          fear and hype make your decisions for you.
         </Text>
       </Flex>
     </Stack>
@@ -243,8 +243,8 @@ function Strategies() {
         <Image src="/images/moneyBag.svg" />
         <Flex alignItems="center">
           <Text textStyle="body">
-            If you can learn anything from the Luna crash, it&apos;s don&apos;t marry your bags. Always be objective and
-            if you don&apos;t take your profits, then someone else will.
+            Set your profit taking goals when accumulating an asset, because when assets start pumping, euphoria kicks
+            in.
           </Text>
         </Flex>
       </Stack>
