@@ -90,27 +90,26 @@ export const dcaOutStrategy = {
 
 export const dcaPlusStrategy = {
   ...dcaInStrategy,
-  dca_plus_config: {
-    escrow_level: '1',
-    escrowed_balance: {
-      denom: 'ukuji',
-      amount: '10000',
-    },
-    model_id: 1,
-    standard_dca_received_amount: {
-      denom: 'ukuji',
-      amount: '10000',
-    },
-    standard_dca_swapped_amount: {
-      denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-      amount: '1000',
-    },
-    total_deposit: {
-      denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-      amount: '1000',
+  performance_assessment_strategy: {
+    compare_to_standard_dca: {
+      received_amount: {
+        denom: 'ukuji',
+        amount: '1000000', // 1 UKUJI
+      },
+      swapped_amount: {
+        denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+        amount: '1000000', // 1 DEMO
+      },
     },
   },
-};
+  swap_adjustment_strategy: {
+    risk_weighted_average: {
+      base_denom: 'bitcoin',
+      model_id: 1,
+      position_type: 'enter',
+    },
+  },
+} as Strategy;
 
 export const osmosisStrategy = {
   balance: {
