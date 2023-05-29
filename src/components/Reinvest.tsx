@@ -53,14 +53,12 @@ function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & O
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent>
-        <HStack alignSelf="center" whiteSpace="nowrap">
-          <Text fontSize="sm" data-testid="strategy-current-balance">
-            <Code bg="abyss.200" fontSize="xx-small" whiteSpace="nowrap">
-              id: {strategy.id}
-            </Code>
-          </Text>
-          <ModalHeader>Strategy details </ModalHeader>
-        </HStack>
+        <ModalHeader>
+          Strategy details{' '}
+          <Code bg="abyss.200" fontSize="small" whiteSpace="nowrap">
+            id: {strategy.id}
+          </Code>
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack justify="center" gap={6} align="center">

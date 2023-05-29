@@ -1,5 +1,17 @@
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Box,
+  Text,
+  Divider,
+  Badge,
+  Flex,
+  HStack,
+  Code,
+  Link as ChakraLink,
+} from '@chakra-ui/react';
+import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -19,6 +31,9 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
+import { getStrategyReinvestStrategyId } from '@helpers/destinations';
+import useStrategy from '@hooks/useStrategy';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -31,6 +46,12 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { data: pairsData } = usePairs();
 
   const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
+
+  // Adding the strategies reinvested into
+  const id = getStrategyReinvestStrategyId(strategy);
+  const { data } = useStrategy(id);
+
+  const { vault: reinvestStrategy } = data || {};
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
@@ -121,11 +142,22 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
             <Heading size="xs">Reinvesting into</Heading>
           </GridItem>
           <GridItem colSpan={2}>
-            <Text fontSize="sm" data-testid="strategy-current-balance">
+            {/* <Text fontSize="sm" data-testid="strategy-current-balance">
               <Code bg="abyss.200" borderWidth={0.5} borderColor="grey.100" fontSize="small" whiteSpace="nowrap">
                 id: {strategy.id}
               </Code>
-            </Text>
+            </Text> */}
+            {!reinvestStrategy ? (
+              <Badge>None</Badge>
+            ) : (
+              <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
+                <Text fontSize="sm" data-testid="strategy-receiving-address">
+                  <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
+                    {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
+                  </Code>
+                </Text>
+              </ChakraLink>
+            )}
           </GridItem>
         </Grid>
       </Box>
