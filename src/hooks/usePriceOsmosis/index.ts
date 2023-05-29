@@ -66,6 +66,8 @@ export default function usePriceOsmosis(
 
   const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
 
+  const isRouteReversed = initialDenom !== pair?.quote_denom;
+
   const {
     data,
     isLoading: isPriceLoading,
@@ -73,7 +75,7 @@ export default function usePriceOsmosis(
   } = useQueryWithNotification<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
-      const directionalRoute = transactionType === TransactionType.Buy ? route! : route!.reverse();
+      const directionalRoute = isRouteReversed ? route!.reverse() : route!;
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
         tokenIn: `1000000${initialDenom}`,
