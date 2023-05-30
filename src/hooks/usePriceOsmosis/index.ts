@@ -1,3 +1,4 @@
+import { reverse } from 'rambda';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
 import { Denom } from '@models/Denom';
@@ -10,7 +11,6 @@ import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import useQueryWithNotification from '../useQueryWithNotification';
 import usePairs from '../usePairs';
-import { reverse } from 'rambda';
 
 interface Step {
   poolId: Long;
