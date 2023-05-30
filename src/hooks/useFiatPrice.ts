@@ -5,17 +5,18 @@ import { COINGECKO_ENDPOINT } from 'src/constants';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Chains, useChain } from './useChain';
 import { useSupportedDenoms } from './useSupportedDenoms';
+import { useAllSupportedDenoms } from './useAllSupportedDenoms';
 
 export type FiatPriceResponse = any;
 
-const useFiatPrice = (denom: Denom | undefined) => {
+const useFiatPrice = (denom: Denom | undefined, allChains = false) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
   const priceChange = 'usd_24h_change';
 
   const { chain } = useChain();
 
-  const supportedDenoms = useSupportedDenoms();
+  const supportedDenoms = allChains ? useAllSupportedDenoms() : useSupportedDenoms();
 
   const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-price', chain, supportedDenoms],

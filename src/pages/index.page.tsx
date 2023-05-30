@@ -29,6 +29,7 @@ import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useEffect } from 'react';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import { useAllSupportedDenoms } from '@hooks/useAllSupportedDenoms';
 
 function InfoPanel() {
   return (
@@ -149,19 +150,24 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
-  const supportedDenoms = useSupportedDenoms();
-  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
-  const { data } = useAdminStrategies();
+  const supportedDenoms = useAllSupportedDenoms();
+  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0], true);
+  const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
+  const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
   const { connected } = useWallet();
   const { chain } = useChain();
 
-  if (!fiatPrices || !data) {
+  if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
       </Center>
     );
   }
+
+  console.log('supportedDenoms', supportedDenoms);
+
+  const data = [...kujiraStrategies, ...osmosisStrategies];
 
   const totalSwappedAmounts = getTotalSwapped(data, supportedDenoms);
   const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
