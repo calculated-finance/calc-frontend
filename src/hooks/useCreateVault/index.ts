@@ -42,24 +42,6 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
   return fundsInCoin;
 }
 
-// temporarily use this for osmosis while auto is not supported
-export const FEE = {
-  amount: [
-    {
-      denom: 'uosmo',
-      amount: '10000',
-    },
-  ],
-  gas: '2500000',
-};
-
-function getFee() {
-  if (isMainnet()) {
-    return 'auto';
-  }
-  return FEE;
-}
-
 const useCreateVault = (
   formName: FormNames,
   transactionType: TransactionType,
@@ -72,8 +54,6 @@ const useCreateVault = (
   const { chain } = useChain();
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
-
-  const fee = chain === Chains.Osmosis ? getFee() : 'auto';
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
@@ -142,7 +122,7 @@ const useCreateVault = (
         msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
       }
 
-      return executeCreateVault(client, senderAddress, msgs, fee);
+      return executeCreateVault(client, senderAddress, msgs);
     },
     {
       onError: (error) => {
