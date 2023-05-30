@@ -243,7 +243,7 @@ export function getStrategyEndDateFromRemainingExecutions(
 
 export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
   const { trigger } = strategy;
-  if (trigger && 'fin_limit_order' in trigger) {
+  if (trigger && 'price' in trigger) {
     return 'Pending strategy start';
   }
 

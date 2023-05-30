@@ -9,6 +9,7 @@ import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
+import getDenomInfo from '@utils/getDenomInfo';
 import useQueryWithNotification from '../useQueryWithNotification';
 import usePairs from '../usePairs';
 
@@ -63,6 +64,16 @@ export default function usePriceOsmosis(
 
   const isRouteReversed = initialDenom !== pair?.quote_denom;
 
+  const { conversion: initialDenomConversion, significantFigures: initialSF } = getDenomInfo(initialDenom!);
+  const { conversion: resultingDenomConversion, significantFigures: resultingSF } = getDenomInfo(resultingDenom!);
+
+  console.log('resultingSF', resultingSF);
+  console.log('initialSF', initialSF);
+
+  const difference = initialSF - resultingSF;
+
+  console.log('isRouteReversed', isRouteReversed);
+  const factor = 10 ** initialSF;
   const {
     data,
     isLoading: isPriceLoading,
@@ -73,7 +84,7 @@ export default function usePriceOsmosis(
       const directionalRoute = isRouteReversed ? reverse(route!) : route!;
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
-        tokenIn: `1000000${initialDenom}`,
+        tokenIn: `${factor}${initialDenom}`,
         routes: findRoute(directionalRoute, initialDenom!, pools!),
       });
       return result;
@@ -86,8 +97,8 @@ export default function usePriceOsmosis(
   const price =
     data &&
     (transactionType === TransactionType.Buy
-      ? 1000000 / Number(data.tokenOutAmount)
-      : safeInvert(1000000 / Number(data.tokenOutAmount)));
+      ? factor / (Number(data.tokenOutAmount) * 10 ** difference)
+      : (10 ** difference * Number(data.tokenOutAmount)) / factor);
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {

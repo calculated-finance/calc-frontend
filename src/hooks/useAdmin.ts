@@ -11,6 +11,8 @@ const admins = [
   'kujira1mumzgqekvhvn9fkzj8tajen0qw9j7lj25r2qlk', // n
   'kujira18gwmpc4dlk7ntzl8tx0pzcu3vkd8veyfherdpm', // s
   'kujira1wsj79nhlfvcw75hfejh7nt9sy66qyvp3td5zu9', // t
+  'osmo13zatchjvrqvtkg2asfxnjmnsur3e7fasmgydqn', // d
+  'osmo18gwmpc4dlk7ntzl8tx0pzcu3vkd8veyfw2j96r', // s
 ];
 
 export function isAddressAdmin(address: string | undefined | null) {
