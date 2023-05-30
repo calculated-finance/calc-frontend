@@ -27,10 +27,9 @@ export function executeCreateVault(
   client: SigningCosmWasmClient,
   senderAddress: any,
   msgs: EncodeObject[],
-  fee: number | StdFee | 'auto',
 ): Promise<string> {
   return client
-    .signAndBroadcast(senderAddress, msgs, fee)
+    .signAndBroadcast(senderAddress, msgs, 'auto')
     .then((data) => {
       try {
         return getVaultIdFromDeliverTxResponse(data);
