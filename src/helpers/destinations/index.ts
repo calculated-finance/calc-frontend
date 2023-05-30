@@ -1,6 +1,4 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
-import { isAutoStaking } from '@helpers/isAutoStaking';
-import { isStrategyV2 } from '@helpers/strategy/isStrategyV2';
 import { Chains } from '@hooks/useChain';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';

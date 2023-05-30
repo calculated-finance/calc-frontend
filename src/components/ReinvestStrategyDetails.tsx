@@ -74,6 +74,14 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {getStrategyName(strategy)}
             </Text>
           </GridItem>
+          <GridItem colSpan={1}>
+            <Heading size="xs">Strategy id</Heading>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <Code bg="abyss.200" fontSize="small" whiteSpace="nowrap">
+              id: {strategy.id}
+            </Code>
+          </GridItem>
           <GridItem colSpan={3}>
             <Divider />
           </GridItem>
