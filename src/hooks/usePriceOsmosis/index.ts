@@ -91,8 +91,8 @@ export default function usePriceOsmosis(
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {
-        maximumFractionDigits: 3,
-        minimumFractionDigits: 3,
+        maximumFractionDigits: 6,
+        minimumFractionDigits: 6,
       })
     : undefined;
 
