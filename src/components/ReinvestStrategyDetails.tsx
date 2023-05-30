@@ -47,7 +47,6 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
 
-  // Adding the strategies reinvested into
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
 
@@ -79,7 +78,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Code bg="abyss.200" fontSize="small" whiteSpace="nowrap">
-              id: {strategy.id}
+              {strategy.id}
             </Code>
           </GridItem>
           <GridItem colSpan={3}>
@@ -150,11 +149,6 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
             <Heading size="xs">Reinvesting into</Heading>
           </GridItem>
           <GridItem colSpan={2}>
-            {/* <Text fontSize="sm" data-testid="strategy-current-balance">
-              <Code bg="abyss.200" borderWidth={0.5} borderColor="grey.100" fontSize="small" whiteSpace="nowrap">
-                id: {strategy.id}
-              </Code>
-            </Text> */}
             {!reinvestStrategy ? (
               <Badge>None</Badge>
             ) : (

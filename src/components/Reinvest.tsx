@@ -198,6 +198,7 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
       ) : isEmpty(filteredStrategies) ? (
         <Stack>
           <Center p={6}>No suitable strategies available</Center>
+          {isEmpty(filteredStrategies) && <Image src="/images/reinvest-diagram.svg" alt="reinvest-diagram" mb={4} />}
         </Stack>
       ) : (
         <Stack {...getRootProps} maxH={220} overflow="auto">
@@ -207,9 +208,7 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
           })}
         </Stack>
       )}
-      <FormHelperText color="brand.200" fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
-        {isEmpty(filteredStrategies) && <Image src="/images/reinvest-diagram.svg" alt="reinvest-diagram" mb={4} />}
-
+      <FormHelperText color="brand.200" fontSize="xs" bg="abyss.200" p={4} borderRadius="md" mt={4}>
         <HStack spacing={3}>
           <Image src="/images/lightBulbOutline.svg" alt="light bulb" />
           <Text>

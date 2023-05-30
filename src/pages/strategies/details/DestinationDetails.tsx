@@ -79,7 +79,6 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
 }
 
 export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
-  const { chain } = useChain();
   const validatorAddress = getStrategyValidatorAddress(strategy);
   const { validator, isLoading } = useValidator(validatorAddress);
 
