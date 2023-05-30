@@ -64,16 +64,12 @@ export default function usePriceOsmosis(
 
   const isRouteReversed = initialDenom !== pair?.quote_denom;
 
-  const { conversion: initialDenomConversion, significantFigures: initialSF } = getDenomInfo(initialDenom!);
-  const { conversion: resultingDenomConversion, significantFigures: resultingSF } = getDenomInfo(resultingDenom!);
-
-  console.log('resultingSF', resultingSF);
-  console.log('initialSF', initialSF);
+  const { significantFigures: initialSF } = getDenomInfo(initialDenom!);
+  const { significantFigures: resultingSF } = getDenomInfo(resultingDenom!);
 
   const difference = initialSF - resultingSF;
-
-  console.log('isRouteReversed', isRouteReversed);
   const factor = 10 ** initialSF;
+
   const {
     data,
     isLoading: isPriceLoading,
