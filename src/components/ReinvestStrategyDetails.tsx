@@ -153,11 +153,9 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <Badge>None</Badge>
             ) : (
               <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
-                <Text fontSize="sm" data-testid="strategy-receiving-address">
-                  <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
-                    {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
-                  </Code>
-                </Text>
+                <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
+                  {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
+                </Code>
               </ChakraLink>
             )}
           </GridItem>
