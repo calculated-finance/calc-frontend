@@ -12,6 +12,7 @@ import {
   HStack,
   Tooltip,
   Stack,
+  Code,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
@@ -174,6 +175,14 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 <Text fontSize="sm" data-testid="strategy-name">
                   {getStrategyName(strategy)}
                 </Text>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Heading size="xs">Strategy id</Heading>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <Code bg="abyss.200" fontSize="small" whiteSpace="nowrap">
+                  {strategy.id}
+                </Code>
               </GridItem>
               <GridItem colSpan={3}>
                 <Divider />

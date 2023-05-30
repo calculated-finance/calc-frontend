@@ -1,6 +1,4 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
-import { isAutoStaking } from '@helpers/isAutoStaking';
-import { isStrategyV2 } from '@helpers/strategy/isStrategyV2';
 import { Chains } from '@hooks/useChain';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -66,7 +64,7 @@ export function buildCallbackDestinations(
   return destinations.length ? destinations : undefined;
 }
 
-export function getStrategyPostSwapDetails(strategy: StrategyOsmosis) {
+export function getStrategyPostSwapDetails(strategy: StrategyOsmosis | Strategy) {
   const { destinations } = strategy;
   const [destination] = destinations;
   const { msg } = destination;
@@ -125,7 +123,7 @@ export function getStrategyPostSwapSendToAnotherWallet(
   return undefined;
 }
 
-export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis) {
+export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis | Strategy) {
   const postSwapDetails = getStrategyPostSwapDetails(strategy);
   if (postSwapDetails && 'deposit' in postSwapDetails) {
     return postSwapDetails.deposit.vault_id;

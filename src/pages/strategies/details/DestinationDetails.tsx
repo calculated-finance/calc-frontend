@@ -66,8 +66,24 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
         ) : (
           <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
             <Text fontSize="sm" data-testid="strategy-receiving-address">
-              <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
+              <Code
+                bg="abyss.200"
+                fontSize="x-small"
+                as={ChakraLink}
+                color="blue.200"
+                display={{ base: 'none', lg: 'contents' }}
+              >
                 {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
+              </Code>
+              <Code
+                bg="abyss.200"
+                fontSize="xx-small"
+                as={ChakraLink}
+                color="blue.200"
+                display={{ base: 'contents', lg: 'none' }}
+                whiteSpace="nowrap"
+              >
+                id: {id} <ExternalLinkIcon />
               </Code>
             </Text>
           </ChakraLink>
@@ -79,7 +95,6 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
 }
 
 export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
-  const { chain } = useChain();
   const validatorAddress = getStrategyValidatorAddress(strategy);
   const { validator, isLoading } = useValidator(validatorAddress);
 

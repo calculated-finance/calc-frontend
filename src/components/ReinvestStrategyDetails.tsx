@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
@@ -19,6 +19,7 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
+import { DestinationDetails } from 'src/pages/strategies/details/DestinationDetails';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -52,6 +53,14 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
             <Text fontSize="sm" data-testid="strategy-name">
               {getStrategyName(strategy)}
             </Text>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Heading size="xs">Strategy id</Heading>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <Code bg="abyss.200" fontSize="small" whiteSpace="nowrap">
+              {strategy.id}
+            </Code>
           </GridItem>
           <GridItem colSpan={3}>
             <Divider />
@@ -112,11 +121,12 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           <GridItem colSpan={1}>
             <Heading size="xs">Current amount in vault</Heading>
           </GridItem>
-          <GridItem colSpan={1}>
+          <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-current-balance">
               {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
+          <DestinationDetails strategy={strategy} />
         </Grid>
       </Box>
     </GridItem>
