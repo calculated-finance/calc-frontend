@@ -77,10 +77,11 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
               </Code>
               <Code
                 bg="abyss.200"
-                fontSize="x-small"
+                fontSize="xx-small"
                 as={ChakraLink}
                 color="blue.200"
                 display={{ base: 'contents', lg: 'none' }}
+                whiteSpace="nowrap"
               >
                 id: {id} <ExternalLinkIcon />
               </Code>
