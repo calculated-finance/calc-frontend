@@ -53,7 +53,7 @@ function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & O
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Strategy details </ModalHeader>
+        <ModalHeader>Strategy details</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack justify="center" gap={6} align="center">

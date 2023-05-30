@@ -1,17 +1,5 @@
-import {
-  Heading,
-  Grid,
-  GridItem,
-  Box,
-  Text,
-  Divider,
-  Badge,
-  Flex,
-  HStack,
-  Code,
-  Link as ChakraLink,
-} from '@chakra-ui/react';
-import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
+import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
+import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -31,9 +19,7 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
-import { getStrategyReinvestStrategyId } from '@helpers/destinations';
-import useStrategy from '@hooks/useStrategy';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { DestinationDetails } from 'src/pages/strategies/details/DestinationDetails';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
@@ -46,11 +32,6 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { data: pairsData } = usePairs();
 
   const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
-
-  const id = getStrategyReinvestStrategyId(strategy);
-  const { data } = useStrategy(id);
-
-  const { vault: reinvestStrategy } = data || {};
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
@@ -145,20 +126,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
             </Text>
           </GridItem>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Reinvesting into</Heading>
-          </GridItem>
-          <GridItem colSpan={2}>
-            {!reinvestStrategy ? (
-              <Badge>None</Badge>
-            ) : (
-              <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
-                <Code bg="abyss.200" fontSize="x-small" as={ChakraLink} color="blue.200">
-                  {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
-                </Code>
-              </ChakraLink>
-            )}
-          </GridItem>
+          <DestinationDetails strategy={strategy} />
         </Grid>
       </Box>
     </GridItem>
