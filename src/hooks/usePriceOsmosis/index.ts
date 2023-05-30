@@ -10,6 +10,7 @@ import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import useQueryWithNotification from '../useQueryWithNotification';
 import usePairs from '../usePairs';
+import { reverse } from 'rambda';
 
 interface Step {
   poolId: Long;
@@ -55,14 +56,8 @@ export default function usePriceOsmosis(
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
-  const pair =
-    pairs && resultingDenom && initialDenom
-      ? findPair(
-          pairs,
-          transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
-          transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
-        )
-      : null;
+
+  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
 
@@ -75,7 +70,7 @@ export default function usePriceOsmosis(
   } = useQueryWithNotification<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
-      const directionalRoute = isRouteReversed ? route!.reverse() : route!;
+      const directionalRoute = isRouteReversed ? reverse(route!) : route!;
       const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
         tokenIn: `1000000${initialDenom}`,
