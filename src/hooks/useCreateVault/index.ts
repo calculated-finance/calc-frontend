@@ -56,7 +56,7 @@ const useCreateVault = (
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
-  const { price: dexPrice } = usePrice(state?.initialDenom, state?.resultingDenom, transactionType);
+  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType);
 
   return useMutation<Strategy['id'], Error>(
     () => {

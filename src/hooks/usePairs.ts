@@ -4,7 +4,7 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
-import { useChain } from './useChain';
+import { Chains, useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 const hiddenPairs = [
@@ -52,12 +52,50 @@ export function allDenomsFromPairs(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom).concat(pairs?.map((pair) => pair.base_denom))));
 }
 
-export default function usePairs() {
+const GET_PAIRS_LIMIT = 400;
+
+function usePairsOsmosis() {
+  const client = useCosmWasmClient((state) => state.client);
+  const { chain } = useChain();
+
+  function fetchPairsRecursively(startAfter = null, allPairs = [] as Pair[]): Promise<Pair[]> {
+    return client!
+      .queryContractSmart(getChainContractAddress(chain), {
+        get_pairs: {
+          limit: GET_PAIRS_LIMIT,
+          start_after: startAfter,
+        },
+      })
+      .then((result) => {
+        allPairs.push(...result.pairs);
+
+        if (result.pairs.length === GET_PAIRS_LIMIT) {
+          const newStartAfter = result.pairs[result.pairs.length - 1];
+          return fetchPairsRecursively(newStartAfter, allPairs);
+        }
+        return allPairs;
+      });
+  }
+
+  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis', chain], () => fetchPairsRecursively(), {
+    enabled: !!client && chain === Chains.Osmosis,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    ...queryResult,
+    data: {
+      pairs: queryResult.data?.filter((pair) => !hiddenPairs.includes(pair.address)),
+    },
+  };
+}
+
+function usePairsKujira() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
 
   const queryResult = useQueryWithNotification<PairsResponse>(
-    ['pairs', chain],
+    ['pairs-kujira', chain],
     async () => {
       const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
         get_pairs: {},
@@ -65,13 +103,23 @@ export default function usePairs() {
       return result;
     },
     {
-      enabled: !!client && !!chain,
+      enabled: !!client && chain === Chains.Kujira,
     },
   );
+
   return {
     ...queryResult,
     data: {
       pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
     },
   };
+}
+
+export default function usePairs() {
+  const { chain } = useChain();
+
+  const kujiraPairsData = usePairsKujira();
+  const osmosisPairsData = usePairsOsmosis();
+
+  return chain === Chains.Kujira ? kujiraPairsData : osmosisPairsData;
 }
