@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Divider, Stack, Grid, GridItem } from '@chakra-ui/react';
+import { Box, HStack, Text, Divider, Stack, Grid, GridItem, Tooltip } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { Denom } from '@models/Denom';
@@ -69,7 +69,9 @@ export function WeightsGrid({
         );
       })}
 
-      <GridItem colSpan={3}>Swap Amount:</GridItem>
+      <GridItem colSpan={3}>
+        <Tooltip label="Setting a price floor/ceiling may affect your swap amounts.">Swap Amount: *</Tooltip>
+      </GridItem>
       {weights.map((weight) => (
         <GridItem colSpan={1} key={weight}>
           {calcSwapFromPriceDelta(weight)}
