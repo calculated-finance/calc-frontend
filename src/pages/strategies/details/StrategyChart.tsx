@@ -65,17 +65,19 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
-    label: `${priceOfDenomName} ➡️ ${priceInDenomName}\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
+    label: `${
+      isBuyStrategy(strategy)
+        ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
+        : `${priceOfDenomName} ➡️ ${priceInDenomName}`
+    }\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
-    } \nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom} \n 
-       Date: ${swap?.date
-         .toLocaleDateString('en-AU', {
-           day: '2-digit',
-           month: 'short',
-           year: '2-digit',
-         })
-         .replace(',', '')} \n 1 ${priceOfDenomName}  = ${formatFiat(swap?.currentPrice || 0)}
-         `,
+    }\nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom}\nDate: ${swap?.date
+      .toLocaleDateString('en-AU', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+      })
+      .replace(',', '')}\n1 ${priceOfDenomName}  = ${formatFiat(swap?.currentPrice || 0)}`,
   }));
 
   return (
