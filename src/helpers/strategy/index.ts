@@ -20,6 +20,7 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { Chains, useChainStore } from '@hooks/useChain';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -256,7 +257,34 @@ export function isStrategyAutoStaking(strategy: Strategy) {
   return isAutoStaking(strategy.destinations);
 }
 
+export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: string) {
+  const { significantFigures: initialSF } = getDenomInfo(getStrategyInitialDenom(strategy));
+  const { significantFigures: resultingSF } = getDenomInfo(getStrategyResultingDenom(strategy));
+
+  // start with scaled receive amount
+  const scaledReceiveAmount = Number(receiveAmount);
+
+  // get unscaled receive amount
+  const scalingFactor = 10 ** (resultingSF - initialSF);
+  const unscaledReceiveAmount = scaledReceiveAmount / scalingFactor;
+
+  // get directionless price
+  const deconvertedSwapAmount = Number(getSwapAmount(strategy));
+  const directionlessPrice = deconvertedSwapAmount / unscaledReceiveAmount;
+
+  // get directed price
+  const directedPrice = isBuyStrategy(strategy) ? directionlessPrice : safeInvert(directionlessPrice);
+
+  return Number(directedPrice.toFixed(6));
+}
+
 export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) {
+  const { chain } = useChainStore.getState();
+
+  if (chain === Chains.Osmosis) {
+    return convertReceiveAmountOsmosis(strategy, receiveAmount);
+  }
+
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)

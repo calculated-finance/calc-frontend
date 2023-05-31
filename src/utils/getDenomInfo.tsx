@@ -504,6 +504,7 @@ const getDenomInfo = (denom?: string) => {
       mapTo.deconversion = (value: number) => Math.round(value * 10 ** significantFigures);
       mapTo.priceDeconversion = (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6);
       mapTo.priceConversion = (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6);
+      mapTo.minimumSwapAmount = 0.05 / 1000;
     }
 
     if (isMainnet()) {

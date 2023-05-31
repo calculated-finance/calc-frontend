@@ -9,7 +9,7 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
-import { useChainStore } from '@hooks/useChain';
+import { Chains, useChainStore } from '@hooks/useChain';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
@@ -22,6 +22,7 @@ import {
 } from 'src/constants';
 import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DcaFormState } from './DcaFormState';
 
 const conversion: Record<ExecutionIntervals, number> = {
@@ -56,6 +57,38 @@ function getReceiveAmount(
   return deconversion(swapAmount * price).toString();
 }
 
+function getOsmosisReceiveAmount(
+  initialDenom: Denom, // osmo
+  swapAmount: number, // 1.2
+  price: number | null | undefined, // 5.0
+  resultingDenom: Denom, // weth
+  transactionType: TransactionType,
+) {
+  // convert swap amount to microns e.g. 1.2 -> 1 200 000
+  // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
+  // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
+
+  if (!price) {
+    return undefined;
+  }
+
+  const { deconversion: initialDeconversion, significantFigures: initialSF } = getDenomInfo(initialDenom);
+  const { significantFigures: resultingSF } = getDenomInfo(resultingDenom);
+
+  // make the price in terms of the initial denom (doesnt matter if its buy or sell)
+  const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
+
+  // get minimum receive amount in initial denom scale
+  const deconvertedSwapAmount = initialDeconversion(swapAmount);
+  const unscaledReceiveAmount = Math.floor(deconvertedSwapAmount / directionlessPrice);
+
+  // get scaled receive amount
+  const scalingFactor = 10 ** (resultingSF - initialSF);
+  const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
+
+  return scaledReceiveAmount.toString();
+}
+
 function getMinimumReceiveAmount(
   initialDenom: Denom,
   swapAmount: number,
@@ -63,6 +96,11 @@ function getMinimumReceiveAmount(
   resultingDenom: Denom,
   transactionType: TransactionType,
 ) {
+  const { chain } = useChainStore.getState();
+
+  if (chain === Chains.Osmosis) {
+    return getOsmosisReceiveAmount(initialDenom, swapAmount, priceThresholdValue, resultingDenom, transactionType);
+  }
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
@@ -99,6 +137,11 @@ function getTargetReceiveAmount(
   resultingDenom: Denom,
   transactionType: TransactionType,
 ) {
+  const { chain } = useChainStore.getState();
+
+  if (chain === Chains.Osmosis) {
+    return getOsmosisReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType);
+  }
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
@@ -113,6 +156,10 @@ function getBaseReceiveAmount(
   resultingDenom: Denom,
   transactionType: TransactionType,
 ) {
+  const { chain } = useChainStore.getState();
+  if (chain === Chains.Osmosis) {
+    return getOsmosisReceiveAmount(initialDenom, swapAmount, basePrice, resultingDenom, transactionType);
+  }
   const { priceConversion } =
     transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
 
