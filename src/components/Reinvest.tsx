@@ -75,8 +75,7 @@ function LoopingDiagram() {
     <Box pb={4}>
       <Image src="/images/reinvest-diagram-lite.svg" alt="reinvest-diagram" />
       <Text px={4}>
-        Here we see a strategy that enters an ATOM position. This strategy can only link to a strategy that is exiting
-        an ATOM position. Buy low, sell high, repeat.
+        For example, you can set price floors and ceilings and set up automated strategies that buy low and sell high.
       </Text>
     </Box>
   );
@@ -174,9 +173,9 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>Want to loop your strategies?</FormLabel>
+      <FormLabel>Want to link your strategies?</FormLabel>
       <FormHelperText>
-        You can only loop into strategies that have compatible assets.{' '}
+        You can only link into strategies that have compatible assets.{' '}
         <Tooltip label={<LoopingDiagram />}>
           <InfoOutlineIcon color="blue.200" />
         </Tooltip>{' '}
@@ -198,7 +197,9 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
       ) : isEmpty(filteredStrategies) ? (
         <Stack>
           <Center p={6}>No suitable strategies available</Center>
-          {isEmpty(filteredStrategies) && <Image src="/images/reinvest-diagram.svg" alt="reinvest-diagram" mb={4} />}
+          {isEmpty(filteredStrategies) && (
+            <Image src="/images/reinvest-diagram-dark.svg" alt="reinvest-diagram" mb={4} borderRadius="md" />
+          )}
         </Stack>
       ) : (
         <Stack {...getRootProps} maxH={220} overflow="auto">
