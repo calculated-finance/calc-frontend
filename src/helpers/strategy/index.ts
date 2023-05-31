@@ -261,19 +261,21 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
   const { significantFigures: initialSF } = getDenomInfo(getStrategyInitialDenom(strategy));
   const { significantFigures: resultingSF } = getDenomInfo(getStrategyResultingDenom(strategy));
 
-  const scalingFactor = 10 ** (resultingSF - initialSF);
-
+  // start with scaled receive amount
   const scaledReceiveAmount = Number(receiveAmount);
 
+  // get unscaled receive amount
+  const scalingFactor = 10 ** (resultingSF - initialSF);
   const unscaledReceiveAmount = scaledReceiveAmount / scalingFactor;
 
+  // get directionless price
   const deconvertedSwapAmount = Number(getSwapAmount(strategy));
-
   const directionlessPrice = deconvertedSwapAmount / unscaledReceiveAmount;
 
+  // get directed price
   const directedPrice = isBuyStrategy(strategy) ? directionlessPrice : safeInvert(directionlessPrice);
 
-  return directedPrice;
+  return Number(directedPrice.toFixed(6));
 }
 
 export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) {

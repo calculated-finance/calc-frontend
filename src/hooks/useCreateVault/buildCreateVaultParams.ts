@@ -69,22 +69,21 @@ function getOsmosisReceiveAmount(
   // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
 
   if (!price) {
-    return 0;
+    return undefined;
   }
-
-  // make the price in terms of the initial denom (doesnt matter if its buy or sell)
-  const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
 
   const { deconversion: initialDeconversion, significantFigures: initialSF } = getDenomInfo(initialDenom);
   const { significantFigures: resultingSF } = getDenomInfo(resultingDenom);
 
-  const scalingFactor = 10 ** (resultingSF - initialSF);
-
-  const deconvertedSwapAmount = initialDeconversion(swapAmount);
+  // make the price in terms of the initial denom (doesnt matter if its buy or sell)
+  const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
 
   // get minimum receive amount in initial denom scale
-  const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
+  const deconvertedSwapAmount = initialDeconversion(swapAmount);
+  const unscaledReceiveAmount = Math.floor(deconvertedSwapAmount / directionlessPrice);
 
+  // get scaled receive amount
+  const scalingFactor = 10 ** (resultingSF - initialSF);
   const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
 
   return scaledReceiveAmount.toString();
