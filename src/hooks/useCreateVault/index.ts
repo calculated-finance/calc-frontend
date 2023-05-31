@@ -10,15 +10,15 @@ import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { FormNames } from '@hooks/useFormStore';
-import { isMainnet } from '@utils/isMainnet';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
 import * as Sentry from '@sentry/react';
 import useStrategy from '@hooks/useStrategy';
 import { isNil } from 'lodash';
+import { useAnalytics } from '@hooks/useAnalytics';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -57,6 +57,7 @@ const useCreateVault = (
 
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType);
+  const { track } = useAnalytics();
 
   return useMutation<Strategy['id'], Error>(
     () => {
@@ -122,7 +123,10 @@ const useCreateVault = (
         msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
       }
 
-      return executeCreateVault(client, senderAddress, msgs);
+      return executeCreateVault(client, senderAddress, msgs).then((res) => {
+        track('Strategy Created', { formName, chain });
+        return res;
+      });
     },
     {
       onError: (error) => {

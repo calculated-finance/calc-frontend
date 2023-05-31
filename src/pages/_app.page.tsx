@@ -2,8 +2,9 @@ import type { AppProps } from 'next/app';
 import '@fontsource/karla';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
+import * as amplitude from '@amplitude/analytics-browser';
 import theme from 'src/theme';
-import { Box, Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
+import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
@@ -36,6 +37,16 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
   environment: isMainnet() ? 'production' : 'test',
 });
+
+function initAmplitude() {
+  if (isMainnet()) {
+    amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
+      defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
+    });
+  }
+}
+
+initAmplitude();
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
