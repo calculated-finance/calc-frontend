@@ -455,6 +455,8 @@ const getDenomInfo = (denom?: string) => {
     if (!isNil(significantFigures) && significantFigures !== 6) {
       mapTo.conversion = (value: number) => value / 10 ** significantFigures;
       mapTo.deconversion = (value: number) => Math.round(value * 10 ** significantFigures);
+      mapTo.priceDeconversion = (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6);
+      mapTo.priceConversion = (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6);
     }
 
     if (isMainnet()) {
