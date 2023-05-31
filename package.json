@@ -14,7 +14,6 @@
     "netlify": "netlify"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^1.10.3",
     "@chain-registry/types": "^0.14.0",
     "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.2.9",

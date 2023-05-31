@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import '@fontsource/karla';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
-import * as amplitude from '@amplitude/analytics-browser';
+// import * as amplitude from '@amplitude/analytics-browser';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -38,15 +38,15 @@ Sentry.init({
   environment: isMainnet() ? 'production' : 'test',
 });
 
-function initAmplitude() {
-  if (featureFlags.amplitudeEnabled) {
-    amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
-      defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
-    });
-  }
-}
+// function initAmplitude() {
+//   if (featureFlags.amplitudeEnabled) {
+//     amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
+//       defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
+//     });
+//   }
+// }
 
-initAmplitude();
+// initAmplitude();
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
