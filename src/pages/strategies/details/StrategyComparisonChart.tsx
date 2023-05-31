@@ -196,7 +196,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
                 data={dcaPlusSwapsChartData}
                 x="time"
                 y={(datum) => datum.amount / lineChartMax}
-                labelComponent={<VictoryTooltip />}
+                labelComponent={<VictoryTooltip style={{ textAnchor: 'left' }} />}
               />
             </VictoryChart>
           )}

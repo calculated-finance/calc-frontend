@@ -124,7 +124,9 @@ export function buildSwapsChartData(
     time: event.time,
     amount: event.total,
     label: event.swapEvent
-      ? `${event.swapEvent.sent} sent.\n${event.swapEvent.received} received.\n ${event.total} total`
+      ? `${event.swapEvent.sent.toFixed(2)} sent.\n${event.swapEvent.received.toFixed(
+          2,
+        )} received.\n${event.total.toFixed(2)} total`
       : 'Created',
   }));
 
