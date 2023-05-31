@@ -314,6 +314,54 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
 export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfo>> = {
   [MainnetDenomsOsmosis.AXL]: {
     coingeckoId: 'usd-coin',
+    stable: true,
+  },
+  [MainnetDenomsOsmosis.AVAX]: {
+    coingeckoId: 'avalanche-2',
+  },
+  [MainnetDenomsOsmosis.wBNB]: {
+    coingeckoId: 'wbnb',
+    enabledInDcaPlus: true,
+  },
+  [MainnetDenomsOsmosis.DAI]: {
+    coingeckoId: 'dai',
+    stable: true,
+  },
+  [MainnetDenomsOsmosis.DOT]: {
+    coingeckoId: 'polkadot',
+  },
+  [MainnetDenomsOsmosis.wETH]: {
+    enabledInDcaPlus: true,
+    coingeckoId: 'weth',
+  },
+  [MainnetDenomsOsmosis.FTM]: {
+    coingeckoId: 'wrapped-fantom',
+  },
+  [MainnetDenomsOsmosis.IST]: {
+    coingeckoId: 'inter-stable-token',
+    stable: true,
+  },
+  [MainnetDenomsOsmosis.USDT]: {
+    stable: true,
+  },
+  [MainnetDenomsOsmosis.ATOM]: {
+    enabledInDcaPlus: true,
+  },
+  [MainnetDenomsOsmosis.stATOM]: {
+    enabledInDcaPlus: true,
+  },
+  [MainnetDenomsOsmosis.wBTC]: {
+    enabledInDcaPlus: true,
+    coingeckoId: 'wrapped-bitcoin',
+  },
+  [MainnetDenomsOsmosis.PSTAKE]: {
+    coingeckoId: 'pstake-finance',
+  },
+  [MainnetDenomsOsmosis.PEPE]: {
+    coingeckoId: 'pepe',
+  },
+  [MainnetDenomsOsmosis.MATIC]: {
+    coingeckoId: 'polygon',
   },
 };
 
@@ -413,11 +461,10 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
 };
 
 const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL.toString()];
-const stableDenomsMainnet = [MainnetDenomsOsmosis.AXL.toString()];
 
 function isDenomInStablesList(denom: Denom) {
   if (isMainnet()) {
-    return stableDenomsMainnet.includes(denom);
+    return mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.stable;
   }
   return stableDenomsTestnet.includes(denom);
 }
@@ -447,8 +494,7 @@ const getDenomInfo = (denom?: string) => {
     mapTo.stable = isDenomInStablesList(denom as Denom);
     mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
     mapTo.osmosisId = asset.symbol;
-    mapTo.enabledInDcaPlus = true; // TODO: Need to use a whitelist of assets that are supported in DCA Plus;
-    mapTo.stakeableAndSupported = denom === 'uosmo';
+    mapTo.enabledInDcaPlus = isMainnet() ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.enabledInDcaPlus : true;
     const significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
     mapTo.significantFigures = significantFigures;
 
