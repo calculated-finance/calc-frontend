@@ -20,10 +20,6 @@ import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 
-amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
-  defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
-});
-
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -41,6 +37,16 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
   environment: isMainnet() ? 'production' : 'test',
 });
+
+function initAmplitude() {
+  if (isMainnet()) {
+    amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
+      defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
+    });
+  }
+}
+
+initAmplitude();
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
