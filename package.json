@@ -62,7 +62,6 @@
     "react-icons": "^4.4.0",
     "react-number-format": "^5.1.2",
     "victory": "^36.6.8",
-    "yarn": "^1.22.19",
     "yup": "^0.32.11",
     "zustand": "^4.3.6"
   },
