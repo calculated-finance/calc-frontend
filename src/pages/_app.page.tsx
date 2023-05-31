@@ -4,7 +4,7 @@ import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import * as amplitude from '@amplitude/analytics-browser';
 import theme from 'src/theme';
-import { Box, Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
+import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
