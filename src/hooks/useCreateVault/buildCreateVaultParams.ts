@@ -22,6 +22,7 @@ import {
 } from 'src/constants';
 import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DcaFormState } from './DcaFormState';
 
 const conversion: Record<ExecutionIntervals, number> = {
@@ -57,23 +58,51 @@ function getReceiveAmount(
 }
 
 function getMinimumReceiveAmount(
-  initialDenom: Denom,
-  swapAmount: number,
-  priceThresholdValue: number | null | undefined,
-  resultingDenom: Denom,
+  initialDenom: Denom, // osmo
+  swapAmount: number, // 1.2
+  priceThresholdValue: number | null | undefined, // 5.0
+  resultingDenom: Denom, // weth
   transactionType: TransactionType,
 ) {
-  const { priceConversion } =
-    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+  // convert swap amount to microns e.g. 1.2 -> 1 200 000
+  // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
+  // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
 
-  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
-  return getReceiveAmount(
-    priceConversion(priceThresholdValue),
-    deconversion,
-    swapAmount,
-    transactionType,
-    significantFigures,
-  );
+  // alternative:
+  // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 =
+  // (initialAmount / price ) * resultingFactor / intialFactor
+  // aka
+  // (initialAmount / price ) / (intialFactor / resultingFactor)
+
+  // for every uOSMO, receive 0.2 uWETH
+  if (!priceThresholdValue) {
+    return 0;
+  }
+
+  // make the price in terms of the initial denom (doesnt matter if its buy or sell)
+  const directionlessPrice =
+    transactionType === TransactionType.Buy ? priceThresholdValue : safeInvert(priceThresholdValue);
+
+  const { deconversion: initialDeconversion, significantFigures: initialSF } = getDenomInfo(initialDenom);
+  const { significantFigures: resultingSF } = getDenomInfo(resultingDenom);
+
+  const scalingFactor = 10 ** (resultingSF - initialSF);
+
+  const deconvertedSwapAmount = initialDeconversion(swapAmount);
+
+  // get minimum receive amount in initial denom scale
+  const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
+
+  const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
+
+  return scaledReceiveAmount.toString();
+
+  // // price ceiling $5
+  // // 1000000 / 5 = 200 000 wETH
+
+  // //
+
+  // return getReceiveAmount(deconvertedPrice, deconversion, swapAmount, transactionType, significantFigures);
 }
 
 function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTolerance: number | null | undefined) {
