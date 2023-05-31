@@ -14,9 +14,8 @@
     "netlify": "netlify"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "^1.10.3",
     "@chain-registry/types": "^0.14.0",
-    "@amplitude/analytics-browser": "^1.9.1",
-    "@amplitude/react-amplitude": "^1.0.1-beta.1",
     "@chakra-ui/icons": "^2.0.10",
     "@chakra-ui/react": "^2.2.9",
     "@chakra-ui/react-use-size": "^2.0.4",
@@ -36,7 +35,6 @@
     "@tanstack/react-query": "^4.2.3",
     "@terra-money/feather.js": "^1.0.0-beta.12",
     "@terra-money/wallet-controller": "^4.0.0",
-    "add": "^2.0.6",
     "ahooks": "^3.7.2",
     "chain-registry": "^1.10.0",
     "chakra-dayzed-datepicker": "^0.2.3",
@@ -47,7 +45,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
-    "kujira.js": "0.8.1",
+    "kujira.js": "^0.8.1",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "long": "^5.2.1",
