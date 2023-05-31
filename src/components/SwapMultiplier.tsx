@@ -36,6 +36,7 @@ export default function SwapMultiplier({
   const [{ value: applyMultiplier }] = useField({ name: 'applyMultiplier' });
   const [{ value: basePrice }] = useField({ name: 'basePriceValue' });
   const [{ value: basePriceIsCurrentPrice }] = useField({ name: 'basePriceIsCurrentPrice' });
+  const [{ value: priceThresholdValue }] = useField({ name: 'priceThresholdValue' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -71,6 +72,7 @@ export default function SwapMultiplier({
         basePrice={basePriceIsCurrentPrice === YesNoValues.No ? basePrice : null}
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}
+        priceThresholdValue={priceThresholdValue}
       />
     </FormControl>
   );

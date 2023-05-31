@@ -81,6 +81,7 @@ export function WeightedScaleConfirmPage({
               basePrice={state.basePriceValue}
               initialDenom={state.initialDenom}
               resultingDenom={state.resultingDenom}
+              priceThresholdValue={state.priceThresholdValue}
             />
             <SummaryWhileSwapping
               initialDenom={state.initialDenom}

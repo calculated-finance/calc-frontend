@@ -16,6 +16,7 @@ export function WeightsGrid({
   applyMultiplier,
   basePrice,
   price,
+  priceThresholdValue,
 }: {
   swapAmount: number;
   swapMultiplier: number;
@@ -23,6 +24,7 @@ export function WeightsGrid({
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
   price: string | undefined;
+  priceThresholdValue: number | undefined | null;
 }) {
   const swapAmountSafe = swapAmount ?? 0;
   const calcSwapFromPriceDelta = (priceDelta: number) => {
@@ -70,7 +72,11 @@ export function WeightsGrid({
       })}
 
       <GridItem colSpan={3}>
-        <Tooltip label="Setting a price floor/ceiling may affect your swap amounts.">Swap Amount: *</Tooltip>
+        {priceThresholdValue ? (
+          <Tooltip label="Setting a price floor/ceiling may affect your swap amounts.">Swap Amount: *</Tooltip>
+        ) : (
+          <Text>Swap Amount:</Text>
+        )}
       </GridItem>
       {weights.map((weight) => (
         <GridItem colSpan={1} key={weight}>
@@ -89,6 +95,7 @@ export function WeightSummary({
   basePrice,
   initialDenom,
   resultingDenom,
+  priceThresholdValue,
 }: {
   swapAmount: number;
   swapMultiplier: number;
@@ -97,6 +104,7 @@ export function WeightSummary({
   basePrice: number | null | undefined;
   initialDenom: Denom;
   resultingDenom: Denom;
+  priceThresholdValue: number | undefined | null;
 }) {
   const { price } = usePrice(resultingDenom, initialDenom, transactionType);
 
@@ -129,6 +137,7 @@ export function WeightSummary({
           applyMultiplier={applyMultiplier}
           basePrice={basePrice}
           price={price}
+          priceThresholdValue={priceThresholdValue}
         />
       </Stack>
     </Box>
