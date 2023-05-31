@@ -39,7 +39,7 @@ Sentry.init({
 });
 
 function initAmplitude() {
-  if (isMainnet()) {
+  if (featureFlags.amplitudeEnabled) {
     amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
       defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
     });
