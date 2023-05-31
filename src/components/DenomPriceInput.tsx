@@ -46,7 +46,7 @@ export function DenomPriceInput({
   const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = getDenomInfo(priceOfDenom);
   const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = getDenomInfo(priceInDenom);
 
-  const pricePrecision = chain === Chains.Osmosis ? 6 : Math.max(priceOfPricePrecision, priceInPricePrecision);
+  const pricePrecision = Math.max(priceOfPricePrecision, priceInPricePrecision);
 
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);

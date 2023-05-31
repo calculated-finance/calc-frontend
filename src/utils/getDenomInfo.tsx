@@ -497,6 +497,7 @@ const getDenomInfo = (denom?: string) => {
     mapTo.enabledInDcaPlus = isMainnet() ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.enabledInDcaPlus : true;
     const significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
     mapTo.significantFigures = significantFigures;
+    mapTo.pricePrecision = 6;
 
     if (!isNil(significantFigures) && significantFigures !== 6) {
       mapTo.conversion = (value: number) => value / 10 ** significantFigures;
