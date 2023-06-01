@@ -56,5 +56,5 @@ export function DenomSelect({
     value: denom,
     label: <DenomSelectLabel denom={denom} />,
   }));
-  return <Select options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
+  return <Select isSearchable={false} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
 }
