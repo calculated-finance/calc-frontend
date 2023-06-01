@@ -68,6 +68,7 @@ export const WeightedScaleCustomiseFormSchema = weightedScaleSchema.pick([
   'startPrice',
   'purchaseTime',
   'executionInterval',
+  'executionIntervalIncrement',
   'swapAmount',
   'basePriceIsCurrentPrice',
   'basePriceValue',
