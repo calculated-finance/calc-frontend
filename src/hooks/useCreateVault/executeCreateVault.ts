@@ -1,4 +1,8 @@
-import { OUT_OF_GAS_ERROR_MESSAGE, LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE } from 'src/constants';
+import {
+  OUT_OF_GAS_ERROR_MESSAGE,
+  LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
+  TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE,
+} from 'src/constants';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Event } from '@cosmjs/stargate/build/events';
@@ -37,12 +41,14 @@ export function executeCreateVault(
       }
     })
     .catch((error) => {
-      const errorMessages: Record<string, string> = {
+      const errorMatchers: Record<string, string> = {
         'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
         "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
           LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
+        'transaction indexing is disabled': TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE,
       };
-      const matchingErrorKey = Object.keys(errorMessages).find((key) => error.toString().includes(key));
-      throw new Error(matchingErrorKey ? errorMessages[matchingErrorKey] : error);
+
+      const matchingErrorKey = Object.keys(errorMatchers).find((key) => error.toString().includes(key));
+      throw new Error(matchingErrorKey ? errorMatchers[matchingErrorKey] : error);
     });
 }
