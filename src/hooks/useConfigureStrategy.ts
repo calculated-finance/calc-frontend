@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
+import * as Sentry from '@sentry/react';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
@@ -73,6 +74,9 @@ export function useConfigureStrategy() {
     {
       onSuccess: (data, { strategy }) => {
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, strategy.id] });
+      },
+      onError: (error, { values }) => {
+        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
       },
     },
   );

@@ -19,6 +19,7 @@ import * as Sentry from '@sentry/react';
 import useStrategy from '@hooks/useStrategy';
 import { isNil } from 'lodash';
 import { useAnalytics } from '@hooks/useAnalytics';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -55,8 +56,12 @@ const useCreateVault = (
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
+  const enablePriceCheck =
+    formName === (FormNames.WeightedScaleIn || formName === FormNames.WeightedScaleOut) &&
+    isNil((state as WeightedScaleState)?.basePriceValue);
+
   const { price } = useFiatPrice(state?.initialDenom as Denom);
-  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType);
+  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType, enablePriceCheck);
   const { track } = useAnalytics();
 
   return useMutation<Strategy['id'], Error>(
@@ -105,14 +110,7 @@ const useCreateVault = (
         msgs.push(getGrantMsg(senderAddress, chain));
       }
 
-      const createVaultMsg = buildCreateVaultParams(
-        formName,
-        state,
-        pairs,
-        transactionType,
-        senderAddress,
-        Number(dexPrice),
-      );
+      const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress, dexPrice);
 
       const funds = getFunds(state.initialDenom, state.initialDeposit);
 
@@ -130,7 +128,7 @@ const useCreateVault = (
     },
     {
       onError: (error) => {
-        Sentry.captureException(error, { tags: { chain } });
+        Sentry.captureException(error, { tags: { chain, formName, state: JSON.stringify(state) } });
       },
     },
   );

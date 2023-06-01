@@ -20,7 +20,6 @@ import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { isDenomStable } from '@utils/getDenomInfo';
 import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
 import { WhitelistModal } from '@components/WhitelistModal';
@@ -34,7 +33,7 @@ function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
       ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
       ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
     ]),
-  ).filter(isDenomStable);
+  );
 }
 
 function Page() {
