@@ -79,7 +79,7 @@ function usePairsOsmosis() {
       });
   }
 
-  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis'], () => fetchPairsRecursively(), {
+  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
     enabled: !!client && chain === Chains.Osmosis,
     staleTime: 1000 * 60 * 5,
   });
@@ -97,7 +97,7 @@ function usePairsKujira() {
   const { chain } = useChain();
 
   const queryResult = useQueryWithNotification<PairsResponse>(
-    ['pairs-kujira'],
+    ['pairs-kujira', client],
     async () => {
       const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
         get_pairs: {},
