@@ -151,13 +151,19 @@ export function isBuyStrategy(strategy: Strategy) {
   );
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
+export function getStrategyPriceTrigger(strategy: Strategy) {
   const { trigger } = strategy;
+  if (trigger && 'price' in trigger) {
+    return trigger.price.target_price;
+  }
+  return undefined;
+}
 
+export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
   let target_price;
 
-  if (trigger && 'price' in trigger) {
-    target_price = trigger.price.target_price;
+  if (getStrategyPriceTrigger(strategy)) {
+    target_price = getStrategyPriceTrigger(strategy);
   }
 
   if (target_price) {
@@ -243,8 +249,7 @@ export function getStrategyEndDateFromRemainingExecutions(
 }
 
 export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] | undefined) {
-  const { trigger } = strategy;
-  if (trigger && 'price' in trigger) {
+  if (getStrategyPriceTrigger(strategy)) {
     return 'Pending strategy start';
   }
 

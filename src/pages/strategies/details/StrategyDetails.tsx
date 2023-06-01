@@ -40,6 +40,7 @@ import {
   isBuyStrategy,
   getStrategyExecutionInterval,
   getBasePrice,
+  getStrategyPriceTrigger,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
@@ -208,7 +209,9 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="estimated-strategy-end-date">
-                  {(isDcaPlus(strategy) || isWeightedScale(strategy)) && isStrategyOperating(strategy) ? (
+                  {(isDcaPlus(strategy) || isWeightedScale(strategy)) &&
+                  isStrategyOperating(strategy) &&
+                  !getStrategyPriceTrigger(strategy) ? (
                     <>
                       Between {getStrategyEndDateRange(strategy, events).min} and{' '}
                       {getStrategyEndDateRange(strategy, events).max}
