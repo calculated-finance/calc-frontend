@@ -66,6 +66,7 @@ export default function usePrice(
   resultingDenom: Denom | undefined,
   initialDenom: Denom | undefined,
   transactionType: TransactionType,
+  enabled = true,
 ) {
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
@@ -85,11 +86,16 @@ export default function usePrice(
       return result;
     },
     {
-      enabled: !!client && !!pair && chain === Chains.Kujira,
+      enabled: !!client && !!pair && chain === Chains.Kujira && enabled,
     },
   );
 
-  const osmosisPrice = usePriceOsmosis(resultingDenom, initialDenom, transactionType, chain === Chains.Osmosis);
+  const osmosisPrice = usePriceOsmosis(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Osmosis && enabled,
+  );
 
   if (chain === Chains.Osmosis) {
     return osmosisPrice;

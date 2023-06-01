@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
-
+import * as Sentry from '@sentry/react';
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
@@ -24,35 +24,42 @@ const useTopUpStrategy = () => {
 
   const { chain } = useChain();
 
-  return useMutation<ExecuteResult, Error, TopUpVariables>(({ values, initialDenom, strategy }) => {
-    const { deconversion } = getDenomInfo(initialDenom);
+  return useMutation<ExecuteResult, Error, TopUpVariables>(
+    ({ values, initialDenom, strategy }) => {
+      const { deconversion } = getDenomInfo(initialDenom);
 
-    if (isNil(address)) {
-      throw new Error('address is null or empty');
-    }
-    if (!client) {
-      throw new Error('client is null or empty');
-    }
+      if (isNil(address)) {
+        throw new Error('address is null or empty');
+      }
+      if (!client) {
+        throw new Error('client is null or empty');
+      }
 
-    if (isNil(chain)) {
-      throw new Error('chain is null or empty');
-    }
+      if (isNil(chain)) {
+        throw new Error('chain is null or empty');
+      }
 
-    if (strategy.owner !== address) {
-      throw new Error('You are not the owner of this strategy');
-    }
+      if (strategy.owner !== address) {
+        throw new Error('You are not the owner of this strategy');
+      }
 
-    const msg = {
-      deposit: {
-        vault_id: strategy.id,
-        address,
+      const msg = {
+        deposit: {
+          vault_id: strategy.id,
+          address,
+        },
+      } as ExecuteMsg;
+
+      const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
+
+      const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined, funds);
+      return result;
+    },
+    {
+      onError: (error, { values }) => {
+        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
       },
-    } as ExecuteMsg;
-
-    const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
-
-    const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined, funds);
-    return result;
-  });
+    },
+  );
 };
 export default useTopUpStrategy;

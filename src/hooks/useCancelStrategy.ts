@@ -1,5 +1,6 @@
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
+import * as Sentry from '@sentry/react';
 import { Denom } from '@models/Denom';
 import { useMutation } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
@@ -46,34 +47,41 @@ const useCancelStrategy = (initialDenom: Denom) => {
   const { price } = useFiatPrice(initialDenom);
   const { chain } = useChain();
 
-  return useMutation<DeliverTxResponse, Error, Strategy>((strategy: Strategy) => {
-    if (client == null) {
-      throw new Error('no client');
-    }
+  return useMutation<DeliverTxResponse, Error, Strategy>(
+    (strategy: Strategy) => {
+      if (client == null) {
+        throw new Error('no client');
+      }
 
-    if (address == null) {
-      throw new Error('no address');
-    }
+      if (address == null) {
+        throw new Error('no address');
+      }
 
-    if (chain == null) {
-      throw new Error('no chain');
-    }
+      if (chain == null) {
+        throw new Error('no chain');
+      }
 
-    if (!price) {
-      throw new Error('No fiat price information');
-    }
+      if (!price) {
+        throw new Error('No fiat price information');
+      }
 
-    if (address !== strategy.owner) {
-      throw new Error('You are not the owner of this strategy');
-    }
+      if (address !== strategy.owner) {
+        throw new Error('You are not the owner of this strategy');
+      }
 
-    msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
-    const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
+      msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
+      const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 
-    msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+      msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
 
-    return client.signAndBroadcast(address, msgs, 'auto');
-  });
+      return client.signAndBroadcast(address, msgs, 'auto');
+    },
+    {
+      onError: (error, strategy) => {
+        Sentry.captureException(error, { tags: { chain, strategy: JSON.stringify(strategy) } });
+      },
+    },
+  );
 };
 
 export default useCancelStrategy;
