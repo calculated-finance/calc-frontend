@@ -36,7 +36,8 @@ Sentry.init({
   // Session Replay
   replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-  environment: isMainnet() ? 'production' : 'test',
+  environment: 'production',
+  enabled: isMainnet(),
 });
 
 // function initAmplitude() {
@@ -57,14 +58,13 @@ function LoadingState() {
   );
 }
 
-function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+function InitWrapper({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (HOTJAR_SITE_ID) {
       hotjar.initialize(parseInt(HOTJAR_SITE_ID, 10), 0);
     }
   });
-
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const { chain } = useChain();
 
   const initStation = useStation((state) => state.init);
 
@@ -73,8 +73,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const initKeplr = useKeplr((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
-
-  const { chain } = useChain();
 
   useEffect(() => {
     if (featureFlags.stationEnabled) {
@@ -108,6 +106,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, [initCosmWasmClient, chain]);
 
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{children}</>;
+}
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  const { chain } = useChain();
+
   return (
     <>
       <Head>
@@ -115,6 +122,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       </Head>
       <ChakraProvider theme={theme}>
         <Sentry.ErrorBoundary
+          beforeCapture={(scope) => {
+            scope.setTag('location', 'error boundary');
+            scope.setTag('chain', chain);
+          }}
           fallback={
             <Center m={8} layerStyle="panel" p={8} flexDirection="column" gap={6}>
               <Heading size="lg">Something went wrong</Heading>
@@ -123,11 +134,15 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             </Center>
           }
         >
-          <CalcWalletModalProvider>
-            <QueryClientProvider client={queryClient}>
-              <AssetListWrapper>{chain ? getLayout(<Component {...pageProps} />) : <LoadingState />}</AssetListWrapper>
-            </QueryClientProvider>
-          </CalcWalletModalProvider>
+          <InitWrapper>
+            <CalcWalletModalProvider>
+              <QueryClientProvider client={queryClient}>
+                <AssetListWrapper>
+                  {chain ? getLayout(<Component {...pageProps} />) : <LoadingState />}
+                </AssetListWrapper>
+              </QueryClientProvider>
+            </CalcWalletModalProvider>
+          </InitWrapper>
         </Sentry.ErrorBoundary>
       </ChakraProvider>
     </>
