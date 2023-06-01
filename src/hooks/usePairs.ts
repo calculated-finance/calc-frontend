@@ -62,7 +62,7 @@ function usePairsOsmosis() {
 
   function fetchPairsRecursively(startAfter = null, allPairs = [] as Pair[]): Promise<Pair[]> {
     return client!
-      .queryContractSmart(getChainContractAddress(chain), {
+      .queryContractSmart(getChainContractAddress(Chains.Osmosis), {
         get_pairs: {
           limit: GET_PAIRS_LIMIT,
           start_after: startAfter,
@@ -79,7 +79,7 @@ function usePairsOsmosis() {
       });
   }
 
-  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis', chain], () => fetchPairsRecursively(), {
+  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis'], () => fetchPairsRecursively(), {
     enabled: !!client && chain === Chains.Osmosis,
     staleTime: 1000 * 60 * 5,
   });
@@ -97,9 +97,9 @@ function usePairsKujira() {
   const { chain } = useChain();
 
   const queryResult = useQueryWithNotification<PairsResponse>(
-    ['pairs-kujira', chain],
+    ['pairs-kujira'],
     async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(chain!), {
+      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
         get_pairs: {},
       });
       return result;
