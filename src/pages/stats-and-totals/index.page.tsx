@@ -19,11 +19,10 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { useChain } from '@hooks/useChain';
+import { Chains, useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
-import { TimeInterval } from 'src/interfaces/v2/generated/execute';
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -83,12 +82,17 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: string[]) {
+export function totalFromCoins(
+  coins: Coin[] | undefined,
+  fiatPrices: any,
+  supportedDenoms: string[],
+  injectedChain?: Chains.Kujira,
+) {
   return (
     coins
       ?.filter((coin) => supportedDenoms.includes(coin.denom))
       .map((balance) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
+        const { conversion, coingeckoId } = getDenomInfo(balance.denom, injectedChain);
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatPriceInfo = fiatPrices[coingeckoId];
         const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;

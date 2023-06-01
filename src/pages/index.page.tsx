@@ -166,7 +166,7 @@ function TotalInvestment() {
   const data = kujiraStrategies;
 
   const totalSwappedAmounts = getTotalSwapped(data, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms, Chains.Kujira);
   const strategiesCount = data.length;
 
   const formattedValue =
