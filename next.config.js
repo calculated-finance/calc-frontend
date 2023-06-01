@@ -7,6 +7,7 @@ const nextConfig = {
   pageExtensions: ['page.tsx'],
   reactStrictMode: false,
   trailingSlash: true,
+  productionBrowserSourceMaps: true,
   redirects: [
     {
       source: '/create-strategy/dca-in/',
