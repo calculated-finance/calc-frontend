@@ -120,6 +120,7 @@ describe('DCA Plus Out customise page', () => {
         basePriceIsCurrentPrice: 'yes',
         basePriceValue: null,
         executionInterval: 'daily',
+        executionIntervalIncrement: 1,
         priceThresholdEnabled: 'no',
         priceThresholdValue: null,
         purchaseTime: '',
