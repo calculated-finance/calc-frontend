@@ -4,12 +4,12 @@ import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useChain } from './useChain';
+import { Chains, useChain } from './useChain';
 
 export type FiatPriceResponse = any;
 
 const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[] | undefined = undefined) => {
-  const { coingeckoId } = getDenomInfo(denom);
+  const { coingeckoId } = getDenomInfo(denom, injectedSupportedDenoms ? Chains.Kujira : undefined);
   const fiatCurrencyId = 'usd';
   const priceChange = 'usd_24h_change';
 
@@ -23,7 +23,7 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
     ['fiat-price', chain, supportedDenoms],
     async () => {
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${supportedDenoms
-        .map((denomId: Denom) => getDenomInfo(denomId).coingeckoId)
+        .map((denomId: Denom) => getDenomInfo(denomId, injectedSupportedDenoms ? Chains.Kujira : undefined).coingeckoId)
         .join(',')}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
 
       const response = await fetch(url);

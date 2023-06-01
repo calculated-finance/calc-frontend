@@ -469,12 +469,14 @@ function isDenomInStablesList(denom: Denom) {
   return stableDenomsTestnet.includes(denom);
 }
 
-const getDenomInfo = (denom?: string) => {
+const getDenomInfo = (denom?: string, injectedChain?: Chains) => {
   // if osmosis blah adapter to current properties
   // use zustand to get chain id
   // use chain store?   const { chain } = useChainStore.getState(); do this if iyt works
   // test with 3g
-  const { chain } = useChainStore.getState();
+  const { chain: storedChain } = useChainStore.getState();
+
+  const chain = injectedChain || storedChain;
 
   const { assetList } = useAssetListStore.getState();
 
@@ -498,6 +500,7 @@ const getDenomInfo = (denom?: string) => {
     const significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
     mapTo.significantFigures = significantFigures;
     mapTo.pricePrecision = 6;
+    mapTo.stakeableAndSupported = denom === 'uosmo';
 
     if (!isNil(significantFigures) && significantFigures !== 6) {
       mapTo.conversion = (value: number) => value / 10 ** significantFigures;
