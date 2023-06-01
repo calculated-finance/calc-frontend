@@ -298,6 +298,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 basePrice={getBasePrice(strategy)}
                 initialDenom={getStrategyInitialDenom(strategy)}
                 resultingDenom={getStrategyResultingDenom(strategy)}
+                priceThresholdValue={getPriceCeilingFloor(strategy)}
               />
             </Box>
           </Box>
