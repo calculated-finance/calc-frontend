@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Stack, Text, list } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useAdminBalances from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -23,6 +23,21 @@ import { Chains, useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
+
+function orderCoinList(coinList: Coin[], fiatPrices: any) {
+  if (!coinList) {
+    return [];
+  }
+  return coinList
+    .map((coin) => {
+      const { conversion, coingeckoId } = getDenomInfo(coin.denom);
+      const denomConvertedAmount = conversion(Number(coin.amount));
+      const fiatPriceInfo = fiatPrices[coingeckoId];
+      const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
+      return { ...coin, fiatAmount };
+    })
+    .sort((a, b) => Number(b.fiatAmount) - Number(a.fiatAmount));
+}
 
 function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
   return strategies
@@ -346,14 +361,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={contractBalances} showFiat />
+            <BalanceList balances={orderCoinList(contractBalances, fiatPrices)} showFiat />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={feeTakerBalances} showFiat />
+            <BalanceList balances={orderCoinList(feeTakerBalances, fiatPrices)} showFiat />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
@@ -373,14 +388,14 @@ function Page() {
           <Heading size="md">Amount Swapped</Heading>
           <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={totalSwappedAmounts} showFiat />
+            <BalanceList balances={orderCoinList(totalSwappedAmounts, fiatPrices)} showFiat />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount Received</Heading>
           <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={totalReceivedAmounts} showFiat />
+            <BalanceList balances={orderCoinList(totalReceivedAmounts, fiatPrices)} showFiat />
           </Box>
         </Stack>
 
