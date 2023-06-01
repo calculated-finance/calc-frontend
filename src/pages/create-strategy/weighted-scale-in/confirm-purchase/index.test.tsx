@@ -40,7 +40,7 @@ const mockStateMachine = {
       initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
       initialDeposit: '30',
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
-      advancedSettings: false,
+      advancedSettings: true,
       autoStakeValidator: null,
       recipientAccount: null,
       sendToWallet: 'yes',
@@ -53,8 +53,10 @@ const mockStateMachine = {
       swapMultiplier: 1,
       applyMultiplier: YesNoValues.Yes,
       swapAmount: 1,
-      basePriceIsCurrentPrice: YesNoValues.Yes,
+      basePriceIsCurrentPrice: YesNoValues.No,
+      basePriceValue: 1,
       executionInterval: 'daily',
+      slippageTolerance: 0.01,
     },
   },
   actions: {
@@ -122,9 +124,22 @@ describe('Confirm page', () => {
           time_interval: 'daily',
           target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
           swap_amount: '1000000',
-          slippage_tolerance: '0.02',
+          slippage_tolerance: '0.0001',
           swap_adjustment_strategy: {
-            weighted_scale: { increase_only: false, multiplier: '1' },
+            weighted_scale: { base_receive_amount: '1000000', increase_only: false, multiplier: '1' },
+          },
+        },
+      };
+
+      const json = {
+        create_vault: {
+          label: '',
+          time_interval: 'daily',
+          target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+          swap_amount: '1000000',
+          slippage_tolerance: '0.0001',
+          swap_adjustment_strategy: {
+            weighted_scale: { base_receive_amount: '1000000', increase_only: false, multiplier: '1' },
           },
         },
       };
