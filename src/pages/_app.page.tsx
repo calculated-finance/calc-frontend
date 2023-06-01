@@ -19,6 +19,7 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
+import Spinner from '@components/Spinner';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -47,6 +48,14 @@ Sentry.init({
 // }
 
 // initAmplitude();
+
+function LoadingState() {
+  return (
+    <Center h="100vh">
+      <Spinner />
+    </Center>
+  );
+}
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
@@ -116,7 +125,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         >
           <CalcWalletModalProvider>
             <QueryClientProvider client={queryClient}>
-              <AssetListWrapper>{getLayout(<Component {...pageProps} />)}</AssetListWrapper>
+              <AssetListWrapper>{chain ? getLayout(<Component {...pageProps} />) : <LoadingState />}</AssetListWrapper>
             </QueryClientProvider>
           </CalcWalletModalProvider>
         </Sentry.ErrorBoundary>

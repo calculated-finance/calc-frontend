@@ -12,6 +12,7 @@ export type SelectProps = {
   customComponents?: Partial<SelectComponent>;
   onChange: (value?: string) => void;
   menuPortalTarget?: HTMLElement;
+  isSearchable?: boolean;
 } & Omit<ChakraSelectProps, 'onChange'>;
 
 export default function Select({
@@ -21,6 +22,7 @@ export default function Select({
   value,
   customComponents,
   menuPortalTarget,
+  isSearchable = true,
 }: SelectProps) {
   const selectProps = useChakraSelectProps({
     menuPortalTarget,
@@ -30,6 +32,7 @@ export default function Select({
     },
     options,
     placeholder,
+    isSearchable,
     value: options?.find((option: OptionType) => value === option.value) || null,
     chakraStyles: {
       control: (provided) => ({
