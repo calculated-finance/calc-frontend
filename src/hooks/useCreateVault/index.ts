@@ -48,6 +48,7 @@ const useCreateVault = (
   transactionType: TransactionType,
   state: DcaFormState | undefined,
   excludeCreationFee: boolean,
+  dexPrice?: string | undefined,
 ) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
@@ -56,12 +57,7 @@ const useCreateVault = (
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
-  const enablePriceCheck =
-    formName === (FormNames.WeightedScaleIn || formName === FormNames.WeightedScaleOut) &&
-    isNil((state as WeightedScaleState)?.basePriceValue);
-
   const { price } = useFiatPrice(state?.initialDenom as Denom);
-  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType, enablePriceCheck);
   const { track } = useAnalytics();
 
   return useMutation<Strategy['id'], Error>(
@@ -149,5 +145,8 @@ export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: Tran
 export const useCreateVaultWeightedScale = (formName: FormNames, transactionType: TransactionType) => {
   const { state } = useWeightedScaleConfirmForm(formName);
 
-  return useCreateVault(formName, transactionType, state, true);
+  const enablePriceCheck = isNil((state as WeightedScaleState)?.basePriceValue);
+  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType, enablePriceCheck);
+
+  return useCreateVault(formName, transactionType, state, true, dexPrice);
 };

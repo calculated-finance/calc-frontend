@@ -350,6 +350,9 @@ export function buildCreateVaultParams(
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {
+    if (isNil((state as WeightedScaleState).basePriceValue) && isNil(currentPrice)) {
+      throw new Error('Current price has not loaded yet. Please try again');
+    }
     return buildCreateVaultParamsWeightedScale(
       state as WeightedScaleState,
       transactionType,
