@@ -36,7 +36,7 @@ export default function PurchaseTime({ title, subtitle }: { title: string; subti
           }
         />
         <Input pr={20} textAlign="right" placeholder="HH:MM" {...field} />
-        <InputRightElement mr={6} pointerEvents="none" children={zone} />
+        <InputRightElement mr={6} pointerEvents="none" children={zone} whiteSpace="nowrap" />
       </InputGroup>
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
