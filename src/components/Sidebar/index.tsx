@@ -208,7 +208,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'navy')}>
-      <Banner />
       <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
