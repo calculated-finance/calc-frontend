@@ -7,7 +7,7 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head>
-          <meta property="og:image" content="/images/calc-image.png" />
+          <meta property="og:image" content="/images/calc-image-v2.png" />
           <meta
             property="og:description"
             content=" CALC removes the hardest part of investing, emotions! Stop being glued to a computer screen 24/7, define your
