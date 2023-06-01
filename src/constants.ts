@@ -59,8 +59,8 @@ export const featureFlags =
         squidIntegrationEnabled: true,
         stationEnabled: false,
         dcaPlusEnabled: true,
-        isKujiraV2Enabled: false,
-        customTimeIntervalEnabled: false,
+        isKujiraV2Enabled: true,
+        customTimeIntervalEnabled: true,
         amplitudeEnabled: false,
       }
     : {
