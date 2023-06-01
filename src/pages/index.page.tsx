@@ -25,11 +25,10 @@ import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { Chains, useChain } from '@hooks/useChain';
-import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
+import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useEffect } from 'react';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
-import { useAllSupportedDenoms } from '@hooks/useAllSupportedDenoms';
 
 function InfoPanel() {
   return (
@@ -150,14 +149,13 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
-  const supportedDenoms = useAllSupportedDenoms();
-  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0], true);
+  const supportedDenoms = SUPPORTED_DENOMS;
+  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0], supportedDenoms);
   const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
-  const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
   const { connected } = useWallet();
   const { chain } = useChain();
 
-  if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
+  if (!fiatPrices || !kujiraStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -165,9 +163,7 @@ function TotalInvestment() {
     );
   }
 
-  console.log('supportedDenoms', supportedDenoms);
-
-  const data = [...kujiraStrategies, ...osmosisStrategies];
+  const data = kujiraStrategies;
 
   const totalSwappedAmounts = getTotalSwapped(data, supportedDenoms);
   const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);

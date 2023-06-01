@@ -4,7 +4,6 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useEffect, useState } from 'react';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Chains, useChain } from './useChain';
-import { useCosmWasmClient } from './useCosmWasmClient';
 
 const QUERY_KEY = 'get_vaults';
 

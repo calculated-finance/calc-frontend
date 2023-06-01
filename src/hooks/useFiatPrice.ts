@@ -3,20 +3,21 @@ import getDenomInfo from '@utils/getDenomInfo';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import useQueryWithNotification from './useQueryWithNotification';
-import { Chains, useChain } from './useChain';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useAllSupportedDenoms } from './useAllSupportedDenoms';
+import { useChain } from './useChain';
 
 export type FiatPriceResponse = any;
 
-const useFiatPrice = (denom: Denom | undefined, allChains = false) => {
+const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[] | undefined = undefined) => {
   const { coingeckoId } = getDenomInfo(denom);
   const fiatCurrencyId = 'usd';
   const priceChange = 'usd_24h_change';
 
   const { chain } = useChain();
 
-  const supportedDenoms = allChains ? useAllSupportedDenoms() : useSupportedDenoms();
+  const fetchedSupportedDenoms = useSupportedDenoms();
+
+  const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
 
   const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-price', chain, supportedDenoms],
