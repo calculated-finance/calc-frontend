@@ -27,7 +27,7 @@ jobs:
   deploy-calc-fi-frontend-production:
     name: Deploy (production)
     uses: ./.github/workflows/deploy-reusable.yml
-    needs: [test-calc-fi-frontend-sandbox, deploy-calc-fi-frontend-sandbox]
+    needs: [test-calc-fi-frontend-sandbox]
     with:
       ENVIRONMENT: production
       BUCKET_DOMAIN_NAME: app.calculated.fi
