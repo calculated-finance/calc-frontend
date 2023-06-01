@@ -33,7 +33,9 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined, enable
         const { events } = result;
         allEvents.push(...events);
 
-        if (events.length === GET_EVENTS_LIMIT) {
+        // sometimes the contract returns limit - 1 events (it's a bug),
+        // so we check for a returned events length of limit and limit - 1
+        if (events.length === GET_EVENTS_LIMIT || events.length === GET_EVENTS_LIMIT - 1) {
           const newStartAfter = events[events.length - 1].id;
           return fetchEventsRecursively(newStartAfter, allEvents);
         }
