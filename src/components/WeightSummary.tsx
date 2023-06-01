@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Divider, Stack, Grid, GridItem, Tooltip } from '@chakra-ui/react';
+import { Box, HStack, Text, Divider, Stack, Grid, GridItem, Tooltip, Spinner } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { Denom } from '@models/Denom';
@@ -52,13 +52,20 @@ export function WeightsGrid({
   return (
     <Grid templateColumns="repeat(12, 1fr)" columnGap={2} rowGap={3}>
       <GridItem colSpan={3}>Price (USD) $</GridItem>
+
       {weights.map((weight) => {
         const displayPrice = basePrice || price;
-        return (
-          <GridItem colSpan={1} key={weight}>
-            {(Number(displayPrice) + Number(displayPrice) * weight).toFixed(2)}
-          </GridItem>
-        );
+        const calcPrice = displayPrice && Number(displayPrice) + Number(displayPrice) * weight;
+        if (calcPrice) {
+          return (
+            <Tooltip label={`$${calcPrice.toFixed(4)}`}>
+              <GridItem colSpan={1} key={weight}>
+                {calcPrice.toFixed(2)}
+              </GridItem>
+            </Tooltip>
+          );
+        }
+        return <Spinner size="xs" />;
       })}
 
       <GridItem colSpan={3}>Price Delta</GridItem>
