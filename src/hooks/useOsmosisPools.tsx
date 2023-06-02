@@ -22,14 +22,16 @@ async function fetchPoolsRecursively(
   })) as QueryPoolsResponse;
   const { nextKey } = poolsResponse?.pagination || {};
 
-  const decodedPools = await poolsResponse?.pools.map((pool) => {
-    try {
-      const decodedPool = osmosis.gamm.v1beta1.Pool.decode(pool.value);
-      return decodedPool;
-    } catch (e) {
-      throw new Error(`Failed to decode pool: ${e}`);
-    }
-  });
+  const decodedPools = (await poolsResponse?.pools
+    .map((pool) => {
+      try {
+        const decodedPool = osmosis.gamm.v1beta1.Pool.decode(pool.value);
+        return decodedPool;
+      } catch (e) {
+        return undefined;
+      }
+    })
+    .filter((pool) => pool !== undefined)) as Pool[];
   allPools.push(...decodedPools);
 
   if (decodedPools.length === POOLS_QUERY_LIMIT) {
