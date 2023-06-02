@@ -280,10 +280,9 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 }
 
 function Page() {
-  const { chain } = useChain();
   const supportedDenoms = useSupportedDenoms();
-  const { balances: contractBalances } = useAdminBalances(getChainContractAddress(chain));
-  const { balances: feeTakerBalances } = useAdminBalances(getChainFeeTakerAddress(chain));
+  const { balances: contractBalances } = useAdminBalances();
+  const { balances: feeTakerBalances } = useAdminBalances();
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
   const { data: allStrategies } = useAdminStrategies();
