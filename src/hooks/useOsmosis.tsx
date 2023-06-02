@@ -5,15 +5,15 @@ import { Chains } from './useChain';
 
 type IUseOsmosis = {
   query: any | null;
-  init: (chain: Chains) => void;
+  init: () => void;
 };
 
 export const useOsmosis = create<IUseOsmosis>()((set) => ({
   query: null,
-  init: async (chain: Chains) => {
+  init: async () => {
     set({ query: null });
     const { createRPCQueryClient } = osmosis.ClientFactory;
-    const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint(chain) });
+    const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint(Chains.Osmosis) });
     set({ query: client });
   },
 }));
