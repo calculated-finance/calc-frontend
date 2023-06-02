@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Collapse, Box } from '@chakra-ui/react';
+import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
 import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
@@ -8,6 +8,7 @@ import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
 import { DenomPriceInput } from './DenomPriceInput';
+import { CollapseWithRender } from './CollapseWithRender';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -72,9 +73,9 @@ export default function PriceThreshold({ formName, transactionType }: PriceThres
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>{title}</FormLabel>
       <FormHelperText>{description}</FormHelperText>
-      <PriceThresholdToggle />
-      <Collapse in={priceThresholdField.value === YesNoValues.Yes}>
-        <Box m="px" mt={3}>
+      <Stack spacing={3}>
+        <PriceThresholdToggle />
+        <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
           <DenomPriceInput
             initialDenom={state.step1.initialDenom}
             resultingDenom={state.step1.resultingDenom}
@@ -83,8 +84,8 @@ export default function PriceThreshold({ formName, transactionType }: PriceThres
             onChange={helpers.setValue}
             {...field}
           />
-        </Box>
-      </Collapse>
+        </CollapseWithRender>
+      </Stack>
     </FormControl>
   );
 }

@@ -152,7 +152,7 @@ describe('DCA Out customise page', () => {
       await waitFor(() => userEvent.type(swapAmountInput, '1'), { timeout: 5000 });
 
       // enable price threshold
-      await waitFor(() => userEvent.click(screen.getAllByLabelText('No')[1]), { timeout: 5000 });
+      await waitFor(() => userEvent.click(screen.getAllByLabelText('Yes')[1]), { timeout: 5000 });
 
       // set price threshold
       const input = await waitFor(() => screen.getByLabelText(/Set sell price floor?/));
@@ -168,7 +168,7 @@ describe('DCA Out customise page', () => {
         startPrice: null,
         swapAmount: 1,
         triggerType: 'date',
-        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdEnabled: YesNoValues.Yes,
         priceThresholdValue: 10,
         purchaseTime: '',
         slippageTolerance: 2,

@@ -1,4 +1,4 @@
-import { Box, Collapse } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import StartDate from '@components/StartDate';
@@ -8,6 +8,7 @@ import { FormNames } from '@hooks/useFormStore';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
+import { CollapseWithRender } from './CollapseWithRender';
 
 export function TriggerForm({ transactionType, formName }: { transactionType: TransactionType; formName: FormNames }) {
   const { values } = useFormikContext<DcaInFormDataAll>();
@@ -16,30 +17,24 @@ export function TriggerForm({ transactionType, formName }: { transactionType: Tr
   return (
     <Box>
       <StartImmediately />
-      <Collapse in={startImmediately === StartImmediatelyValues.No}>
-        <Collapse animateOpacity in={triggerType === 'date'}>
-          <Box m="px">
-            <StartDate />
-            <Collapse in={advancedSettings}>
-              <Box m="px">
-                <PurchaseTime
-                  title={transactionType === TransactionType.Buy ? 'Purchase time' : 'Sell time'}
-                  subtitle={
-                    transactionType === TransactionType.Buy
-                      ? 'This is the time of day that your first buy will be made'
-                      : undefined
-                  }
-                />
-              </Box>
-            </Collapse>
-          </Box>
-        </Collapse>
-        <Collapse animateOpacity in={triggerType === 'price'}>
-          <Box m="px">
-            <StartPrice formName={formName} transactionType={transactionType} />
-          </Box>
-        </Collapse>
-      </Collapse>
+      <CollapseWithRender isOpen={startImmediately === StartImmediatelyValues.No}>
+        <CollapseWithRender isOpen={triggerType === 'date'}>
+          <StartDate />
+          <CollapseWithRender isOpen={advancedSettings}>
+            <PurchaseTime
+              title={transactionType === TransactionType.Buy ? 'Purchase time' : 'Sell time'}
+              subtitle={
+                transactionType === TransactionType.Buy
+                  ? 'This is the time of day that your first buy will be made'
+                  : undefined
+              }
+            />
+          </CollapseWithRender>
+        </CollapseWithRender>
+        <CollapseWithRender isOpen={triggerType === 'price'}>
+          <StartPrice formName={formName} transactionType={transactionType} />
+        </CollapseWithRender>
+      </CollapseWithRender>
     </Box>
   );
 }
