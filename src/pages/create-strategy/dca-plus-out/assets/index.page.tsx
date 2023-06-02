@@ -4,6 +4,7 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
   isSupportedDenomForDcaPlus,
+  orderAlphabetically,
   uniqueBaseDenoms,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
@@ -29,12 +30,14 @@ import useWhitelist from '@hooks/useWhitelist';
 import { FormNames } from '@hooks/useFormStore';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
-  ).filter(isDenomStable);
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ).filter(isDenomStable),
+  );
 }
 
 function Page() {
@@ -67,8 +70,8 @@ function Page() {
   if (!pairs) {
     return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;
   }
-  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(
-    isSupportedDenomForDcaPlus,
+  const denoms = orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isSupportedDenomForDcaPlus),
   );
 
   const { quote_denom, base_denom } =

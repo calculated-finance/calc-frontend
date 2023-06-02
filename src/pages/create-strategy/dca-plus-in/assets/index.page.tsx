@@ -26,11 +26,13 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ),
   );
 }
 

@@ -4,6 +4,7 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, {
   isSupportedDenomForWeightedScale,
+  orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenomsFromBaseDenom,
 } from '@hooks/usePairs';
@@ -26,11 +27,13 @@ import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ),
   );
 }
 

@@ -4,6 +4,7 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
   isSupportedDenomForWeightedScale,
+  orderAlphabetically,
   uniqueBaseDenoms,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
@@ -28,11 +29,13 @@ import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ),
   );
 }
 
@@ -66,8 +69,10 @@ function Page() {
   if (!pairs) {
     return <ModalWrapper stepsConfig={weightedScaleOutSteps} isLoading reset={actions.resetAction} />;
   }
-  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(
-    isSupportedDenomForWeightedScale,
+  const denoms = orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(
+      isSupportedDenomForWeightedScale,
+    ),
   );
 
   const { quote_denom, base_denom } =
