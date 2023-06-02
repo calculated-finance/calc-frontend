@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, HStack, useRadioGroup, Collapse, Box } from '@chakra-ui/react';
+import { FormControl, FormLabel, HStack, useRadioGroup, Collapse, Box, Stack } from '@chakra-ui/react';
 import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
@@ -9,6 +9,7 @@ import Radio from './Radio';
 import { TransactionType } from './TransactionType';
 import { DenomPriceInput } from './DenomPriceInput';
 import { yesNoData } from './PriceThreshold';
+import { CollapseWithRender } from './CollapseWithRender';
 
 function BasePriceToggle() {
   const [field, , helpers] = useField({ name: 'basePriceIsCurrentPrice' });
@@ -54,9 +55,9 @@ export default function BasePrice({ formName, transactionType }: BasePriceProps)
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>Set base price to current price?</FormLabel>
-      <BasePriceToggle />
-      <Collapse in={priceThresholdField.value === YesNoValues.No}>
-        <Box m="px" mt={3}>
+      <Stack spacing={3}>
+        <BasePriceToggle />
+        <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.No}>
           <DenomPriceInput
             initialDenom={state.step1.initialDenom}
             resultingDenom={state.step1.resultingDenom}
@@ -65,8 +66,8 @@ export default function BasePrice({ formName, transactionType }: BasePriceProps)
             onChange={helpers.setValue}
             {...field}
           />
-        </Box>
-      </Collapse>
+        </CollapseWithRender>
+      </Stack>
     </FormControl>
   );
 }
