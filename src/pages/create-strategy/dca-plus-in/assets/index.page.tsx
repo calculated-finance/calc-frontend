@@ -4,6 +4,7 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, {
   isSupportedDenomForDcaPlus,
+  orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenomsFromBaseDenom,
 } from '@hooks/usePairs';
