@@ -2,7 +2,11 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
-import usePairs, { uniqueBaseDenomsFromQuoteDenom, uniqueQuoteDenomsFromBaseDenom } from '@hooks/usePairs';
+import usePairs, {
+  orderAlphabetically,
+  uniqueBaseDenomsFromQuoteDenom,
+  uniqueQuoteDenomsFromBaseDenom,
+} from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -19,11 +23,13 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ),
   );
 }
 

@@ -22,7 +22,7 @@ export function isSupportedDenomForWeightedScale(denom: Denom) {
   return true;
 }
 
-function orderAlphabetically(denoms: Denom[]) {
+export function orderAlphabetically(denoms: Denom[]) {
   return denoms.sort((a, b) => {
     const { name: nameA } = getDenomInfo(a);
     const { name: nameB } = getDenomInfo(b);
@@ -31,22 +31,20 @@ function orderAlphabetically(denoms: Denom[]) {
 }
 
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
-  return orderAlphabetically(Array.from(new Set(pairs?.map((pair) => pair.quote_denom))));
+  return Array.from(new Set(pairs?.map((pair) => pair.quote_denom)));
 }
 
 export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
-  return orderAlphabetically(Array.from(new Set(pairs?.map((pair) => pair.base_denom))));
+  return Array.from(new Set(pairs?.map((pair) => pair.base_denom)));
 }
 
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom | undefined, pairs: Pair[] | undefined) {
-  return orderAlphabetically(
-    Array.from(new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom))),
-  );
+  return Array.from(new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)));
 }
 
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined, pairs: Pair[] | undefined) {
-  return orderAlphabetically(
-    Array.from(new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom))),
+  return Array.from(
+    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
   );
 }
 

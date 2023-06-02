@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
+  orderAlphabetically,
   uniqueBaseDenoms,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
@@ -25,11 +26,13 @@ import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return Array.from(
-    new Set([
-      ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-      ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-    ]),
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ),
   );
 }
 
@@ -57,7 +60,9 @@ function Page() {
   if (!pairs) {
     return <ModalWrapper stepsConfig={dcaOutSteps} isLoading reset={actions.resetAction} />;
   }
-  const denoms = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile);
+  const denoms = orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile),
+  );
 
   const { quote_denom, base_denom } =
     pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
