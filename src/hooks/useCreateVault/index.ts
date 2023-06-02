@@ -48,7 +48,7 @@ const useCreateVault = (
   transactionType: TransactionType,
   state: DcaFormState | undefined,
   excludeCreationFee: boolean,
-  dexPrice?: string | undefined,
+  dexPrice?: number | undefined,
 ) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();

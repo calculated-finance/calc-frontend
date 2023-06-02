@@ -104,7 +104,8 @@ export default function usePriceOsmosis(
     : undefined;
 
   return {
-    price: formattedPrice,
+    price,
+    formattedPrice,
     pairAddress: pair?.address,
     isLoading: isPriceLoading || isLoadingPools,
     ...helpers,

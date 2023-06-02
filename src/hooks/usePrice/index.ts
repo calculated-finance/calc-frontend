@@ -113,7 +113,8 @@ export default function usePrice(
     : undefined;
 
   return {
-    price: formattedPrice,
+    formattedPrice,
+    price,
     pairAddress: pair?.address,
     ...helpers,
   };

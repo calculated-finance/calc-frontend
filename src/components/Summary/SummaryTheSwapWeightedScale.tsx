@@ -23,7 +23,7 @@ export function SummaryTheSwapWeightedScale({
   const { name: resultingDenomName } = getDenomInfo(resultingDenom);
 
   const { chain } = useChain();
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice } = usePrice(resultingDenom, initialDenom, transactionType);
   const { price: osmosisPrice } = usePriceOsmosis(
     resultingDenom,
     initialDenom,
@@ -55,7 +55,7 @@ export function SummaryTheSwapWeightedScale({
         Where price delta is calculated from the base price of
         <BadgeButton url="customise">
           <Text>
-            1 {priceOfDenomName} = {basePriceValue || price || osmosisPrice} {priceInDenomName}
+            1 {priceOfDenomName} = {basePriceValue || formattedPrice || osmosisPrice} {priceInDenomName}
           </Text>
         </BadgeButton>
         for{' '}
