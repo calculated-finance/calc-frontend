@@ -7,7 +7,7 @@ import { Chains } from './useChain';
 
 type IUseKujira = {
   query: KujiraQueryClient | null;
-  init: (chain: Chains) => void;
+  init: () => void;
 };
 
 export const useKujira = create<IUseKujira>()(
@@ -16,10 +16,10 @@ export const useKujira = create<IUseKujira>()(
       query: null as KujiraQueryClient | null,
     },
     (set) => ({
-      init: (chain: Chains) => {
+      init: () => {
         set({ query: null });
         Tendermint34Client.create(
-          new HttpBatchClient(getChainEndpoint(chain), {
+          new HttpBatchClient(getChainEndpoint(Chains.Kujira), {
             dispatchInterval: 100,
             batchSizeLimit: 200,
           }),

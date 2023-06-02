@@ -90,13 +90,13 @@ function InitWrapper({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (chain) {
-      initKujira(chain);
+      initKujira();
     }
   }, [initKujira, chain]);
 
   useEffect(() => {
     if (chain) {
-      initOsmosis(chain);
+      initOsmosis();
     }
   }, [initOsmosis, chain]);
 
