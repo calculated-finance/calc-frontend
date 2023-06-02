@@ -52,59 +52,14 @@ export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsm
 export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
-
   const { vault: reinvestStrategy } = data || {};
-
-  const { data: loopedData } = useStrategy(id);
-
-  if (loopedData?.vault) {
-    const checkLoopedStrategy = getStrategyReinvestStrategyId(loopedData.vault);
-    const isLooped = checkLoopedStrategy === strategy.id;
-    if (isLooped) {
-      return (
-        <>
-          <GridItem colSpan={1}>
-            <Heading size="xs">Looping into</Heading>
-          </GridItem>
-          <GridItem colSpan={1}>
-            {!reinvestStrategy ? (
-              <Spinner size="xs" />
-            ) : (
-              <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
-                <Text fontSize="sm" data-testid="strategy-receiving-address">
-                  <Code
-                    bg="abyss.200"
-                    fontSize="x-small"
-                    as={ChakraLink}
-                    color="blue.200"
-                    display={{ base: 'none', lg: 'contents' }}
-                  >
-                    {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
-                  </Code>
-                  <Code
-                    bg="abyss.200"
-                    fontSize="xx-small"
-                    as={ChakraLink}
-                    color="blue.200"
-                    display={{ base: 'contents', lg: 'none' }}
-                    whiteSpace="nowrap"
-                  >
-                    id: {id} <ExternalLinkIcon />
-                  </Code>
-                </Text>
-              </ChakraLink>
-            )}
-          </GridItem>
-          <ConfigureButton strategy={strategy} />
-        </>
-      );
-    }
-  }
+  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
+  const isLooped = checkLoopedStrategy === strategy.id;
 
   return (
     <>
       <GridItem colSpan={1}>
-        <Heading size="xs">Reinvesting into</Heading>
+        <Heading size="xs">{isLooped ? 'Looping into' : 'Reinvesting into'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         {!reinvestStrategy ? (
