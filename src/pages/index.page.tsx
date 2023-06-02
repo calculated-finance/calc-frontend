@@ -25,9 +25,9 @@ import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { Chains, useChain } from '@hooks/useChain';
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useEffect } from 'react';
+import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -149,13 +149,18 @@ function ActiveStrategies() {
 }
 
 function TotalInvestment() {
-  const supportedDenoms = SUPPORTED_DENOMS;
-  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0], supportedDenoms);
+  const kujiraSupportedDenoms = useSupportedDenoms(Chains.Kujira);
+  const osmosisSupportedDenoms = useSupportedDenoms(Chains.Osmosis);
+  const { data: fiatPrices } = useFiatPrice(kujiraSupportedDenoms[0], [
+    ...kujiraSupportedDenoms,
+    ...osmosisSupportedDenoms,
+  ]);
   const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
+  const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
   const { connected } = useWallet();
   const { chain } = useChain();
 
-  if (!fiatPrices || !kujiraStrategies) {
+  if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -163,11 +168,24 @@ function TotalInvestment() {
     );
   }
 
-  const data = kujiraStrategies;
+  const totalSwappedAmountsKujira = getTotalSwapped(kujiraStrategies, kujiraSupportedDenoms);
+  const totalSwappedTotalKujira = totalFromCoins(
+    totalSwappedAmountsKujira,
+    fiatPrices,
+    kujiraSupportedDenoms,
+    Chains.Kujira,
+  );
 
-  const totalSwappedAmounts = getTotalSwapped(data, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms, Chains.Kujira);
-  const strategiesCount = data.length;
+  const totalSwappedAmountsOsmosis = getTotalSwapped(osmosisStrategies, osmosisSupportedDenoms);
+  const totalSwappedTotalOsmosis = totalFromCoins(
+    totalSwappedAmountsOsmosis,
+    fiatPrices,
+    osmosisSupportedDenoms,
+    Chains.Osmosis,
+  );
+  const strategiesCount = kujiraStrategies.length + osmosisStrategies.length;
+
+  const totalSwappedTotal = totalSwappedTotalOsmosis + totalSwappedTotalKujira;
 
   const formattedValue =
     totalSwappedTotal >= 1000000

@@ -2,8 +2,10 @@ import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import { useChain, Chains } from './useChain';
 import usePairs, { allDenomsFromPairs } from './usePairs';
 
-export function useSupportedDenoms() {
-  const { chain } = useChain();
+export function useSupportedDenoms(injectedChain?: Chains) {
+  const { chain: currentChain } = useChain();
+
+  const chain = injectedChain || currentChain;
 
   const { data: pairsData } = usePairs();
 
