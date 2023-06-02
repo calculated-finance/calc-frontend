@@ -38,7 +38,7 @@ export function DenomPriceInput({
   onChange: (value: number | undefined) => void;
 } & InputProps) {
   const { chain } = useChain();
-  const { price, pairAddress, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice, pairAddress, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -75,7 +75,7 @@ export function DenomPriceInput({
           onValueChange={handleChange}
           value={value as number}
           defaultValue={defaultValue as number}
-          placeholder={`${price} ${priceInDenomName}`}
+          placeholder={`${formattedPrice} ${priceInDenomName}`}
           {...inputProps}
         />
       </InputGroup>
@@ -84,7 +84,7 @@ export function DenomPriceInput({
         <FormHelperText>
           <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-              Current price: 1 {priceOfDenomName} = {price} {priceInDenomName}
+              Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>
           </Link>
         </FormHelperText>
@@ -98,7 +98,7 @@ export function DenomPriceInput({
             }`}
           >
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-              Current price: 1 {priceOfDenomName} = {price} {priceInDenomName}
+              Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>
           </Link>
         </FormHelperText>

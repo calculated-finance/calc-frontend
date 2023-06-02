@@ -9,6 +9,19 @@ import { TransactionType } from './TransactionType';
 
 const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
 
+function convertLargeNumber(value: number) {
+  if (value > 1000000000) {
+    return `${Number((value / 1000000000).toFixed(2))}b`;
+  }
+  if (value > 1000000) {
+    return `${Number((value / 1000000).toFixed(2))}m`;
+  }
+  if (value > 1000) {
+    return `${Number((value / 1000).toFixed(2))}k`;
+  }
+  return Number(value.toFixed(2));
+}
+
 export function WeightsGrid({
   swapAmount,
   swapMultiplier,
@@ -23,7 +36,7 @@ export function WeightsGrid({
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
-  price: string | undefined;
+  price: number | undefined;
   priceThresholdValue: number | undefined | null;
 }) {
   const swapAmountSafe = swapAmount ?? 0;
@@ -37,16 +50,7 @@ export function WeightsGrid({
     if (value < 0) {
       return 0;
     }
-    if (value > 1000000000) {
-      return `${Number((value / 1000000000).toFixed(2))}b`;
-    }
-    if (value > 1000000) {
-      return `${Number((value / 1000000).toFixed(2))}m`;
-    }
-    if (value > 1000) {
-      return `${Number((value / 1000).toFixed(2))}k`;
-    }
-    return Number(value.toFixed(2));
+    return convertLargeNumber(value);
   };
 
   return (
@@ -60,7 +64,7 @@ export function WeightsGrid({
           return (
             <Tooltip label={`$${calcPrice.toFixed(4)}`}>
               <GridItem colSpan={1} key={weight}>
-                {calcPrice.toFixed(2)}
+                {convertLargeNumber(calcPrice)}
               </GridItem>
             </Tooltip>
           );
@@ -113,7 +117,7 @@ export function WeightSummary({
   resultingDenom: Denom;
   priceThresholdValue: number | undefined | null;
 }) {
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { price, formattedPrice } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -132,7 +136,7 @@ export function WeightSummary({
           <Text>
             Base Price:{' '}
             <Text as="span" color="blue.200">
-              {`1 ${priceOfDenomName} = ${isNil(basePrice) ? price : basePrice} ${priceInDenomName}`}
+              {`1 ${priceOfDenomName} = ${isNil(basePrice) ? formattedPrice : basePrice} ${priceInDenomName}`}
             </Text>
           </Text>
         </HStack>

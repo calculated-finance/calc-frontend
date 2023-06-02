@@ -339,7 +339,7 @@ export function buildCreateVaultParams(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
-  currentPrice?: string,
+  currentPrice?: number,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
     return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
