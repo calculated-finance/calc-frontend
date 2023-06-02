@@ -101,7 +101,7 @@ export function totalFromCoins(
   coins: Coin[] | undefined,
   fiatPrices: any,
   supportedDenoms: string[],
-  injectedChain?: Chains.Kujira,
+  injectedChain?: Chains,
 ) {
   return (
     coins
