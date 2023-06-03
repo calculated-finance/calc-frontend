@@ -12,6 +12,15 @@ import {
   Flex,
   Spinner,
   Code,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Stack,
+  ModalProps,
 } from '@chakra-ui/react';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
@@ -32,6 +41,34 @@ import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import Link from 'next/link';
+import { LoopingStrategyDetails } from '@components/LoopingStrategyDetails';
+import { BoxedExportIcon } from '@fusion-icons/react/interface';
+
+function LoopingDetailsModal({
+  strategy,
+  isOpen,
+  onClose,
+}: { strategy: StrategyOsmosis } & Omit<ModalProps, 'children'>) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Looping Strategy Details</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Stack justify="center" gap={6} align="center">
+            <LoopingStrategyDetails strategy={strategy} />
+            {/* <Link isExternal href={`/strategies/details/?id=${strategy.id}`}> */}
+            <Button variant="outline" rightIcon={<Icon as={BoxedExportIcon} stroke="brand.200" fontSize="md" />}>
+              Go to strategy
+            </Button>
+            {/* </Link> */}
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
 
 export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
@@ -55,6 +92,7 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   const { vault: reinvestStrategy } = data || {};
   const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
   const isLooped = checkLoopedStrategy === strategy.id;
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -65,30 +103,38 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
         {!reinvestStrategy ? (
           <Spinner size="xs" />
         ) : (
-          <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
-            <Text fontSize="sm" data-testid="strategy-receiving-address">
-              <Code
-                bg="abyss.200"
-                fontSize="x-small"
-                as={ChakraLink}
-                color="blue.200"
-                display={{ base: 'none', lg: 'contents' }}
-              >
-                {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
-              </Code>
-              <Code
-                bg="abyss.200"
-                fontSize="xx-small"
-                as={ChakraLink}
-                color="blue.200"
-                display={{ base: 'contents', lg: 'none' }}
-                whiteSpace="nowrap"
-              >
-                id: {id} <ExternalLinkIcon />
-              </Code>
-            </Text>
-          </ChakraLink>
+          // <ChakraLink isExternal href={`/strategies/details/?id=${id}`}>
+          <Text fontSize="sm" data-testid="strategy-receiving-address" as={ChakraLink}>
+            <Code
+              bg="abyss.200"
+              fontSize="x-small"
+              as={ChakraLink}
+              color="blue.200"
+              display={{ base: 'none', lg: 'contents' }}
+              aria-label="More details"
+              variant="ghost"
+              onClick={onOpen}
+            >
+              {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
+            </Code>
+            <Code
+              bg="abyss.200"
+              fontSize="xx-small"
+              as={ChakraLink}
+              color="blue.200"
+              display={{ base: 'contents', lg: 'none' }}
+              whiteSpace="nowrap"
+              aria-label="More details"
+              variant="ghost"
+              onClick={onOpen}
+            >
+              {/* <ExternalLinkIcon /> */}
+              id: {id}
+            </Code>
+          </Text>
+          // </ChakraLink>
         )}
+        <LoopingDetailsModal strategy={strategy} isOpen={isOpen} onClose={onClose} />
       </GridItem>
       <ConfigureButton strategy={strategy} />
     </>
