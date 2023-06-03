@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text, list } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
-import useAdminBalances from '@hooks/useAdminBalances';
+import useContractBalances, { useFeeTakerBalances } from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -281,8 +281,8 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 
 function Page() {
   const supportedDenoms = useSupportedDenoms();
-  const { balances: contractBalances } = useAdminBalances();
-  const { balances: feeTakerBalances } = useAdminBalances();
+  const { balances: contractBalances } = useContractBalances();
+  const { balances: feeTakerBalances } = useFeeTakerBalances();
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
   const { data: allStrategies } = useAdminStrategies();
