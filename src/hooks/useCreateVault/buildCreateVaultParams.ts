@@ -80,13 +80,14 @@ function getOsmosisReceiveAmount(
 
   // get minimum receive amount in initial denom scale
   const deconvertedSwapAmount = initialDeconversion(swapAmount);
-  const unscaledReceiveAmount = Math.floor(deconvertedSwapAmount / directionlessPrice);
+
+  const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
 
   // get scaled receive amount
   const scalingFactor = 10 ** (resultingSF - initialSF);
   const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
 
-  return scaledReceiveAmount.toString();
+  return Math.floor(scaledReceiveAmount).toString();
 }
 
 function getMinimumReceiveAmount(
@@ -168,7 +169,7 @@ function getBaseReceiveAmount(
 }
 
 function getSwapAmount(initialDenom: Denom, swapAmount: number) {
-  const { deconversion } = getDenomInfo(initialDenom);
+  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
 
   return deconversion(swapAmount).toString();
 }
