@@ -124,7 +124,10 @@ const useCreateVault = (
     },
     {
       onError: (error) => {
-        Sentry.captureException(error, { tags: { chain, formName, state: JSON.stringify(state) } });
+        Sentry.withScope((scope) => {
+          scope.setFingerprint([error.message]);
+          Sentry.captureException(error, { tags: { chain, formName, state: JSON.stringify(state) } });
+        });
       },
     },
   );
