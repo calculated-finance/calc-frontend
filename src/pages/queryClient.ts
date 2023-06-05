@@ -1,0 +1,23 @@
+import { QueryCache, QueryClient } from '@tanstack/react-query';
+import * as Sentry from '@sentry/react';
+import { toast } from './toast';
+
+// disable retries on testnet
+export const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      const label = query.queryKey[0] as string;
+      const { errorMessage } = (query.meta as { errorMessage: string }) || {};
+      Sentry.captureException(error, { tags: { queryKey: label, errorMessage } });
+      toast({
+        title: 'Something went wrong',
+        position: 'top-right',
+        description: errorMessage || `There was a problem while loading (Reason: ${error})`,
+        status: 'error',
+        variant: 'subtle',
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  }),
+});

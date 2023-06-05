@@ -5,7 +5,7 @@ import {
 } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
 import { getChainContractAddress } from '@helpers/chains';
 import { QueryMsg } from '@models/index';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import { Strategy } from './useStrategies';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -43,11 +43,10 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined, enable
       });
   }
 
-  return useQueryWithNotification<StrategyEvent[]>(
-    ['strategyEvents', address, id, client],
-    () => fetchEventsRecursively(),
-    {
-      enabled: !!address && !!client && !!id && !!enabled && !!chain,
+  return useQuery<StrategyEvent[]>(['strategyEvents', address, id, client], () => fetchEventsRecursively(), {
+    enabled: !!address && !!client && !!id && !!enabled && !!chain,
+    meta: {
+      errorMessage: 'Error fetching strategy events',
     },
-  );
+  });
 }

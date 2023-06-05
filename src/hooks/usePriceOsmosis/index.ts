@@ -5,12 +5,11 @@ import { Denom } from '@models/Denom';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
-import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import getDenomInfo from '@utils/getDenomInfo';
-import useQueryWithNotification from '../useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import usePairs from '../usePairs';
 
 interface Step {
@@ -74,7 +73,7 @@ export default function usePriceOsmosis(
     data,
     isLoading: isPriceLoading,
     ...helpers
-  } = useQueryWithNotification<{ tokenOutAmount: string }>(
+  } = useQuery<{ tokenOutAmount: string }>(
     ['price-osmosis', pair, client],
     async () => {
       const directionalRoute = isRouteReversed ? reverse(route!) : route!;
@@ -87,6 +86,9 @@ export default function usePriceOsmosis(
     },
     {
       enabled: !!client && !!route && !!enabled && !!pools,
+      meta: {
+        errorMessage: 'Error fetching price',
+      },
     },
   );
 

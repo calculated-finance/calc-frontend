@@ -7,8 +7,8 @@ import { Denom } from '@models/Denom';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { Chains, useChain } from '@hooks/useChain';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
+import { useQuery } from '@tanstack/react-query';
 import usePairs from '../usePairs';
-import useQueryWithNotification from '../useQueryWithNotification';
 import { safeInvert } from './safeInvert';
 
 function calculatePrice(result: BookResponse, initialDenom: Denom, transactionType: TransactionType) {
@@ -75,7 +75,7 @@ export default function usePrice(
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-  const { data, ...helpers } = useQueryWithNotification<BookResponse>(
+  const { data, ...helpers } = useQuery<BookResponse>(
     ['price', pair, client],
     async () => {
       const result = await client!.queryContractSmart(pair!.address, {
@@ -87,6 +87,9 @@ export default function usePrice(
     },
     {
       enabled: !!client && !!pair && chain === Chains.Kujira && enabled,
+      meta: {
+        errorMessage: 'Error fetching price',
+      },
     },
   );
 

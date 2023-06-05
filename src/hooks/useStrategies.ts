@@ -4,7 +4,7 @@ import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
@@ -20,7 +20,7 @@ export default function useStrategies() {
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<VaultsResponse>(
+  return useQuery<VaultsResponse>(
     [QUERY_KEY, address, client],
     () => {
       const result = client!.queryContractSmart(getChainContractAddress(chain!), {
@@ -33,6 +33,9 @@ export default function useStrategies() {
     },
     {
       enabled: !!address && !!client && !!chain,
+      meta: {
+        errorMessage: 'Error fetching strategies',
+      },
     },
   );
 }

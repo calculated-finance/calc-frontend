@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import testnetAssetList from 'src/assetLists/osmo-test-5.assetlist.json';
 import mainnetAssetList from 'src/assetLists/osmosis-1.assetlist.json';
+import { useQuery } from '@tanstack/react-query';
 import { Chains, useChain } from './useChain';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
@@ -19,7 +20,7 @@ export function useAssetList(): { isLoading: any; error: any; data: any } {
 
   const backup = isMainnet() ? mainnetAssetList : testnetAssetList;
 
-  return useQueryWithNotification<AssetList>(
+  return useQuery<AssetList>(
     ['assetList'],
     () =>
       fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`)
@@ -32,6 +33,9 @@ export function useAssetList(): { isLoading: any; error: any; data: any } {
       staleTime: Infinity,
       cacheTime: Infinity,
       enabled: chain === Chains.Osmosis,
+      meta: {
+        errorMessage: 'Error fetching asset list',
+      },
     },
   );
 }

@@ -17,10 +17,10 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { getDenomName } from '@utils/getDenomInfo';
 import { getMarsAddress } from '@helpers/chains';
 import { Denom } from '@models/Denom';
+import { useQuery } from '@tanstack/react-query';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 
@@ -129,7 +129,7 @@ function MarsOption({
 function useMars(resultingDenom: string | undefined) {
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<any>(
+  return useQuery<any>(
     ['mars-check', client, resultingDenom],
     async () => {
       if (!client) {
@@ -142,6 +142,9 @@ function useMars(resultingDenom: string | undefined) {
     },
     {
       enabled: !!client && !!resultingDenom,
+      meta: {
+        errorMessage: 'Error fetching Mars data',
+      },
     },
   );
 }

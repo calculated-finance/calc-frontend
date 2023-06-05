@@ -2,10 +2,8 @@ import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { PairsResponse } from 'src/interfaces/v2/generated/response/get_pairs';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
-import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
-import { useEffect, useState } from 'react';
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import useQueryWithNotification from './useQueryWithNotification';
+import { getChainContractAddress } from '@helpers/chains';
+import { useQuery } from '@tanstack/react-query';
 import { Chains, useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
@@ -77,7 +75,7 @@ function usePairsOsmosis() {
       });
   }
 
-  const queryResult = useQueryWithNotification<Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
+  const queryResult = useQuery<Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
     enabled: !!client && chain === Chains.Osmosis,
     staleTime: 1000 * 60 * 5,
   });
@@ -94,7 +92,7 @@ function usePairsKujira() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
 
-  const queryResult = useQueryWithNotification<PairsResponse>(
+  const queryResult = useQuery<PairsResponse>(
     ['pairs-kujira', client],
     async () => {
       const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
@@ -111,6 +109,9 @@ function usePairsKujira() {
     ...queryResult,
     data: {
       pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
+    },
+    meta: {
+      errorMessage: 'Error fetching pairs',
     },
   };
 }

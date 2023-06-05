@@ -1,8 +1,9 @@
 import { Denom } from '@models/Denom';
 import getDenomInfo from '@utils/getDenomInfo';
+import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import { Chains, useChain } from './useChain';
 
@@ -19,7 +20,7 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
 
   const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
 
-  const { data, ...other } = useQueryWithNotification<FiatPriceResponse>(
+  const { data, ...other } = useQuery<FiatPriceResponse>(
     ['fiat-price', chain, supportedDenoms],
     async () => {
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${supportedDenoms
@@ -28,6 +29,8 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
 
       const response = await fetch(url);
       if (!response.ok) {
+        const error = await response.json();
+        Sentry.captureException(error.error);
         throw new Error('Failed to fetch fiat price');
       }
 
@@ -37,6 +40,9 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
       cacheTime: 5000,
       staleTime: 30000,
       enabled: !!coingeckoId && !!fiatCurrencyId && !!chain && Boolean(supportedDenoms.length),
+      meta: {
+        errorMessage: 'Error fetching fiat price',
+      },
     },
   );
 
