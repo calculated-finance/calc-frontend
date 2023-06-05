@@ -63,7 +63,7 @@ export const featureFlags =
         dcaPlusEnabled: true,
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
-        amplitudeEnabled: false,
+        amplitudeEnabled: true,
       }
     : {
         extraTimeOptions: true,
