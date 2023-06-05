@@ -50,5 +50,8 @@ export default function useAdminStrategies(customChain?: Chains) {
 
   return useQuery<Vault[]>([QUERY_KEY, storedClient, chain], () => fetchVaultsRecursively(storedClient!, chain), {
     enabled: !!storedClient && !!chain,
+    meta: {
+      errorMessage: 'Error fetching all strategies',
+    },
   });
 }

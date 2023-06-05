@@ -111,7 +111,7 @@ function usePairsKujira() {
       pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
     },
     meta: {
-      errorMessage: 'Error fetching fiat prices',
+      errorMessage: 'Error fetching pairs',
     },
   };
 }
