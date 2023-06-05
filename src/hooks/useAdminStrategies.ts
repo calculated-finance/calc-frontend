@@ -1,4 +1,5 @@
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import * as Sentry from '@sentry/react';
 import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useEffect, useState } from 'react';
@@ -44,7 +45,7 @@ export default function useAdminStrategies(customChain?: Chains) {
 
   useEffect(() => {
     if (chain) {
-      CosmWasmClient.connect(getChainEndpoint(chain)).then(setStoredClient);
+      CosmWasmClient.connect(getChainEndpoint(chain)).then(setStoredClient).catch(Sentry.captureException);
     }
   }, [chain]);
 

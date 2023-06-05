@@ -1,4 +1,5 @@
 import { Keplr as WindowKeplr } from '@keplr-wallet/types';
+import * as Sentry from '@sentry/react';
 import { AccountData } from '@cosmjs/proto-signing';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -85,7 +86,7 @@ export const useXDEFI = create<IWallet>()(
             autoconnect: true,
           });
         } catch (e) {
-          console.error(e);
+          Sentry.captureException(e);
           set({ autoconnect: false });
         } finally {
           set({ isConnecting: false });
