@@ -361,7 +361,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     coingeckoId: 'pepe',
   },
   [MainnetDenomsOsmosis.MATIC]: {
-    coingeckoId: 'polygon',
+    coingeckoId: 'matic-network',
   },
 };
 
