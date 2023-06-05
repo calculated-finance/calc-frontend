@@ -8,8 +8,7 @@ import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
-import { featureFlags, HOTJAR_SITE_ID } from 'src/constants';
-import { hotjar } from 'react-hotjar';
+import { featureFlags } from 'src/constants';
 import { useKujira } from '@hooks/useKujira';
 import { useStation } from '@hooks/useStation';
 import { useKeplr } from '@hooks/useKeplr';
@@ -61,11 +60,6 @@ function LoadingState() {
 }
 
 function InitWrapper({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    if (HOTJAR_SITE_ID) {
-      hotjar.initialize(parseInt(HOTJAR_SITE_ID, 10), 0);
-    }
-  });
   const { chain } = useChain();
 
   const initStation = useStation((state) => state.init);
