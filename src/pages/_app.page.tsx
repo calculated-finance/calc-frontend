@@ -48,8 +48,6 @@ function initAmplitude() {
   }
 }
 
-initAmplitude();
-
 function LoadingState() {
   return (
     <Center h="100vh">
@@ -70,6 +68,10 @@ function InitWrapper({ children }: { children: ReactNode }) {
   const initXDEFI = useXDEFI((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
+
+  useEffect(() => {
+    initAmplitude();
+  }, []);
 
   useEffect(() => {
     if (featureFlags.stationEnabled) {
