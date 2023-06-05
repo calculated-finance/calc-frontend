@@ -1,4 +1,17 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center, Stack } from '@chakra-ui/react';
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Text,
+  Divider,
+  Flex,
+  HStack,
+  Spinner,
+  Stack,
+  Code,
+  VStack,
+  Center,
+} from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -21,52 +34,133 @@ import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
-function LoopedStrategyDetails() {
-  return (
-    <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
-      <GridItem colSpan={3}>
-        <Stack
-          layerStyle="panel"
-          flexGrow={1}
-          alignItems="start"
-          bgColor="gray.800"
-          h="full"
-          spacing={1}
-          fontSize="xs"
-          p={2}
-        >
-          <Text>Strategy ID: ......</Text>
-          <Text>Value: ...... </Text>
-          <Text>Deposit: ...... </Text>
-        </Stack>{' '}
-      </GridItem>
-      <GridItem colSpan={1}>
-        <Flex alignItems="center" justifyContent="center">
-          <ArrowForwardIcon boxSize={6} />
-        </Flex>
-      </GridItem>
-      <GridItem colSpan={4}>
-        <Stack
-          layerStyle="panel"
-          flexGrow={1}
-          alignItems="start"
-          bgColor="gray.800"
-          h="full"
-          spacing={1}
-          fontSize="xs"
-          p={2}
-          mr={14}
-        >
-          <Text>Strategy ID: ......</Text>
-          <Text>Value: ...... </Text>
-          <Text>Deposit: ...... </Text>
-        </Stack>{' '}
-      </GridItem>
-    </Grid>
+function LoopedStrategyDetails({
+  strategy,
+  marketValueInFiat,
+  data,
+}: {
+  strategy: Strategy;
+  marketValueInFiat: number;
+  data: any;
+}) {
+  const id = getStrategyReinvestStrategyId(data.vault);
+  const { data: linkedData } = useStrategy(id);
+
+  const linkedStrategy = data.vault as Strategy;
+
+  const initialDenom = data === 'string' ? getStrategyInitialDenom(linkedStrategy) : '';
+  const resultingDenom = data === 'string' ? getStrategyResultingDenom(linkedStrategy) : '';
+  const { dexFee } = useDexFee(
+    initialDenom,
+    resultingDenom,
+    isBuyStrategy(linkedStrategy) ? TransactionType.Buy : TransactionType.Sell,
   );
+
+  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+
+  console.log('price', useFiatPrice(initialDenom), useFiatPrice(resultingDenom));
+
+  const { vault: reinvestStrategy } = linkedData || {};
+  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
+  const isLooped = checkLoopedStrategy === strategy.id;
+
+  const {
+    color,
+    percentageChange,
+    profit,
+    marketValueInFiat: linkedMarketValueInFiat,
+  } = getPerformanceStatistics(linkedStrategy, initialDenomPrice, resultingDenomPrice, dexFee);
+
+  const linkedValue = formatFiat(linkedMarketValueInFiat);
+  console.log(linkedStrategy, initialDenomPrice, resultingDenomPrice, dexFee);
+
+  console.log(color, percentageChange, profit, linkedMarketValueInFiat);
+
+  if (reinvestStrategy) {
+    return (
+      <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
+        <GridItem colSpan={3}>
+          <VStack
+            layerStyle="panel"
+            flexGrow={1}
+            alignItems="start"
+            bgColor="gray.800"
+            h="full"
+            spacing={1}
+            fontSize="xs"
+            p={2}
+          >
+            <HStack w="full">
+              <Text>Strategy ID:</Text>
+              <Text>
+                {!reinvestStrategy ? (
+                  <Spinner size="xs" />
+                ) : (
+                  <>
+                    <Code
+                      bgColor="abyss.200"
+                      fontSize="xx-small"
+                      variant="outline"
+                      display={{ base: 'none', lg: 'contents' }}
+                    >
+                      id: {strategy.id}
+                    </Code>
+                    <Code
+                      bg="abyss.200"
+                      fontSize="xx-small"
+                      display={{ base: 'contents', lg: 'none' }}
+                      whiteSpace="nowrap"
+                    >
+                      {strategy.id}
+                    </Code>
+                  </>
+                )}{' '}
+              </Text>
+            </HStack>
+
+            <Text>
+              Value:
+              {formatFiat(marketValueInFiat)}
+            </Text>
+          </VStack>{' '}
+        </GridItem>
+        <GridItem colSpan={1}>
+          {isLooped ? (
+            <VStack alignItems="center" justifyContent="center">
+              <ArrowForwardIcon boxSize={6} />
+              <ArrowBackIcon boxSize={6} />
+            </VStack>
+          ) : (
+            <Flex alignItems="center" justifyContent="center">
+              <ArrowForwardIcon boxSize={6} />
+            </Flex>
+          )}
+        </GridItem>
+        <GridItem colSpan={4}>
+          <Stack
+            layerStyle="panel"
+            flexGrow={1}
+            alignItems="start"
+            bgColor="gray.800"
+            h="full"
+            spacing={1}
+            fontSize="xs"
+            p={2}
+            mr={14}
+          >
+            <Text>Strategy ID: {linkedStrategy.id}</Text>
+            <Text>Value: {linkedValue} </Text>
+          </Stack>{' '}
+        </GridItem>
+      </Grid>
+    );
+  }
+
+  return '';
 }
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
@@ -81,10 +175,6 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
-  const { vault: reinvestStrategy } = data || {};
-  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
-  const isLooped = checkLoopedStrategy === strategy.id;
-
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
@@ -99,13 +189,13 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   }
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
-
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
     dexFee,
   );
+  console.log(color, percentageChange, profit, marketValueInFiat);
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
@@ -231,18 +321,27 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={2}>
         <Divider />
       </GridItem>
-      {isLooped && (
+      {data && (
         <>
           <GridItem colSpan={1}>
             <Heading size="xs">Linked strategy total value:</Heading>
           </GridItem>
           <GridItem colSpan={1}>
-            <Text color={color} fontSize="sm">
-              Current value of both
-            </Text>
+            <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
+              <Text fontSize="sm" data-testid="strategy-asset-price">
+                {isBuyStrategy(strategy) ? formatFiat(resultingDenomPrice) : formatFiat(initialDenomPrice)}
+              </Text>
+              <HStack spacing={1}>
+                {priceChange > 0 ? <HiTrendingUp /> : <HiTrendingDown />}
+
+                <Text fontSize="xs" data-testid="strategy-asset-price-change">
+                  {formatSignedPercentage(priceChange / 100)}
+                </Text>
+              </HStack>
+            </HStack>
           </GridItem>
           <GridItem colSpan={2}>
-            <LoopedStrategyDetails />
+            <LoopedStrategyDetails strategy={strategy} marketValueInFiat={marketValueInFiat} data={data} />
           </GridItem>
         </>
       )}
