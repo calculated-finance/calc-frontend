@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center, Stack } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -19,7 +19,55 @@ import {
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
+import { getStrategyReinvestStrategyId } from '@helpers/destinations';
+import useStrategy from '@hooks/useStrategy';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
+
+function LoopedStrategyDetails() {
+  return (
+    <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
+      <GridItem colSpan={3}>
+        <Stack
+          layerStyle="panel"
+          flexGrow={1}
+          alignItems="start"
+          bgColor="gray.800"
+          h="full"
+          spacing={1}
+          fontSize="xs"
+          p={2}
+        >
+          <Text>Strategy ID: ......</Text>
+          <Text>Value: ...... </Text>
+          <Text>Deposit: ...... </Text>
+        </Stack>{' '}
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Flex alignItems="center" justifyContent="center">
+          <ArrowForwardIcon boxSize={6} />
+        </Flex>
+      </GridItem>
+      <GridItem colSpan={4}>
+        <Stack
+          layerStyle="panel"
+          flexGrow={1}
+          alignItems="start"
+          bgColor="gray.800"
+          h="full"
+          spacing={1}
+          fontSize="xs"
+          p={2}
+          mr={14}
+        >
+          <Text>Strategy ID: ......</Text>
+          <Text>Value: ...... </Text>
+          <Text>Deposit: ...... </Text>
+        </Stack>{' '}
+      </GridItem>
+    </Grid>
+  );
+}
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -30,6 +78,12 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenom,
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
+
+  const id = getStrategyReinvestStrategyId(strategy);
+  const { data } = useStrategy(id);
+  const { vault: reinvestStrategy } = data || {};
+  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
+  const isLooped = checkLoopedStrategy === strategy.id;
 
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
@@ -168,6 +222,27 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
             <Text color={color} fontSize="sm">
               {percentageChange}
             </Text>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Profit taken'}</Heading>
+          </GridItem>
+        </>
+      )}
+      <GridItem colSpan={2}>
+        <Divider />
+      </GridItem>
+      {isLooped && (
+        <>
+          <GridItem colSpan={1}>
+            <Heading size="xs">Linked strategy total value:</Heading>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Text color={color} fontSize="sm">
+              Current value of both
+            </Text>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <LoopedStrategyDetails />
           </GridItem>
         </>
       )}
