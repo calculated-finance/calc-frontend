@@ -497,7 +497,10 @@ const getDenomInfo = (denom?: string, injectedChain?: Chains) => {
     mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
     mapTo.osmosisId = asset.symbol;
     mapTo.enabledInDcaPlus = isMainnet() ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.enabledInDcaPlus : true;
-    const significantFigures = (asset.denom_units.length > 1 && asset.denom_units[1]?.exponent) || 6;
+
+    const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
+    const significantFigures = findDenomUnits?.exponent || 6;
+
     mapTo.significantFigures = significantFigures;
     mapTo.pricePrecision = 6;
     mapTo.stakeableAndSupported = denom === 'uosmo';
