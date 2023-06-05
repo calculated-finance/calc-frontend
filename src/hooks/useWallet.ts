@@ -1,14 +1,32 @@
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useKeplr } from './useKeplr';
+import { useLeap } from './useLeap';
+import { useXDEFI } from './useXDEFI';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
   STATION = 'Station',
+  LEAP = 'Leap',
+  XDEFI = 'XDEFI',
 }
 
 export function useWallet() {
   const keplrWallet = useKeplr((state) => ({
+    account: state.account,
+    controller: state.controller,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
+
+  const leapWallet = useLeap((state) => ({
+    account: state.account,
+    controller: state.controller,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
+
+  const XDEFIWallet = useXDEFI((state) => ({
     account: state.account,
     controller: state.controller,
     isConnecting: state.isConnecting,
@@ -32,6 +50,27 @@ export function useWallet() {
       isConnecting: false,
     };
   }
+  if (leapWallet.account) {
+    return {
+      address: leapWallet.account?.address,
+      connected: true,
+      signingClient: leapWallet.controller,
+      disconnect: leapWallet.disconnect,
+      walletType: WalletTypes.LEAP,
+      isConnecting: false,
+    };
+  }
+
+  if (XDEFIWallet.account) {
+    return {
+      address: XDEFIWallet.account?.address,
+      connected: true,
+      signingClient: XDEFIWallet.controller,
+      disconnect: XDEFIWallet.disconnect,
+      walletType: WalletTypes.XDEFI,
+      isConnecting: false,
+    };
+  }
   if (stationWallet?.account) {
     return {
       address: stationWallet.account?.address,
@@ -46,6 +85,6 @@ export function useWallet() {
     };
   }
   return {
-    isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting,
+    isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting || leapWallet?.isConnecting,
   };
 }

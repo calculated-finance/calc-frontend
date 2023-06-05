@@ -7,30 +7,28 @@ import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helper
 import { Chains } from './useChain';
 
 interface KeplrWindow extends Window {
-  keplr?: WindowKeplr & { isXDEFI?: boolean };
+  keplr?: WindowKeplr;
+  leap?: WindowKeplr;
 }
 
 declare const window: KeplrWindow;
 
-function waitForKeplr(timeout = 1000) {
+function waitForLeap(timeout = 1000) {
   return new Promise((resolve) => {
-    const checkKeplr = () => {
+    const check = () => {
       try {
         if (typeof window !== 'undefined') {
-          if (window && window.keplr) {
-            if (window.keplr.isXDEFI) {
-              resolve(false);
-            }
+          if (window && window.leap) {
             resolve(true);
           }
         }
       } catch (e) {
         console.error(e);
       }
-      setTimeout(checkKeplr, timeout);
+      setTimeout(check, timeout);
     };
 
-    checkKeplr();
+    check();
   });
 }
 type IWallet = {
@@ -44,7 +42,7 @@ type IWallet = {
   controller: SigningCosmWasmClient | null;
 };
 
-export const useKeplr = create<IWallet>()(
+export const useLeap = create<IWallet>()(
   persist(
     (set, get) => ({
       isInstalled: false,
@@ -65,7 +63,7 @@ export const useKeplr = create<IWallet>()(
         const chainId = getChainId(chain);
         const chainInfo = getChainInfo(chain);
         try {
-          const keplr = window.keplr!;
+          const keplr = window.leap!;
 
           await keplr.experimentalSuggestChain({
             ...chainInfo,
@@ -93,10 +91,8 @@ export const useKeplr = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          const foundKeplr = await waitForKeplr();
-          if (foundKeplr) {
-            set({ isInstalled: true });
-          }
+          await waitForLeap();
+          set({ isInstalled: true });
         }
         if (get().autoconnect) {
           get().connect(chain);
@@ -105,7 +101,7 @@ export const useKeplr = create<IWallet>()(
     }),
 
     {
-      name: 'keplrAutoconnect',
+      name: 'leapAutoconnect',
       partialize: (state) => ({ autoconnect: state.autoconnect }),
     },
   ),

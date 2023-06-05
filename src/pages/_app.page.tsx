@@ -20,6 +20,8 @@ import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import Spinner from '@components/Spinner';
+import { useLeap } from '@hooks/useLeap';
+import { useXDEFI } from '@hooks/useXDEFI';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -71,6 +73,8 @@ function InitWrapper({ children }: { children: ReactNode }) {
   const initKujira = useKujira((state) => state.init);
   const initOsmosis = useOsmosis((state) => state.init);
   const initKeplr = useKeplr((state) => state.init);
+  const initLeap = useLeap((state) => state.init);
+  const initXDEFI = useXDEFI((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
 
@@ -87,6 +91,18 @@ function InitWrapper({ children }: { children: ReactNode }) {
       initKeplr(chain);
     }
   }, [initKeplr, chain]);
+
+  useEffect(() => {
+    if (chain) {
+      initLeap(chain);
+    }
+  }, [initLeap, chain]);
+
+  useEffect(() => {
+    if (chain) {
+      initXDEFI(chain);
+    }
+  }, [initXDEFI, chain]);
 
   useEffect(() => {
     if (chain) {

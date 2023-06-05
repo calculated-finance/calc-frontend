@@ -7,30 +7,30 @@ import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helper
 import { Chains } from './useChain';
 
 interface KeplrWindow extends Window {
-  keplr?: WindowKeplr & { isXDEFI?: boolean };
+  keplr?: WindowKeplr;
+  xfi?: {
+    keplr: WindowKeplr;
+  };
 }
 
 declare const window: KeplrWindow;
 
-function waitForKeplr(timeout = 1000) {
+function waitForXDEFI(timeout = 1000) {
   return new Promise((resolve) => {
-    const checkKeplr = () => {
+    const check = () => {
       try {
         if (typeof window !== 'undefined') {
-          if (window && window.keplr) {
-            if (window.keplr.isXDEFI) {
-              resolve(false);
-            }
+          if (window && window.xfi?.keplr) {
             resolve(true);
           }
         }
       } catch (e) {
         console.error(e);
       }
-      setTimeout(checkKeplr, timeout);
+      setTimeout(check, timeout);
     };
 
-    checkKeplr();
+    check();
   });
 }
 type IWallet = {
@@ -44,7 +44,7 @@ type IWallet = {
   controller: SigningCosmWasmClient | null;
 };
 
-export const useKeplr = create<IWallet>()(
+export const useXDEFI = create<IWallet>()(
   persist(
     (set, get) => ({
       isInstalled: false,
@@ -65,12 +65,12 @@ export const useKeplr = create<IWallet>()(
         const chainId = getChainId(chain);
         const chainInfo = getChainInfo(chain);
         try {
-          const keplr = window.keplr!;
+          const { keplr } = window.xfi!;
 
-          await keplr.experimentalSuggestChain({
-            ...chainInfo,
-            feeCurrencies: getFeeCurrencies(chain),
-          });
+          // await keplr.experimentalSuggestChain({
+          //   ...chainInfo,
+          //   feeCurrencies: getFeeCurrencies(chain),
+          // });
 
           await keplr.enable(chainId);
           const offlineSigner = await keplr.getOfflineSignerAuto(chainId);
@@ -93,10 +93,8 @@ export const useKeplr = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          const foundKeplr = await waitForKeplr();
-          if (foundKeplr) {
-            set({ isInstalled: true });
-          }
+          await waitForXDEFI();
+          set({ isInstalled: true });
         }
         if (get().autoconnect) {
           get().connect(chain);
@@ -105,7 +103,7 @@ export const useKeplr = create<IWallet>()(
     }),
 
     {
-      name: 'keplrAutoconnect',
+      name: 'xdefiAutoconnect',
       partialize: (state) => ({ autoconnect: state.autoconnect }),
     },
   ),
