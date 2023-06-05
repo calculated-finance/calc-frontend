@@ -52,13 +52,14 @@ export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsm
 export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
-
   const { vault: reinvestStrategy } = data || {};
+  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
+  const isLooped = checkLoopedStrategy === strategy.id;
 
   return (
     <>
       <GridItem colSpan={1}>
-        <Heading size="xs">Reinvesting into</Heading>
+        <Heading size="xs">{isLooped ? 'Looping into' : 'Reinvesting into'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         {!reinvestStrategy ? (
