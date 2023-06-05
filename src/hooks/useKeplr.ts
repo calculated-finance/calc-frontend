@@ -7,7 +7,7 @@ import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helper
 import { Chains } from './useChain';
 
 interface KeplrWindow extends Window {
-  keplr?: WindowKeplr;
+  keplr?: WindowKeplr & { isXDEFI?: boolean };
 }
 
 declare const window: KeplrWindow;
@@ -18,6 +18,9 @@ function waitForKeplr(timeout = 1000) {
       try {
         if (typeof window !== 'undefined') {
           if (window && window.keplr) {
+            if (window.keplr.isXDEFI) {
+              resolve(false);
+            }
             resolve(true);
           }
         }
@@ -90,8 +93,10 @@ export const useKeplr = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          await waitForKeplr();
-          set({ isInstalled: true });
+          const foundKeplr = await waitForKeplr();
+          if (foundKeplr) {
+            set({ isInstalled: true });
+          }
         }
         if (get().autoconnect) {
           get().connect(chain);

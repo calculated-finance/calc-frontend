@@ -22,6 +22,8 @@ import { useKeplr } from '@hooks/useKeplr';
 import { useWallet } from '@hooks/useWallet';
 import { useChain } from '@hooks/useChain';
 import { useLeap } from '@hooks/useLeap';
+import { useXDEFI } from '@hooks/useXDEFI';
+import { useAdmin } from '@hooks/useAdmin';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -29,6 +31,8 @@ function WalletModal() {
   const { visible, setVisible } = useWalletModal();
 
   const { isConnecting } = useWallet();
+
+  const { isAdminPage } = useAdmin();
 
   const { isStationInstalled, connect: connectStation } = useStation((state) => ({
     isStationInstalled: state.isStationInstalled,
@@ -41,6 +45,11 @@ function WalletModal() {
   }));
 
   const { isInstalled: isLeapInstalled, connect: connectLeap } = useLeap((state) => ({
+    isInstalled: state.isInstalled,
+    connect: state.connect,
+  }));
+
+  const { isInstalled: isXDEFIInstalled, connect: connectXDEFI } = useXDEFI((state) => ({
     isInstalled: state.isInstalled,
     connect: state.connect,
   }));
@@ -65,6 +74,11 @@ function WalletModal() {
 
   const handleLeapConnect = () => {
     connectLeap(chain);
+    handleClose();
+  };
+
+  const handleXDEFIConnect = () => {
+    connectXDEFI(chain);
     handleClose();
   };
 
@@ -109,6 +123,15 @@ function WalletModal() {
                     icon="/images/leap.svg"
                     isInstalled={isLeapInstalled}
                     walletInstallLink="https://www.leapwallet.io/download"
+                  />
+                )}
+                {(featureFlags.XDEFIEnabled || isAdminPage) && (
+                  <WalletListItem
+                    handleClick={handleXDEFIConnect}
+                    name="XDEFI Wallet"
+                    icon="/images/xdefi.png"
+                    isInstalled={isXDEFIInstalled}
+                    walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
 

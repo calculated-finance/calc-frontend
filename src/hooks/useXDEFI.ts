@@ -8,17 +8,19 @@ import { Chains } from './useChain';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
-  leap?: WindowKeplr;
+  xfi?: {
+    keplr: WindowKeplr;
+  };
 }
 
 declare const window: KeplrWindow;
 
-function waitForLeap(timeout = 1000) {
+function waitForXDEFI(timeout = 1000) {
   return new Promise((resolve) => {
     const check = () => {
       try {
         if (typeof window !== 'undefined') {
-          if (window && window.leap) {
+          if (window && window.xfi?.keplr) {
             resolve(true);
           }
         }
@@ -42,7 +44,7 @@ type IWallet = {
   controller: SigningCosmWasmClient | null;
 };
 
-export const useLeap = create<IWallet>()(
+export const useXDEFI = create<IWallet>()(
   persist(
     (set, get) => ({
       isInstalled: false,
@@ -63,12 +65,12 @@ export const useLeap = create<IWallet>()(
         const chainId = getChainId(chain);
         const chainInfo = getChainInfo(chain);
         try {
-          const keplr = window.leap!;
+          const { keplr } = window.xfi!;
 
-          await keplr.experimentalSuggestChain({
-            ...chainInfo,
-            feeCurrencies: getFeeCurrencies(chain),
-          });
+          // await keplr.experimentalSuggestChain({
+          //   ...chainInfo,
+          //   feeCurrencies: getFeeCurrencies(chain),
+          // });
 
           await keplr.enable(chainId);
           const offlineSigner = await keplr.getOfflineSignerAuto(chainId);
@@ -91,7 +93,7 @@ export const useLeap = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          await waitForLeap();
+          await waitForXDEFI();
           set({ isInstalled: true });
         }
         if (get().autoconnect) {
@@ -101,7 +103,7 @@ export const useLeap = create<IWallet>()(
     }),
 
     {
-      name: 'leapAutoconnect',
+      name: 'xdefiAutoconnect',
       partialize: (state) => ({ autoconnect: state.autoconnect }),
     },
   ),

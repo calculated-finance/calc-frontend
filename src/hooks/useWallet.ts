@@ -2,11 +2,13 @@ import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
+import { useXDEFI } from './useXDEFI';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
   STATION = 'Station',
   LEAP = 'Leap',
+  XDEFI = 'XDEFI',
 }
 
 export function useWallet() {
@@ -18,6 +20,13 @@ export function useWallet() {
   }));
 
   const leapWallet = useLeap((state) => ({
+    account: state.account,
+    controller: state.controller,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
+
+  const XDEFIWallet = useXDEFI((state) => ({
     account: state.account,
     controller: state.controller,
     isConnecting: state.isConnecting,
@@ -48,6 +57,17 @@ export function useWallet() {
       signingClient: leapWallet.controller,
       disconnect: leapWallet.disconnect,
       walletType: WalletTypes.LEAP,
+      isConnecting: false,
+    };
+  }
+
+  if (XDEFIWallet.account) {
+    return {
+      address: XDEFIWallet.account?.address,
+      connected: true,
+      signingClient: XDEFIWallet.controller,
+      disconnect: XDEFIWallet.disconnect,
+      walletType: WalletTypes.XDEFI,
       isConnecting: false,
     };
   }

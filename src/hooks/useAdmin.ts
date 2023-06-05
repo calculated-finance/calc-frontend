@@ -1,6 +1,7 @@
 // usewhitelist
 
 import { isNil } from 'lodash';
+import { useRouter } from 'next/router';
 import { useWallet } from './useWallet';
 
 const admins = [
@@ -23,9 +24,13 @@ export function isAddressAdmin(address: string | undefined | null) {
   return !isNil(address) && admins.includes(address);
 }
 
+const adminPages = ['/admin', '/stats-and-totals'];
+
 export function useAdmin() {
   const { address } = useWallet();
+  const router = useRouter();
   return {
     isAdmin: isAddressAdmin(address),
+    isAdminPage: adminPages.includes(router.pathname),
   };
 }
