@@ -2,7 +2,7 @@ import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useEffect, useState } from 'react';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import { Chains, useChain } from './useChain';
 
 const QUERY_KEY = 'get_vaults';
@@ -48,11 +48,7 @@ export default function useAdminStrategies(customChain?: Chains) {
     }
   }, [chain]);
 
-  return useQueryWithNotification<Vault[]>(
-    [QUERY_KEY, storedClient, chain],
-    () => fetchVaultsRecursively(storedClient!, chain),
-    {
-      enabled: !!storedClient && !!chain,
-    },
-  );
+  return useQuery<Vault[]>([QUERY_KEY, storedClient, chain], () => fetchVaultsRecursively(storedClient!, chain), {
+    enabled: !!storedClient && !!chain,
+  });
 }

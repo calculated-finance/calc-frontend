@@ -1,6 +1,7 @@
 import { Coin } from '@cosmjs/stargate';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
+import { useQuery } from '@tanstack/react-query';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
@@ -20,7 +21,7 @@ const useBalance = ({ token }: UseBalanceArgs) => {
   const { address } = useWallet();
   const client = useCosmWasmClient((state) => state.client);
 
-  const result = useQueryWithNotification<Coin>(
+  const result = useQuery<Coin>(
     ['balance', token, address, client],
     () => {
       if (!client) {
@@ -34,6 +35,9 @@ const useBalance = ({ token }: UseBalanceArgs) => {
     {
       enabled: !!token && !!address && !!client,
       keepPreviousData: true,
+      meta: {
+        errorMessage: 'Error fetching balance',
+      },
     },
   );
 

@@ -2,6 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
+import { useQuery } from '@tanstack/react-query';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 import { isAddressAdmin } from './useAdmin';
@@ -15,7 +16,7 @@ export default function useStrategy(id?: Strategy['id']) {
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<VaultResponse>(
+  return useQuery<VaultResponse>(
     [STRATEGY_KEY, id, client, address],
     async () => {
       if (!client) {
@@ -33,6 +34,9 @@ export default function useStrategy(id?: Strategy['id']) {
     },
     {
       enabled: !!client && !!id && !!address && !!chain,
+      meta: {
+        errorMessage: 'Error fetching strategy',
+      },
     },
   );
 }

@@ -22,13 +22,12 @@ import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import Spinner from '@components/Spinner';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
+import { ToastContainer } from './toast';
+import { queryClient } from './queryClient';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
-
-// disable retries on testnet
-const queryClient = new QueryClient();
 
 Sentry.init({
   dsn: 'https://c9fd7738c4244fbba9ece76de612785b@o4505139619364864.ingest.sentry.io/4505140076281856',
@@ -158,6 +157,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
                 </AssetListWrapper>
               </QueryClientProvider>
             </CalcWalletModalProvider>
+            <ToastContainer />
           </InitWrapper>
         </Sentry.ErrorBoundary>
       </ChakraProvider>

@@ -2,7 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
 import { ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { Version } from './Version';
@@ -12,7 +12,7 @@ export function useVersion(): Version | undefined {
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  const { data } = useQueryWithNotification<ConfigResponse>(
+  const { data } = useQuery<ConfigResponse>(
     ['config', chain, client],
     async () => {
       if (!client) {
@@ -26,6 +26,9 @@ export function useVersion(): Version | undefined {
     },
     {
       enabled: !!client && !!address && !!chain,
+      meta: {
+        errorMessage: 'Error fetching config',
+      },
     },
   );
 

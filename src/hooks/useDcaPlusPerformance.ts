@@ -2,6 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/v2/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
+import { useQuery } from '@tanstack/react-query';
 import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 import { useChain } from './useChain';
@@ -14,7 +15,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQueryWithNotification<DcaPlusPerformanceResponse>(
+  return useQuery<DcaPlusPerformanceResponse>(
     ['strategy-dca-plus-performance', id, client, address],
     async () => {
       if (!client) {
@@ -31,6 +32,9 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
     },
     {
       enabled: !!client && !!id && !!address && !!enabled && !!chain,
+      meta: {
+        errorMessage: 'Error fetching strategy performance',
+      },
     },
   );
 }

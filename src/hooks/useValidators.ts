@@ -1,4 +1,5 @@
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
+import { useQuery } from '@tanstack/react-query';
 import { Chains, useChain } from './useChain';
 import { useKujira } from './useKujira';
 import { useOsmosis } from './useOsmosis';
@@ -11,7 +12,7 @@ const useValidators = () => {
 
   const { chain } = useChain();
 
-  const { data, ...other } = useQueryWithNotification<{ validators: Validator[] }>(
+  const { data, ...other } = useQuery<{ validators: Validator[] }>(
     ['validators', chain],
     () => {
       if (chain === Chains.Osmosis) {
@@ -21,6 +22,9 @@ const useValidators = () => {
     },
     {
       enabled: !!kujiraQuery && !!osmosisQuery && !!chain,
+      meta: {
+        errorMessage: 'Error fetching validators',
+      },
     },
   );
 
