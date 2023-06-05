@@ -2,7 +2,6 @@ import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code 
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
-import { StrategyTypes } from '@models/StrategyTypes';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -13,6 +12,7 @@ import {
   getSlippageTolerance,
   getPriceCeilingFloor,
   getStrategyExecutionInterval,
+  isBuyStrategy,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
@@ -105,13 +105,13 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
             <>
               <GridItem colSpan={1}>
-                <Heading size="xs">{strategyType === StrategyTypes.DCAIn ? 'Price ceiling' : 'Price floor'}</Heading>
+                <Heading size="xs">{isBuyStrategy(strategy) ? 'Price ceiling' : 'Price floor'}</Heading>
               </GridItem>
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
                     {getPriceCeilingFloor(strategy)}{' '}
-                    {getDenomInfo(strategyType === StrategyTypes.DCAIn ? initialDenom : resultingDenom).name}
+                    {getDenomInfo(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>
