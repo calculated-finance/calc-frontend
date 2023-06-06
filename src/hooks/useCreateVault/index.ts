@@ -60,7 +60,7 @@ const useCreateVault = (
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { track } = useAnalytics();
 
-  return useMutation<Strategy['id'], Error>(
+  return useMutation<Strategy['id'] | undefined, Error>(
     () => {
       if (!state) {
         throw new Error('No state');
