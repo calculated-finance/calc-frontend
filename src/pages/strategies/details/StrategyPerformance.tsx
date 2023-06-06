@@ -160,7 +160,11 @@ function LoopedStrategyDetails({
     );
   }
 
-  return '';
+  return (
+    <GridItem colSpan={2}>
+      <Divider />
+    </GridItem>
+  );
 }
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
