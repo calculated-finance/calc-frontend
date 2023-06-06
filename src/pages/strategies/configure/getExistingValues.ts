@@ -1,6 +1,6 @@
 import { StrategyOsmosis } from '@hooks/useStrategies';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import SendToWalletValues from '@models/SendToWalletValues';
 import {

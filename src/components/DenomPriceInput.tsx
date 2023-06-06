@@ -16,7 +16,8 @@ import usePrice from '@hooks/usePrice';
 import { Denom } from '@models/Denom';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { TransactionType } from './TransactionType';
 

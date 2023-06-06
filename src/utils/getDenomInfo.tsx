@@ -1,6 +1,7 @@
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
-import { Chains, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';

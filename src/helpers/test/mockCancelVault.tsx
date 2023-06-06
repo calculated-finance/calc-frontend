@@ -13,7 +13,7 @@ const msgs = [
   {
     typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: {
-      sender: 'kujitestwallet',
+      sender: 'kujiratestwallet',
       contract: CONTRACT_ADDRESS,
       msg: encode(defaultMsg),
       funds: [],
@@ -22,7 +22,7 @@ const msgs = [
   {
     typeUrl: '/cosmos.bank.v1beta1.MsgSend',
     value: {
-      fromAddress: 'kujitestwallet',
+      fromAddress: 'kujiratestwallet',
       toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
       amount: [
         {
@@ -37,9 +37,9 @@ const msgs = [
 export function mockCancelVault(success = true) {
   const cancelSpy = jest.fn();
   if (success) {
-    when(cancelSpy).expectCalledWith('kujitestwallet', msgs, 'auto').mockResolvedValueOnce({});
+    when(cancelSpy).expectCalledWith('kujiratestwallet', msgs, 'auto').mockResolvedValueOnce({});
   } else {
-    when(cancelSpy).expectCalledWith('kujitestwallet', msgs, 'auto').mockRejectedValueOnce(new Error('test reason'));
+    when(cancelSpy).expectCalledWith('kujiratestwallet', msgs, 'auto').mockRejectedValueOnce(new Error('test reason'));
   }
   return cancelSpy;
 }

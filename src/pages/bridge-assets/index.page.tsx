@@ -4,7 +4,8 @@ import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import { featureFlags } from 'src/constants';
 import OnRampModal from '@components/OnRampModalContent';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 
 type GetAssetsCardProps = {
   name: string;

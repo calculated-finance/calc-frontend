@@ -4,7 +4,8 @@ import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 const hiddenPairs = [

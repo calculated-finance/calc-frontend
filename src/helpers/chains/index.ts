@@ -1,5 +1,5 @@
 import { GasPrice } from '@cosmjs/stargate';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { Version } from '@hooks/Version';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
@@ -180,6 +180,15 @@ export function getChainAddressPrefix(chain: Chains) {
     return 'osmo';
   }
   return 'kujira';
+}
+export function getChainFromAddress(address: string) {
+  if (address.startsWith(getChainAddressPrefix(Chains.Osmosis))) {
+    return Chains.Osmosis;
+  }
+  if (address.startsWith(getChainAddressPrefix(Chains.Kujira))) {
+    return Chains.Kujira;
+  }
+  return undefined;
 }
 
 export function getChainAddressLength(chain: Chains) {

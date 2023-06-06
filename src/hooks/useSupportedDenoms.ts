@@ -1,5 +1,6 @@
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
-import { useChain, Chains } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import usePairs, { allDenomsFromPairs } from './usePairs';
 
 export function useSupportedDenoms(injectedChain?: Chains) {

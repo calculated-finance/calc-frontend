@@ -1,8 +1,10 @@
 import { useWallet } from '@hooks/useWallet';
 import { Coin } from '@cosmjs/stargate';
+import { getChainFromAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useKujira } from './useKujira';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import { useOsmosis } from './useOsmosis';
 import { useSupportedDenoms } from './useSupportedDenoms';
 
@@ -17,12 +19,15 @@ const useBalances = () => {
   const { data, ...other } = useQueryWithNotification(
     ['balances', address, chain],
     async () => {
-      if (chain === Chains.Kujira) {
+      if (chain === Chains.Kujira && getChainFromAddress(address!) === Chains.Kujira) {
         return kujiraQuery?.bank.allBalances(address!);
       }
-      return osmosisQuery?.cosmos.bank.v1beta1
-        .allBalances({ address })
-        .then((res: { balances: Coin[] }) => res.balances);
+      if (chain === Chains.Osmosis && getChainFromAddress(address!) === Chains.Osmosis) {
+        return osmosisQuery?.cosmos.bank.v1beta1
+          .allBalances({ address })
+          .then((res: { balances: Coin[] }) => res.balances);
+      }
+      return [];
     },
     {
       enabled: !!address && !!kujiraQuery && !!osmosisQuery && !!chain,

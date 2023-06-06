@@ -1,5 +1,5 @@
 import { isAddressAdmin } from '@hooks/useAdmin';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { featureFlags } from 'src/constants';
 
 export function isV2Enabled(chain: Chains, address: string | undefined) {

@@ -132,7 +132,7 @@ describe('DCA Plus Out confirm page', () => {
               },
             ],
             msg: encode(executeMsg),
-            sender: 'kujitestwallet',
+            sender: 'kujiratestwallet',
           },
         },
         {
@@ -144,7 +144,7 @@ describe('DCA Plus Out confirm page', () => {
                 denom: 'ukuji',
               },
             ],
-            fromAddress: 'kujitestwallet',
+            fromAddress: 'kujiratestwallet',
             toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
           },
         },

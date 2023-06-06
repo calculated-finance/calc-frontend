@@ -1,13 +1,10 @@
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useFormStore } from '@hooks/useFormStore';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export enum Chains {
-  Kujira = 'Kujira',
-  Osmosis = 'Osmosis',
-}
+import { Chains } from './Chains';
 
 type ChainState = {
   chain: Chains;
@@ -20,6 +17,7 @@ export const useChainStore = create<ChainState>()(
       chain: Chains.Kujira,
       setChain: (chain: Chains) => {
         useFormStore.setState({ forms: {} });
+        useCosmWasmClient.setState({ client: null });
         return set({ chain });
       },
     }),

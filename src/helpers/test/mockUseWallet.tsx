@@ -1,5 +1,6 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Chains, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useWallet } from '@hooks/useWallet';
 
@@ -21,7 +22,7 @@ export function mockUseWallet(
   });
 
   (useWallet as jest.Mock).mockImplementation(() => ({
-    address: 'kujitestwallet',
+    address: 'kujiratestwallet',
     connected: true,
     signingClient: {
       execute: mockExecute,

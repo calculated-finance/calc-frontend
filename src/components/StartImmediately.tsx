@@ -4,7 +4,8 @@ import Radio from '@components/Radio';
 import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 
 const startImediatelyData: { value: StartImmediatelyValues; label: string }[] = [
   {

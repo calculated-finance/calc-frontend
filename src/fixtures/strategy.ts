@@ -6,7 +6,7 @@ const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 const dcaInStrategy = {
   id: '1',
   created_at: '0',
-  owner: 'kujitestwallet',
+  owner: 'kujiratestwallet',
   balance: {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO
@@ -37,7 +37,7 @@ const dcaInStrategy = {
   },
   destinations: [
     {
-      address: 'kujitestwallet',
+      address: 'kujiratestwallet',
       allocation: '1',
     },
   ],
@@ -49,7 +49,7 @@ const dcaInStrategy = {
 export const dcaOutStrategy = {
   id: '1',
   created_at: '0',
-  owner: 'kujitestwallet',
+  owner: 'kujiratestwallet',
   balance: {
     denom: 'ukuji',
     amount: '10000000',
@@ -81,7 +81,7 @@ export const dcaOutStrategy = {
   },
   destinations: [
     {
-      address: 'kujitestwallet',
+      address: 'kujiratestwallet',
       allocation: '1',
     },
   ],
@@ -117,7 +117,7 @@ export const osmosisStrategy = {
     amount: '10000000', // 10 DEMO
   },
   created_at: '0',
-  owner: 'kujitestwallet',
+  owner: 'kujiratestwallet',
   deposited_amount: {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO

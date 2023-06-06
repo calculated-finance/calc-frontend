@@ -156,7 +156,7 @@ describe('Confirm page', () => {
               },
             ],
             msg: encode(executeMsg),
-            sender: 'kujitestwallet',
+            sender: 'kujiratestwallet',
           },
         },
       ]);

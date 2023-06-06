@@ -12,7 +12,8 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { useRouter } from 'next/router';
 
 const chainSelectionAllowedUrls = [

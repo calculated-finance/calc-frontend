@@ -31,7 +31,7 @@ const defaultMsgs = [
         { amount: '1000000', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
       ],
       msg: encode(defaultExecuteMsg),
-      sender: 'kujitestwallet',
+      sender: 'kujiratestwallet',
     },
   },
   {
@@ -40,7 +40,7 @@ const defaultMsgs = [
       amount: [
         { amount: '28571', denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk' },
       ],
-      fromAddress: 'kujitestwallet',
+      fromAddress: 'kujiratestwallet',
       toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
     },
   },
@@ -49,7 +49,7 @@ const defaultMsgs = [
 export function mockCreateVault(msgs = defaultMsgs) {
   const queryContractSmart = jest.fn();
   when(queryContractSmart)
-    .expectCalledWith('kujitestwallet', msgs, 'auto')
+    .expectCalledWith('kujiratestwallet', msgs, 'auto')
     .mockResolvedValueOnce({
       logs: [
         {

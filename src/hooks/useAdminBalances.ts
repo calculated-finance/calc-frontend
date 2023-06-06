@@ -2,7 +2,8 @@ import { Coin } from '@cosmjs/proto-signing';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { useKujira } from './useKujira';
 import useQueryWithNotification from './useQueryWithNotification';
-import { useChain, Chains } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import { useOsmosis } from './useOsmosis';
 import { useSupportedDenoms } from './useSupportedDenoms';
 

@@ -135,7 +135,7 @@ describe('DCA Plus In confirm page', () => {
               },
             ],
             msg: encode(executeMsg),
-            sender: 'kujitestwallet',
+            sender: 'kujiratestwallet',
           },
         },
         {
@@ -147,7 +147,7 @@ describe('DCA Plus In confirm page', () => {
                 denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
               },
             ],
-            fromAddress: 'kujitestwallet',
+            fromAddress: 'kujiratestwallet',
             toAddress: 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0',
           },
         },

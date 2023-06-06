@@ -1,5 +1,5 @@
 import { Destination } from 'src/interfaces/generated-osmosis/execute';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { StrategyOsmosis } from '@hooks/useStrategies';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';

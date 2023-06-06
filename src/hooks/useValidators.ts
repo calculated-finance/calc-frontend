@@ -1,6 +1,7 @@
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { useQuery } from '@tanstack/react-query';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import { useKujira } from './useKujira';
 import { useOsmosis } from './useOsmosis';
 import useQueryWithNotification from './useQueryWithNotification';

@@ -5,7 +5,8 @@ import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 
 export type FiatPriceResponse = any;
 

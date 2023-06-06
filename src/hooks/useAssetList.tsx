@@ -6,7 +6,8 @@ import { isMainnet } from '@utils/isMainnet';
 import testnetAssetList from 'src/assetLists/osmo-test-5.assetlist.json';
 import mainnetAssetList from 'src/assetLists/osmosis-1.assetlist.json';
 import { useQuery } from '@tanstack/react-query';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);

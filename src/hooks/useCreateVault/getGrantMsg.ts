@@ -1,7 +1,7 @@
 import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { getChainStakingRouterContractAddress } from '@helpers/chains';
 import { Version } from '@hooks/Version';
 
