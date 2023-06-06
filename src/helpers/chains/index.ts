@@ -181,6 +181,15 @@ export function getChainAddressPrefix(chain: Chains) {
   }
   return 'kujira';
 }
+export function getChainFromAddress(address: string) {
+  if (address.startsWith(getChainAddressPrefix(Chains.Osmosis))) {
+    return Chains.Osmosis;
+  }
+  if (address.startsWith(getChainAddressPrefix(Chains.Kujira))) {
+    return Chains.Kujira;
+  }
+  return undefined;
+}
 
 export function getChainAddressLength(chain: Chains) {
   if (chain === Chains.Osmosis) {

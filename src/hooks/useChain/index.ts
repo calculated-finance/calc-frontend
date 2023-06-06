@@ -1,3 +1,4 @@
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useFormStore } from '@hooks/useFormStore';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -20,6 +21,7 @@ export const useChainStore = create<ChainState>()(
       chain: Chains.Kujira,
       setChain: (chain: Chains) => {
         useFormStore.setState({ forms: {} });
+        useCosmWasmClient.setState({ client: null });
         return set({ chain });
       },
     }),
