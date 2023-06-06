@@ -20,7 +20,8 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { Chains, useChainStore } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';

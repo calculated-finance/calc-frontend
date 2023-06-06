@@ -3,7 +3,7 @@ import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
 import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
 import { getChainEndpoint } from '@helpers/chains';
-import { Chains } from './useChain';
+import { Chains } from './useChain/Chains';
 
 type IUseKujira = {
   query: KujiraQueryClient | null;

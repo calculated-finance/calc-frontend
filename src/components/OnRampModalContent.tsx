@@ -2,7 +2,8 @@ import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, 
 import { KADO_API_KEY } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 
 function OnRampModalContent() {
   const { connected, address } = useWallet();

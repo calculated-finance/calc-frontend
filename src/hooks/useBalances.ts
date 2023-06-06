@@ -3,7 +3,8 @@ import { Coin } from '@cosmjs/stargate';
 import { getChainFromAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useKujira } from './useKujira';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 import { useOsmosis } from './useOsmosis';
 import { useSupportedDenoms } from './useSupportedDenoms';
 

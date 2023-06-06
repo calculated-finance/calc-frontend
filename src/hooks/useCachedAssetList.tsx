@@ -4,7 +4,8 @@ import { ReactNode, useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useAssetList } from './useAssetList';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 
 type AssetListState = {
   assetList: AssetList | null;

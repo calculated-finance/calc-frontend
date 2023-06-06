@@ -6,7 +6,7 @@ import {
 } from '@helpers/destinations';
 import SendToWalletValues from '@models/SendToWalletValues';
 import { StrategyOsmosis } from '@hooks/useStrategies';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { osmosisStrategy } from 'src/fixtures/strategy';
 import { getExistingValues } from './getExistingValues'; // update with the actual path
 

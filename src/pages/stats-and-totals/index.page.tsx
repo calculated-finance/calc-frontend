@@ -19,7 +19,8 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';

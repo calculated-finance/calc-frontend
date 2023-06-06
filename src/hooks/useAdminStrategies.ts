@@ -4,7 +4,8 @@ import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Chains, useChain } from './useChain';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 
 const QUERY_KEY = 'get_vaults';
 

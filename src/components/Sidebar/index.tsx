@@ -25,7 +25,8 @@ import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import Banner from '@components/Banner';
 import { SidebarControls } from '@components/Layout/SidebarControls';
-import { Chains, useChain } from '@hooks/useChain';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { Pages } from './Pages';
 
 interface LinkItem {

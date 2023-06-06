@@ -5,7 +5,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
-import { Chains } from './useChain';
+import { Chains } from './useChain/Chains';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;

@@ -1,5 +1,5 @@
 import * as isMainnet from '@utils/isMainnet';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { getChainContractAddress, getMarsAddress } from '.';
 

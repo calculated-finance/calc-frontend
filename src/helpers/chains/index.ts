@@ -1,5 +1,5 @@
 import { GasPrice } from '@cosmjs/stargate';
-import { Chains } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { Version } from '@hooks/Version';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';

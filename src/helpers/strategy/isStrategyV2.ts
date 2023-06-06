@@ -1,4 +1,5 @@
-import { useChainStore, Chains } from '@hooks/useChain';
+import { useChainStore } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 
 export function isStrategyV2(strategy: Strategy | StrategyOsmosis) {

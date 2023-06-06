@@ -4,11 +4,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export enum Chains {
-  Kujira = 'Kujira',
-  Osmosis = 'Osmosis',
-}
+import { Chains } from './Chains';
 
 type ChainState = {
   chain: Chains;
