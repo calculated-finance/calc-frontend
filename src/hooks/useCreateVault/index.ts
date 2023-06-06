@@ -124,6 +124,9 @@ const useCreateVault = (
     },
     {
       onError: (error) => {
+        if (error.message.includes('Request rejected')) {
+          return;
+        }
         Sentry.withScope((scope) => {
           scope.setFingerprint([error.message]);
           Sentry.captureException(error, { tags: { chain, formName, state: JSON.stringify(state) } });
