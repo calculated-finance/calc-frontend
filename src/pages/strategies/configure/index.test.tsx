@@ -42,18 +42,18 @@ function mockUpdate(execute = jest.fn(), success = true) {
     update: {
       vault_id: '1',
       destinations: [],
-      address: 'kujitestwallet',
+      address: 'kujiratestwallet',
     },
   };
   if (success) {
     when(execute)
-      .expectCalledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockResolvedValueOnce('');
   } else {
     when(execute)
-      .expectCalledWith('kujitestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockRejectedValueOnce(new Error('test error'));

@@ -142,7 +142,7 @@ describe('DCA Plus Out confirm page', () => {
               },
             ],
             msg: encode(executeMsg),
-            sender: 'kujitestwallet',
+            sender: 'kujiratestwallet',
           },
         },
       ]);

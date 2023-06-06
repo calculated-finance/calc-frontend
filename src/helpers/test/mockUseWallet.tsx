@@ -22,7 +22,7 @@ export function mockUseWallet(
   });
 
   (useWallet as jest.Mock).mockImplementation(() => ({
-    address: 'kujitestwallet',
+    address: 'kujiratestwallet',
     connected: true,
     signingClient: {
       execute: mockExecute,

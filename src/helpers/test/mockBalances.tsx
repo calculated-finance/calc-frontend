@@ -5,7 +5,7 @@ import { Coin } from '@cosmjs/stargate';
 export function mockBalances() {
   const balancesSpy = jest.fn();
   when(balancesSpy)
-    .expectCalledWith('kujitestwallet')
+    .expectCalledWith('kujiratestwallet')
     .mockResolvedValue([
       {
         denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
