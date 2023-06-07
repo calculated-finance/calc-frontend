@@ -44,7 +44,7 @@ function Returning() {
         <Heading size="md">Ready to fire up CALC again?</Heading>
         <Text fontSize="sm">
           Match your investments to your goals, spread your &apos;eggs&apos; among multiple baskets, set up a purchase
-          plan–and stick with it and backtest your previous startegies.
+          plan–and stick with it and backtest your previous strategies.
         </Text>
       </Stack>
       <Stack direction={{ base: 'column', sm: 'row' }}>
