@@ -60,7 +60,7 @@ const useCreateVault = (
   const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { track } = useAnalytics();
 
-  return useMutation<Strategy['id'], Error>(
+  return useMutation<Strategy['id'] | undefined, Error>(
     () => {
       if (!state) {
         throw new Error('No state');
@@ -124,6 +124,9 @@ const useCreateVault = (
     },
     {
       onError: (error) => {
+        if (error.message.includes('Request rejected')) {
+          return;
+        }
         Sentry.withScope((scope) => {
           scope.setFingerprint([error.message]);
           Sentry.captureException(error, { tags: { chain, formName, state: JSON.stringify(state) } });

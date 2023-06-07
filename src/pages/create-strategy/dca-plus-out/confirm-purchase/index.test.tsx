@@ -90,7 +90,7 @@ describe('DCA Plus Out confirm page', () => {
 
       await renderTarget();
 
-      const yourDeposit = screen.getByTestId('summary-your-deposit');
+      const yourDeposit = await waitFor(() => screen.getByTestId('summary-your-deposit'));
 
       within(yourDeposit).getByText('30 KUJI');
 

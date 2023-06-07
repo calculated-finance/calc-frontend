@@ -19,6 +19,7 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
 import { SWAP_FEE_WS } from 'src/constants';
+import useFiatPrice from '@hooks/useFiatPrice';
 import Fees from './Fees';
 
 export function WeightedScaleConfirmPage({
@@ -35,6 +36,8 @@ export function WeightedScaleConfirmPage({
   const { state, actions } = useWeightedScaleConfirmForm(formName);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(steps);
+
+  const { price } = useFiatPrice(state?.initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
 
@@ -62,7 +65,7 @@ export function WeightedScaleConfirmPage({
       <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram

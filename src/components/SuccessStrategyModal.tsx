@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import Lottie from 'lottie-react';
 import * as Confetti from '../animations/confetti.json';
+import { Pages } from './Sidebar/Pages';
 
 function ThatsCalculatedThinkingText() {
   return (
@@ -50,9 +51,15 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
               <Text>and removed the emotions from your trades! 💪</Text>
             </Stack>
           </>
-          <Link passHref href={generateStrategyDetailUrl(strategyId as string)}>
-            <Button isLoading={isPageLoading}>View strategy details</Button>
-          </Link>
+          {strategyId ? (
+            <Link passHref href={generateStrategyDetailUrl(strategyId as string)}>
+              <Button isLoading={isPageLoading}>View strategy details</Button>
+            </Link>
+          ) : (
+            <Link passHref href={Pages.Strategies}>
+              <Button isLoading={isPageLoading}>View strategies</Button>
+            </Link>
+          )}
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>
