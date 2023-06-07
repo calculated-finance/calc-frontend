@@ -261,7 +261,7 @@ describe('Detail page', () => {
         mockUseWallet(mockUseStrategy({ vault: mockStrategy({ slippage_tolerance: '0.02' }) }), mockCancelVault());
 
         await renderTarget();
-        await waitFor(() => expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('2.00%'));
+        await waitFor(() => expect(screen.getByTestId('strategy-slippage-tolerance').textContent).toBe('2%'));
       });
       describe('when slippage tolerance is null', () => {
         it('does not render slippage tolerance', async () => {
