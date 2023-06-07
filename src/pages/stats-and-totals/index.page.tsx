@@ -1,11 +1,11 @@
 import 'isomorphic-fetch';
-import { Box, Heading, SimpleGrid, Stack, Text, list } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useContractBalances, { useFeeTakerBalances } from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
-import { SWAP_FEE } from 'src/constants';
+import { SECONDS_IN_A_DAY, SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { Coin } from '@cosmjs/stargate';
@@ -19,9 +19,7 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 
@@ -587,6 +585,70 @@ function Page() {
                 return {
                   x: remainingTimeInDays,
                   label: remainingTimeInDays,
+                };
+              })}
+              labelComponent={<VictoryTooltip />}
+              colorScale={['tomato', 'orange', 'gold', 'cyan']}
+              style={{
+                labels: {
+                  fill: 'white',
+                },
+              }}
+            />
+          </VictoryChart>
+        </Stack>
+        <Stack spacing={4} layerStyle="panel" p={4}>
+          <Heading size="md">Time intervals in days</Heading>
+          <VictoryChart theme={VictoryTheme.material}>
+            <VictoryAxis
+              dependentAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryAxis
+              tickFormat={(tick) => `${tick}`}
+              style={{
+                grid: { stroke: '#F4F5F7', strokeWidth: 0.5 },
+              }}
+            />
+            <VictoryHistogram
+              animate={{
+                duration: 2000,
+                onLoad: { duration: 1000 },
+              }}
+              bins={20}
+              data={allStrategies.filter(isStrategyActive).map((strategy: Strategy) => {
+                if (strategy.time_interval instanceof Object) {
+                  const days = Math.round(strategy.time_interval.custom.seconds / SECONDS_IN_A_DAY);
+                  console.log(days);
+                  return {
+                    x: days,
+                    label: days.toString(),
+                  };
+                }
+                if (strategy.time_interval === 'daily') {
+                  return {
+                    x: 1,
+                    label: '1',
+                  };
+                }
+                if (strategy.time_interval === 'weekly') {
+                  return {
+                    x: 7,
+                    label: '7',
+                  };
+                }
+                if (strategy.time_interval === 'monthly') {
+                  return {
+                    x: 30,
+                    label: '30',
+                  };
+                }
+                return {
+                  x: 0,
+                  label: '0',
                 };
               })}
               labelComponent={<VictoryTooltip />}
