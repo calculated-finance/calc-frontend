@@ -131,9 +131,7 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false}>
-        Choose Funding &amp; Assets
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false} />
       {data?.vault && <TopUpForm strategy={data.vault} />}
     </NewStrategyModal>
   );

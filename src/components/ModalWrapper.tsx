@@ -14,9 +14,7 @@ export function ModalWrapper({
 }) {
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset}>
-        Choose Funding &amp; Assets
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset} />
       <NewStrategyModalBody stepsConfig={stepsConfig} isLoading={isLoading}>
         {children}
       </NewStrategyModalBody>

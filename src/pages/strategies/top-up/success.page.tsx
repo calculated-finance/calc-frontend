@@ -20,9 +20,7 @@ function Success() {
   if (!data) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
-          Top Up Successful
-        </NewStrategyModalHeader>
+        <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps} />
         <NewStrategyModalBody isLoading={isLoading} stepsConfig={topUpSteps}>
           loading
         </NewStrategyModalBody>
@@ -34,9 +32,7 @@ function Success() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps}>
-        Top Up Successful
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={topUpSteps} />
       <NewStrategyModalBody stepsConfig={topUpSteps}>
         <Stack spacing={6} alignItems="center">
           <Image src="/images/congratulations.svg" />

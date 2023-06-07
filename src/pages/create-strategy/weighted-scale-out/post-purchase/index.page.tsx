@@ -36,9 +36,7 @@ function Page() {
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={weightedScaleOutSteps} resetForm={actions.resetAction}>
-            Post Purchase
-          </NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={weightedScaleOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
               <PostPurchaseForm resultingDenom={context?.resultingDenom} />

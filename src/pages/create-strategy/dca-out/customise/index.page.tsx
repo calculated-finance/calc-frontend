@@ -37,9 +37,7 @@ function Page() {
     // TODO: clean this up so we dont need two modal codes
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
-          Customise Strategy
-        </NewStrategyModalHeader>
+        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
         <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
@@ -63,9 +61,7 @@ function Page() {
     >
       {({ values, isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
-            Customise Strategy
-          </NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>

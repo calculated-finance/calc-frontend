@@ -94,9 +94,7 @@ function Page() {
   if (!data?.vault || !chain || !address) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
-          Choose Funding &amp; Assets
-        </NewStrategyModalHeader>
+        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
 
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
           Loading
@@ -117,9 +115,7 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
-        Choose Funding &amp; Assets
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
       <ConfigureForm strategy={data.vault} configureStrategyInitialValues={configureStrategyInitialValues} />
     </NewStrategyModal>
   );

@@ -17,9 +17,7 @@ function Success() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={configureSteps}>
-        Configuration Successful
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={configureSteps} />
       <NewStrategyModalBody stepsConfig={configureSteps}>
         <Stack spacing={6} alignItems="center">
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />

@@ -55,9 +55,7 @@ function Page() {
   const transactionType = TransactionType.Sell;
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
-        Confirm &amp; Sign
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
