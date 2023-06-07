@@ -20,7 +20,7 @@ export const yesNoData: { value: YesNoValues; label: string }[] = [
   },
 ];
 
-function PriceThresholdToggle() {
+function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
   const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -36,7 +36,12 @@ function PriceThresholdToggle() {
           {yesNoData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
-              <RadioCard key={option.label} {...radio}>
+              <RadioCard
+                key={option.label}
+                {...radio}
+                isDisabled={forceOpen}
+                disabledMessage="We currently do not support the removal of price thresholds, please set a suitably high or low value for your purpose"
+              >
                 {option.label}
               </RadioCard>
             );
@@ -51,9 +56,15 @@ type PriceThresholdProps = {
   transactionType: TransactionType;
   initialDenom: Denom;
   resultingDenom: Denom;
+  forceOpen?: boolean;
 };
 
-export default function PriceThreshold({ initialDenom, resultingDenom, transactionType }: PriceThresholdProps) {
+export default function PriceThreshold({
+  initialDenom,
+  resultingDenom,
+  transactionType,
+  forceOpen,
+}: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
 
@@ -69,7 +80,7 @@ export default function PriceThreshold({ initialDenom, resultingDenom, transacti
       <FormLabel>{title}</FormLabel>
       <FormHelperText>{description}</FormHelperText>
       <Stack spacing={3}>
-        <PriceThresholdToggle />
+        <PriceThresholdToggle forceOpen={forceOpen} />
         <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
           <DenomPriceInput
             initialDenom={initialDenom}

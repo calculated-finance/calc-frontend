@@ -82,6 +82,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
               align="center"
               borderRadius="md"
               isDisabled={!option.supported}
+              disabledMessage="Not supported for this strategy"
             >
               {option.label}
             </RadioCard>

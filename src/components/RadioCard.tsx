@@ -1,15 +1,15 @@
 import { Box, Text, useRadio, UseRadioProps, FlexProps, Tooltip } from '@chakra-ui/react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 
-export default function RadioCard(props: UseRadioProps & ChildrenProp & FlexProps) {
-  const { children, borderRadius, isDisabled } = props;
+export default function RadioCard(props: UseRadioProps & ChildrenProp & FlexProps & { disabledMessage?: string }) {
+  const { children, borderRadius, isDisabled, disabledMessage } = props;
   const { getInputProps, getCheckboxProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getCheckboxProps();
 
   return (
-    <Tooltip label={isDisabled ? 'Not supported for this strategy' : ''}>
+    <Tooltip label={isDisabled ? disabledMessage : ''}>
       <Box as="label" {...htmlProps}>
         <input {...input} />
         <Box

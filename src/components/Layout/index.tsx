@@ -82,6 +82,7 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   strategies: { label: 'My strategies', enabled: true },
   'top-up': { label: 'Top up strategy', enabled: false },
   configure: { label: 'Configure strategy', enabled: false },
+  customise: { label: 'Customise strategy', enabled: false },
 };
 
 function FlowBreadcrumbs() {
