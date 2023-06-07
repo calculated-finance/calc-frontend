@@ -39,6 +39,7 @@ export default function SwapMultiplier({
   const [{ value: basePrice }] = useField({ name: 'basePriceValue' });
   const [{ value: basePriceIsCurrentPrice }] = useField({ name: 'basePriceIsCurrentPrice' });
   const [{ value: priceThresholdValue }] = useField({ name: 'priceThresholdValue' });
+  const [{ value: advancedSettings }] = useField({ name: 'advancedSettings' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -68,10 +69,10 @@ export default function SwapMultiplier({
 
       <WeightSummary
         transactionType={transactionType}
-        applyMultiplier={applyMultiplier}
+        applyMultiplier={advancedSettings && applyMultiplier}
         swapMultiplier={value}
         swapAmount={swapAmount || swapAmountInjected}
-        basePrice={basePriceIsCurrentPrice === YesNoValues.No ? basePrice : null}
+        basePrice={basePriceIsCurrentPrice === YesNoValues.No && advancedSettings ? basePrice : null}
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}
         priceThresholdValue={priceThresholdValue}
