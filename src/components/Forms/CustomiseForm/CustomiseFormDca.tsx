@@ -45,7 +45,7 @@ export function CustomiseFormDca({
             <AdvancedSettingsSwitch />
             <TriggerForm transactionType={transactionType} formName={formName} />
             <ExecutionInterval />
-            <SwapAmount step1State={step1} />
+            <SwapAmount step1State={step1} isSell={transactionType === TransactionType.Sell} />
             <CollapseWithRender isOpen={values.advancedSettings}>
               <PriceThreshold
                 initialDenom={step1.initialDenom}
