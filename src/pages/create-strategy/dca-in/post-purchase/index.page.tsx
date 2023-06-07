@@ -7,7 +7,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { FormNames } from '@hooks/useFormStore';
 

@@ -8,7 +8,7 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 

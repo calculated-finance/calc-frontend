@@ -1,30 +1,20 @@
-import { Box, Stack, Collapse } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import { useStep2Form } from 'src/hooks/useDcaInForm';
 import useValidation from '@hooks/useValidation';
-import Submit from '@components/Submit';
-import DcaDiagram from '@components/DcaDiagram';
-import PriceThreshold from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import ExecutionInterval from '@components/ExecutionInterval';
 import { DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
-import SlippageTolerance from '@components/SlippageTolerance';
-import { TriggerForm } from '@components/TriggerForm';
 import { InvalidData } from '@components/InvalidData';
-import SwapAmount from '@components/SwapAmount';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames } from '@hooks/useFormStore';
+import { CustomiseFormDca } from '@components/Forms/CustomiseForm/CustomiseFormDca';
 
 function Page() {
   const { actions, state } = useStep2Form(FormNames.DcaOut);
 
-  const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType: StrategyTypes.DCAOut });
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
 
@@ -38,7 +28,7 @@ function Page() {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
-        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading}>
+        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={false}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
       </NewStrategyModal>
@@ -59,35 +49,13 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ values, isSubmitting }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
-          <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !isSubmitting}>
-            <Form autoComplete="off">
-              <Stack direction="column" spacing={4}>
-                <DcaDiagram
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
-                  initialDeposit={state.step1.initialDeposit}
-                />
-                <AdvancedSettingsSwitch />
-                <TriggerForm transactionType={TransactionType.Sell} formName={FormNames.DcaOut} />
-                <ExecutionInterval />
-                <SwapAmount step1State={state.step1} isSell />
-                <Collapse in={values.advancedSettings}>
-                  <Box m="px">
-                    <Stack spacing={4}>
-                      <PriceThreshold transactionType={TransactionType.Sell} formName={FormNames.DcaOut} />
-                      <SlippageTolerance />
-                    </Stack>
-                  </Box>
-                </Collapse>
-                <Submit>Next</Submit>
-              </Stack>
-            </Form>
-          </NewStrategyModalBody>
-        </NewStrategyModal>
-      )}
+      <CustomiseFormDca
+        steps={dcaOutSteps}
+        resetAction={actions.resetAction}
+        step1={state.step1}
+        formName={FormNames.DcaOut}
+        transactionType={TransactionType.Sell}
+      />
     </Formik>
   );
 }

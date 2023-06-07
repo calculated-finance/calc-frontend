@@ -9,8 +9,8 @@ import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
 import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormData';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.WeightedScaleOut);

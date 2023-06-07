@@ -8,7 +8,7 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
 import dcaOutSteps from '@formConfig/dcaOut';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
 
 function Page() {

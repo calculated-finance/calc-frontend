@@ -8,7 +8,7 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { useWeightedScaleInFormPostPurchase } from '@hooks/useWeightedScaleForm';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormData';
 

@@ -8,13 +8,13 @@ import useStrategy from '@hooks/useStrategy';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
 import { getStrategyResultingDenom } from '@helpers/strategy';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { getExistingValues } from './getExistingValues';
 
 export const configureSteps: StepConfig[] = [
