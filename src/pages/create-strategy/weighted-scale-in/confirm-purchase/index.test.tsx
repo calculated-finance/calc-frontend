@@ -56,6 +56,8 @@ const mockStateMachine = {
       basePriceIsCurrentPrice: YesNoValues.No,
       basePriceValue: 1,
       executionInterval: 'daily',
+      executionIntervalIncrement: 1,
+
       slippageTolerance: 0.01,
     },
   },
@@ -121,20 +123,7 @@ describe('Confirm page', () => {
       const executeMsg = {
         create_vault: {
           label: '',
-          time_interval: 'daily',
-          target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
-          swap_amount: '1000000',
-          slippage_tolerance: '0.0001',
-          swap_adjustment_strategy: {
-            weighted_scale: { base_receive_amount: '1000000', increase_only: false, multiplier: '1' },
-          },
-        },
-      };
-
-      const json = {
-        create_vault: {
-          label: '',
-          time_interval: 'daily',
+          time_interval: { custom: { seconds: 86400 } },
           target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
           swap_amount: '1000000',
           slippage_tolerance: '0.0001',

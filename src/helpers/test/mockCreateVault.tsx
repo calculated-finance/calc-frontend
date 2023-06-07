@@ -15,7 +15,7 @@ export function mockStrategy(data?: Partial<Strategy>) {
 const defaultExecuteMsg: ExecuteMsg = {
   create_vault: {
     label: '',
-    time_interval: 'daily',
+    time_interval: { custom: { seconds: 86400 } },
     target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
     swap_amount: '1000000',
     slippage_tolerance: '0.02',

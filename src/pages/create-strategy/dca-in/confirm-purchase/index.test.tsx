@@ -39,6 +39,7 @@ const mockStateMachine = {
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       advancedSettings: false,
       executionInterval: 'daily',
+      executionIntervalIncrement: 1,
       priceThresholdEnabled: YesNoValues.No,
       priceThresholdValue: null,
       purchaseTime: '',
@@ -107,7 +108,7 @@ describe('DCA In confirm page', () => {
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('NBTC');
-      within(theSwap).getByText('day');
+      within(theSwap).getByText('1 cycle');
       within(theSwap).getByText('1 day');
     });
   });
