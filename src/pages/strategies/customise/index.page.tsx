@@ -16,11 +16,9 @@ import {
   getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
-  getStrategyExecutionInterval,
   getStrategyExecutionIntervalData,
   getStrategyInitialDenom,
   getStrategyResultingDenom,
-  getStrategySlippageTolerance,
   isBuyStrategy,
 } from '@helpers/strategy';
 import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
@@ -29,7 +27,6 @@ import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
 import Submit from '@components/Submit';
 import YesNoValues from '@models/YesNoValues';
-import { getExecutionInterval } from '@hooks/useCreateVault/buildCreateVaultParams';
 import DcaDiagram from '@components/DcaDiagram';
 import { CustomiseSchemaDca, customiseSchemaDca } from './CustomiseSchemaDca';
 
