@@ -21,11 +21,13 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames } from '@hooks/useFormStore';
+import useFiatPrice from '@hooks/useFiatPrice';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
+  const { price } = useFiatPrice(state?.initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
@@ -56,7 +58,7 @@ function Page() {
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram

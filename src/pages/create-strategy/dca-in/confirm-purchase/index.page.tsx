@@ -20,10 +20,12 @@ import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
+import useFiatPrice from '@hooks/useFiatPrice';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
+  const { price } = useFiatPrice(state?.initialDenom);
   const { nextStep, goToStep } = useSteps(steps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
@@ -54,7 +56,7 @@ function Page() {
       <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
         Confirm &amp; Sign
       </NewStrategyModalHeader>
-      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
+      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
