@@ -53,9 +53,7 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
-        Confirm &amp; Sign
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>

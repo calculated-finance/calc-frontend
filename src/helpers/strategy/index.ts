@@ -71,7 +71,10 @@ export function getStrategyResultingDenom(strategy: Strategy): Denom {
   return strategy.received_amount.denom;
 }
 
-export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
+export function getStrategyExecutionIntervalData(strategy: Strategy | StrategyOsmosis): {
+  timeInterval: ExecutionIntervals;
+  timeIncrement: number | undefined;
+} {
   if (strategy.time_interval instanceof Object) {
     const { custom } = strategy.time_interval;
 
@@ -82,22 +85,58 @@ export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosi
 
     if (custom) {
       if (custom.seconds % SECONDS_IN_A_WEEK === 0) {
-        return `${weeks} Week`;
+        return {
+          timeInterval: 'weekly',
+          timeIncrement: weeks,
+        };
       }
       if (custom.seconds % SECONDS_IN_A_DAY === 0) {
-        return `${days} Day`;
+        return {
+          timeInterval: 'daily',
+          timeIncrement: days,
+        };
       }
       if (custom.seconds % SECONDS_IN_A_HOUR === 0) {
-        return `${hours} Hour`;
+        return {
+          timeInterval: 'hourly',
+          timeIncrement: hours,
+        };
       }
       if (custom.seconds % SECONDS_IN_A_MINUTE === 0) {
-        return `${minutes} Minute`;
+        return {
+          timeInterval: 'minute',
+          timeIncrement: minutes,
+        };
       }
     }
   }
   const { time_interval } = strategy as Strategy;
 
-  return executionIntervalLabel[time_interval as ExecutionIntervals];
+  return {
+    timeInterval: time_interval as ExecutionIntervals,
+    timeIncrement: undefined,
+  };
+}
+
+export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
+  const { timeInterval, timeIncrement } = getStrategyExecutionIntervalData(strategy);
+
+  if (timeIncrement) {
+    if (timeInterval === 'weekly') {
+      return `${timeIncrement} Week`;
+    }
+    if (timeInterval === 'daily') {
+      return `${timeIncrement} Day`;
+    }
+    if (timeInterval === 'hourly') {
+      return `${timeIncrement} Hour`;
+    }
+    if (timeInterval === 'minute') {
+      return `${timeIncrement} Minute`;
+    }
+  }
+
+  return executionIntervalLabel[timeInterval];
 }
 
 export function getStrategyName(strategy: Strategy) {
@@ -110,7 +149,13 @@ export function getStrategyName(strategy: Strategy) {
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
-  return strategy.slippage_tolerance ? `${(parseFloat(strategy.slippage_tolerance) * 100).toFixed(2)}%` : '-';
+  const { slippage_tolerance } = strategy;
+  return slippage_tolerance ? (Number(slippage_tolerance) * 100).toFixed(2) : undefined;
+}
+
+export function getSlippageToleranceFormatted(strategy: Strategy) {
+  const slippageTolerance = getSlippageTolerance(strategy);
+  return slippageTolerance ? `${getSlippageTolerance(strategy)}%` : '-';
 }
 
 export function getSwapAmount(strategy: Strategy | StrategyOsmosis) {

@@ -62,9 +62,7 @@ export function WeightedScaleConfirmPage({
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-        Confirm &amp; Sign
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <Stack spacing={4}>

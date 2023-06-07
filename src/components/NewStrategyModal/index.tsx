@@ -104,7 +104,12 @@ export function NewStrategyModalHeader({
   finalStep = true,
   stepsConfig,
   showStepper = true,
-}: { resetForm?: () => void; finalStep?: boolean; stepsConfig: StepConfig[]; showStepper?: boolean } & ChildrenProp) {
+}: {
+  resetForm?: () => void;
+  finalStep?: boolean;
+  stepsConfig: StepConfig[];
+  showStepper?: boolean;
+}) {
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
   const { connected } = useWallet();

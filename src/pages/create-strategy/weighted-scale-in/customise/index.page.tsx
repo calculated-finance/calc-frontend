@@ -57,9 +57,7 @@ export function WeightedScaleCustomisePage({
   if (!state) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-          Customise Strategy
-        </NewStrategyModalHeader>
+        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
         <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
@@ -84,9 +82,7 @@ export function WeightedScaleCustomisePage({
     >
       {({ isSubmitting, values }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction}>
-            Customise Strategy
-          </NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
@@ -111,7 +107,11 @@ export function WeightedScaleCustomisePage({
                     <Stack spacing={4}>
                       <ApplyMultiplier transactionType={transactionType} />
                       <BasePrice formName={formName} transactionType={transactionType} />
-                      <PriceThreshold transactionType={transactionType} formName={formName} />
+                      <PriceThreshold
+                        initialDenom={state.step1.initialDenom}
+                        resultingDenom={state.step1.resultingDenom}
+                        transactionType={transactionType}
+                      />
                       <SlippageTolerance />
                     </Stack>
                   </Box>

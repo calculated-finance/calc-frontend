@@ -32,7 +32,7 @@ import {
   isStrategyCancelled,
   getStrategyName,
   getStrategyEndDate,
-  getSlippageTolerance,
+  getSlippageToleranceFormatted,
   getPriceCeilingFloor,
   getConvertedSwapAmount,
   isStrategyAutoStaking,
@@ -55,6 +55,8 @@ import { isNil } from 'lodash';
 import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
+import { useAdmin } from '@hooks/useAdmin';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -150,13 +152,32 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const { data: events } = useStrategyEvents(strategy.id);
 
+  const { isAdmin } = useAdmin();
+
+  const showEditButton =
+    isAdmin &&
+    (getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAOut) &&
+    !isStrategyCancelled(strategy);
+
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
       <Stack spacing={6}>
         <Box>
-          <Heading pb={4} size="md">
-            Strategy details
-          </Heading>
+          <HStack align="center" pb={4}>
+            <Heading size="md">Strategy details</Heading>
+            {showEditButton && (
+              <Link href={generateStrategyCustomiseUrl(strategy.id)}>
+                <Button
+                  size="xs"
+                  variant="ghost"
+                  colorScheme="brand"
+                  leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                >
+                  Edit
+                </Button>
+              </Link>
+            )}
+          </HStack>
           <Box px={8} py={6} layerStyle="panel">
             <Grid templateColumns="repeat(3, 1fr)" gap={3} alignItems="center">
               <GridItem colSpan={1}>
@@ -239,7 +260,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </GridItem>
                   <GridItem colSpan={2}>
                     <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
-                      {getSlippageTolerance(strategy)}
+                      {getSlippageToleranceFormatted(strategy)}
                     </Text>
                   </GridItem>
                 </>

@@ -19,7 +19,7 @@ function Success() {
       <NewStrategyModalBody stepsConfig={configureSteps}>
         <Stack spacing={6} alignItems="center">
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />
-          <Text textAlign="center">Strategy destination updated.</Text>
+          <Text textAlign="center">Post-swap action updated.</Text>
           <Divider />
           <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>

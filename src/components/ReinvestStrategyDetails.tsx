@@ -9,7 +9,7 @@ import {
   getStrategyStartDate,
   isStrategyCancelled,
   getStrategyName,
-  getSlippageTolerance,
+  getSlippageToleranceFormatted,
   getPriceCeilingFloor,
   getStrategyExecutionInterval,
   isBuyStrategy,
@@ -97,7 +97,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
-                  {getSlippageTolerance(strategy)}
+                  {getSlippageToleranceFormatted(strategy)}
                 </Text>
               </GridItem>
             </>

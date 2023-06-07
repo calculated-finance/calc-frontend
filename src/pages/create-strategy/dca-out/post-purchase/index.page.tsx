@@ -8,7 +8,7 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
 import dcaOutSteps from '@formConfig/dcaOut';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
 
 function Page() {
@@ -35,9 +35,7 @@ function Page() {
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction}>
-            Post Purchase
-          </NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
               <PostPurchaseForm resultingDenom={context?.resultingDenom} />

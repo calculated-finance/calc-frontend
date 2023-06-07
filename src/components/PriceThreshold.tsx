@@ -1,9 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
-import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
-import { FormNames } from '@hooks/useFormStore';
+import { Denom } from '@models/Denom';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -21,7 +20,7 @@ export const yesNoData: { value: YesNoValues; label: string }[] = [
   },
 ];
 
-function PriceThresholdToggle() {
+function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
   const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -37,7 +36,12 @@ function PriceThresholdToggle() {
           {yesNoData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
-              <RadioCard key={option.label} {...radio}>
+              <RadioCard
+                key={option.label}
+                {...radio}
+                isDisabled={forceOpen}
+                disabledMessage="We currently do not support the removal of price thresholds, please set a suitably high or low value for your purpose"
+              >
                 {option.label}
               </RadioCard>
             );
@@ -49,18 +53,20 @@ function PriceThresholdToggle() {
 }
 
 type PriceThresholdProps = {
-  formName: FormNames;
   transactionType: TransactionType;
+  initialDenom: Denom;
+  resultingDenom: Denom;
+  forceOpen?: boolean;
 };
 
-export default function PriceThreshold({ formName, transactionType }: PriceThresholdProps) {
+export default function PriceThreshold({
+  initialDenom,
+  resultingDenom,
+  transactionType,
+  forceOpen,
+}: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
-  const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
-
-  if (!state) {
-    return null;
-  }
 
   const title = transactionType === 'buy' ? 'Set buy price ceiling?' : 'Set sell price floor?';
 
@@ -74,11 +80,11 @@ export default function PriceThreshold({ formName, transactionType }: PriceThres
       <FormLabel>{title}</FormLabel>
       <FormHelperText>{description}</FormHelperText>
       <Stack spacing={3}>
-        <PriceThresholdToggle />
+        <PriceThresholdToggle forceOpen={forceOpen} />
         <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
           <DenomPriceInput
-            initialDenom={state.step1.initialDenom}
-            resultingDenom={state.step1.resultingDenom}
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}

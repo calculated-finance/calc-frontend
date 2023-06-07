@@ -80,7 +80,9 @@ describe('Configure page', () => {
 
     await renderTarget();
 
-    expect(within(screen.getByTestId('strategy-modal-header')).getByText('Configure Strategy')).toBeInTheDocument();
+    expect(
+      within(screen.getByTestId('strategy-modal-header')).getByText('Configure Strategy Destination'),
+    ).toBeInTheDocument();
   });
   describe('when submitted', () => {
     it('should successfully update', async () => {

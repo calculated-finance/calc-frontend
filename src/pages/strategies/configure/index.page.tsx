@@ -8,19 +8,19 @@ import useStrategy from '@hooks/useStrategy';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
 import { getStrategyResultingDenom } from '@helpers/strategy';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { getExistingValues } from './getExistingValues';
 
 export const configureSteps: StepConfig[] = [
   {
     href: '/strategies/configure',
-    title: 'Configure Strategy',
+    title: 'Configure Strategy Destination',
   },
   {
     href: '/strategies/configure/success',
@@ -94,9 +94,7 @@ function Page() {
   if (!data?.vault || !chain || !address) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
-          Choose Funding &amp; Assets
-        </NewStrategyModalHeader>
+        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
 
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
           Loading
@@ -117,9 +115,7 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false}>
-        Choose Funding &amp; Assets
-      </NewStrategyModalHeader>
+      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
       <ConfigureForm strategy={data.vault} configureStrategyInitialValues={configureStrategyInitialValues} />
     </NewStrategyModal>
   );

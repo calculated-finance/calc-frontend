@@ -23,11 +23,11 @@ import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useWallet } from '@hooks/useWallet';
-import RadioCard from './RadioCard';
-import Radio from './Radio';
-import { PostPurchaseOptions } from '../models/PostPurchaseOptions';
-import GenerateYield from './GenerateYield';
-import { Reinvest } from './Reinvest';
+import RadioCard from '../../RadioCard';
+import Radio from '../../Radio';
+import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
+import GenerateYield from '../../GenerateYield';
+import { Reinvest } from '../../Reinvest';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -82,6 +82,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
               align="center"
               borderRadius="md"
               isDisabled={!option.supported}
+              disabledMessage="Not supported for this strategy"
             >
               {option.label}
             </RadioCard>

@@ -9,8 +9,8 @@ import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
 import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormData';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import { PostPurchaseForm } from '@components/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
+import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.WeightedScaleOut);
@@ -36,9 +36,7 @@ function Page() {
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={weightedScaleOutSteps} resetForm={actions.resetAction}>
-            Post Purchase
-          </NewStrategyModalHeader>
+          <NewStrategyModalHeader stepsConfig={weightedScaleOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             {state ? (
               <PostPurchaseForm resultingDenom={context?.resultingDenom} />

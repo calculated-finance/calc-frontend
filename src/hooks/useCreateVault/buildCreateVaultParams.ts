@@ -91,7 +91,7 @@ function getOsmosisReceiveAmount(
   return Math.floor(scaledReceiveAmount).toString();
 }
 
-function getMinimumReceiveAmount(
+export function getMinimumReceiveAmount(
   initialDenom: Denom,
   swapAmount: number,
   priceThresholdValue: number | null | undefined,
@@ -116,7 +116,10 @@ function getMinimumReceiveAmount(
   );
 }
 
-function getSlippageTolerance(advancedSettings: boolean | undefined, slippageTolerance: number | null | undefined) {
+export function getSlippageTolerance(
+  advancedSettings: boolean | undefined,
+  slippageTolerance: number | null | undefined,
+) {
   return advancedSettings && slippageTolerance
     ? getSlippageWithoutTrailingZeros(slippageTolerance)
     : getSlippageWithoutTrailingZeros(initialValues.slippageTolerance);
