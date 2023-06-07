@@ -20,7 +20,7 @@ import { getExistingValues } from './getExistingValues';
 export const configureSteps: StepConfig[] = [
   {
     href: '/strategies/configure',
-    title: 'Configure Strategy',
+    title: 'Configure Strategy Destination',
   },
   {
     href: '/strategies/configure/success',

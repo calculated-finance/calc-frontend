@@ -56,6 +56,7 @@ import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWei
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
 import { useAdmin } from '@hooks/useAdmin';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -155,7 +156,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const showEditButton =
     isAdmin &&
-    (getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAIn) &&
+    (getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAOut) &&
     !isStrategyCancelled(strategy);
 
   return (
@@ -165,7 +166,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <HStack align="center" pb={4}>
             <Heading size="md">Strategy details</Heading>
             {showEditButton && (
-              <Link href={generateStrategyTopUpUrl(strategy.id)}>
+              <Link href={generateStrategyCustomiseUrl(strategy.id)}>
                 <Button
                   size="xs"
                   variant="ghost"
