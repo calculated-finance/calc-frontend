@@ -37,7 +37,7 @@ function getUpdateVaultMessage({ values, initialValues, context, strategy }: Con
   const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
   const isSlippageToleranceDirty = values.slippageTolerance !== initialValues.slippageTolerance;
   const isTimeIntervalDirty =
-    values.executionInterval !== initialValues.executionInterval &&
+    values.executionInterval !== initialValues.executionInterval ||
     values.executionIntervalIncrement !== initialValues.executionIntervalIncrement;
 
   const updateVaultMsg = {

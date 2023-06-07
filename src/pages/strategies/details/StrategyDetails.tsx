@@ -32,7 +32,7 @@ import {
   isStrategyCancelled,
   getStrategyName,
   getStrategyEndDate,
-  getSlippageTolerance,
+  getSlippageToleranceFormatted,
   getPriceCeilingFloor,
   getConvertedSwapAmount,
   isStrategyAutoStaking,
@@ -260,7 +260,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </GridItem>
                   <GridItem colSpan={2}>
                     <Text fontSize="sm" data-testid="strategy-slippage-tolerance">
-                      {getSlippageTolerance(strategy)}
+                      {getSlippageToleranceFormatted(strategy)}
                     </Text>
                   </GridItem>
                 </>

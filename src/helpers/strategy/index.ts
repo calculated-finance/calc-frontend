@@ -149,7 +149,13 @@ export function getStrategyName(strategy: Strategy) {
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
-  return strategy.slippage_tolerance ? `${(parseFloat(strategy.slippage_tolerance) * 100).toFixed(2)}%` : '-';
+  const { slippage_tolerance } = strategy;
+  return slippage_tolerance ? (Number(slippage_tolerance) * 100).toFixed(2) : undefined;
+}
+
+export function getSlippageToleranceFormatted(strategy: Strategy) {
+  const slippageTolerance = getSlippageTolerance(strategy);
+  return slippageTolerance ? `${getSlippageTolerance(strategy)}%` : '-';
 }
 
 export function getSwapAmount(strategy: Strategy | StrategyOsmosis) {
@@ -395,9 +401,4 @@ export function getAverageSellPrice(strategy: Vault, dexFee: number) {
 
 export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
-}
-
-export function getStrategySlippageTolerance(strategy: Strategy) {
-  const { slippage_tolerance } = strategy;
-  return Number(slippage_tolerance);
 }

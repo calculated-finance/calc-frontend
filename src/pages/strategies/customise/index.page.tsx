@@ -15,6 +15,7 @@ import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
 import {
   getConvertedSwapAmount,
   getPriceCeilingFloor,
+  getSlippageTolerance,
   getStrategyExecutionInterval,
   getStrategyExecutionIntervalData,
   getStrategyInitialDenom,
@@ -140,7 +141,7 @@ function Page() {
     advancedSettings: true,
     executionInterval: timeInterval,
     executionIntervalIncrement: timeIncrement || 1,
-    slippageTolerance: getStrategySlippageTolerance(strategy),
+    slippageTolerance: getSlippageTolerance(strategy),
     priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
     priceThresholdValue: priceThreshold,
   };
