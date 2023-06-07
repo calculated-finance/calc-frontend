@@ -7,7 +7,7 @@ import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
-import { initialValues } from '@models/DcaInFormData';
+import { initialValues as globalInitialValues } from '@models/DcaInFormData';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
@@ -22,13 +22,14 @@ import {
   getStrategySlippageTolerance,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { Stack, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
 import ExecutionInterval from '@components/ExecutionInterval';
 import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
 import Submit from '@components/Submit';
 import YesNoValues from '@models/YesNoValues';
 import { getExecutionInterval } from '@hooks/useCreateVault/buildCreateVaultParams';
+import DcaDiagram from '@components/DcaDiagram';
 import { CustomiseSchemaDca, customiseSchemaDca } from './CustomiseSchemaDca';
 
 export const configureSteps: StepConfig[] = [
@@ -45,13 +46,7 @@ export const configureSteps: StepConfig[] = [
   },
 ];
 
-function CustomiseForm({
-  strategy,
-  configureStrategyInitialValues,
-}: {
-  strategy: Strategy;
-  configureStrategyInitialValues: CustomiseSchemaDca;
-}) {
+function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchemaDca }) {
   const { nextStep } = useSteps(configureSteps);
 
   const { mutate, error, isError, isLoading } = useCustomiseStrategy();
@@ -59,10 +54,22 @@ function CustomiseForm({
   const validationSchema = customiseSchemaDca;
   const { isPageLoading } = usePageLoad();
 
+  const resultingDenom = getStrategyResultingDenom(strategy);
+  const initialDenom = getStrategyInitialDenom(strategy);
+
+  const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
+
+  const context = {
+    initialDenom,
+    swapAmount: getConvertedSwapAmount(strategy),
+    resultingDenom,
+    transactionType,
+  };
+
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
     const validatedValues = customiseSchemaDca.cast(values, { stripUnknown: true });
     return mutate(
-      { values: validatedValues as CustomiseSchemaDca, strategy },
+      { values: validatedValues as CustomiseSchemaDca, strategy, context, initialValues },
       {
         onSuccess: async () => {
           await nextStep({
@@ -76,21 +83,18 @@ function CustomiseForm({
     );
   };
 
-  const resultingDenom = getStrategyResultingDenom(strategy);
-  const initialDenom = getStrategyInitialDenom(strategy);
-
-  const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
-
   return (
-    <Formik initialValues={configureStrategyInitialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
       <NewStrategyModal>
         <NewStrategyModalHeader stepsConfig={configureSteps} />
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading && !isLoading}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={4}>
+              <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+              <Divider />
               <ExecutionInterval />
               <PriceThreshold
-                forceOpen={configureStrategyInitialValues.priceThresholdEnabled === YesNoValues.Yes}
+                forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                 resultingDenom={resultingDenom}
                 initialDenom={initialDenom}
                 transactionType={transactionType}
@@ -142,11 +146,11 @@ function Page() {
   };
 
   const castValues = {
-    ...customiseSchemaDca.cast(initialValues, { stripUnknown: true }),
+    ...customiseSchemaDca.cast(globalInitialValues, { stripUnknown: true }),
     ...customiseSchemaDca.cast(existingValues, { stripUnknown: true }),
   } as CustomiseSchemaDca;
 
-  return <CustomiseForm strategy={strategy} configureStrategyInitialValues={castValues} />;
+  return <CustomiseForm strategy={strategy} initialValues={castValues} />;
 }
 
 Page.getLayout = getFlowLayout;
