@@ -39,18 +39,14 @@ function BasePriceToggle() {
 }
 
 type BasePriceProps = {
-  formName: FormNames;
+  initialDenom: string;
+  resultingDenom: string;
   transactionType: TransactionType;
 };
 
-export default function BasePrice({ formName, transactionType }: BasePriceProps) {
+export default function BasePrice({ initialDenom, resultingDenom, transactionType }: BasePriceProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'basePriceValue' });
-  const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'basePriceIsCurrentPrice' });
-
-  if (!state) {
-    return null;
-  }
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
@@ -59,8 +55,8 @@ export default function BasePrice({ formName, transactionType }: BasePriceProps)
         <BasePriceToggle />
         <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.No}>
           <DenomPriceInput
-            initialDenom={state.step1.initialDenom}
-            resultingDenom={state.step1.resultingDenom}
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}

@@ -15,6 +15,7 @@ import { Strategy } from './useStrategies';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';
 import {
+  buildWeightedScaleAdjustmentStrategy,
   getExecutionInterval,
   getMinimumReceiveAmount,
   getSlippageTolerance,
@@ -29,6 +30,7 @@ type ConfigureVariables = {
     swapAmount: number;
     resultingDenom: string;
     transactionType: TransactionType;
+    currentPrice: number | undefined;
   };
   strategy: Strategy;
 };
@@ -39,6 +41,16 @@ function getUpdateVaultMessage({ values, initialValues, context, strategy }: Con
   const isTimeIntervalDirty =
     values.executionInterval !== initialValues.executionInterval ||
     values.executionIntervalIncrement !== initialValues.executionIntervalIncrement;
+
+  if (context.currentPrice === undefined) {
+    throw new Error('Unable to get current price. Please try again.');
+  }
+
+  const isWeightedScaleDirty =
+    values.applyMultiplier !== initialValues.applyMultiplier ||
+    values.basePriceIsCurrentPrice !== initialValues.basePriceIsCurrentPrice ||
+    values.swapMultiplier !== initialValues.swapMultiplier ||
+    values.applyMultiplier !== initialValues.applyMultiplier;
 
   const updateVaultMsg = {
     update_vault: {
@@ -55,6 +67,18 @@ function getUpdateVaultMessage({ values, initialValues, context, strategy }: Con
       slippage_tolerance: isSlippageToleranceDirty ? getSlippageTolerance(true, values.slippageTolerance) : undefined,
       time_interval: isTimeIntervalDirty
         ? getExecutionInterval(values.executionInterval, values.executionIntervalIncrement)
+        : undefined,
+      swap_adjustment_strategy: isWeightedScaleDirty
+        ? buildWeightedScaleAdjustmentStrategy(
+            context.initialDenom,
+            context.swapAmount,
+            values.basePriceValue,
+            context.resultingDenom,
+            context.transactionType,
+            values.applyMultiplier,
+            values.swapMultiplier,
+            context.currentPrice,
+          )
         : undefined,
     },
   } as ExecuteMsg;

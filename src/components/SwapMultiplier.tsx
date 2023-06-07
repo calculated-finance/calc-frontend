@@ -24,10 +24,12 @@ export default function SwapMultiplier({
   initialDenom,
   resultingDenom,
   transactionType,
+  swapAmountInjected,
 }: {
   initialDenom: Denom;
   resultingDenom: Denom;
   transactionType: TransactionType;
+  swapAmountInjected?: number;
 }) {
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
 
@@ -44,7 +46,7 @@ export default function SwapMultiplier({
       <FormHelperText fontSize="xs">Your swap amount will be calculated as:</FormHelperText>
       <Flex justify="center">
         <Code bg="abyss.200" color="white" borderRadius="md" p={1}>
-          {swapAmount || 0} {getDenomName(initialDenom)} &times; (1 - price delta &times; {value})
+          {swapAmount || swapAmountInjected || 0} {getDenomName(initialDenom)} &times; (1 - price delta &times; {value})
         </Code>
       </Flex>
       <Flex textStyle="body-xs">
@@ -68,7 +70,7 @@ export default function SwapMultiplier({
         transactionType={transactionType}
         applyMultiplier={applyMultiplier}
         swapMultiplier={value}
-        swapAmount={swapAmount}
+        swapAmount={swapAmount || swapAmountInjected}
         basePrice={basePriceIsCurrentPrice === YesNoValues.No ? basePrice : null}
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}

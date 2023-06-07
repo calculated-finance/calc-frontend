@@ -154,10 +154,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const { isAdmin } = useAdmin();
 
-  const showEditButton =
-    isAdmin &&
-    (getStrategyType(strategy) === StrategyTypes.DCAIn || getStrategyType(strategy) === StrategyTypes.DCAOut) &&
-    !isStrategyCancelled(strategy);
+  const showEditButton = isAdmin && !isStrategyCancelled(strategy);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>

@@ -13,6 +13,7 @@ import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
 import {
+  getBasePrice,
   getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
@@ -21,13 +22,22 @@ import {
   getStrategyResultingDenom,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
+import { Stack, FormControl, FormErrorMessage, Divider, Box } from '@chakra-ui/react';
 import ExecutionInterval from '@components/ExecutionInterval';
 import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
 import Submit from '@components/Submit';
 import YesNoValues from '@models/YesNoValues';
 import DcaDiagram from '@components/DcaDiagram';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import SwapMultiplier from '@components/SwapMultiplier';
+import ApplyMultiplier from '@components/ApplyMultiplier';
+import BasePrice from '@components/BasePrice';
+import StrategyDuration from '@components/StrategyDuration';
+import usePrice from '@hooks/usePrice';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
+import { CollapseWithRender } from '@components/CollapseWithRender';
 import { CustomiseSchemaDca, customiseSchemaDca } from './CustomiseSchemaDca';
 
 export const configureSteps: StepConfig[] = [
@@ -57,11 +67,14 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+
   const context = {
     initialDenom,
     swapAmount: getConvertedSwapAmount(strategy),
     resultingDenom,
     transactionType,
+    currentPrice: price,
   };
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
@@ -83,29 +96,66 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-      <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} />
-        <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading && !isLoading}>
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={4}>
-              <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-              <Divider />
-              <ExecutionInterval />
-              <PriceThreshold
-                forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
-                resultingDenom={resultingDenom}
-                initialDenom={initialDenom}
-                transactionType={transactionType}
-              />
-              <SlippageTolerance />
-              <FormControl isInvalid={isError}>
-                <Submit disabledUnlessDirty>Confirm</Submit>
-                <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
-              </FormControl>
-            </Stack>
-          </Form>
-        </NewStrategyModalBody>
-      </NewStrategyModal>
+      {({ values }) => (
+        <NewStrategyModal>
+          <NewStrategyModalHeader stepsConfig={configureSteps} />
+          <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading && !isLoading}>
+            <Form autoComplete="off">
+              <Stack direction="column" spacing={4}>
+                <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                <Divider />
+                {!isDcaPlus(strategy) && <AdvancedSettingsSwitch />}
+
+                {!isDcaPlus(strategy) && !isWeightedScale(strategy) && (
+                  <>
+                    <ExecutionInterval />
+                    <CollapseWithRender isOpen={values.advancedSettings}>
+                      <PriceThreshold
+                        forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
+                        resultingDenom={resultingDenom}
+                        initialDenom={initialDenom}
+                        transactionType={transactionType}
+                      />
+                    </CollapseWithRender>
+                  </>
+                )}
+                {isWeightedScale(strategy) && (
+                  <>
+                    <ExecutionInterval />
+                    <SwapMultiplier
+                      initialDenom={initialDenom}
+                      resultingDenom={resultingDenom}
+                      transactionType={transactionType}
+                      swapAmountInjected={context.swapAmount}
+                    />
+                    <CollapseWithRender isOpen={values.advancedSettings}>
+                      <ApplyMultiplier transactionType={transactionType} />
+                      <BasePrice
+                        initialDenom={initialDenom}
+                        resultingDenom={resultingDenom}
+                        transactionType={transactionType}
+                      />
+                      <PriceThreshold
+                        forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
+                        resultingDenom={resultingDenom}
+                        initialDenom={initialDenom}
+                        transactionType={transactionType}
+                      />
+                    </CollapseWithRender>
+                  </>
+                )}
+                <CollapseWithRender isOpen={values.advancedSettings}>
+                  <SlippageTolerance />
+                </CollapseWithRender>
+                <FormControl isInvalid={isError}>
+                  <Submit disabledUnlessDirty>Confirm</Submit>
+                  <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
+                </FormControl>
+              </Stack>
+            </Form>
+          </NewStrategyModalBody>
+        </NewStrategyModal>
+      )}
     </Formik>
   );
 }
@@ -134,13 +184,25 @@ function Page() {
 
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
 
+  const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
+
+  const slippageTolerance = getSlippageTolerance(strategy);
+
   const existingValues = {
-    advancedSettings: true,
+    advancedSettings:
+      increaseOnly ||
+      priceThreshold ||
+      isDcaPlus(strategy) ||
+      slippageTolerance !== globalInitialValues.slippageTolerance,
     executionInterval: timeInterval,
     executionIntervalIncrement: timeIncrement || 1,
-    slippageTolerance: getSlippageTolerance(strategy),
+    slippageTolerance,
     priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
     priceThresholdValue: priceThreshold,
+    basePriceIsCurrentPrice: YesNoValues.No,
+    basePriceValue: getBasePrice(strategy),
+    swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
+    applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
   };
 
   const castValues = {

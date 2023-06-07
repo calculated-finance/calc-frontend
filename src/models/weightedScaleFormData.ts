@@ -4,21 +4,7 @@ import { allSchema } from './DcaInFormData';
 import YesNoValues from './YesNoValues';
 import { ExecutionIntervals } from './ExecutionIntervals';
 
-export const weightedScaleSchema = Yup.object({
-  resultingDenom: allSchema.resultingDenom,
-  initialDenom: allSchema.initialDenom,
-  initialDeposit: allSchema.initialDeposit,
-  advancedSettings: allSchema.advancedSettings,
-  slippageTolerance: allSchema.slippageTolerance,
-  sendToWallet: allSchema.sendToWallet,
-  recipientAccount: allSchema.recipientAccount,
-  autoStakeValidator: allSchema.autoStakeValidator,
-  postPurchaseOption: allSchema.postPurchaseOption,
-  yieldOption: allSchema.yieldOption,
-  reinvestStrategy: allSchema.reinvestStrategy,
-  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
-  executionIntervalIncrement: allSchema.executionIntervalIncrement,
-  swapAmount: allSchema.swapAmount,
+export const weightedScaleSchemaFields = {
   basePriceIsCurrentPrice: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
     .required()
@@ -43,6 +29,29 @@ export const weightedScaleSchema = Yup.object({
       is: false,
       then: (schema) => schema.transform(() => YesNoValues.Yes),
     }),
+};
+
+export const weightedScaleSchema = Yup.object({
+  resultingDenom: allSchema.resultingDenom,
+  initialDenom: allSchema.initialDenom,
+  initialDeposit: allSchema.initialDeposit,
+  advancedSettings: allSchema.advancedSettings,
+  slippageTolerance: allSchema.slippageTolerance,
+  sendToWallet: allSchema.sendToWallet,
+  recipientAccount: allSchema.recipientAccount,
+  autoStakeValidator: allSchema.autoStakeValidator,
+  postPurchaseOption: allSchema.postPurchaseOption,
+  yieldOption: allSchema.yieldOption,
+  reinvestStrategy: allSchema.reinvestStrategy,
+  executionInterval: Yup.mixed<ExecutionIntervals>().required(),
+  executionIntervalIncrement: allSchema.executionIntervalIncrement,
+  swapAmount: allSchema.swapAmount,
+
+  basePriceIsCurrentPrice: weightedScaleSchemaFields.basePriceIsCurrentPrice,
+  basePriceValue: weightedScaleSchemaFields.basePriceValue,
+  swapMultiplier: weightedScaleSchemaFields.swapMultiplier,
+  applyMultiplier: weightedScaleSchemaFields.applyMultiplier,
+
   startImmediately: allSchema.startImmediately.when('advancedSettings', {
     is: false,
     then: (schema) => schema.transform(() => YesNoValues.Yes),

@@ -244,6 +244,31 @@ export function buildCreateVaultParamsDCA(
   return msg;
 }
 
+export function buildWeightedScaleAdjustmentStrategy(
+  initialDenom: Denom,
+  swapAmount: number,
+  basePriceValue: number | null | undefined,
+  resultingDenom: Denom,
+  transactionType: TransactionType,
+  applyMultiplier: YesNoValues,
+  swapMultiplier: number,
+  currentPrice: number,
+) {
+  return {
+    weighted_scale: {
+      base_receive_amount: getBaseReceiveAmount(
+        initialDenom,
+        swapAmount,
+        basePriceValue || currentPrice,
+        resultingDenom,
+        transactionType,
+      ),
+      increase_only: applyMultiplier === YesNoValues.No,
+      multiplier: swapMultiplier.toString(),
+    },
+  };
+}
+
 export function buildCreateVaultParamsWeightedScale(
   state: WeightedScaleState,
   transactionType: TransactionType,
@@ -283,19 +308,16 @@ export function buildCreateVaultParamsWeightedScale(
         state.resultingDenom,
         transactionType,
       ),
-      swap_adjustment_strategy: {
-        weighted_scale: {
-          base_receive_amount: getBaseReceiveAmount(
-            state.initialDenom,
-            state.swapAmount,
-            state.basePriceValue || currentPrice,
-            state.resultingDenom,
-            transactionType,
-          ),
-          increase_only: state.applyMultiplier === YesNoValues.No,
-          multiplier: state.swapMultiplier.toString(),
-        },
-      },
+      swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
+        state.initialDenom,
+        state.swapAmount,
+        state.basePriceValue,
+        state.resultingDenom,
+        transactionType,
+        state.applyMultiplier,
+        state.swapMultiplier,
+        currentPrice,
+      ),
     },
   } as OsmosisExecuteMsg;
   return msg;
