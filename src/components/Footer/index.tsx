@@ -12,7 +12,7 @@ function Footer() {
       <Link target="_blank" href={CALC_TELEGRAM_URL} rel="noopener noreferrer">
         <Icon as={TelegramIcon} stroke="slateGrey" />
       </Link>
-      <Link target="_blank" href="https://discord.gg/s7D2NSkF" rel="noopener noreferrer">
+      <Link target="_blank" href="https://discord.gg/bJDj3zJhDH" rel="noopener noreferrer">
         <Icon as={DiscordIcon} stroke="slateGrey" />
       </Link>
     </Stack>
