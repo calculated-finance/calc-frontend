@@ -150,7 +150,7 @@ export function getStrategyName(strategy: Strategy) {
 
 export function getSlippageTolerance(strategy: Strategy) {
   const { slippage_tolerance } = strategy;
-  return slippage_tolerance ? (Number(slippage_tolerance) * 100).toFixed(2) : undefined;
+  return slippage_tolerance ? Number((Number(slippage_tolerance) * 100).toFixed(2)) : undefined;
 }
 
 export function getSlippageToleranceFormatted(strategy: Strategy) {

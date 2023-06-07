@@ -144,6 +144,7 @@ export const allSchema = {
   executionInterval: Yup.mixed<ExecutionIntervals>().required(),
   executionIntervalIncrement: Yup.number()
     .label('Increment')
+    .required()
     .positive()
     .integer()
     .nullable()

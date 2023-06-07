@@ -7,14 +7,21 @@ import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { CustomiseSchemaDca } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { TransactionType } from '@components/TransactionType';
+import {
+  CustomiseSchema,
+  CustomiseSchemaDca,
+  CustomiseSchemaWeightedScale,
+} from 'src/pages/strategies/customise/CustomiseSchemaDca';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { useChain } from './useChain';
 import { Strategy } from './useStrategies';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';
 import {
+  buildWeightedScaleAdjustmentStrategy,
   getExecutionInterval,
   getMinimumReceiveAmount,
   getSlippageTolerance,
@@ -22,40 +29,105 @@ import {
 import { useAnalytics } from './useAnalytics';
 
 type ConfigureVariables = {
-  values: CustomiseSchemaDca;
-  initialValues: CustomiseSchemaDca;
+  values: CustomiseSchema;
+  initialValues: CustomiseSchema;
   context: {
     initialDenom: string;
     swapAmount: number;
     resultingDenom: string;
     transactionType: TransactionType;
+    currentPrice: number | undefined;
   };
   strategy: Strategy;
 };
 
-function getUpdateVaultMessage({ values, initialValues, context, strategy }: ConfigureVariables) {
-  const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
-  const isSlippageToleranceDirty = values.slippageTolerance !== initialValues.slippageTolerance;
-  const isTimeIntervalDirty =
-    values.executionInterval !== initialValues.executionInterval ||
-    values.executionIntervalIncrement !== initialValues.executionIntervalIncrement;
+function buildTimeInterval({ values, initialValues, context, strategy }: ConfigureVariables) {
+  if (!isDcaPlus(strategy)) {
+    const castedValues = values as CustomiseSchemaDca | CustomiseSchemaWeightedScale;
+    const castedInvitialValues = initialValues as CustomiseSchemaDca | CustomiseSchemaWeightedScale;
+    const isTimeIntervalDirty =
+      castedValues.executionInterval !== castedInvitialValues.executionInterval ||
+      castedValues.executionIntervalIncrement !== castedInvitialValues.executionIntervalIncrement;
 
+    if (isTimeIntervalDirty) {
+      return {
+        time_interval: getExecutionInterval(castedValues.executionInterval, castedValues.executionIntervalIncrement),
+      };
+    }
+  }
+  return {};
+}
+
+function buildPriceThreshold({ values, initialValues, context, strategy }: ConfigureVariables) {
+  const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
+
+  if (isPriceThresholdDirty) {
+    return {
+      minimum_receive_amount: getMinimumReceiveAmount(
+        context.initialDenom,
+        context.swapAmount,
+        values.priceThresholdValue,
+        context.resultingDenom,
+        context.transactionType,
+      ),
+    };
+  }
+  return {};
+}
+
+function buildSlippageTolerance({ values, initialValues, context, strategy }: ConfigureVariables) {
+  const isSlippageToleranceDirty = values.slippageTolerance !== initialValues.slippageTolerance;
+  if (isSlippageToleranceDirty) {
+    return {
+      slippage_tolerance: getSlippageTolerance(true, values.slippageTolerance),
+    };
+  }
+  return {};
+}
+
+function buildSwapAdjustmentStrategy({ values, initialValues, context, strategy }: ConfigureVariables) {
+  if (!isWeightedScale(strategy)) {
+    return {};
+  }
+
+  if (context.currentPrice === undefined) {
+    throw new Error('Unable to get current price. Please try again.');
+  }
+
+  const castedValues = values as CustomiseSchemaWeightedScale;
+  const castedInvitialValues = initialValues as CustomiseSchemaWeightedScale;
+  const isWeightedScaleDirty =
+    castedValues.applyMultiplier !== castedInvitialValues.applyMultiplier ||
+    castedValues.basePriceIsCurrentPrice !== castedInvitialValues.basePriceIsCurrentPrice ||
+    castedValues.basePriceValue !== castedInvitialValues.basePriceValue ||
+    castedValues.swapMultiplier !== castedInvitialValues.swapMultiplier ||
+    castedValues.applyMultiplier !== castedInvitialValues.applyMultiplier;
+
+  if (isWeightedScaleDirty) {
+    return {
+      swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
+        context.initialDenom,
+        context.swapAmount,
+        castedValues.basePriceValue,
+        context.resultingDenom,
+        context.transactionType,
+        castedValues.applyMultiplier,
+        castedValues.swapMultiplier,
+        context.currentPrice,
+      ),
+    };
+  }
+  return {};
+}
+
+function getUpdateVaultMessage(variables: ConfigureVariables) {
   const updateVaultMsg = {
     update_vault: {
-      vault_id: strategy.id,
-      minimum_receive_amount: isPriceThresholdDirty
-        ? getMinimumReceiveAmount(
-            context.initialDenom,
-            context.swapAmount,
-            values.priceThresholdValue,
-            context.resultingDenom,
-            context.transactionType,
-          )
-        : undefined,
-      slippage_tolerance: isSlippageToleranceDirty ? getSlippageTolerance(true, values.slippageTolerance) : undefined,
-      time_interval: isTimeIntervalDirty
-        ? getExecutionInterval(values.executionInterval, values.executionIntervalIncrement)
-        : undefined,
+      vault_id: variables.strategy.id,
+      ...buildPriceThreshold(variables),
+      ...buildSlippageTolerance(variables),
+      ...buildTimeInterval(variables),
+      ...buildSwapAdjustmentStrategy(variables),
     },
   } as ExecuteMsg;
   return updateVaultMsg;
@@ -71,6 +143,7 @@ export function useCustomiseStrategy() {
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     (variables) => {
+      console.log('variables', variables);
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }

@@ -41,6 +41,7 @@ const mockStateMachine = {
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: false,
       executionInterval: 'daily',
+      executionIntervalIncrement: 1,
       priceThresholdEnabled: YesNoValues.No,
       priceThresholdValue: null,
       purchaseTime: '',
@@ -109,7 +110,7 @@ describe('DCA Out confirm page', () => {
 
       within(theSwap).getByText('Immediately');
       within(theSwap).getByText('OSMO');
-      within(theSwap).getByText('day');
+      within(theSwap).getByText('1 cycle');
       within(theSwap).getByText('1 day');
     });
   });
@@ -119,7 +120,7 @@ describe('DCA Out confirm page', () => {
       const executeMsg = {
         create_vault: {
           label: '',
-          time_interval: 'daily',
+          time_interval: { custom: { seconds: 86400 } },
           target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
           target_start_time_utc_seconds: undefined,

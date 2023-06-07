@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
-import { configureSteps } from './index.page';
+import { customiseSteps } from './customiseSteps';
 
 function Success() {
   const { isPageLoading } = usePageLoad();
@@ -15,11 +15,11 @@ function Success() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={configureSteps} />
-      <NewStrategyModalBody stepsConfig={configureSteps}>
+      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={customiseSteps} />
+      <NewStrategyModalBody stepsConfig={customiseSteps}>
         <Stack spacing={6} alignItems="center">
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />
-          <Text textAlign="center">Post-swap action updated.</Text>
+          <Text textAlign="center">Strategy updated</Text>
           <Divider />
           <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>

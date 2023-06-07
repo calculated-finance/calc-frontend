@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik, FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
-import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
@@ -13,6 +12,7 @@ import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
 import {
+  getBasePrice,
   getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
@@ -28,28 +28,21 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import Submit from '@components/Submit';
 import YesNoValues from '@models/YesNoValues';
 import DcaDiagram from '@components/DcaDiagram';
-import { CustomiseSchemaDca, customiseSchemaDca } from './CustomiseSchemaDca';
+import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import SwapMultiplier from '@components/SwapMultiplier';
+import ApplyMultiplier from '@components/ApplyMultiplier';
+import BasePrice from '@components/BasePrice';
+import usePrice from '@hooks/usePrice';
+import { CollapseWithRender } from '@components/CollapseWithRender';
+import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
+import { customiseSteps } from './customiseSteps';
 
-export const configureSteps: StepConfig[] = [
-  {
-    href: '/strategies/customise',
-    title: 'Customise Strategy',
-  },
-  {
-    href: '/strategies/customise/success',
-    title: 'Customise Successful',
-    noBackButton: true,
-    noJump: true,
-    successPage: true,
-  },
-];
-
-function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchemaDca }) {
-  const { nextStep } = useSteps(configureSteps);
+function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
+  const { nextStep } = useSteps(customiseSteps);
 
   const { mutate, error, isError, isLoading } = useCustomiseStrategy();
 
-  const validationSchema = customiseSchemaDca;
   const { isPageLoading } = usePageLoad();
 
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -57,15 +50,18 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
+  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+
   const context = {
     initialDenom,
     swapAmount: getConvertedSwapAmount(strategy),
     resultingDenom,
     transactionType,
+    currentPrice: price,
   };
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
-    const validatedValues = customiseSchemaDca.cast(values, { stripUnknown: true });
+    const validatedValues = getCustomiseSchema(strategy).cast(values, { stripUnknown: true });
     return mutate(
       { values: validatedValues as CustomiseSchemaDca, strategy, context, initialValues },
       {
@@ -82,30 +78,71 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-      <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} />
-        <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading && !isLoading}>
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={4}>
-              <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-              <Divider />
-              <ExecutionInterval />
-              <PriceThreshold
-                forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
-                resultingDenom={resultingDenom}
-                initialDenom={initialDenom}
-                transactionType={transactionType}
-              />
-              <SlippageTolerance />
-              <FormControl isInvalid={isError}>
-                <Submit disabledUnlessDirty>Confirm</Submit>
-                <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
-              </FormControl>
-            </Stack>
-          </Form>
-        </NewStrategyModalBody>
-      </NewStrategyModal>
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    <Formik initialValues={initialValues} validationSchema={getCustomiseSchema(strategy)} onSubmit={onSubmit}>
+      {({ values }) => (
+        <NewStrategyModal>
+          <NewStrategyModalHeader stepsConfig={customiseSteps} />
+          <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
+            <Form autoComplete="off">
+              <Stack spacing={4}>
+                <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                <Divider />
+                {/* {!isDcaPlus(strategy) && <AdvancedSettingsSwitch />} */}
+
+                {!isDcaPlus(strategy) && !isWeightedScale(strategy) && (
+                  <Stack spacing={4}>
+                    <ExecutionInterval />
+                    <CollapseWithRender isOpen={values.advancedSettings}>
+                      <PriceThreshold
+                        forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
+                        resultingDenom={resultingDenom}
+                        initialDenom={initialDenom}
+                        transactionType={transactionType}
+                      />
+                    </CollapseWithRender>
+                  </Stack>
+                )}
+                {isWeightedScale(strategy) && (
+                  <Stack spacing={4}>
+                    <ExecutionInterval />
+                    <SwapMultiplier
+                      initialDenom={initialDenom}
+                      resultingDenom={resultingDenom}
+                      transactionType={transactionType}
+                      swapAmountInjected={context.swapAmount}
+                    />
+                    <CollapseWithRender isOpen={values.advancedSettings}>
+                      <Stack spacing={4}>
+                        <ApplyMultiplier transactionType={transactionType} />
+                        <BasePrice
+                          initialDenom={initialDenom}
+                          resultingDenom={resultingDenom}
+                          transactionType={transactionType}
+                        />
+                        <PriceThreshold
+                          forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
+                          resultingDenom={resultingDenom}
+                          initialDenom={initialDenom}
+                          transactionType={transactionType}
+                        />
+                      </Stack>
+                    </CollapseWithRender>
+                  </Stack>
+                )}
+                <CollapseWithRender isOpen={values.advancedSettings}>
+                  <SlippageTolerance />
+                </CollapseWithRender>
+                <FormControl isInvalid={isError}>
+                  <Submit disabledUnlessDirty>Confirm</Submit>
+                  <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
+                </FormControl>
+              </Stack>
+            </Form>
+          </NewStrategyModalBody>
+        </NewStrategyModal>
+      )}
     </Formik>
   );
 }
@@ -121,9 +158,9 @@ function Page() {
   if (!strategy || !chain || !address) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
+        <NewStrategyModalHeader stepsConfig={customiseSteps} showStepper={false} />
 
-        <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
+        <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isLoading}>
           Loading
         </NewStrategyModalBody>
       </NewStrategyModal>
@@ -134,19 +171,32 @@ function Page() {
 
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
 
+  const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
+
+  const slippageTolerance = getSlippageTolerance(strategy);
+
   const existingValues = {
+    // advancedSettings:
+    //   increaseOnly ||
+    //   priceThreshold ||
+    //   isDcaPlus(strategy) ||
+    //   slippageTolerance !== globalInitialValues.slippageTolerance,
     advancedSettings: true,
     executionInterval: timeInterval,
     executionIntervalIncrement: timeIncrement || 1,
-    slippageTolerance: getSlippageTolerance(strategy),
+    slippageTolerance,
     priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
     priceThresholdValue: priceThreshold,
+    basePriceIsCurrentPrice: YesNoValues.No,
+    basePriceValue: getBasePrice(strategy),
+    swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
+    applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
   };
 
   const castValues = {
-    ...customiseSchemaDca.cast(globalInitialValues, { stripUnknown: true }),
-    ...customiseSchemaDca.cast(existingValues, { stripUnknown: true }),
-  } as CustomiseSchemaDca;
+    ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),
+    ...getCustomiseSchema(strategy).cast(existingValues, { stripUnknown: true }),
+  } as CustomiseSchema;
 
   return <CustomiseForm strategy={strategy} initialValues={castValues} />;
 }

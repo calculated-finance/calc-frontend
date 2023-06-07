@@ -57,6 +57,7 @@ const mockStateMachine = {
       basePriceValue: 1,
       slippageTolerance: 0.01,
       executionInterval: 'daily',
+      executionIntervalIncrement: 1,
     },
   },
   actions: {
@@ -120,7 +121,7 @@ describe('DCA Plus Out confirm page', () => {
       const executeMsg = {
         create_vault: {
           label: '',
-          time_interval: 'daily',
+          time_interval: { custom: { seconds: 86400 } },
           target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
           slippage_tolerance: '0.0001',
