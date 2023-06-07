@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
+import { useCosmWasmClient } from './useCosmWasmClient';
 
 const QUERY_KEY = 'get_vaults';
 
@@ -39,19 +40,21 @@ function fetchVaultsRecursively(
 
 export default function useAdminStrategies(customChain?: Chains) {
   const { chain: defaultChain } = useChain();
+  const { client: defaultClient } = useCosmWasmClient();
+  const chain = customChain || defaultChain;
 
   const [storedClient, setStoredClient] = useState<CosmWasmClient | null>(null);
 
-  const chain = customChain || defaultChain;
+  const client = !customChain ? defaultClient : storedClient;
 
   useEffect(() => {
-    if (chain) {
-      CosmWasmClient.connect(getChainEndpoint(chain)).then(setStoredClient).catch(Sentry.captureException);
+    if (customChain) {
+      CosmWasmClient.connect(getChainEndpoint(customChain)).then(setStoredClient).catch(Sentry.captureException);
     }
-  }, [chain]);
+  }, [chain, customChain]);
 
-  return useQuery<Vault[]>([QUERY_KEY, storedClient, chain], () => fetchVaultsRecursively(storedClient!, chain), {
-    enabled: !!storedClient && !!chain,
+  return useQuery<Vault[]>([QUERY_KEY, storedClient, chain], () => fetchVaultsRecursively(client!, chain), {
+    enabled: !!client && !!chain,
     meta: {
       errorMessage: 'Error fetching all strategies',
     },
