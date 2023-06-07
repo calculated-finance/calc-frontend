@@ -107,7 +107,11 @@ export function WeightedScaleCustomisePage({
                     <Stack spacing={4}>
                       <ApplyMultiplier transactionType={transactionType} />
                       <BasePrice formName={formName} transactionType={transactionType} />
-                      <PriceThreshold transactionType={transactionType} formName={formName} />
+                      <PriceThreshold
+                        initialDenom={state.step1.initialDenom}
+                        resultingDenom={state.step1.resultingDenom}
+                        transactionType={transactionType}
+                      />
                       <SlippageTolerance />
                     </Stack>
                   </Box>

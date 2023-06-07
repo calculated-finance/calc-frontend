@@ -1,9 +1,8 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
-import { useStep2Form } from '@hooks/useDcaInForm';
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
-import { FormNames } from '@hooks/useFormStore';
+import { Denom } from '@models/Denom';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -49,18 +48,14 @@ function PriceThresholdToggle() {
 }
 
 type PriceThresholdProps = {
-  formName: FormNames;
   transactionType: TransactionType;
+  initialDenom: Denom;
+  resultingDenom: Denom;
 };
 
-export default function PriceThreshold({ formName, transactionType }: PriceThresholdProps) {
+export default function PriceThreshold({ initialDenom, resultingDenom, transactionType }: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
-  const { state } = useStep2Form(formName);
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
-
-  if (!state) {
-    return null;
-  }
 
   const title = transactionType === 'buy' ? 'Set buy price ceiling?' : 'Set sell price floor?';
 
@@ -77,8 +72,8 @@ export default function PriceThreshold({ formName, transactionType }: PriceThres
         <PriceThresholdToggle />
         <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
           <DenomPriceInput
-            initialDenom={state.step1.initialDenom}
-            resultingDenom={state.step1.resultingDenom}
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}

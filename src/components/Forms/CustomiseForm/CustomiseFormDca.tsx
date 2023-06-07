@@ -47,7 +47,11 @@ export function CustomiseFormDca({
             <ExecutionInterval />
             <SwapAmount step1State={step1} />
             <CollapseWithRender isOpen={values.advancedSettings}>
-              <PriceThreshold transactionType={transactionType} formName={formName} />
+              <PriceThreshold
+                initialDenom={step1.initialDenom}
+                resultingDenom={step1.resultingDenom}
+                transactionType={transactionType}
+              />
               <SlippageTolerance />
             </CollapseWithRender>
             <Submit>Next</Submit>
