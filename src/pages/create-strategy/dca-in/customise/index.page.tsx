@@ -53,7 +53,6 @@ function DcaInStep2() {
         steps={dcaInSteps}
         resetAction={actions.resetAction}
         step1={state.step1}
-        formName={FormNames.DcaIn}
         transactionType={TransactionType.Buy}
       />
     </Formik>

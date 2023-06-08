@@ -53,7 +53,6 @@ function Page() {
         steps={dcaOutSteps}
         resetAction={actions.resetAction}
         step1={state.step1}
-        formName={FormNames.DcaOut}
         transactionType={TransactionType.Sell}
       />
     </Formik>
