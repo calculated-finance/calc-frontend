@@ -22,8 +22,7 @@ const useFiatPrice = (denom: DenomInfo | undefined, injectedSupportedDenoms?: De
     ['fiat-price', chain, supportedDenoms],
     async () => {
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
-      const unqiueIds = Array.from(new Set(coingeckoIds));
-      const formattedIds = unqiueIds.join(',');
+      const formattedIds = coingeckoIds.join(',');
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
 
       const response = await fetch(url);

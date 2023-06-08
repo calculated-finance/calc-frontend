@@ -86,7 +86,7 @@ export default function usePriceOsmosis(
       const directionalRoute = isRouteReversed ? reverse(route) : route;
       const result = await query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
-        tokenIn: `${factor}${initialDenom}`,
+        tokenIn: `${factor}${initialDenom.id}`,
         routes: findRoute(directionalRoute, initialDenom.id, pools),
       });
       const price =
