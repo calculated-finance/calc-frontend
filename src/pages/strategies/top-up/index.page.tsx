@@ -63,9 +63,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { displayAmount } = useBalance({
-    token: initialDenom,
-  });
+  const { displayAmount } = useBalance(initialDenom);
 
   const remaining = getStrategyBalance(strategy);
 

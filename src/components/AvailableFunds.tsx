@@ -9,7 +9,7 @@ export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });
   const [, , helpers] = useField('initialDeposit');
 
-  const { price } = useFiatPrice(field.value);
+  const { price } = useFiatPrice(field.value && getDenomInfo(field.value));
 
   const createStrategyFee = Number(createStrategyFeeInTokens(price));
 

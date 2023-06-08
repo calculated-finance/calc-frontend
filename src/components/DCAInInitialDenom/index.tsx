@@ -26,7 +26,9 @@ export default function DCAInInitialDenom() {
   }
 
   const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomStable),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+      .map((denom) => getDenomInfo(denom))
+      .filter(isDenomStable),
   );
 
   const { promotion } = getDenomInfo(field.value);

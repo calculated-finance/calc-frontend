@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, {
+  getResultingDenoms,
   isSupportedDenomForDcaPlus,
   orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
@@ -24,17 +25,6 @@ import { useRouter } from 'next/router';
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
 
 function DcaIn() {
   const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);

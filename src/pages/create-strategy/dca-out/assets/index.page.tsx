@@ -3,11 +3,10 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
+  getResultingDenoms,
   orderAlphabetically,
   uniqueBaseDenoms,
-  uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
-  uniqueQuoteDenomsFromBaseDenom,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -21,20 +20,7 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { Pair } from '@models/Pair';
 import { FormNames } from '@hooks/useFormStore';
-import { DenomInfo } from '@utils/DenomInfo';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
 
 function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaOut);
@@ -61,7 +47,9 @@ function Page() {
     return <ModalWrapper stepsConfig={dcaOutSteps} isLoading reset={actions.resetAction} />;
   }
   const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomVolatile),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+      .map((denom) => getDenomInfo(denom))
+      .filter(isDenomVolatile),
   );
 
   const { quote_denom, base_denom } =

@@ -29,29 +29,38 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
 }
 
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => getDenomInfo(pair.quote_denom))));
+  return Array.from(new Set(pairs?.map((pair) => pair.quote_denom)));
 }
 
 export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => getDenomInfo(pair.base_denom))));
+  return Array.from(new Set(pairs?.map((pair) => pair.base_denom)));
 }
 
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom.id).map((pair) => getDenomInfo(pair.base_denom))),
+    new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom.id).map((pair) => pair.base_denom)),
   );
 }
 
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(
-      pairs?.filter((pair) => pair.base_denom === resultingDenom.id).map((pair) => getDenomInfo(pair.quote_denom)),
-    ),
+    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom.id).map((pair) => pair.quote_denom)),
   );
 }
 
 export function allDenomsFromPairs(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom).concat(pairs?.map((pair) => pair.base_denom))));
+}
+
+export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ).map((denom) => getDenomInfo(denom)),
+  );
 }
 
 const GET_PAIRS_LIMIT = 400;

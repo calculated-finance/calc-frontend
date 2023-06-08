@@ -3,7 +3,6 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import useQueryWithNotification from './useQueryWithNotification';
 import { Strategy } from './useStrategies';
 import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';

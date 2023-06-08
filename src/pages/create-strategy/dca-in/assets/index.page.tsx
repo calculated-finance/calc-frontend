@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
+  getResultingDenoms,
   orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenomsFromBaseDenom,
@@ -22,17 +23,6 @@ import { FormNames } from '@hooks/useFormStore';
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
 
 function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);

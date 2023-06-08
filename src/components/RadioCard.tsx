@@ -1,8 +1,11 @@
 import { Box, Text, useRadio, UseRadioProps, FlexProps, Tooltip } from '@chakra-ui/react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 
-export default function RadioCard(props: UseRadioProps & ChildrenProp & FlexProps & { disabledMessage?: string }) {
-  const { children, borderRadius, isDisabled, disabledMessage } = props;
+export default function RadioCard({
+  disabledMessage,
+  ...props
+}: UseRadioProps & ChildrenProp & FlexProps & { disabledMessage?: string }) {
+  const { children, borderRadius, isDisabled } = props;
   const { getInputProps, getCheckboxProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();

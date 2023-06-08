@@ -8,7 +8,7 @@ import { useChain } from './useChain';
 
 export type FiatPriceResponse = any;
 
-const useFiatPrice = (denom: DenomInfo | undefined, injectedSupportedDenoms: DenomInfo[] | undefined = undefined) => {
+const useFiatPrice = (denom: DenomInfo, injectedSupportedDenoms: DenomInfo[] | undefined = undefined) => {
   const { chain } = useChain();
 
   const fetchedSupportedDenoms = useSupportedDenoms();

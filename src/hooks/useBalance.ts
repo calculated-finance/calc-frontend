@@ -1,7 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
@@ -10,7 +9,7 @@ export type BalanceResponse = {
 };
 
 export function getDisplayAmount(token: DenomInfo, amount: number) {
-  return Number(token?.conversion(amount));
+  return token.conversion(amount);
 }
 
 const useBalance = (token: DenomInfo | undefined) => {

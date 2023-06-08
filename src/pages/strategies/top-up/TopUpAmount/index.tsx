@@ -24,9 +24,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { DenomInfo } from '@utils/DenomInfo';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
-  const { displayAmount, isLoading } = useBalance({
-    token: initialDenom,
-  });
+  const { displayAmount, isLoading } = useBalance(initialDenom);
 
   const [, , helpers] = useField('topUpAmount');
 
