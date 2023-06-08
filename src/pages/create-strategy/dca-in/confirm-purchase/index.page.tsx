@@ -23,27 +23,30 @@ import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 
-function Page() {
+function PageInternal() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+  const { price } = useFiatPrice(getDenomInfo(state.initialDenom));
   const { nextStep, goToStep } = useSteps(steps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(price, {
-      onSuccess: async (strategyId) => {
-        await nextStep({
-          strategyId,
-          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
-        });
-        actions.resetAction();
+    mutate(
+      { price },
+      {
+        onSuccess: async (strategyId) => {
+          await nextStep({
+            strategyId,
+            timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          });
+          actions.resetAction();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
       },
-      onSettled: () => {
-        setSubmitting(false);
-      },
-    });
+    );
 
   const handleRestart = () => {
     actions.resetAction();
@@ -81,6 +84,14 @@ function Page() {
           <InvalidData onRestart={handleRestart} />
         )}
       </NewStrategyModalBody>
+    </NewStrategyModal>
+  );
+}
+
+function Page() {
+  return (
+    <NewStrategyModal>
+      <PageInternal />
     </NewStrategyModal>
   );
 }

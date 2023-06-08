@@ -8,7 +8,7 @@ import { useChain } from './useChain';
 
 export type FiatPriceResponse = any;
 
-const useFiatPrice = (denom: DenomInfo, injectedSupportedDenoms: DenomInfo[] | undefined = undefined) => {
+const useFiatPrice = (denom: DenomInfo, injectedSupportedDenoms?: DenomInfo[]) => {
   const { chain } = useChain();
 
   const fetchedSupportedDenoms = useSupportedDenoms();
@@ -21,9 +21,10 @@ const useFiatPrice = (denom: DenomInfo, injectedSupportedDenoms: DenomInfo[] | u
   const { data, ...other } = useQuery<FiatPriceResponse>(
     ['fiat-price', chain, supportedDenoms],
     async () => {
-      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${supportedDenoms
-        .map((supportedDenom) => supportedDenom.coingeckoId)
-        .join(',')}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
+      const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
+      const unqiueIds = Array.from(new Set(coingeckoIds));
+      const formattedIds = unqiueIds.join(',');
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
 
       const response = await fetch(url);
       if (!response.ok) {

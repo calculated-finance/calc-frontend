@@ -21,6 +21,8 @@ import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import Spinner from '@components/Spinner';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
+import { useAssetList } from '@hooks/useAssetList';
+import { Chains } from '@hooks/useChain/Chains';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 
@@ -54,6 +56,14 @@ function LoadingState() {
       <Spinner />
     </Center>
   );
+}
+
+function LoadingWrapper({ children }: { children: ReactNode }) {
+  const { chain } = useChain();
+
+  const { data: assetList } = useAssetList();
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return chain && (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
 }
 
 function InitWrapper({ children }: { children: ReactNode }) {
@@ -149,7 +159,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <CalcWalletModalProvider>
               <QueryClientProvider client={queryClient}>
                 <AssetListWrapper>
-                  {chain ? getLayout(<Component {...pageProps} />) : <LoadingState />}
+                  <LoadingWrapper>{getLayout(<Component {...pageProps} />)}</LoadingWrapper>
                 </AssetListWrapper>
               </QueryClientProvider>
             </CalcWalletModalProvider>

@@ -31,8 +31,6 @@ export default function DCAInInitialDenom() {
       .filter(isDenomStable),
   );
 
-  const { promotion } = getDenomInfo(field.value);
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>How will you fund your first investment?</FormLabel>
@@ -53,7 +51,6 @@ export default function DCAInInitialDenom() {
             showPromotion
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-          {promotion && <FormHelperText color="blue.200">{promotion}</FormHelperText>}
         </Box>
         <InitialDeposit />
       </SimpleGrid>

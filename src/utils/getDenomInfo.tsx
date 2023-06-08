@@ -416,20 +416,19 @@ function isDenomInStablesList(denom: Denom) {
 }
 
 const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
+  if (!denom) {
+    console.log('denom', denom);
+    throw new Error('Denom is required');
+  }
   const { chain: storedChain } = useChainStore.getState();
 
   const chain = injectedChain || storedChain;
 
   const { assetList } = useAssetListStore.getState();
 
-  if (chain === Chains.Osmosis && assetList?.assets) {
-    // map asset list to denom info
-    const asset = assetList.assets.find((a) => a.base === denom);
+  const asset = chain === Chains.Osmosis && assetList?.assets && assetList.assets.find((a) => a.base === denom);
 
-    if (!asset) {
-      throw Error(`Asset not found for denom ${denom}`);
-    }
-
+  if (asset) {
     const mapTo = {} as Partial<DenomInfo>;
 
     mapTo.name = asset.symbol;
@@ -470,13 +469,24 @@ const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
       ...mapTo,
     };
   }
-  // second comparison is not needed but just being explicit
-  if (isMainnet() && chain === Chains.Kujira) {
+
+  if (isMainnet()) {
+    const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+    if (!kujiraMainnetAsset) {
+      throw new Error(`Unknown denom ${denom}`);
+    }
     return {
       id: denom,
       ...defaultDenom,
       ...mainnetDenoms[denom as MainnetDenoms],
     };
+  }
+
+  const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
+
+  if (!kujiraTestnetAsset) {
+    console.log('assetList', assetList);
+    throw new Error(`Unknown denom ${denom}`);
   }
   return {
     id: denom,

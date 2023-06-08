@@ -32,18 +32,21 @@ function Page() {
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(price, {
-      onSuccess: async (strategyId) => {
-        await nextStep({
-          strategyId,
-          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
-        });
-        actions.resetAction();
+    mutate(
+      { price },
+      {
+        onSuccess: async (strategyId) => {
+          await nextStep({
+            strategyId,
+            timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          });
+          actions.resetAction();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
       },
-      onSettled: () => {
-        setSubmitting(false);
-      },
-    });
+    );
 
   const handleRestart = () => {
     actions.resetAction();
