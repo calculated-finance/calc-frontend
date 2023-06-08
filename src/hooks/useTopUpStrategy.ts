@@ -8,6 +8,7 @@ import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { Denom } from '@models/Denom';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
+import { DenomInfo } from '@utils/DenomInfo';
 import { Strategy } from './useStrategies';
 import { useChain } from './useChain';
 
@@ -15,7 +16,7 @@ type TopUpVariables = {
   values: {
     topUpAmount: number;
   };
-  initialDenom: Denom;
+  initialDenom: DenomInfo | undefined;
   strategy: Strategy;
 };
 
@@ -26,7 +27,7 @@ const useTopUpStrategy = () => {
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(
     ({ values, initialDenom, strategy }) => {
-      const { deconversion } = getDenomInfo(initialDenom);
+      const { deconversion } = initialDenom || {};
 
       if (isNil(address)) {
         throw new Error('address is null or empty');

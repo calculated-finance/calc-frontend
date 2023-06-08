@@ -11,14 +11,14 @@ import {
   InputProps,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import usePrice from '@hooks/usePrice';
-import { Denom } from '@models/Denom';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
+import { DenomInfo } from '@utils/DenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
 
 export function DenomPriceInput({
@@ -33,8 +33,8 @@ export function DenomPriceInput({
   ...inputProps
 }: {
   transactionType: TransactionType;
-  initialDenom: Denom;
-  resultingDenom: Denom;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
@@ -44,8 +44,8 @@ export function DenomPriceInput({
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
-  const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = getDenomInfo(priceOfDenom);
-  const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = getDenomInfo(priceInDenom);
+  const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = priceOfDenom;
+  const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = priceInDenom;
 
   const pricePrecision = Math.max(priceOfPricePrecision, priceInPricePrecision);
 
@@ -62,7 +62,7 @@ export function DenomPriceInput({
           pl={4}
           children={
             <HStack direction="row">
-              <DenomIcon denomName={priceOfDenom} /> <Text fontSize="sm">{priceOfDenomName} Price</Text>
+              <DenomIcon denomInfo={priceOfDenom} /> <Text fontSize="sm">{priceOfDenomName} Price</Text>
             </HStack>
           }
         />
@@ -92,12 +92,7 @@ export function DenomPriceInput({
       )}
       {chain === Chains.Osmosis && (
         <FormHelperText>
-          <Link
-            isExternal
-            href={`${getOsmosisWebUrl()}?from=${getDenomInfo(priceOfDenom).osmosisId}&to=${
-              getDenomInfo(priceInDenom).osmosisId
-            }`}
-          >
+          <Link isExternal href={`${getOsmosisWebUrl()}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
               Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>

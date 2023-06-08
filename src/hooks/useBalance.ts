@@ -1,8 +1,7 @@
 import { Coin } from '@cosmjs/stargate';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
-import useQueryWithNotification from './useQueryWithNotification';
+import { DenomInfo } from '@utils/DenomInfo';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 export type BalanceResponse = {
@@ -10,11 +9,11 @@ export type BalanceResponse = {
 };
 
 interface UseBalanceArgs {
-  token?: string;
+  token?: DenomInfo;
 }
 
-export function getDisplayAmount(token: string | undefined, amount: number) {
-  return Number(getDenomInfo(token).conversion(amount));
+export function getDisplayAmount(token: DenomInfo | undefined, amount: number) {
+  return Number(token?.conversion(amount));
 }
 
 const useBalance = ({ token }: UseBalanceArgs) => {
@@ -30,7 +29,7 @@ const useBalance = ({ token }: UseBalanceArgs) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      return client.getBalance(address, token ?? '');
+      return client.getBalance(address, token?.id ?? '');
     },
     {
       enabled: !!token && !!address && !!client,

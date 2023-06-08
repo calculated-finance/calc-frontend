@@ -14,17 +14,14 @@ import {
   useBoolean,
 } from '@chakra-ui/react';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { FormNames } from '@hooks/useFormStore';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
-import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { TransactionType } from './TransactionType';
@@ -254,7 +251,7 @@ export default function Fees({
         )}
         <Tooltip label={swapFeeTooltip} placement="top">
           <Text as="span" textColor="white">
-            {String.fromCharCode(8275)} {getPrettyFee(swapAmount!, swapFee + dexFee)} {initialDenomName}
+            {String.fromCharCode(8275)} {getPrettyFee(swapAmount, swapFee + dexFee)} {initialDenomName}
           </Text>
         </Tooltip>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
@@ -262,7 +259,7 @@ export default function Fees({
 
       <FeeBreakdown
         initialDenomName={initialDenomName}
-        swapAmount={swapAmount!}
+        swapAmount={swapAmount}
         price={price}
         applyPromo={applyPromo}
         dexFee={dexFee}

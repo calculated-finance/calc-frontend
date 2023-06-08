@@ -23,6 +23,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useWallet } from '@hooks/useWallet';
+import { DenomInfo } from '@utils/DenomInfo';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
@@ -101,12 +102,12 @@ export function PostPurchaseForm({
   resultingDenom,
   submitButton,
 }: {
-  resultingDenom: Denom;
+  resultingDenom: DenomInfo;
   submitButton?: JSX.Element;
 }) {
-  const stakeingPossible = getDenomInfo(resultingDenom).stakeable;
+  const stakeingPossible = resultingDenom.stakeable;
 
-  const stakeingUnsupported = !getDenomInfo(resultingDenom).stakeableAndSupported;
+  const stakeingUnsupported = !resultingDenom.stakeableAndSupported;
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
   const [{ value: postPurchaseOption }] = useField('postPurchaseOption');

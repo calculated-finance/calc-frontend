@@ -8,8 +8,8 @@ import { IncrementAndInterval } from './IncrementAndInterval';
 
 export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
   const { initialDenom, resultingDenom, swapAmount } = state;
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const initialDenomInfo = getDenomInfo(initialDenom);
+  const resultingDenomInfo = getDenomInfo(resultingDenom);
   return (
     <Box data-testid="summary-the-swap">
       <Text textStyle="body-xs">The swap</Text>
@@ -17,14 +17,14 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
-            {String.fromCharCode(8275)} {swapAmount} {initialDenomName}
+            {String.fromCharCode(8275)} {swapAmount} {initialDenomInfo.name}
           </Text>
-          <DenomIcon denomName={initialDenom} />
+          <DenomIcon denomInfo={initialDenomInfo} />
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="assets">
-          <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />
+          <Text>{resultingDenomInfo.name}</Text>
+          <DenomIcon denomInfo={resultingDenomInfo} />
         </BadgeButton>{' '}
         every <IncrementAndInterval state={state} />.
       </Text>

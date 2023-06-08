@@ -273,7 +273,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
                         {getPriceCeilingFloor(strategy)}{' '}
-                        {getDenomInfo(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                        {getDenomName(isBuyStrategy(strategy) ? initialDenom : resultingDenom)}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
                     </HStack>
@@ -285,7 +285,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={1}>
                 <Text fontSize="sm" data-testid="strategy-current-balance">
-                  {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+                  {initialDenomValue.toConverted()} {getDenomName(initialDenom)}
                 </Text>
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>

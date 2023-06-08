@@ -16,6 +16,7 @@ import {
 } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import { DenomInfo } from '@utils/DenomInfo';
 import { useChain } from './useChain';
 import { Strategy } from './useStrategies';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
@@ -32,9 +33,9 @@ type ConfigureVariables = {
   values: CustomiseSchema;
   initialValues: CustomiseSchema;
   context: {
-    initialDenom: string;
+    initialDenom: DenomInfo;
     swapAmount: number;
-    resultingDenom: string;
+    resultingDenom: DenomInfo;
     transactionType: TransactionType;
     currentPrice: number | undefined;
   };

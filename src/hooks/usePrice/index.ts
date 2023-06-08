@@ -3,16 +3,16 @@ import { BookResponse } from 'kujira.js/lib/cjs/fin';
 import { TransactionType } from '@components/TransactionType';
 import getDenomInfo from '@utils/getDenomInfo';
 import { findPair } from '@helpers/findPair';
-import { Denom } from '@models/Denom';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 import usePairs from '../usePairs';
 import { safeInvert } from './safeInvert';
 
-function calculatePrice(result: BookResponse, initialDenom: Denom, transactionType: TransactionType) {
+function calculatePrice(result: BookResponse, initialDenom: DenomInfo, transactionType: TransactionType) {
   const quotePriceInfo = result.quote[0];
   const basePriceInfo = result.base[0];
 
@@ -29,16 +29,16 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
   const { offer_denom: baseOfferDenom } = basePriceInfo;
   let priceDeconversion;
   if ('native' in baseOfferDenom) {
-    priceDeconversion = getDenomInfo(baseOfferDenom.native).priceDeconversion;
+    priceDeconversion = getDenomInfo(baseOfferDenom.native)?.priceDeconversion;
   } else if ('cw20' in baseOfferDenom) {
-    priceDeconversion = getDenomInfo(baseOfferDenom.cw20).priceDeconversion;
+    priceDeconversion = getDenomInfo(baseOfferDenom.cw20)?.priceDeconversion;
   } else {
-    priceDeconversion = getDenomInfo(baseOfferDenom).priceDeconversion;
+    priceDeconversion = getDenomInfo(baseOfferDenom)?.priceDeconversion;
   }
 
   // the quote denom may be a string, or shown as an object with native info
   if (typeof offer_denom === 'string') {
-    if (offer_denom === initialDenom) {
+    if (offer_denom === initialDenom.id) {
       // return the price of the base
       if (transactionType === 'buy') {
         return priceDeconversion(Number(basePriceInfo.quote_price));
@@ -46,7 +46,7 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
       return safeInvert(priceDeconversion(Number(basePriceInfo.quote_price)));
     }
   } else if ('native' in offer_denom) {
-    if (offer_denom.native === initialDenom) {
+    if (offer_denom.native === initialDenom.id) {
       // return the price of the base
       if (transactionType === 'buy') {
         return priceDeconversion(Number(basePriceInfo.quote_price));
@@ -64,8 +64,8 @@ function calculatePrice(result: BookResponse, initialDenom: Denom, transactionTy
 }
 
 export default function usePrice(
-  resultingDenom: Denom | undefined,
-  initialDenom: Denom | undefined,
+  resultingDenom: DenomInfo,
+  initialDenom: DenomInfo,
   transactionType: TransactionType,
   enabled = true,
 ) {

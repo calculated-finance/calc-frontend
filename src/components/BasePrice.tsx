@@ -1,9 +1,8 @@
-import { FormControl, FormLabel, HStack, useRadioGroup, Collapse, Box, Stack } from '@chakra-ui/react';
-import { useStep2Form } from '@hooks/useDcaInForm';
+import { FormControl, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
-import { FormNames } from '@hooks/useFormStore';
+import { DenomInfo } from '@utils/DenomInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -39,8 +38,8 @@ function BasePriceToggle() {
 }
 
 type BasePriceProps = {
-  initialDenom: string;
-  resultingDenom: string;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   transactionType: TransactionType;
 };
 

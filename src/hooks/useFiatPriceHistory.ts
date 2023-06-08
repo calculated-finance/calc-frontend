@@ -4,6 +4,7 @@ import 'isomorphic-fetch';
 import * as Sentry from '@sentry/react';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 
 export type FiatPriceHistoryResponse = {
   prices: number[][];
@@ -11,8 +12,8 @@ export type FiatPriceHistoryResponse = {
   market_caps: number[][];
 };
 
-const useFiatPriceHistory = (denom: Denom | undefined, days: string) => {
-  const { coingeckoId } = getDenomInfo(denom);
+const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
+  const { coingeckoId } = denom || {};
   const fiatCurrencyId = 'usd';
 
   return useQuery<FiatPriceHistoryResponse>(

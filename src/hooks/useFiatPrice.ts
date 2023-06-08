@@ -1,23 +1,20 @@
-import { Denom } from '@models/Denom';
-import getDenomInfo from '@utils/getDenomInfo';
 import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
 
 export type FiatPriceResponse = any;
 
-const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[] | undefined = undefined) => {
-  const { coingeckoId } = getDenomInfo(denom, injectedSupportedDenoms ? Chains.Kujira : undefined);
-  const fiatCurrencyId = 'usd';
-  const priceChange = 'usd_24h_change';
-
+const useFiatPrice = (denom: DenomInfo | undefined, injectedSupportedDenoms: DenomInfo[] | undefined = undefined) => {
   const { chain } = useChain();
 
   const fetchedSupportedDenoms = useSupportedDenoms();
+
+  const fiatCurrencyId = 'usd';
+  const priceChange = 'usd_24h_change';
 
   const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
 
@@ -25,7 +22,7 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
     ['fiat-price', chain, supportedDenoms],
     async () => {
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${supportedDenoms
-        .map((denomId: Denom) => getDenomInfo(denomId, injectedSupportedDenoms ? Chains.Kujira : undefined).coingeckoId)
+        .map((supportedDenom) => supportedDenom.coingeckoId)
         .join(',')}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
 
       const response = await fetch(url);
@@ -40,7 +37,7 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
     {
       cacheTime: 5000,
       staleTime: 30000,
-      enabled: !!coingeckoId && !!fiatCurrencyId && !!chain && Boolean(supportedDenoms.length),
+      enabled: !!denom?.coingeckoId && !!fiatCurrencyId && !!chain && Boolean(supportedDenoms.length),
       meta: {
         errorMessage: 'Error fetching fiat price',
       },
@@ -48,9 +45,9 @@ const useFiatPrice = (denom: Denom | undefined, injectedSupportedDenoms: Denom[]
   );
 
   return {
-    price: data?.[coingeckoId]?.[fiatCurrencyId],
+    price: denom && data?.[denom.coingeckoId]?.[fiatCurrencyId],
     data,
-    priceChange24Hr: data?.[coingeckoId]?.[priceChange],
+    priceChange24Hr: denom && data?.[denom.coingeckoId]?.[priceChange],
     ...other,
   };
 };

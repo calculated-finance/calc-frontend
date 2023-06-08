@@ -90,7 +90,7 @@ function InvestmentThesis() {
               <Text>Asset(s) accumulating:</Text>
               <HStack>
                 {acculumatingAssets.length ? (
-                  acculumatingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset} denomName={asset} />)
+                  acculumatingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}
@@ -102,7 +102,7 @@ function InvestmentThesis() {
               <Text>Asset(s) taking profit on:</Text>
               <HStack>
                 {profitTakingAssets.length ? (
-                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset} denomName={asset} />)
+                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}

@@ -1,17 +1,24 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
-import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getSwapRange } from '@helpers/ml/getSwapRange';
+import { DenomInfo } from '@utils/DenomInfo';
 import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
 
-export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
-  const { initialDenom, resultingDenom, strategyDuration, initialDeposit } = state;
-
-  const { name: initialDenomName, minimumSwapAmount } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+export function SummaryTheSwapDcaPlus({
+  initialDenom,
+  resultingDenom,
+  strategyDuration,
+  initialDeposit,
+}: {
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  strategyDuration: number;
+  initialDeposit: number;
+}) {
+  const { name: initialDenomName, minimumSwapAmount } = initialDenom;
+  const { name: resultingDenomName } = resultingDenom;
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
@@ -26,19 +33,19 @@ export function SummaryTheSwapDcaPlus({ state }: { state: DcaPlusState }) {
           <Text>
             {minSwap} {initialDenomName}
           </Text>
-          <DenomIcon denomName={initialDenom} />
+          <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}
         and{' '}
         <BadgeButton url="customise">
           <Text>
             {maxSwap} {initialDenomName}
           </Text>
-          <DenomIcon denomName={initialDenom} />
+          <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="assets">
           <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />
+          <DenomIcon denomInfo={resultingDenom} />
         </BadgeButton>{' '}
         every day based on market conditions, until the deposit is empty.
       </Text>

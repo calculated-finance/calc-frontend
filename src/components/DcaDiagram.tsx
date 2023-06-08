@@ -1,31 +1,29 @@
 import { Flex, HStack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
+import { DenomInfo } from '@utils/DenomInfo';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 
 type DcaDiagramProps = {
-  initialDenom: string;
+  initialDenom: DenomInfo;
   initialDeposit?: string | number;
-  resultingDenom: string;
+  resultingDenom: DenomInfo;
 };
 
 export default function DcaDiagram({ initialDenom, initialDeposit, resultingDenom }: DcaDiagramProps) {
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
   return (
     <Flex w="full" justifyContent="space-between">
       <HStack>
-        <DenomIcon denomName={initialDenom} />
+        <DenomIcon denomInfo={initialDenom} />
         <Text>
           {Boolean(initialDeposit) && <>{initialDeposit}&nbsp;</>}
-          {initialDenomName}
+          {initialDenom.name}
         </Text>
       </HStack>
       <Lottie animationData={arrow} loop />
       <HStack>
-        <DenomIcon denomName={resultingDenom} />
-        <Text>{resultingDenomName}</Text>
+        <DenomIcon denomInfo={resultingDenom} />
+        <Text>{resultingDenom.name}</Text>
       </HStack>
     </Flex>
   );

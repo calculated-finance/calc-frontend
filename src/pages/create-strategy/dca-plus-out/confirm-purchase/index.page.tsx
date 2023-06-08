@@ -22,12 +22,13 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames } from '@hooks/useFormStore';
 import useFiatPrice from '@hooks/useFiatPrice';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
-  const { price } = useFiatPrice(state?.initialDenom);
+  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
@@ -52,6 +53,20 @@ function Page() {
     goToStep(0);
   };
 
+  if (!state) {
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading isSigning={isLoading}>
+          Loading
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
+  }
+
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
+
   const transactionType = TransactionType.Sell;
   return (
     <NewStrategyModal>
@@ -60,17 +75,22 @@ function Page() {
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={state.initialDeposit}
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
-            <SummaryTheSwapDcaPlus state={state} />
+            <SummaryTheSwapDcaPlus
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
+              strategyDuration={state.strategyDuration}
+              initialDeposit={state.initialDeposit}
+            />
             <SummaryWhileSwapping
               transactionType={transactionType}
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
             />

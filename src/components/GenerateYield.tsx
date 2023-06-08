@@ -21,6 +21,7 @@ import { getDenomName } from '@utils/getDenomInfo';
 import { getMarsAddress } from '@helpers/chains';
 import { Denom } from '@models/Denom';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 
@@ -76,14 +77,14 @@ function MarsOption({
   resultingDenom,
   marsData,
   ...props
-}: UseRadioProps & FlexProps & { resultingDenom: string; marsData: any }) {
+}: UseRadioProps & FlexProps & { resultingDenom: DenomInfo; marsData: any }) {
   const { getInputProps, getRadioProps, htmlProps, getLabelProps } = useRadio(props);
 
   const input = getInputProps();
   const checkbox = getRadioProps();
 
   return (
-    <Tooltip label={props.isDisabled ? `Mars is not yet available for ${getDenomName(resultingDenom)}` : ''}>
+    <Tooltip label={props.isDisabled ? `Mars is not yet available for ${resultingDenom.name}` : ''}>
       <Box as="label" {...htmlProps}>
         <input {...input} />
         <Box
@@ -109,11 +110,11 @@ function MarsOption({
             <Grid templateColumns="repeat(8, 1fr)">
               <GridItem colSpan={1} verticalAlign="center" textAlign="center">
                 <Box mt="px">
-                  <DenomIcon denomName={resultingDenom} />
+                  <DenomIcon denomInfo={resultingDenom} />
                 </Box>
               </GridItem>
               <GridItem colSpan={5}>
-                <Text fontSize="sm">Loan {getDenomName(resultingDenom)} on Mars</Text>
+                <Text fontSize="sm">Loan {resultingDenom.name} on Mars</Text>
               </GridItem>
               <GridItem colSpan={2} textAlign="right">
                 <Text>~{Number((Number(marsData?.liquidity_rate) * 100).toFixed(2))}%</Text>
@@ -126,11 +127,11 @@ function MarsOption({
   );
 }
 
-function useMars(resultingDenom: string | undefined) {
+function useMars(resultingDenom: DenomInfo | undefined) {
   const client = useCosmWasmClient((state) => state.client);
 
   return useQuery<any>(
-    ['mars-check', client, resultingDenom],
+    ['mars-check', client, resultingDenom?.id],
     async () => {
       if (!client) {
         throw new Error('No client');
@@ -149,7 +150,7 @@ function useMars(resultingDenom: string | undefined) {
   );
 }
 
-export default function GenerateYield({ resultingDenom }: { resultingDenom: Denom }) {
+export default function GenerateYield({ resultingDenom }: { resultingDenom: DenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
   const { data, isLoading } = useMars(resultingDenom);
 
@@ -190,7 +191,7 @@ export default function GenerateYield({ resultingDenom }: { resultingDenom: Deno
           </Stack>
         </>
       ) : (
-        <Center>No yield strategies available for {getDenomName(resultingDenom)} yet.</Center>
+        <Center>No yield strategies available for {resultingDenom.name} yet.</Center>
       )}
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>

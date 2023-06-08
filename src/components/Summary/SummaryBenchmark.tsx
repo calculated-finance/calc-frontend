@@ -8,8 +8,8 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, initialDeposit, strategyDuration } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const initialDenomInfo = getDenomInfo(initialDenom);
+  const resultingDenomInfo = getDenomInfo(resultingDenom);
 
   const swapAmount = Number(getSwapAmountFromDuration(initialDeposit, strategyDuration).toFixed(3));
 
@@ -20,14 +20,14 @@ export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
         The DCA+ performance will be benchmarked against a daily swap of{' '}
         <BadgeButton url="customise">
           <Text>
-            {swapAmount} {initialDenomName}
+            {swapAmount} {initialDenomInfo.name}
           </Text>
-          <DenomIcon denomName={initialDenom} />{' '}
+          <DenomIcon denomInfo={initialDenomInfo} />{' '}
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="assets">
-          <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />{' '}
+          <Text>{resultingDenomInfo.name}</Text>
+          <DenomIcon denomInfo={resultingDenomInfo} />{' '}
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="customise">

@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Box, Heading, SimpleGrid, Stack, Text, list } from '@chakra-ui/react';
+import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import useContractBalances, { useFeeTakerBalances } from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
@@ -19,11 +19,10 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
+import { DenomInfo } from '@utils/DenomInfo';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -40,19 +39,19 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
     .sort((a, b) => Number(b.fiatAmount) - Number(a.fiatAmount));
 }
 
-function getTotalSwappedForDenom(denom: string, strategies: Strategy[]) {
+function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
-    .filter((strategy) => strategy.swapped_amount.denom === denom)
+    .filter((strategy) => strategy.swapped_amount.denom === denom.id)
     .map((strategy) => strategy.swapped_amount.amount)
     .reduce((total, amount) => total + Number(amount), 0)
     .toFixed(6);
 }
 
-export function getTotalSwapped(strategies: Strategy[], supportedDenoms: string[]) {
+export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
   const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
-        denom,
+        denom: denom.id,
         amount: getTotalSwappedForDenom(denom, strategies),
       } as Coin),
   );
@@ -60,19 +59,19 @@ export function getTotalSwapped(strategies: Strategy[], supportedDenoms: string[
   return totalSwapped;
 }
 
-function getTotalReceivedForDenom(denom: string, strategies: Strategy[]) {
+function getTotalReceivedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
-    .filter((strategy) => strategy.received_amount.denom === denom)
+    .filter((strategy) => strategy.received_amount.denom === denom.id)
     .map((strategy) => strategy.received_amount.amount)
     .reduce((total, amount) => total + Number(amount), 0)
     .toFixed(6);
 }
 
-function getTotalReceived(strategies: Strategy[], supportedDenoms: string[]) {
+function getTotalReceived(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
   const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
-        denom,
+        denom: denom.id,
         amount: getTotalReceivedForDenom(denom, strategies),
       } as Coin),
   );
@@ -101,12 +100,12 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
 export function totalFromCoins(
   coins: Coin[] | undefined,
   fiatPrices: any,
-  supportedDenoms: string[],
+  supportedDenoms: DenomInfo[],
   injectedChain?: Chains,
 ) {
   return (
     coins
-      ?.filter((coin) => supportedDenoms.includes(coin.denom))
+      ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
       .map((balance) => {
         const { conversion, coingeckoId } = getDenomInfo(balance.denom, injectedChain);
         const denomConvertedAmount = conversion(Number(balance.amount));

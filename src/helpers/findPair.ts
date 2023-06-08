@@ -1,14 +1,13 @@
-import { isDenomStable } from '@utils/getDenomInfo';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
+import { DenomInfo } from '@utils/DenomInfo';
 
-export function findPair(pairs: Pair[], resultingDenom: Denom, initialDenom: Denom): Pair | undefined {
+export function findPair(pairs: Pair[], resultingDenom: DenomInfo, initialDenom: DenomInfo): Pair | undefined {
   const initialAsQuote = pairs?.find(
-    (pair: Pair) => pair.base_denom === resultingDenom && pair.quote_denom === initialDenom,
+    (pair: Pair) => pair.base_denom === resultingDenom.id && pair.quote_denom === initialDenom.id,
   );
 
   if (initialAsQuote) {
     return initialAsQuote;
   }
-  return pairs?.find((pair: Pair) => pair.base_denom === initialDenom && pair.quote_denom === resultingDenom);
+  return pairs?.find((pair: Pair) => pair.base_denom === initialDenom.id && pair.quote_denom === resultingDenom.id);
 }

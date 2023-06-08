@@ -6,10 +6,11 @@ import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
 import usePairs from '@hooks/usePairs';
 import { OsmosisPair } from '@models/Pair';
+import { DenomInfo } from '@utils/DenomInfo';
 
 export default function useDexFee(
-  initialDenom: string | undefined,
-  resultingDenom: string | undefined,
+  initialDenom: DenomInfo,
+  resultingDenom: DenomInfo,
   transactionType: TransactionType,
 ) {
   const { chain } = useChain();

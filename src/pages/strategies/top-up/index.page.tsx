@@ -107,7 +107,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
               <Stack spacing={2}>
                 <Heading size="sm">{getStrategyName(strategy)}</Heading>
                 <Text textStyle="body-xs">
-                  Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
+                  Remaining balance: {remaining} {initialDenom.name}
                 </Text>
                 <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
               </Stack>

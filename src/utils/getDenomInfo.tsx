@@ -5,27 +5,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';
-
-type DenomInfo = {
-  id: Denom;
-  name: string;
-  icon: string;
-  conversion: (value: number) => number;
-  deconversion: (value: number) => number;
-  priceDeconversion: (value: number | undefined | null) => number;
-  priceConversion: (value: number | undefined | null) => number;
-  stakeable: boolean;
-  stable: boolean;
-  coingeckoId: string;
-  stakeableAndSupported: boolean;
-  promotion?: JSX.Element;
-  enabled: boolean;
-  minimumSwapAmount: number;
-  significantFigures: number;
-  enabledInDcaPlus: boolean;
-  osmosisId?: string;
-  pricePrecision: number;
-};
+import { DenomInfo } from './DenomInfo';
 
 type DenomInfoWithoutId = Omit<DenomInfo, 'id'>;
 
@@ -435,10 +415,7 @@ function isDenomInStablesList(denom: Denom) {
   return stableDenomsTestnet.includes(denom);
 }
 
-const getDenomInfo = (denom?: string, injectedChain?: Chains): DenomInfo | undefined => {
-  if (!denom) {
-    return undefined;
-  }
+const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
   const { chain: storedChain } = useChainStore.getState();
 
   const chain = injectedChain || storedChain;
@@ -450,7 +427,7 @@ const getDenomInfo = (denom?: string, injectedChain?: Chains): DenomInfo | undef
     const asset = assetList.assets.find((a) => a.base === denom);
 
     if (!asset) {
-      return undefined;
+      throw Error(`Asset not found for denom ${denom}`);
     }
 
     const mapTo = {} as Partial<DenomInfo>;
@@ -520,11 +497,12 @@ export function convertDenomFromCoin(coin: Coin | undefined) {
   if (!denomInfo) {
     return 0;
   }
-  return Number(denomInfo.conversion(Number(coin.amount)).toFixed(denomInfo.significantFigures));
+  const { significantFigures, conversion } = denomInfo;
+  return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
 }
 
-export function getDenomMinimumSwapAmount(denomInfo: DenomInfo) {
-  return denomInfo.minimumSwapAmount;
+export function getDenomMinimumSwapAmount(denom: Denom) {
+  return getDenomInfo(denom)?.minimumSwapAmount;
 }
 
 export class DenomValue {
@@ -539,15 +517,18 @@ export class DenomValue {
   }
 
   toConverted() {
-    const { conversion } = getDenomInfo(this.denomId);
+    const { conversion } = getDenomInfo(this.denomId) || {};
+    if (!conversion) {
+      return 0;
+    }
     return parseFloat(conversion(this.amount).toFixed(6));
   }
 }
 
-export function isDenomStable(denom: Denom) {
-  return getDenomInfo(denom).stable;
+export function isDenomStable(denom: DenomInfo | undefined) {
+  return denom?.stable;
 }
-export function isDenomVolatile(denom: Denom) {
+export function isDenomVolatile(denom: DenomInfo | undefined) {
   return !isDenomStable(denom);
 }
 

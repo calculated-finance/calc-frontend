@@ -3,6 +3,7 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { Denom } from '@models/Denom';
+import { DenomInfo } from '@utils/DenomInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -54,8 +55,8 @@ function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
 
 type PriceThresholdProps = {
   transactionType: TransactionType;
-  initialDenom: Denom;
-  resultingDenom: Denom;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   forceOpen?: boolean;
 };
 

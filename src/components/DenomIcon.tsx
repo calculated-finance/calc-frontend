@@ -1,21 +1,23 @@
-import { Box, Image, Tooltip } from '@chakra-ui/react';
-import { Denom } from '@models/Denom';
-import getDenomInfo from '@utils/getDenomInfo';
+import { Box, Image, SkeletonCircle, Tooltip } from '@chakra-ui/react';
+import { DenomInfo } from '@utils/DenomInfo';
 
 function DenomIcon({
-  denomName,
+  denomInfo,
   size = 4,
   showTooltip = false,
 }: {
-  denomName: Denom;
+  denomInfo: DenomInfo;
   size?: number;
   showTooltip?: boolean;
 }) {
-  const { name, icon } = getDenomInfo(denomName);
+  if (!denomInfo) {
+    return <SkeletonCircle width={size} height={size} />;
+  }
+  const { name, icon, id } = denomInfo;
   return (
     <Tooltip label={name} isDisabled={!showTooltip}>
       {icon ? (
-        <Image data-testid={`denom-icon-${denomName}`} display="inline" src={icon} width={size} height={size} />
+        <Image data-testid={`denom-icon-${id}`} display="inline" src={icon} width={size} height={size} />
       ) : (
         <Box
           fontSize="xs"

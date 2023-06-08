@@ -6,6 +6,7 @@ import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import TriggerTypes from '@models/TriggerTypes';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
+import { DenomInfo } from '@utils/DenomInfo';
 
 export function ImmediateTriggerInfo() {
   return (
@@ -53,16 +54,16 @@ export function TimeTriggerInfo({ state }: { state: DcaInFormDataAll | WeightedS
 }
 
 export function PriceTriggerInfo({
-  state,
+  initialDenom,
+  resultingDenom,
+  startPrice,
   transactionType,
 }: {
-  state: DcaInFormDataAll | WeightedScaleState;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  startPrice: number | null | undefined;
   transactionType: string;
 }) {
-  const { initialDenom, resultingDenom, startPrice } = state;
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
-
   return (
     <>
       Starting when{' '}
@@ -70,27 +71,27 @@ export function PriceTriggerInfo({
         {transactionType === 'buy' ? (
           <>
             {' '}
-            <Text>{resultingDenomName}</Text>
-            <DenomIcon denomName={resultingDenom} />
+            <Text>{resultingDenom.name}</Text>
+            <DenomIcon denomInfo={resultingDenom} />
             <Text pt={1} fontSize="xs">
               &le;
             </Text>
             <Text>
-              {startPrice} {initialDenomName}
+              {startPrice} {initialDenom.name}
             </Text>
-            <DenomIcon denomName={initialDenom} />
+            <DenomIcon denomInfo={initialDenom} />
           </>
         ) : (
           <>
-            <Text>1 {initialDenomName}</Text>
-            <DenomIcon denomName={initialDenom} />
+            <Text>1 {initialDenom.name}</Text>
+            <DenomIcon denomInfo={initialDenom} />
             <Text pt={1} fontSize="xs">
               &ge;
             </Text>
             <Text>
-              {startPrice} {resultingDenomName}
+              {startPrice} {resultingDenom.name}
             </Text>
-            <DenomIcon denomName={resultingDenom} />
+            <DenomIcon denomInfo={resultingDenom} />
           </>
         )}
       </BadgeButton>
@@ -105,7 +106,7 @@ export function SummaryTriggerInfo({
   state: DcaInFormDataAll | WeightedScaleState;
   transactionType: string;
 }) {
-  const { startImmediately, triggerType } = state;
+  const { startImmediately, triggerType, initialDenom, resultingDenom, startPrice } = state;
 
   if (startImmediately === StartImmediatelyValues.Yes) {
     return <ImmediateTriggerInfo />;
@@ -113,5 +114,12 @@ export function SummaryTriggerInfo({
   if (triggerType === TriggerTypes.Date) {
     return <TimeTriggerInfo state={state} />;
   }
-  return <PriceTriggerInfo state={state} transactionType={transactionType} />;
+  return (
+    <PriceTriggerInfo
+      initialDenom={getDenomInfo(initialDenom)}
+      resultingDenom={getDenomInfo(resultingDenom)}
+      transactionType={transactionType}
+      startPrice={startPrice}
+    />
+  );
 }

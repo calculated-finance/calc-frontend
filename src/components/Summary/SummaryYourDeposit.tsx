@@ -19,7 +19,7 @@ export function SummaryYourDeposit({ state, strategyType }: { state: DcaFormStat
           <Text>
             {initialDeposit} {initialDenomName}
           </Text>
-          <DenomIcon denomName={initialDenom} />{' '}
+          <DenomIcon denomInfo={getDenomInfo(initialDenom)} />{' '}
         </BadgeButton>{' '}
         Into the CALC {strategyType} vault.
       </Text>
