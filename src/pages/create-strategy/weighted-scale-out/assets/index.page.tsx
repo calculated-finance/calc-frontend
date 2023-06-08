@@ -23,8 +23,6 @@ import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
-import { WhitelistModal } from '@components/WhitelistModal';
-import useWhitelist from '@hooks/useWhitelist';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 
@@ -59,12 +57,6 @@ function Page() {
   };
 
   const router = useRouter();
-
-  const { isWhitelisted } = useWhitelist();
-
-  if (!isWhitelisted) {
-    return <WhitelistModal />;
-  }
 
   if (!pairs) {
     return <ModalWrapper stepsConfig={weightedScaleOutSteps} isLoading reset={actions.resetAction} />;

@@ -8,7 +8,6 @@ import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
-import useWhitelist from '@hooks/useWhitelist';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import StrategyUrls from './StrategyUrls';
@@ -129,8 +128,6 @@ function Strategies() {
 
   const { chain } = useChain();
 
-  const { isWhitelisted } = useWhitelist();
-
   const showFearAndGreedAccumulate = index < 41;
   const showFearAndGreedProfit = index > 59;
 
@@ -149,7 +146,7 @@ function Strategies() {
         description: 'Let our machine learning DCA algorithms invest for you.',
         advanced: true,
         href: StrategyUrls.DCAPlusIn,
-        enabled: isWhitelisted,
+        enabled: true,
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
         learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
       },
@@ -185,7 +182,7 @@ function Strategies() {
         advanced: true,
         href: StrategyUrls.DCAPlusOut,
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-        enabled: isWhitelisted,
+        enabled: true,
         learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
       },
     ] as StrategyCardProps[];

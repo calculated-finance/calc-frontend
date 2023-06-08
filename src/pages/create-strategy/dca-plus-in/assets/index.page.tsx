@@ -20,8 +20,6 @@ import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { ModalWrapper } from '@components/ModalWrapper';
-import useWhitelist from '@hooks/useWhitelist';
-import { WhitelistModal } from '@components/WhitelistModal';
 import { useRouter } from 'next/router';
 import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
@@ -58,11 +56,6 @@ function DcaIn() {
 
   const router = useRouter();
 
-  const { isWhitelisted } = useWhitelist();
-
-  if (!isWhitelisted) {
-    return <WhitelistModal />;
-  }
   if (!pairs) {
     return <ModalWrapper stepsConfig={dcaPlusInSteps} isLoading reset={actions.resetAction} />;
   }

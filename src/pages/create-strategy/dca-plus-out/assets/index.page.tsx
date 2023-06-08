@@ -25,8 +25,6 @@ import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { isDenomStable } from '@utils/getDenomInfo';
 import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
-import { WhitelistModal } from '@components/WhitelistModal';
-import useWhitelist from '@hooks/useWhitelist';
 import { FormNames } from '@hooks/useFormStore';
 
 function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
@@ -60,12 +58,6 @@ function Page() {
   };
 
   const router = useRouter();
-
-  const { isWhitelisted } = useWhitelist();
-
-  if (!isWhitelisted) {
-    return <WhitelistModal />;
-  }
 
   if (!pairs) {
     return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;

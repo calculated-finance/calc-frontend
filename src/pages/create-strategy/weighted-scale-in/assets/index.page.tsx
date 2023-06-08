@@ -20,8 +20,6 @@ import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
-import useWhitelist from '@hooks/useWhitelist';
-import { WhitelistModal } from '@components/WhitelistModal';
 import { useRouter } from 'next/router';
 import { Pair } from '@models/Pair';
 import { Denom } from '@models/Denom';
@@ -58,11 +56,6 @@ function DcaIn() {
 
   const router = useRouter();
 
-  const { isWhitelisted } = useWhitelist();
-
-  if (!isWhitelisted) {
-    return <WhitelistModal />;
-  }
   if (!pairs) {
     return <ModalWrapper stepsConfig={weightedScaleInSteps} isLoading reset={actions.resetAction} />;
   }
