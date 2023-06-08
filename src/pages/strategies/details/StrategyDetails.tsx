@@ -57,6 +57,7 @@ import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
 import { useAdmin } from '@hooks/useAdmin';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
+import useWhitelist from '@hooks/useWhitelist';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -153,8 +154,9 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { data: events } = useStrategyEvents(strategy.id);
 
   const { isAdmin } = useAdmin();
+  const { isWhitelisted } = useWhitelist();
 
-  const showEditButton = isAdmin && !isStrategyCancelled(strategy);
+  const showEditButton = (isWhitelisted || isAdmin) && !isStrategyCancelled(strategy);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
