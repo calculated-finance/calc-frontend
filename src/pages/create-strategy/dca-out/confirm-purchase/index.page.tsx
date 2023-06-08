@@ -55,41 +55,51 @@ function Page() {
 
   const transactionType = TransactionType.Sell;
 
+  if (!state) {
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
+          <InvalidData onRestart={handleRestart} />
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
+  }
+
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
-        {state ? (
-          <Stack spacing={4}>
-            <DcaDiagram
-              initialDenom={getDenomInfo(state.initialDenom)}
-              resultingDenom={getDenomInfo(state.resultingDenom)}
-              initialDeposit={state.initialDeposit}
-            />
-            <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
-            <SummaryTheSwap state={state} transactionType={transactionType} />
-            <SummaryWhileSwapping
-              initialDenom={getDenomInfo(state.initialDenom)}
-              resultingDenom={getDenomInfo(state.resultingDenom)}
-              priceThresholdValue={state.priceThresholdValue}
-              slippageTolerance={state.slippageTolerance}
-              transactionType={transactionType}
-            />
-            <SummaryAfterEachSwap state={state} />
-            <Fees
-              transactionType={TransactionType.Sell}
-              swapFee={SWAP_FEE}
-              initialDenom={getDenomInfo(state.initialDenom)}
-              resultingDenom={getDenomInfo(state.resultingDenom)}
-              autoStakeValidator={state.autoStakeValidator}
-              swapAmount={state.swapAmount}
-            />
-            <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-          </Stack>
-        ) : (
-          <InvalidData onRestart={handleRestart} />
-        )}
+        <Stack spacing={4}>
+          <DcaDiagram
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
+            initialDeposit={state.initialDeposit}
+          />
+          <Divider />
+          <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
+          <SummaryTheSwap state={state} transactionType={transactionType} />
+          <SummaryWhileSwapping
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
+            priceThresholdValue={state.priceThresholdValue}
+            slippageTolerance={state.slippageTolerance}
+            transactionType={transactionType}
+          />
+          <SummaryAfterEachSwap state={state} />
+          <Fees
+            transactionType={TransactionType.Sell}
+            swapFee={SWAP_FEE}
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
+            autoStakeValidator={state.autoStakeValidator}
+            swapAmount={state.swapAmount}
+          />
+          <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+        </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>
   );
