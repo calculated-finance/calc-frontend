@@ -1,27 +1,24 @@
-import { Coin } from '@cosmjs/stargate';
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { Coin } from '@cosmjs/proto-signing';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 export type BalanceResponse = {
   amount: number;
 };
 
-interface UseBalanceArgs {
-  token?: DenomInfo;
-}
-
-export function getDisplayAmount(token: DenomInfo | undefined, amount: number) {
+export function getDisplayAmount(token: DenomInfo, amount: number) {
   return Number(token?.conversion(amount));
 }
 
-const useBalance = ({ token }: UseBalanceArgs) => {
+const useBalance = (token: DenomInfo | undefined) => {
   const { address } = useWallet();
   const client = useCosmWasmClient((state) => state.client);
 
   const result = useQuery<Coin>(
-    ['balance', token, address, client],
+    ['balance', token?.id, address, client],
     () => {
       if (!client) {
         throw new Error('Client not initialized');
@@ -29,7 +26,7 @@ const useBalance = ({ token }: UseBalanceArgs) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      return client.getBalance(address, token?.id ?? '');
+      return client.getBalance(address, token!.id);
     },
     {
       enabled: !!token && !!address && !!client,
@@ -41,7 +38,8 @@ const useBalance = ({ token }: UseBalanceArgs) => {
   );
 
   return {
-    displayAmount: result.data ? getDisplayAmount(token, Number(result.data.amount)) : 0,
+    displayAmount: result.data && token ? getDisplayAmount(token, Number(result.data.amount)) : 0,
+
     ...result,
   };
 };

@@ -7,32 +7,28 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 
 export function AvailableFunds() {
   const [field] = useField({ name: 'initialDenom' });
+  const [, , helpers] = useField('initialDeposit');
 
   const { price } = useFiatPrice(field.value);
 
   const createStrategyFee = Number(createStrategyFeeInTokens(price));
-  const initialDenom = field.value;
 
-  const { data, isLoading } = useBalance({
-    token: initialDenom,
-  });
+  const { data, isLoading } = useBalance(field.value ? getDenomInfo(field.value) : undefined);
+
+  if (!field.value) {
+    return null;
+  }
+
+  const initialDenom = getDenomInfo(field.value);
 
   const balance = Number(data?.amount);
 
-  const { name } = getDenomInfo(field.value);
-
-  const displayAmount = getDisplayAmount(field.value, Math.max(balance - createStrategyFee, 0));
-  const displayFee = getDisplayAmount(field.value, createStrategyFee);
-
-  const [, , helpers] = useField('initialDeposit');
+  const displayAmount = getDisplayAmount(initialDenom, Math.max(balance - createStrategyFee, 0));
+  const displayFee = getDisplayAmount(initialDenom, createStrategyFee);
 
   const handleClick = () => {
     helpers.setValue(displayAmount);
   };
-
-  if (!initialDenom) {
-    return null;
-  }
 
   return (
     <Center textStyle="body-xs">
@@ -40,7 +36,7 @@ export function AvailableFunds() {
         isDisabled={balance === 0}
         label={`This is the estimated balance available to you after fees have been deducted ( ${String.fromCharCode(
           8275,
-        )} ${displayFee} ${name}). This excludes gas fees, so please make sure you have remaining funds.`}
+        )} ${displayFee} ${initialDenom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>

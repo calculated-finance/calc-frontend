@@ -144,7 +144,6 @@ export function useCustomiseStrategy() {
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     (variables) => {
-      console.log('variables', variables);
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
