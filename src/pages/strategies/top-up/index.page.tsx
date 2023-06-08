@@ -7,7 +7,6 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';

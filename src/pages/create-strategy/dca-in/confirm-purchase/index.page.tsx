@@ -21,17 +21,18 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
-  const { price } = useFiatPrice(state?.initialDenom);
+  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
   const { nextStep, goToStep } = useSteps(steps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(undefined, {
+    mutate(price, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
@@ -58,16 +59,16 @@ function Page() {
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
               initialDeposit={state.initialDeposit}
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAIn} />
             <SummaryTheSwap state={state} transactionType={transactionType} />
             <SummaryWhileSwapping
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
               priceThresholdValue={state.priceThresholdValue}
               slippageTolerance={state.slippageTolerance}
               transactionType={transactionType}

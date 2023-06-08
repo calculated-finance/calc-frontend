@@ -22,17 +22,18 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import useFiatPrice from '@hooks/useFiatPrice';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
-  const { price } = useFiatPrice(state?.initialDenom);
+  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(undefined, {
+    mutate(price, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,
@@ -61,17 +62,22 @@ function Page() {
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
               initialDeposit={state.initialDeposit}
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
-            <SummaryTheSwapDcaPlus state={state} />
+            <SummaryTheSwapDcaPlus
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              initialDeposit={state.initialDeposit}
+              strategyDuration={state.strategyDuration}
+            />
             <SummaryWhileSwapping
               transactionType={transactionType}
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
               priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
             />

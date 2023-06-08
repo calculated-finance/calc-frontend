@@ -31,7 +31,7 @@ const useContractBalances = () => {
   );
 
   return {
-    balances: result.data?.filter((balance: Coin) => supportedDenoms.includes(balance.denom)),
+    balances: result.data?.filter((balance: Coin) => supportedDenoms.map((sd) => sd.id).includes(balance.denom)),
     ...result,
   };
 };
@@ -60,7 +60,7 @@ export const useFeeTakerBalances = () => {
   );
 
   return {
-    balances: result.data?.filter((balance: Coin) => supportedDenoms.includes(balance.denom)),
+    balances: result.data?.filter((balance: Coin) => supportedDenoms.map((sd) => sd.id).includes(balance.denom)),
     ...result,
   };
 };

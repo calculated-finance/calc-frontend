@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, Divider, GridItem, Grid } from '@chakra-ui/react';
 import useBalances from '@hooks/useBalances';
-import getDenomInfo from '@utils/getDenomInfo';
-import { Coin } from '@cosmjs/stargate';
+import getDenomInfo, { convertDenomFromCoin } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
+import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
 
 function CoinBalance({ balance }: { balance: Coin }) {
   const { name, conversion } = getDenomInfo(balance.denom);
@@ -23,9 +23,9 @@ function CoinBalance({ balance }: { balance: Coin }) {
 }
 
 function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
-  const { price } = useFiatPrice(balance.denom);
-  const { name, conversion } = getDenomInfo(balance.denom);
-  const balanceConverted = conversion(Number(balance.amount));
+  const denom = getDenomInfo(balance.denom);
+  const { price } = useFiatPrice(denom);
+  const balanceConverted = convertDenomFromCoin(balance);
   return (
     <>
       <GridItem colSpan={1}>
@@ -34,7 +34,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{name || balance.denom}</Text>
+        <Text textStyle="body-xs">{denom.name || balance.denom}</Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text textStyle="body-xs">{formatFiat(price * balanceConverted)}</Text>

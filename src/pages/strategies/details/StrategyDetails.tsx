@@ -15,13 +15,12 @@ import {
   Code,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
+import { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@hooks/useStrategies';
 import useStrategyEvents from '@hooks/useStrategyEvents';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import {

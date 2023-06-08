@@ -36,7 +36,7 @@ type CancelStrategyModalProps = {
 } & Omit<ModalProps, 'children'>;
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
-  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(strategy.balance.denom);
+  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(getStrategyInitialDenom(strategy));
 
   const { price } = useFiatPrice(getStrategyInitialDenom(strategy));
 

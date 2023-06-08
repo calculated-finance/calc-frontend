@@ -107,7 +107,7 @@ export default function usePrice(
 
   const price = data && calculatePrice(data, initialDenom!, transactionType);
 
-  const pricePrecision = max([getDenomInfo(initialDenom).pricePrecision, getDenomInfo(resultingDenom).pricePrecision]);
+  const pricePrecision = max([initialDenom.pricePrecision, resultingDenom.pricePrecision]);
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {

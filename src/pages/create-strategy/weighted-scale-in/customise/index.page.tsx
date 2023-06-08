@@ -97,10 +97,14 @@ export function WeightedScaleCustomisePage({
                 />
                 <AdvancedSettingsSwitch />
                 <Collapse in={values.advancedSettings}>
-                  <TriggerForm transactionType={transactionType} formName={formName} />
+                  <TriggerForm
+                    transactionType={transactionType}
+                    initialDenom={initialDenomInfo}
+                    resultingDenom={resultingDenomInfo}
+                  />
                 </Collapse>
                 <ExecutionInterval />
-                <BaseSwapAmount step1State={state.step1} />
+                <BaseSwapAmount initialDenom={initialDenomInfo} initialDeposit={state.step1.initialDeposit} />
                 <SwapMultiplier
                   initialDenom={initialDenomInfo}
                   resultingDenom={resultingDenomInfo}

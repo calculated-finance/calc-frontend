@@ -2,10 +2,8 @@
 import { useWallet } from '@hooks/useWallet';
 import * as Sentry from '@sentry/react';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
-import { Denom } from '@models/Denom';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -16,7 +14,7 @@ type TopUpVariables = {
   values: {
     topUpAmount: number;
   };
-  initialDenom: DenomInfo | undefined;
+  initialDenom: DenomInfo;
   strategy: Strategy;
 };
 
@@ -27,7 +25,7 @@ const useTopUpStrategy = () => {
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(
     ({ values, initialDenom, strategy }) => {
-      const { deconversion } = initialDenom || {};
+      const { deconversion } = initialDenom;
 
       if (isNil(address)) {
         throw new Error('address is null or empty');
@@ -51,7 +49,7 @@ const useTopUpStrategy = () => {
         },
       } as ExecuteMsg;
 
-      const funds = [{ denom: initialDenom, amount: deconversion(values.topUpAmount).toString() }];
+      const funds = [{ denom: initialDenom.id, amount: deconversion(values.topUpAmount).toString() }];
 
       const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined, funds);
       return result;

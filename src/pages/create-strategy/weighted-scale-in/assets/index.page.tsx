@@ -22,9 +22,10 @@ import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -82,7 +83,13 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={getResultingDenoms(pairs, values.initialDenom).filter(isSupportedDenomForWeightedScale)}
+                denoms={
+                  values.initialDenom
+                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(
+                        isSupportedDenomForWeightedScale,
+                      )
+                    : []
+                }
               />
               <Submit>Next</Submit>
             </Stack>

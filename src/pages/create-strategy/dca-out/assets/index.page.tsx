@@ -20,12 +20,12 @@ import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
-import { isDenomVolatile } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
+import { DenomInfo } from '@utils/DenomInfo';
 
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -85,7 +85,9 @@ function Page() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
+              <DCAOutResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               <Submit>Next</Submit>
             </Stack>
           </Form>

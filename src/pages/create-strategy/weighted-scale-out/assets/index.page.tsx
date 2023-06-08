@@ -22,11 +22,12 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -88,7 +89,9 @@ function Page() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
+              <DCAOutResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               <Submit>Next</Submit>
             </Stack>
           </Form>

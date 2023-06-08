@@ -22,12 +22,12 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
-import { isDenomStable } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
 import { FormNames } from '@hooks/useFormStore';
+import { DenomInfo } from '@utils/DenomInfo';
 
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
+function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -87,7 +87,9 @@ function Page() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
+              <DCAOutResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               <Submit>Next</Submit>
             </Stack>
           </Form>

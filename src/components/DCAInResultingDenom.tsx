@@ -4,9 +4,10 @@ import { useField, useFormikContext } from 'formik';
 import { Denom } from '@models/Denom';
 import { useChain } from '@hooks/useChain';
 import { getChainDexName } from '@helpers/chains';
+import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
 
-export default function DCAInResultingDenom({ denoms }: { denoms: Denom[] }) {
+export default function DCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chain } = useChain();
 

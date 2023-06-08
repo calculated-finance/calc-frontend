@@ -11,6 +11,7 @@ import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);
@@ -38,8 +39,8 @@ function Page() {
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            {state ? (
-              <PostPurchaseForm resultingDenom={context?.resultingDenom} />
+            {state && context ? (
+              <PostPurchaseForm resultingDenom={getDenomInfo(context?.resultingDenom)} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

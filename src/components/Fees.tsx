@@ -218,9 +218,11 @@ export default function Fees({
   swapFeeTooltip?: string;
   excludeDepositFee?: boolean;
 }) {
-  const { price } = useFiatPrice(state?.initialDenom);
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
+  const { price } = useFiatPrice(initialDenom);
 
-  const { initialDenom, autoStakeValidator, swapAmount, resultingDenom } = state || {};
+  const { autoStakeValidator, swapAmount } = state;
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
@@ -230,8 +232,8 @@ export default function Fees({
     return null;
   }
 
-  const { name: initialDenomName, promotion: initialDenomPromotion } = getDenomInfo(initialDenom);
-  const { promotion: resultingDenomPromotion } = getDenomInfo(resultingDenom);
+  const { name: initialDenomName, promotion: initialDenomPromotion } = initialDenom;
+  const { promotion: resultingDenomPromotion } = resultingDenom;
 
   const applyPromo = Boolean(initialDenomPromotion) || Boolean(resultingDenomPromotion);
 

@@ -15,5 +15,5 @@ export function useSupportedDenoms(injectedChain?: Chains) {
 
   const allDenoms = chain === Chains.Osmosis ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
 
-  return allDenoms.map(getDenomInfo);
+  return allDenoms.map((denom) => getDenomInfo(denom));
 }

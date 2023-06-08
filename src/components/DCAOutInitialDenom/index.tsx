@@ -15,10 +15,11 @@ import InitialDeposit from '@components/InitialDeposit';
 import { Denom } from '@models/Denom';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
+import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from '../DenomSelect';
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
-export default function DCAOutInitialDenom({ denoms }: { denoms: Denom[] }) {
+export default function DCAOutInitialDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
   const { chain } = useChain();

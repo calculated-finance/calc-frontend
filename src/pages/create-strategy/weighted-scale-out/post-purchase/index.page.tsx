@@ -11,6 +11,7 @@ import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormDa
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { FormNames } from '@hooks/useFormStore';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.WeightedScaleOut);
@@ -38,8 +39,8 @@ function Page() {
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={weightedScaleOutSteps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            {state ? (
-              <PostPurchaseForm resultingDenom={context?.resultingDenom} />
+            {state && context ? (
+              <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

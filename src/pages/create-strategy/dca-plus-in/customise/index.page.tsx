@@ -17,6 +17,7 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
@@ -67,8 +68,8 @@ function Page() {
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaDiagram
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
+                  initialDenom={getDenomInfo(state.step1.initialDenom)}
+                  resultingDenom={getDenomInfo(state.step1.resultingDenom)}
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />

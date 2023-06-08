@@ -33,7 +33,7 @@ function Page() {
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(undefined, {
+    mutate(price, {
       onSuccess: async (strategyId) => {
         await nextStep({
           strategyId,

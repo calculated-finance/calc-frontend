@@ -17,6 +17,7 @@ import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames } from '@hooks/useFormStore';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);
@@ -51,6 +52,8 @@ function Page() {
   };
 
   const initialValues = state.step2;
+  const initialDenom = getDenomInfo(state.step1.initialDenom);
+  const resultingDenom = getDenomInfo(state.step1.resultingDenom);
 
   return (
     <Formik
@@ -67,8 +70,8 @@ function Page() {
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaDiagram
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
+                  initialDenom={initialDenom}
+                  resultingDenom={resultingDenom}
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />

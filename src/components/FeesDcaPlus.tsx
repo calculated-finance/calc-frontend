@@ -207,21 +207,17 @@ export default function FeesDcaPlus({
   transactionType: TransactionType;
 }) {
   const { state } = useDcaPlusConfirmForm(formName);
-  const { price } = useFiatPrice(state?.initialDenom);
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
+  const { autoStakeValidator, initialDeposit, strategyDuration } = state;
 
-  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration, resultingDenom } = state || {};
+  const { price } = useFiatPrice(initialDenom);
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
-  // instead of returning any empty state on error, we could throw a validation error and catch it to display the
-  // invalid data message, along with missing field info.
-  if (!state) {
-    return null;
-  }
+  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const swapAmount = getSwapAmountFromDuration(initialDeposit!, strategyDuration!);
-
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: initialDenomName } = initialDenom;
 
   return (
     <Stack spacing={0}>
