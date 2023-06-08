@@ -12,7 +12,7 @@ export function getDisplayAmount(token: DenomInfo, amount: number) {
   return token.conversion(amount);
 }
 
-const useBalance = (token: DenomInfo | undefined) => {
+const useBalance = (token: DenomInfo) => {
   const { address } = useWallet();
   const client = useCosmWasmClient((state) => state.client);
 
@@ -25,7 +25,7 @@ const useBalance = (token: DenomInfo | undefined) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      return client.getBalance(address, token!.id);
+      return client.getBalance(address, token.id);
     },
     {
       enabled: !!token && !!address && !!client,
@@ -37,7 +37,7 @@ const useBalance = (token: DenomInfo | undefined) => {
   );
 
   return {
-    displayAmount: result.data && token ? getDisplayAmount(token, Number(result.data.amount)) : 0,
+    displayAmount: result.data ? getDisplayAmount(token, Number(result.data.amount)) : 0,
 
     ...result,
   };

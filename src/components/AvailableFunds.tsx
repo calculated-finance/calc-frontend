@@ -4,27 +4,21 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { DenomInfo } from '@utils/DenomInfo';
 
-export function AvailableFunds() {
-  const [field] = useField({ name: 'initialDenom' });
+export function AvailableFunds({ denom }: { denom: DenomInfo }) {
   const [, , helpers] = useField('initialDeposit');
 
-  const { price } = useFiatPrice(field.value && getDenomInfo(field.value));
+  const { price } = useFiatPrice(denom);
 
   const createStrategyFee = Number(createStrategyFeeInTokens(price));
 
-  const { data, isLoading } = useBalance(field.value ? getDenomInfo(field.value) : undefined);
-
-  if (!field.value) {
-    return null;
-  }
-
-  const initialDenom = getDenomInfo(field.value);
+  const { data, isLoading } = useBalance(denom);
 
   const balance = Number(data?.amount);
 
-  const displayAmount = getDisplayAmount(initialDenom, Math.max(balance - createStrategyFee, 0));
-  const displayFee = getDisplayAmount(initialDenom, createStrategyFee);
+  const displayAmount = getDisplayAmount(denom, Math.max(balance - createStrategyFee, 0));
+  const displayFee = getDisplayAmount(denom, createStrategyFee);
 
   const handleClick = () => {
     helpers.setValue(displayAmount);
@@ -36,7 +30,7 @@ export function AvailableFunds() {
         isDisabled={balance === 0}
         label={`This is the estimated balance available to you after fees have been deducted ( ${String.fromCharCode(
           8275,
-        )} ${displayFee} ${initialDenom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
+        )} ${displayFee} ${denom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>

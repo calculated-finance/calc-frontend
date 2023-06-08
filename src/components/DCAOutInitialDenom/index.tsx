@@ -12,11 +12,10 @@ import {
 import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
-import { Denom } from '@models/Denom';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
-import { DcaInFormDataStep1 } from '@models/DcaInFormData';
+import getDenomInfo from '@utils/getDenomInfo';
 import { DenomSelect } from '../DenomSelect';
 
 // its rough to name this quote denom, change to something more generic like "starting denom"
@@ -32,7 +31,7 @@ export default function DCAOutInitialDenom({ denoms }: { denoms: DenomInfo[] }) 
         <Center>
           <Text textStyle="body-xs">CALC currently supports pairs trading on {getChainDexName(chain)}.</Text>
           <Spacer />
-          <AvailableFunds />
+          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>

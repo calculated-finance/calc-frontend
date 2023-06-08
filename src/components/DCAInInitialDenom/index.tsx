@@ -38,7 +38,7 @@ export default function DCAInInitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose between stablecoins or fiat</Text>
           <Spacer />
-          <AvailableFunds />
+          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
