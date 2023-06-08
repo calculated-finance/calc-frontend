@@ -75,14 +75,12 @@ function ActiveWithOne() {
     maximumFractionDigits: 6,
     minimumFractionDigits: 2,
   });
-
-  const denom = useDenom(balanceValue.denomId);
   return (
     <>
       <HStack align="center">
         <Icon as={Block3DIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">
-          {displayBalance} {denom.name} remaining in vault
+          {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
         </Text>
       </HStack>
       <Stack spacing={1}>
