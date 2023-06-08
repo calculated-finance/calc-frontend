@@ -108,6 +108,12 @@ export const useDcaPlusConfirmForm = (formName: FormNames) => {
       },
     };
   } catch (e) {
-    throw new Error('Invalid data');
+    return {
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
+      errors: e,
+    };
   }
 };

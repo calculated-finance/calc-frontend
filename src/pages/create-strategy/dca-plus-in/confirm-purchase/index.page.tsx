@@ -89,7 +89,14 @@ function Page() {
             />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
-            <FeesDcaPlus formName={FormNames.DcaPlusIn} transactionType={TransactionType.Buy} />
+            <FeesDcaPlus
+              transactionType={TransactionType.Buy}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              strategyDuration={state.strategyDuration}
+              initialDeposit={state.initialDeposit}
+              autoStakeValidator={state.autoStakeValidator}
+            />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

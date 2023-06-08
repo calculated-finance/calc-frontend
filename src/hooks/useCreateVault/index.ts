@@ -23,7 +23,6 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
-import useFiatPrice from '../useFiatPrice';
 import { getGrantMsg } from './getGrantMsg';
 import { getExecuteMsg } from './getCreateVaultExecuteMsg';
 import { buildCreateVaultParams } from './buildCreateVaultParams';
@@ -152,8 +151,8 @@ export const useCreateVaultWeightedScale = (formName: FormNames, transactionType
 
   const enablePriceCheck = isNil((state as WeightedScaleState)?.basePriceValue);
   const { price: dexPrice } = usePrice(
-    getDenomInfo(state.resultingDenom),
-    getDenomInfo(state.initialDenom),
+    state && getDenomInfo(state.resultingDenom),
+    state && getDenomInfo(state.initialDenom),
     transactionType,
     enablePriceCheck,
   );

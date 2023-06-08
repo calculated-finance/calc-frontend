@@ -64,8 +64,8 @@ function calculatePrice(result: BookResponse, initialDenom: DenomInfo, transacti
 }
 
 export default function usePrice(
-  resultingDenom: DenomInfo,
-  initialDenom: DenomInfo,
+  resultingDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo | undefined,
   transactionType: TransactionType,
   enabled = true,
 ) {
@@ -107,7 +107,7 @@ export default function usePrice(
 
   const price = data && calculatePrice(data, initialDenom!, transactionType);
 
-  const pricePrecision = max([initialDenom.pricePrecision, resultingDenom.pricePrecision]);
+  const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);
 
   const formattedPrice = price
     ? price.toLocaleString('en-US', {

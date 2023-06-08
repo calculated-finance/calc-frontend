@@ -108,6 +108,12 @@ export const useWeightedScaleConfirmForm = (formName: FormNames) => {
       },
     };
   } catch (e) {
-    throw new Error('invalid data');
+    return {
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
+      errors: e,
+    };
   }
 };

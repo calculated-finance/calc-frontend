@@ -77,7 +77,14 @@ function Page() {
               transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
-            <Fees state={state} transactionType={TransactionType.Sell} swapFee={SWAP_FEE} />
+            <Fees
+              transactionType={TransactionType.Sell}
+              swapFee={SWAP_FEE}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              autoStakeValidator={state.autoStakeValidator}
+              swapAmount={state.swapAmount}
+            />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

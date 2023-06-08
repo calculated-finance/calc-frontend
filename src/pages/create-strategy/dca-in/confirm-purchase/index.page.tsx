@@ -23,10 +23,10 @@ import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 
-function PageInternal() {
+function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
-  const { price } = useFiatPrice(getDenomInfo(state.initialDenom));
+  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
   const { nextStep, goToStep } = useSteps(steps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
@@ -77,21 +77,20 @@ function PageInternal() {
               transactionType={transactionType}
             />
             <SummaryAfterEachSwap state={state} />
-            <Fees state={state} transactionType={TransactionType.Buy} swapFee={SWAP_FEE} />
+            <Fees
+              transactionType={TransactionType.Buy}
+              swapFee={SWAP_FEE}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              autoStakeValidator={state.autoStakeValidator}
+              swapAmount={state.swapAmount}
+            />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (
           <InvalidData onRestart={handleRestart} />
         )}
       </NewStrategyModalBody>
-    </NewStrategyModal>
-  );
-}
-
-function Page() {
-  return (
-    <NewStrategyModal>
-      <PageInternal />
     </NewStrategyModal>
   );
 }

@@ -109,7 +109,13 @@ export const useConfirmForm = (formName: FormNames) => {
       },
     };
   } catch (e) {
-    throw new Error('Invalid form state');
+    return {
+      actions: {
+        updateAction: updateAction(formName, address),
+        resetAction: resetAction(formName),
+      },
+      errors: e,
+    };
   }
 };
 

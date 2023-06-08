@@ -24,13 +24,13 @@ import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
-  applyPromo,
   dexFee,
   swapFee,
   excludeDepositFee,
@@ -38,7 +38,6 @@ function FeeBreakdown({
   initialDenomName: string;
   swapAmount: number;
   price: number;
-  applyPromo: boolean;
   dexFee: number;
   swapFee: number;
   excludeDepositFee: boolean;
@@ -134,15 +133,9 @@ function FeeBreakdown({
                   <Flex>
                     <Text textStyle="body-xs">CALC sustainability tax:</Text>
                     <Spacer />
-                    {applyPromo ? (
-                      <Text color="blue.200" textStyle="body-xs">
-                        Free
-                      </Text>
-                    ) : (
-                      <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
-                      </Text>
-                    )}
+                    <Text textStyle="body-xs">
+                      {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
+                    </Text>
                   </Flex>
                 )}
                 {chain === Chains.Kujira && (
@@ -150,28 +143,16 @@ function FeeBreakdown({
                     <Flex>
                       <Text textStyle="body-xs">CALC sustainability tax:</Text>
                       <Spacer />
-                      {applyPromo ? (
-                        <Text color="blue.200" textStyle="body-xs">
-                          Free
-                        </Text>
-                      ) : (
-                        <Text textStyle="body-xs">
-                          {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
-                        </Text>
-                      )}
+                      <Text textStyle="body-xs">
+                        {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
+                      </Text>
                     </Flex>
                     <Flex>
                       <Text textStyle="body-xs">{Chains[chain]} community pool:</Text>
                       <Spacer />
-                      {applyPromo ? (
-                        <Text color="blue.200" textStyle="body-xs">
-                          Free
-                        </Text>
-                      ) : (
-                        <Text textStyle="body-xs">
-                          {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
-                        </Text>
-                      )}
+                      <Text textStyle="body-xs">
+                        {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
+                      </Text>
                     </Flex>
                   </>
                 )}
@@ -193,7 +174,7 @@ function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, (applyPromo ? 0 : swapFee) + dexFee)} {initialDenomName}
+                    {getPrettyFee(swapAmount, swapFee + dexFee)} {initialDenomName}
                   </Text>
                 </Flex>
               </Stack>
@@ -206,36 +187,29 @@ function FeeBreakdown({
 }
 
 export default function Fees({
-  state,
   transactionType,
   swapFee,
+  initialDenom,
+  resultingDenom,
+  swapAmount,
+  autoStakeValidator,
   swapFeeTooltip,
   excludeDepositFee = false,
 }: {
-  state: DcaInFormDataAll | WeightedScaleState;
   transactionType: TransactionType;
   swapFee: number;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  swapAmount: number;
+  autoStakeValidator: string | null | undefined;
   swapFeeTooltip?: string;
   excludeDepositFee?: boolean;
 }) {
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
   const { price } = useFiatPrice(initialDenom);
-
-  const { autoStakeValidator, swapAmount } = state;
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
-  // instead of returning any empty state on error, we could throw a validation error and catch it to display the
-  // invalid data message, along with missing field info.
-  if (!state) {
-    return null;
-  }
-
-  const { name: initialDenomName, promotion: initialDenomPromotion } = initialDenom;
-  const { promotion: resultingDenomPromotion } = resultingDenom;
-
-  const applyPromo = Boolean(initialDenomPromotion) || Boolean(resultingDenomPromotion);
+  const { name: initialDenomName } = initialDenom;
 
   return (
     <Stack spacing={0}>
@@ -263,7 +237,6 @@ export default function Fees({
         initialDenomName={initialDenomName}
         swapAmount={swapAmount}
         price={price}
-        applyPromo={applyPromo}
         dexFee={dexFee}
         swapFee={swapFee}
         excludeDepositFee={excludeDepositFee}

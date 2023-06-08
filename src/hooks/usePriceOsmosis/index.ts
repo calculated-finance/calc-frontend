@@ -42,8 +42,8 @@ function findRoute(poolIds: number[], initialDenomId: string, poolList: Pool[]):
 }
 
 export default function usePriceOsmosis(
-  resultingDenom: DenomInfo,
-  initialDenom: DenomInfo,
+  resultingDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo | undefined,
   transactionType: TransactionType,
   enabled: boolean,
 ) {
@@ -54,25 +54,28 @@ export default function usePriceOsmosis(
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
 
-  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
-
-  const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
-
-  const isRouteReversed = initialDenom.id !== pair?.quote_denom;
-
-  const { significantFigures: initialSF } = initialDenom;
-  const { significantFigures: resultingSF } = resultingDenom;
-
-  const difference = initialSF - resultingSF;
-  const factor = 10 ** initialSF;
-
   const {
     data,
     isLoading: isPriceLoading,
     ...helpers
-  } = useQuery<{ tokenOutAmount: string }>(
-    ['price-osmosis', pair],
+  } = useQuery<{ price: number }>(
+    ['price-osmosis', initialDenom, resultingDenom],
     async () => {
+      if (!resultingDenom || !initialDenom) {
+        throw new Error('Denoms not found');
+      }
+
+      const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
+
+      const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
+
+      const isRouteReversed = initialDenom.id !== pair?.quote_denom;
+
+      const { significantFigures: initialSF } = initialDenom;
+      const { significantFigures: resultingSF } = resultingDenom;
+
+      const difference = initialSF - resultingSF;
+      const factor = 10 ** initialSF;
       if (!route) {
         throw new Error('Route not found');
       }
@@ -81,38 +84,37 @@ export default function usePriceOsmosis(
         throw new Error('Pools not found');
       }
       const directionalRoute = isRouteReversed ? reverse(route) : route;
-      const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
+      const result = await query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
         tokenIn: `${factor}${initialDenom}`,
         routes: findRoute(directionalRoute, initialDenom.id, pools),
       });
-      return result;
+      const price =
+        transactionType === TransactionType.Buy
+          ? factor / (Number(result.tokenOutAmount) * 10 ** difference)
+          : (10 ** difference * Number(result.tokenOutAmount)) / factor;
+      return { price };
     },
     {
-      enabled: !!route && !!enabled && !!pools,
+      enabled: !!enabled && !!pools && !!initialDenom && !!resultingDenom,
       meta: {
         errorMessage: 'Error fetching price',
       },
     },
   );
 
-  const price =
-    data &&
-    (transactionType === TransactionType.Buy
-      ? factor / (Number(data.tokenOutAmount) * 10 ** difference)
-      : (10 ** difference * Number(data.tokenOutAmount)) / factor);
-
-  const formattedPrice = price
-    ? price.toLocaleString('en-US', {
-        maximumFractionDigits: 6,
-        minimumFractionDigits: 6,
-      })
-    : undefined;
+  const formattedPrice =
+    data && data.price
+      ? data.price.toLocaleString('en-US', {
+          maximumFractionDigits: 6,
+          minimumFractionDigits: 6,
+        })
+      : undefined;
 
   return {
-    price,
+    price: data?.price,
     formattedPrice,
-    pairAddress: pair?.address,
+    pairAddress: '',
     isLoading: isPriceLoading || isLoadingPools,
     ...helpers,
   };

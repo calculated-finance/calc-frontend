@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useChainStore } from '@hooks/useChain';
@@ -417,8 +418,11 @@ function isDenomInStablesList(denom: Denom) {
 
 const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
   if (!denom) {
-    console.log('denom', denom);
-    throw new Error('Denom is required');
+    Sentry.captureException('getDenomInfo: denom is undefined');
+    return {
+      id: denom,
+      ...defaultDenom,
+    };
   }
   const { chain: storedChain } = useChainStore.getState();
 
@@ -473,7 +477,11 @@ const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
   if (isMainnet()) {
     const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
     if (!kujiraMainnetAsset) {
-      throw new Error(`Unknown denom ${denom}`);
+      Sentry.captureException('getDenomInfo: kujiraMainnetAsset is undefined', { tags: { denom } });
+      return {
+        id: denom,
+        ...defaultDenom,
+      };
     }
     return {
       id: denom,
@@ -485,8 +493,11 @@ const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
   const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
 
   if (!kujiraTestnetAsset) {
-    console.log('assetList', assetList);
-    throw new Error(`Unknown denom ${denom}`);
+    Sentry.captureException('getDenomInfo: kujiraTestnetAsset is undefined', { tags: { denom } });
+    return {
+      id: denom,
+      ...defaultDenom,
+    };
   }
   return {
     id: denom,

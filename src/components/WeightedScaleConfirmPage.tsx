@@ -21,6 +21,7 @@ import { SWAP_FEE_WS } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import Fees from './Fees';
+import { InvalidData } from './InvalidData';
 
 export function WeightedScaleConfirmPage({
   formName,
@@ -35,7 +36,7 @@ export function WeightedScaleConfirmPage({
 }) {
   const { state, actions } = useWeightedScaleConfirmForm(formName);
   const { isPageLoading } = usePageLoad();
-  const { nextStep } = useSteps(steps);
+  const { nextStep, goToStep } = useSteps(steps);
 
   const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
@@ -58,46 +59,58 @@ export function WeightedScaleConfirmPage({
       },
     );
 
+  const handleRestart = () => {
+    actions.resetAction();
+    goToStep(0);
+  };
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
-        <Stack spacing={4}>
-          <DcaDiagram
-            initialDenom={getDenomInfo(state.initialDenom)}
-            resultingDenom={getDenomInfo(state.resultingDenom)}
-            initialDeposit={state.initialDeposit}
-          />
-          <Divider />
-          <SummaryYourDeposit state={state} strategyType={strategyType} />
-          <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
-          <WeightSummary
-            transactionType={transactionType}
-            applyMultiplier={state.applyMultiplier}
-            swapMultiplier={state.swapMultiplier}
-            swapAmount={state.swapAmount}
-            basePrice={state.basePriceValue}
-            initialDenom={getDenomInfo(state.initialDenom)}
-            resultingDenom={getDenomInfo(state.resultingDenom)}
-            priceThresholdValue={state.priceThresholdValue}
-          />
-          <SummaryWhileSwapping
-            initialDenom={getDenomInfo(state.initialDenom)}
-            resultingDenom={getDenomInfo(state.resultingDenom)}
-            priceThresholdValue={state.priceThresholdValue}
-            slippageTolerance={state.slippageTolerance}
-            transactionType={transactionType}
-          />
-          <SummaryAfterEachSwap state={state} />
-          <Fees
-            state={state}
-            transactionType={transactionType}
-            swapFee={SWAP_FEE_WS}
-            swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
-            excludeDepositFee
-          />
-          <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-        </Stack>
+        {state ? (
+          <Stack spacing={4}>
+            <DcaDiagram
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              initialDeposit={state.initialDeposit}
+            />
+            <Divider />
+            <SummaryYourDeposit state={state} strategyType={strategyType} />
+            <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
+            <WeightSummary
+              transactionType={transactionType}
+              applyMultiplier={state.applyMultiplier}
+              swapMultiplier={state.swapMultiplier}
+              swapAmount={state.swapAmount}
+              basePrice={state.basePriceValue}
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              priceThresholdValue={state.priceThresholdValue}
+            />
+            <SummaryWhileSwapping
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              priceThresholdValue={state.priceThresholdValue}
+              slippageTolerance={state.slippageTolerance}
+              transactionType={transactionType}
+            />
+            <SummaryAfterEachSwap state={state} />
+            <Fees
+              initialDenom={getDenomInfo(state.initialDenom)}
+              resultingDenom={getDenomInfo(state.resultingDenom)}
+              autoStakeValidator={state.autoStakeValidator}
+              swapAmount={state.swapAmount}
+              transactionType={transactionType}
+              swapFee={SWAP_FEE_WS}
+              swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
+              excludeDepositFee
+            />
+            <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+          </Stack>
+        ) : (
+          <InvalidData onRestart={handleRestart} />
+        )}
       </NewStrategyModalBody>
     </NewStrategyModal>
   );

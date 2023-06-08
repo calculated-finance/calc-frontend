@@ -32,6 +32,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
+import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -200,17 +201,20 @@ function FeeBreakdown({
 }
 
 export default function FeesDcaPlus({
-  formName,
   transactionType,
+  initialDenom,
+  resultingDenom,
+  initialDeposit,
+  strategyDuration,
+  autoStakeValidator,
 }: {
-  formName: FormNames;
   transactionType: TransactionType;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  initialDeposit: number;
+  strategyDuration: number;
+  autoStakeValidator: string | null | undefined;
 }) {
-  const { state } = useDcaPlusConfirmForm(formName);
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
-  const { autoStakeValidator, initialDeposit, strategyDuration } = state;
-
   const { price } = useFiatPrice(initialDenom);
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
