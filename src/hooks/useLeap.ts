@@ -3,7 +3,7 @@ import { AccountData } from '@cosmjs/proto-signing';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
+import { getChainEndpoint, getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
 import { Chains } from './useChain/Chains';
 
 interface KeplrWindow extends Window {
@@ -73,7 +73,7 @@ export const useLeap = create<IWallet>()(
           await keplr.enable(chainId);
           const offlineSigner = await keplr.getOfflineSignerAuto(chainId);
           const accounts = await offlineSigner.getAccounts();
-          const client = await SigningCosmWasmClient.connectWithSigner(chainInfo.rpc, offlineSigner, {
+          const client = await SigningCosmWasmClient.connectWithSigner(getChainEndpoint(chain), offlineSigner, {
             gasPrice: getGasPrice(chain),
           });
 

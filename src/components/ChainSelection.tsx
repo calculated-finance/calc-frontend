@@ -23,6 +23,7 @@ const chainSelectionAllowedUrls = [
   '/stats-and-totals',
   '/bridge-assets',
   '/how-it-works',
+  '/experimental-features',
 ];
 
 export function ChainSelection() {

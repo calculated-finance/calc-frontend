@@ -24,7 +24,7 @@ export function isAddressAdmin(address: string | undefined | null) {
   return !isNil(address) && admins.includes(address);
 }
 
-const adminPages = ['/admin', '/stats-and-totals'];
+const adminPages = ['/admin', '/stats-and-totals', '/experimental-features'];
 
 export function useAdmin() {
   const { address } = useWallet();
