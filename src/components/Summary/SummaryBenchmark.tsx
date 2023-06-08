@@ -1,15 +1,15 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, initialDeposit, strategyDuration } = state;
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
+  const initialDenomInfo = useDenom(initialDenom);
+  const resultingDenomInfo = useDenom(resultingDenom);
 
   const swapAmount = Number(getSwapAmountFromDuration(initialDeposit, strategyDuration).toFixed(3));
 

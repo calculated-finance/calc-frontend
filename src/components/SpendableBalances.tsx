@@ -5,6 +5,7 @@ import getDenomInfo, { convertDenomFromCoin } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function CoinBalance({ balance }: { balance: Coin }) {
   const { name, conversion } = getDenomInfo(balance.denom);
@@ -23,7 +24,7 @@ function CoinBalance({ balance }: { balance: Coin }) {
 }
 
 function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
-  const denom = getDenomInfo(balance.denom);
+  const denom = useDenom(balance.denom);
   const { price } = useFiatPrice(denom);
   const balanceConverted = convertDenomFromCoin(balance);
   return (

@@ -22,13 +22,17 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import useFiatPrice from '@hooks/useFiatPrice';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+
+  const initialDenom = useDenom(state?.initialDenom);
+  const resultingDenom = useDenom(state?.resultingDenom);
+
+  const { price } = useFiatPrice(initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
 
@@ -71,9 +75,6 @@ function Page() {
       </NewStrategyModal>
     );
   }
-
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
 
   return (
     <NewStrategyModal>

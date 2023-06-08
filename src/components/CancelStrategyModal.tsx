@@ -19,7 +19,7 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
+import { getStrategyInitialDenom, getStrategyInitialDenomId, getStrategyResultingDenom } from '@helpers/strategy';
 import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
@@ -29,6 +29,7 @@ import { CANCEL_VAULT_FEE } from 'src/constants';
 import { formatDate } from '@helpers/format/formatDate';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;
@@ -36,9 +37,10 @@ type CancelStrategyModalProps = {
 } & Omit<ModalProps, 'children'>;
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
-  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(getStrategyInitialDenom(strategy));
+  const initialDenom = useDenom(getStrategyInitialDenomId(strategy));
+  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(initialDenom);
 
-  const { price } = useFiatPrice(getStrategyInitialDenom(strategy));
+  const { price } = useFiatPrice(initialDenom);
 
   const toast = useToast();
 
@@ -88,7 +90,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                 <Heading size="sm">Amount to be returned:</Heading>
                 <Spacer />
                 <Text as="span" fontSize="lg" color="blue.200">
-                  {convertDenomFromCoin(strategy.balance)} {getDenomInfo(strategy.balance.denom).name}
+                  {convertDenomFromCoin(strategy.balance)} {initialDenom.name}
                 </Text>
               </Flex>
               {isDcaPlus(strategy) && (
@@ -103,7 +105,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
             </Stack>
             <Text textAlign="center" textStyle="body-xs" data-testid="cancel-strategy-model-fee">
               Cancellation Fee: {price ? parseFloat((CANCEL_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-              {getStrategyInitialDenom(strategy).name}
+              {initialDenom.name}
             </Text>
             {isDcaPlus(strategy) && (
               <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">

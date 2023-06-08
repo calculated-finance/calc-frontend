@@ -416,11 +416,11 @@ function isDenomInStablesList(denom: Denom) {
   return stableDenomsTestnet.includes(denom);
 }
 
-const getDenomInfo = (denom: string, injectedChain?: Chains): DenomInfo => {
+const getDenomInfo = (denom: string | undefined, injectedChain?: Chains): DenomInfo => {
   if (!denom) {
     Sentry.captureException('getDenomInfo: denom is undefined');
     return {
-      id: denom,
+      id: '',
       ...defaultDenom,
     };
   }

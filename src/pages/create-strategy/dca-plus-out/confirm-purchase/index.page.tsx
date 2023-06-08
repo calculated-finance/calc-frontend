@@ -22,13 +22,15 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames } from '@hooks/useFormStore';
 import useFiatPrice from '@hooks/useFiatPrice';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+  const initialDenom = useDenom(state?.initialDenom);
+  const resultingDenom = useDenom(state?.resultingDenom);
+  const { price } = useFiatPrice(initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
@@ -70,10 +72,8 @@ function Page() {
     );
   }
 
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
-
   const transactionType = TransactionType.Sell;
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
@@ -104,8 +104,8 @@ function Page() {
             <SummaryBenchmark state={state} />
             <FeesDcaPlus
               transactionType={TransactionType.Sell}
-              initialDenom={getDenomInfo(state.initialDenom)}
-              resultingDenom={getDenomInfo(state.resultingDenom)}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               strategyDuration={state.strategyDuration}
               initialDeposit={state.initialDeposit}
               autoStakeValidator={state.autoStakeValidator}

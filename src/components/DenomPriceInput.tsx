@@ -18,7 +18,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
-import { getDenomName } from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
 
 export function DenomPriceInput({

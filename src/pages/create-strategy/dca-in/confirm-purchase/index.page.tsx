@@ -21,12 +21,14 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaIn);
   const { isPageLoading } = usePageLoad();
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+  const initialDenom = useDenom(state?.initialDenom);
+  const resultingDenom = useDenom(state?.resultingDenom);
+  const { price } = useFiatPrice(initialDenom);
   const { nextStep, goToStep } = useSteps(steps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaIn, TransactionType.Buy);
@@ -66,8 +68,6 @@ function Page() {
     );
   }
 
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />

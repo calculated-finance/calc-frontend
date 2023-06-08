@@ -15,26 +15,24 @@ import { TriggerForm } from '@components/TriggerForm';
 import { FormNames } from '@hooks/useFormStore';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { StepConfig } from '@formConfig/StepConfig';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function CustomiseFormDca({
   steps,
   step1,
   resetAction,
   transactionType,
-  formName,
 }: {
   steps: StepConfig[];
   step1: DcaInFormDataStep1;
   resetAction?: () => void;
   transactionType: TransactionType;
-  formName: FormNames;
 }) {
   const { isPageLoading } = usePageLoad();
   const { values, isSubmitting } = useFormikContext<DcaInFormDataStep2>();
 
-  const initialDenom = getDenomInfo(step1.initialDenom);
-  const resultingDenom = getDenomInfo(step1.resultingDenom);
+  const initialDenom = useDenom(step1.initialDenom);
+  const resultingDenom = useDenom(step1.resultingDenom);
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} resetForm={resetAction} />

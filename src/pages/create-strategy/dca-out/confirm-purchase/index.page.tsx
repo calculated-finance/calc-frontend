@@ -22,12 +22,17 @@ import { FormNames } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+
+  const initialDenom = useDenom(state?.initialDenom);
+  const resultingDenom = getDenomInfo(state?.resultingDenom);
+
+  const { price } = useFiatPrice(initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
 
@@ -65,9 +70,6 @@ function Page() {
       </NewStrategyModal>
     );
   }
-
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
 
   return (
     <NewStrategyModal>

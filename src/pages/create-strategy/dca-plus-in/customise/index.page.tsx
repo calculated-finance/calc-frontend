@@ -17,7 +17,7 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
@@ -34,6 +34,9 @@ function Page() {
     actions.resetAction();
     goToStep(0);
   };
+
+  const initialDenom = useDenom(state?.step1.initialDenom);
+  const resulingDenom = useDenom(state?.step1.resultingDenom);
 
   if (!state) {
     return (
@@ -68,8 +71,8 @@ function Page() {
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaDiagram
-                  initialDenom={getDenomInfo(state.step1.initialDenom)}
-                  resultingDenom={getDenomInfo(state.step1.resultingDenom)}
+                  initialDenom={initialDenom}
+                  resultingDenom={resulingDenom}
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />

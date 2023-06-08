@@ -7,6 +7,7 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { isStrategyOperating } from '@helpers/strategy';
+import { useDenom } from '@hooks/useDenom/useDenom';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -74,12 +75,14 @@ function ActiveWithOne() {
     maximumFractionDigits: 6,
     minimumFractionDigits: 2,
   });
+
+  const denom = useDenom(balanceValue.denomId);
   return (
     <>
       <HStack align="center">
         <Icon as={Block3DIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">
-          {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
+          {displayBalance} {denom.name} remaining in vault
         </Text>
       </HStack>
       <Stack spacing={1}>

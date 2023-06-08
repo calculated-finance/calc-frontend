@@ -1,14 +1,14 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function SummaryYourDeposit({ state, strategyType }: { state: DcaFormState; strategyType: StrategyTypes }) {
-  const { initialDenom, initialDeposit } = state;
+  const { initialDenom: initialDenomId, initialDeposit } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const initialDenom = useDenom(initialDenomId);
 
   return (
     <Box data-testid="summary-your-deposit">
@@ -17,9 +17,9 @@ export function SummaryYourDeposit({ state, strategyType }: { state: DcaFormStat
         I deposit{' '}
         <BadgeButton url="assets">
           <Text>
-            {initialDeposit} {initialDenomName}
+            {initialDeposit} {initialDenom.name}
           </Text>
-          <DenomIcon denomInfo={getDenomInfo(initialDenom)} />{' '}
+          <DenomIcon denomInfo={initialDenom} />{' '}
         </BadgeButton>{' '}
         Into the CALC {strategyType} vault.
       </Text>

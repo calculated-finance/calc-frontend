@@ -8,6 +8,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { TransactionType } from '@components/TransactionType';
+import { useDenom } from '@hooks/useDenom/useDenom';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
@@ -20,8 +21,8 @@ export function SummaryTheSwapWeightedScale({
 }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
+  const initialDenomInfo = useDenom(initialDenom);
+  const resultingDenomInfo = useDenom(resultingDenom);
 
   const { chain } = useChain();
   const { formattedPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);

@@ -64,6 +64,10 @@ export default function getStrategyBalance(strategy: Strategy | StrategyOsmosis)
   return convertDenomFromCoin(balance);
 }
 
+export function getStrategyInitialDenomId(strategy: Strategy): string {
+  return strategy.balance.denom;
+}
+
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
   return getDenomInfo(strategy.balance.denom);
 }

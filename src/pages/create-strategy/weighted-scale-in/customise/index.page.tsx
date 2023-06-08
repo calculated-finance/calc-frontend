@@ -27,6 +27,7 @@ import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 import PriceThreshold from '@components/PriceThreshold';
 import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function WeightedScaleCustomisePage({
   formName,
@@ -55,6 +56,9 @@ export function WeightedScaleCustomisePage({
     goToStep(0);
   };
 
+  const initialDenomInfo = useDenom(state?.step1.initialDenom);
+  const resultingDenomInfo = useDenom(state?.step1.resultingDenom);
+
   if (!state) {
     return (
       <NewStrategyModal>
@@ -72,9 +76,6 @@ export function WeightedScaleCustomisePage({
   };
 
   const initialValues = state.step2;
-
-  const initialDenomInfo = getDenomInfo(state.step1.initialDenom);
-  const resultingDenomInfo = getDenomInfo(state.step1.resultingDenom);
 
   return (
     <Formik

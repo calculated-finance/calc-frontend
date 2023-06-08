@@ -11,7 +11,7 @@ import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
-import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { actions, state, context } = useDcaPlusInFormPostPurchase(FormNames.DcaPlusIn);
@@ -31,6 +31,7 @@ function Page() {
     goToStep(0);
   };
 
+  const resultingDenom = useDenom(context?.resultingDenom);
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -40,7 +41,7 @@ function Page() {
           <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             {state && context ? (
-              <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
+              <PostPurchaseForm resultingDenom={resultingDenom} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

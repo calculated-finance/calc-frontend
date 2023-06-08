@@ -5,6 +5,7 @@ import totalExecutions from 'src/utils/totalExecutions';
 import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { useDenom } from '@hooks/useDenom/useDenom';
 import { DenomInput } from './DenomInput';
 
 export default function SwapAmount({
@@ -18,8 +19,8 @@ export default function SwapAmount({
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
 
-  const initialDenom = getDenomInfo(step1State.initialDenom);
-  const resultingDenom = getDenomInfo(step1State.resultingDenom);
+  const initialDenom = useDenom(step1State.initialDenom);
+  const resultingDenom = useDenom(step1State.resultingDenom);
   const { initialDeposit } = step1State;
 
   const handleClick = () => {
