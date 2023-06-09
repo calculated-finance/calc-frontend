@@ -28,6 +28,7 @@ import {
   getSlippageTolerance,
 } from './useCreateVault/buildCreateVaultParams';
 import { useAnalytics } from './useAnalytics';
+import { Chains } from './useChain/Chains';
 
 type ConfigureVariables = {
   values: CustomiseSchema;
@@ -59,7 +60,7 @@ function buildTimeInterval({ values, initialValues, context, strategy }: Configu
   return {};
 }
 
-function buildPriceThreshold({ values, initialValues, context, strategy }: ConfigureVariables) {
+function buildPriceThreshold({ values, initialValues, context, strategy }: ConfigureVariables, chain: Chains) {
   const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
 
   if (isPriceThresholdDirty) {
@@ -70,6 +71,7 @@ function buildPriceThreshold({ values, initialValues, context, strategy }: Confi
         values.priceThresholdValue,
         context.resultingDenom,
         context.transactionType,
+        chain,
       ),
     };
   }
@@ -121,11 +123,11 @@ function buildSwapAdjustmentStrategy({ values, initialValues, context, strategy 
   return {};
 }
 
-function getUpdateVaultMessage(variables: ConfigureVariables) {
+function getUpdateVaultMessage(variables: ConfigureVariables, chain: Chains) {
   const updateVaultMsg = {
     update_vault: {
       vault_id: variables.strategy.id,
-      ...buildPriceThreshold(variables),
+      ...buildPriceThreshold(variables, chain),
       ...buildSlippageTolerance(variables),
       ...buildTimeInterval(variables),
       ...buildSwapAdjustmentStrategy(variables),
@@ -161,7 +163,7 @@ export function useCustomiseStrategy() {
 
       const msgs: EncodeObject[] = [];
 
-      const updateVaultMsg = getUpdateVaultMessage(variables);
+      const updateVaultMsg = getUpdateVaultMessage(variables, chain);
 
       msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
 
@@ -169,7 +171,7 @@ export function useCustomiseStrategy() {
     },
     {
       onSuccess: (data, variables) => {
-        track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables) });
+        track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables, chain) });
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, variables.strategy.id] });
       },
       onError: (error, { values }) => {

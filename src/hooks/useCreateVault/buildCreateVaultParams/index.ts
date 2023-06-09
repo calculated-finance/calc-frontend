@@ -5,7 +5,6 @@ import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { ExecuteMsg as OsmosisExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
@@ -14,35 +13,18 @@ import { Chains } from '@hooks/useChain/Chains';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import YesNoValues from '@models/YesNoValues';
-import {
-  SECONDS_IN_A_DAY,
-  SECONDS_IN_A_HOUR,
-  SECONDS_IN_A_MINUTE,
-  SECONDS_IN_A_WEEK,
-  featureFlags,
-} from 'src/constants';
+import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DenomInfo } from '@utils/DenomInfo';
-import { DcaFormState } from './DcaFormState';
+import { DcaFormState } from '../DcaFormState';
 
-const conversion: Record<ExecutionIntervals, number> = {
-  minute: SECONDS_IN_A_MINUTE,
-  half_hourly: SECONDS_IN_A_HOUR / 2,
-  hourly: SECONDS_IN_A_HOUR,
-  half_daily: SECONDS_IN_A_DAY / 2,
-  daily: SECONDS_IN_A_DAY,
-  weekly: SECONDS_IN_A_WEEK,
-  fortnightly: SECONDS_IN_A_WEEK * 2,
-  monthly: SECONDS_IN_A_WEEK * 4,
-};
-
-function getSlippageWithoutTrailingZeros(slippage: number) {
+export function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
 }
 
-function getReceiveAmount(
+export function getReceiveAmount(
   price: number | null | undefined,
   deconversion: (value: number) => number,
   swapAmount: number,
@@ -59,7 +41,7 @@ function getReceiveAmount(
   return BigInt(deconversion(swapAmount * price)).toString();
 }
 
-function getOsmosisReceiveAmount(
+export function getOsmosisReceiveAmount(
   initialDenom: DenomInfo | undefined, // osmo
   swapAmount: number, // 1.2
   price: number | null | undefined, // 5.0
@@ -102,12 +84,11 @@ export function getMinimumReceiveAmount(
   priceThresholdValue: number | null | undefined,
   resultingDenom: DenomInfo | undefined,
   transactionType: TransactionType,
+  chain: Chains,
 ) {
   if (!initialDenom || !resultingDenom) {
     throw new Error('Missing denom info');
   }
-
-  const { chain } = useChainStore.getState();
 
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, priceThresholdValue, resultingDenom, transactionType);
@@ -144,16 +125,12 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
 }
 
 function getTargetReceiveAmount(
-  initialDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo,
   swapAmount: number,
   startPrice: number | null | undefined,
-  resultingDenom: DenomInfo | undefined,
+  resultingDenom: DenomInfo,
   transactionType: TransactionType,
 ) {
-  if (!initialDenom || !resultingDenom) {
-    throw new Error('Missing denom info');
-  }
-
   const { chain } = useChainStore.getState();
 
   if (chain === Chains.Osmosis) {
@@ -198,7 +175,17 @@ export function getExecutionInterval(
   executionInterval: ExecutionIntervals,
   executionIntervalIncrement: number | undefined | null,
 ) {
-  if (featureFlags.customTimeIntervalEnabled && !isNil(executionIntervalIncrement) && executionIntervalIncrement > 0) {
+  const conversion: Record<ExecutionIntervals, number> = {
+    minute: SECONDS_IN_A_MINUTE,
+    half_hourly: SECONDS_IN_A_HOUR / 2,
+    hourly: SECONDS_IN_A_HOUR,
+    half_daily: SECONDS_IN_A_DAY / 2,
+    daily: SECONDS_IN_A_DAY,
+    weekly: SECONDS_IN_A_WEEK,
+    fortnightly: SECONDS_IN_A_WEEK * 2,
+    monthly: SECONDS_IN_A_WEEK * 4,
+  };
+  if (!isNil(executionIntervalIncrement) && executionIntervalIncrement > 0) {
     return {
       custom: {
         seconds: executionIntervalIncrement * conversion[executionInterval],
@@ -235,6 +222,7 @@ export function buildCreateVaultParamsDCA(
         state.priceThresholdValue,
         resultingDenomInfo,
         transactionType,
+        chain,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations: buildCallbackDestinations(
@@ -323,6 +311,7 @@ export function buildCreateVaultParamsWeightedScale(
         state.priceThresholdValue,
         resultingDenomInfo,
         transactionType,
+        chain,
       ),
       swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
         initialDenomInfo,

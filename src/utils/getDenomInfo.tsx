@@ -10,7 +10,7 @@ import { DenomInfo } from './DenomInfo';
 
 type DenomInfoWithoutId = Omit<DenomInfo, 'id'>;
 
-const defaultDenom = {
+export const defaultDenom = {
   name: '',
   icon: '',
   conversion: (value: number) => value / 1000000,
