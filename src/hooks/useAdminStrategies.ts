@@ -12,7 +12,7 @@ const QUERY_KEY = 'get_vaults';
 
 export type Strategy = Vault;
 
-const GET_VAULTS_LIMIT = 400;
+const GET_VAULTS_LIMIT = 300;
 
 function fetchVaultsRecursively(
   client: CosmWasmClient,
