@@ -177,7 +177,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={2}>
         <Divider />
       </GridItem>
-      {data && <LinkedStrategyDetails strategy={strategy} marketValueInFiat={marketValueInFiat} data={data} />}
+      {data && <LinkedStrategyDetails strategy={strategy} marketValueInFiat={marketValueInFiat} data={data.vault} />}
     </Grid>
   );
 }

@@ -7,7 +7,6 @@ import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
@@ -18,7 +17,7 @@ export function LinkedStrategyDetails({
 }: {
   strategy: Strategy;
   marketValueInFiat: number;
-  data: VaultResponse;
+  data: Strategy;
 }) {
   const linkedStrategy = data.vault as Strategy;
   const curStrategyId = strategy.id;
