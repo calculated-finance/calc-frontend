@@ -107,7 +107,7 @@ export function LinkedStrategyDetails({
                   <ArrowBackIcon boxSize={6} />
                 </VStack>
               ) : (
-                <Flex alignItems="center" justifyContent="center">
+                <Flex justify="center" py={4}>
                   <ArrowForwardIcon boxSize={6} />
                 </Flex>
               )}
