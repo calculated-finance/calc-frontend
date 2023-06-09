@@ -8,6 +8,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { TransactionType } from '@components/TransactionType';
+import { useDenom } from '@hooks/useDenom/useDenom';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
@@ -20,23 +21,23 @@ export function SummaryTheSwapWeightedScale({
 }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const initialDenomInfo = useDenom(initialDenom);
+  const resultingDenomInfo = useDenom(resultingDenom);
 
   const { chain } = useChain();
-  const { formattedPrice } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);
   const { price: osmosisPrice } = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
+    resultingDenomInfo,
+    initialDenomInfo,
     transactionType,
     chain === Chains.Osmosis,
   );
 
-  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
-  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
+  const priceOfDenom = transactionType === 'buy' ? resultingDenomInfo : initialDenomInfo;
+  const priceInDenom = transactionType === 'buy' ? initialDenomInfo : resultingDenomInfo;
 
-  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
-  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
+  const { name: priceOfDenomName } = priceOfDenom;
+  const { name: priceInDenomName } = priceInDenom;
 
   return (
     <Box data-testid="summary-the-swap-weighted-scale">
@@ -45,9 +46,9 @@ export function SummaryTheSwapWeightedScale({
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap the amount of{' '}
         <BadgeButton url="customise">
           <Code color="none" bg="none">
-            {swapAmount} {initialDenomName}
+            {swapAmount} {initialDenomInfo.name}
           </Code>
-          <DenomIcon denomName={initialDenom} />
+          <DenomIcon denomInfo={initialDenomInfo} />
           <Code color="none" bg="none">
             &times; (1 - price delta &times; {swapMultiplier})
           </Code>
@@ -61,8 +62,8 @@ export function SummaryTheSwapWeightedScale({
         </BadgeButton>
         for{' '}
         <BadgeButton url="assets">
-          <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />
+          <Text>{resultingDenomInfo.name}</Text>
+          <DenomIcon denomInfo={resultingDenomInfo} />
         </BadgeButton>{' '}
         every <IncrementAndInterval state={state} />
       </Text>

@@ -22,6 +22,7 @@ import {
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
+import { DenomInfo } from '@utils/DenomInfo';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -63,12 +64,16 @@ export default function getStrategyBalance(strategy: Strategy | StrategyOsmosis)
   return convertDenomFromCoin(balance);
 }
 
-export function getStrategyInitialDenom(strategy: Strategy): Denom {
+export function getStrategyInitialDenomId(strategy: Strategy): string {
   return strategy.balance.denom;
 }
 
-export function getStrategyResultingDenom(strategy: Strategy): Denom {
-  return strategy.received_amount.denom;
+export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
+  return getDenomInfo(strategy.balance.denom);
+}
+
+export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
+  return getDenomInfo(strategy.received_amount.denom);
 }
 
 export function getStrategyExecutionIntervalData(strategy: Strategy | StrategyOsmosis): {
@@ -143,9 +148,7 @@ export function getStrategyName(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  return `${getDenomInfo(initialDenom).name} to ${getDenomInfo(resultingDenom).name} - ${getStrategyExecutionInterval(
-    strategy,
-  )}`;
+  return `${initialDenom.name} to ${resultingDenom.name} - ${getStrategyExecutionInterval(strategy)}`;
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
@@ -216,7 +219,7 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
-    if (pair && pair.base_denom === getStrategyInitialDenom(strategy)) {
+    if (pair && pair.base_denom === getStrategyInitialDenom(strategy).id) {
       return safeInvert(Number(target_price));
     }
     return Number(target_price);
@@ -228,8 +231,8 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
 export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefined) {
   const { trigger } = strategy;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
-    ? getDenomInfo(getStrategyResultingDenom(strategy))
-    : getDenomInfo(getStrategyInitialDenom(strategy));
+    ? getStrategyResultingDenom(strategy)
+    : getStrategyInitialDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
@@ -239,9 +242,9 @@ export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefin
     const price = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
 
     if (isBuyStrategy(strategy)) {
-      return `When ${getDenomInfo(resultingDenom).name} hits ${price} ${getDenomInfo(initialDenom).name}`;
+      return `When ${resultingDenom.name} hits ${price} ${initialDenom.name}`;
     }
-    return `When ${getDenomInfo(initialDenom).name} hits ${price} ${getDenomInfo(resultingDenom).name}`;
+    return `When ${initialDenom.name} hits ${price} ${resultingDenom.name}`;
   }
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger && trigger.time.target_time) {
@@ -309,8 +312,8 @@ export function isStrategyAutoStaking(strategy: Strategy) {
 }
 
 export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: string) {
-  const { significantFigures: initialSF } = getDenomInfo(getStrategyInitialDenom(strategy));
-  const { significantFigures: resultingSF } = getDenomInfo(getStrategyResultingDenom(strategy));
+  const { significantFigures: initialSF } = getStrategyInitialDenom(strategy);
+  const { significantFigures: resultingSF } = getStrategyResultingDenom(strategy);
 
   // start with scaled receive amount
   const scaledReceiveAmount = Number(receiveAmount);
@@ -338,9 +341,7 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) 
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
-    ? getDenomInfo(resultingDenom)
-    : getDenomInfo(initialDenom);
+  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
   const price = isBuyStrategy(strategy)
     ? parseFloat(strategy.swap_amount) / parseFloat(receiveAmount)
@@ -385,8 +386,8 @@ export function getTotalReceived(strategy: Strategy) {
 export function hasSwapFees(strategy: Strategy) {
   return (
     !isDcaPlus(strategy) &&
-    getStrategyInitialDenom(strategy) !== Denoms.USK &&
-    getStrategyResultingDenom(strategy) !== Denoms.USK
+    getStrategyInitialDenom(strategy).id !== Denoms.USK &&
+    getStrategyResultingDenom(strategy).id !== Denoms.USK
   );
 }
 

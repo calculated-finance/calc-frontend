@@ -1,10 +1,9 @@
 import { Box, HStack, Text, Divider, Stack, Grid, GridItem, Tooltip, Spinner } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
-import { Denom } from '@models/Denom';
-import getDenomInfo from '@utils/getDenomInfo';
 import usePrice from '@hooks/usePrice';
 import { isNil } from 'lodash';
+import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
@@ -113,8 +112,8 @@ export function WeightSummary({
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
-  initialDenom: Denom;
-  resultingDenom: Denom;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   priceThresholdValue: number | undefined | null;
 }) {
   const { price, formattedPrice } = usePrice(resultingDenom, initialDenom, transactionType);
@@ -122,8 +121,8 @@ export function WeightSummary({
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
-  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
-  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
+  const { name: priceOfDenomName } = priceOfDenom;
+  const { name: priceInDenomName } = priceInDenom;
 
   return (
     <Box fontSize="10px" bg="deepHorizon" p={4} borderRadius="md" color="white">

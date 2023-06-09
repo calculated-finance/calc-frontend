@@ -36,7 +36,7 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
 export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
   const { resultingDenom, autoStakeValidator, recipientAccount, yieldOption, reinvestStrategy } = state;
 
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const resultingDenomInfo = getDenomInfo(resultingDenom);
   const { validator, isLoading } = useValidator(autoStakeValidator);
 
   return (
@@ -47,8 +47,8 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
           <>
             After each swap, CALC will send{' '}
             <BadgeButton url="assets">
-              <Text>{resultingDenomName}</Text>
-              <DenomIcon denomName={resultingDenom} />
+              <Text>{resultingDenomInfo.name}</Text>
+              <DenomIcon denomInfo={resultingDenomInfo} />
             </BadgeButton>{' '}
             to{' '}
             <BadgeButton url="post-purchase">

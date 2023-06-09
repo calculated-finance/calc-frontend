@@ -377,7 +377,11 @@ export const dcaSchema = Yup.object({
 });
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
-export const step1ValidationSchema = dcaSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
+export const step1ValidationSchema = Yup.object({
+  resultingDenom: allSchema.resultingDenom,
+  initialDenom: allSchema.initialDenom,
+  initialDeposit: allSchema.initialDeposit,
+});
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 
 export const postPurchaseValidationSchema = dcaSchema.pick([

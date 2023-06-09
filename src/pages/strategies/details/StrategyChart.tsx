@@ -14,7 +14,6 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { formatFiat } from '@helpers/format/formatFiat';
-import getDenomInfo from '@utils/getDenomInfo';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
@@ -57,8 +56,8 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const priceOfDenom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
   const priceInDenom = isBuyStrategy(strategy) ? initialDenom : resultingDenom;
 
-  const { name: priceOfDenomName } = getDenomInfo(priceOfDenom);
-  const { name: priceInDenomName } = getDenomInfo(priceInDenom);
+  const { name: priceOfDenomName } = priceOfDenom;
+  const { name: priceInDenomName } = priceInDenom;
 
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);

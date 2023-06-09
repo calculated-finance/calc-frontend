@@ -3,12 +3,11 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
+  getResultingDenoms,
   isSupportedDenomForDcaPlus,
   orderAlphabetically,
   uniqueBaseDenoms,
-  uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
-  uniqueQuoteDenomsFromBaseDenom,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -22,21 +21,8 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
-import { isDenomStable } from '@utils/getDenomInfo';
-import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
+import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ).filter(isDenomStable),
-  );
-}
 
 function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);
@@ -63,7 +49,9 @@ function Page() {
     return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;
   }
   const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isSupportedDenomForDcaPlus),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+      .map((denom) => getDenomInfo(denom))
+      .filter(isSupportedDenomForDcaPlus),
   );
 
   const { quote_denom, base_denom } =
@@ -87,7 +75,9 @@ function Page() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
+              <DCAOutResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               <Submit>Next</Submit>
             </Stack>
           </Form>

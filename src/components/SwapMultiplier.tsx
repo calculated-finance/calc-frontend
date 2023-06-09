@@ -13,10 +13,10 @@ import {
   Code,
   Tooltip,
 } from '@chakra-ui/react';
-import { Denom } from '@models/Denom';
 import YesNoValues from '@models/YesNoValues';
 import { getDenomName } from '@utils/getDenomInfo';
 import { useField } from 'formik';
+import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 import { WeightSummary } from './WeightSummary';
 
@@ -26,8 +26,8 @@ export default function SwapMultiplier({
   transactionType,
   swapAmountInjected,
 }: {
-  initialDenom: Denom;
-  resultingDenom: Denom;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   transactionType: TransactionType;
   swapAmountInjected?: number;
 }) {

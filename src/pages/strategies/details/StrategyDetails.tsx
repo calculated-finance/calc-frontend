@@ -15,13 +15,12 @@ import {
   Code,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import getDenomInfo, { DenomValue, getDenomName } from '@utils/getDenomInfo';
+import { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@hooks/useStrategies';
 import useStrategyEvents from '@hooks/useStrategyEvents';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import {
@@ -273,7 +272,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
                         {getPriceCeilingFloor(strategy)}{' '}
-                        {getDenomInfo(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                        {getDenomName(isBuyStrategy(strategy) ? initialDenom : resultingDenom)}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
                     </HStack>
@@ -285,7 +284,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={1}>
                 <Text fontSize="sm" data-testid="strategy-current-balance">
-                  {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+                  {initialDenomValue.toConverted()} {getDenomName(initialDenom)}
                 </Text>
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>

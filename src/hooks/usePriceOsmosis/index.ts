@@ -1,15 +1,13 @@
 import { reverse } from 'rambda';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
-import { Denom } from '@models/Denom';
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
 import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 import usePairs from '../usePairs';
 
 interface Step {
@@ -17,8 +15,8 @@ interface Step {
   tokenOutDenom: string;
 }
 
-function findRoute(poolIds: number[], initialDenom: string, poolList: Pool[]): Step[] {
-  let tokenInDenom = initialDenom;
+function findRoute(poolIds: number[], initialDenomId: string, poolList: Pool[]): Step[] {
+  let tokenInDenom = initialDenomId;
 
   const steps = poolIds.reduce((acc: Step[], poolId) => {
     const pool = poolList.find((p) => p.id.toNumber() === poolId);
@@ -44,12 +42,11 @@ function findRoute(poolIds: number[], initialDenom: string, poolList: Pool[]): S
 }
 
 export default function usePriceOsmosis(
-  resultingDenom: Denom | undefined,
-  initialDenom: Denom | undefined,
+  resultingDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo | undefined,
   transactionType: TransactionType,
   enabled: boolean,
 ) {
-  const client = useCosmWasmClient((state) => state.client);
   const query = useOsmosis((state) => state.query);
 
   const { data: pools, isLoading: isLoadingPools } = useOsmosisPools(enabled);
@@ -57,58 +54,67 @@ export default function usePriceOsmosis(
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
 
-  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
-
-  const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
-
-  const isRouteReversed = initialDenom !== pair?.quote_denom;
-
-  const { significantFigures: initialSF } = getDenomInfo(initialDenom!);
-  const { significantFigures: resultingSF } = getDenomInfo(resultingDenom!);
-
-  const difference = initialSF - resultingSF;
-  const factor = 10 ** initialSF;
-
   const {
     data,
     isLoading: isPriceLoading,
     ...helpers
-  } = useQuery<{ tokenOutAmount: string }>(
-    ['price-osmosis', pair, client],
+  } = useQuery<{ price: number }>(
+    ['price-osmosis', initialDenom, resultingDenom],
     async () => {
-      const directionalRoute = isRouteReversed ? reverse(route!) : route!;
-      const result = query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
+      if (!resultingDenom || !initialDenom) {
+        throw new Error('Denoms not found');
+      }
+
+      const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
+
+      const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
+
+      const isRouteReversed = initialDenom.id !== pair?.quote_denom;
+
+      const { significantFigures: initialSF } = initialDenom;
+      const { significantFigures: resultingSF } = resultingDenom;
+
+      const difference = initialSF - resultingSF;
+      const factor = 10 ** initialSF;
+      if (!route) {
+        throw new Error('Route not found');
+      }
+
+      if (!pools) {
+        throw new Error('Pools not found');
+      }
+      const directionalRoute = isRouteReversed ? reverse(route) : route;
+      const result = await query.osmosis.poolmanager.v1beta1.estimateSwapExactAmountIn({
         poolId: new Long(0),
-        tokenIn: `${factor}${initialDenom}`,
-        routes: findRoute(directionalRoute, initialDenom!, pools!),
+        tokenIn: `${factor}${initialDenom.id}`,
+        routes: findRoute(directionalRoute, initialDenom.id, pools),
       });
-      return result;
+      const price =
+        transactionType === TransactionType.Buy
+          ? factor / (Number(result.tokenOutAmount) * 10 ** difference)
+          : (10 ** difference * Number(result.tokenOutAmount)) / factor;
+      return { price };
     },
     {
-      enabled: !!client && !!route && !!enabled && !!pools,
+      enabled: !!enabled && !!pools && !!initialDenom && !!resultingDenom,
       meta: {
         errorMessage: 'Error fetching price',
       },
     },
   );
 
-  const price =
-    data &&
-    (transactionType === TransactionType.Buy
-      ? factor / (Number(data.tokenOutAmount) * 10 ** difference)
-      : (10 ** difference * Number(data.tokenOutAmount)) / factor);
-
-  const formattedPrice = price
-    ? price.toLocaleString('en-US', {
-        maximumFractionDigits: 6,
-        minimumFractionDigits: 6,
-      })
-    : undefined;
+  const formattedPrice =
+    data && data.price
+      ? data.price.toLocaleString('en-US', {
+          maximumFractionDigits: 6,
+          minimumFractionDigits: 6,
+        })
+      : undefined;
 
   return {
-    price,
+    price: data?.price,
     formattedPrice,
-    pairAddress: pair?.address,
+    pairAddress: '',
     isLoading: isPriceLoading || isLoadingPools,
     ...helpers,
   };

@@ -18,7 +18,7 @@ import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
-import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
@@ -72,12 +72,12 @@ function InvestmentThesis() {
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
   const acculumatingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyAcculumating).map(getStrategyResultingDenom)),
-  );
+    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
 
   const profitTakingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyProfitTaking).map(getStrategyInitialDenom)),
-  );
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => getStrategyInitialDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
   return (
     <Flex layerStyle="panel" p={8} alignItems="center" h="full">
       {isLoading ? (
@@ -90,7 +90,7 @@ function InvestmentThesis() {
               <Text>Asset(s) accumulating:</Text>
               <HStack>
                 {acculumatingAssets.length ? (
-                  acculumatingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset} denomName={asset} />)
+                  acculumatingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}
@@ -102,7 +102,7 @@ function InvestmentThesis() {
               <Text>Asset(s) taking profit on:</Text>
               <HStack>
                 {profitTakingAssets.length ? (
-                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset} denomName={asset} />)
+                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
                 ) : (
                   <Text>-</Text>
                 )}

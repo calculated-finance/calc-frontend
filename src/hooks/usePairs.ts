@@ -1,9 +1,9 @@
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { PairsResponse } from 'src/interfaces/v2/generated/response/get_pairs';
-import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
+import { DenomInfo } from '@utils/DenomInfo';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -13,18 +13,17 @@ const hiddenPairs = [
   'kujira1uvqk5vj9vn4gjemrp0myz4ku49aaemulgaqw7pfe0nuvfwp3gukq64r3ws', // ampLuna - usk pair
 ] as string[];
 
-export function isSupportedDenomForDcaPlus(denom: Denom) {
-  const { enabledInDcaPlus } = getDenomInfo(denom);
-  return enabledInDcaPlus && isDenomVolatile(denom);
+export function isSupportedDenomForDcaPlus(denom: DenomInfo) {
+  return denom.enabledInDcaPlus && isDenomVolatile(denom);
 }
-export function isSupportedDenomForWeightedScale(denom: Denom) {
+export function isSupportedDenomForWeightedScale(denom: DenomInfo) {
   return true;
 }
 
-export function orderAlphabetically(denoms: Denom[]) {
+export function orderAlphabetically(denoms: DenomInfo[]) {
   return denoms.sort((a, b) => {
-    const { name: nameA } = getDenomInfo(a);
-    const { name: nameB } = getDenomInfo(b);
+    const { name: nameA } = a;
+    const { name: nameB } = b;
     return nameA.localeCompare(nameB);
   });
 }
@@ -37,18 +36,31 @@ export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.base_denom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: Denom | undefined, pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom).map((pair) => pair.base_denom)));
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
+  return Array.from(
+    new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom.id).map((pair) => pair.base_denom)),
+  );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: Denom | undefined, pairs: Pair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom).map((pair) => pair.quote_denom)),
+    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom.id).map((pair) => pair.quote_denom)),
   );
 }
 
 export function allDenomsFromPairs(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => pair.quote_denom).concat(pairs?.map((pair) => pair.base_denom))));
+}
+
+export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
+  return orderAlphabetically(
+    Array.from(
+      new Set([
+        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+      ]),
+    ).map((denom) => getDenomInfo(denom)),
+  );
 }
 
 const GET_PAIRS_LIMIT = 400;

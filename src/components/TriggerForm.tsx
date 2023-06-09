@@ -4,13 +4,21 @@ import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
-import { FormNames } from '@hooks/useFormStore';
+import { DenomInfo } from '@utils/DenomInfo';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
 import { CollapseWithRender } from './CollapseWithRender';
 
-export function TriggerForm({ transactionType, formName }: { transactionType: TransactionType; formName: FormNames }) {
+export function TriggerForm({
+  transactionType,
+  initialDenom,
+  resultingDenom,
+}: {
+  transactionType: TransactionType;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+}) {
   const { values } = useFormikContext<DcaInFormDataAll>();
   const { startImmediately, triggerType, advancedSettings } = values;
 
@@ -32,7 +40,7 @@ export function TriggerForm({ transactionType, formName }: { transactionType: Tr
           </CollapseWithRender>
         </CollapseWithRender>
         <CollapseWithRender isOpen={triggerType === 'price'}>
-          <StartPrice formName={formName} transactionType={transactionType} />
+          <StartPrice transactionType={transactionType} initialDenom={initialDenom} resultingDenom={resultingDenom} />
         </CollapseWithRender>
       </CollapseWithRender>
     </Box>

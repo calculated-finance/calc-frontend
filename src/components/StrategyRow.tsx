@@ -4,7 +4,7 @@ import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
 import Link from 'next/link';
 
-import getDenomInfo from '@utils/getDenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -12,6 +12,7 @@ import {
   getStrategyName,
   isStrategyCancelled,
   getStrategyExecutionInterval,
+  getConvertedSwapAmount,
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -75,9 +76,9 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             Assets:
           </Text>
           <HStack spacing={1}>
-            <DenomIcon showTooltip denomName={initialDenom} />
+            <DenomIcon showTooltip denomInfo={initialDenom} />
             <Icon as={ArrowRightIcon} stroke="grey" />
-            <DenomIcon showTooltip denomName={resultingDenom} />
+            <DenomIcon showTooltip denomInfo={resultingDenom} />
           </HStack>
         </GridItem>
 
@@ -89,17 +90,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Interval:</Text>
           <Text textStyle="body-xs">
-            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>:{' '}
-            {Number(getDenomInfo(initialDenom).conversion(Number(strategy.swap_amount)).toFixed(6))}{' '}
-            {getDenomInfo(initialDenom).name}
+            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getConvertedSwapAmount(strategy)}{' '}
+            {initialDenom.name}
           </Text>
         </GridItem>
 
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Balance:</Text>
           <Text textStyle="body-xs">
-            {Number(getDenomInfo(strategy.balance.denom).conversion(Number(strategy.balance.amount)).toFixed(6))}{' '}
-            {getDenomInfo(strategy.balance.denom).name}
+            {convertDenomFromCoin(strategy.balance)} {initialDenom.name}
           </Text>
         </GridItem>
         <GridItem

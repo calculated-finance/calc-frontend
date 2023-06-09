@@ -10,6 +10,7 @@ import { encode } from '@helpers/encode';
 import { getFeeMessage } from '@helpers/getFeeMessage';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import { DenomInfo } from '@utils/DenomInfo';
 import useFiatPrice from './useFiatPrice';
 import { Strategy } from './useStrategies';
 import { useChain } from './useChain';
@@ -41,7 +42,7 @@ function getCancelVaultExecuteMsg(
   return protobufMsg;
 }
 
-const useCancelStrategy = (initialDenom: Denom) => {
+const useCancelStrategy = (initialDenom: DenomInfo) => {
   const { address, signingClient: client } = useWallet();
   const msgs: EncodeObject[] = [];
   const { price } = useFiatPrice(initialDenom);
@@ -72,7 +73,7 @@ const useCancelStrategy = (initialDenom: Denom) => {
       msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
       const tokensToCoverFee = ((CANCEL_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
 
-      msgs.push(getFeeMessage(address, initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
+      msgs.push(getFeeMessage(address, initialDenom.id, tokensToCoverFee, getChainFeeTakerAddress(chain)));
 
       return client.signAndBroadcast(address, msgs, 'auto');
     },

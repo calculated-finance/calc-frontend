@@ -1,8 +1,8 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { initialValues } from '@models/DcaInFormData';
+import { DenomInfo } from '@utils/DenomInfo';
 
 export function SummaryWhileSwapping({
   initialDenom,
@@ -11,16 +11,14 @@ export function SummaryWhileSwapping({
   slippageTolerance,
   transactionType,
 }: {
-  initialDenom: string;
-  resultingDenom: string;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
   priceThresholdValue: number | null | undefined;
   slippageTolerance: number | null | undefined;
   transactionType: string;
 }) {
-  // const { initialDenom, resultingDenom, priceThresholdValue, slippageTolerance } = state;
-
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const { name: initialDenomName } = initialDenom;
+  const { name: resultingDenomName } = resultingDenom;
 
   const showSlippage =
     slippageTolerance !== undefined &&
@@ -38,28 +36,28 @@ export function SummaryWhileSwapping({
           <>
             <BadgeButton url="customise">
               <Text>{resultingDenomName}</Text>
-              <DenomIcon denomName={resultingDenom} />
+              <DenomIcon denomInfo={initialDenom} />
             </BadgeButton>{' '}
             price is higher than{' '}
             <BadgeButton url="customise">
               <Text>
                 {priceThresholdValue} {initialDenomName}
               </Text>
-              <DenomIcon denomName={initialDenom} />
+              <DenomIcon denomInfo={initialDenom} />
             </BadgeButton>{' '}
           </>
         ) : (
           <>
             <BadgeButton url="customise">
               <Text>{initialDenomName}</Text>
-              <DenomIcon denomName={initialDenom} />
+              <DenomIcon denomInfo={initialDenom} />
             </BadgeButton>{' '}
             price is lower than{' '}
             <BadgeButton url="customise">
               <Text>
                 {priceThresholdValue} {resultingDenomName}
               </Text>
-              <DenomIcon denomName={resultingDenom} />
+              <DenomIcon denomInfo={resultingDenom} />
             </BadgeButton>{' '}
           </>
         )}

@@ -49,7 +49,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={1}>
         <Flex align="center" gap={2} data-testid="strategy-initial-denom">
-          <Text fontSize="sm">{getDenomName(initialDenom)}</Text> <DenomIcon denomName={initialDenom} />
+          <Text fontSize="sm">{getDenomName(initialDenom)}</Text> <DenomIcon denomInfo={initialDenom} />
         </Flex>
       </GridItem>
       <GridItem colSpan={1}>
@@ -57,7 +57,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={1}>
         <Flex align="center" gap={2} data-testid="strategy-resulting-denom">
-          <Text fontSize="sm">{getDenomName(resultingDenom)}</Text> <DenomIcon denomName={resultingDenom} />
+          <Text fontSize="sm">{getDenomName(resultingDenom)}</Text> <DenomIcon denomInfo={resultingDenom} />
         </Flex>
       </GridItem>
       <GridItem colSpan={2}>

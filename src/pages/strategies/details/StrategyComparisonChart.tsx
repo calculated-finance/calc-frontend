@@ -14,10 +14,10 @@ import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, getTotalReceived, isBuyStrategy } from '@helpers/strategy';
 import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
-import { Denom } from '@models/Denom';
 import { getDenomName } from '@utils/getDenomInfo';
 import Spinner from '@components/Spinner';
 import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
+import { DenomInfo } from '@utils/DenomInfo';
 import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
@@ -40,7 +40,7 @@ function formatTimeTick() {
     });
 }
 // legend with the strategy names and their line colors
-function StrategyComparisonLegend({ denom }: { denom: Denom }) {
+function StrategyComparisonLegend({ denom }: { denom: DenomInfo }) {
   return (
     <HStack spacing={4}>
       <HStack spacing={1}>

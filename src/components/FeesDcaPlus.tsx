@@ -32,6 +32,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
+import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -200,28 +201,27 @@ function FeeBreakdown({
 }
 
 export default function FeesDcaPlus({
-  formName,
   transactionType,
+  initialDenom,
+  resultingDenom,
+  initialDeposit,
+  strategyDuration,
+  autoStakeValidator,
 }: {
-  formName: FormNames;
   transactionType: TransactionType;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  initialDeposit: number;
+  strategyDuration: number;
+  autoStakeValidator: string | null | undefined;
 }) {
-  const { state } = useDcaPlusConfirmForm(formName);
-  const { price } = useFiatPrice(state?.initialDenom);
-
-  const { initialDenom, autoStakeValidator, initialDeposit, strategyDuration, resultingDenom } = state || {};
+  const { price } = useFiatPrice(initialDenom);
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 
-  // instead of returning any empty state on error, we could throw a validation error and catch it to display the
-  // invalid data message, along with missing field info.
-  if (!state) {
-    return null;
-  }
+  const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
-  const swapAmount = getSwapAmountFromDuration(initialDeposit!, strategyDuration!);
-
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
+  const { name: initialDenomName } = initialDenom;
 
   return (
     <Stack spacing={0}>

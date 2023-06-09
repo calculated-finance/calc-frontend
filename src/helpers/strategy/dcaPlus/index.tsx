@@ -103,7 +103,7 @@ export function getStrategySwapRange(strategy: Strategy) {
     const swapAmount = getConvertedSwapAmount(strategy);
     const model = getStrategyModel(strategy);
 
-    const minimumSwapAmount = getDenomMinimumSwapAmount(getStrategyInitialDenom(strategy));
+    const { minimumSwapAmount } = getStrategyInitialDenom(strategy);
     return getSwapRangeFromModel(swapAmount, model, minimumSwapAmount);
   }
   if (isWeightedScale(strategy)) {

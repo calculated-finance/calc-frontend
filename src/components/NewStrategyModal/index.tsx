@@ -1,9 +1,12 @@
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import * as Sentry from '@sentry/react';
 import {
   Button,
   Flex,
   Box,
   Spacer,
+  Image,
+  Text,
   Stack,
   IconButton,
   Heading,
@@ -33,9 +36,19 @@ import Stepper from './Stepper';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
-    <Box maxWidth={451} mx="auto" py={8} pb={200}>
-      {children}
-    </Box>
+    <Sentry.ErrorBoundary
+      fallback={
+        <Center m={8} p={8} flexDirection="column" gap={6}>
+          <Heading size="lg">Something went wrong</Heading>
+          <Image w={28} h={28} src="/images/notConnected.png" />
+          <Text>Please try again in a new session</Text>
+        </Center>
+      }
+    >
+      <Box maxWidth={451} mx="auto" py={8} pb={200}>
+        {children}
+      </Box>
+    </Sentry.ErrorBoundary>
   );
 }
 

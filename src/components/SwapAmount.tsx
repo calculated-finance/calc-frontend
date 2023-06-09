@@ -5,6 +5,7 @@ import totalExecutions from 'src/utils/totalExecutions';
 import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { useDenom } from '@hooks/useDenom/useDenom';
 import { DenomInput } from './DenomInput';
 
 export default function SwapAmount({
@@ -18,8 +19,8 @@ export default function SwapAmount({
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
 
-  const { name: initialDenomName } = getDenomInfo(step1State.initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(step1State.resultingDenom);
+  const initialDenom = useDenom(step1State.initialDenom);
+  const resultingDenom = useDenom(step1State.resultingDenom);
   const { initialDeposit } = step1State;
 
   const handleClick = () => {
@@ -37,11 +38,11 @@ export default function SwapAmount({
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>
-        How much {initialDenomName} each {isSell ? 'swap' : 'purchase'}?
+        How much {initialDenom.name} each {isSell ? 'swap' : 'purchase'}?
       </FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
-          <Text>The amount you want swapped each purchase for {resultingDenomName}.</Text>
+          <Text>The amount you want swapped each purchase for {resultingDenom.name}.</Text>
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
@@ -53,7 +54,7 @@ export default function SwapAmount({
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={step1State.initialDenom} onChange={helpers.setValue} {...field} />
+      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

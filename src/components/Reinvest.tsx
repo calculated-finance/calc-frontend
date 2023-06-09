@@ -39,10 +39,10 @@ import {
 import useStrategies from '@hooks/useStrategies';
 import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
-import { Denom } from '@models/Denom';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
+import { DenomInfo } from '@utils/DenomInfo';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -113,9 +113,9 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
           <Box {...getLabelProps()}>
             <Flex justify="space-between" align="center" gap={4} fontSize="xs">
               <HStack spacing={1}>
-                <DenomIcon showTooltip denomName={getStrategyInitialDenom(strategy)} />
+                <DenomIcon showTooltip denomInfo={getStrategyInitialDenom(strategy)} />
                 <Icon as={ArrowRightIcon} stroke="grey" />
-                <DenomIcon showTooltip denomName={getStrategyResultingDenom(strategy)} />
+                <DenomIcon showTooltip denomInfo={getStrategyResultingDenom(strategy)} />
               </HStack>
               <HStack flexGrow={1} align="center">
                 <Text>
@@ -148,7 +148,7 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
   );
 }
 
-export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
+export function Reinvest({ resultingDenom }: { resultingDenom: DenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'reinvestStrategy' });
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -161,7 +161,7 @@ export function Reinvest({ resultingDenom }: { resultingDenom: Denom }) {
   const filteredStrategies = data?.vaults
     .sort((a, b) => Number(b.id) - Number(a.id))
     .filter((strategy: Strategy) => {
-      if (getStrategyInitialDenom(strategy) !== resultingDenom) {
+      if (getStrategyInitialDenom(strategy).id !== resultingDenom.id) {
         return false;
       }
 

@@ -13,7 +13,6 @@ import {
   Stack,
   Link as ChakraLink,
 } from '@chakra-ui/react';
-import { Denom } from '@models/Denom';
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
@@ -22,11 +21,10 @@ import { Strategy } from '@hooks/useStrategies';
 import { Pages } from '@components/Sidebar/Pages';
 import Link from 'next/link';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { DenomInfo } from '@utils/DenomInfo';
 
-function TopUpAvailableFunds({ initialDenom }: { initialDenom: Denom }) {
-  const { displayAmount, isLoading } = useBalance({
-    token: initialDenom,
-  });
+function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
+  const { displayAmount, isLoading } = useBalance(initialDenom);
 
   const [, , helpers] = useField('topUpAmount');
 

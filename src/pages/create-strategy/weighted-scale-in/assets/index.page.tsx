@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, {
+  getResultingDenoms,
   isSupportedDenomForWeightedScale,
   orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
@@ -22,18 +23,8 @@ import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
 import { Pair } from '@models/Pair';
-import { Denom } from '@models/Denom';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function DcaIn() {
   const { actions, state } = useWeightedScaleAssetsForm(FormNames.WeightedScaleIn);
@@ -82,7 +73,7 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={getResultingDenoms(pairs, values.initialDenom).filter(isSupportedDenomForWeightedScale)}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
               <Submit>Next</Submit>
             </Stack>

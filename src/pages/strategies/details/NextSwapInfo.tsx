@@ -1,10 +1,8 @@
 import { Heading, Text, HStack, Flex, Stack, Icon, Box } from '@chakra-ui/react';
-import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
-import { Denom } from '@models/Denom';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -14,14 +12,15 @@ import {
 } from '@helpers/strategy';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import usePairs from '@hooks/usePairs';
+import { DenomInfo } from '@utils/DenomInfo';
 
-function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; resultingDenom: Denom }) {
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
+  const { name: initialDenomName } = initialDenom;
+  const { name: resultingDenomName } = resultingDenom;
   return (
     <Flex justify="space-between" gap={2} align="center" w="full">
       <HStack>
-        <DenomIcon size={5} denomName={initialDenom} />
+        <DenomIcon size={5} denomInfo={initialDenom} />
         <Text>{initialDenomName}</Text>
       </HStack>
       <Flex display={{ base: 'none', lg: 'initial' }} flexShrink={1}>
@@ -29,7 +28,7 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: Denom; result
       </Flex>
       <Icon as={ArrowForwardIcon} display={{ lg: 'none' }} />
       <HStack>
-        <DenomIcon size={5} denomName={resultingDenom} />
+        <DenomIcon size={5} denomInfo={resultingDenom} />
         <Text>{resultingDenomName}</Text>
       </HStack>
     </Flex>
@@ -72,23 +71,20 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
-          ? getDenomInfo(resultingDenom)
-          : getDenomInfo(initialDenom);
+        const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+
         const convertedPrice = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
 
         if (isBuyStrategy(strategy)) {
           nextSwapInfo = (
             <>
-              When price hits 1 {getDenomInfo(resultingDenom).name} &le; {convertedPrice}{' '}
-              {getDenomInfo(initialDenom).name}
+              When price hits 1 {resultingDenom.name} &le; {convertedPrice} {initialDenom.name}
             </>
           );
         } else {
           nextSwapInfo = (
             <>
-              When price hits 1 {getDenomInfo(initialDenom).name} &ge; {convertedPrice}{' '}
-              {getDenomInfo(resultingDenom).name}
+              When price hits 1 {initialDenom.name} &ge; {convertedPrice} {resultingDenom.name}
             </>
           );
         }

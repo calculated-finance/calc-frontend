@@ -26,6 +26,8 @@ import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 import PriceThreshold from '@components/PriceThreshold';
+import getDenomInfo from '@utils/getDenomInfo';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function WeightedScaleCustomisePage({
   formName,
@@ -53,6 +55,9 @@ export function WeightedScaleCustomisePage({
     actions.resetAction();
     goToStep(0);
   };
+
+  const initialDenomInfo = useDenom(state?.step1.initialDenom);
+  const resultingDenomInfo = useDenom(state?.step1.resultingDenom);
 
   if (!state) {
     return (
@@ -87,19 +92,23 @@ export function WeightedScaleCustomisePage({
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>
                 <DcaDiagram
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
+                  initialDenom={initialDenomInfo}
+                  resultingDenom={resultingDenomInfo}
                   initialDeposit={state.step1.initialDeposit}
                 />
                 <AdvancedSettingsSwitch />
                 <Collapse in={values.advancedSettings}>
-                  <TriggerForm transactionType={transactionType} formName={formName} />
+                  <TriggerForm
+                    transactionType={transactionType}
+                    initialDenom={initialDenomInfo}
+                    resultingDenom={resultingDenomInfo}
+                  />
                 </Collapse>
                 <ExecutionInterval />
-                <BaseSwapAmount step1State={state.step1} />
+                <BaseSwapAmount initialDenom={initialDenomInfo} initialDeposit={state.step1.initialDeposit} />
                 <SwapMultiplier
-                  initialDenom={state.step1.initialDenom}
-                  resultingDenom={state.step1.resultingDenom}
+                  initialDenom={initialDenomInfo}
+                  resultingDenom={resultingDenomInfo}
                   transactionType={transactionType}
                 />
                 <Collapse in={values.advancedSettings}>
@@ -107,13 +116,13 @@ export function WeightedScaleCustomisePage({
                     <Stack spacing={4}>
                       <ApplyMultiplier transactionType={transactionType} />
                       <BasePrice
-                        initialDenom={state.step1.initialDenom}
-                        resultingDenom={state.step1.resultingDenom}
+                        initialDenom={initialDenomInfo}
+                        resultingDenom={resultingDenomInfo}
                         transactionType={transactionType}
                       />
                       <PriceThreshold
-                        initialDenom={state.step1.initialDenom}
-                        resultingDenom={state.step1.resultingDenom}
+                        initialDenom={initialDenomInfo}
+                        resultingDenom={resultingDenomInfo}
                         transactionType={transactionType}
                       />
                       <SlippageTolerance />

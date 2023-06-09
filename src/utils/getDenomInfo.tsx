@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useChainStore } from '@hooks/useChain';
@@ -5,26 +6,9 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';
+import { DenomInfo } from './DenomInfo';
 
-type DenomInfo = {
-  name: string;
-  icon?: string;
-  conversion?: (value: number) => number;
-  deconversion?: (value: number) => number;
-  priceDeconversion?: (value: number | undefined | null) => number;
-  priceConversion?: (value: number | undefined | null) => number;
-  stakeable?: boolean;
-  stable?: boolean;
-  coingeckoId: string;
-  stakeableAndSupported?: boolean;
-  promotion?: JSX.Element;
-  enabled?: boolean;
-  minimumSwapAmount?: number;
-  significantFigures: number;
-  enabledInDcaPlus?: boolean;
-  osmosisId?: string;
-  pricePrecision?: number;
-};
+type DenomInfoWithoutId = Omit<DenomInfo, 'id'>;
 
 const defaultDenom = {
   name: '',
@@ -44,9 +28,9 @@ const defaultDenom = {
   enabledInDcaPlus: false,
   osmosisId: undefined,
   pricePrecision: 3,
-};
+} as DenomInfoWithoutId;
 
-export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
+export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.ATOM]: {
     name: 'ATOM',
     icon: '/images/denoms/atom.svg',
@@ -312,7 +296,7 @@ export const mainnetDenoms: Record<MainnetDenoms, DenomInfo> = {
     pricePrecision: 3,
   },
 };
-export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfo>> = {
+export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfoWithoutId>> = {
   [MainnetDenomsOsmosis.AXL]: {
     coingeckoId: 'usd-coin',
     stable: true,
@@ -366,7 +350,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   },
 };
 
-export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
+export const testnetDenoms: Record<TestnetDenoms, Partial<DenomInfo>> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
@@ -421,44 +405,6 @@ export const testnetDenoms: Record<TestnetDenoms, DenomInfo> = {
     significantFigures: 6,
     enabledInDcaPlus: true,
   },
-  // [TestnetDenomsOsmosis.OSMO]: {
-  //   name: 'OSMO',
-  //   icon: '/images/denoms/osmo.svg',
-  //   stakeable: true,
-  //   stakeableAndSupported: true,
-  //   coingeckoId: 'osmosis',
-  //   significantFigures: 6,
-  //   osmosisId: 'OSMO',
-  //   enabledInDcaPlus: true,
-  // },
-  // [TestnetDenomsOsmosis.AXL]: {
-  //   name: 'axlUSDC',
-  //   icon: '/images/denoms/axl.svg',
-  //   stakeable: false,
-  //   stable: true,
-  //   coingeckoId: 'usd-coin',
-  //   significantFigures: 6,
-  //   osmosisId: 'aUSDC',
-  //   enabledInDcaPlus: true,
-  // },
-  // [TestnetDenomsOsmosis.ATOM]: {
-  //   name: 'ATOM',
-  //   icon: '/images/denoms/atom.svg',
-  //   osmosisId: 'ATOM',
-  //   stakeable: true,
-  //   coingeckoId: 'cosmos',
-  //   significantFigures: 6,
-  //   enabledInDcaPlus: true,
-  // },
-  // [TestnetDenomsOsmosis.ION]: {
-  //   name: 'ION',
-  //   icon: '/images/denoms/ion.svg',
-  //   osmosisId: 'ION',
-  //   stakeable: true,
-  //   coingeckoId: 'ion',
-  //   significantFigures: 6,
-  //   enabledInDcaPlus: true,
-  // },
 };
 
 const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL.toString()];
@@ -470,25 +416,23 @@ function isDenomInStablesList(denom: Denom) {
   return stableDenomsTestnet.includes(denom);
 }
 
-const getDenomInfo = (denom?: string, injectedChain?: Chains) => {
-  // if osmosis blah adapter to current properties
-  // use zustand to get chain id
-  // use chain store?   const { chain } = useChainStore.getState(); do this if iyt works
-  // test with 3g
+const getDenomInfo = (denom: string | undefined, injectedChain?: Chains): DenomInfo => {
+  if (!denom) {
+    Sentry.captureException('getDenomInfo: denom is undefined');
+    return {
+      id: '',
+      ...defaultDenom,
+    };
+  }
   const { chain: storedChain } = useChainStore.getState();
 
   const chain = injectedChain || storedChain;
 
   const { assetList } = useAssetListStore.getState();
 
-  if (chain === Chains.Osmosis && assetList?.assets) {
-    // map asset list to denom info
-    const asset = assetList.assets.find((a) => a.base === denom);
+  const asset = chain === Chains.Osmosis && assetList?.assets && assetList.assets.find((a) => a.base === denom);
 
-    if (!asset) {
-      return defaultDenom;
-    }
-
+  if (asset) {
     const mapTo = {} as Partial<DenomInfo>;
 
     mapTo.name = asset.symbol;
@@ -516,44 +460,70 @@ const getDenomInfo = (denom?: string, injectedChain?: Chains) => {
 
     if (isMainnet()) {
       return {
+        id: denom,
         ...defaultDenom,
         ...mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis],
         ...mapTo,
       };
     }
     return {
+      id: denom,
       ...defaultDenom,
       ...testnetDenoms[denom as TestnetDenoms],
       ...mapTo,
     };
   }
-  // second comparison is not needed but just being explicit
-  if (isMainnet() && chain === Chains.Kujira) {
+
+  if (isMainnet()) {
+    const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+    if (!kujiraMainnetAsset) {
+      Sentry.captureException('getDenomInfo: kujiraMainnetAsset is undefined', { tags: { denom } });
+      return {
+        id: denom,
+        ...defaultDenom,
+      };
+    }
     return {
+      id: denom,
       ...defaultDenom,
       ...mainnetDenoms[denom as MainnetDenoms],
     };
   }
+
+  const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
+
+  if (!kujiraTestnetAsset) {
+    Sentry.captureException('getDenomInfo: kujiraTestnetAsset is undefined', { tags: { denom } });
+    return {
+      id: denom,
+      ...defaultDenom,
+    };
+  }
   return {
+    id: denom,
     ...defaultDenom,
     ...testnetDenoms[denom as TestnetDenoms],
   };
 };
 
-export function getDenomName(denom: string) {
-  return getDenomInfo(denom).name;
+export function getDenomName(denomInfo: DenomInfo) {
+  return denomInfo.name;
 }
 
 export function convertDenomFromCoin(coin: Coin | undefined) {
   if (!coin) {
     return 0;
   }
-  const { significantFigures, conversion } = getDenomInfo(coin.denom);
+  const denomInfo = getDenomInfo(coin.denom);
+  if (!denomInfo) {
+    return 0;
+  }
+  const { significantFigures, conversion } = denomInfo;
   return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
 }
 
-export function getDenomMinimumSwapAmount(denom: string) {
-  return getDenomInfo(denom).minimumSwapAmount;
+export function getDenomMinimumSwapAmount(denom: Denom) {
+  return getDenomInfo(denom)?.minimumSwapAmount;
 }
 
 export class DenomValue {
@@ -568,15 +538,18 @@ export class DenomValue {
   }
 
   toConverted() {
-    const { conversion } = getDenomInfo(this.denomId);
+    const { conversion } = getDenomInfo(this.denomId) || {};
+    if (!conversion) {
+      return 0;
+    }
     return parseFloat(conversion(this.amount).toFixed(6));
   }
 }
 
-export function isDenomStable(denom: Denom) {
-  return getDenomInfo(denom).stable;
+export function isDenomStable(denom: DenomInfo | undefined) {
+  return denom?.stable;
 }
-export function isDenomVolatile(denom: Denom) {
+export function isDenomVolatile(denom: DenomInfo | undefined) {
   return !isDenomStable(denom);
 }
 

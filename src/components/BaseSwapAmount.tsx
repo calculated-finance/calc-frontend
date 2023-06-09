@@ -1,24 +1,27 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { getDenomName } from '@utils/getDenomInfo';
+import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
 
-export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDataStep1; isSell?: boolean }) {
+export default function BaseSwapAmount({
+  initialDenom,
+  initialDeposit,
+}: {
+  initialDenom: DenomInfo;
+  initialDeposit: number;
+}) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-
-  const { initialDeposit } = step1State;
 
   const handleClick = () => {
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(step1State.initialDeposit, field.value);
+  const executions = totalExecutions(initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
@@ -29,7 +32,7 @@ export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDa
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>Set your base {getDenomName(step1State.initialDenom)} swap amount</FormLabel>
+      <FormLabel>Set your base {initialDenom.name} swap amount</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
           <Text>The base amount you want swapped each interval.</Text>
@@ -44,7 +47,7 @@ export default function BaseSwapAmount({ step1State }: { step1State: DcaInFormDa
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={step1State.initialDenom} onChange={helpers.setValue} {...field} />
+      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

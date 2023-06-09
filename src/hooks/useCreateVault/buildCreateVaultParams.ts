@@ -24,6 +24,7 @@ import {
 import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
+import { DenomInfo } from '@utils/DenomInfo';
 import { DcaFormState } from './DcaFormState';
 
 const conversion: Record<ExecutionIntervals, number> = {
@@ -59,10 +60,10 @@ function getReceiveAmount(
 }
 
 function getOsmosisReceiveAmount(
-  initialDenom: Denom, // osmo
+  initialDenom: DenomInfo | undefined, // osmo
   swapAmount: number, // 1.2
   price: number | null | undefined, // 5.0
-  resultingDenom: Denom, // weth
+  resultingDenom: DenomInfo | undefined, // weth
   transactionType: TransactionType,
 ) {
   // convert swap amount to microns e.g. 1.2 -> 1 200 000
@@ -73,8 +74,12 @@ function getOsmosisReceiveAmount(
     return undefined;
   }
 
-  const { deconversion: initialDeconversion, significantFigures: initialSF } = getDenomInfo(initialDenom);
-  const { significantFigures: resultingSF } = getDenomInfo(resultingDenom);
+  const { deconversion: initialDeconversion, significantFigures: initialSF } = initialDenom || {};
+  const { significantFigures: resultingSF } = resultingDenom || {};
+
+  if (!initialDeconversion || !initialSF || !resultingSF) {
+    throw new Error('Missing denom info');
+  }
 
   // make the price in terms of the initial denom (doesnt matter if its buy or sell)
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
@@ -92,21 +97,24 @@ function getOsmosisReceiveAmount(
 }
 
 export function getMinimumReceiveAmount(
-  initialDenom: Denom,
+  initialDenom: DenomInfo | undefined,
   swapAmount: number,
   priceThresholdValue: number | null | undefined,
-  resultingDenom: Denom,
+  resultingDenom: DenomInfo | undefined,
   transactionType: TransactionType,
 ) {
+  if (!initialDenom || !resultingDenom) {
+    throw new Error('Missing denom info');
+  }
+
   const { chain } = useChainStore.getState();
 
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, priceThresholdValue, resultingDenom, transactionType);
   }
-  const { priceConversion } =
-    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+  const { priceConversion } = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
 
-  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  const { deconversion, significantFigures } = initialDenom;
   return getReceiveAmount(
     priceConversion(priceThresholdValue),
     deconversion,
@@ -136,50 +144,52 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
 }
 
 function getTargetReceiveAmount(
-  initialDenom: Denom,
+  initialDenom: DenomInfo | undefined,
   swapAmount: number,
   startPrice: number | null | undefined,
-  resultingDenom: Denom,
+  resultingDenom: DenomInfo | undefined,
   transactionType: TransactionType,
 ) {
+  if (!initialDenom || !resultingDenom) {
+    throw new Error('Missing denom info');
+  }
+
   const { chain } = useChainStore.getState();
 
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType);
   }
-  const { priceConversion } =
-    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+  const { priceConversion } = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
 
-  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  const { deconversion, significantFigures } = initialDenom;
   return getReceiveAmount(priceConversion(startPrice), deconversion, swapAmount, transactionType, significantFigures);
 }
 
 function getBaseReceiveAmount(
-  initialDenom: Denom,
+  initialDenom: DenomInfo,
   swapAmount: number,
   basePrice: number | null | undefined,
-  resultingDenom: Denom,
+  resultingDenom: DenomInfo,
   transactionType: TransactionType,
 ) {
   const { chain } = useChainStore.getState();
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, basePrice, resultingDenom, transactionType);
   }
-  const { priceConversion } =
-    transactionType === TransactionType.Buy ? getDenomInfo(resultingDenom) : getDenomInfo(initialDenom);
+  const { priceConversion } = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
 
-  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+  const { deconversion, significantFigures } = initialDenom;
   return getReceiveAmount(priceConversion(basePrice), deconversion, swapAmount, transactionType, significantFigures);
 }
 
-function getSwapAmount(initialDenom: Denom, swapAmount: number) {
-  const { deconversion, significantFigures } = getDenomInfo(initialDenom);
+function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
+  const { deconversion } = initialDenom;
 
   return deconversion(swapAmount).toString();
 }
 
-function calculateSwapAmountFromDuration(initialDenom: Denom, strategyDuration: number, initialDeposit: number) {
-  const { deconversion } = getDenomInfo(initialDenom);
+function calculateSwapAmountFromDuration(initialDenom: DenomInfo, strategyDuration: number, initialDeposit: number) {
+  const { deconversion } = initialDenom;
 
   return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
 }
@@ -209,18 +219,20 @@ export function buildCreateVaultParamsDCA(
 
   const { executionInterval, executionIntervalIncrement } = state;
 
+  const initialDenomInfo = getDenomInfo(state.initialDenom);
+  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
   const msg = {
     create_vault: {
       label: '',
       time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
-      target_denom: state.resultingDenom,
-      swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
+      target_denom: resultingDenomInfo.id,
+      swap_amount: getSwapAmount(initialDenomInfo, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       minimum_receive_amount: getMinimumReceiveAmount(
-        state.initialDenom,
+        initialDenomInfo,
         state.swapAmount,
         state.priceThresholdValue,
-        state.resultingDenom,
+        resultingDenomInfo,
         transactionType,
       ),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
@@ -233,10 +245,10 @@ export function buildCreateVaultParamsDCA(
         state.reinvestStrategy,
       ),
       target_receive_amount: getTargetReceiveAmount(
-        state.initialDenom,
+        initialDenomInfo,
         state.swapAmount,
         state.startPrice,
-        state.resultingDenom,
+        resultingDenomInfo,
         transactionType,
       ),
     },
@@ -245,10 +257,10 @@ export function buildCreateVaultParamsDCA(
 }
 
 export function buildWeightedScaleAdjustmentStrategy(
-  initialDenom: Denom,
+  initialDenom: DenomInfo,
   swapAmount: number,
   basePriceValue: number | null | undefined,
-  resultingDenom: Denom,
+  resultingDenom: DenomInfo,
   transactionType: TransactionType,
   applyMultiplier: YesNoValues,
   swapMultiplier: number,
@@ -278,12 +290,15 @@ export function buildCreateVaultParamsWeightedScale(
   const { chain } = useChainStore.getState();
   const { executionInterval, executionIntervalIncrement } = state;
 
+  const initialDenomInfo = getDenomInfo(state.initialDenom);
+  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+
   const msg = {
     create_vault: {
       label: '',
       time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
-      target_denom: state.resultingDenom,
-      swap_amount: getSwapAmount(state.initialDenom, state.swapAmount),
+      target_denom: resultingDenomInfo.id,
+      swap_amount: getSwapAmount(initialDenomInfo, state.swapAmount),
       target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
       slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
       destinations: buildCallbackDestinations(
@@ -295,24 +310,24 @@ export function buildCreateVaultParamsWeightedScale(
         state.reinvestStrategy,
       ),
       target_receive_amount: getTargetReceiveAmount(
-        state.initialDenom,
+        initialDenomInfo,
         state.swapAmount,
         state.startPrice,
-        state.resultingDenom,
+        resultingDenomInfo,
         transactionType,
       ),
       minimum_receive_amount: getMinimumReceiveAmount(
-        state.initialDenom,
+        initialDenomInfo,
         state.swapAmount,
         state.priceThresholdValue,
-        state.resultingDenom,
+        resultingDenomInfo,
         transactionType,
       ),
       swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
-        state.initialDenom,
+        initialDenomInfo,
         state.swapAmount,
         state.basePriceValue,
-        state.resultingDenom,
+        resultingDenomInfo,
         transactionType,
         state.applyMultiplier,
         state.swapMultiplier,
@@ -328,7 +343,10 @@ export function buildCreateVaultParamsDCAPlus(
   pairs: Pair[],
   senderAddress: string,
 ): ExecuteMsg | OsmosisExecuteMsg {
-  const swapAmount = calculateSwapAmountFromDuration(state.initialDenom, state.strategyDuration, state.initialDeposit);
+  const initialDenomInfo = getDenomInfo(state.initialDenom);
+  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+
+  const swapAmount = calculateSwapAmountFromDuration(initialDenomInfo, state.strategyDuration, state.initialDeposit);
 
   const { chain } = useChainStore.getState();
 
@@ -336,7 +354,7 @@ export function buildCreateVaultParamsDCAPlus(
     create_vault: {
       label: '',
       time_interval: 'daily',
-      target_denom: state.resultingDenom,
+      target_denom: resultingDenomInfo.id,
       swap_amount: swapAmount.toString(),
       target_start_time_utc_seconds: undefined,
       target_receive_amount: undefined,

@@ -7,7 +7,6 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
-import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
@@ -64,9 +63,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { displayAmount } = useBalance({
-    token: initialDenom,
-  });
+  const { displayAmount } = useBalance(initialDenom);
 
   const remaining = getStrategyBalance(strategy);
 
@@ -107,7 +104,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
               <Stack spacing={2}>
                 <Heading size="sm">{getStrategyName(strategy)}</Heading>
                 <Text textStyle="body-xs">
-                  Remaining balance: {remaining} {getDenomInfo(initialDenom).name}
+                  Remaining balance: {remaining} {initialDenom.name}
                 </Text>
                 <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
               </Stack>

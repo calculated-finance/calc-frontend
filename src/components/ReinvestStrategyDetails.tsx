@@ -1,5 +1,5 @@
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import { DenomValue, convertDenomFromCoin } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
 import {
@@ -25,8 +25,6 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-
-  const initialDenomValue = new DenomValue(balance);
 
   const strategyType = getStrategyType(strategy);
   const { data: pairsData } = usePairs();
@@ -110,8 +108,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy)}{' '}
-                    {getDenomInfo(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                    {getPriceCeilingFloor(strategy)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>
@@ -123,7 +120,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-current-balance">
-              {initialDenomValue.toConverted()} {getDenomInfo(initialDenom).name}
+              {convertDenomFromCoin(balance)} {initialDenom.name}
             </Text>
           </GridItem>
           <DestinationDetails strategy={strategy} />

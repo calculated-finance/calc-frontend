@@ -15,22 +15,24 @@ import { TriggerForm } from '@components/TriggerForm';
 import { FormNames } from '@hooks/useFormStore';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { StepConfig } from '@formConfig/StepConfig';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function CustomiseFormDca({
   steps,
   step1,
   resetAction,
   transactionType,
-  formName,
 }: {
   steps: StepConfig[];
   step1: DcaInFormDataStep1;
   resetAction?: () => void;
   transactionType: TransactionType;
-  formName: FormNames;
 }) {
   const { isPageLoading } = usePageLoad();
   const { values, isSubmitting } = useFormikContext<DcaInFormDataStep2>();
+
+  const initialDenom = useDenom(step1.initialDenom);
+  const resultingDenom = useDenom(step1.resultingDenom);
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={steps} resetForm={resetAction} />
@@ -38,18 +40,22 @@ export function CustomiseFormDca({
         <Form autoComplete="off">
           <Stack direction="column" spacing={4}>
             <DcaDiagram
-              initialDenom={step1.initialDenom}
-              resultingDenom={step1.resultingDenom}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={step1.initialDeposit}
             />
             <AdvancedSettingsSwitch />
-            <TriggerForm transactionType={transactionType} formName={formName} />
+            <TriggerForm
+              transactionType={transactionType}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
+            />
             <ExecutionInterval />
             <SwapAmount step1State={step1} isSell={transactionType === TransactionType.Sell} />
             <CollapseWithRender isOpen={values.advancedSettings}>
               <PriceThreshold
-                initialDenom={step1.initialDenom}
-                resultingDenom={step1.resultingDenom}
+                initialDenom={initialDenom}
+                resultingDenom={resultingDenom}
                 transactionType={transactionType}
               />
               <SlippageTolerance />

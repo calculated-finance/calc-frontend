@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, {
+  getResultingDenoms,
   isSupportedDenomForDcaPlus,
   orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
@@ -21,19 +22,9 @@ import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
-import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function DcaIn() {
   const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);
@@ -82,7 +73,11 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={getResultingDenoms(pairs, values.initialDenom).filter(isSupportedDenomForDcaPlus)}
+                denoms={
+                  values.initialDenom
+                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
+                    : []
+                }
               />
               <Submit>Next</Submit>
             </Stack>

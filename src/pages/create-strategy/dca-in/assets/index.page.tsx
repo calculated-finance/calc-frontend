@@ -3,6 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
+  getResultingDenoms,
   orderAlphabetically,
   uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenomsFromBaseDenom,
@@ -19,19 +20,9 @@ import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
-import { Denom } from '@models/Denom';
 import { Pair } from '@models/Pair';
-
-function getResultingDenoms(pairs: Pair[], initialDenom: Denom | undefined) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ),
-  );
-}
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
 function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
@@ -79,7 +70,9 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={getResultingDenoms(pairs, values.initialDenom)} />
+              <DCAInResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               <Submit>Next</Submit>
             </Stack>
           </Form>

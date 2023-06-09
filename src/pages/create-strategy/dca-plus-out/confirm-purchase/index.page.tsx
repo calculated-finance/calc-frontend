@@ -22,37 +22,58 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames } from '@hooks/useFormStore';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
-  const { price } = useFiatPrice(state?.initialDenom);
+  const initialDenom = useDenom(state?.initialDenom);
+  const resultingDenom = useDenom(state?.resultingDenom);
+  const { price } = useFiatPrice(initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(undefined, {
-      onSuccess: async (strategyId) => {
-        await nextStep({
-          strategyId,
-          timeSaved:
-            state &&
-            getTimeSaved(state.initialDeposit, getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration)),
-        });
-        actions.resetAction();
+    mutate(
+      { price },
+      {
+        onSuccess: async (strategyId) => {
+          await nextStep({
+            strategyId,
+            timeSaved:
+              state &&
+              getTimeSaved(
+                state.initialDeposit,
+                getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
+              ),
+          });
+          actions.resetAction();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
       },
-      onSettled: () => {
-        setSubmitting(false);
-      },
-    });
+    );
 
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
   };
 
+  if (!state) {
+    return (
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading isSigning={isLoading}>
+          Loading
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    );
+  }
+
   const transactionType = TransactionType.Sell;
+
   return (
     <NewStrategyModal>
       <NewStrategyModalHeader stepsConfig={dcaPlusOutSteps} resetForm={actions.resetAction} />
@@ -60,23 +81,35 @@ function Page() {
         {state ? (
           <Stack spacing={4}>
             <DcaDiagram
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={state.initialDeposit}
             />
             <Divider />
             <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
-            <SummaryTheSwapDcaPlus state={state} />
+            <SummaryTheSwapDcaPlus
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
+              strategyDuration={state.strategyDuration}
+              initialDeposit={state.initialDeposit}
+            />
             <SummaryWhileSwapping
               transactionType={transactionType}
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               priceThresholdValue={undefined}
               slippageTolerance={state.slippageTolerance}
             />
             <SummaryAfterEachSwap state={state} />
             <SummaryBenchmark state={state} />
-            <FeesDcaPlus formName={FormNames.DcaPlusOut} transactionType={TransactionType.Sell} />
+            <FeesDcaPlus
+              transactionType={TransactionType.Sell}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
+              strategyDuration={state.strategyDuration}
+              initialDeposit={state.initialDeposit}
+              autoStakeValidator={state.autoStakeValidator}
+            />
             <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
           </Stack>
         ) : (

@@ -5,7 +5,6 @@ import { useCreateVaultWeightedScale } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
-import { InvalidData } from '@components/InvalidData';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
@@ -20,7 +19,66 @@ import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
 import { SWAP_FEE_WS } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
+import getDenomInfo from '@utils/getDenomInfo';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
 import Fees from './Fees';
+import { InvalidData } from './InvalidData';
+
+function PageInternal({
+  state,
+  strategyType,
+  transactionType,
+  isError,
+  error,
+  handleSubmit,
+}: {
+  state: WeightedScaleState;
+  strategyType: StrategyTypes;
+  transactionType: TransactionType;
+  isError: boolean;
+  error: Error | null;
+  handleSubmit: (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => void;
+}) {
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
+  return (
+    <Stack spacing={4}>
+      <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+      <Divider />
+      <SummaryYourDeposit state={state} strategyType={strategyType} />
+      <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
+      <WeightSummary
+        transactionType={transactionType}
+        applyMultiplier={state.applyMultiplier}
+        swapMultiplier={state.swapMultiplier}
+        swapAmount={state.swapAmount}
+        basePrice={state.basePriceValue}
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        priceThresholdValue={state.priceThresholdValue}
+      />
+      <SummaryWhileSwapping
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        priceThresholdValue={state.priceThresholdValue}
+        slippageTolerance={state.slippageTolerance}
+        transactionType={transactionType}
+      />
+      <SummaryAfterEachSwap state={state} />
+      <Fees
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        autoStakeValidator={state.autoStakeValidator}
+        swapAmount={state.swapAmount}
+        transactionType={transactionType}
+        swapFee={SWAP_FEE_WS}
+        swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
+        excludeDepositFee
+      />
+      <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+    </Stack>
+  );
+}
 
 export function WeightedScaleConfirmPage({
   formName,
@@ -37,23 +95,26 @@ export function WeightedScaleConfirmPage({
   const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(steps);
 
-  const { price } = useFiatPrice(state?.initialDenom);
+  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
   const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(undefined, {
-      onSuccess: async (strategyId) => {
-        await nextStep({
-          strategyId,
-          timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
-        });
-        actions.resetAction();
+    mutate(
+      { price },
+      {
+        onSuccess: async (strategyId) => {
+          await nextStep({
+            strategyId,
+            timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          });
+          actions.resetAction();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
       },
-      onSettled: () => {
-        setSubmitting(false);
-      },
-    });
+    );
 
   const handleRestart = () => {
     actions.resetAction();
@@ -65,42 +126,14 @@ export function WeightedScaleConfirmPage({
       <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
       <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
-          <Stack spacing={4}>
-            <DcaDiagram
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
-              initialDeposit={state.initialDeposit}
-            />
-            <Divider />
-            <SummaryYourDeposit state={state} strategyType={strategyType} />
-            <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
-            <WeightSummary
-              transactionType={transactionType}
-              applyMultiplier={state.applyMultiplier}
-              swapMultiplier={state.swapMultiplier}
-              swapAmount={state.swapAmount}
-              basePrice={state.basePriceValue}
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
-              priceThresholdValue={state.priceThresholdValue}
-            />
-            <SummaryWhileSwapping
-              initialDenom={state.initialDenom}
-              resultingDenom={state.resultingDenom}
-              priceThresholdValue={state.priceThresholdValue}
-              slippageTolerance={state.slippageTolerance}
-              transactionType={transactionType}
-            />
-            <SummaryAfterEachSwap state={state} />
-            <Fees
-              state={state}
-              transactionType={transactionType}
-              swapFee={SWAP_FEE_WS}
-              swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
-              excludeDepositFee
-            />
-            <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-          </Stack>
+          <PageInternal
+            transactionType={transactionType}
+            strategyType={strategyType}
+            state={state}
+            isError={isError}
+            error={error}
+            handleSubmit={handleSubmit}
+          />
         ) : (
           <InvalidData onRestart={handleRestart} />
         )}

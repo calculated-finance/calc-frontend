@@ -23,7 +23,6 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
-import useFiatPrice from '../useFiatPrice';
 import { getGrantMsg } from './getGrantMsg';
 import { getExecuteMsg } from './getCreateVaultExecuteMsg';
 import { buildCreateVaultParams } from './buildCreateVaultParams';
@@ -57,11 +56,10 @@ const useCreateVault = (
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
-  const { price } = useFiatPrice(state?.initialDenom as Denom);
   const { track } = useAnalytics();
 
-  return useMutation<Strategy['id'] | undefined, Error>(
-    () => {
+  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
+    ({ price }) => {
       if (!state) {
         throw new Error('No state');
       }
@@ -152,7 +150,12 @@ export const useCreateVaultWeightedScale = (formName: FormNames, transactionType
   const { state } = useWeightedScaleConfirmForm(formName);
 
   const enablePriceCheck = isNil((state as WeightedScaleState)?.basePriceValue);
-  const { price: dexPrice } = usePrice(state?.resultingDenom, state?.initialDenom, transactionType, enablePriceCheck);
+  const { price: dexPrice } = usePrice(
+    state && getDenomInfo(state.resultingDenom),
+    state && getDenomInfo(state.initialDenom),
+    transactionType,
+    enablePriceCheck,
+  );
 
   return useCreateVault(formName, transactionType, state, true, dexPrice);
 };

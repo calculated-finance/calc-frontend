@@ -1,18 +1,15 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
-import getDenomInfo from '@utils/getDenomInfo';
-import { Denom } from '@models/Denom';
+import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
 
-export default function DCAOutResultingDenom({ denoms }: { denoms: Denom[] }) {
+export default function DCAOutResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
 
   const {
     values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
-
-  const { promotion } = getDenomInfo(field.value);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
@@ -28,7 +25,6 @@ export default function DCAOutResultingDenom({ denoms }: { denoms: Denom[] }) {
         showPromotion
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-      {promotion && <FormHelperText color="blue.200">{promotion}</FormHelperText>}
     </FormControl>
   );
 }

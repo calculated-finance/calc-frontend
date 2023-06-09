@@ -26,10 +26,10 @@ export default function DCAInInitialDenom() {
   }
 
   const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(isDenomStable),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+      .map((denom) => getDenomInfo(denom))
+      .filter(isDenomStable),
   );
-
-  const { promotion } = getDenomInfo(field.value);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -38,7 +38,7 @@ export default function DCAInInitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose between stablecoins or fiat</Text>
           <Spacer />
-          <AvailableFunds />
+          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
@@ -51,7 +51,6 @@ export default function DCAInInitialDenom() {
             showPromotion
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-          {promotion && <FormHelperText color="blue.200">{promotion}</FormHelperText>}
         </Box>
         <InitialDeposit />
       </SimpleGrid>

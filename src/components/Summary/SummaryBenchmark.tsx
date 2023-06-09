@@ -1,15 +1,15 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, initialDeposit, strategyDuration } = state;
 
-  const { name: initialDenomName } = getDenomInfo(initialDenom);
-  const { name: resultingDenomName } = getDenomInfo(resultingDenom);
+  const initialDenomInfo = useDenom(initialDenom);
+  const resultingDenomInfo = useDenom(resultingDenom);
 
   const swapAmount = Number(getSwapAmountFromDuration(initialDeposit, strategyDuration).toFixed(3));
 
@@ -20,14 +20,14 @@ export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
         The DCA+ performance will be benchmarked against a daily swap of{' '}
         <BadgeButton url="customise">
           <Text>
-            {swapAmount} {initialDenomName}
+            {swapAmount} {initialDenomInfo.name}
           </Text>
-          <DenomIcon denomName={initialDenom} />{' '}
+          <DenomIcon denomInfo={initialDenomInfo} />{' '}
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="assets">
-          <Text>{resultingDenomName}</Text>
-          <DenomIcon denomName={resultingDenom} />{' '}
+          <Text>{resultingDenomInfo.name}</Text>
+          <DenomIcon denomInfo={resultingDenomInfo} />{' '}
         </BadgeButton>{' '}
         for{' '}
         <BadgeButton url="customise">
