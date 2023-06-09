@@ -36,6 +36,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
+  const linkedToStrategy = data?.vault;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
@@ -177,7 +178,13 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       <GridItem colSpan={2}>
         <Divider />
       </GridItem>
-      {data && <LinkedStrategyDetails strategy={strategy} marketValueInFiat={marketValueInFiat} data={data.vault} />}
+      {linkedToStrategy && (
+        <LinkedStrategyDetails
+          originalStrategy={strategy}
+          marketValueInFiat={marketValueInFiat}
+          linkedToStrategy={linkedToStrategy}
+        />
+      )}
     </Grid>
   );
 }

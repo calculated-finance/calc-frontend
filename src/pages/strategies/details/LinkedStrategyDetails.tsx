@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Stack, Code, VStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Flex, HStack, Spinner, Stack, Code, VStack } from '@chakra-ui/react';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -11,25 +11,24 @@ import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function LinkedStrategyDetails({
-  strategy,
+  originalStrategy,
   marketValueInFiat,
-  data,
+  linkedToStrategy,
 }: {
-  strategy: Strategy;
+  originalStrategy: Strategy;
   marketValueInFiat: number;
-  data: Strategy;
+  linkedToStrategy: Strategy;
 }) {
-  const linkedStrategy = data.vault as Strategy;
-  const curStrategyId = strategy.id;
-  const linkingIntoId = getStrategyReinvestStrategyId(data.vault);
+  const curStrategy = linkedToStrategy;
+  const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const { data: linkedData } = useStrategy(linkingIntoId);
 
-  const initialDenom = data ? getStrategyInitialDenom(linkedStrategy) : '';
-  const resultingDenom = data ? getStrategyResultingDenom(linkedStrategy) : '';
+  const initialDenom = getStrategyInitialDenom(curStrategy);
+  const resultingDenom = getStrategyResultingDenom(curStrategy);
   const { dexFee } = useDexFee(
     initialDenom,
     resultingDenom,
-    isBuyStrategy(linkedStrategy) ? TransactionType.Buy : TransactionType.Sell,
+    isBuyStrategy(curStrategy) ? TransactionType.Buy : TransactionType.Sell,
   );
 
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
@@ -37,119 +36,111 @@ export function LinkedStrategyDetails({
 
   const { vault: reinvestStrategy } = linkedData || {};
   const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
-  const isLooped = curStrategyId === linkingIntoId;
+  const isLooped = originalStrategy.id === linkingIntoId;
 
   const {
     color,
     percentageChange,
     profit,
     marketValueInFiat: linkedMarketValueInFiat,
-  } = getPerformanceStatistics(linkedStrategy, initialDenomPrice, resultingDenomPrice, dexFee);
+  } = getPerformanceStatistics(curStrategy, initialDenomPrice, resultingDenomPrice, dexFee);
 
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
 
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
 
-  if (reinvestStrategy) {
-    return (
-      <>
-        <GridItem colSpan={1}>
-          <Heading size="xs">Linked strategy total value:</Heading>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Text fontSize="sm" data-testid="strategy-asset-price">
-            {totalValue}
-          </Text>
-        </GridItem>
-        <GridItem colSpan={2}>
-          <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
-            <GridItem colSpan={3}>
-              <VStack
-                layerStyle="panel"
-                flexGrow={1}
-                alignItems="start"
-                bgColor="gray.800"
-                h="full"
-                spacing={1}
-                fontSize="xs"
-                p={2}
-              >
-                <HStack w="full">
-                  <Text fontWeight="bold">This Strategy:</Text>
-                  <Text>
-                    {!reinvestStrategy ? (
-                      <Spinner size="xs" />
-                    ) : (
-                      <>
-                        <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
-                          id: {strategy.id}
-                        </Code>
-                        <Code fontSize="xx-small" display={{ base: 'contents', lg: 'none' }} whiteSpace="nowrap">
-                          id: {strategy.id}
-                        </Code>
-                      </>
-                    )}{' '}
-                  </Text>
-                </HStack>
-
-                <HStack>
-                  <Text fontWeight="bold">Value:</Text>
-                  <Text> {value}</Text>
-                </HStack>
-              </VStack>{' '}
-            </GridItem>
-            <GridItem colSpan={1}>
-              {isLooped ? (
-                <VStack alignItems="center" justifyContent="center">
-                  <ArrowForwardIcon boxSize={6} />
-                  <ArrowBackIcon boxSize={6} />
-                </VStack>
-              ) : (
-                <Flex justify="center" py={4}>
-                  <ArrowForwardIcon boxSize={6} />
-                </Flex>
-              )}
-            </GridItem>
-            <GridItem colSpan={4}>
-              <Stack
-                layerStyle="panel"
-                flexGrow={1}
-                alignItems="start"
-                bgColor="gray.800"
-                h="full"
-                spacing={1}
-                fontSize="xs"
-                p={2}
-              >
-                <HStack>
-                  <Text fontWeight="bold">Linked Strategy: </Text>
-                  <Text>
+  return (
+    <>
+      <GridItem colSpan={1}>
+        <Heading size="xs">Linked strategy total value:</Heading>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text fontSize="sm" data-testid="strategy-asset-price">
+          {totalValue}
+        </Text>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
+          <GridItem colSpan={3}>
+            <VStack
+              layerStyle="panel"
+              flexGrow={1}
+              alignItems="start"
+              bgColor="gray.800"
+              h="full"
+              spacing={1}
+              fontSize="xs"
+              p={2}
+            >
+              <HStack w="full">
+                <Text fontWeight="bold">This Strategy:</Text>
+                <Text>
+                  {!reinvestStrategy ? (
+                    <Spinner size="xs" />
+                  ) : (
                     <>
                       <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
-                        id: {checkLoopedStrategy}
+                        id: {originalStrategy.id}
                       </Code>
                       <Code fontSize="xx-small" display={{ base: 'contents', lg: 'none' }} whiteSpace="nowrap">
-                        id: {checkLoopedStrategy}
+                        id: {originalStrategy.id}
                       </Code>
                     </>
-                  </Text>
-                </HStack>
-                <HStack>
-                  <Text fontWeight="bold">Value:</Text>
-                  <Text> {linkedValue} </Text>
-                </HStack>
-              </Stack>{' '}
-            </GridItem>
-          </Grid>
-        </GridItem>
-      </>
-    );
-  }
+                  )}{' '}
+                </Text>
+              </HStack>
 
-  return (
-    <GridItem colSpan={2}>
-      <Divider />
-    </GridItem>
+              <HStack>
+                <Text fontWeight="bold">Value:</Text>
+                <Text> {value}</Text>
+              </HStack>
+            </VStack>{' '}
+          </GridItem>
+          <GridItem colSpan={1}>
+            {isLooped ? (
+              <VStack alignItems="center" justifyContent="center">
+                <ArrowForwardIcon boxSize={6} />
+                <ArrowBackIcon boxSize={6} />
+              </VStack>
+            ) : (
+              <Flex justify="center" py={4}>
+                <ArrowForwardIcon boxSize={6} />
+              </Flex>
+            )}
+          </GridItem>
+          <GridItem colSpan={4}>
+            <Stack
+              layerStyle="panel"
+              flexGrow={1}
+              alignItems="start"
+              bgColor="gray.800"
+              h="full"
+              spacing={1}
+              fontSize="xs"
+              p={2}
+            >
+              <HStack>
+                <Text fontWeight="bold">Linked Strategy: </Text>
+                <Text>
+                  <>
+                    <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
+                      id: {checkLoopedStrategy}
+                    </Code>
+                    <Code fontSize="xx-small" display={{ base: 'contents', lg: 'none' }} whiteSpace="nowrap">
+                      id: {checkLoopedStrategy}
+                    </Code>
+                  </>
+                </Text>
+              </HStack>
+              <HStack>
+                <Text fontWeight="bold">Value:</Text>
+                <Text> {linkedValue} </Text>
+              </HStack>
+            </Stack>{' '}
+          </GridItem>
+        </Grid>
+      </GridItem>
+    </>
   );
 }
