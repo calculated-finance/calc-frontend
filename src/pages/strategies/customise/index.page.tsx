@@ -12,11 +12,7 @@ import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
 import {
-  getBasePrice,
   getConvertedSwapAmount,
-  getPriceCeilingFloor,
-  getSlippageTolerance,
-  getStrategyExecutionIntervalData,
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   isBuyStrategy,
@@ -29,7 +25,7 @@ import Submit from '@components/Submit';
 import YesNoValues from '@models/YesNoValues';
 import DcaDiagram from '@components/DcaDiagram';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
 import BasePrice from '@components/BasePrice';
@@ -38,6 +34,7 @@ import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
+import { getExistingValues } from './getExistingValues';
 
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
@@ -172,31 +169,7 @@ function Page() {
     );
   }
 
-  const priceThreshold = getPriceCeilingFloor(strategy);
-
-  const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
-
-  const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
-
-  const slippageTolerance = getSlippageTolerance(strategy);
-
-  const existingValues = {
-    // advancedSettings:
-    //   increaseOnly ||
-    //   priceThreshold ||
-    //   isDcaPlus(strategy) ||
-    //   slippageTolerance !== globalInitialValues.slippageTolerance,
-    advancedSettings: true,
-    executionInterval: timeInterval,
-    executionIntervalIncrement: timeIncrement || 1,
-    slippageTolerance,
-    priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
-    priceThresholdValue: priceThreshold,
-    basePriceIsCurrentPrice: YesNoValues.No,
-    basePriceValue: getBasePrice(strategy),
-    swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
-    applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
-  };
+  const existingValues = getExistingValues(strategy);
 
   const castValues = {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),
