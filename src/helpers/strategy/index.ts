@@ -30,7 +30,6 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
-import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {
