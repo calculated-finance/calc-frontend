@@ -230,7 +230,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <Text fontSize="sm" data-testid="estimated-strategy-end-date">
                   {(isDcaPlus(strategy) || isWeightedScale(strategy)) &&
-                  isStrategyOperating(strategy) &&
+                  strategy.isStrategyOperating &&
                   !getStrategyPriceTrigger(strategy) ? (
                     <>
                       Between {getStrategyEndDateRange(strategy, events).min} and{' '}

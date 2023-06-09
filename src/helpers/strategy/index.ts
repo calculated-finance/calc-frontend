@@ -282,7 +282,7 @@ export function getStrategyEndDateFromRemainingExecutions(
 
   const lastExecutionDate = getLastExecutionDateFromStrategyEvents(events);
 
-  if (isStrategyOperating(strategy) && lastExecutionDate) {
+  if (strategy.isStrategyOperating && lastExecutionDate) {
     return formatDate(getEndDateFromRemainingExecutions(strategy, lastExecutionDate, executions));
   }
 

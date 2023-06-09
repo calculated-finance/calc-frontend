@@ -53,7 +53,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
 
     const targetPrice = getTargetPrice(strategy, pairsData?.pairs);
 
-    if (isStrategyOperating(strategy)) {
+    if (strategy.isStrategyOperating) {
       if (targetTime) {
         const nextSwapDate = new Date(Number(time?.target_time) / 1000000).toLocaleDateString('en-US', {
           year: 'numeric',

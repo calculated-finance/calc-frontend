@@ -39,7 +39,7 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
-          {isStrategyOperating(strategy)
+          {strategy.isStrategyOperating
             ? `${getRemainingExecutionsRange(strategy).min} - ${getRemainingExecutionsRange(strategy).max}`
             : 0}
         </Text>

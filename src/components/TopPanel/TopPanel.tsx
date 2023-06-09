@@ -7,7 +7,6 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { isStrategyOperating } from '@helpers/strategy';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -150,7 +149,7 @@ export default function TopPanel() {
 
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
-  const completedStrategies = data?.vaults.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
+  const completedStrategies = data?.vaults.filter((strategy: Strategy) => !strategy.isStrategyOperating) ?? [];
 
   const getConfig = () => {
     if (connected && isLoading) {
