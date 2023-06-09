@@ -154,7 +154,7 @@ export default function GenerateYield({ resultingDenom }: { resultingDenom: Deno
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
   const { data, isLoading } = useMars(resultingDenom);
 
-  const marsData = data?.find((market: any) => market.denom === resultingDenom.id);
+  const marsData = data?.find((market: { denom: string }) => market.denom === resultingDenom.id);
   const marsEnabled = Boolean(marsData);
 
   const { getRootProps, getRadioProps } = useRadioGroup({
