@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Flex, HStack, Spinner, Stack, Code, VStack } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, HStack, Spinner, Stack, Code, Flex, Center } from '@chakra-ui/react';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -7,7 +7,9 @@ import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import Lottie from 'lottie-react';
+import looping from 'src/animations/looping.json';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function LinkedStrategyDetails({
@@ -63,7 +65,7 @@ export function LinkedStrategyDetails({
       <GridItem colSpan={2}>
         <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
           <GridItem colSpan={3}>
-            <VStack
+            <Stack
               layerStyle="panel"
               flexGrow={1}
               alignItems="start"
@@ -71,10 +73,13 @@ export function LinkedStrategyDetails({
               h="full"
               spacing={1}
               fontSize="xs"
-              p={2}
+              py={2}
+              px={4}
             >
               <HStack w="full">
-                <Text fontWeight="bold">This Strategy:</Text>
+                <Text fontWeight="bold" fontSize={{ base: 8, sm: 10, md: 12 }}>
+                  This Strategy:
+                </Text>
                 <Text>
                   {!reinvestStrategy ? (
                     <Spinner size="xs" />
@@ -92,19 +97,25 @@ export function LinkedStrategyDetails({
               </HStack>
 
               <HStack>
-                <Text fontWeight="bold">Value:</Text>
-                <Text> {value}</Text>
+                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+                  Value:
+                </Text>
+                <Text whiteSpace="nowrap" fontSize={{ base: 8, sm: 10, md: 12 }}>
+                  {' '}
+                  {value}
+                </Text>
               </HStack>
-            </VStack>{' '}
+            </Stack>{' '}
           </GridItem>
           <GridItem colSpan={1}>
             {isLooped ? (
-              <VStack alignItems="center" justifyContent="center">
-                <ArrowForwardIcon boxSize={6} />
-                <ArrowBackIcon boxSize={6} />
-              </VStack>
+              <Center h="full">
+                <Center>
+                  <Lottie animationData={looping} style={{ padding: 4, height: 50 }} />
+                </Center>
+              </Center>
             ) : (
-              <Flex justify="center" py={4}>
+              <Flex alignItems="center" justifyContent="center" p={4}>
                 <ArrowForwardIcon boxSize={6} />
               </Flex>
             )}
@@ -118,10 +129,13 @@ export function LinkedStrategyDetails({
               h="full"
               spacing={1}
               fontSize="xs"
-              p={2}
+              py={2}
+              px={4}
             >
               <HStack>
-                <Text fontWeight="bold">Linked Strategy: </Text>
+                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+                  Linked Strategy:{' '}
+                </Text>
                 <Text>
                   <>
                     <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
@@ -134,8 +148,10 @@ export function LinkedStrategyDetails({
                 </Text>
               </HStack>
               <HStack>
-                <Text fontWeight="bold">Value:</Text>
-                <Text> {linkedValue} </Text>
+                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+                  Value:
+                </Text>
+                <Text fontSize={{ base: 8, sm: 10, md: 12 }}> {linkedValue} </Text>
               </HStack>
             </Stack>{' '}
           </GridItem>
