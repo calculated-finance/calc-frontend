@@ -13,7 +13,6 @@ import {
   Tooltip,
   useBoolean,
 } from '@chakra-ui/react';
-import getDenomInfo from '@utils/getDenomInfo';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
@@ -22,8 +21,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
-import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
@@ -37,7 +34,7 @@ function FeeBreakdown({
 }: {
   initialDenomName: string;
   swapAmount: number;
-  price: number;
+  price: number | undefined;
   dexFee: number;
   swapFee: number;
   excludeDepositFee: boolean;

@@ -56,14 +56,16 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
 function StrategyComparisonDetails({
   strategy,
   strategyEvents,
+  initialDenomPrice,
+  resultingDenomPrice,
 }: {
   strategy: Strategy;
   strategyEvents: StrategyEvent[];
+  initialDenomPrice: number;
+  resultingDenomPrice: number;
 }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
 
   const { dexFee } = useDexFee(
     initialDenom,
@@ -151,6 +153,13 @@ function StrategyComparisonDetails({
 export default function StrategyComparison({ strategy }: { strategy: Strategy }) {
   const { data: events } = useStrategyEvents(strategy.id);
 
+  const initialDenom = getStrategyInitialDenom(strategy);
+  const resultingDenom = getStrategyResultingDenom(strategy);
+  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+
+  const isLoading = !events || !initialDenomPrice || !resultingDenomPrice;
+
   return (
     <GridItem colSpan={6}>
       <Flex h="full" flexDirection="column">
@@ -158,13 +167,18 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
           Comparison against traditional DCA
         </Heading>
         <Flex layerStyle="panel" flexGrow={1} p={8} alignItems="start">
-          {events ? (
+          {!isLoading ? (
             <Stack direction={['column', null, null, null, 'row']} w="full" gap={8}>
-              <StrategyComparisonDetails strategy={strategy} strategyEvents={events} />
+              <StrategyComparisonDetails
+                strategy={strategy}
+                strategyEvents={events}
+                initialDenomPrice={initialDenomPrice}
+                resultingDenomPrice={resultingDenomPrice}
+              />
               <StrategyComparisonCard strategy={strategy} />
             </Stack>
           ) : (
-            <Center w="full" h="full" px={8} py={6}>
+            <Center w="full" h="full" px={10} py={6}>
               <Spinner />
             </Center>
           )}

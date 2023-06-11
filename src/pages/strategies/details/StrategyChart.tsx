@@ -7,6 +7,7 @@ import {
   VictoryChart,
   VictoryScatter,
   VictoryTooltip,
+  VictoryTooltipProps,
   VictoryVoronoiContainer,
 } from 'victory';
 import { useRef, useState } from 'react';
@@ -19,7 +20,7 @@ import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 
-function CustomLabel(props: any) {
+function CustomLabel(props: VictoryTooltipProps) {
   return (
     <g>
       <VictoryTooltip
@@ -139,7 +140,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 data={swapsDataWithLabel}
                 x="date"
                 y="marketValue"
-                labelComponent={<CustomLabel props={swapsData} />}
+                labelComponent={<CustomLabel />}
               />
               <VictoryArea
                 style={{
@@ -147,7 +148,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 }}
                 data={chartData}
                 standalone={false}
-                labelComponent={<CustomLabel props={swapsData} />}
+                labelComponent={<CustomLabel />}
                 x="date"
                 y="marketValue"
               />
