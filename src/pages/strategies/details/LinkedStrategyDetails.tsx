@@ -76,7 +76,7 @@ export function LinkedStrategyDetails({
               py={2}
               px={3}
             >
-              <HStack w="full" whiteSpace="nowrap" spacing={1}>
+              <HStack w="full" whiteSpace="nowrap" spacing={{ base: 1, md: 2 }}>
                 <Text fontWeight="bold" fontSize={{ base: 10, md: 12 }}>
                   Strategy:
                 </Text>
@@ -130,7 +130,7 @@ export function LinkedStrategyDetails({
               py={2}
               px={3}
             >
-              <HStack w="full" whiteSpace="nowrap" spacing={1}>
+              <HStack w="full" whiteSpace="nowrap" spacing={{ base: 1, md: 2 }}>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Linked Strategy:{' '}
                 </Text>
