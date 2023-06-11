@@ -7,7 +7,7 @@ import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
@@ -66,7 +66,7 @@ export function LinkedStrategyDetails({
         <Grid templateColumns="repeat(8, 1fr)" gap={1} w="full">
           <GridItem colSpan={3}>
             <Stack
-              layerStyle="panel"
+              borderRadius={16}
               flexGrow={1}
               alignItems="start"
               bgColor="gray.800"
@@ -74,33 +74,31 @@ export function LinkedStrategyDetails({
               spacing={1}
               fontSize="xs"
               py={2}
-              px={4}
+              px={3}
             >
-              <HStack w="full">
-                <Text fontWeight="bold" fontSize={{ base: 8, sm: 10, md: 12 }}>
-                  This Strategy:
+              <HStack w="full" whiteSpace="nowrap" spacing={1}>
+                <Text fontWeight="bold" fontSize={{ base: 10, md: 12 }}>
+                  Strategy:
                 </Text>
                 <Text>
                   {!reinvestStrategy ? (
                     <Spinner size="xs" />
                   ) : (
-                    <>
-                      <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
+                    <HStack>
+                      <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                         id: {originalStrategy.id}
                       </Code>
-                      <Code fontSize="xx-small" display={{ base: 'contents', lg: 'none' }} whiteSpace="nowrap">
-                        id: {originalStrategy.id}
-                      </Code>
-                    </>
+                      <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} />
+                    </HStack>
                   )}{' '}
                 </Text>
               </HStack>
 
               <HStack>
-                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+                <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text whiteSpace="nowrap" fontSize={{ base: 8, sm: 10, md: 12 }}>
+                <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }}>
                   {' '}
                   {value}
                 </Text>
@@ -122,7 +120,7 @@ export function LinkedStrategyDetails({
           </GridItem>
           <GridItem colSpan={4}>
             <Stack
-              layerStyle="panel"
+              borderRadius={16}
               flexGrow={1}
               alignItems="start"
               bgColor="gray.800"
@@ -130,28 +128,22 @@ export function LinkedStrategyDetails({
               spacing={1}
               fontSize="xs"
               py={2}
-              px={4}
+              px={3}
             >
-              <HStack>
-                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+              <HStack w="full" whiteSpace="nowrap" spacing={1}>
+                <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Linked Strategy:{' '}
                 </Text>
-                <Text>
-                  <>
-                    <Code fontSize="xx-small" display={{ base: 'none', lg: 'contents' }}>
-                      id: {checkLoopedStrategy}
-                    </Code>
-                    <Code fontSize="xx-small" display={{ base: 'contents', lg: 'none' }} whiteSpace="nowrap">
-                      id: {checkLoopedStrategy}
-                    </Code>
-                  </>
-                </Text>
+                <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
+                  id: {checkLoopedStrategy}
+                </Code>
+                <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} />
               </HStack>
               <HStack>
-                <Text fontSize={{ base: 8, sm: 10, md: 12 }} fontWeight="bold">
+                <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text fontSize={{ base: 8, sm: 10, md: 12 }}> {linkedValue} </Text>
+                <Text fontSize={{ base: 10, md: 12 }}> {linkedValue} </Text>
               </HStack>
             </Stack>{' '}
           </GridItem>
