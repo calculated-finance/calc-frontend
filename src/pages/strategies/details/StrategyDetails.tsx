@@ -152,10 +152,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const { data: events } = useStrategyEvents(strategy.id);
 
-  const { isAdmin } = useAdmin();
-  const { isWhitelisted } = useWhitelist();
-
-  const showEditButton = (isWhitelisted || isAdmin) && !isStrategyCancelled(strategy);
+  const showEditButton = !isStrategyCancelled(strategy);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
