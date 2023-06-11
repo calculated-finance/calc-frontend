@@ -86,7 +86,7 @@ export const useKeplr = create<IWallet>()(
             autoconnect: true,
           });
         } catch (e) {
-          Sentry.captureException(e);
+          Sentry.captureException(e, { tags: { page: 'useKeplr' } });
           set({ autoconnect: false });
         } finally {
           set({ isConnecting: false });

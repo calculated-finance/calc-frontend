@@ -18,7 +18,7 @@ export const useOsmosis = create<IUseOsmosis>()((set) => ({
       const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint(Chains.Osmosis) });
       set({ query: client });
     } catch (e) {
-      Sentry.captureException(e);
+      Sentry.captureException(e, { tags: { page: 'useOsmosis' } });
     }
   },
 }));
