@@ -17,7 +17,7 @@ export const useCosmWasmClient = create<IUseCosmWasmClient>()((set) => ({
       const client = await CosmWasmClient.connect(getChainEndpoint(chain));
       set({ client });
     } catch (e) {
-      Sentry.captureException(e);
+      Sentry.captureException(e, { tags: { page: 'useCosmWasmClient' } });
     }
   },
 }));
