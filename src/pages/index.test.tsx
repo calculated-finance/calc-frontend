@@ -86,7 +86,7 @@ describe('Home', () => {
       });
       it('does not show investment thesis', async () => {
         await renderTarget();
-        expect(screen.queryByText(/My investment thesis/)).toBeNull();
+        expect(screen.queryByText(/My thesis/)).toBeNull();
       });
     });
     describe('when active strategies exist', () => {
@@ -113,7 +113,7 @@ describe('Home', () => {
       });
       it('shows investment thesis', async () => {
         await renderTarget();
-        expect(screen.getByText(/My investment thesis/)).toBeInTheDocument();
+        expect(screen.getByText(/My thesis/)).toBeInTheDocument();
         expect(screen.queryAllByTestId('denom-icon-ukuji').length).toEqual(1);
       });
     });

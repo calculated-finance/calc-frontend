@@ -84,7 +84,7 @@ function InvestmentThesis() {
         <Spinner />
       ) : (
         <Stack spacing={8}>
-          <Heading size="md">My investment thesis:</Heading>
+          <Heading size="md">My thesis:</Heading>
           <Heading size="xs">
             <Wrap spacingX={6} spacingY={2} align="center">
               <Text>Asset(s) accumulating:</Text>
@@ -265,8 +265,7 @@ function Home() {
           Welcome to CALC, you&apos;ve made a great choice!
         </Heading>
         <Text textStyle="body">
-          CALC removes the hardest part of investing, emotions! Stop being glued to a computer screen 24/7, define your
-          strategy up front, and leave the rest to CALC.
+          Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
 
