@@ -38,7 +38,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
         <Text textStyle="body-xs">{denom.name || balance.denom}</Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{formatFiat(price * balanceConverted)}</Text>
+        <Text textStyle="body-xs">{formatFiat((price || 0) * balanceConverted)}</Text>
       </GridItem>
     </>
   );

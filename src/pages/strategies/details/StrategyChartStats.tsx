@@ -1,4 +1,12 @@
-import { Stat, StatNumber, Stack, StatLabel, StatHelpText, StatArrow } from '@chakra-ui/react';
+import {
+  Stat,
+  StatNumber,
+  Stack,
+  StatLabel,
+  StatHelpText,
+  StatArrow,
+  Spinner as ChakraSpinner,
+} from '@chakra-ui/react';
 import { Strategy } from '@hooks/useStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -19,12 +27,26 @@ export function StrategyChartStats({ strategy }: { strategy: Strategy }) {
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
 
+  if (!resultingDenomPrice || !initialDenomPrice) {
+    return (
+      <Stack spacing={3} pt={6} pl={6}>
+        <Stat>
+          <StatLabel fontSize="lg">Strategy market value</StatLabel>
+          <StatNumber>
+            <ChakraSpinner size="xs" />
+          </StatNumber>
+        </Stat>
+      </Stack>
+    );
+  }
+
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
     dexFee,
   );
+
   return (
     <Stack spacing={3} pt={6} pl={6}>
       <Stat>

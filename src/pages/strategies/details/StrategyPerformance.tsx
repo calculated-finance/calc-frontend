@@ -1,4 +1,4 @@
-import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner } from '@chakra-ui/react';
+import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -18,6 +18,7 @@ import {
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
+import CalcSpinner from '@components/Spinner';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
@@ -32,6 +33,16 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
+
+  if (!resultingDenomPrice || !initialDenomPrice) {
+    return (
+      <Flex align="center" justify="center" h="full" gap={3} px={8} py={6} w="full">
+        <Center>
+          <CalcSpinner />
+        </Center>
+      </Flex>
+    );
+  }
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
 

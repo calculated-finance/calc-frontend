@@ -1,5 +1,7 @@
 import { useStation } from '@hooks/useStation';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { EncodeObject } from '@cosmjs/proto-signing';
+import { StdFee } from '@cosmjs/stargate';
 import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
@@ -77,8 +79,12 @@ export function useWallet() {
       connected: true,
       disconnect: stationWallet.disconnect,
       signingClient: {
-        signAndBroadcast: (senderAddress: string, msgs: any, fee: any, memo?: string) =>
-          stationWallet.signAndBroadcast(msgs),
+        signAndBroadcast: (
+          senderAddress: string,
+          msgs: EncodeObject[],
+          fee: number | StdFee | 'auto',
+          memo?: string | undefined,
+        ) => stationWallet.signAndBroadcast(msgs),
       } as SigningCosmWasmClient,
       walletType: WalletTypes.STATION,
       isConnecting: false,

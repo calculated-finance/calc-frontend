@@ -43,7 +43,7 @@ function FeeBreakdown({
 }: {
   initialDenomName: string;
   swapAmount: number;
-  price: number;
+  price: number | undefined;
   dexFee: number;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);

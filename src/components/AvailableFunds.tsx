@@ -10,10 +10,9 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
 
   const { price } = useFiatPrice(denom);
 
-  const createStrategyFee = Number(createStrategyFeeInTokens(price));
-
   const { data, isLoading } = useBalance(denom);
 
+  const createStrategyFee = Number(createStrategyFeeInTokens(price));
   const balance = Number(data?.amount);
 
   const displayAmount = getDisplayAmount(denom, Math.max(balance - createStrategyFee, 0));
@@ -36,7 +35,7 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
 
       <Button
         size="xs"
-        isLoading={isLoading}
+        isLoading={isLoading || !price}
         colorScheme="blue"
         variant="link"
         cursor="pointer"
