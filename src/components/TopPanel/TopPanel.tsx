@@ -85,10 +85,7 @@ function ActiveWithOne() {
       </HStack>
       <Stack spacing={1}>
         <Heading size="md">Awesome - you have a calculated strategy active!</Heading>
-        <Text fontSize="sm">
-          Break free of FOMO, stop buying pico tops, it&apos;s time to get calculated with your investment approach.
-          CALC is empowering investors with the tools to make investing emotionless.
-        </Text>
+        <Text fontSize="sm">You have the ability to edit and fine tune your strategy at any time.</Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
         <Link passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>

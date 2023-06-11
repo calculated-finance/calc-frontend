@@ -143,7 +143,7 @@ function Strategies() {
       },
       {
         name: 'Algorithm DCA+ In',
-        description: 'Let our machine learning DCA algorithms invest for you.',
+        description: 'DCA into large cap assets based on market risk.',
         advanced: true,
         href: StrategyUrls.DCAPlusIn,
         enabled: true,
@@ -178,7 +178,7 @@ function Strategies() {
       },
       {
         name: 'Algorithm DCA+ Out',
-        description: 'Let our machine learning DCA algorithms sell for you.',
+        description: 'DCA out of large cap assets based on market risk.',
         advanced: true,
         href: StrategyUrls.DCAPlusOut,
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
@@ -204,38 +204,32 @@ function Strategies() {
 
   return (
     <Stack direction="column" spacing={8}>
-      <Box>
+      <Stack>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading size="md">Accumulation strategies</Heading>
           {showFearAndGreedAccumulate && <FearGreedStrategyRecommendation isAccumulation />}
         </Wrap>
-        <Text pb={4} textStyle="body">
-          Strategies that build a position in an asset.{' '}
-        </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {accumulationStratgies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>
-      </Box>
+      </Stack>
 
       <InfoPanel />
-      <Box>
+      <Stack>
         <Wrap spacing={2} pb={1} shouldWrapChildren align="center">
           <Heading mb={1} size="md">
             Take Profit strategies
           </Heading>
           {showFearAndGreedProfit && <FearGreedStrategyRecommendation />}
         </Wrap>
-        <Text pb={4} textStyle="body">
-          Strategies that sell assets for profit.
-        </Text>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {takeProfitStrategies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>
-      </Box>
+      </Stack>
       <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
         <Image src="/images/moneyBag.svg" />
         <Flex alignItems="center">
