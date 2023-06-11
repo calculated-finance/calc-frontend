@@ -48,7 +48,7 @@ import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { ReinvestStrategyDetails } from './ReinvestStrategyDetails';
 
-function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & Omit<ModalProps, 'children'>) {
+export function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strategy } & Omit<ModalProps, 'children'>) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />

@@ -1,4 +1,17 @@
-import { Heading, Grid, GridItem, Text, HStack, Spinner, Stack, Code, Flex, Center } from '@chakra-ui/react';
+import {
+  Heading,
+  Grid,
+  GridItem,
+  Text,
+  HStack,
+  Spinner,
+  Stack,
+  Code,
+  Flex,
+  Center,
+  IconButton,
+  useDisclosure,
+} from '@chakra-ui/react';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -11,6 +24,7 @@ import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
+import { StrategyModal } from '@components/Reinvest';
 
 export function LinkedStrategyDetails({
   originalStrategy,
@@ -51,6 +65,7 @@ export function LinkedStrategyDetails({
   const linkedValue = formatFiat(linkedMarketValueInFiat);
 
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -88,7 +103,15 @@ export function LinkedStrategyDetails({
                       <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                         id: {originalStrategy.id}
                       </Code>
-                      <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} />
+                      {/* <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} /> */}
+                      <IconButton
+                        colorScheme="blue"
+                        icon={<InfoOutlineIcon />}
+                        aria-label="More details"
+                        variant="ghost"
+                        onClick={onOpen}
+                      />
+                      <StrategyModal strategy={originalStrategy} isOpen={isOpen} onClose={onClose} />
                     </HStack>
                   )}{' '}
                 </Text>
@@ -137,7 +160,15 @@ export function LinkedStrategyDetails({
                 <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                   id: {checkLoopedStrategy}
                 </Code>
-                <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} />
+                {/* <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} /> */}
+                <IconButton
+                  colorScheme="blue"
+                  icon={<InfoOutlineIcon />}
+                  aria-label="More details"
+                  variant="ghost"
+                  onClick={onOpen}
+                />
+                <StrategyModal strategy={linkedToStrategy} isOpen={isOpen} onClose={onClose} />
               </HStack>
               <HStack>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
