@@ -146,7 +146,7 @@ export function NewStrategyModalHeader({
       data-testid="strategy-modal-header"
     >
       <Stack direction="row" spacing={3} alignItems="center">
-        {hasPreviousStep && !hasNextStep && (
+        {hasPreviousStep && (
           <IconButton
             variant="ghost"
             colorScheme="blue"

@@ -12,7 +12,7 @@ function Page() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaOutSteps} isLoading={isPageLoading} reset={resetForm(FormNames.DcaOut)}>
+    <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
       <CustomiseFormDcaWrapper formName={FormNames.DcaIn} strategyType={StrategyTypes.DCAOut} steps={dcaOutSteps} />
     </ModalWrapper>
   );

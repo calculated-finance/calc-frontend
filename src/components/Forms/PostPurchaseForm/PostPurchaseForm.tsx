@@ -2,7 +2,6 @@ import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioG
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import RecipientAccount from '@components/RecipientAccount';
-import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { useChain } from '@hooks/useChain';
@@ -16,6 +15,7 @@ import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
 import GenerateYield from '../../GenerateYield';
 import { Reinvest } from '../../Reinvest';
+import YesNoValues from '@models/YesNoValues';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -107,7 +107,7 @@ export function PostPurchaseForm({
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
             <Stack>
               <DcaInSendToWallet resultingDenom={resultingDenom} />
-              <CollapseWithRender in={sendToWalletValue === SendToWalletValues.No}>
+              <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
                 <RecipientAccount />
               </CollapseWithRender>
             </Stack>

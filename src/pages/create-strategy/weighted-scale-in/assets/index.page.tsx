@@ -40,7 +40,7 @@ function DcaIn() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={weightedScaleInSteps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={weightedScaleInSteps} reset={actions.resetAction} />;
   }
 
   const { quote_denom, base_denom } =
@@ -56,11 +56,7 @@ function DcaIn() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting, values }) => (
-        <ModalWrapper
-          isLoading={isLoading || (isPageLoading && !isSubmitting)}
-          reset={actions.resetAction}
-          stepsConfig={weightedScaleInSteps}
-        >
+        <ModalWrapper reset={actions.resetAction} stepsConfig={weightedScaleInSteps}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />

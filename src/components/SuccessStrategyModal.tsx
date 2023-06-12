@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import Lottie from 'lottie-react';
 import * as Confetti from '../animations/confetti.json';
-import { Pages } from './Sidebar/Pages';
+import { Pages } from './Layout/Sidebar/Pages';
 import { ModalWrapper } from './ModalWrapper';
 
 function ThatsCalculatedThinkingText() {

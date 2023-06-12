@@ -21,7 +21,7 @@ import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ModalWrapper } from '@components/ModalWrapper';
-import Sidebar from '../Sidebar';
+import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
 

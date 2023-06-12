@@ -1,7 +1,7 @@
 import { RadioGroup, Stack, Radio, Text } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import TriggerTypes from '@models/TriggerTypes';
+import YesNoValues from '@models/YesNoValues';
 
 export default function TriggerType() {
   const [field, , helpers] = useField('triggerType');
@@ -11,7 +11,7 @@ export default function TriggerType() {
     <RadioGroup
       defaultValue="date"
       colorScheme="blue"
-      isDisabled={startImmediatelyField.value === StartImmediatelyValues.Yes}
+      isDisabled={startImmediatelyField.value === YesNoValues.Yes}
       {...field}
       onChange={helpers.setValue}
     >

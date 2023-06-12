@@ -17,7 +17,6 @@ function Success() {
     <NewStrategyModal>
       <NewStrategyModalHeader
         showStepper={false}
-        finalStep={false}
         stepsConfig={customiseSteps}
         cancelUrl={generateStrategyDetailUrl(query?.id)}
       />

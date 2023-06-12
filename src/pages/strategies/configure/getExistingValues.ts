@@ -2,12 +2,12 @@ import { StrategyOsmosis } from '@hooks/useStrategies';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { Chains } from '@hooks/useChain/Chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import SendToWalletValues from '@models/SendToWalletValues';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
   getStrategyValidatorAddress,
 } from '@helpers/destinations';
+import YesNoValues from '@models/YesNoValues';
 
 export function getExistingValues(
   strategy: StrategyOsmosis,
@@ -22,13 +22,13 @@ export function getExistingValues(
     if (destination?.address !== address) {
       return {
         postPurchaseOption,
-        sendToWallet: SendToWalletValues.No,
+        sendToWallet: YesNoValues.No,
         recipientAccount: destination?.address,
       };
     }
     return {
       postPurchaseOption,
-      sendToWallet: SendToWalletValues.Yes,
+      sendToWallet: YesNoValues.Yes,
     };
   }
 

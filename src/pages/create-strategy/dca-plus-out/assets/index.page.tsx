@@ -46,7 +46,7 @@ function Page() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction} />;
   }
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
@@ -67,11 +67,7 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ isSubmitting, values }) => (
-        <ModalWrapper
-          stepsConfig={dcaPlusOutSteps}
-          isLoading={isLoading || (isPageLoading && !isSubmitting)}
-          reset={actions.resetAction}
-        >
+        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
