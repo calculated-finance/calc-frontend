@@ -51,12 +51,12 @@ export function LinkedStrategyDetails({
 
   const isLooped = originalStrategy.id === linkingIntoId;
 
-  const {
-    color,
-    percentageChange,
-    profit,
-    marketValueInFiat: linkedMarketValueInFiat,
-  } = getPerformanceStatistics(curStrategy, initialDenomPrice, resultingDenomPrice, dexFee);
+  const { marketValueInFiat: linkedMarketValueInFiat } = getPerformanceStatistics(
+    curStrategy,
+    initialDenomPrice,
+    resultingDenomPrice,
+    dexFee,
+  );
 
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
