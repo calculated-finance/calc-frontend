@@ -54,6 +54,8 @@ const useCreateVault = (
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
 
+  const { walletType } = useWallet();
+
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
 
   const { track } = useAnalytics();
@@ -116,7 +118,7 @@ const useCreateVault = (
       }
 
       return executeCreateVault(client, senderAddress, msgs).then((res) => {
-        track('Strategy Created', { formName, chain });
+        track('Strategy Created', { formName, chain, address: senderAddress, walletType });
         return res;
       });
     },
