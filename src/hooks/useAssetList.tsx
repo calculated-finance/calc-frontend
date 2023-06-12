@@ -27,7 +27,7 @@ export function useAssetList(): { isLoading: any; error: any; data: any } {
       fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`)
         .then((res) => res.json())
         .catch((err) => {
-          Sentry.captureException(err);
+          Sentry.captureException(err, { tags: { page: 'useAssetList' } });
           return backup;
         }),
     {

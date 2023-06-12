@@ -418,7 +418,6 @@ function isDenomInStablesList(denom: Denom) {
 
 const getDenomInfo = (denom: string | undefined, injectedChain?: Chains): DenomInfo => {
   if (!denom) {
-    Sentry.captureException('getDenomInfo: denom is undefined');
     return {
       id: '',
       ...defaultDenom,

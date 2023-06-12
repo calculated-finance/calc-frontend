@@ -49,7 +49,9 @@ export default function useAdminStrategies(customChain?: Chains) {
 
   useEffect(() => {
     if (customChain) {
-      CosmWasmClient.connect(getChainEndpoint(customChain)).then(setStoredClient).catch(Sentry.captureException);
+      CosmWasmClient.connect(getChainEndpoint(customChain))
+        .then(setStoredClient)
+        .catch((error) => Sentry.captureException(error, { tags: { page: 'useAdminStrategies' } }));
     }
   }, [chain, customChain]);
 

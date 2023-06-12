@@ -86,7 +86,7 @@ export const useXDEFI = create<IWallet>()(
             autoconnect: true,
           });
         } catch (e) {
-          Sentry.captureException(e);
+          Sentry.captureException(e, { tags: { page: 'useXDEFI' } });
           set({ autoconnect: false });
         } finally {
           set({ isConnecting: false });
