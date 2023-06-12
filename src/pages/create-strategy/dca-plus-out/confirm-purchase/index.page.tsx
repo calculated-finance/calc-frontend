@@ -1,8 +1,6 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
-import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
@@ -20,19 +18,19 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
-  const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
+  const { mutate, isError, error } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -62,71 +60,53 @@ function Page() {
   };
 
   if (!state) {
-    return (
-      <NewStrategyModal>
-        <NewStrategyModalHeader
-          stepsConfig={dcaPlusOutSteps}
-          resetForm={actions.resetAction}
-          cancelUrl="/create-strategy"
-        />
-        <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading isSigning={isLoading}>
-          Loading
-        </NewStrategyModalBody>
-      </NewStrategyModal>
-    );
+    return <InvalidData onRestart={handleRestart} />;
   }
 
   const transactionType = TransactionType.Sell;
 
   return (
-    <NewStrategyModal>
-      <NewStrategyModalHeader
-        stepsConfig={dcaPlusOutSteps}
-        resetForm={actions.resetAction}
-        cancelUrl="/create-strategy"
+    <Stack spacing={4}>
+      <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+      <Divider />
+      <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
+      <SummaryTheSwapDcaPlus
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        strategyDuration={state.strategyDuration}
+        initialDeposit={state.initialDeposit}
       />
-      <NewStrategyModalBody stepsConfig={dcaPlusOutSteps} isLoading={isPageLoading || !price} isSigning={isLoading}>
-        {state ? (
-          <Stack spacing={4}>
-            <DcaDiagram
-              initialDenom={initialDenom}
-              resultingDenom={resultingDenom}
-              initialDeposit={state.initialDeposit}
-            />
-            <Divider />
-            <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
-            <SummaryTheSwapDcaPlus
-              initialDenom={initialDenom}
-              resultingDenom={resultingDenom}
-              strategyDuration={state.strategyDuration}
-              initialDeposit={state.initialDeposit}
-            />
-            <SummaryWhileSwapping
-              transactionType={transactionType}
-              initialDenom={initialDenom}
-              resultingDenom={resultingDenom}
-              priceThresholdValue={undefined}
-              slippageTolerance={state.slippageTolerance}
-            />
-            <SummaryAfterEachSwap state={state} />
-            <SummaryBenchmark state={state} />
-            <FeesDcaPlus
-              transactionType={TransactionType.Sell}
-              initialDenom={initialDenom}
-              resultingDenom={resultingDenom}
-              strategyDuration={state.strategyDuration}
-              initialDeposit={state.initialDeposit}
-              autoStakeValidator={state.autoStakeValidator}
-            />
-            <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-          </Stack>
-        ) : (
-          <InvalidData onRestart={handleRestart} />
-        )}
-      </NewStrategyModalBody>
-    </NewStrategyModal>
+      <SummaryWhileSwapping
+        transactionType={transactionType}
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        priceThresholdValue={undefined}
+        slippageTolerance={state.slippageTolerance}
+      />
+      <SummaryAfterEachSwap state={state} />
+      <SummaryBenchmark state={state} />
+      <FeesDcaPlus
+        transactionType={TransactionType.Sell}
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        strategyDuration={state.strategyDuration}
+        initialDeposit={state.initialDeposit}
+        autoStakeValidator={state.autoStakeValidator}
+      />
+      <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+    </Stack>
   );
 }
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

@@ -22,7 +22,7 @@ import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 
 function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);
@@ -87,6 +87,16 @@ function Page() {
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

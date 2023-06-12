@@ -1,8 +1,6 @@
 import { Divider, Stack } from '@chakra-ui/react';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { FormNames } from 'src/hooks/useFormStore';
 import { useCreateVaultWeightedScale } from '@hooks/useCreateVault';
-import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
@@ -23,6 +21,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
+import { ModalWrapper } from './ModalWrapper';
 
 function PageInternal({
   state,
@@ -92,12 +91,11 @@ export function WeightedScaleConfirmPage({
   strategyType: StrategyTypes;
 }) {
   const { state, actions } = useWeightedScaleConfirmForm(formName);
-  const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(steps);
 
   const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
-  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
+  const { mutate, isError, error } = useCreateVaultWeightedScale(formName, transactionType);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -122,22 +120,19 @@ export function WeightedScaleConfirmPage({
   };
 
   return (
-    <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-      <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
-        {state ? (
-          <PageInternal
-            transactionType={transactionType}
-            strategyType={strategyType}
-            state={state}
-            isError={isError}
-            error={error}
-            handleSubmit={handleSubmit}
-          />
-        ) : (
-          <InvalidData onRestart={handleRestart} />
-        )}
-      </NewStrategyModalBody>
-    </NewStrategyModal>
+    <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+      {state ? (
+        <PageInternal
+          transactionType={transactionType}
+          strategyType={strategyType}
+          state={state}
+          isError={isError}
+          error={error}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
+        <InvalidData onRestart={handleRestart} />
+      )}
+    </ModalWrapper>
   );
 }

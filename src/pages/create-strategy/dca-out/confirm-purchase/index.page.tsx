@@ -18,15 +18,15 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaOutSteps from '@formConfig/dcaOut';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function Page() {
   const { state, actions } = useConfirmForm(FormNames.DcaOut);
-  const { isPageLoading } = usePageLoad();
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
 
   const initialDenom = useDenom(state?.initialDenom);
@@ -34,7 +34,7 @@ function Page() {
 
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
+  const { mutate, isError, error } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -61,55 +61,45 @@ function Page() {
   const transactionType = TransactionType.Sell;
 
   if (!state) {
-    return (
-      <NewStrategyModal>
-        <NewStrategyModalHeader
-          stepsConfig={dcaOutSteps}
-          resetForm={actions.resetAction}
-          cancelUrl="/create-strategy"
-        />
-        <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
-          <InvalidData onRestart={handleRestart} />
-        </NewStrategyModalBody>
-      </NewStrategyModal>
-    );
+    return <InvalidData onRestart={handleRestart} />;
   }
 
   return (
-    <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-      <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
-        <Stack spacing={4}>
-          <DcaDiagram
-            initialDenom={initialDenom}
-            resultingDenom={resultingDenom}
-            initialDeposit={state.initialDeposit}
-          />
-          <Divider />
-          <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
-          <SummaryTheSwap state={state} transactionType={transactionType} />
-          <SummaryWhileSwapping
-            initialDenom={initialDenom}
-            resultingDenom={resultingDenom}
-            priceThresholdValue={state.priceThresholdValue}
-            slippageTolerance={state.slippageTolerance}
-            transactionType={transactionType}
-          />
-          <SummaryAfterEachSwap state={state} />
-          <Fees
-            transactionType={TransactionType.Sell}
-            swapFee={SWAP_FEE}
-            initialDenom={initialDenom}
-            resultingDenom={resultingDenom}
-            autoStakeValidator={state.autoStakeValidator}
-            swapAmount={state.swapAmount}
-          />
-          <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-        </Stack>
-      </NewStrategyModalBody>
-    </NewStrategyModal>
+    <Stack spacing={4}>
+      <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+      <Divider />
+      <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
+      <SummaryTheSwap state={state} transactionType={transactionType} />
+      <SummaryWhileSwapping
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        priceThresholdValue={state.priceThresholdValue}
+        slippageTolerance={state.slippageTolerance}
+        transactionType={transactionType}
+      />
+      <SummaryAfterEachSwap state={state} />
+      <Fees
+        transactionType={TransactionType.Sell}
+        swapFee={SWAP_FEE}
+        initialDenom={initialDenom}
+        resultingDenom={resultingDenom}
+        autoStakeValidator={state.autoStakeValidator}
+        swapAmount={state.swapAmount}
+      />
+      <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+    </Stack>
   );
 }
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

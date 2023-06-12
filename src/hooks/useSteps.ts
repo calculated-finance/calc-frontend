@@ -16,6 +16,9 @@ export default function useSteps(steps: StepConfig[]) {
   // has previous step
   const hasPreviousStep = currentStepIndex > 0 && !currentStep.noBackButton;
 
+  // has next step
+  const hasNextStep = currentStepIndex < steps.length - 1;
+
   const previousStep = () => {
     if (hasPreviousStep) {
       router.push(steps[currentStepIndex - 1].href);
@@ -34,6 +37,7 @@ export default function useSteps(steps: StepConfig[]) {
     currentStepIndex,
     nextStep,
     hasPreviousStep,
+    hasNextStep,
     previousStep,
     goToStep,
   };

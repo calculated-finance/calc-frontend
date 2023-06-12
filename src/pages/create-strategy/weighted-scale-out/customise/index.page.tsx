@@ -4,7 +4,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import { WeightedScaleCustomisePage } from '../../weighted-scale-in/customise/index.page';
+import { WeightedScaleCustomisePage } from '../../../../components/Forms/CustomiseForm/WeightedScaleCustomisePage';
 
 function Page() {
   return (

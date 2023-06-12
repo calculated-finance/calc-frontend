@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
+import { ModalWrapper } from '@components/ModalWrapper';
 import Sidebar from '../Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -126,13 +127,9 @@ function FlowLayout({ children }: { children: ReactElement }) {
         {address ? (
           children
         ) : (
-          <NewStrategyModal>
-            {/* TODO: we should do something around the way the stepper works here */}
-            <NewStrategyModalHeader stepsConfig={[]} cancelUrl="/create-strategy" />
-            <NewStrategyModalBody stepsConfig={[]}>
-              <ConnectWallet h={80} />
-            </NewStrategyModalBody>
-          </NewStrategyModal>
+          <ModalWrapper stepsConfig={[]}>
+            <ConnectWallet h={80} />
+          </ModalWrapper>
         )}
       </Content>
     </>
