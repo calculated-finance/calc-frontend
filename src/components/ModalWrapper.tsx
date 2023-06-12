@@ -14,7 +14,7 @@ export function ModalWrapper({
 }) {
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset} />
+      <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset} cancelUrl="/create-strategy" />
       <NewStrategyModalBody stepsConfig={stepsConfig} isLoading={isLoading}>
         {children}
       </NewStrategyModalBody>

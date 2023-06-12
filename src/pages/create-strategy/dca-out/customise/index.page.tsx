@@ -27,7 +27,11 @@ function Page() {
     // TODO: clean this up so we dont need two modal codes
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalHeader
+          stepsConfig={dcaOutSteps}
+          resetForm={actions.resetAction}
+          cancelUrl="/create-strategy"
+        />
         <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={false}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>

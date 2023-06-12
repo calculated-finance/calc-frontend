@@ -26,7 +26,7 @@ function DcaInStep2() {
   if (!state) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaInSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalHeader stepsConfig={dcaInSteps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
         <NewStrategyModalBody stepsConfig={dcaInSteps} isLoading={false}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>

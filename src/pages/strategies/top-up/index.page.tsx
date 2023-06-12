@@ -21,6 +21,7 @@ import getStrategyBalance, {
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { DcaPlusTopUp } from '@components/helpContent/DcaPlusTopUp';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import TopUpAmount from './TopUpAmount';
 
 export const topUpSteps: StepConfig[] = [
@@ -128,7 +129,11 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={topUpSteps} showStepper={false} />
+      <NewStrategyModalHeader
+        stepsConfig={topUpSteps}
+        showStepper={false}
+        cancelUrl={generateStrategyDetailUrl(query?.id)}
+      />
       {data?.vault && <TopUpForm strategy={data.vault} />}
     </NewStrategyModal>
   );

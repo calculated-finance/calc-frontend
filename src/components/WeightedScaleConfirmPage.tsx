@@ -123,7 +123,7 @@ export function WeightedScaleConfirmPage({
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
+      <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
       <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading || !price} isSigning={isLoading}>
         {state ? (
           <PageInternal

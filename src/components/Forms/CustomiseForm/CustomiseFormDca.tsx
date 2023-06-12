@@ -12,7 +12,6 @@ import { DcaInFormDataStep1, DcaInFormDataStep2 } from '@models/DcaInFormData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import SwapAmount from '@components/SwapAmount';
 import { TriggerForm } from '@components/TriggerForm';
-import { FormNames } from '@hooks/useFormStore';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { StepConfig } from '@formConfig/StepConfig';
 import { useDenom } from '@hooks/useDenom/useDenom';
@@ -35,7 +34,7 @@ export function CustomiseFormDca({
   const resultingDenom = useDenom(step1.resultingDenom);
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={steps} resetForm={resetAction} />
+      <NewStrategyModalHeader stepsConfig={steps} resetForm={resetAction} cancelUrl="/create-strategy" />
       <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
         <Form autoComplete="off">
           <Stack direction="column" spacing={4}>
