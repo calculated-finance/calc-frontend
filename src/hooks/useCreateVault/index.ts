@@ -31,7 +31,7 @@ import { DcaFormState } from './DcaFormState';
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {
   const { deconversion } = getDenomInfo(initialDenom);
-  const funds = [{ denom: initialDenom, amount: deconversion(initialDeposit).toString() }];
+  const funds = [{ denom: initialDenom, amount: BigInt(deconversion(initialDeposit)).toString() }];
 
   const fundsInCoin = [
     Coin.fromPartial({
