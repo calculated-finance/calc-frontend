@@ -1,6 +1,6 @@
 import { Link, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { TwitterIcon, DiscordIcon, TelegramIcon } from '@fusion-icons/react/interface';
+import { TwitterIcon, DiscordIcon, TelegramIcon, GithubIcon } from '@fusion-icons/react/interface';
 import { CALC_TELEGRAM_URL } from 'src/constants';
 
 function Footer() {
@@ -14,6 +14,9 @@ function Footer() {
       </Link>
       <Link target="_blank" href="https://discord.gg/bJDj3zJhDH" rel="noopener noreferrer">
         <Icon as={DiscordIcon} stroke="slateGrey" />
+      </Link>
+      <Link target="_blank" href="https://github.com/calculated-finance" rel="noopener noreferrer">
+        <Icon as={GithubIcon} stroke="slateGrey" />
       </Link>
     </Stack>
   );
