@@ -127,6 +127,22 @@ export function LinkedStrategyDetails({
                   {value}
                 </Text>
               </HStack>
+              <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
+                <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
+                  More details:
+                  <IconButton
+                    colorScheme="blue"
+                    icon={<InfoOutlineIcon />}
+                    aria-label="More details"
+                    variant="ghost"
+                    onClick={onOpen}
+                    size="xs"
+                    id="original-strategy"
+                    onMouseDown={handleClick}
+                    boxSize={1}
+                  />
+                </Text>
+              </HStack>
             </Stack>{' '}
           </GridItem>
           <GridItem colSpan={1}>
@@ -178,6 +194,22 @@ export function LinkedStrategyDetails({
                   Value:
                 </Text>
                 <Text fontSize={{ base: 10, md: 12 }}> {linkedValue} </Text>
+              </HStack>
+              <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
+                <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
+                  More details:
+                  <IconButton
+                    colorScheme="blue"
+                    icon={<InfoOutlineIcon />}
+                    aria-label="More details"
+                    variant="ghost"
+                    onClick={onOpen}
+                    size="xs"
+                    id="linked-strategy"
+                    onMouseDown={handleClick}
+                    boxSize={1}
+                  />
+                </Text>
               </HStack>
             </Stack>{' '}
           </GridItem>
