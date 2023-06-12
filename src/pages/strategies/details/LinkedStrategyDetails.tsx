@@ -11,59 +11,35 @@ import {
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
-import useDexFee from '@hooks/useDexFee';
-import { TransactionType } from '@components/TransactionType';
+import { getTotalReceived } from '@helpers/strategy';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
-import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function LinkedStrategyDetails({
   originalStrategy,
   marketValueInFiat,
   linkedToStrategy,
+  resultingDenomPrice,
 }: {
   originalStrategy: Strategy;
   marketValueInFiat: number;
   linkedToStrategy: Strategy;
+  resultingDenomPrice: number;
 }) {
   const [isClicked, setIsClicked] = useState('');
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
-
-  const initialDenom = getStrategyInitialDenom(curStrategy);
-  const resultingDenom = getStrategyResultingDenom(curStrategy);
-  const { dexFee } = useDexFee(
-    initialDenom,
-    resultingDenom,
-    isBuyStrategy(curStrategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
-
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
-
   const isLooped = originalStrategy.id === linkingIntoId;
-
-  const initialDenomPriceNum = Number(initialDenomPrice);
   const resultingDenomPriceNum = Number(resultingDenomPrice);
-
-  const { marketValueInFiat: linkedMarketValueInFiat } = getPerformanceStatistics(
-    curStrategy,
-    initialDenomPriceNum,
-    resultingDenomPriceNum,
-    dexFee,
-  );
-
+  const linkedMarketValueInFiat = Number((getTotalReceived(curStrategy) * resultingDenomPriceNum).toFixed(2));
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
-
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -71,6 +47,7 @@ export function LinkedStrategyDetails({
     const clickedId = e.currentTarget.id;
     setIsClicked(clickedId);
   };
+
   const modalStrategy = isClicked === 'original-strategy' ? originalStrategy : linkedToStrategy;
 
   return (
@@ -126,7 +103,6 @@ export function LinkedStrategyDetails({
                   Value:
                 </Text>
                 <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }}>
-                  {' '}
                   {value}
                 </Text>
               </HStack>
@@ -146,7 +122,8 @@ export function LinkedStrategyDetails({
                   />
                 </Text>
               </HStack>
-            </Stack>{' '}
+            </Stack>
+            <StrategyModal strategy={originalStrategy} isOpen={isOpen} onClose={onClose} />
           </GridItem>
           <GridItem colSpan={1}>
             {isLooped ? (
@@ -175,7 +152,7 @@ export function LinkedStrategyDetails({
             >
               <HStack w="full" whiteSpace="nowrap" spacing={{ base: 1, md: 2 }}>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
-                  Linked Strategy:{' '}
+                  Linked Strategy:
                 </Text>
                 <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                   id: {curStrategy.id}
@@ -196,7 +173,7 @@ export function LinkedStrategyDetails({
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text fontSize={{ base: 10, md: 12 }}> {linkedValue} </Text>
+                <Text fontSize={{ base: 10, md: 12 }}>{linkedValue}</Text>
               </HStack>
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
@@ -214,7 +191,8 @@ export function LinkedStrategyDetails({
                   />
                 </Text>
               </HStack>
-            </Stack>{' '}
+            </Stack>
+            <StrategyModal strategy={linkedToStrategy} isOpen={isOpen} onClose={onClose} />
           </GridItem>
         </Grid>
         <StrategyModal strategy={modalStrategy} isOpen={isOpen} onClose={onClose} />

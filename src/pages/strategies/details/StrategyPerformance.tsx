@@ -175,15 +175,19 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
         </>
       )}
-      <GridItem colSpan={2}>
-        <Divider />
-      </GridItem>
+
       {linkedToStrategy && (
-        <LinkedStrategyDetails
-          originalStrategy={strategy}
-          marketValueInFiat={marketValueInFiat}
-          linkedToStrategy={linkedToStrategy}
-        />
+        <>
+          <GridItem colSpan={2}>
+            <Divider />
+          </GridItem>
+          <LinkedStrategyDetails
+            originalStrategy={strategy}
+            marketValueInFiat={marketValueInFiat}
+            linkedToStrategy={linkedToStrategy}
+            resultingDenomPrice={resultingDenomPrice}
+          />
+        </>
       )}
     </Grid>
   );
