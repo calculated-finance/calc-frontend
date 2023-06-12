@@ -62,6 +62,15 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+  // const initswapsdata = [
+  //   getChartDataSwaps(events, coingeckoData?.prices, displayPrices),
+  //   getChartDataSwaps(events, coingeckoDataInitialDenom?.prices, coingeckoDataInitialDenom?.prices),
+  // ];
+  // const init = initswapsdata?.map((swap) => !isNil(swap) && isBuyStrategy(strategy) && swap[0]);
+  // console.log(init);
+
+  const initDenom = getChartDataSwaps(events, coingeckoDataInitialDenom?.prices, coingeckoDataInitialDenom?.prices);
+  console.log(initDenom?.map((el) => `Swapping ${el?.currentPrice} axl`));
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
@@ -69,7 +78,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
       isBuyStrategy(strategy)
         ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
         : `${priceOfDenomName} ➡️ ${priceInDenomName}`
-    }\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
+    }\nSwapped ${initDenom?.map((el) => el)} ${priceInDenomName} for ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
     }\nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom}\nDate: ${swap?.date
       .toLocaleDateString('en-AU', {
