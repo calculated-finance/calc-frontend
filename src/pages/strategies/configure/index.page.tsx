@@ -15,6 +15,7 @@ import Submit from '@components/Submit';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { getExistingValues } from './getExistingValues';
 
 export const configureSteps: StepConfig[] = [
@@ -94,7 +95,11 @@ function Page() {
   if (!data?.vault || !chain || !address) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
+        <NewStrategyModalHeader
+          stepsConfig={configureSteps}
+          showStepper={false}
+          cancelUrl={generateStrategyDetailUrl(query?.id)}
+        />
 
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
           Loading
@@ -115,7 +120,11 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={configureSteps} showStepper={false} />
+      <NewStrategyModalHeader
+        stepsConfig={configureSteps}
+        showStepper={false}
+        cancelUrl={generateStrategyDetailUrl(query?.id)}
+      />
       <ConfigureForm strategy={data.vault} configureStrategyInitialValues={configureStrategyInitialValues} />
     </NewStrategyModal>
   );

@@ -32,6 +32,7 @@ import Lottie from 'lottie-react';
 import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
+import { Url, UrlObject } from 'url';
 import Stepper from './Stepper';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
@@ -114,10 +115,12 @@ export function NewStrategyModalBody({
 
 export function NewStrategyModalHeader({
   resetForm,
+  cancelUrl,
   finalStep = true,
   stepsConfig,
   showStepper = true,
 }: {
+  cancelUrl: UrlObject | Url | string;
   resetForm?: () => void;
   finalStep?: boolean;
   stepsConfig: StepConfig[];
@@ -128,7 +131,7 @@ export function NewStrategyModalHeader({
   const { connected } = useWallet();
 
   const handleCancel = async () => {
-    await router.push('/create-strategy');
+    await router.push(cancelUrl);
     if (resetForm) {
       resetForm();
     }

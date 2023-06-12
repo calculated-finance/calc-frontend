@@ -62,7 +62,7 @@ export function WeightedScaleCustomisePage({
   if (!state) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
+        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
         <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
@@ -87,7 +87,7 @@ export function WeightedScaleCustomisePage({
     >
       {({ isSubmitting, values }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} />
+          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={4}>

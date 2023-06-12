@@ -31,7 +31,7 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
   const { strategyId, timeSaved } = query;
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={stepConfig} finalStep={false} />
+      <NewStrategyModalHeader stepsConfig={stepConfig} finalStep={false} cancelUrl="/create-strategy" />
       <NewStrategyModalBody stepsConfig={stepConfig}>
         <AbsoluteCenter w="100%" h="100%" top="10%">
           <Lottie animationData={Confetti} loop={1} />

@@ -16,6 +16,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { StepConfig } from '@formConfig/StepConfig';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 
 export function CustomiseFormDca({
   steps,

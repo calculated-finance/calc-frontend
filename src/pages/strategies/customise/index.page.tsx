@@ -35,6 +35,7 @@ import ApplyMultiplier from '@components/ApplyMultiplier';
 import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
+import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 
@@ -83,7 +84,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     <Formik initialValues={initialValues} validationSchema={getCustomiseSchema(strategy)} onSubmit={onSubmit}>
       {({ values }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={customiseSteps} />
+          <NewStrategyModalHeader stepsConfig={customiseSteps} cancelUrl={generateStrategyDetailUrl(strategy.id)} />
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
             <Form autoComplete="off">
               <Stack spacing={4}>
@@ -158,7 +159,11 @@ function Page() {
   if (!strategy || !chain || !address) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={customiseSteps} showStepper={false} />
+        <NewStrategyModalHeader
+          stepsConfig={customiseSteps}
+          showStepper={false}
+          cancelUrl={generateStrategyDetailUrl(query?.id)}
+        />
 
         <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isLoading}>
           Loading

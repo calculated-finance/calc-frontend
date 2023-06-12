@@ -15,7 +15,12 @@ function Success() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader showStepper={false} finalStep={false} stepsConfig={customiseSteps} />
+      <NewStrategyModalHeader
+        showStepper={false}
+        finalStep={false}
+        stepsConfig={customiseSteps}
+        cancelUrl={generateStrategyDetailUrl(query?.id)}
+      />
       <NewStrategyModalBody stepsConfig={customiseSteps}>
         <Stack spacing={6} alignItems="center">
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />

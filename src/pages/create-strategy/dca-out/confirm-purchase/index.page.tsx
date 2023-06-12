@@ -63,7 +63,11 @@ function Page() {
   if (!state) {
     return (
       <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
+        <NewStrategyModalHeader
+          stepsConfig={dcaOutSteps}
+          resetForm={actions.resetAction}
+          cancelUrl="/create-strategy"
+        />
         <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
           <InvalidData onRestart={handleRestart} />
         </NewStrategyModalBody>
@@ -73,7 +77,7 @@ function Page() {
 
   return (
     <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} />
+      <NewStrategyModalHeader stepsConfig={dcaOutSteps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
       <NewStrategyModalBody stepsConfig={dcaOutSteps} isLoading={isPageLoading && !price} isSigning={isLoading}>
         <Stack spacing={4}>
           <DcaDiagram
