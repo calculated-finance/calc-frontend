@@ -4,7 +4,6 @@ import {
   GridItem,
   Text,
   HStack,
-  Spinner,
   Stack,
   Code,
   Flex,
@@ -19,12 +18,12 @@ import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } fro
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
-import useStrategy from '@hooks/useStrategy';
+import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
+import { useState } from 'react';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
-import { StrategyModal } from '@components/Reinvest';
 
 export function LinkedStrategyDetails({
   originalStrategy,
@@ -35,9 +34,9 @@ export function LinkedStrategyDetails({
   marketValueInFiat: number;
   linkedToStrategy: Strategy;
 }) {
+  const [isClicked, setIsClicked] = useState('');
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
-  const { data: linkedData } = useStrategy(linkingIntoId);
 
   const initialDenom = getStrategyInitialDenom(curStrategy);
   const resultingDenom = getStrategyResultingDenom(curStrategy);
@@ -50,8 +49,6 @@ export function LinkedStrategyDetails({
   const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { vault: reinvestStrategy } = linkedData || {};
-  const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
 
   const {
@@ -66,6 +63,12 @@ export function LinkedStrategyDetails({
 
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const clickedId = e.currentTarget.id;
+    setIsClicked(clickedId);
+  };
+  const modalStrategy = isClicked === 'original-strategy' ? originalStrategy : linkedToStrategy;
 
   return (
     <>
@@ -96,24 +99,22 @@ export function LinkedStrategyDetails({
                   Strategy:
                 </Text>
                 <Text>
-                  {!reinvestStrategy ? (
-                    <Spinner size="xs" />
-                  ) : (
-                    <HStack>
-                      <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
-                        id: {originalStrategy.id}
-                      </Code>
-                      {/* <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} /> */}
-                      <IconButton
-                        colorScheme="blue"
-                        icon={<InfoOutlineIcon />}
-                        aria-label="More details"
-                        variant="ghost"
-                        onClick={onOpen}
-                      />
-                      <StrategyModal strategy={originalStrategy} isOpen={isOpen} onClose={onClose} />
-                    </HStack>
-                  )}{' '}
+                  <HStack>
+                    <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
+                      id: {originalStrategy.id}
+                    </Code>
+                    <IconButton
+                      colorScheme="blue"
+                      icon={<InfoOutlineIcon />}
+                      aria-label="More details"
+                      variant="ghost"
+                      onClick={onOpen}
+                      size="xs"
+                      display={{ base: 'none', sm: 'initial' }}
+                      id="original-strategy"
+                      onMouseDown={handleClick}
+                    />
+                  </HStack>
                 </Text>
               </HStack>
 
@@ -158,17 +159,19 @@ export function LinkedStrategyDetails({
                   Linked Strategy:{' '}
                 </Text>
                 <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
-                  id: {checkLoopedStrategy}
+                  id: {curStrategy.id}
                 </Code>
-                {/* <InfoOutlineIcon boxSize={{ base: 2, md: 3 }} display={{ base: 'none', sm: 'initial' }} /> */}
                 <IconButton
                   colorScheme="blue"
                   icon={<InfoOutlineIcon />}
                   aria-label="More details"
                   variant="ghost"
                   onClick={onOpen}
+                  size="xs"
+                  display={{ base: 'none', sm: 'initial' }}
+                  id="linked-strategy"
+                  onMouseDown={handleClick}
                 />
-                <StrategyModal strategy={linkedToStrategy} isOpen={isOpen} onClose={onClose} />
               </HStack>
               <HStack>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
@@ -179,6 +182,7 @@ export function LinkedStrategyDetails({
             </Stack>{' '}
           </GridItem>
         </Grid>
+        <StrategyModal strategy={modalStrategy} isOpen={isOpen} onClose={onClose} />
       </GridItem>
     </>
   );
