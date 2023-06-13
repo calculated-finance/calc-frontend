@@ -17,9 +17,26 @@ import { getTotalReceived } from '@helpers/strategy';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
+
+function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <IconButton
+        colorScheme="blue"
+        icon={<InfoOutlineIcon />}
+        aria-label="More details"
+        variant="ghost"
+        onClick={onOpen}
+        size="xs"
+        display={{ base: 'none', sm: 'initial' }}
+      />
+      <StrategyModal strategy={strategy} isOpen={isOpen} onClose={onClose} />
+    </>
+  );
+}
 
 export function LinkedStrategyDetails({
   originalStrategy,
@@ -32,7 +49,6 @@ export function LinkedStrategyDetails({
   linkedToStrategy: Strategy;
   resultingDenomPrice: number;
 }) {
-  const [isClicked, setIsClicked] = useState('');
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
@@ -41,15 +57,6 @@ export function LinkedStrategyDetails({
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const clickedId = e.currentTarget.id;
-    setIsClicked(clickedId);
-  };
-
-  const modalStrategy = isClicked === 'original-strategy' ? originalStrategy : linkedToStrategy;
-
   return (
     <>
       <GridItem colSpan={1}>
@@ -83,21 +90,10 @@ export function LinkedStrategyDetails({
                     <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                       id: {originalStrategy.id}
                     </Code>
-                    <IconButton
-                      colorScheme="blue"
-                      icon={<InfoOutlineIcon />}
-                      aria-label="More details"
-                      variant="ghost"
-                      onClick={onOpen}
-                      size="xs"
-                      display={{ base: 'none', sm: 'initial' }}
-                      id="original-strategy"
-                      onMouseDown={handleClick}
-                    />
+                    <LinkedStrategyModal strategy={originalStrategy} />
                   </HStack>
                 </Text>
               </HStack>
-
               <HStack>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
@@ -109,21 +105,10 @@ export function LinkedStrategyDetails({
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   More details:
-                  <IconButton
-                    colorScheme="blue"
-                    icon={<InfoOutlineIcon />}
-                    aria-label="More details"
-                    variant="ghost"
-                    onClick={onOpen}
-                    size="xs"
-                    id="original-strategy"
-                    onMouseDown={handleClick}
-                    boxSize={1}
-                  />
+                  <LinkedStrategyModal strategy={originalStrategy} />
                 </Text>
               </HStack>
             </Stack>
-            <StrategyModal strategy={originalStrategy} isOpen={isOpen} onClose={onClose} />
           </GridItem>
           <GridItem colSpan={1}>
             {isLooped ? (
@@ -157,17 +142,7 @@ export function LinkedStrategyDetails({
                 <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
                   id: {curStrategy.id}
                 </Code>
-                <IconButton
-                  colorScheme="blue"
-                  icon={<InfoOutlineIcon />}
-                  aria-label="More details"
-                  variant="ghost"
-                  onClick={onOpen}
-                  size="xs"
-                  display={{ base: 'none', sm: 'initial' }}
-                  id="linked-strategy"
-                  onMouseDown={handleClick}
-                />
+                <LinkedStrategyModal strategy={linkedToStrategy} />
               </HStack>
               <HStack>
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
@@ -178,24 +153,12 @@ export function LinkedStrategyDetails({
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   More details:
-                  <IconButton
-                    colorScheme="blue"
-                    icon={<InfoOutlineIcon />}
-                    aria-label="More details"
-                    variant="ghost"
-                    onClick={onOpen}
-                    size="xs"
-                    id="linked-strategy"
-                    onMouseDown={handleClick}
-                    boxSize={1}
-                  />
+                  <LinkedStrategyModal strategy={linkedToStrategy} />
                 </Text>
               </HStack>
             </Stack>
-            <StrategyModal strategy={linkedToStrategy} isOpen={isOpen} onClose={onClose} />
           </GridItem>
         </Grid>
-        <StrategyModal strategy={modalStrategy} isOpen={isOpen} onClose={onClose} />
       </GridItem>
     </>
   );
