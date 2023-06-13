@@ -82,6 +82,7 @@ function ExecutionIntervalCustom() {
         <SimpleGrid columns={2} spacing={2}>
           <FormControl isInvalid={incrementMeta.touched && !!incrementMeta.error}>
             <NumberInput
+              data-testid="execution-interval-increment"
               onChange={incrementHelpers.setValue}
               placeholder="Enter increment"
               {...incrementField}
