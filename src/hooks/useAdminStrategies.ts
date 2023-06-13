@@ -20,7 +20,7 @@ function fetchVaultsRecursively(
   startAfter = null,
   allVaults = [] as Vault[],
 ): Promise<Vault[]> {
-  return client!
+  return client
     .queryContractSmart(getChainContractAddress(chain), {
       get_vaults: {
         limit: GET_VAULTS_LIMIT,
@@ -55,10 +55,17 @@ export default function useAdminStrategies(customChain?: Chains) {
     }
   }, [chain, customChain]);
 
-  return useQuery<Vault[]>([QUERY_KEY, storedClient, chain], () => fetchVaultsRecursively(client!, chain), {
-    enabled: !!client && !!chain,
-    meta: {
-      errorMessage: 'Error fetching all strategies',
+  return useQuery<Vault[]>(
+    [QUERY_KEY, storedClient, chain],
+    () => {
+      if (!client) throw new Error('No client');
+      return fetchVaultsRecursively(client, chain);
     },
-  });
+    {
+      enabled: !!client && !!chain,
+      meta: {
+        errorMessage: 'Error fetching all strategies',
+      },
+    },
+  );
 }

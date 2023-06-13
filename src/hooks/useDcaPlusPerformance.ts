@@ -20,13 +20,16 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
       if (!client) {
         throw new Error('No client');
       }
+      if (!chain) {
+        throw new Error('No chain');
+      }
       const msg = {
         get_vault_performance: {
           vault_id: id,
         },
       } as QueryMsg;
 
-      const result = await client.queryContractSmart(getChainContractAddress(chain!), msg);
+      const result = await client.queryContractSmart(getChainContractAddress(chain), msg);
       return result;
     },
     {

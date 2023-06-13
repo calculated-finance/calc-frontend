@@ -2,13 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
-import usePairs, {
-  getResultingDenoms,
-  isSupportedDenomForWeightedScale,
-  orderAlphabetically,
-  uniqueBaseDenomsFromQuoteDenom,
-  uniqueQuoteDenomsFromBaseDenom,
-} from '@hooks/usePairs';
+import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -22,8 +16,6 @@ import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
-import { Pair } from '@models/Pair';
-import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
 
 function DcaIn() {

@@ -1,16 +1,9 @@
 import { GasPrice } from '@cosmjs/stargate';
 import { Chains } from '@hooks/useChain/Chains';
-import { Version } from '@hooks/Version';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
-import {
-  CHAIN_ID,
-  CONTRACT_ADDRESS,
-  FEE_TAKER_ADDRESS,
-  RPC_ENDPOINT,
-  STAKING_ROUTER_CONTRACT_ADDRESS,
-} from 'src/constants';
+import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, RPC_ENDPOINT } from 'src/constants';
 
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',

@@ -1,5 +1,5 @@
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
-import { DenomValue, convertDenomFromCoin } from '@utils/getDenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 import { Strategy } from '@hooks/useStrategies';
 import {

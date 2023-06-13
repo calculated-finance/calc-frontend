@@ -23,7 +23,6 @@ import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon } from '@fusion-icons/
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
-import Banner from '@components/Banner';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';

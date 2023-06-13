@@ -79,7 +79,15 @@ export default function usePrice(
   const { data, ...helpers } = useQuery<BookResponse>(
     ['price', pair, client],
     async () => {
-      const result = await client!.queryContractSmart(pair!.address, {
+      if (!client) {
+        throw new Error('No client');
+      }
+
+      if (!pair) {
+        throw new Error('No pair');
+      }
+
+      const result = await client.queryContractSmart(pair.address, {
         book: {
           limit: 1,
         },

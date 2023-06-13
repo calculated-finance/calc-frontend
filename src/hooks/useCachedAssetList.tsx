@@ -1,8 +1,6 @@
 import { AssetList } from '@chain-registry/types';
-import { isMainnet } from '@utils/isMainnet';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
-import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useAssetList } from './useAssetList';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';

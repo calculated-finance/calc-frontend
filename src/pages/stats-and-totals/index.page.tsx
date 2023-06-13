@@ -143,14 +143,14 @@ function hoursUntil(date: Date) {
 
 // map functions to time intervals
 const timeIntervalMap: Record<any, (date: Date) => number> = {
-  every_second: (date: Date) => 1,
-  every_minute: (date: Date) => 1,
-  half_hourly: (date: Date) => 30,
+  every_second: () => 1,
+  every_minute: () => 1,
+  half_hourly: () => 30,
   hourly: hoursUntil,
-  half_daily: (date: Date) => 12,
+  half_daily: () => 12,
   daily: daysUntil,
   weekly: weeksUntil,
-  fortnightly: (date: Date) => 2,
+  fortnightly: () => 2,
   monthly: monthsUntil,
 };
 

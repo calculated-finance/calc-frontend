@@ -17,6 +17,8 @@ import { FiCalendar, FiClock } from 'react-icons/fi';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { featureFlags } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
+import { IconType } from 'react-icons/lib';
+import { ReactElement } from 'react';
 import Radio from './Radio';
 import RadioCard from './RadioCard';
 import NumberInput from './NumberInput';
@@ -49,7 +51,7 @@ function ExecutionIntervalLegacy() {
     </FormControl>
   );
 }
-function TimePeriodOption({ label, icon }: { label: string; icon: any }) {
+function TimePeriodOption({ label, icon }: { label: string; icon: ReactElement<IconType> }) {
   return (
     <HStack flexGrow={1}>
       {icon}

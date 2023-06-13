@@ -1,7 +1,6 @@
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import * as Sentry from '@sentry/react';
-import { Denom } from '@models/Denom';
 import { useMutation } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';

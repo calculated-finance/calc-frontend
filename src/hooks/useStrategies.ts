@@ -23,7 +23,10 @@ export default function useStrategies() {
   return useQuery<VaultsResponse>(
     [QUERY_KEY, address, client],
     () => {
-      const result = client!.queryContractSmart(getChainContractAddress(chain!), {
+      if (!client) {
+        throw new Error('No client');
+      }
+      const result = client.queryContractSmart(getChainContractAddress(chain), {
         get_vaults_by_address: {
           address,
           limit: 1000,

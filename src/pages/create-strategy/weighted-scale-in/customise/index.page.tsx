@@ -26,7 +26,6 @@ import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 import PriceThreshold from '@components/PriceThreshold';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
 
 export function WeightedScaleCustomisePage({

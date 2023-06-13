@@ -21,8 +21,11 @@ export default function useStrategyEvents(id: Strategy['id'] | undefined, enable
   const { chain } = useChain();
 
   function fetchEventsRecursively(startAfter = null, allEvents = [] as StrategyEvent[]): Promise<StrategyEvent[]> {
-    return client!
-      .queryContractSmart(getChainContractAddress(chain!), {
+    if (!chain) throw new Error('No chain');
+
+    if (!client) throw new Error('No client');
+    return client
+      .queryContractSmart(getChainContractAddress(chain), {
         get_events_by_resource_id: {
           resource_id: id,
           limit: GET_EVENTS_LIMIT,

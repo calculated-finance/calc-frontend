@@ -19,10 +19,13 @@ const useBalances = () => {
   const { data, ...other } = useQueryWithNotification(
     ['balances', address, chain],
     async () => {
-      if (chain === Chains.Kujira && getChainFromAddress(address!) === Chains.Kujira) {
-        return kujiraQuery?.bank.allBalances(address!);
+      if (!address) {
+        throw new Error('No address');
       }
-      if (chain === Chains.Osmosis && getChainFromAddress(address!) === Chains.Osmosis) {
+      if (chain === Chains.Kujira && getChainFromAddress(address) === Chains.Kujira) {
+        return kujiraQuery?.bank.allBalances(address);
+      }
+      if (chain === Chains.Osmosis && getChainFromAddress(address) === Chains.Osmosis) {
         return osmosisQuery?.cosmos.bank.v1beta1
           .allBalances({ address })
           .then((res: { balances: Coin[] }) => res.balances);

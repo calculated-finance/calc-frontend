@@ -19,11 +19,11 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { getStrategyInitialDenom, getStrategyInitialDenomId, getStrategyResultingDenom } from '@helpers/strategy';
+import { getStrategyInitialDenomId, getStrategyResultingDenom } from '@helpers/strategy';
 import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@hooks/useStrategies';
-import getDenomInfo, { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 import { CANCEL_VAULT_FEE } from 'src/constants';
 import { formatDate } from '@helpers/format/formatDate';
