@@ -37,6 +37,7 @@ function CustomLabel(props: VictoryTooltipProps) {
   );
 }
 
+// may not need.
 function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[]) {
   return failedEvents?.map((event) => {
     const { data } = event;
@@ -44,6 +45,7 @@ function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[]) {
     if ('dca_vault_execution_skipped' in data) {
       const { reason } = data.dca_vault_execution_skipped;
       return {
+        time: new Date(Number(event.timestamp) / 1000000),
         failed: reason,
       };
     }
@@ -73,6 +75,7 @@ function getFailedChartDataSwaps(
     return null;
   }
   const eventsWithAccumulation = getFailedEventsWithAccumulation(failedEvents);
+  // add time and market value in this return (MV can use getAmountInTime() )
   return eventsWithAccumulation;
 }
 
