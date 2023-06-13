@@ -57,10 +57,12 @@ export function CustomiseFormDcaWrapper({
   formName,
   strategyType,
   steps,
+  transactionType,
 }: {
   formName: FormNames;
   strategyType: StrategyTypes;
   steps: StepConfig[];
+  transactionType: TransactionType;
 }) {
   const { state, actions } = useStep2Form(formName);
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
@@ -90,7 +92,7 @@ export function CustomiseFormDcaWrapper({
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      <CustomiseFormDca step1={state.step1} transactionType={TransactionType.Buy} />
+      <CustomiseFormDca step1={state.step1} transactionType={transactionType} />
     </Formik>
   );
 }
