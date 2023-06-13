@@ -1,6 +1,6 @@
 import { GridItem, Box, Center } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import useStrategyEvents from '@hooks/useStrategyEvents';
+import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
   VictoryAxis,
@@ -13,7 +13,7 @@ import {
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
-import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
+import useFiatPriceHistory, { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
@@ -35,6 +35,45 @@ function CustomLabel(props: VictoryTooltipProps) {
       />
     </g>
   );
+}
+
+function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[]) {
+  return failedEvents?.map((event) => {
+    const { data } = event;
+
+    if ('dca_vault_execution_skipped' in data) {
+      const { reason } = data.dca_vault_execution_skipped;
+      return {
+        failed: reason,
+      };
+    }
+    throw new Error();
+  });
+}
+
+// gedt failed events
+function getFailedEvents(events: StrategyEvent[] | undefined) {
+  return events?.filter((event) => {
+    const { data } = event;
+    if ('dca_vault_execution_skipped' in data) {
+      return data.dca_vault_execution_skipped;
+    }
+    return undefined;
+  });
+}
+
+function getFailedChartDataSwaps(
+  events: StrategyEvent[] | undefined,
+  fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
+) {
+  const failedEvents = getFailedEvents(events);
+
+  if (!failedEvents || !fiatPrices || !displayPrices) {
+    return null;
+  }
+  const eventsWithAccumulation = getFailedEventsWithAccumulation(failedEvents);
+  return eventsWithAccumulation;
 }
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
@@ -60,6 +99,10 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+
+  // const skippedExecution = events?.find((item) => item.data?.dca_vault_execution_skipped);
+  const failedChartData = getFailedEvents(events);
+  const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
@@ -133,6 +176,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                   })
                 }
               />
+
               <VictoryScatter
                 style={{
                   data: { fill: '#1AEFAF', stroke: 'white', strokeWidth: 1 },
@@ -154,6 +198,27 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 x="date"
                 y="marketValue"
               />
+              <VictoryScatter
+                style={{
+                  data: { fill: 'red', stroke: 'white', strokeWidth: 1 },
+                  labels: { fill: 'white', fontSize: 6 },
+                }}
+                size={6}
+                data={swapsDataWithLabel}
+                x="date"
+                y="marketValue"
+                labelComponent={<CustomLabel />}
+              />
+              {/* <VictoryArea
+                style={{
+                  data: { stroke: '#1AEFAF', fillOpacity: '10%', fill: 'url(#myGradient)', strokeWidth: 2 },
+                }}
+                data={failedChartData}
+                standalone={false}
+                labelComponent={<CustomLabel props={swapsFailedData} />}
+                x="date"
+                y="marketValue"
+              /> */}
             </VictoryChart>
           )}
         </Center>
