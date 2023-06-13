@@ -7,8 +7,8 @@ import {
 import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Chains } from '@hooks/useChain/Chains';
 import { osmosisStrategy } from 'src/fixtures/strategy';
-import { getExistingValues } from './getExistingValues'; // update with the actual path
 import YesNoValues from '@models/YesNoValues';
+import { getExistingValues } from './getExistingValues'; // update with the actual path
 
 jest.mock('@helpers/destinations');
 

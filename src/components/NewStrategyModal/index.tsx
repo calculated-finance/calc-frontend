@@ -53,6 +53,22 @@ export default function NewStrategyModal({ children }: ChildrenProp) {
   );
 }
 
+export function SigningState({ isSigning, children }: { isSigning?: boolean } & ChildrenProp) {
+  return (
+    <Box position="relative">
+      {isSigning && (
+        <Center position="absolute" w="full" h="full">
+          <Stack spacing={6}>
+            <Lottie animationData={broadcast} loop />
+            <Heading size="xs">Review and approve the transaction.</Heading>
+          </Stack>
+        </Center>
+      )}
+      <Box visibility={isSigning ? 'hidden' : 'visible'}>{children}</Box>
+    </Box>
+  );
+}
+
 export function NewStrategyModalBody({
   children,
   isLoading,

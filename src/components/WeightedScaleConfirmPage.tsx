@@ -22,6 +22,7 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
+import { SigningState } from './NewStrategyModal';
 
 function PageInternal({
   state,
@@ -95,7 +96,7 @@ export function WeightedScaleConfirmPage({
 
   const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
-  const { mutate, isError, error } = useCreateVaultWeightedScale(formName, transactionType);
+  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -122,14 +123,16 @@ export function WeightedScaleConfirmPage({
   return (
     <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
       {state ? (
-        <PageInternal
-          transactionType={transactionType}
-          strategyType={strategyType}
-          state={state}
-          isError={isError}
-          error={error}
-          handleSubmit={handleSubmit}
-        />
+        <SigningState isSigning={isLoading}>
+          <PageInternal
+            transactionType={transactionType}
+            strategyType={strategyType}
+            state={state}
+            isError={isError}
+            error={error}
+            handleSubmit={handleSubmit}
+          />
+        </SigningState>
       ) : (
         <InvalidData onRestart={handleRestart} />
       )}

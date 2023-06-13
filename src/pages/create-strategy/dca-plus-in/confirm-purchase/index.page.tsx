@@ -1,6 +1,10 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
+import NewStrategyModal, {
+  NewStrategyModalBody,
+  NewStrategyModalHeader,
+  SigningState,
+} from '@components/NewStrategyModal';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
 import usePageLoad from '@hooks/usePageLoad';
@@ -35,7 +39,7 @@ function Page() {
 
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -71,35 +75,37 @@ function Page() {
   }
 
   return (
-    <Stack spacing={4}>
-      <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
-      <Divider />
-      <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
-      <SummaryTheSwapDcaPlus
-        initialDenom={initialDenom}
-        resultingDenom={resultingDenom}
-        initialDeposit={state.initialDeposit}
-        strategyDuration={state.strategyDuration}
-      />
-      <SummaryWhileSwapping
-        transactionType={transactionType}
-        initialDenom={initialDenom}
-        resultingDenom={resultingDenom}
-        priceThresholdValue={undefined}
-        slippageTolerance={state.slippageTolerance}
-      />
-      <SummaryAfterEachSwap state={state} />
-      <SummaryBenchmark state={state} />
-      <FeesDcaPlus
-        transactionType={TransactionType.Buy}
-        initialDenom={initialDenom}
-        resultingDenom={resultingDenom}
-        strategyDuration={state.strategyDuration}
-        initialDeposit={state.initialDeposit}
-        autoStakeValidator={state.autoStakeValidator}
-      />
-      <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-    </Stack>
+    <SigningState isSigning={isLoading}>
+      <Stack spacing={4}>
+        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+        <Divider />
+        <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
+        <SummaryTheSwapDcaPlus
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          initialDeposit={state.initialDeposit}
+          strategyDuration={state.strategyDuration}
+        />
+        <SummaryWhileSwapping
+          transactionType={transactionType}
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          priceThresholdValue={undefined}
+          slippageTolerance={state.slippageTolerance}
+        />
+        <SummaryAfterEachSwap state={state} />
+        <SummaryBenchmark state={state} />
+        <FeesDcaPlus
+          transactionType={TransactionType.Buy}
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          strategyDuration={state.strategyDuration}
+          initialDeposit={state.initialDeposit}
+          autoStakeValidator={state.autoStakeValidator}
+        />
+        <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+      </Stack>
+    </SigningState>
   );
 }
 function PageWrapper() {
