@@ -67,17 +67,15 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction}>
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={6}>
-              <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              <Submit>Next</Submit>
-            </Stack>
-          </Form>
-        </ModalWrapper>
+        <Form autoComplete="off">
+          <Stack direction="column" spacing={6}>
+            <DCAOutInitialDenom denoms={denoms} />
+            <DCAOutResultingDenom
+              denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+            />
+            <Submit>Next</Submit>
+          </Stack>
+        </Form>
       )}
     </Formik>
   );
