@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
-import { useStation } from '@hooks/useStation';
 import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
 import { useWallet } from '@hooks/useWallet';
@@ -34,10 +33,10 @@ function WalletModal() {
 
   const { isAdminPage } = useAdmin();
 
-  const { isStationInstalled, connect: connectStation } = useStation((state) => ({
-    isStationInstalled: state.isStationInstalled,
-    connect: state.connect,
-  }));
+  // const { isStationInstalled, connect: connectStation } = useStation((state) => ({
+  //   isStationInstalled: state.isStationInstalled,
+  //   connect: state.connect,
+  // }));
 
   const { isInstalled: isKeplrInstalled, connect: connectKeplr } = useKeplr((state) => ({
     isInstalled: state.isInstalled,
@@ -62,10 +61,10 @@ function WalletModal() {
     setVisible(false);
   }, [setVisible]);
 
-  const handleStationConnect = () => {
-    connectStation?.();
-    handleClose();
-  };
+  // const handleStationConnect = () => {
+  //   connectStation?.();
+  //   handleClose();
+  // };
 
   const handleKeplrConnect = () => {
     connectKeplr(chain);
@@ -107,7 +106,7 @@ function WalletModal() {
                   isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
-                {featureFlags.stationEnabled && (
+                {/* {featureFlags.stationEnabled && (
                   <WalletListItem
                     handleClick={handleStationConnect}
                     name="Terra Station"
@@ -115,7 +114,7 @@ function WalletModal() {
                     isInstalled={isStationInstalled}
                     walletInstallLink="https://setup-station.terra.money/"
                   />
-                )}
+                )} */}
                 {featureFlags.leapEnabled && (
                   <WalletListItem
                     handleClick={handleLeapConnect}
