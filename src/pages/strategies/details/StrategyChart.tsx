@@ -53,7 +53,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { data: coingeckoDataInitialDenom } = useFiatPriceHistory(initialDenom, days);
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
-
+  const initDisplayPrices = isBuyStrategy(strategy) ? coingeckoDataInitialDenom?.prices : coingeckoData?.prices;
   const priceOfDenom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
   const priceInDenom = isBuyStrategy(strategy) ? initialDenom : resultingDenom;
 
@@ -62,15 +62,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
-  // const initswapsdata = [
-  //   getChartDataSwaps(events, coingeckoData?.prices, displayPrices),
-  //   getChartDataSwaps(events, coingeckoDataInitialDenom?.prices, coingeckoDataInitialDenom?.prices),
-  // ];
-  // const init = initswapsdata?.map((swap) => !isNil(swap) && isBuyStrategy(strategy) && swap[0]);
-  // console.log(init);
+  const initdata = getChartDataSwaps(events, coingeckoDataInitialDenom?.prices, initDisplayPrices);
 
-  const initDenom = getChartDataSwaps(events, coingeckoDataInitialDenom?.prices, coingeckoDataInitialDenom?.prices);
-  console.log(initDenom?.map((el) => `Swapping ${el?.currentPrice} axl`));
+  const x = initdata?.map((el) => el?.currentPrice);
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
@@ -78,7 +72,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
       isBuyStrategy(strategy)
         ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
         : `${priceOfDenomName} ➡️ ${priceInDenomName}`
-    }\nSwapped ${initDenom?.map((el) => el)} ${priceInDenomName} for ${Number(swap?.event.swapAmount.toFixed(2))} ${
+    }\nSwapped ${'e'} ${priceInDenomName} for ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
     }\nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom}\nDate: ${swap?.date
       .toLocaleDateString('en-AU', {
