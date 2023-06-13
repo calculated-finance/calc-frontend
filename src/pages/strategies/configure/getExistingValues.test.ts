@@ -4,10 +4,10 @@ import {
   getStrategyValidatorAddress,
   getStrategyReinvestStrategyId,
 } from '@helpers/destinations';
-import SendToWalletValues from '@models/SendToWalletValues';
 import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Chains } from '@hooks/useChain/Chains';
 import { osmosisStrategy } from 'src/fixtures/strategy';
+import YesNoValues from '@models/YesNoValues';
 import { getExistingValues } from './getExistingValues'; // update with the actual path
 
 jest.mock('@helpers/destinations');
@@ -28,7 +28,7 @@ describe('getExistingValues', () => {
 
     expect(result).toEqual({
       postPurchaseOption: PostPurchaseOptions.SendToWallet,
-      sendToWallet: SendToWalletValues.Yes,
+      sendToWallet: YesNoValues.Yes,
     });
   });
 

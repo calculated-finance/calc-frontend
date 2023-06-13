@@ -1,152 +1,25 @@
-import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import usePageLoad from '@hooks/usePageLoad';
-import useSteps from '@hooks/useSteps';
-import { Form, Formik } from 'formik';
-import { FormNames } from 'src/hooks/useFormStore';
-import useValidation from '@hooks/useValidation';
-import Submit from '@components/Submit';
+import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
-import DcaDiagram from '@components/DcaDiagram';
-import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
-import { useWeightedScaleStep2Form } from '@hooks/useWeightedScaleForm';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
-import { InvalidData } from '@components/InvalidData';
-import SlippageTolerance from '@components/SlippageTolerance';
-import ExecutionInterval from '@components/ExecutionInterval';
-import BaseSwapAmount from '@components/BaseSwapAmount';
-import SwapMultiplier from '@components/SwapMultiplier';
-import ApplyMultiplier from '@components/ApplyMultiplier';
-import BasePrice from '@components/BasePrice';
 import { TransactionType } from '@components/TransactionType';
-import { TriggerForm } from '@components/TriggerForm';
-import { StepConfig } from '@formConfig/StepConfig';
-import { AnySchema } from 'yup';
-import PriceThreshold from '@components/PriceThreshold';
-import { useDenom } from '@hooks/useDenom/useDenom';
-
-export function WeightedScaleCustomisePage({
-  formName,
-  steps,
-  strategyType,
-  transactionType,
-  formSchema,
-}: {
-  formName: FormNames;
-  steps: StepConfig[];
-  strategyType: StrategyTypes;
-  transactionType: TransactionType;
-  formSchema: AnySchema;
-}) {
-  const { actions, state } = useWeightedScaleStep2Form(formName);
-
-  const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(formSchema, {
-    ...state?.step1,
-    strategyType,
-  });
-  const { nextStep, goToStep } = useSteps(steps);
-
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
-
-  const initialDenomInfo = useDenom(state?.step1.initialDenom);
-  const resultingDenomInfo = useDenom(state?.step1.resultingDenom);
-
-  if (!state) {
-    return (
-      <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
-          <InvalidData onRestart={handleRestart} />
-        </NewStrategyModalBody>
-      </NewStrategyModal>
-    );
-  }
-
-  const onSubmit = async (data: DcaInFormDataStep2) => {
-    await actions.updateAction(data);
-    await nextStep();
-  };
-
-  const initialValues = state.step2;
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validate={validate}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      onSubmit={onSubmit}
-    >
-      {({ isSubmitting, values }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            <Form autoComplete="off">
-              <Stack direction="column" spacing={4}>
-                <DcaDiagram
-                  initialDenom={initialDenomInfo}
-                  resultingDenom={resultingDenomInfo}
-                  initialDeposit={state.step1.initialDeposit}
-                />
-                <AdvancedSettingsSwitch />
-                <Collapse in={values.advancedSettings}>
-                  <TriggerForm
-                    transactionType={transactionType}
-                    initialDenom={initialDenomInfo}
-                    resultingDenom={resultingDenomInfo}
-                  />
-                </Collapse>
-                <ExecutionInterval />
-                <BaseSwapAmount initialDenom={initialDenomInfo} initialDeposit={state.step1.initialDeposit} />
-                <SwapMultiplier
-                  initialDenom={initialDenomInfo}
-                  resultingDenom={resultingDenomInfo}
-                  transactionType={transactionType}
-                />
-                <Collapse in={values.advancedSettings}>
-                  <Box m="px">
-                    <Stack spacing={4}>
-                      <ApplyMultiplier transactionType={transactionType} />
-                      <BasePrice
-                        initialDenom={initialDenomInfo}
-                        resultingDenom={resultingDenomInfo}
-                        transactionType={transactionType}
-                      />
-                      <PriceThreshold
-                        initialDenom={initialDenomInfo}
-                        resultingDenom={resultingDenomInfo}
-                        transactionType={transactionType}
-                      />
-                      <SlippageTolerance />
-                    </Stack>
-                  </Box>
-                </Collapse>
-                <Submit>Next</Submit>
-              </Stack>
-            </Form>
-          </NewStrategyModalBody>
-        </NewStrategyModal>
-      )}
-    </Formik>
-  );
-}
+import { ModalWrapper } from '@components/ModalWrapper';
+import { WeightedScaleCustomisePage } from '@components/Forms/CustomiseForm/WeightedScaleCustomisePage';
 
 function Page() {
+  const { resetForm } = useFormStore();
+
   return (
-    <WeightedScaleCustomisePage
-      formName={FormNames.WeightedScaleIn}
-      steps={weightedScaleInSteps}
-      strategyType={StrategyTypes.WeightedScaleIn}
-      transactionType={TransactionType.Buy}
-      formSchema={WeightedScaleCustomiseFormSchema}
-    />
+    <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
+      <WeightedScaleCustomisePage
+        formName={FormNames.WeightedScaleIn}
+        steps={weightedScaleInSteps}
+        strategyType={StrategyTypes.WeightedScaleIn}
+        transactionType={TransactionType.Buy}
+        formSchema={WeightedScaleCustomiseFormSchema}
+      />
+    </ModalWrapper>
   );
 }
 

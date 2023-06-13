@@ -1,7 +1,5 @@
 import getDenomInfo from '@utils/getDenomInfo';
-import SendToWalletValues from 'src/models/SendToWalletValues';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
-import { StartImmediatelyValues } from 'src/models/StartImmediatelyValues';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
@@ -25,7 +23,7 @@ export const initialValues = {
   initialDenom: '',
   initialDeposit: null,
   advancedSettings: false,
-  startImmediately: StartImmediatelyValues.Yes,
+  startImmediately: YesNoValues.Yes,
   triggerType: TriggerTypes.Date,
   startDate: null,
   purchaseTime: '',
@@ -37,7 +35,7 @@ export const initialValues = {
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
-  sendToWallet: SendToWalletValues.Yes,
+  sendToWallet: YesNoValues.Yes,
   recipientAccount: '',
   autoStakeValidator: '',
   strategyDuration: 60,
@@ -75,12 +73,12 @@ export const allSchema = {
       },
     }),
   advancedSettings: Yup.boolean(),
-  startImmediately: Yup.mixed<StartImmediatelyValues>().oneOf(Object.values(StartImmediatelyValues)).required(),
+  startImmediately: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
   triggerType: Yup.mixed<TriggerTypes>()
     .oneOf(Object.values(TriggerTypes))
     .required()
     .when('startImmediately', {
-      is: StartImmediatelyValues.Yes,
+      is: YesNoValues.Yes,
       then: (schema) => schema.transform(() => TriggerTypes.Date),
     }),
   startDate: Yup.mixed()
@@ -92,7 +90,7 @@ export const allSchema = {
       advancedSettings,
       schema,
     ) => {
-      if (triggerType === TriggerTypes.Date && startImmediately === StartImmediatelyValues.No) {
+      if (triggerType === TriggerTypes.Date && startImmediately === YesNoValues.No) {
         const minDate = advancedSettings ? new Date(new Date().setDate(new Date().getDate() - 1)) : new Date();
         return Yup.date()
           .label('Start Date')
@@ -108,8 +106,8 @@ export const allSchema = {
     .positive()
     .nullable()
     .when(['startImmediately', 'triggerType'], {
-      is: (startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
-        triggerType === TriggerTypes.Price && startImmediately === StartImmediatelyValues.No,
+      is: (startImmediately: YesNoValues, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Price && startImmediately === YesNoValues.No,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
@@ -120,10 +118,8 @@ export const allSchema = {
       message: ({ label }) => `${label} must be in the format HH:MM (24 hour time)`,
     })
     .when(['advancedSettings', 'startImmediately', 'triggerType'], {
-      is: (advancedSettings: boolean, startImmediately: StartImmediatelyValues, triggerType: TriggerTypes) =>
-        triggerType === TriggerTypes.Date &&
-        advancedSettings === true &&
-        startImmediately === StartImmediatelyValues.No,
+      is: (advancedSettings: boolean, startImmediately: YesNoValues, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Date && advancedSettings === true && startImmediately === YesNoValues.No,
       then: Yup.string().required(),
       otherwise: (schema) => schema.transform(() => ''),
     })
@@ -257,19 +253,19 @@ export const allSchema = {
       },
     }),
   postPurchaseOption: Yup.mixed<PostPurchaseOptions>(),
-  sendToWallet: Yup.mixed<SendToWalletValues>()
-    .oneOf(Object.values(SendToWalletValues))
+  sendToWallet: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
     .required()
     .when('postPurchaseOption', {
       is: PostPurchaseOptions.SendToWallet,
       then: (schema) => schema,
-      otherwise: (schema) => schema.transform(() => SendToWalletValues.Yes),
+      otherwise: (schema) => schema.transform(() => YesNoValues.Yes),
     }),
   recipientAccount: Yup.string()
     .label('Recipient Account')
     .nullable()
     .when('sendToWallet', {
-      is: SendToWalletValues.No,
+      is: YesNoValues.No,
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => ''),
     })

@@ -1,17 +1,17 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import { useField } from 'formik';
-import SendToWalletValues from '@models/SendToWalletValues';
+import YesNoValues from '@models/YesNoValues';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 
 // TODO: fix massive hack and actually set default vaule differently (use different schema)
-const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
+const sendToWalletData: { value: YesNoValues; label: string }[] = [
   {
-    value: SendToWalletValues.No,
+    value: YesNoValues.No,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.Yes,
+    value: YesNoValues.Yes,
     label: 'No',
   },
 ];

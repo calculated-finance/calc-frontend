@@ -22,7 +22,6 @@ function Success() {
       <NewStrategyModal>
         <NewStrategyModalHeader
           showStepper={false}
-          finalStep={false}
           stepsConfig={topUpSteps}
           cancelUrl={generateStrategyDetailUrl(query?.id)}
         />
@@ -39,7 +38,6 @@ function Success() {
     <NewStrategyModal>
       <NewStrategyModalHeader
         showStepper={false}
-        finalStep={false}
         stepsConfig={topUpSteps}
         cancelUrl={generateStrategyDetailUrl(query?.id)}
       />

@@ -22,7 +22,7 @@ import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import getDenomInfo from '@utils/getDenomInfo';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 
 function Page() {
   const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);
@@ -46,7 +46,7 @@ function Page() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaPlusOutSteps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction} />;
   }
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
@@ -66,27 +66,31 @@ function Page() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting, values }) => (
-        <ModalWrapper
-          stepsConfig={dcaPlusOutSteps}
-          isLoading={isLoading || (isPageLoading && !isSubmitting)}
-          reset={actions.resetAction}
-        >
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={6}>
-              <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              <Submit>Next</Submit>
-            </Stack>
-          </Form>
-        </ModalWrapper>
+      {({ values }) => (
+        <Form autoComplete="off">
+          <Stack direction="column" spacing={6}>
+            <DCAOutInitialDenom denoms={denoms} />
+            <DCAOutResultingDenom
+              denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+            />
+            <Submit>Next</Submit>
+          </Stack>
+        </Form>
       )}
     </Formik>
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

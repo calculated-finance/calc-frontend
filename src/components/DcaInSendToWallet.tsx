@@ -3,15 +3,15 @@ import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
 import RadioCard from '@components/RadioCard';
 import Radio from '@components/Radio';
-import SendToWalletValues from '@models/SendToWalletValues';
+import YesNoValues from '@models/YesNoValues';
 
-const sendToWalletData: { value: SendToWalletValues; label: string }[] = [
+const sendToWalletData: { value: YesNoValues; label: string }[] = [
   {
-    value: SendToWalletValues.Yes,
+    value: YesNoValues.Yes,
     label: 'Yes',
   },
   {
-    value: SendToWalletValues.No,
+    value: YesNoValues.No,
     label: 'No',
   },
 ];

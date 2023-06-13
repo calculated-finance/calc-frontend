@@ -53,6 +53,22 @@ export default function NewStrategyModal({ children }: ChildrenProp) {
   );
 }
 
+export function SigningState({ isSigning, children }: { isSigning?: boolean } & ChildrenProp) {
+  return (
+    <Box position="relative">
+      {isSigning && (
+        <Center position="absolute" w="full" h="full">
+          <Stack spacing={6}>
+            <Lottie animationData={broadcast} loop />
+            <Heading size="xs">Review and approve the transaction.</Heading>
+          </Stack>
+        </Center>
+      )}
+      <Box visibility={isSigning ? 'hidden' : 'visible'}>{children}</Box>
+    </Box>
+  );
+}
+
 export function NewStrategyModalBody({
   children,
   isLoading,
@@ -116,18 +132,16 @@ export function NewStrategyModalBody({
 export function NewStrategyModalHeader({
   resetForm,
   cancelUrl,
-  finalStep = true,
   stepsConfig,
   showStepper = true,
 }: {
   cancelUrl: UrlObject | Url | string;
   resetForm?: () => void;
-  finalStep?: boolean;
   stepsConfig: StepConfig[];
   showStepper?: boolean;
 }) {
   const router = useRouter();
-  const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
+  const { currentStep, hasPreviousStep, previousStep, hasNextStep } = useSteps(stepsConfig);
   const { connected } = useWallet();
 
   const handleCancel = async () => {
@@ -148,7 +162,7 @@ export function NewStrategyModalHeader({
       data-testid="strategy-modal-header"
     >
       <Stack direction="row" spacing={3} alignItems="center">
-        {hasPreviousStep && finalStep && (
+        {hasPreviousStep && (
           <IconButton
             variant="ghost"
             colorScheme="blue"
@@ -161,7 +175,7 @@ export function NewStrategyModalHeader({
       </Stack>
       <Spacer />
       {showStepper && <Stepper steps={stepsConfig} />}
-      {finalStep && (
+      {hasNextStep && (
         <Box position="relative">
           <Button
             position="absolute"

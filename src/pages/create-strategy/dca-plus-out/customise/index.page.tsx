@@ -1,7 +1,5 @@
 import { Box, Collapse, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
-import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -16,14 +14,14 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusOut);
   const steps = dcaPlusOutSteps;
 
-  const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
     strategyType: StrategyTypes.DCAPlusOut,
@@ -39,14 +37,7 @@ function Page() {
   const resultingDenom = useDenom(state?.step1.resultingDenom);
 
   if (!state) {
-    return (
-      <NewStrategyModal>
-        <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-        <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
-          <InvalidData onRestart={handleRestart} />
-        </NewStrategyModalBody>
-      </NewStrategyModal>
-    );
+    return <InvalidData onRestart={handleRestart} />;
   }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
@@ -64,34 +55,39 @@ function Page() {
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      {({ isSubmitting, values }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            <Form autoComplete="off">
-              <Stack direction="column" spacing={4}>
-                <DcaDiagram
-                  initialDenom={initialDenom}
-                  resultingDenom={resultingDenom}
-                  initialDeposit={state.step1.initialDeposit}
-                />
-                <AdvancedSettingsSwitch />
-                <StrategyDuration />
-                <Collapse in={values.advancedSettings}>
-                  <Box m="px">
-                    <SlippageTolerance />
-                  </Box>
-                </Collapse>
-                <Submit>Next</Submit>
-              </Stack>
-            </Form>
-          </NewStrategyModalBody>
-        </NewStrategyModal>
+      {({ values }) => (
+        <Form autoComplete="off">
+          <Stack direction="column" spacing={4}>
+            <DcaDiagram
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
+              initialDeposit={state.step1.initialDeposit}
+            />
+            <AdvancedSettingsSwitch />
+            <StrategyDuration />
+            <Collapse in={values.advancedSettings}>
+              <Box m="px">
+                <SlippageTolerance />
+              </Box>
+            </Collapse>
+            <Submit>Next</Submit>
+          </Stack>
+        </Form>
       )}
     </Formik>
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

@@ -1,21 +1,19 @@
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataPostPurchase, postPurchaseValidationSchema } from 'src/models/DcaInFormData';
 import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
-import { FormNames } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
+import { ModalWrapper } from '@components/ModalWrapper';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
   const { nextStep, goToStep } = useSteps(steps);
-  const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
@@ -32,22 +30,25 @@ function Page() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting }) => (
-        <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={steps} resetForm={actions.resetAction} cancelUrl="/create-strategy" />
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            {state && context ? (
-              <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
-            ) : (
-              <InvalidData onRestart={handleRestart} />
-            )}
-          </NewStrategyModalBody>
-        </NewStrategyModal>
+      {state && context ? (
+        <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
+      ) : (
+        <InvalidData onRestart={handleRestart} />
       )}
     </Formik>
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  const { resetForm } = useFormStore();
 
-export default Page;
+  return (
+    <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+      <Page />
+    </ModalWrapper>
+  );
+}
+
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

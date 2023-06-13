@@ -21,7 +21,6 @@ function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(steps);
 
@@ -39,7 +38,7 @@ function DcaIn() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={steps} isLoading reset={actions.resetAction} />;
+    return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
   }
 
   const { quote_denom, base_denom } =
@@ -54,12 +53,8 @@ function DcaIn() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting, values }) => (
-        <ModalWrapper
-          isLoading={isLoading || (isPageLoading && !isSubmitting)}
-          reset={actions.resetAction}
-          stepsConfig={steps}
-        >
+      {({ values }) => (
+        <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />

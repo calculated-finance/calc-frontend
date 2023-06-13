@@ -18,7 +18,7 @@ import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
 import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@hooks/useStrategies';
-import { Pages } from '@components/Sidebar/Pages';
+import { Pages } from '@components/Layout/Sidebar/Pages';
 import Link from 'next/link';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { DenomInfo } from '@utils/DenomInfo';

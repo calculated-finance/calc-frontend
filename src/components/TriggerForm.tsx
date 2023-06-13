@@ -1,10 +1,10 @@
 import { Box } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
-import { StartImmediatelyValues } from '@models/StartImmediatelyValues';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
+import YesNoValues from '@models/YesNoValues';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
@@ -25,7 +25,7 @@ export function TriggerForm({
   return (
     <Box>
       <StartImmediately />
-      <CollapseWithRender isOpen={startImmediately === StartImmediatelyValues.No}>
+      <CollapseWithRender isOpen={startImmediately === YesNoValues.No}>
         <CollapseWithRender isOpen={triggerType === 'date'}>
           <StartDate />
           <CollapseWithRender isOpen={advancedSettings}>
