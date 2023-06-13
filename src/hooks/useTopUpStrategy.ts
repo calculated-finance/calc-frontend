@@ -49,7 +49,7 @@ const useTopUpStrategy = () => {
         },
       } as ExecuteMsg;
 
-      const funds = [{ denom: initialDenom.id, amount: deconversion(values.topUpAmount).toString() }];
+      const funds = [{ denom: initialDenom.id, amount: BigInt(deconversion(values.topUpAmount)).toString() }];
 
       const result = client.execute(address, getChainContractAddress(chain!), msg, 'auto', undefined, funds);
       return result;

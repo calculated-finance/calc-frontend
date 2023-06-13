@@ -54,9 +54,9 @@ function getReceiveAmount(
   }
 
   if (transactionType === TransactionType.Buy) {
-    return deconversion(Number((swapAmount / price).toFixed(significantFigures))).toString();
+    return BigInt(deconversion(Number((swapAmount / price).toFixed(significantFigures)))).toString();
   }
-  return deconversion(swapAmount * price).toString();
+  return BigInt(deconversion(swapAmount * price)).toString();
 }
 
 function getOsmosisReceiveAmount(
@@ -185,13 +185,13 @@ function getBaseReceiveAmount(
 function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
   const { deconversion } = initialDenom;
 
-  return deconversion(swapAmount).toString();
+  return BigInt(deconversion(swapAmount)).toString();
 }
 
 function calculateSwapAmountFromDuration(initialDenom: DenomInfo, strategyDuration: number, initialDeposit: number) {
   const { deconversion } = initialDenom;
 
-  return deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration));
+  return BigInt(deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration)));
 }
 
 export function getExecutionInterval(
@@ -221,6 +221,7 @@ export function buildCreateVaultParamsDCA(
 
   const initialDenomInfo = getDenomInfo(state.initialDenom);
   const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+
   const msg = {
     create_vault: {
       label: '',
