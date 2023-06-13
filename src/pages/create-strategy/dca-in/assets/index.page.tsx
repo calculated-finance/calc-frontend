@@ -21,7 +21,6 @@ function DcaIn() {
   const { actions, state } = useDcaInForm(FormNames.DcaIn);
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(steps);
 
@@ -54,7 +53,7 @@ function DcaIn() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting, values }) => (
+      {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

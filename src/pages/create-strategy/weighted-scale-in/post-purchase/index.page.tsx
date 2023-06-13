@@ -46,7 +46,7 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.DcaIn)}>
+    <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
       <Page />
     </ModalWrapper>
   );

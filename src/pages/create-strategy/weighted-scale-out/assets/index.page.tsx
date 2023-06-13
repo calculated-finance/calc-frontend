@@ -63,7 +63,7 @@ function Page() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting, values }) => (
+      {({ values }) => (
         <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={actions.resetAction}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

@@ -55,7 +55,7 @@ function DcaIn() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ isSubmitting, values }) => (
+      {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={dcaPlusInSteps}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
