@@ -1,4 +1,4 @@
-import { PlusSquareIcon } from '@chakra-ui/icons';
+import { EditIcon, PlusSquareIcon } from '@chakra-ui/icons';
 import {
   Heading,
   Grid,
@@ -54,9 +54,7 @@ import { isNil } from 'lodash';
 import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
-import { useAdmin } from '@hooks/useAdmin';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
-import useWhitelist from '@hooks/useWhitelist';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -166,7 +164,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   size="xs"
                   variant="ghost"
                   colorScheme="brand"
-                  leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                  leftIcon={<CalcIcon as={EditIcon} stroke="brand.200" width={4} height={4} />}
                 >
                   Edit
                 </Button>
