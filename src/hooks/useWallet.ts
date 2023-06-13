@@ -1,7 +1,3 @@
-import { useStation } from '@hooks/useStation';
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { EncodeObject } from '@cosmjs/proto-signing';
-import { StdFee } from '@cosmjs/stargate';
 import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
@@ -35,12 +31,12 @@ export function useWallet() {
     disconnect: state.disconnect,
   }));
 
-  const stationWallet = useStation((state) => ({
-    account: state.account,
-    disconnect: state.disconnect,
-    signAndBroadcast: state.signAndBroadcast,
-    isConnecting: state.isConnecting,
-  }));
+  // const stationWallet = useStation((state) => ({
+  //   account: state.account,
+  //   disconnect: state.disconnect,
+  //   signAndBroadcast: state.signAndBroadcast,
+  //   isConnecting: state.isConnecting,
+  // }));
 
   if (keplrWallet.account) {
     return {
@@ -73,24 +69,24 @@ export function useWallet() {
       isConnecting: false,
     };
   }
-  if (stationWallet?.account) {
-    return {
-      address: stationWallet.account?.address,
-      connected: true,
-      disconnect: stationWallet.disconnect,
-      signingClient: {
-        signAndBroadcast: (
-          senderAddress: string,
-          msgs: EncodeObject[],
-          fee: number | StdFee | 'auto',
-          memo?: string | undefined,
-        ) => stationWallet.signAndBroadcast(msgs),
-      } as SigningCosmWasmClient,
-      walletType: WalletTypes.STATION,
-      isConnecting: false,
-    };
-  }
+  // if (stationWallet?.account) {
+  //   return {
+  //     address: stationWallet.account?.address,
+  //     connected: true,
+  //     disconnect: stationWallet.disconnect,
+  //     signingClient: {
+  //       signAndBroadcast: (
+  //         senderAddress: string,
+  //         msgs: EncodeObject[],
+  //         fee: number | StdFee | 'auto',
+  //         memo?: string | undefined,
+  //       ) => stationWallet.signAndBroadcast(msgs),
+  //     } as SigningCosmWasmClient,
+  //     walletType: WalletTypes.STATION,
+  //     isConnecting: false,
+  //   };
+  // }
   return {
-    isConnecting: keplrWallet.isConnecting || stationWallet?.isConnecting || leapWallet?.isConnecting,
+    isConnecting: keplrWallet.isConnecting || leapWallet?.isConnecting || XDEFIWallet?.isConnecting,
   };
 }

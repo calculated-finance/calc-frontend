@@ -5,12 +5,11 @@ import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
 import { featureFlags } from 'src/constants';
 import { useKujira } from '@hooks/useKujira';
-import { useStation } from '@hooks/useStation';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
@@ -69,7 +68,7 @@ function LoadingWrapper({ children }: { children: ReactNode }) {
 function InitWrapper({ children }: { children: ReactNode }) {
   const { chain } = useChain();
 
-  const initStation = useStation((state) => state.init);
+  // const initStation = useStation((state) => state.init);
 
   const initKujira = useKujira((state) => state.init);
   const initOsmosis = useOsmosis((state) => state.init);
@@ -83,13 +82,13 @@ function InitWrapper({ children }: { children: ReactNode }) {
     initAmplitude();
   }, []);
 
-  useEffect(() => {
-    if (featureFlags.stationEnabled) {
-      if (chain) {
-        initStation();
-      }
-    }
-  }, [initStation, chain]);
+  // useEffect(() => {
+  //   if (featureFlags.stationEnabled) {
+  //     if (chain) {
+  //       initStation();
+  //     }
+  //   }
+  // }, [initStation, chain]);
 
   useEffect(() => {
     if (chain) {
