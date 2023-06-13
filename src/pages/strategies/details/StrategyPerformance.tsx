@@ -19,7 +19,10 @@ import {
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
+import { getStrategyReinvestStrategyId } from '@helpers/destinations';
+import useStrategy from '@hooks/useStrategy';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
+import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -31,6 +34,9 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
 
+  const id = getStrategyReinvestStrategyId(strategy);
+  const { data } = useStrategy(id);
+  const linkedToStrategy = data?.vault;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
@@ -45,14 +51,12 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   }
 
   const priceChange = isBuyStrategy(strategy) ? resultingPriceChange24Hr : initialPriceChange24Hr;
-
   const { color, percentageChange, profit, marketValueInFiat } = getPerformanceStatistics(
     strategy,
     initialDenomPrice,
     resultingDenomPrice,
     dexFee,
   );
-
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1}>
@@ -169,6 +173,20 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
               {percentageChange}
             </Text>
           </GridItem>
+        </>
+      )}
+
+      {linkedToStrategy && (
+        <>
+          <GridItem colSpan={2}>
+            <Divider />
+          </GridItem>
+          <LinkedStrategyDetails
+            originalStrategy={strategy}
+            marketValueInFiat={marketValueInFiat}
+            linkedToStrategy={linkedToStrategy}
+            resultingDenomPrice={resultingDenomPrice}
+          />
         </>
       )}
     </Grid>
