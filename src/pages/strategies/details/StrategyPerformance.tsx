@@ -186,7 +186,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
             originalStrategy={strategy}
             marketValueInFiat={marketValueInFiat}
             linkedToStrategy={linkedToStrategy}
-            resultingDenomPrice={resultingDenomPrice}
+            initialDenomPrice={initialDenomPrice}
           />
         </>
       )}

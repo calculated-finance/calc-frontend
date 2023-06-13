@@ -42,18 +42,18 @@ export function LinkedStrategyDetails({
   originalStrategy,
   marketValueInFiat,
   linkedToStrategy,
-  resultingDenomPrice,
+  initialDenomPrice,
 }: {
   originalStrategy: Strategy;
   marketValueInFiat: number;
   linkedToStrategy: Strategy;
-  resultingDenomPrice: number;
+  initialDenomPrice: number;
 }) {
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
-  const resultingDenomPriceNum = Number(resultingDenomPrice);
-  const linkedMarketValueInFiat = Number((getTotalReceived(curStrategy) * resultingDenomPriceNum).toFixed(2));
+  const initialDenomPriceNum = Number(initialDenomPrice);
+  const linkedMarketValueInFiat = Number((getTotalReceived(curStrategy) * initialDenomPriceNum).toFixed(2));
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
