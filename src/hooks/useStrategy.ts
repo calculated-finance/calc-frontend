@@ -21,7 +21,10 @@ export default function useStrategy(id?: Strategy['id']) {
       if (!client) {
         throw new Error('No client');
       }
-      const result = await client.queryContractSmart(getChainContractAddress(chain!), {
+      if (!chain) {
+        throw new Error('No chain');
+      }
+      const result = await client.queryContractSmart(getChainContractAddress(chain), {
         get_vault: {
           vault_id: id,
         },

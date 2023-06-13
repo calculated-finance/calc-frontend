@@ -20,7 +20,7 @@ export function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse | undefi
 
 export function executeCreateVault(
   client: SigningCosmWasmClient,
-  senderAddress: any,
+  senderAddress: string,
   msgs: EncodeObject[],
 ): Promise<string | undefined> {
   return signAndBroadcast(client, senderAddress, msgs)

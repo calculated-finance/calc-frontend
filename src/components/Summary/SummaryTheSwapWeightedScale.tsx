@@ -1,6 +1,5 @@
 import { Box, Code, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useChain } from '@hooks/useChain';

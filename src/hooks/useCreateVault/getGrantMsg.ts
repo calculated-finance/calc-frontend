@@ -3,7 +3,6 @@ import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Chains } from '@hooks/useChain/Chains';
 import { getChainStakingRouterContractAddress } from '@helpers/chains';
-import { Version } from '@hooks/Version';
 
 export function getGrantMsg(senderAddress: string, chain: Chains): { typeUrl: string; value: MsgGrant } {
   // https://github.com/confio/cosmjs-types/blob/cae4762f5856efcb32f49ac26b8fdae799a3727a/src/cosmos/staking/v1beta1/authz.ts

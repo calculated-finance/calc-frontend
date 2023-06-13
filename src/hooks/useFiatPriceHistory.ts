@@ -1,5 +1,3 @@
-import { Denom } from '@models/Denom';
-import getDenomInfo from '@utils/getDenomInfo';
 import 'isomorphic-fetch';
 import * as Sentry from '@sentry/react';
 import { COINGECKO_ENDPOINT } from 'src/constants';

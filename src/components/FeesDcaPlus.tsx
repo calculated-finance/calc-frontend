@@ -21,14 +21,11 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
-import getDenomInfo from '@utils/getDenomInfo';
 import { ChevronDownIcon, ChevronUpIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
-import { FormNames } from '@hooks/useFormStore';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';

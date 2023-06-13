@@ -1,4 +1,4 @@
-import { convertDenomFromCoin, getDenomMinimumSwapAmount } from '@utils/getDenomInfo';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import { Strategy } from '@hooks/useStrategies';
 import totalExecutions from '@utils/totalExecutions';
 

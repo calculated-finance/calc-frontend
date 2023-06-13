@@ -7,7 +7,6 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import Link from 'next/link';
 import { isStrategyOperating } from '@helpers/strategy';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 

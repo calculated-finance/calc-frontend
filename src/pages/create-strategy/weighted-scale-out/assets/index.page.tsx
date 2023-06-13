@@ -4,12 +4,9 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, {
   getResultingDenoms,
-  isSupportedDenomForWeightedScale,
   orderAlphabetically,
   uniqueBaseDenoms,
-  uniqueBaseDenomsFromQuoteDenom,
   uniqueQuoteDenoms,
-  uniqueQuoteDenomsFromBaseDenom,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -22,10 +19,8 @@ import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { Pair } from '@models/Pair';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
 
 function Page() {
@@ -53,9 +48,7 @@ function Page() {
     return <ModalWrapper stepsConfig={weightedScaleOutSteps} isLoading reset={actions.resetAction} />;
   }
   const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
-      .map((denom) => getDenomInfo(denom))
-      .filter(isSupportedDenomForWeightedScale),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
   );
 
   const { quote_denom, base_denom } =

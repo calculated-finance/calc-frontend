@@ -2,12 +2,7 @@ import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
-import usePairs, {
-  getResultingDenoms,
-  orderAlphabetically,
-  uniqueBaseDenomsFromQuoteDenom,
-  uniqueQuoteDenomsFromBaseDenom,
-} from '@hooks/usePairs';
+import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
@@ -20,8 +15,6 @@ import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
-import { Pair } from '@models/Pair';
-import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
 
 function DcaIn() {

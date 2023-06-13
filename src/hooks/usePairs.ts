@@ -16,9 +16,6 @@ const hiddenPairs = [
 export function isSupportedDenomForDcaPlus(denom: DenomInfo) {
   return denom.enabledInDcaPlus && isDenomVolatile(denom);
 }
-export function isSupportedDenomForWeightedScale(denom: DenomInfo) {
-  return true;
-}
 
 export function orderAlphabetically(denoms: DenomInfo[]) {
   return denoms.sort((a, b) => {

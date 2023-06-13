@@ -26,8 +26,6 @@ import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { useAnalytics } from '@hooks/useAnalytics';
-import { useEffect } from 'react';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
@@ -251,12 +249,6 @@ function Home() {
 
   const { data } = useStrategies();
   const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
-
-  const { track } = useAnalytics();
-
-  useEffect(() => {
-    track('Home page viewed');
-  }, []);
 
   return (
     <>

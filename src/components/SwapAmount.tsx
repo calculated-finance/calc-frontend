@@ -1,5 +1,4 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import { DcaInFormDataStep1 } from '@models/DcaInFormData';

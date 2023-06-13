@@ -1,23 +1,10 @@
-import {
-  Box,
-  Collapse,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  HStack,
-  Image,
-  Stack,
-  Text,
-  useRadioGroup,
-} from '@chakra-ui/react';
+import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
-import getDenomInfo from '@utils/getDenomInfo';
 import RecipientAccount from '@components/RecipientAccount';
 import SendToWalletValues from '@models/SendToWalletValues';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
-import { Denom } from '@models/Denom';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';

@@ -11,7 +11,6 @@ import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
 
 function Page() {

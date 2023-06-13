@@ -2,7 +2,6 @@ import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } 
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
-import { Denom } from '@models/Denom';
 import { DenomInfo } from '@utils/DenomInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';

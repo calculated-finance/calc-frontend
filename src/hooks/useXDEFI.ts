@@ -64,7 +64,6 @@ export const useXDEFI = create<IWallet>()(
           get().disconnect();
         }
         const chainId = getChainId(chain);
-        const chainInfo = getChainInfo(chain);
         try {
           const { keplr } = window.xfi!;
 
