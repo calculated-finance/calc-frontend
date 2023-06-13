@@ -61,12 +61,14 @@ export const featureFlags =
         leapEnabled: false,
         XDEFIEnabled: true,
         dcaPlusEnabled: true,
+        reinvestVisualsEnabled: false,
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
       }
     : {
         extraTimeOptions: true,
+        reinvestVisualsEnabled: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
         leapEnabled: false,
