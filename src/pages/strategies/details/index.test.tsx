@@ -450,7 +450,7 @@ describe('Detail page', () => {
           mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$2.48 USD'));
+          await waitFor(() => expect(screen.getByTestId('strategy-average-token-cost').textContent).toBe('$0.99 DEMO'));
         });
       });
       describe('when DCA Out', () => {

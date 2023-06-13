@@ -1,6 +1,6 @@
 import { isNaN } from 'lodash';
 
-export function formatFiat(value: number | undefined) {
+export function formatFiat(value: number | undefined, ticker?: string) {
   if (value === undefined) {
     return '';
   }
@@ -10,5 +10,5 @@ export function formatFiat(value: number | undefined) {
     minimumFractionDigits: 2,
     maximumFractionDigits: roundedValue < 0.1 ? 4 : 2,
     currency: 'USD',
-  }).format(!isNaN(value) ? value : 0)} USD`;
+  }).format(!isNaN(value) ? value : 0)} ${ticker || 'USD'}`;
 }
