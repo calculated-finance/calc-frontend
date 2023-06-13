@@ -133,14 +133,14 @@ function StrategyComparisonDetails({
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span">
           {isBuyStrategy(strategy)
-            ? formatFiat(getAveragePurchasePrice(strategy, dexFee) * initialDenomPrice)
+            ? formatFiat(getAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
             : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
           {isBuyStrategy(strategy)
-            ? formatFiat(getStandardDcaAveragePurchasePrice(strategy, dexFee) * initialDenomPrice)
+            ? formatFiat(getStandardDcaAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
             : formatFiat(getStandardDcaAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
