@@ -59,7 +59,7 @@ export const featureFlags =
         squidIntegrationEnabled: true,
         stationEnabled: false,
         leapEnabled: false,
-        XDEFIEnabled: false,
+        XDEFIEnabled: true,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
