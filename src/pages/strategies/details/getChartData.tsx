@@ -39,8 +39,12 @@ function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
     const { data } = event;
 
     if ('dca_vault_execution_completed' in data) {
-      const { received, fee } = data.dca_vault_execution_completed;
+      const { received, fee, sent } = data.dca_vault_execution_completed;
       const { conversion, name } = getDenomInfo(received.denom);
+
+      console.log(sent);
+      // const {  } = getDenomInfo(sent.amount);
+      // naming to update
 
       const amount = conversion(Number(received.amount) - Number(fee.amount));
       totalAmount += Number(amount);
