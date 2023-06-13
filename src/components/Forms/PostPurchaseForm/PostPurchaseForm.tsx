@@ -10,12 +10,12 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
+import YesNoValues from '@models/YesNoValues';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
 import GenerateYield from '../../GenerateYield';
 import { Reinvest } from '../../Reinvest';
-import YesNoValues from '@models/YesNoValues';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });

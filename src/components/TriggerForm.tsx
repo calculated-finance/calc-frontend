@@ -4,11 +4,11 @@ import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
+import YesNoValues from '@models/YesNoValues';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
 import { CollapseWithRender } from './CollapseWithRender';
-import YesNoValues from '@models/YesNoValues';
 
 export function TriggerForm({
   transactionType,
