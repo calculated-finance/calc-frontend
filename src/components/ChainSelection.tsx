@@ -69,6 +69,11 @@ const chainSelectionAllowedUrls = [
   '/experimental-features',
 ];
 
+const imageMap = {
+  [Chains.Osmosis]: '/images/denoms/osmo.svg',
+  [Chains.Kujira]: '/images/denoms/kuji.svg',
+  [Chains.Moonbeam]: '/images/moonbeam.png',
+};
 export function ChainSelection() {
   const { isOpen, onClose } = useDisclosure();
 
@@ -88,11 +93,7 @@ export function ChainSelection() {
           rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}
           isDisabled={!isChainSelectionAllowed}
         >
-          {chain === Chains.Osmosis ? (
-            <Image src="/images/denoms/osmo.svg" w={5} />
-          ) : (
-            <Image src="/images/denoms/kuji.svg" w={5} />
-          )}
+          <Image src={imageMap[chain]} w={5} />
         </MenuButton>
       </Tooltip>
       <MenuList fontSize="sm">
@@ -109,19 +110,21 @@ export function ChainSelection() {
             <Text>Kujira</Text>
           </HStack>
         </MenuItemOption>
-        <MenuItemOption
-          _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === Chains.Osmosis}
-          onClick={() => {
-            setChain(Chains.Osmosis);
-            onClose();
-          }}
-        >
-          <HStack>
-            <Image src="/images/denoms/osmo.svg" w={5} />
-            <Text>Osmosis</Text>
-          </HStack>
-        </MenuItemOption>
+        {chain === Chains.Moonbeam && (
+          <MenuItemOption
+            _checked={{ bg: 'blue.500', color: 'navy' }}
+            isChecked={chain === Chains.Moonbeam}
+            onClick={() => {
+              setChain(Chains.Moonbeam);
+              onClose();
+            }}
+          >
+            <HStack>
+              <Image src="/images/metamask.png" w={5} />
+              <Text>Moonbeam</Text>
+            </HStack>
+          </MenuItemOption>
+        )}
       </MenuList>
     </Menu>
   );

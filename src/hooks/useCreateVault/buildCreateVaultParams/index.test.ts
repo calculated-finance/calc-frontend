@@ -1,6 +1,6 @@
 import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
-import { defaultDenom } from '@utils/getDenomInfo';
+import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import {
   getExecutionInterval,

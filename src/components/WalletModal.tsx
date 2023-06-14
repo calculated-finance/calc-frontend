@@ -23,6 +23,7 @@ import { useChain } from '@hooks/useChain';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
+import { useMetamask } from '@hooks/useMetamask';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -53,6 +54,11 @@ function WalletModal() {
     connect: state.connect,
   }));
 
+  const { isInstalled: isMetamaskInstalled, connect: connectMetamask } = useMetamask((state) => ({
+    isInstalled: state.isInstalled,
+    connect: state.connect,
+  }));
+
   const { chain } = useChain();
 
   const { isOpen, onToggle } = useDisclosure();
@@ -78,6 +84,11 @@ function WalletModal() {
 
   const handleXDEFIConnect = () => {
     connectXDEFI(chain);
+    handleClose();
+  };
+
+  const handleMetamaskConnect = () => {
+    connectMetamask();
     handleClose();
   };
 
@@ -133,6 +144,13 @@ function WalletModal() {
                     walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
+                <WalletListItem
+                  handleClick={handleMetamaskConnect}
+                  name="Metamask"
+                  icon="/images/metamask.png"
+                  isInstalled={isMetamaskInstalled}
+                  walletInstallLink="https://metamask.io/download/"
+                />
 
                 <Stack>
                   <Button

@@ -17,7 +17,6 @@ import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
-import { truncate } from '@components/truncate';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
@@ -33,6 +32,7 @@ import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { Chains } from '@hooks/useChain/Chains';
+import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();

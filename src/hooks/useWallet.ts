@@ -1,12 +1,14 @@
 import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
+import { useMetamask } from './useMetamask';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
   STATION = 'Station',
   LEAP = 'Leap',
   XDEFI = 'XDEFI',
+  METAMASK = 'Metamask',
 }
 
 export function useWallet() {
@@ -31,12 +33,29 @@ export function useWallet() {
     disconnect: state.disconnect,
   }));
 
+  const metamaskWallet = useMetamask((state) => ({
+    account: state.account,
+    controller: state.provider,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
+
   // const stationWallet = useStation((state) => ({
   //   account: state.account,
   //   disconnect: state.disconnect,
   //   signAndBroadcast: state.signAndBroadcast,
   //   isConnecting: state.isConnecting,
   // }));
+  if (metamaskWallet.account) {
+    return {
+      address: metamaskWallet.account?.address,
+      connected: true,
+      signingClient: metamaskWallet.controller,
+      disconnect: metamaskWallet.disconnect,
+      walletType: WalletTypes.METAMASK,
+      isConnecting: false,
+    };
+  }
 
   if (keplrWallet.account) {
     return {
@@ -87,6 +106,9 @@ export function useWallet() {
   //   };
   // }
   return {
-    isConnecting: keplrWallet.isConnecting || leapWallet?.isConnecting || XDEFIWallet?.isConnecting,
+    isConnecting: keplrWallet.isConnecting
+    || leapWallet?.isConnecting
+    || XDEFIWallet?.isConnecting
+    || metamaskWallet?.isConnecting,
   };
 }

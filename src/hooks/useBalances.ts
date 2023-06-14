@@ -16,6 +16,7 @@ const useBalances = () => {
 
   const supportedDenoms = useSupportedDenoms();
 
+
   const { data, ...other } = useQueryWithNotification(
     ['balances', address, chain],
     async () => {

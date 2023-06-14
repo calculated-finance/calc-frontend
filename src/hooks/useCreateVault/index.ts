@@ -3,10 +3,10 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import { EncodeObject } from '@cosmjs/proto-signing';
+import { Coin  } from 'cosmjs-types/cosmos/base/v1beta1/coin';
+import { EncodeObject   } from '@cosmjs/proto-signing';
 import { getFeeMessage } from '@helpers/getFeeMessage';
-import { Denom } from '@models/Denom';
+
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useChain } from '@hooks/useChain';
@@ -19,14 +19,22 @@ import { isNil } from 'lodash';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
+import { useMetamask } from '@hooks/useMetamask';
+import { ethers } from 'ethers';
+import { Chains } from '@hooks/useChain/Chains';
+import { Denom } from '@models/Denom';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
 import { getGrantMsg } from './getGrantMsg';
 import { getExecuteMsg } from './getCreateVaultExecuteMsg';
-import { buildCreateVaultParams } from './buildCreateVaultParams';
+import { buildCreateVaultParams, getExecutionInterval } from './buildCreateVaultParams';
 import { executeCreateVault } from './executeCreateVault';
 import { DcaFormState } from './DcaFormState';
+
+import factoryContractJson from './Factory.json'
+
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {
   const { deconversion } = getDenomInfo(initialDenom);
@@ -39,6 +47,128 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
     }),
   ];
   return fundsInCoin;
+}
+
+
+
+function useMoonbeamCreateVault(
+  state: DcaFormState | undefined
+) {
+
+  const { address } = useWallet();
+
+  const provider = useMetamask(metaMaskState => metaMaskState.provider)
+  const signer = useMetamask(metaMaskState => metaMaskState.signer)
+
+
+
+  // useEffect(() => {
+  //   if (factoryContract === null) {
+  //     return;
+  //   }
+
+  //   if (signer === null) {
+  //     return;
+  //   }
+
+  //   const getVaultsByAddress = async () => {
+  //     const address = await signer.getAddress();
+  //     const vaults = await factoryContract.getVaultsByAddress(address);
+  //     setVaults(vaults);
+  //   };
+
+  //   getVaultsByAddress();
+  // }, [factoryContract, signer]);
+
+
+
+  
+  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
+    async ({ price }) => {
+   
+    const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
+  
+      const contractWithSigner = factoryContract.connect(signer);
+
+      const preSwapAutomationType = 0
+			const swapAdjustmentType = 0
+
+			const postSwapAutomationParams = [
+				{
+					postSwapAutomationType: 0,
+					destination: '0x5c8B07ad20AB2FE6e92198a595a0aB6e0327c5f1',
+					basisPoints: 50,
+				},
+				// {
+				// 	postSwapAutomationType: 0,
+				// 	destination: destinationOne.address,
+				// 	basisPoints: 475,
+				// },
+				// {
+				// 	postSwapAutomationType: 0,
+				// 	destination: destinationTwo.address,
+				// 	basisPoints: 475,
+				// },
+			]
+
+			const triggerCreationConditionType = 0 // when vault has funds
+			const performSwapConditionType = 0 // when vault has funds
+			const finaliseVaultConditionType = 1 // when vault has no funds
+			const finaliserType = 0
+  
+  
+      const params = {
+        owner: address,
+        tokenIn: state?.initialDenom,
+        tokenOut: state?.resultingDenom,
+        swapAmount: ethers.parseEther(state?.initialDeposit.toString()),
+        timeInterval: getExecutionInterval(state?.executionInterval, state?.executionIntervalIncrement).custom.seconds.toString(),
+        targetTime: Math.floor(Date.now() / 1000) + 100,
+        swapAdjustmentType,
+				preSwapAutomationType,
+				postSwapAutomationParams,
+				finaliserType,
+				triggerCreationConditionType,
+				performSwapConditionType,
+				finaliseVaultConditionType,
+				simulation: false,
+				referenceVaultAddress: ethers.ZeroAddress
+      };
+
+
+
+      console.log('params', params);
+  
+      const tx = await contractWithSigner.createVault(
+        params
+      );
+
+      console.log('hi')
+  
+      console.log('tx', tx);
+  
+      const wait = await tx.wait();
+  
+      console.log('wait', wait);
+
+      // const data =
+      // '0x321695310000000000000000000000001af6fca482cd73c198b8c0f3c883be8d9bf5cf74000000000000000000000000a6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa0000000000000000000000009c3c9283d3e44854697cd22d3faa240cfb032889000000000000000000000000000000000000000000000000000009184e72a000000000000000000000000000000000000000000000000000000000000000003c0000000000000000000000000000000000000000000000000000000064361265';
+  
+  
+    // const contractInterface = new Interface(factoryContractJson);
+    // const parsed = contractInterface.parseTransaction({ data });
+    // console.log('parsed', parsed);
+
+    },
+    {
+      onError: (error) => {
+        if (error.message.includes('Request rejected')) {
+          return;
+        }
+        Sentry.captureException(error);
+      },
+    },
+  );
 }
 
 const useCreateVault = (
@@ -59,7 +189,11 @@ const useCreateVault = (
 
   const { track } = useAnalytics();
 
-  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
+ 
+
+  const evmCreate = useMoonbeamCreateVault(state);
+
+  const cosmosCreate = useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
     ({ price }) => {
       if (!state) {
         throw new Error('No state');
@@ -130,6 +264,8 @@ const useCreateVault = (
       },
     },
   );
+
+  return chain === Chains.Moonbeam ? evmCreate : cosmosCreate;
 };
 
 export const useCreateVaultDca = () => {

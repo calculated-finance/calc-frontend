@@ -14,6 +14,7 @@ import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
+import { useMetamask } from '@hooks/useMetamask';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { ChainWrapper } from './ChainWrapper';
@@ -41,6 +42,7 @@ function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
 
   const { chain } = useChain();
+
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
 }

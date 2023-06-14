@@ -1,4 +1,6 @@
-import getDenomInfo, { mainnetDenoms, testnetDenoms } from './getDenomInfo';
+import getDenomInfo from './getDenomInfo';
+import { testnetDenoms } from './testnetDenoms';
+import { mainnetDenoms } from './mainnetDenoms';
 import { isMainnet } from './isMainnet';
 
 // filter keys that arent enabled
