@@ -99,6 +99,5 @@ const addresses: Record<string, Record<string, string>> = {
   },
 };
 
-export const getPairAddress = (swapDenom: string, targetDenom: string): string | undefined => {
-  return addresses[isMainnet() ? 'kaiyo-1' : 'harpoon-4'][[swapDenom, targetDenom].sort().join('')];
-};
+export const getPairAddress = (swapDenom: string, targetDenom: string): string | undefined =>
+  addresses[isMainnet() ? 'kaiyo-1' : 'harpoon-4'][[swapDenom, targetDenom].sort().join('')];

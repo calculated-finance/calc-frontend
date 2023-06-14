@@ -1,11 +1,8 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import {
-  SigningState
-} from '@components/NewStrategyModal';
+import { SigningState } from '@components/NewStrategyModal';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
-import usePageLoad from '@hooks/usePageLoad';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
@@ -39,7 +36,7 @@ function Page() {
 
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus();
 
-  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
+  const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
       { price },
       {
@@ -107,11 +104,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaPlusIn,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaPlusIn,
+      }}
+    >
       <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
         <Page />
       </ModalWrapper>
@@ -122,5 +121,3 @@ function PageWrapper() {
 PageWrapper.getLayout = getFlowLayout;
 
 export default PageWrapper;
-
-

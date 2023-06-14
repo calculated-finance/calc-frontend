@@ -57,12 +57,10 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
 function StrategyComparisonDetails({
   strategy,
   strategyEvents,
-  initialDenomPrice,
   resultingDenomPrice,
 }: {
   strategy: Strategy;
   strategyEvents: StrategyEvent[];
-  initialDenomPrice: number;
   resultingDenomPrice: number;
 }) {
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -173,7 +171,6 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
               <StrategyComparisonDetails
                 strategy={strategy}
                 strategyEvents={events}
-                initialDenomPrice={initialDenomPrice}
                 resultingDenomPrice={resultingDenomPrice}
               />
               <StrategyComparisonCard strategy={strategy} />

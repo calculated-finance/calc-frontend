@@ -9,7 +9,6 @@ import usePairs, {
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -25,6 +24,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { getPairAddress } from 'src/fixtures/addresses';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -34,7 +34,6 @@ function Page() {
   const { nextStep } = useSteps(weightedScaleOutSteps);
 
   const { data } = useBalances();
-
 
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
@@ -52,12 +51,15 @@ function Page() {
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
   );
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
+  const pair = pairs.find((p) => {
+    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
+    return Boolean(pairAddress) && pairAddress === router.query.pair;
+  });
+
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : quote_denom,
+    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
+    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
   };
 
   return (
@@ -83,11 +85,13 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.WeightedScaleOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.WeightedScaleOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.WeightedScaleOut,
+      }}
+    >
       <Page />
     </StrategyInfoProvider>
   );

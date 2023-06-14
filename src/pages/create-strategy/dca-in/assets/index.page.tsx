@@ -42,8 +42,8 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
   }
 
-  const pair = pairs.find((pair) => {
-    const pairAddress = getPairAddress(pair.denoms[0], pair.denoms[1]);
+  const pair = pairs.find((p) => {
+    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
     return Boolean(pairAddress) && pairAddress === router.query.pair;
   });
 

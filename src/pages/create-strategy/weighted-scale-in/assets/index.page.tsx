@@ -4,7 +4,6 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -19,6 +18,7 @@ import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
@@ -29,7 +29,6 @@ function DcaIn() {
   const { nextStep } = useSteps(weightedScaleInSteps);
 
   const { data } = useBalances();
-
 
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
@@ -44,12 +43,15 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={weightedScaleInSteps} reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
+  const pair = pairs.find((p) => {
+    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
+    return Boolean(pairAddress) && pairAddress === router.query.pair;
+  });
+
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : base_denom,
+    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
+    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
   };
 
   return (
@@ -75,11 +77,13 @@ function DcaIn() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.WeightedScaleIn,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.WeightedScaleIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.WeightedScaleIn,
+      }}
+    >
       <DcaIn />
     </StrategyInfoProvider>
   );

@@ -139,9 +139,10 @@ function usePairsKujira() {
   const queryResult = useQuery<PairsResponse>(
     ['pairs-kujira', client],
     async () => {
-      return await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
+      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
         get_pairs: {},
       });
+      return result;
     },
     {
       enabled: !!client && chain === Chains.Kujira,

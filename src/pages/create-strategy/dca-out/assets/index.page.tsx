@@ -30,13 +30,10 @@ function Page() {
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(dcaOutSteps);
 
   const { data } = useBalances();
-
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
 
@@ -56,8 +53,8 @@ function Page() {
       .filter(isDenomVolatile),
   );
 
-  const pair = pairs.find((pair) => {
-    const pairAddress = getPairAddress(pair.denoms[0], pair.denoms[1]);
+  const pair = pairs.find((p) => {
+    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
     return Boolean(pairAddress) && pairAddress === router.query.pair;
   });
 

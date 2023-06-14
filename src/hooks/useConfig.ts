@@ -2,9 +2,9 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
+import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
-import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
 
 export function useConfig(): Config | undefined {
   const { address } = useWallet();

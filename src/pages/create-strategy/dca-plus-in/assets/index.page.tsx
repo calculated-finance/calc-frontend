@@ -4,7 +4,6 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, { getResultingDenoms, isSupportedDenomForDcaPlus } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -18,21 +17,18 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
-import dcaOutSteps from '@formConfig/dcaOut';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
   const { actions, state } = useDCAPlusAssetsForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(dcaPlusInSteps);
 
   const { data } = useBalances();
-
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances: data?.balances });
 
@@ -47,12 +43,15 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={dcaPlusInSteps} reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
+  const pair = pairs.find((p) => {
+    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
+    return Boolean(pairAddress) && pairAddress === router.query.pair;
+  });
+
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : base_denom,
+    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
+    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
   };
 
   return (
@@ -80,14 +79,15 @@ function DcaIn() {
   );
 }
 function PageWrapper() {
-
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaPlusIn,
-    }}>
-        <DcaIn />
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaPlusIn,
+      }}
+    >
+      <DcaIn />
     </StrategyInfoProvider>
   );
 }
@@ -95,4 +95,3 @@ function PageWrapper() {
 PageWrapper.getLayout = getFlowLayout;
 
 export default PageWrapper;
-
