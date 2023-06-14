@@ -15,7 +15,7 @@ import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory, { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
-import { getChartData, getChartDataSwaps } from './getChartData';
+import { findCurrentPriceInTime, getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 
@@ -37,16 +37,29 @@ function CustomLabel(props: VictoryTooltipProps) {
   );
 }
 
+type ExecutionSkippedReason = 'slippage_tolerance_exceeded' | 'swap_amount_adjusted_to_zero';
+
+function convertToSentence(reason: ExecutionSkippedReason) {
+  const sentenceMap = {
+    slippage_tolerance_exceeded: 'Slippage tolerance exceeded',
+    swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
+  };
+
+  return sentenceMap[reason] || 'Unknown reason.';
+}
+
 // may not need.
-function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[]) {
+function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[] | undefined) {
   return failedEvents?.map((event) => {
     const { data } = event;
 
     if ('dca_vault_execution_skipped' in data) {
       const { reason } = data.dca_vault_execution_skipped;
+      const x = convertToSentence(reason);
+
       return {
         time: new Date(Number(event.timestamp) / 1000000),
-        failed: reason,
+        failed: x,
       };
     }
     throw new Error();
@@ -75,8 +88,25 @@ function getFailedChartDataSwaps(
     return null;
   }
   const eventsWithAccumulation = getFailedEventsWithAccumulation(failedEvents);
-  // add time and market value in this return (MV can use getAmountInTime() )
-  return eventsWithAccumulation;
+
+  const chartData = eventsWithAccumulation?.map((event) => {
+    const date = new Date(event.time);
+    const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
+    const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
+    if (currentPriceInTime === null) {
+      return null;
+    }
+    return {
+      date,
+      marketValue: Number((1 * currentPriceInTime).toFixed(2)),
+      currentPrice: currentDisplayPriceInTime,
+      event,
+    };
+  });
+  if (!chartData) {
+    return null;
+  }
+  return chartData.filter((data) => data !== null);
 }
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
@@ -103,9 +133,17 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
 
-  // const skippedExecution = events?.find((item) => item.data?.dca_vault_execution_skipped);
-  const failedChartData = getFailedEvents(events);
   const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+  const swapsFailedDataWithLabel = swapsFailedData?.map((swap) => ({
+    ...swap,
+    label: `${swap?.event.failed}. \nDate: ${swap?.date
+      .toLocaleDateString('en-AU', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+      })
+      .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
+  }));
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
@@ -207,21 +245,11 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                   labels: { fill: 'white', fontSize: 6 },
                 }}
                 size={6}
-                data={swapsDataWithLabel}
+                data={swapsFailedDataWithLabel}
                 x="date"
                 y="marketValue"
                 labelComponent={<CustomLabel />}
               />
-              {/* <VictoryArea
-                style={{
-                  data: { stroke: '#1AEFAF', fillOpacity: '10%', fill: 'url(#myGradient)', strokeWidth: 2 },
-                }}
-                data={failedChartData}
-                standalone={false}
-                labelComponent={<CustomLabel props={swapsFailedData} />}
-                x="date"
-                y="marketValue"
-              /> */}
             </VictoryChart>
           )}
         </Center>
