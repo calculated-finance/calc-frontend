@@ -25,7 +25,6 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -55,15 +54,10 @@ function Page() {
       .filter(isSupportedDenomForDcaPlus),
   );
 
-  const pair = pairs.find((p) => {
-    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
-    return Boolean(pairAddress) && pairAddress === router.query.pair;
-  });
-
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (

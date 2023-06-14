@@ -1,10 +1,12 @@
+import { filter } from 'rambda';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { PairsResponse } from 'src/interfaces/v2/generated/response/get_pairs';
-import { Pair } from '@models/Pair';
+import { V2Pair, V3Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TestnetDenomsMoonbeam } from '@models/Denom';
+import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -20,7 +22,7 @@ const hiddenPairs = [
   ]),
 ];
 
-function isPairVisible(pair: Pair) {
+function isPairVisible(pair: V3Pair) {
   return !hiddenPairs.includes(JSON.stringify(pair.denoms));
 }
 
@@ -36,29 +38,41 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
   });
 }
 
-export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.denoms[1])));
+export function uniqueQuoteDenoms(pairs: V2Pair[] | V3Pair[] | undefined) {
+  return Array.from(new Set(pairs?.map(getQuoteDenom)));
 }
 
-export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.denoms[0])));
+export function uniqueBaseDenoms(pairs: V2Pair[] | V3Pair[] | undefined) {
+  return Array.from(new Set(pairs?.map(getBaseDenom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.filter((pair) => pair.denoms[1] === initialDenom.id).map((pair) => pair.denoms[0])));
-}
-
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: V2Pair[] | V3Pair[] | undefined) {
   return Array.from(
-    new Set(pairs?.filter((pair) => pair.denoms[0] === resultingDenom.id).map((pair) => pair.denoms[1])),
+    new Set(
+      filter(
+        (pair: V2Pair | V3Pair) => getQuoteDenom(pair) === initialDenom.id,
+        (pairs as V3Pair[]) ?? (pairs as V3Pair[]),
+      ).map(getBaseDenom),
+    ),
   );
 }
 
-export function allDenomsFromPairs(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.denoms[1]).concat(pairs?.map((pair) => pair.denoms[0]))));
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: V2Pair[] | V3Pair[] | undefined) {
+  return Array.from(
+    new Set(
+      filter(
+        (pair: V2Pair | V3Pair) => getBaseDenom(pair) === resultingDenom.id,
+        (pairs as V3Pair[]) ?? (pairs as V3Pair[]),
+      ).map(getQuoteDenom),
+    ),
+  );
 }
 
-export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
+export function allDenomsFromPairs(pairs: V2Pair[] | V3Pair[] | undefined) {
+  return Array.from(new Set(pairs?.map((pair) => getQuoteDenom(pair)).concat(pairs?.map(getBaseDenom))));
+}
+
+export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -75,7 +89,7 @@ function usePairsOsmosis() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
 
-  function fetchPairsRecursively(startAfter = null, allPairs = [] as Pair[]): Promise<Pair[]> {
+  function fetchPairsRecursively(startAfter = null, allPairs = [] as V2Pair[]): Promise<V2Pair[]> {
     return client!
       .queryContractSmart(getChainContractAddress(Chains.Osmosis), {
         get_pairs: {
@@ -94,7 +108,7 @@ function usePairsOsmosis() {
       });
   }
 
-  const queryResult = useQuery<Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
+  const queryResult = useQuery<V2Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
     enabled: !!client && chain === Chains.Osmosis,
     staleTime: 1000 * 60 * 5,
   });
@@ -102,7 +116,11 @@ function usePairsOsmosis() {
   return {
     ...queryResult,
     data: {
-      pairs: queryResult.data?.filter(isPairVisible),
+      pairs: queryResult.data?.filter((pair) =>
+        isPairVisible({
+          denoms: [pair.base_denom, pair.quote_denom],
+        }),
+      ),
     },
   };
 }

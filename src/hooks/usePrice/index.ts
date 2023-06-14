@@ -9,7 +9,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
-import { Pair } from '@models/Pair';
+import { V2Pair, V3Pair } from '@models/Pair';
 import { useConfig } from '@hooks/useConfig';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
@@ -72,11 +72,11 @@ function usePriceKujira(
   client: CosmWasmClient | null,
   resultingDenom: DenomInfo | undefined,
   initialDenom: DenomInfo | undefined,
-  pair: Pair | null | undefined,
+  pair: V2Pair | null | undefined,
   transactionType: TransactionType,
   enabled = true,
 ) {
-  const { data, ...helpers } = useQuery<BookResponse>(
+  const { data, ...helpers } = useQuery<number>(
     ['price', pair, client],
     async () => {
       const result = await client!.queryContractSmart(getPairAddress(initialDenom!.id, resultingDenom!.id)!, {
@@ -84,7 +84,7 @@ function usePriceKujira(
           limit: 1,
         },
       });
-      return result;
+      return result && calculatePrice(result, initialDenom!, transactionType);
     },
     {
       enabled,
@@ -94,12 +94,10 @@ function usePriceKujira(
     },
   );
 
-  const price = data && calculatePrice(data, initialDenom!, transactionType);
-
   const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);
 
-  const formattedPrice = price
-    ? price.toLocaleString('en-US', {
+  const formattedPrice = data
+    ? data.toLocaleString('en-US', {
         maximumFractionDigits: pricePrecision || 3,
         minimumFractionDigits: 3,
       })
@@ -107,7 +105,7 @@ function usePriceKujira(
 
   return {
     formattedPrice,
-    price,
+    price: data,
     ...helpers,
   };
 }
@@ -116,13 +114,10 @@ function usePriceV3(
   client: CosmWasmClient | null,
   resultingDenom: DenomInfo | undefined,
   initialDenom: DenomInfo | undefined,
+  pair: V3Pair | null | undefined,
   config: Config | undefined,
   enabled = true,
 ) {
-  const { data: pairsData } = usePairs();
-  const { pairs } = pairsData || {};
-  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
-
   const { data, ...helpers } = useQuery<number>(
     ['price', pair, client],
     async () => {
@@ -182,17 +177,21 @@ export default function usePrice(
 
   const config = useConfig();
 
-  const isV3Enabled = !!client && !!pair && chain === Chains.Kujira && enabled && !!config?.exchange_contract_address;
+  const isV3Enabled =
+    !!client && !!pair && chain === Chains.Kujira && !!config && !!config?.exchange_contract_address && enabled;
 
-  const v3Price = usePriceV3(client, resultingDenom, initialDenom, config, isV3Enabled);
+  const isV2Enabled =
+    !!client && !!pair && chain === Chains.Kujira && !!config && !config?.exchange_contract_address && enabled;
+
+  const v3Price = usePriceV3(client, resultingDenom, initialDenom, pair as V3Pair, config, isV3Enabled);
 
   const kujiraPrice = usePriceKujira(
     client,
     resultingDenom,
     initialDenom,
-    pair,
+    pair as V2Pair,
     transactionType,
-    !!client && !!pair && chain === Chains.Kujira && !config?.exchange_contract_address && enabled,
+    isV2Enabled,
   );
 
   if (isV3Enabled) {

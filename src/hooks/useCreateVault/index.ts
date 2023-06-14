@@ -56,7 +56,7 @@ const useCreateVault = (
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
 
-  const { formName, transactionType} = useStrategyInfo();
+  const { formName, transactionType } = useStrategyInfo();
 
   const { walletType } = useWallet();
 
@@ -112,7 +112,7 @@ const useCreateVault = (
         msgs.push(getGrantMsg(senderAddress, chain));
       }
 
-      const createVaultMsg = buildCreateVaultParams(formName, state, pairs, transactionType, senderAddress, dexPrice, chain);
+      const createVaultMsg = buildCreateVaultParams(formName, state, transactionType, senderAddress, dexPrice, chain);
 
       const funds = getFunds(state.initialDenom, state.initialDeposit);
 
@@ -166,5 +166,5 @@ export const useCreateVaultWeightedScale = () => {
     enablePriceCheck,
   );
 
-  return useCreateVault( state, true, dexPrice);
+  return useCreateVault(state, true, dexPrice);
 };

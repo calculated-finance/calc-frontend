@@ -7,7 +7,7 @@ import totalExecutions from '@utils/totalExecutions';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
-import { Pair } from '@models/Pair';
+import { V2Pair, V3Pair } from '@models/Pair';
 import {
   DAYS_IN_A_WEEK,
   DELEGATION_FEE,
@@ -29,6 +29,7 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
+import { getBaseDenom } from '@utils/pair';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {
@@ -207,7 +208,7 @@ export function getStrategyPriceTrigger(strategy: Strategy) {
   return undefined;
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
+export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
   let target_price;
 
   if (getStrategyPriceTrigger(strategy)) {
@@ -218,16 +219,18 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
-    if (pair && pair.denoms[0] === getStrategyInitialDenom(strategy).id) {
+
+    if (pair && getBaseDenom(pair) === getStrategyInitialDenom(strategy).id) {
       return safeInvert(Number(target_price));
     }
+
     return Number(target_price);
   }
 
   return null;
 }
 
-export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefined) {
+export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
   const { trigger } = strategy;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)

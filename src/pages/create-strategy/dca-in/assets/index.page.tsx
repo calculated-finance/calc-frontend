@@ -15,10 +15,13 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
+<<<<<<< HEAD
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+=======
+>>>>>>> db94b77 (fix backward compatibility)
 
 function DcaIn() {
   const { actions, state } = useDcaInForm();
@@ -42,15 +45,10 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
   }
 
-  const pair = pairs.find((p) => {
-    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
-    return Boolean(pairAddress) && pairAddress === router.query.pair;
-  });
-
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (

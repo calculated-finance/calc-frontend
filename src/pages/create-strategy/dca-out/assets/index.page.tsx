@@ -23,7 +23,6 @@ import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
-import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -53,15 +52,10 @@ function Page() {
       .filter(isDenomVolatile),
   );
 
-  const pair = pairs.find((p) => {
-    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
-    return Boolean(pairAddress) && pairAddress === router.query.pair;
-  });
-
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[0],
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[1],
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (

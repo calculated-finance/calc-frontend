@@ -5,7 +5,7 @@ import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { ExecuteMsg as OsmosisExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import { Pair } from '@models/Pair';
+import { V2Pair, V3Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains } from '@hooks/useChain/Chains';
@@ -131,7 +131,6 @@ function getTargetReceiveAmount(
   transactionType: TransactionType,
   chain: Chains,
 ) {
-
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType);
   }
@@ -197,12 +196,10 @@ export function getExecutionInterval(
 
 export function buildCreateVaultParamsDCA(
   state: DcaInFormDataAll,
-  pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
   chain: Chains,
 ) {
-
   const { executionInterval, executionIntervalIncrement } = state;
 
   const initialDenomInfo = getDenomInfo(state.initialDenom);
@@ -334,7 +331,6 @@ export function buildCreateVaultParamsWeightedScale(
 
 export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
-  pairs: Pair[],
   senderAddress: string,
   chain: Chains,
 ): ExecuteMsg | OsmosisExecuteMsg {
@@ -374,18 +370,17 @@ export function buildCreateVaultParamsDCAPlus(
 export function buildCreateVaultParams(
   formType: FormNames,
   state: DcaFormState,
-  pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
   currentPrice: number | undefined,
   chain: Chains,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
-    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress, chain);
+    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, transactionType, senderAddress, chain);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress, chain);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, senderAddress, chain);
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {

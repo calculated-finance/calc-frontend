@@ -18,7 +18,6 @@ import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
@@ -43,15 +42,10 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={weightedScaleInSteps} reset={actions.resetAction} />;
   }
 
-  const pair = pairs.find((p) => {
-    const pairAddress = getPairAddress(p.denoms[0], p.denoms[1]);
-    return Boolean(pairAddress) && pairAddress === router.query.pair;
-  });
-
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[1],
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[0],
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
