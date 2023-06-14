@@ -1,0 +1,49 @@
+import { useWallet } from '@hooks/useWallet';
+import { queryClient } from '@helpers/test/testQueryClient';
+import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { getChainContractAddress } from '@helpers/chains';
+import { useQuery } from '@tanstack/react-query';
+import { ethers } from 'ethers';
+import factoryContractJson from 'src/Factory.json'
+import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
+import { useChain } from './useChain';
+import { useMetamask } from './useMetamask';
+import { Chains } from './useChain/Chains';
+
+const QUERY_KEY = 'get_vaults_by_address_evm';
+
+export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
+
+export type Strategy = Vault;
+export type StrategyOsmosis = VaultOsmosis;
+
+export default function useStrategiesEVM() {
+  const { address } = useWallet();
+  const { chain } = useChain();
+  const provider = useMetamask(state => state.provider);
+
+  
+
+  return useQuery<VaultsResponse>(
+    [QUERY_KEY, address, provider],
+    () => {
+      if (!provider) {
+        throw new Error('No client');
+      }
+
+  const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
+
+      const result = factoryContract.getVaultsByAddress(address);
+      console.log(result);
+      return result;
+    },
+    {
+      enabled: !!address && !!provider && !!chain && chain === Chains.Moonbeam,
+      meta: {
+        errorMessage: 'Error fetching strategies',
+      },
+    },
+  );
+}

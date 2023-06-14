@@ -24,6 +24,7 @@ import { useMetamask } from '@hooks/useMetamask';
 import { ethers } from 'ethers';
 import { Chains } from '@hooks/useChain/Chains';
 import { Denom } from '@models/Denom';
+import factoryContractJson from 'src/Factory.json'
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -33,7 +34,6 @@ import { buildCreateVaultParams, getExecutionInterval } from './buildCreateVault
 import { executeCreateVault } from './executeCreateVault';
 import { DcaFormState } from './DcaFormState';
 
-import factoryContractJson from './Factory.json'
 
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {
@@ -147,9 +147,15 @@ function useMoonbeamCreateVault(
   
       console.log('tx', tx);
   
-      const wait = await tx.wait();
+      const receipt = await tx.wait();
   
-      console.log('wait', wait);
+      console.log('wait', receipt);
+
+      const referenceVaultCreatedEvent = receipt.events.find(
+				(e) => e.event === 'VaultCreated'
+			)
+			const referenceVaultAddress = referenceVaultCreatedEvent.args.vaultAddress
+      return referenceVaultAddress;
 
       // const data =
       // '0x321695310000000000000000000000001af6fca482cd73c198b8c0f3c883be8d9bf5cf74000000000000000000000000a6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa0000000000000000000000009c3c9283d3e44854697cd22d3faa240cfb032889000000000000000000000000000000000000000000000000000009184e72a000000000000000000000000000000000000000000000000000000000000000003c0000000000000000000000000000000000000000000000000000000064361265';

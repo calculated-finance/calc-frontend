@@ -12,20 +12,29 @@ import {
   StrategyAccordionPanel,
   StrategyAccordion,
 } from '@components/StrategyAccordion';
+import { ChildrenProp } from '@helpers/ChildrenProp';
+import { Chains } from '@hooks/useChain/Chains';
+import { useChain } from '@hooks/useChain';
+import useStrategiesEVM from '@hooks/useStrategiesEVM';
 
-function Page() {
-  const { data, isLoading } = useStrategies();
+function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLoading: boolean}) {
   const { connected } = useWallet();
 
-  const scheduledStrategies =
-    data?.vaults.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  // const scheduledStrategies =
+  //   strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  const activeStrategies = data?.vaults.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-  const completedStrategies =
-    data?.vaults.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  // const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  // const completedStrategies =
+  //   strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  const cancelledStrategies =
-    data?.vaults.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  // const cancelledStrategies =
+  //   strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+
+  const activeStrategies = strategies;
+  const scheduledStrategies = [];
+  const completedStrategies = [];
+  const cancelledStrategies = [];
+
 
   return (
     <>
@@ -40,7 +49,7 @@ function Page() {
           <StrategyAccordionItem>
             <StrategiesAccordionButton>
               <Heading pb={2} size="md">
-                Active Strategies ({activeStrategies.length})
+                Active Strategies ({activeStrategies?.length})
               </Heading>
               <Text pb={2} textStyle="body">
                 Strategies actively swapping.
@@ -48,7 +57,7 @@ function Page() {
             </StrategiesAccordionButton>
             <StrategyAccordionPanel>
               {/* eslint-disable-next-line no-nested-ternary */}
-              {!activeStrategies.length ? (
+              {!activeStrategies?.length ? (
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                   {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
                 </Flex>
@@ -123,6 +132,24 @@ function Page() {
   );
 }
 
-Page.getLayout = getSidebarLayout;
 
-export default Page;
+function StrategiesCosmos() {
+  const { data, isLoading } = useStrategies();
+  return <Page strategies={data?.vaults} isLoading={isLoading} />;
+}
+
+function StrategiesEVM() {
+  const { data: strategies, isLoading } = useStrategiesEVM();
+  return <Page strategies={strategies} isLoading={isLoading} />;
+}
+
+
+
+function PageWrapper() {
+  const { chain } = useChain();
+  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
+}
+
+PageWrapper.getLayout = getSidebarLayout;
+
+export default PageWrapper;

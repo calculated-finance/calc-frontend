@@ -15,6 +15,8 @@ export const queryClient = new QueryClient({
         Sentry.captureException(error, { tags: { queryKey: label, errorMessage } });
       }
 
+      console.error('error', error)
+
       toast({
         title: 'Something went wrong',
         position: 'top-right',
