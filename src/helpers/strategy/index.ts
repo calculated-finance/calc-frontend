@@ -22,6 +22,7 @@ import {
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { Chains } from '@hooks/useChain/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
+import { getBaseDenom } from '@utils/pair';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -29,7 +30,6 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
-import { getBaseDenom } from '@utils/pair';
 
 export function getStrategyStatus(strategy: Strategy) {
   if (strategy.status === 'inactive') {
