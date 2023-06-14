@@ -69,7 +69,7 @@ export default function usePriceOsmosis(
 
       const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
 
-      const isRouteReversed = initialDenom.id !== pair?.quote_denom;
+      const isRouteReversed = initialDenom.id !== pair?.denoms[1];
 
       const { significantFigures: initialSF } = initialDenom;
       const { significantFigures: resultingSF } = resultingDenom;

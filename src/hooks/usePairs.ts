@@ -10,9 +10,19 @@ import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 const hiddenPairs = [
-  'kujira13l8gwanf37938wgfv5yktmfzxjwaj4ysn4gl96vj78xcqqxlcrgssfl797', // not sure what this is
-  'kujira1uvqk5vj9vn4gjemrp0myz4ku49aaemulgaqw7pfe0nuvfwp3gukq64r3ws', // ampLuna - usk pair
-] as string[];
+  JSON.stringify([
+    'ibc/D36D2BBE441D3605EEF340EAFAC57D669880597073050A2650B1468F1634A5F5',
+    'factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk',
+  ]),
+  JSON.stringify([
+    'ibc/F33B313325B1C99B646B1B786F1EA621E3794D787B90C204C30FE1D4D45970AE',
+    'factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk',
+  ]),
+];
+
+function isPairVisible(pair: Pair) {
+  return !hiddenPairs.includes(JSON.stringify(pair.denoms));
+}
 
 export function isSupportedDenomForDcaPlus(denom: DenomInfo) {
   return denom.enabledInDcaPlus && isDenomVolatile(denom);
@@ -27,27 +37,25 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
 }
 
 export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.quote_denom)));
+  return Array.from(new Set(pairs?.map((pair) => pair.denoms[1])));
 }
 
 export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.base_denom)));
+  return Array.from(new Set(pairs?.map((pair) => pair.denoms[0])));
 }
 
 export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
-  return Array.from(
-    new Set(pairs?.filter((pair) => pair.quote_denom === initialDenom.id).map((pair) => pair.base_denom)),
-  );
+  return Array.from(new Set(pairs?.filter((pair) => pair.denoms[1] === initialDenom.id).map((pair) => pair.denoms[0])));
 }
 
 export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(pairs?.filter((pair) => pair.base_denom === resultingDenom.id).map((pair) => pair.quote_denom)),
+    new Set(pairs?.filter((pair) => pair.denoms[0] === resultingDenom.id).map((pair) => pair.denoms[1])),
   );
 }
 
 export function allDenomsFromPairs(pairs: Pair[] | undefined) {
-  return Array.from(new Set(pairs?.map((pair) => pair.quote_denom).concat(pairs?.map((pair) => pair.base_denom))));
+  return Array.from(new Set(pairs?.map((pair) => pair.denoms[1]).concat(pairs?.map((pair) => pair.denoms[0]))));
 }
 
 export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
@@ -94,7 +102,7 @@ function usePairsOsmosis() {
   return {
     ...queryResult,
     data: {
-      pairs: queryResult.data?.filter((pair) => !hiddenPairs.includes(pair.address)),
+      pairs: queryResult.data?.filter(isPairVisible),
     },
   };
 }
@@ -131,10 +139,9 @@ function usePairsKujira() {
   const queryResult = useQuery<PairsResponse>(
     ['pairs-kujira', client],
     async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
+      return await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
         get_pairs: {},
       });
-      return result;
     },
     {
       enabled: !!client && chain === Chains.Kujira,
@@ -159,7 +166,7 @@ function usePairsKujira() {
   return {
     ...queryResult,
     data: {
-      pairs: queryResult.data?.pairs.filter((pair) => !hiddenPairs.includes(pair.address)),
+      pairs: queryResult.data?.pairs.filter(isPairVisible),
     },
     meta: {
       errorMessage: 'Error fetching pairs',

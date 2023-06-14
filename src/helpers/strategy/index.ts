@@ -218,7 +218,7 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
     const initialDenom = getStrategyInitialDenom(strategy);
     const resultingDenom = getStrategyResultingDenom(strategy);
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
-    if (pair && pair.base_denom === getStrategyInitialDenom(strategy).id) {
+    if (pair && pair.denoms[0] === getStrategyInitialDenom(strategy).id) {
       return safeInvert(Number(target_price));
     }
     return Number(target_price);

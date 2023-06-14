@@ -19,6 +19,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
+import { getPairAddress } from 'src/fixtures/addresses';
 
 export function DenomPriceInput({
   transactionType,
@@ -38,7 +39,7 @@ export function DenomPriceInput({
   onChange: (value: number | undefined) => void;
 } & InputProps) {
   const { chain } = useChain();
-  const { formattedPrice, pairAddress, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
@@ -82,7 +83,10 @@ export function DenomPriceInput({
       <FormErrorMessage>{error}</FormErrorMessage>
       {chain === Chains.Kujira && (
         <FormHelperText>
-          <Link isExternal href={`https://fin.kujira.app/trade/${pairAddress}`}>
+          <Link
+            isExternal
+            href={`https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`}
+          >
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
               Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>

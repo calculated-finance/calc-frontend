@@ -79,6 +79,7 @@ describe('DCA In Assets page', () => {
     });
     mockFiatPrice();
   });
+
   describe('on page load', () => {
     it('renders the heading', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
@@ -105,6 +106,7 @@ describe('DCA In Assets page', () => {
       });
     });
   });
+
   describe('when initial denom is selected', () => {
     describe('and there are not available funds', () => {
       it('should show an amount of none', async () => {

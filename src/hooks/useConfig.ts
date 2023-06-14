@@ -1,13 +1,12 @@
 import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
-import { ConfigResponse } from 'src/interfaces/generated-osmosis/response/get_config';
 import { useQuery } from '@tanstack/react-query';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
-import { Version } from './Version';
+import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
 
-export function useVersion(): Version | undefined {
+export function useConfig(): Config | undefined {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
@@ -38,8 +37,5 @@ export function useVersion(): Version | undefined {
 
   const { config } = data;
 
-  if (config && 'twap_period' in config) {
-    return 'v2';
-  }
-  return 'v1';
+  return config;
 }

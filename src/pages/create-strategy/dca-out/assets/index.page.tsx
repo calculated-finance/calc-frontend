@@ -23,6 +23,7 @@ import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
+import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -55,12 +56,15 @@ function Page() {
       .filter(isDenomVolatile),
   );
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
+  const pair = pairs.find((pair) => {
+    const pairAddress = getPairAddress(pair.denoms[0], pair.denoms[1]);
+    return Boolean(pairAddress) && pairAddress === router.query.pair;
+  });
+
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : quote_denom,
+    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : pair?.denoms[0],
+    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : pair?.denoms[1],
   };
 
   return (
@@ -86,11 +90,13 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaOut,
+      }}
+    >
       <Page />
     </StrategyInfoProvider>
   );

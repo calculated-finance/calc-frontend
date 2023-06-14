@@ -20,7 +20,5 @@ export interface PairsResponse {
   pairs: Pair[];
 }
 export interface Pair {
-  address: Addr;
-  base_denom: string;
-  quote_denom: string;
+  denoms: [string, string];
 }
