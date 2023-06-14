@@ -41,10 +41,8 @@ function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
     if ('dca_vault_execution_completed' in data) {
       const { received, fee, sent } = data.dca_vault_execution_completed;
       const { conversion, name } = getDenomInfo(received.denom);
-
-      console.log(sent);
-      // const {  } = getDenomInfo(sent.amount);
-      // naming to update
+      const sentAmount = conversion(Number(sent.amount));
+      const sentDenom = sent.denom;
 
       const amount = conversion(Number(received.amount) - Number(fee.amount));
       totalAmount += Number(amount);
@@ -53,6 +51,8 @@ function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
         accumulation: totalAmount,
         swapAmount: amount,
         swapDenom: name,
+        denomSent: sentDenom,
+        denomAmountSent: sentAmount,
       };
     }
     throw new Error();
