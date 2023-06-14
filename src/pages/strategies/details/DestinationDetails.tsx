@@ -17,7 +17,7 @@ import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
-import { truncate } from '@components/CosmosWallet';
+import { truncate } from '@components/truncate';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
