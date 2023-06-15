@@ -1,9 +1,10 @@
 import { GridItem, Box, Center } from '@chakra-ui/react';
 import Spinner from '@components/Spinner';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
   VictoryAxis,
+  VictoryBar,
   VictoryChart,
   VictoryScatter,
   VictoryTooltip,
@@ -13,11 +14,12 @@ import {
 import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
-import useFiatPriceHistory, { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
+import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
-import { findCurrentPriceInTime, getChartData, getChartDataSwaps } from './getChartData';
+import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
+import { getFailedChartDataSwaps } from './getFailedChartData';
 
 function CustomLabel(props: VictoryTooltipProps) {
   return (
@@ -35,78 +37,6 @@ function CustomLabel(props: VictoryTooltipProps) {
       />
     </g>
   );
-}
-
-type ExecutionSkippedReason = 'slippage_tolerance_exceeded' | 'swap_amount_adjusted_to_zero';
-
-function convertToSentence(reason: ExecutionSkippedReason) {
-  const sentenceMap = {
-    slippage_tolerance_exceeded: 'Slippage tolerance exceeded',
-    swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
-  };
-
-  return sentenceMap[reason] || 'Unknown reason.';
-}
-
-// may not need.
-function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[] | undefined) {
-  return failedEvents?.map((event) => {
-    const { data } = event;
-
-    if ('dca_vault_execution_skipped' in data) {
-      const { reason } = data.dca_vault_execution_skipped;
-      const reasonString = convertToSentence(reason as ExecutionSkippedReason);
-
-      return {
-        time: new Date(Number(event.timestamp) / 1000000),
-        failed: reasonString,
-      };
-    }
-    throw new Error();
-  });
-}
-
-// gedt failed events
-function getFailedEvents(events: StrategyEvent[] | undefined) {
-  return events?.filter((event) => {
-    const { data } = event;
-    if ('dca_vault_execution_skipped' in data) {
-      return data.dca_vault_execution_skipped;
-    }
-    return undefined;
-  });
-}
-
-function getFailedChartDataSwaps(
-  events: StrategyEvent[] | undefined,
-  fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
-) {
-  const failedEvents = getFailedEvents(events);
-
-  if (!failedEvents || !fiatPrices || !displayPrices) {
-    return null;
-  }
-  const eventsWithAccumulation = getFailedEventsWithAccumulation(failedEvents);
-
-  const chartData = eventsWithAccumulation?.map((event) => {
-    const date = new Date(event.time);
-    const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
-    const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
-    if (currentPriceInTime === null) {
-      return null;
-    }
-    return {
-      date,
-      marketValue: Number((1 * currentPriceInTime).toFixed(2)),
-      currentPrice: currentDisplayPriceInTime,
-      event,
-    };
-  });
-  if (!chartData) {
-    return null;
-  }
-  return chartData.filter((data) => data !== null);
 }
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
@@ -239,12 +169,12 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 x="date"
                 y="marketValue"
               />
-              <VictoryScatter
+              <VictoryBar
                 style={{
-                  data: { fill: 'red', stroke: 'white', strokeWidth: 1 },
+                  data: { fill: 'grey', fillOpacity: 0.5 },
                   labels: { fill: 'white', fontSize: 6 },
                 }}
-                size={6}
+                barWidth={0.5}
                 data={swapsFailedDataWithLabel}
                 x="date"
                 y="marketValue"

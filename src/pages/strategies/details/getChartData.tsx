@@ -32,49 +32,6 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
   return currentPrice;
 };
 
-// type ExecutionSkippedReason = 'slippage_tolerance_exceeded' | 'swap_amount_adjusted_to_zero';
-
-// function convertToSentence(reason: ExecutionSkippedReason) {
-//   const sentenceMap = {
-//     slippage_tolerance_exceeded: 'Slippage tolerance exceeded',
-//     swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
-//   };
-
-//   return sentenceMap[reason] || 'Unknown reason.';
-// }
-
-// export function getEventsWithAccumulation(events: StrategyEvent[]) {
-//   let totalAmount = 0;
-
-//   return events?.map((event) => {
-//     const { data } = event;
-
-//     if ('dca_vault_execution_completed' in data) {
-//       const { received, fee } = data.dca_vault_execution_completed;
-//       const { conversion, name } = getDenomInfo(received.denom);
-
-//       const amount = conversion(Number(received.amount) - Number(fee.amount));
-//       totalAmount += Number(amount);
-//       return {
-//         time: new Date(Number(event.timestamp) / 1000000),
-//         accumulation: totalAmount,
-//         swapAmount: amount,
-//         swapDenom: name,
-//       };
-//     }
-//     if ('dca_vault_execution_skipped' in data) {
-//       const { reason } = data.dca_vault_execution_skipped;
-//       const reasonString = convertToSentence(reason as ExecutionSkippedReason);
-
-//       return {
-//         time: new Date(Number(event.timestamp) / 1000000),
-//         failed: reasonString,
-//       };
-//     }
-//     throw new Error();
-//   });
-// }
-
 export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
   let totalAmount = 0;
 
