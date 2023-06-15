@@ -2,7 +2,6 @@ import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Sta
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
-import Link from 'next/link';
 
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import {
@@ -21,6 +20,7 @@ import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
+import LinkWithQuery from './LinkWithQuery';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,7 +53,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   return (
-    <Link href={generateStrategyDetailUrl(strategy.id)}>
+    <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
       <Grid
         templateRows="repeat(1, 1fr)"
         templateColumns="repeat(15, 1fr)"
@@ -108,7 +108,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         >
           <Flex justifyContent={{ base: 'left', sm: 'end' }} alignItems="center" h="full">
             <Stack direction={{ base: 'column', sm: 'row' }} w="full">
-              <Link href={generateStrategyTopUpUrl(strategy.id)}>
+              <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
                 <Button
                   size="xs"
                   variant={{ base: 'outline', sm: 'ghost' }}
@@ -117,20 +117,20 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
                 >
                   Top up
                 </Button>
-              </Link>
+              </LinkWithQuery>
               <CancelButton strategy={strategy} />
             </Stack>
           </Flex>
         </GridItem>
         <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
           <Flex justifyContent="end" alignItems="center" h="full">
-            <Link href={generateStrategyDetailUrl(strategy.id)}>
+            <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
               <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
-            </Link>
+            </LinkWithQuery>
           </Flex>
         </GridItem>
       </Grid>
-    </Link>
+    </LinkWithQuery>
   );
 }
 

@@ -53,12 +53,13 @@ export default function useAdminStrategies(customChain?: Chains) {
         .then(setStoredClient)
         .catch((error) => Sentry.captureException(error, { tags: { page: 'useAdminStrategies' } }));
     }
-  }, [chain, customChain]);
+  }, [ customChain]);
 
   return useQuery<Vault[]>(
-    [QUERY_KEY, storedClient, chain],
+    [QUERY_KEY, client, chain],
     () => {
       if (!client) throw new Error('No client');
+      if (!chain) throw new Error('No chain');
       return fetchVaultsRecursively(client, chain);
     },
     {

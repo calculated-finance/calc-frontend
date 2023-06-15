@@ -57,12 +57,17 @@ function LoadingState() {
   );
 }
 
+function AssetListLoader({ children }: { children: ReactNode }) {
+  const { data: assetList } = useAssetList();
+
+  const { chain } = useChain();
+  return (chain !== Chains.Osmosis || assetList) ? children : <LoadingState />;
+}
+
 function LoadingWrapper({ children }: { children: ReactNode }) {
   const { chain } = useChain();
 
-  const { data: assetList } = useAssetList();
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return chain && (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
+  return chain ? children : <LoadingState />;
 }
 
 function InitWrapper({ children }: { children: ReactNode }) {
@@ -158,7 +163,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <CalcWalletModalProvider>
               <QueryClientProvider client={queryClient}>
                 <AssetListWrapper>
-                  <LoadingWrapper>{getLayout(<Component {...pageProps} />)}</LoadingWrapper>
+                  <LoadingWrapper>
+                    <AssetListLoader>
+                      {getLayout(<Component {...pageProps} />)}
+                    </AssetListLoader>
+                  </LoadingWrapper>
                 </AssetListWrapper>
               </QueryClientProvider>
             </CalcWalletModalProvider>

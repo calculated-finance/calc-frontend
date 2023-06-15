@@ -4,10 +4,10 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { getStrategyInitialDenom } from '@helpers/strategy';
 import { getDenomName } from '@utils/getDenomInfo';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { topUpSteps } from './index.page';
 
 function Success() {
@@ -56,9 +56,9 @@ function Success() {
               <Text>and removed the emotions from your trades! 💪</Text>
             </Stack>
           </>
-          <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
+          <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
-          </Link>
+          </LinkWithQuery>
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>

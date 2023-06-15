@@ -13,7 +13,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/strategies/top-up',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },

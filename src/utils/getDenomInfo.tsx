@@ -1,8 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
-import { useChainStore } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';
@@ -416,20 +414,19 @@ function isDenomInStablesList(denom: Denom) {
   return stableDenomsTestnet.includes(denom);
 }
 
-const getDenomInfo = (denom: string | undefined, injectedChain?: Chains): DenomInfo => {
+const getDenomInfo = (denom: string | undefined): DenomInfo => {
   if (!denom) {
     return {
       id: '',
       ...defaultDenom,
     };
   }
-  const { chain: storedChain } = useChainStore.getState();
-
-  const chain = injectedChain || storedChain;
 
   const { assetList } = useAssetListStore.getState();
 
-  const asset = chain === Chains.Osmosis && assetList?.assets && assetList.assets.find((a) => a.base === denom);
+
+
+  const asset = assetList?.assets && assetList.assets.find((a) => a.base === denom);
 
   if (asset) {
     const mapTo = {} as Partial<DenomInfo>;

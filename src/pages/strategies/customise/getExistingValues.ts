@@ -7,9 +7,10 @@ import {
 } from '@helpers/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
+import { Chains } from '@hooks/useChain/Chains';
 
-export function getExistingValues(strategy: Strategy) {
-  const priceThreshold = getPriceCeilingFloor(strategy);
+export function getExistingValues(strategy: Strategy, chain: Chains) {
+  const priceThreshold = getPriceCeilingFloor(strategy, chain);
 
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
 
@@ -25,7 +26,7 @@ export function getExistingValues(strategy: Strategy) {
     priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
     priceThresholdValue: priceThreshold,
     basePriceIsCurrentPrice: YesNoValues.No,
-    basePriceValue: getBasePrice(strategy),
+    basePriceValue: getBasePrice(strategy, chain),
     swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
     applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
   };

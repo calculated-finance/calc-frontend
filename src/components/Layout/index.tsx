@@ -10,17 +10,16 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { ReactElement, useEffect } from 'react';
-import Link from 'next/link';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ModalWrapper } from '@components/ModalWrapper';
+import LinkWithQuery from '@components/LinkWithQuery';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -46,13 +45,13 @@ function AppHeader() {
   const { chain } = useChain();
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
-      <Link href="/">
+      <LinkWithQuery href="/">
         {chain === Chains.Osmosis ? (
           <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
         ) : (
           <Image cursor="pointer" src="/images/logo.svg" w={105} />
         )}
-      </Link>
+      </LinkWithQuery>
       <Spacer />
       <SidebarControls />
     </Flex>
@@ -96,9 +95,9 @@ function FlowBreadcrumbs() {
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
           <BreadcrumbItem key={`breadcrum-item-${String(index)}`}>
-            <Link href={breadcrumbData[part].enabled ? href : '#'}>
+            <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
               <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
-            </Link>
+            </LinkWithQuery>
           </BreadcrumbItem>
         ) : null;
       })}

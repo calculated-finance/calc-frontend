@@ -1,9 +1,7 @@
-import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
 
-export function isStrategyV2(strategy: Strategy | StrategyOsmosis) {
-  const { chain } = useChainStore.getState();
+export function isStrategyV2(strategy: Strategy | StrategyOsmosis, chain: Chains) {
   if (chain === Chains.Osmosis) {
     return true;
   }

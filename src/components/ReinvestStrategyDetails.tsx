@@ -20,8 +20,10 @@ import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
 import { DestinationDetails } from 'src/pages/strategies/details/DestinationDetails';
+import { useChain } from '@hooks/useChain';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
+  const { chain } = useChain();
   const { balance } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -108,7 +110,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                    {getPriceCeilingFloor(strategy, chain)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>
@@ -123,7 +125,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {convertDenomFromCoin(balance)} {initialDenom.name}
             </Text>
           </GridItem>
-          <DestinationDetails strategy={strategy} />
+          <DestinationDetails strategy={strategy} chain={chain} />
         </Grid>
       </Box>
     </GridItem>

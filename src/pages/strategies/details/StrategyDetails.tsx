@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import { DenomValue, getDenomName } from '@utils/getDenomInfo';
-import Link from 'next/link';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@hooks/useStrategies';
@@ -55,6 +54,7 @@ import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWei
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
 
@@ -136,6 +136,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
+
+  const { chain } = useChain();
   const { balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -159,7 +161,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <HStack align="center" pb={4}>
             <Heading size="md">Strategy details</Heading>
             {showEditButton && (
-              <Link href={generateStrategyCustomiseUrl(strategy.id)}>
+              <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id)}>
                 <Button
                   size="xs"
                   variant="ghost"
@@ -168,7 +170,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 >
                   Edit
                 </Button>
-              </Link>
+              </LinkWithQuery>
             )}
           </HStack>
           <Box px={8} py={6} layerStyle="panel">
@@ -266,7 +268,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   <GridItem colSpan={2}>
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                        {getPriceCeilingFloor(strategy)}{' '}
+                        {getPriceCeilingFloor(strategy, chain)}{' '}
                         {getDenomName(isBuyStrategy(strategy) ? initialDenom : resultingDenom)}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
@@ -284,7 +286,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
                 <Flex justify="end">
-                  <Link href={generateStrategyTopUpUrl(strategy.id)}>
+                  <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
                     <Button
                       size="xs"
                       variant="ghost"
@@ -293,10 +295,10 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                     >
                       Add more funds
                     </Button>
-                  </Link>
+                  </LinkWithQuery>
                 </Flex>
               </GridItem>
-              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} />}
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain}/>}
             </Grid>
           </Box>
         </Box>
@@ -311,10 +313,10 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
                 transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
                 applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
-                basePrice={getBasePrice(strategy)}
+                basePrice={getBasePrice(strategy, chain)}
                 initialDenom={getStrategyInitialDenom(strategy)}
                 resultingDenom={getStrategyResultingDenom(strategy)}
-                priceThresholdValue={getPriceCeilingFloor(strategy)}
+                priceThresholdValue={getPriceCeilingFloor(strategy, chain)}
               />
             </Box>
           </Box>

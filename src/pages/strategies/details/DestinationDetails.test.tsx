@@ -5,7 +5,6 @@ import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { getStrategyPostSwapType } from '@helpers/destinations';
 import { osmosisStrategy } from 'src/fixtures/strategy';
 import { Destination } from 'src/interfaces/generated-osmosis/response/get_vault';
-import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
@@ -24,7 +23,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-in/assets',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -49,29 +48,27 @@ function strategyWithDestination(destination: Destination | undefined = { addres
 
 describe('<DestinationDetails />', () => {
   it('renders ValidatorDetails when postSwapExecutionType is Stake', () => {
-    useChainStore.setState({ chain: Chains.Osmosis });
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.Stake);
-    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} />);
+    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} chain={Chains.Osmosis} />);
 
     waitFor(() => expect(getByText('Auto staking status')).toBeInTheDocument());
   });
 
   it('renders Mars link when postSwapExecutionType is GenerateYield', () => {
-    useChainStore.setState({ chain: Chains.Osmosis });
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.GenerateYield);
-    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} />);
+    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} chain={Chains.Osmosis} />);
 
     waitFor(() => expect(getByText('Mars')).toBeInTheDocument());
   });
 
   it('renders ReinvestDetails when postSwapExecutionType is Reinvest', () => {
-    useChainStore.setState({ chain: Chains.Osmosis });
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.Reinvest);
     const { getByText } = renderWithQueryClient(
       <DestinationDetails
+        chain={Chains.Osmosis}
         strategy={strategyWithDestination({
           address: getChainContractAddress(Chains.Osmosis),
           allocation: '1.0',
@@ -92,9 +89,8 @@ describe('<DestinationDetails />', () => {
 
   it('renders ConfigureButton when chain is Osmosis', () => {
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.SendToWallet);
-    useChainStore.setState({ chain: Chains.Osmosis });
 
-    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} />);
+    const { getByText } = renderWithQueryClient(<DestinationDetails strategy={strategyWithDestination()} chain={Chains.Osmosis}/>);
 
     expect(getByText('Configure')).toBeInTheDocument();
   });

@@ -1,14 +1,13 @@
 import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter } from '@chakra-ui/react';
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import Lottie from 'lottie-react';
 import * as Confetti from '../animations/confetti.json';
 import { Pages } from './Layout/Sidebar/Pages';
 import { ModalWrapper } from './ModalWrapper';
+import LinkWithQuery from './LinkWithQuery';
 
 function ThatsCalculatedThinkingText() {
   return (
@@ -49,13 +48,13 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
           </Stack>
         </>
         {strategyId ? (
-          <Link passHref href={generateStrategyDetailUrl(strategyId as string)}>
+          <LinkWithQuery passHref href={generateStrategyDetailUrl(strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
-          </Link>
+          </LinkWithQuery>
         ) : (
-          <Link passHref href={Pages.Strategies}>
+          <LinkWithQuery passHref href={Pages.Strategies}>
             <Button isLoading={isPageLoading}>View strategies</Button>
-          </Link>
+          </LinkWithQuery>
         )}
       </Stack>
     </ModalWrapper>

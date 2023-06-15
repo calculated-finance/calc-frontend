@@ -8,7 +8,6 @@ import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
-import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
@@ -130,8 +129,8 @@ function getTargetReceiveAmount(
   startPrice: number | null | undefined,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
+  chain: Chains,
 ) {
-  const { chain } = useChainStore.getState();
 
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType);
@@ -148,8 +147,8 @@ function getBaseReceiveAmount(
   basePrice: number | null | undefined,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
+  chain: Chains,
 ) {
-  const { chain } = useChainStore.getState();
   if (chain === Chains.Osmosis) {
     return getOsmosisReceiveAmount(initialDenom, swapAmount, basePrice, resultingDenom, transactionType);
   }
@@ -201,8 +200,8 @@ export function buildCreateVaultParamsDCA(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
+  chain: Chains,
 ) {
-  const { chain } = useChainStore.getState();
 
   const { executionInterval, executionIntervalIncrement } = state;
 
@@ -239,6 +238,7 @@ export function buildCreateVaultParamsDCA(
         state.startPrice,
         resultingDenomInfo,
         transactionType,
+        chain,
       ),
     },
   } as OsmosisExecuteMsg;
@@ -254,6 +254,7 @@ export function buildWeightedScaleAdjustmentStrategy(
   applyMultiplier: YesNoValues,
   swapMultiplier: number,
   currentPrice: number,
+  chain: Chains,
 ) {
   return {
     weighted_scale: {
@@ -263,6 +264,7 @@ export function buildWeightedScaleAdjustmentStrategy(
         basePriceValue || currentPrice,
         resultingDenom,
         transactionType,
+        chain,
       ),
       increase_only: applyMultiplier === YesNoValues.No,
       multiplier: swapMultiplier.toString(),
@@ -275,8 +277,8 @@ export function buildCreateVaultParamsWeightedScale(
   transactionType: TransactionType,
   senderAddress: string,
   currentPrice: number,
+  chain: Chains,
 ) {
-  const { chain } = useChainStore.getState();
   const { executionInterval, executionIntervalIncrement } = state;
 
   const initialDenomInfo = getDenomInfo(state.initialDenom);
@@ -304,6 +306,7 @@ export function buildCreateVaultParamsWeightedScale(
         state.startPrice,
         resultingDenomInfo,
         transactionType,
+        chain,
       ),
       minimum_receive_amount: getMinimumReceiveAmount(
         initialDenomInfo,
@@ -322,6 +325,7 @@ export function buildCreateVaultParamsWeightedScale(
         state.applyMultiplier,
         state.swapMultiplier,
         currentPrice,
+        chain,
       ),
     },
   } as OsmosisExecuteMsg;
@@ -332,13 +336,12 @@ export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
   pairs: Pair[],
   senderAddress: string,
+  chain: Chains,
 ): ExecuteMsg | OsmosisExecuteMsg {
   const initialDenomInfo = getDenomInfo(state.initialDenom);
   const resultingDenomInfo = getDenomInfo(state.resultingDenom);
 
   const swapAmount = calculateSwapAmountFromDuration(initialDenomInfo, state.strategyDuration, state.initialDeposit);
-
-  const { chain } = useChainStore.getState();
 
   const msg = {
     create_vault: {
@@ -374,14 +377,15 @@ export function buildCreateVaultParams(
   pairs: Pair[],
   transactionType: TransactionType,
   senderAddress: string,
-  currentPrice?: number,
+  currentPrice: number | undefined,
+  chain: Chains,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
-    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress);
+    return buildCreateVaultParamsDCA(state as DcaInFormDataAll, pairs, transactionType, senderAddress, chain);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, pairs, senderAddress, chain);
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {
@@ -393,6 +397,7 @@ export function buildCreateVaultParams(
       transactionType,
       senderAddress,
       Number(currentPrice),
+      chain,
     );
   }
 

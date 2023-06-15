@@ -21,7 +21,7 @@ import Page from './index.page';
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
 };
 
 const mockKujiraQuery = {

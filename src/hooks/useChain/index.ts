@@ -1,9 +1,9 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useFormStore } from '@hooks/useFormStore';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Chains } from './Chains';
 
 type ChainState = {
@@ -11,42 +11,42 @@ type ChainState = {
   setChain: (chain: Chains) => void;
 };
 
-export const useChainStore = create<ChainState>()(
-  persist(
-    (set) => ({
-      chain: Chains.Kujira,
-      setChain: (chain: Chains) => {
-        useFormStore.setState({ forms: {} });
-        useCosmWasmClient.setState({ client: null });
-        return set({ chain });
-      },
-    }),
-    {
-      name: 'chain',
-    },
-  ),
-);
+// export const useChainStore = create<ChainState>()(
+//   persist(
+//     (set) => ({
+//       chain: Chains.Kujira,
+//       setChain: (chain: Chains) => set({ chain }),
+//     }),
+//     {
+//       name: 'chain',
+//     },
+//   ),
+// );
 
 export const useChain = () => {
   const router = useRouter();
-  const chain = useChainStore((state) => state.chain);
-  const setChain = useChainStore((state) => state.setChain);
+  const { chain } = useMemo(() => router.query, [router.query]);
+  const [data, setData] = useState<ChainState>({} as ChainState);
 
-  const [data, setData] = useState<ChainState>();
+  const setChain = useCallback((newChain: Chains) => {
+    useFormStore.setState({ forms: {} });
+    useCosmWasmClient.setState({ client: null });
+    router.replace({
+      pathname: router.pathname,
+      query: { ...router.query, chain: newChain },
+    });
+  }, [router]);
+
 
   useEffect(() => {
-    if (router.isReady) {
-      const { chain: queryParamChain, ...otherParams } = router.query;
-      if (queryParamChain) {
-        setChain(queryParamChain as Chains);
-        router.replace({
-          pathname: router.pathname,
-          query: otherParams,
-        });
-      }
-      setData({ chain, setChain });
+    if (!chain) {
+      setChain(Chains.Kujira);
     }
-  }, [router, setChain, chain]);
+    setData({ chain: chain as Chains, setChain });
 
-  return data || ({} as ChainState);
+  }, [setChain, chain]);
+
+
+console.log(data)
+  return data as ChainState
 };

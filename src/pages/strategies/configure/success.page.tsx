@@ -3,10 +3,10 @@ import { getFlowLayout } from '@components/Layout';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { configureSteps } from './index.page';
 
 function Success() {
@@ -25,9 +25,9 @@ function Success() {
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />
           <Text textAlign="center">Strategy destination updated.</Text>
           <Divider />
-          <Link passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
+          <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
             <Button isLoading={isPageLoading}>View strategy details</Button>
-          </Link>
+          </LinkWithQuery>
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>
