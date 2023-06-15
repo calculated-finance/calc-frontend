@@ -128,7 +128,7 @@ export function WeightSummary({
     <Box fontSize="10px" bg="deepHorizon" p={4} borderRadius="md" color="white">
       <Stack spacing={3}>
         <HStack justify="space-between">
-          <Text>Base Swap: {swapAmount || 0} axlUSDC</Text>
+          <Text>Base Swap: {swapAmount || 0} {initialDenom.name}</Text>
           <Text>|</Text>
           <Text>Multiplier: {swapMultiplier}</Text>
           <Text>|</Text>
