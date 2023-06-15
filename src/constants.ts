@@ -61,7 +61,7 @@ export const featureFlags =
         leapEnabled: false,
         XDEFIEnabled: true,
         dcaPlusEnabled: true,
-        reinvestVisualsEnabled: false,
+        reinvestVisualsEnabled: true,
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
