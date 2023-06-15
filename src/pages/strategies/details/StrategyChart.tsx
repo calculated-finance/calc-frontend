@@ -55,11 +55,11 @@ function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[] | undefin
 
     if ('dca_vault_execution_skipped' in data) {
       const { reason } = data.dca_vault_execution_skipped;
-      const x = convertToSentence(reason);
+      const reasonString = convertToSentence(reason as ExecutionSkippedReason);
 
       return {
         time: new Date(Number(event.timestamp) / 1000000),
-        failed: x,
+        failed: reasonString,
       };
     }
     throw new Error();
