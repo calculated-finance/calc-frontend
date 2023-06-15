@@ -19,7 +19,14 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { HomeIcon, Add1Icon, ToolkitIcon, BoxedImportIcon } from '@fusion-icons/react/interface';
+import {
+  HomeIcon,
+  Add1Icon,
+  ToolkitIcon,
+  BoxedImportIcon,
+  Graph2Icon,
+  ViewListIcon,
+} from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
@@ -27,6 +34,7 @@ import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { Pages } from './Pages';
+import { useAdmin } from '@hooks/useAdmin';
 
 interface LinkItem {
   name: string;
@@ -44,6 +52,18 @@ const LinkItems: Array<LinkItem> = [
   { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
+
+const getLinkItems = (isAdmin: boolean) => {
+  return [
+    ...LinkItems,
+    ...(isAdmin
+      ? [
+          { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+          { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+        ]
+      : []),
+  ];
+};
 
 const SIDEBAR_WIDTH = 64;
 
@@ -97,6 +117,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
 function SidebarContent({ onClose, ...rest }: SidebarProps) {
   const router = useRouter();
   const { chain } = useChain();
+  const { isAdmin } = useAdmin();
 
   return (
     <Flex
@@ -122,11 +143,13 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
-        {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
-          <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
-            {link.name}
-          </NavItem>
-        ))}
+        {getLinkItems(isAdmin)
+          .filter((link) => !link.exclude?.includes(chain))
+          .map((link) => (
+            <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
+              {link.name}
+            </NavItem>
+          ))}
       </Box>
       <Stack
         position="absolute"
@@ -150,6 +173,7 @@ interface MobileProps extends FlexProps {
 function MobileNav({ onOpen, ...rest }: MobileProps) {
   const router = useRouter();
   const { chain } = useChain();
+  const { isAdmin } = useAdmin();
 
   return (
     <Flex
@@ -173,32 +197,34 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
-        {LinkItems.filter((link) => !link.exclude?.includes(chain)).map((link) => (
-          <Link href={link.href} key={link.name}>
-            <IconButton
-              aria-label={link.name}
-              variant="link"
-              width={12}
-              height={12}
-              p={0}
-              borderBottomWidth={2}
-              borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
-              borderRadius="none"
-              _hover={{
-                bg: 'darkGrey',
-                stroke: link.href === router.asPath ? 'brand.200' : 'white',
-              }}
-              icon={
-                <Icon
-                  as={link.icon}
-                  cursor="pointer"
-                  color={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
-                  stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
-                />
-              }
-            />
-          </Link>
-        ))}
+        {getLinkItems(isAdmin)
+          .filter((link) => !link.exclude?.includes(chain))
+          .map((link) => (
+            <Link href={link.href} key={link.name}>
+              <IconButton
+                aria-label={link.name}
+                variant="link"
+                width={12}
+                height={12}
+                p={0}
+                borderBottomWidth={2}
+                borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
+                borderRadius="none"
+                _hover={{
+                  bg: 'darkGrey',
+                  stroke: link.href === router.asPath ? 'brand.200' : 'white',
+                }}
+                icon={
+                  <Icon
+                    as={link.icon}
+                    cursor="pointer"
+                    color={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                    stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                  />
+                }
+              />
+            </Link>
+          ))}
       </Flex>
     </Flex>
   );

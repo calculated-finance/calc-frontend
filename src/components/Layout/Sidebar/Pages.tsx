@@ -7,4 +7,6 @@ export enum Pages {
   GetAssets = '/bridge-assets',
   // Settings = '/settings',
   HowItWorks = '/how-it-works',
+  StatsAndTotals = '/stats-and-totals',
+  AllStrategies = '/admin/strategies',
 }
