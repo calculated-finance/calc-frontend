@@ -14,7 +14,6 @@ import { useRef, useState } from 'react';
 import { Strategy } from '@hooks/useStrategies';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
-import { formatFiat } from '@helpers/format/formatFiat';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
@@ -53,7 +52,6 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { data: coingeckoDataInitialDenom } = useFiatPriceHistory(initialDenom, days);
 
   const displayPrices = isBuyStrategy(strategy) ? coingeckoData?.prices : coingeckoDataInitialDenom?.prices;
-
   const priceOfDenom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
   const priceInDenom = isBuyStrategy(strategy) ? initialDenom : resultingDenom;
 
@@ -69,7 +67,11 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
       isBuyStrategy(strategy)
         ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
         : `${priceOfDenomName} ➡️ ${priceInDenomName}`
-    }\nReceived: ${Number(swap?.event.swapAmount.toFixed(2))} ${
+    }\nSwapped: ${
+      isBuyStrategy(strategy)
+        ? `${Number(swap?.event.denomAmountSent).toFixed(2)} ${priceInDenomName}`
+        : `${Number(swap?.event.denomAmountSent).toFixed(2)} ${priceOfDenomName}`
+    }  ➡️  ${Number(swap?.event.swapAmount.toFixed(2))} ${
       swap?.event.swapDenom
     }\nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom}\nDate: ${swap?.date
       .toLocaleDateString('en-AU', {
@@ -77,7 +79,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
         month: 'short',
         year: '2-digit',
       })
-      .replace(',', '')}\n1 ${priceOfDenomName}  = ${formatFiat(swap?.currentPrice || 0)}`,
+      .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
   }));
 
   return (

@@ -119,6 +119,8 @@ describe('getChartData', () => {
           accumulation: 9.999999,
           swapAmount: 9.999999,
           swapDenom: 'axlUSDC',
+          denomSent: 'ibc/85CE72EE820A66F0ABD5EE3907A34E243E4BE2D6CFAEB4C08DF85BD6C0784FA2',
+          denomAmountSent: 0.000001,
         },
       },
       {
@@ -130,6 +132,8 @@ describe('getChartData', () => {
           accumulation: 21.999998,
           swapAmount: 11.999999,
           swapDenom: 'axlUSDC',
+          denomSent: 'ibc/85CE72EE820A66F0ABD5EE3907A34E243E4BE2D6CFAEB4C08DF85BD6C0784FA2',
+          denomAmountSent: 0.000001,
         },
       },
     ]);
@@ -166,6 +170,8 @@ describe('getChartData', () => {
           accumulation: 21.999998,
           swapAmount: 11.999999,
           swapDenom: 'axlUSDC',
+          denomSent: 'ibc/85CE72EE820A66F0ABD5EE3907A34E243E4BE2D6CFAEB4C08DF85BD6C0784FA2',
+          denomAmountSent: 0.000001,
         },
       },
     ]);
