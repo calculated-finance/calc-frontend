@@ -17,24 +17,35 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useChain } from '@hooks/useChain';
 import useStrategiesEVM from '@hooks/useStrategiesEVM';
 
-function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLoading: boolean}) {
+type SortedStrategies = {
+  activeStrategies: Strategy[];
+  scheduledStrategies: Strategy[];
+  completedStrategies: Strategy[];
+  cancelledStrategies: Strategy[];
+};
+
+
+function StrategyList({strategies = []}: {strategies: Strategy[]}) {
+
+  return (
+    <>
+      {strategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)}
+    </>
+  );
+}
+
+function Page({strategies, isLoading}: {strategies: Strategy[]; isLoading: boolean}) {
   const { connected } = useWallet();
 
-  // const scheduledStrategies =
-  //   strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const scheduledStrategies =
+  strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  // const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-  // const completedStrategies =
-  //   strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+const completedStrategies =
+  strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  // const cancelledStrategies =
-  //   strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-
-  const activeStrategies = strategies;
-  const scheduledStrategies = [];
-  const completedStrategies = [];
-  const cancelledStrategies = [];
-
+const cancelledStrategies =
+  strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <>
@@ -56,14 +67,11 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLo
               </Text>
             </StrategiesAccordionButton>
             <StrategyAccordionPanel>
-              {/* eslint-disable-next-line no-nested-ternary */}
               {!activeStrategies?.length ? (
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                   {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
                 </Flex>
-              ) : (
-                activeStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-              )}
+              ) : <StrategyList strategies={activeStrategies} />}
             </StrategyAccordionPanel>
           </StrategyAccordionItem>
           {Boolean(scheduledStrategies.length) && (
@@ -77,14 +85,11 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLo
                 </Text>
               </StrategiesAccordionButton>
               <StrategyAccordionPanel>
-                {/* eslint-disable-next-line no-nested-ternary */}
                 {!scheduledStrategies.length ? (
                   <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                     {isLoading ? <Spinner /> : <Text>No scheduled strategies</Text>}
                   </Flex>
-                ) : (
-                  scheduledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-                )}
+                ) : <StrategyList strategies={scheduledStrategies} />}
               </StrategyAccordionPanel>
             </StrategyAccordionItem>
           )}
@@ -102,9 +107,7 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLo
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                   {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
                 </Flex>
-              ) : (
-                completedStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-              )}
+              ) : <StrategyList strategies={completedStrategies} />}
             </StrategyAccordionPanel>
           </StrategyAccordionItem>
           <StrategyAccordionItem>
@@ -121,9 +124,7 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLo
                 <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                   {isLoading ? <Spinner /> : <Text>No cancelled strategies</Text>}
                 </Flex>
-              ) : (
-                cancelledStrategies.map((strategy: Strategy) => <StrategyRow key={strategy.id} strategy={strategy} />)
-              )}
+              ) : <StrategyList strategies={cancelledStrategies} />}
             </StrategyAccordionPanel>
           </StrategyAccordionItem>
         </StrategyAccordion>
@@ -135,11 +136,16 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined, isLo
 
 function StrategiesCosmos() {
   const { data, isLoading } = useStrategies();
-  return <Page strategies={data?.vaults} isLoading={isLoading} />;
+
+  return <Page  strategies={data?.vaults} 
+  isLoading={isLoading} />;
 }
 
 function StrategiesEVM() {
   const { data: strategies, isLoading } = useStrategiesEVM();
+
+
+
   return <Page strategies={strategies} isLoading={isLoading} />;
 }
 

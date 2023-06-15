@@ -112,6 +112,12 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   );
 }
 
+const sidebarLogoUrls = {
+  [Chains.Osmosis]: '/images/osmoMascot.svg',
+  [Chains.Kujira]: '/images/kujiMascot.svg',
+  [Chains.Moonbeam]: '/images/moonbeam-large.png',
+}
+
 function SidebarContent({ onClose, ...rest }: SidebarProps) {
   const router = useRouter();
   const { chain } = useChain();
@@ -124,8 +130,9 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={chain === Chains.Osmosis ? '/images/osmoMascot.svg' : '/images/kujiMascot.svg'}
+      bgImage={sidebarLogoUrls[chain]}
       bgPosition="bottom"
+      bgSize="contain"
       bgRepeat="no-repeat"
       {...rest}
     >

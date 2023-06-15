@@ -3,7 +3,6 @@ import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenom
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
-import { truncate } from '@helpers/truncate';
 import { isMainnet } from './isMainnet';
 import { DenomInfo } from './DenomInfo';
 import { defaultDenom } from './defaultDenom';
@@ -89,14 +88,22 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     return {
       id: denom,
       ...defaultDenom,
-      ...mainnetDenoms[denom as MainnetDenoms],
+      ...kujiraMainnetAsset,
     };
   }
 
   if (chain === Chains.Moonbeam) {
+    const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
+    if (!moonbeamTestnetAsset) {
+      Sentry.captureException('getDenomInfo: moonbeamTestnetAsset is undefined', { tags: { denom } });
+      return {
+        id: denom.toLowerCase(),
+        ...defaultDenom,
+      };
+    }
     return {
       ...defaultDenom,
-      ...testnetDenomsMoonbeam[denom as TestnetDenomsMoonbeam],
+      ...moonbeamTestnetAsset,
       minimumSwapAmount: 0.05 / 1000,
       id: denom,
     };

@@ -15,8 +15,8 @@ import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { toBase64 } from '@helpers/base64';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import Page from './index.page';
 import { truncate } from '@helpers/truncate';
+import Page from './index.page';
 
 const mockRouter = {
   isReady: true,

@@ -11,6 +11,7 @@ import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { useChain } from './useChain';
 import { useMetamask } from './useMetamask';
 import { Chains } from './useChain/Chains';
+import { fetchStrategy } from './useStrategyEVM';
 
 const QUERY_KEY = 'get_vaults_by_address_evm';
 
@@ -26,17 +27,17 @@ export default function useStrategiesEVM() {
 
   
 
-  return useQuery<VaultsResponse>(
+  return useQuery<Strategy[]>(
     [QUERY_KEY, address, provider],
-    () => {
+    async () => {
       if (!provider) {
         throw new Error('No client');
       }
 
   const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
 
-      const result = factoryContract.getVaultsByAddress(address);
-      console.log(result);
+      const result = factoryContract.getVaultsByAddress(address).then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
+      
       return result;
     },
     {

@@ -12,7 +12,8 @@
     "test": "TZ=UTC jest --config=./jest.config.js",
     "typecheck": "tsc",
     "netlify": "netlify",
-    "sentry": "sentry-cli"
+    "sentry": "sentry-cli",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^1.10.5",

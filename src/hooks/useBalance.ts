@@ -2,11 +2,11 @@ import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
+import { ethers, formatEther, parseEther } from 'ethers';
+import * as erc20json from "@openzeppelin/contracts/build/contracts/ERC20.json"
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useMetamask } from './useMetamask';
-import { ethers, formatEther, parseEther } from 'ethers';
 
-import * as erc20json from "@openzeppelin/contracts/build/contracts/ERC20.json"
 
 
 export type BalanceResponse = {

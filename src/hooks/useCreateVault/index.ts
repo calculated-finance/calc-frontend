@@ -151,11 +151,13 @@ function useMoonbeamCreateVault(
   
       console.log('wait', receipt);
 
-      const referenceVaultCreatedEvent = receipt.events.find(
-				(e) => e.event === 'VaultCreated'
-			)
-			const referenceVaultAddress = referenceVaultCreatedEvent.args.vaultAddress
-      return referenceVaultAddress;
+      return receipt;
+
+      // const referenceVaultCreatedEvent = receipt.events.find(
+			// 	(e) => e.event === 'VaultCreated'
+			// )
+			// const referenceVaultAddress = referenceVaultCreatedEvent.args.vaultAddress
+      // return referenceVaultAddress;
 
       // const data =
       // '0x321695310000000000000000000000001af6fca482cd73c198b8c0f3c883be8d9bf5cf74000000000000000000000000a6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa0000000000000000000000009c3c9283d3e44854697cd22d3faa240cfb032889000000000000000000000000000000000000000000000000000009184e72a000000000000000000000000000000000000000000000000000000000000000003c0000000000000000000000000000000000000000000000000000000064361265';
