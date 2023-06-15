@@ -3,6 +3,7 @@ import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 
 export const daysData = [
+  { value: '0.0417', label: '1Hr' },
   { value: '1', label: '1D' },
   { value: '3', label: '3D' },
   { value: '7', label: '1W' },
