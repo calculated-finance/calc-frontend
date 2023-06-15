@@ -4,6 +4,7 @@ import { DenomInfo } from './DenomInfo';
 
 export const testnetDenomsMoonbeam: Record<TestnetDenomsMoonbeam, Partial<DenomInfo>> = {
   [TestnetDenomsMoonbeam.WDEV]: {
+
     name: 'WDEV',
     icon: '/images/denoms/weth.svg',
     stable: true,
