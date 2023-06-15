@@ -1,7 +1,5 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useFormStore } from '@hooks/useFormStore';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Chains } from './Chains';
@@ -26,11 +24,12 @@ type ChainState = {
 export const useChain = () => {
   const router = useRouter();
   const { chain } = useMemo(() => router.query, [router.query]);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<ChainState>({} as ChainState);
 
-  const setChain = useCallback((newChain: Chains) => {
-    useFormStore.setState({ forms: {} });
-    useCosmWasmClient.setState({ client: null });
+  const updateQueryParam = useCallback((newChain: Chains) => {
+    console.log('updateQueryParam', newChain);
     router.replace({
       pathname: router.pathname,
       query: { ...router.query, chain: newChain },
@@ -38,15 +37,27 @@ export const useChain = () => {
   }, [router]);
 
 
+  const setChain = useCallback((newChain: Chains) => {
+    console.log('setChain', newChain);
+    useFormStore.setState({ forms: {} });
+    useCosmWasmClient.setState({ client: null });
+    updateQueryParam(newChain)
+  }, [router]);
+
+
+
   useEffect(() => {
-    if (!chain) {
-      setChain(Chains.Kujira);
+    if (router.isReady) {
+      if(chain) {
+        setData({ chain: chain as Chains, setChain });
+      } else {
+        setData({ chain: Chains.None, setChain });
+      }
+      setIsLoading(false);
     }
-    setData({ chain: chain as Chains, setChain });
+      
+  }, [router.isReady, setChain, chain]);
 
-  }, [setChain, chain]);
 
-
-console.log(data)
-  return data as ChainState
+  return {...data as ChainState, isLoading}
 };

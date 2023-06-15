@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
 import * as amplitude from '@amplitude/analytics-browser';
-import { ReactElement, ReactNode, useEffect } from 'react';
+import {  ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
@@ -9,22 +9,18 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
 import { featureFlags } from 'src/constants';
-import { useKujira } from '@hooks/useKujira';
-import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useOsmosis } from '@hooks/useOsmosis';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
-import Spinner from '@components/Spinner';
-import { useLeap } from '@hooks/useLeap';
-import { useXDEFI } from '@hooks/useXDEFI';
 import { useAssetList } from '@hooks/useAssetList';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
+import { ChainWrapper } from './ChainWrapper';
+import { InitWrapper } from './InitWrapper';
+import { LoadingState } from './LoadingState';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -42,20 +38,12 @@ Sentry.init({
   enabled: isMainnet(),
 });
 
-function initAmplitude() {
+export function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {
     amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
       defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
     });
   }
-}
-
-function LoadingState() {
-  return (
-    <Center h="100vh">
-      <Spinner />
-    </Center>
-  );
 }
 
 function AssetListLoader({ children }: ChildrenProp) {
@@ -64,78 +52,6 @@ function AssetListLoader({ children }: ChildrenProp) {
   const { chain } = useChain();
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
-}
-
-function LoadingWrapper({ children }: ChildrenProp) {
-  const { chain } = useChain();
-
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return chain ? <>{children}</> : <LoadingState />;
-}
-
-function InitWrapper({ children }: ChildrenProp) {
-  const { chain } = useChain();
-
-  // const initStation = useStation((state) => state.init);
-
-  const initKujira = useKujira((state) => state.init);
-  const initOsmosis = useOsmosis((state) => state.init);
-  const initKeplr = useKeplr((state) => state.init);
-  const initLeap = useLeap((state) => state.init);
-  const initXDEFI = useXDEFI((state) => state.init);
-
-  const initCosmWasmClient = useCosmWasmClient((state) => state.init);
-
-  useEffect(() => {
-    initAmplitude();
-  }, []);
-
-  // useEffect(() => {
-  //   if (featureFlags.stationEnabled) {
-  //     if (chain) {
-  //       initStation();
-  //     }
-  //   }
-  // }, [initStation, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initKeplr(chain);
-    }
-  }, [initKeplr, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initLeap(chain);
-    }
-  }, [initLeap, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initXDEFI(chain);
-    }
-  }, [initXDEFI, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initKujira();
-    }
-  }, [initKujira, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initOsmosis();
-    }
-  }, [initOsmosis, chain]);
-
-  useEffect(() => {
-    if (chain) {
-      initCosmWasmClient(chain);
-    }
-  }, [initCosmWasmClient, chain]);
-
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{children}</>;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
@@ -166,11 +82,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <CalcWalletModalProvider>
               <QueryClientProvider client={queryClient}>
                 <AssetListWrapper>
-                  <LoadingWrapper>
+                  <ChainWrapper>
                     <AssetListLoader>
                       {getLayout(<Component {...pageProps} />)}
                     </AssetListLoader>
-                  </LoadingWrapper>
+                  </ChainWrapper>
                 </AssetListWrapper>
               </QueryClientProvider>
             </CalcWalletModalProvider>

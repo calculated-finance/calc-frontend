@@ -43,8 +43,6 @@ export function useCustomiseStrategy() {
 
       const updateVaultMsg = getUpdateVaultMessage(variables, chain);
 
-      console.log('updateVaultMsg', updateVaultMsg);
-
       msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
 
       return client.signAndBroadcast(address, msgs, 'auto');
