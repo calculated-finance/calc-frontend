@@ -2,7 +2,6 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
 
-const persistedQueryParams = ["chain"];
 
 function LinkWithQuery({ href, ...props }: LinkProps & PropsWithChildren) {
   const router = useRouter();
@@ -14,18 +13,6 @@ function LinkWithQuery({ href, ...props }: LinkProps & PropsWithChildren) {
       ? href.query
       : {};
 
-
-  const persistedRouterQueries = Object.keys(router.query).reduce(
-    (acc, key) => {
-        if (persistedQueryParams.includes(key)) {
-            acc[key] = router.query[key];
-        }
-        return acc;
-    },
-    {}
-    );
-
-
   return (
     <Link
       {...props}
@@ -33,7 +20,7 @@ function LinkWithQuery({ href, ...props }: LinkProps & PropsWithChildren) {
         pathname,
         query: {
           ...query,
-          ...persistedRouterQueries,
+          chain: router.query.chain,
         },
       }}
     />

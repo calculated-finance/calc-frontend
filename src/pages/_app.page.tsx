@@ -22,6 +22,7 @@ import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAssetList } from '@hooks/useAssetList';
 import { Chains } from '@hooks/useChain/Chains';
+import { ChildrenProp } from '@helpers/ChildrenProp';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 
@@ -57,20 +58,22 @@ function LoadingState() {
   );
 }
 
-function AssetListLoader({ children }: { children: ReactNode }) {
+function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
 
   const { chain } = useChain();
-  return (chain !== Chains.Osmosis || assetList) ? children : <LoadingState />;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
 }
 
-function LoadingWrapper({ children }: { children: ReactNode }) {
+function LoadingWrapper({ children }: ChildrenProp) {
   const { chain } = useChain();
 
-  return chain ? children : <LoadingState />;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return chain ? <>{children}</> : <LoadingState />;
 }
 
-function InitWrapper({ children }: { children: ReactNode }) {
+function InitWrapper({ children }: ChildrenProp) {
   const { chain } = useChain();
 
   // const initStation = useStation((state) => state.init);
