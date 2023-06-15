@@ -150,12 +150,34 @@ function Page({strategy, events}: {strategy: Strategy | undefined, events: Strat
   );
 }
 
+
+// const { data,  } = useStrategy(id);
+// const { data: events } = useStrategyEvents(id as string);
+
+// return <Page strategy={data?.vault} events={events} > {children}</Page>
+// }
+
+
+// function StrategyDetailsEVM({ id, children }: { id: string} & ChildrenProp) {
+// const { data: strategy  } = useStrategyEVM(id);
+// return <Page strategy={strategy} events={[]}> {children}</Page>
+// }
+
+// function StrategyProvider({id, children}: {id: string} & ChildrenProp) {
+// const { chain } = useChain();
+// return chain === Chains.Moonbeam ? 
+//   <StrategyProviderEVM id={id} >{children}</StrategyProviderEVM> 
+//   : 
+//   <StrategyProviderCosmos id={id} >{children}</StrategyProviderCosmos>
+
+
 function StrategyDetailsCosmos({id }: { id: string }) {
   const { data,  } = useStrategy(id);
   const { data: events } = useStrategyEvents(id as string);
 
   return <Page strategy={data?.vault} events={events}  />;
 }
+
 
 function StrategyDetailsEVM({ id }: { id: string }) {
   const { data: strategy  } = useStrategyEVM(id);

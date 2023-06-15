@@ -16,7 +16,6 @@ import {
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import React from 'react';
-import useStrategyEVM from '@hooks/useStrategyEVM';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -51,24 +50,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
   );
 }
 
-const withStrategy = (WrappedComponent) => {
-  function WithStrategy(props) {
-     const {data: strategy, isLoading}  = useStrategyEVM(props.strategy);
-
-  console.log(strategy)
-
-
-    return <WrappedComponent strategy={strategy} isLoading={isLoading} />;
-  }
-
-  return WithStrategy;
-};
-
-
-  
-
 function StrategyRow({ strategy}: { strategy: Strategy}) {
-
 
   // return (
   //   <Link href={generateStrategyDetailUrl(strategy)}>

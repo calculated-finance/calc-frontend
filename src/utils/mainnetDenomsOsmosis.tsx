@@ -24,6 +24,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   [MainnetDenomsOsmosis.wETH]: {
     enabledInDcaPlus: true,
     coingeckoId: 'weth',
+    minimumSwapAmount: 0.05 / 1000,
   },
   [MainnetDenomsOsmosis.FTM]: {
     coingeckoId: 'wrapped-fantom',
@@ -44,6 +45,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   [MainnetDenomsOsmosis.wBTC]: {
     enabledInDcaPlus: true,
     coingeckoId: 'wrapped-bitcoin',
+    minimumSwapAmount: 0.05 / 1000,
   },
   [MainnetDenomsOsmosis.PSTAKE]: {
     coingeckoId: 'pstake-finance',

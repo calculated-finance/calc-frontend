@@ -27,6 +27,7 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
+import useStrategiesEVM from '@hooks/useStrategiesEVM';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -113,13 +114,12 @@ function InvestmentThesis() {
   );
 }
 
-function ActiveStrategies() {
-  const { data, isLoading } = useStrategies();
+function ActiveStrategies({strategies} : {strategies: Strategy[] | undefined}) {
   const { connected } = useWallet();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
-      {connected && isLoading ? (
+      {connected && !strategies ? (
         <Spinner />
       ) : (
         <Stack spacing={4}>
@@ -244,11 +244,11 @@ function WorkflowInformation() {
   );
 }
 
-function Home() {
+function Home({strategies}: { strategies: Strategy[] | undefined  }) {
   const { connected } = useWallet();
+  const { chain } = useChain();
 
-  const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
   return (
     <>
@@ -272,12 +272,12 @@ function Home() {
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
           <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-            <ActiveStrategies />
+            <ActiveStrategies strategies={strategies} />
           </GridItem>
         )}
 
         <GridItem colSpan={{ base: 6, xl: 3 }}>
-          <TotalInvestment />
+          {chain !== Chains.Moonbeam && <TotalInvestment />}
         </GridItem>
         <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
           <WorkflowInformation />
@@ -287,6 +287,25 @@ function Home() {
   );
 }
 
-Home.getLayout = getSidebarLayout;
+function StrategiesCosmos() {
+  const { data, isLoading } = useStrategies();
 
-export default Home;
+  return <Home  strategies={data?.vaults} 
+  />;
+}
+
+function StrategiesEVM() {
+  const { data: strategies, isLoading } = useStrategiesEVM();
+
+  return <Home strategies={strategies} />;
+}
+
+function Page() {
+  const { chain } = useChain();
+  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
+}
+
+
+Page.getLayout = getSidebarLayout;
+
+export default Page;

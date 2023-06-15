@@ -115,13 +115,15 @@ function useMoonbeamCreateVault(
 			const performSwapConditionType = 0 // when vault has funds
 			const finaliseVaultConditionType = 1 // when vault has no funds
 			const finaliserType = 0
+
+      const { deconversion } = getDenomInfo(state?.initialDenom);
   
   
       const params = {
         owner: address,
         tokenIn: state?.initialDenom,
         tokenOut: state?.resultingDenom,
-        swapAmount: ethers.parseEther(state?.initialDeposit.toString()),
+        swapAmount: ethers.parseEther(deconversion(state?.swapAmount).toString()).toString(),
         timeInterval: getExecutionInterval(state?.executionInterval, state?.executionIntervalIncrement).custom.seconds.toString(),
         targetTime: Math.floor(Date.now() / 1000) + 100,
         swapAdjustmentType,

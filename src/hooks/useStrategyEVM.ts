@@ -3,6 +3,7 @@ import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { useQuery } from '@tanstack/react-query';
 import vaultContractJson from 'src/Vault.json'
 import { Interface, ethers } from 'ethers';
+import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from './useStrategies';
 import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';
@@ -42,6 +43,8 @@ export async function fetchStrategy(id: string, provider: any) {
   // console.log('simulation', result.simulation)
 
   const balance = ethers.parseEther(balanceResponse.toString())
+
+  const { conversion } = getDenomInfo(result.tokenIn)
   return {
     status: balance ? 'active' : 'inactive',
     balance: {
@@ -63,7 +66,7 @@ export async function fetchStrategy(id: string, provider: any) {
       },
     ],
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
-    swap_amount: result.swapAmount.toString(),
+    swap_amount: conversion(Number(result.swapAmount)).toString(),
     id,
   };
 }
@@ -80,7 +83,7 @@ export default function useStrategyEVM(id: Strategy['id'] | undefined) {
       if (!id) {
         throw new Error('No id');
       }
-try {
+  try {
 
       return await fetchStrategy(id, provider);
     } catch (e) {

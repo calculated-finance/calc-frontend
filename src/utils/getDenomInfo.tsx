@@ -105,6 +105,8 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
       ...defaultDenom,
       ...moonbeamTestnetAsset,
       minimumSwapAmount: 0.05 / 1000,
+      conversion: (value: number) => value / 10 ** 18,
+      deconversion: (value: number) => Math.round(value * 10 ** 18),
       id: denom,
     };
   }

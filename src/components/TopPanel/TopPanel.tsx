@@ -7,6 +7,10 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
+import React from 'react';
+import useStrategiesEVM from '@hooks/useStrategiesEVM';
+import { useChain } from '@hooks/useChain';
+import { Chains } from '@hooks/useChain/Chains';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -63,9 +67,8 @@ function Returning() {
   );
 }
 
-function ActiveWithOne() {
-  const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+function ActiveWithOne({strategies}: {strategies: Strategy[]}) {
+  const activeStrategies = strategies.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
   const balanceValue = new DenomValue(balance);
@@ -102,9 +105,8 @@ function ActiveWithOne() {
   );
 }
 
-function ActiveWithMany() {
-  const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+function ActiveWithMany({strategies}: {strategies: Strategy[]}) {
+  const activeStrategies = strategies.filter(isStrategyOperating) ?? [];
   return (
     <>
       <HStack align="center">
@@ -141,19 +143,18 @@ function ActiveWithMany() {
   );
 }
 
-export default function TopPanel() {
+function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[], isLoading: boolean}) {
   const { connected } = useWallet();
 
-  const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
-  const completedStrategies = data?.vaults.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+  const completedStrategies = strategies?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
     if (connected && isLoading) {
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'transparent',
-        Content: Box,
+        content: <Box />,
       };
     }
     if (!activeStrategies.length) {
@@ -161,30 +162,30 @@ export default function TopPanel() {
         return {
           background: '/images/backgrounds/twist-thin.svg',
           border: 'brand.200',
-          Content: Onboarding,
+          content: <Onboarding />,
         };
       }
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'brand.200',
-        Content: Returning,
+        content: <Returning />,
       };
     }
     if (activeStrategies.length === 1) {
       return {
         background: '/images/backgrounds/spiral-thin.svg',
         border: 'blue.200',
-        Content: ActiveWithOne,
+        content: <ActiveWithOne strategies={strategies} />,
       };
     }
     return {
       background: '/images/backgrounds/star-thin.svg',
       border: 'green.200',
-      Content: ActiveWithMany,
+      content: <ActiveWithMany strategies={strategies} />,
     };
   };
 
-  const { background, border, Content } = getConfig();
+  const { background, border, content } = getConfig();
   const colSpan = { base: 6, lg: activeStrategies.length ? 4 : 6 };
 
   return (
@@ -213,10 +214,30 @@ export default function TopPanel() {
             borderRadius="2xl"
           />
           <Stack zIndex={1} spacing={4} m={0} p={8} bg="transparent">
-            <Content />
+            {content}
           </Stack>
         </Flex>
       )}
     </GridItem>
   );
 }
+
+
+function StrategiesCosmos() {
+  const { data, isLoading } = useStrategies();
+
+  return <TopPanelWithStrategies  strategies={data?.vaults} 
+  isLoading={isLoading} />;
+}
+
+function StrategiesEVM() {
+  const { data: strategies, isLoading } = useStrategiesEVM();
+
+  return <TopPanelWithStrategies strategies={strategies} isLoading={isLoading} />;
+}
+
+export default function TopPanel() {
+  const { chain } = useChain();
+  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
+}
+
