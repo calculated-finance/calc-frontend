@@ -33,8 +33,8 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { Pages } from './Pages';
 import { useAdmin } from '@hooks/useAdmin';
+import { Pages } from './Pages';
 
 interface LinkItem {
   name: string;
@@ -53,17 +53,15 @@ const LinkItems: Array<LinkItem> = [
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
-const getLinkItems = (isAdmin: boolean) => {
-  return [
-    ...LinkItems,
-    ...(isAdmin
-      ? [
-          { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-          { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-        ]
-      : []),
-  ];
-};
+const getLinkItems = (isAdmin: boolean) => [
+  ...LinkItems,
+  ...(isAdmin
+    ? [
+        { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+        { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+      ]
+    : []),
+];
 
 const SIDEBAR_WIDTH = 64;
 
