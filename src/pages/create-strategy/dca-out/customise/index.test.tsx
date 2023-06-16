@@ -132,7 +132,7 @@ describe('DCA Out customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -178,7 +178,7 @@ describe('DCA Out customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -242,7 +242,7 @@ describe('DCA Out customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -277,7 +277,7 @@ describe('DCA Out customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

@@ -118,7 +118,7 @@ describe('DCA Plus In customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

@@ -120,7 +120,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -154,7 +154,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -179,7 +179,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

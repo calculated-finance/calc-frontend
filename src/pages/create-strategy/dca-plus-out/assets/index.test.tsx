@@ -193,7 +193,7 @@ describe('DCA Out Assets page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-out/customise',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

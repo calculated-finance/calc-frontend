@@ -191,7 +191,7 @@ describe('Assets page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/customise',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

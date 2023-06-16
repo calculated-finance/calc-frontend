@@ -102,7 +102,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -129,7 +129,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

@@ -135,7 +135,7 @@ describe('DCA Plus In customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

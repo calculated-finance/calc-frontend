@@ -191,7 +191,7 @@ describe('DCA In Assets page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/customise',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
