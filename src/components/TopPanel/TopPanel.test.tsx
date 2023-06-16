@@ -4,7 +4,27 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import useStrategies from '@hooks/useStrategies';
 import { queryClient } from '@helpers/test/testQueryClient';
+import { Chains } from '@hooks/useChain/Chains';
 import TopPanel from './TopPanel';
+
+
+const mockRouter = {
+  isReady: true,
+  push: jest.fn(),
+  pathname: '/',
+  query: {  chain: Chains.Kujira },
+  events: {
+    on: jest.fn(),
+  },
+};
+
+jest.mock('@hooks/useWallet');
+
+jest.mock('next/router', () => ({
+  useRouter() {
+    return mockRouter;
+  },
+}));
 
 jest.mock('@hooks/useWallet');
 jest.mock('@hooks/useStrategies');
@@ -36,7 +56,7 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Ready to set up a CALC Strategy?/)).toBeInTheDocument();
-        expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy');
+        expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
       });
     });
     describe('when a user has only completed strategies', () => {
@@ -56,8 +76,8 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Ready to fire up CALC again?/)).toBeInTheDocument();
-        expect(screen.getByText(/Create new strategy/)).toHaveAttribute('href', '/create-strategy');
-        expect(screen.getByText(/Review past strategies/)).toHaveAttribute('href', '/strategies');
+        expect(screen.getByText(/Create new strategy/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
+        expect(screen.getByText(/Review past strategies/)).toHaveAttribute('href', '/strategies?chain=Kujira');
       });
     });
     describe('when a single strategy is set', () => {
@@ -77,8 +97,8 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Awesome - you have a calculated strategy active!/)).toBeInTheDocument();
-        expect(screen.getByText(/Top up my strategy/)).toHaveAttribute('href', '/strategies/top-up?id=1');
-        expect(screen.getByText(/Review performance/)).toHaveAttribute('href', '/strategies/details?id=1');
+        expect(screen.getByText(/Top up my strategy/)).toHaveAttribute('href', '/strategies/top-up?id=1&chain=Kujira');
+        expect(screen.getByText(/Review performance/)).toHaveAttribute('href', '/strategies/details?id=1&chain=Kujira');
       });
     });
     describe('when multiple strategies are set', () => {
@@ -101,7 +121,7 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/Wow - you're a CALC pro./)).toBeInTheDocument();
-        expect(screen.getByText(/See my strategies/)).toHaveAttribute('href', '/strategies');
+        expect(screen.getByText(/See my strategies/)).toHaveAttribute('href', '/strategies?chain=Kujira');
         expect(screen.getByText(/Share with others/)).toHaveAttribute(
           'href',
           'https://twitter.com/intent/tweet?text=I%27ve%20got%20a%20few%20strategies%20running%20on%20%40CALC_FINANCE%20-%20come%20check%20them%20out!%20App.calculated.fi',
