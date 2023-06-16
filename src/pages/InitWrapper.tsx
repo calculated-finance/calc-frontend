@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import * as amplitude from '@amplitude/analytics-browser';
 import { useKujira } from '@hooks/useKujira';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
@@ -7,7 +8,15 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { initAmplitude } from './_app.page';
+import { featureFlags } from 'src/constants';
+
+function initAmplitude() {
+  if (featureFlags.amplitudeEnabled) {
+    amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
+      defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
+    });
+  }
+}
 
 export function InitWrapper({ children }: ChildrenProp) {
   const { chain } = useChain();

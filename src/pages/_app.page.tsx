@@ -1,6 +1,5 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
-import * as amplitude from '@amplitude/analytics-browser';
 import {  ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import theme from 'src/theme';
@@ -8,7 +7,6 @@ import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
-import { featureFlags } from 'src/constants';
 import { useChain } from '@hooks/useChain';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
@@ -38,13 +36,6 @@ Sentry.init({
   enabled: isMainnet(),
 });
 
-export function initAmplitude() {
-  if (featureFlags.amplitudeEnabled) {
-    amplitude.init('6c73f6d252d959716850893db0164c57', undefined, {
-      defaultTracking: { sessions: true, pageViews: true, formInteractions: true, fileDownloads: true },
-    });
-  }
-}
 
 function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
