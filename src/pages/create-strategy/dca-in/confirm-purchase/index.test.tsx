@@ -11,6 +11,7 @@ import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import YesNoValues from '@models/YesNoValues';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
@@ -138,6 +139,7 @@ describe('DCA In confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 10,
+          chain: Chains.Kujira,
         },
       });
     });
