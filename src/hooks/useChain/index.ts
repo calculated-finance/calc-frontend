@@ -1,4 +1,5 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import * as Sentry from '@sentry/react';
 import { useFormStore } from '@hooks/useFormStore';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -29,6 +30,8 @@ export const useChain = () => {
   const storedChain = useChainStore((state) => state.chain);
   const setStoredChain = useChainStore((state) => state.setChain);
 
+
+
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<ChainState>({} as ChainState);
 
@@ -56,6 +59,7 @@ export const useChain = () => {
       } else if (storedChain) {
         updateQueryParam(storedChain);
         setData({ chain: storedChain, setChain });
+        Sentry.captureMessage(`No chain set for ${router.pathname}`);
       }
       setIsLoading(false);
     }
