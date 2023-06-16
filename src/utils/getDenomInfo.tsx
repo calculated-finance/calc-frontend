@@ -76,15 +76,9 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
-  if (isMainnet()) {
-    const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
-    if (!kujiraMainnetAsset) {
-      Sentry.captureException('getDenomInfo: kujiraMainnetAsset is undefined', { tags: { denom } });
-      return {
-        id: denom,
-        ...defaultDenom,
-      };
-    }
+  const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+
+  if (kujiraMainnetAsset) {
     return {
       id: denom,
       ...defaultDenom,
@@ -92,15 +86,8 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
-  if (chain === Chains.Moonbeam) {
-    const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
-    if (!moonbeamTestnetAsset) {
-      Sentry.captureException('getDenomInfo: moonbeamTestnetAsset is undefined', { tags: { denom } });
-      return {
-        id: denom.toLowerCase(),
-        ...defaultDenom,
-      };
-    }
+  const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
+  if (moonbeamTestnetAsset) {
     return {
       ...defaultDenom,
       ...moonbeamTestnetAsset,
@@ -113,18 +100,21 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
 
   const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
 
-  if (!kujiraTestnetAsset) {
-    Sentry.captureException('getDenomInfo: kujiraTestnetAsset is undefined', { tags: { denom } });
+  if (kujiraTestnetAsset) {
     return {
       id: denom,
       ...defaultDenom,
-    }
+      ...testnetDenoms[denom as TestnetDenoms],
+    };
   }
+
+
+  Sentry.captureException('didint find a denom', { tags: { denom } });
   return {
     id: denom,
     ...defaultDenom,
-    ...testnetDenoms[denom as TestnetDenoms],
-  };
+  }
+  
 };
 
 export function getDenomName(denomInfo: DenomInfo) {

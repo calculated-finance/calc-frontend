@@ -36,7 +36,10 @@ export default function useStrategiesEVM() {
 
   const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
 
-      const result = factoryContract.getVaultsByAddress(address).then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
+      const result = factoryContract.getVaultsByAddress(address).then((ids: string[]) => {
+        console.log(ids)
+        return Promise.all(ids.map((id: string) => fetchStrategy(id, provider)));
+      });
       
       return result;
     },

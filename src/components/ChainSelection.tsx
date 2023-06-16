@@ -120,7 +120,7 @@ export function ChainSelection() {
             }}
           >
             <HStack>
-              <Image src="/images/metamask.png" w={5} />
+              <Image src="/images/moonbeam.png" w={5} />
               <Text>Moonbeam</Text>
             </HStack>
           </MenuItemOption>
