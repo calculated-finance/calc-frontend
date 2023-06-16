@@ -16,6 +16,7 @@ import { useKujira } from '@hooks/useKujira';
 import { KujiraQueryClient } from 'kujira.js';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
@@ -189,7 +190,7 @@ describe('DCA In Assets page', () => {
         resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       });
 
-      expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/create-strategy/dca-in/customise', query: undefined });
+      expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/create-strategy/dca-in/customise', query: { chain: Chains.Kujira} });
     });
   });
 });
