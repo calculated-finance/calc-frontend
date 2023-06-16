@@ -1,5 +1,4 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useWallet } from '@hooks/useWallet';
@@ -17,9 +16,6 @@ export function mockUseWallet(
     } as unknown as CosmWasmClient,
   });
 
-  useChainStore.setState({
-    chain: Chains.Kujira,
-  });
 
   (useWallet as jest.Mock).mockImplementation(() => ({
     address: 'kujiratestwallet',

@@ -1,7 +1,8 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import * as Sentry from '@sentry/react';
 import { useFormStore } from '@hooks/useFormStore';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Chains } from './Chains';
@@ -15,11 +16,7 @@ export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
       chain: Chains.Kujira,
-      setChain: (chain: Chains) => {
-        useFormStore.setState({ forms: {} });
-        useCosmWasmClient.setState({ client: null });
-        return set({ chain });
-      },
+      setChain: (chain: Chains) => set({ chain }),
     }),
     {
       name: 'chain',
@@ -29,24 +26,46 @@ export const useChainStore = create<ChainState>()(
 
 export const useChain = () => {
   const router = useRouter();
-  const chain = useChainStore((state) => state.chain);
-  const setChain = useChainStore((state) => state.setChain);
+  const { chain } = useMemo(() => router.query, [router.query]);
+  const storedChain = useChainStore((state) => state.chain);
+  const setStoredChain = useChainStore((state) => state.setChain);
 
-  const [data, setData] = useState<ChainState>();
+
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<ChainState>({} as ChainState);
+
+  const updateQueryParam = useCallback((newChain: Chains) => {
+    router.replace({
+      pathname: router.pathname,
+      query: { ...router.query, chain: newChain },
+    });
+  }, [router]);
+
+
+  const setChain = useCallback((newChain: Chains) => {
+    useFormStore.setState({ forms: {} });
+    useCosmWasmClient.setState({ client: null });
+    setStoredChain(newChain);
+    updateQueryParam(newChain)
+  }, [router]);
+
+
 
   useEffect(() => {
     if (router.isReady) {
-      const { chain: queryParamChain, ...otherParams } = router.query;
-      if (queryParamChain) {
-        setChain(queryParamChain as Chains);
-        router.replace({
-          pathname: router.pathname,
-          query: otherParams,
-        });
+      if(chain) {
+        setData({ chain: chain as Chains, setChain });
+      } else if (storedChain) {
+        updateQueryParam(storedChain);
+        setData({ chain: storedChain, setChain });
+        Sentry.captureMessage(`No chain set for ${router.pathname}`);
       }
-      setData({ chain, setChain });
+      setIsLoading(false);
     }
-  }, [router, setChain, chain]);
+      
+  }, [router.isReady, setChain, chain]);
 
-  return data || ({} as ChainState);
+
+  return {...data as ChainState, isLoading}
 };

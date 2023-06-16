@@ -4,13 +4,14 @@ import '@testing-library/jest-dom';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-out/success',
-  query: { strategyId: '1', timeSaved: 100 },
+  query: { strategyId: '1', timeSaved: 100, chain: Chains.Kujira },
   events: {
     on: jest.fn(),
   },
@@ -59,6 +60,6 @@ describe('DCA Plus Out success page', () => {
 
     await renderTarget();
 
-    expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1');
+    expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1&chain=Kujira');
   });
 });

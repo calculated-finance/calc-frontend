@@ -1,10 +1,11 @@
 import { Badge, BadgeProps, HStack } from '@chakra-ui/react';
+import { routerPush } from '@helpers/routerPush';
 import { useRouter } from 'next/router';
 
 export default function BadgeButton({ url, children, ...props }: { url: string } & BadgeProps) {
   const router = useRouter();
   const handleClick = () => {
-    router.push(url);
+    routerPush(router, url);
   };
   return (
     <Badge

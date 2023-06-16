@@ -24,7 +24,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-in/post-purchase',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -120,7 +120,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -154,7 +154,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });
@@ -179,7 +179,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

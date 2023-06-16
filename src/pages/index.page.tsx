@@ -20,13 +20,13 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import useStrategies, { Strategy } from '@hooks/useStrategies';
 import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
-import Link from 'next/link';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -128,17 +128,17 @@ function ActiveStrategies() {
             {activeStrategies.length}
           </Heading>
           <Stack direction={{ base: 'column', sm: 'row' }}>
-            <Link href="/create-strategy">
+            <LinkWithQuery href="/create-strategy">
               <Button w={44} variant="outline" colorScheme="blue">
                 {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
               </Button>
-            </Link>
+            </LinkWithQuery>
             {Boolean(activeStrategies.length) && (
-              <Link href="/strategies">
+              <LinkWithQuery href="/strategies">
                 <Button w={44} variant="outline" colorScheme="blue">
                   Review my strategies
                 </Button>
-              </Link>
+              </LinkWithQuery>
             )}
           </Stack>
         </Stack>
@@ -211,18 +211,18 @@ function TotalInvestment() {
         </Stack>
       </Flex>
       {!connected && chain === Chains.Kujira && (
-        <Link href="/how-it-works">
+        <LinkWithQuery href="/how-it-works">
           <Button w={44} variant="outline" colorScheme="blue">
             Learn how CALC works
           </Button>
-        </Link>
+        </LinkWithQuery>
       )}
       {!connected && chain === Chains.Osmosis && (
-        <Link href="/create-strategy">
+        <LinkWithQuery href="/create-strategy">
           <Button w={44} variant="outline" colorScheme="blue">
             Create a strategy
           </Button>
-        </Link>
+        </LinkWithQuery>
       )}
     </Stack>
   );

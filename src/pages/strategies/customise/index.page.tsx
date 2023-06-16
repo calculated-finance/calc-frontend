@@ -39,6 +39,8 @@ import { getExistingValues } from './getExistingValues';
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
 
+  const { chain } = useChain();
+
   const { mutate, error, isError, isLoading } = useCustomiseStrategy();
 
   const { isPageLoading } = usePageLoad();
@@ -56,6 +58,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     resultingDenom,
     transactionType,
     currentPrice: price,
+    chain,
   };
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
@@ -169,7 +172,7 @@ function Page() {
     );
   }
 
-  const existingValues = getExistingValues(strategy);
+  const existingValues = getExistingValues(strategy, chain);
 
   const castValues = {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),

@@ -32,6 +32,7 @@ export function buildSwapAdjustmentStrategy({ values, initialValues, context, st
         castedValues.applyMultiplier,
         castedValues.swapMultiplier,
         context.currentPrice,
+        context.chain
       ),
     };
   }

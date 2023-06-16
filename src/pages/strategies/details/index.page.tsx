@@ -16,7 +16,6 @@ import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
 import useStrategy from '@hooks/useStrategy';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@hooks/useWallet';
@@ -33,6 +32,7 @@ import { getSidebarLayout } from '@components/Layout';
 import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';
@@ -102,11 +102,11 @@ function Page() {
   return (
     <>
       <HStack spacing={6} pb={6}>
-        <Link href="/strategies">
+        <LinkWithQuery href="/strategies">
           <IconButton aria-label="back" variant="outline">
             <Icon as={FiArrowLeft} stroke="brand.200" />
           </IconButton>
-        </Link>
+        </LinkWithQuery>
 
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">{getStrategyName(strategy)}</Heading>

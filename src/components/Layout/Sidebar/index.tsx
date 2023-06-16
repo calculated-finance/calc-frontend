@@ -17,7 +17,6 @@ import {
   ComponentWithAs,
   IconProps,
 } from '@chakra-ui/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   HomeIcon,
@@ -34,6 +33,7 @@ import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAdmin } from '@hooks/useAdmin';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
 
 interface LinkItem {
@@ -76,7 +76,7 @@ interface NavItemProps extends FlexProps {
 }
 function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   return (
-    <Link href={href}>
+    <LinkWithQuery href={href}>
       <Flex
         align="center"
         p="4"
@@ -108,7 +108,7 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         )}
         {children}
       </Flex>
-    </Link>
+    </LinkWithQuery>
   );
 }
 
@@ -130,13 +130,13 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       {...rest}
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
-        <Link href="/">
+        <LinkWithQuery href="/">
           {chain === Chains.Osmosis ? (
             <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
           ) : (
             <Image cursor="pointer" src="/images/logo.svg" w={105} />
           )}
-        </Link>
+        </LinkWithQuery>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -198,7 +198,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         {getLinkItems(isAdmin)
           .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
-            <Link href={link.href} key={link.name}>
+            <LinkWithQuery href={link.href} key={link.name}>
               <IconButton
                 aria-label={link.name}
                 variant="link"
@@ -221,8 +221,9 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
                   />
                 }
               />
-            </Link>
+            </LinkWithQuery>
           ))}
+
       </Flex>
     </Flex>
   );

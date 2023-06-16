@@ -31,7 +31,8 @@ import useValidator from '@hooks/useValidator';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
-import Link from 'next/link';
+import LinkWithQuery from '@components/LinkWithQuery';
+import { Chains } from '@hooks/useChain/Chains';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
   const { chain } = useChain();
@@ -39,11 +40,11 @@ export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsm
   return (
     <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain, address) ? 'hidden' : 'visible'}>
       <Flex justify="end">
-        <Link href={generateStrategyConfigureUrl(strategy.id)}>
+        <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
             Configure
           </Button>
-        </Link>
+        </LinkWithQuery>
       </Flex>
     </GridItem>
   );
@@ -120,9 +121,8 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOs
   );
 }
 
-export function DestinationDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+export function DestinationDetails({ strategy, chain }: { strategy: Strategy | StrategyOsmosis ; chain: Chains }) {
   const { destinations } = strategy;
-  const { chain } = useChain();
 
   const { address } = useWallet();
 

@@ -1,6 +1,5 @@
 import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import NextLink from 'next/link';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
 import { FiDivide } from 'react-icons/fi';
@@ -10,6 +9,7 @@ import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
+import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -58,20 +58,20 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <NextLink href={{ pathname: href ?? '#', query }}>
+          <LinkWithQuery href={{ pathname: href ?? '', query }}>
             <Button mb={2}>Get started</Button>
-          </NextLink>
+          </LinkWithQuery>
         ) : (
           <Button mb={2} cursor="unset" color="navy" colorScheme="grey">
             Coming soon
           </Button>
         )}
 
-        <NextLink href={learnMoreHref} passHref>
+        <LinkWithQuery href={learnMoreHref} passHref>
           <Button as="a" target="_blank" colorScheme="blue" variant="ghost">
             Learn more
           </Button>
-        </NextLink>
+        </LinkWithQuery>
       </Flex>
     </Stack>
   );
@@ -109,11 +109,11 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
       ) : index ? (
         <>
           According to the{' '}
-          <NextLink passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+          <LinkWithQuery passHref href="https://alternative.me/crypto/fear-and-greed-index/">
             <Text as="a" textDecoration="underline" target="_blank">
               Fear &amp; Greed index score
             </Text>
-          </NextLink>
+          </LinkWithQuery>
           : {index} ({classification}), it may be a good time to use {setStrategyRecommendation} strategies
         </>
       ) : null}

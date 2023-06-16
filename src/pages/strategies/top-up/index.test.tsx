@@ -7,13 +7,14 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/strategies/top-up',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -117,7 +118,7 @@ describe('Top up page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/top-up/success',
-          query: { strategyId: '1', timeSaved: 10 },
+          query: { strategyId: '1', timeSaved: 10, chain: Chains.Kujira },
         }),
       );
     });

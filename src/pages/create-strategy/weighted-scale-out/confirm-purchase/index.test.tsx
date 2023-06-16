@@ -14,13 +14,14 @@ import { useFormStore } from '@hooks/useFormStore';
 import TriggerTypes from '@models/TriggerTypes';
 import YesNoValues from '@models/YesNoValues';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -169,6 +170,8 @@ describe('DCA Plus Out confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 300,
+          chain: Chains.Kujira,
+
         },
       });
     });

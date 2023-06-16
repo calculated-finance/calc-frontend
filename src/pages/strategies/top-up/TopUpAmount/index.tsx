@@ -19,9 +19,9 @@ import { DenomInput } from '@components/DenomInput';
 import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { Pages } from '@components/Layout/Sidebar/Pages';
-import Link from 'next/link';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { DenomInfo } from '@utils/DenomInfo';
+import LinkWithQuery from '@components/LinkWithQuery';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
   const { displayAmount, isLoading } = useBalance(initialDenom);
@@ -82,9 +82,9 @@ export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
                 <Text>
                   Please note that this will increase your strategy duration by more than 6 months. Perhaps it&apos;s
                   best to{' '}
-                  <Link href={Pages.CreateStrategy} passHref>
+                  <LinkWithQuery href={Pages.CreateStrategy} passHref>
                     <ChakraLink color="brand.200">start a new strategy</ChakraLink>
-                  </Link>{' '}
+                  </LinkWithQuery>{' '}
                   with a higher daily base allocation.
                 </Text>
               </HStack>

@@ -8,13 +8,14 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import userEvent from '@testing-library/user-event';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/strategies/configure',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -104,7 +105,7 @@ describe('Configure page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/configure/success',
-          query: { strategyId: '1' },
+          query: { strategyId: '1', chain: Chains.Kujira },
         }),
       );
     });

@@ -16,7 +16,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-out/customise',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -117,7 +117,7 @@ describe('DCA Plus Out customise page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-out/post-purchase',
-        query: undefined,
+        query: { chain: 'Kujira'},
       });
     });
   });

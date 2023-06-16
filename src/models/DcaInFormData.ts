@@ -12,7 +12,6 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
-import { useChainStore } from '@hooks/useChain';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
@@ -271,23 +270,25 @@ export const allSchema = {
     })
     .test({
       name: 'correct-length',
-      message: ({ label }) => `${label} must be ${getChainAddressLength(useChainStore.getState().chain)} characters`,
-      test(value) {
+      message: ({ label}) => `${label} is not a valid address`,
+      test(value, context) {
         if (!value) {
           return true;
         }
-        return value?.length === getChainAddressLength(useChainStore.getState().chain);
+        const { chain } = context.options.context || {}
+        return value?.length === getChainAddressLength(chain);
       },
     })
 
     .test({
       name: 'starts-with-chain-prefix',
-      message: ({ label }) => `${label} must start with "${getChainAddressPrefix(useChainStore.getState().chain)}"`,
-      test(value) {
+      message: ({ label }) => `${label} has an invalid prefix`,
+      test(value, context) {
         if (!value) {
           return true;
         }
-        return value?.startsWith(getChainAddressPrefix(useChainStore.getState().chain));
+        const { chain } = context.options.context || {}
+        return value?.startsWith(getChainAddressPrefix(chain));
       },
     }),
   autoStakeValidator: Yup.string()

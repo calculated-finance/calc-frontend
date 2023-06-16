@@ -14,13 +14,14 @@ import { useFormStore } from '@hooks/useFormStore';
 import YesNoValues from '@models/YesNoValues';
 import TriggerTypes from '@models/TriggerTypes';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -171,6 +172,8 @@ describe('Confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 300,
+          chain: Chains.Kujira,
+
         },
       });
     });

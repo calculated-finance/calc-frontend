@@ -20,7 +20,6 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { useChainStore } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
@@ -332,8 +331,7 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
   return Number(directedPrice.toFixed(6));
 }
 
-export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) {
-  const { chain } = useChainStore.getState();
+export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: Chains) {
 
   if (chain === Chains.Osmosis) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
@@ -350,21 +348,21 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getPriceCeilingFloor(strategy: Vault) {
+export function getPriceCeilingFloor(strategy: Vault, chain: Chains) {
   if (!strategy.minimum_receive_amount) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, strategy.minimum_receive_amount);
+  return convertReceiveAmount(strategy, strategy.minimum_receive_amount, chain);
 }
 
-export function getBasePrice(strategy: Vault) {
+export function getBasePrice(strategy: Vault, chain: Chains) {
   const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
   if (!base_receive_amount) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, base_receive_amount);
+  return convertReceiveAmount(strategy, base_receive_amount, chain);
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {

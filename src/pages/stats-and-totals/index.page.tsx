@@ -107,7 +107,7 @@ export function totalFromCoins(
     coins
       ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
       .map((balance) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom, injectedChain);
+        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatPriceInfo = fiatPrices[coingeckoId];
         const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;

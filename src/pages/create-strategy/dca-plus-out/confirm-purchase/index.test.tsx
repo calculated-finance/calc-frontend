@@ -12,13 +12,14 @@ import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-out/confirm-purchase',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -171,6 +172,8 @@ describe('DCA Plus Out confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 300,
+          chain: Chains.Kujira,
+
         },
       });
     });

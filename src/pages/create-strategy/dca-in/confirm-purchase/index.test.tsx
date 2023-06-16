@@ -11,13 +11,14 @@ import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import YesNoValues from '@models/YesNoValues';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
+import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-in/confirm-purchase',
-  query: { id: '1' },
+  query: { id: '1' , chain: 'Kujira'},
   events: {
     on: jest.fn(),
   },
@@ -138,6 +139,7 @@ describe('DCA In confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 10,
+          chain: Chains.Kujira,
         },
       });
     });
