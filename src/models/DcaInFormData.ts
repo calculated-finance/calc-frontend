@@ -282,7 +282,7 @@ export const allSchema = {
 
     .test({
       name: 'starts-with-chain-prefix',
-      message: ({ label }) => `${label} has an invalid prefix"`,
+      message: ({ label }) => `${label} has an invalid prefix`,
       test(value, context) {
         if (!value) {
           return true;
