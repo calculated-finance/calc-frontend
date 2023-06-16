@@ -31,7 +31,15 @@ function formatPriceTick(priceMax: number) {
   };
 }
 
-function formatTimeTick() {
+export function formatTimeTick(days: string) {
+  if (days === '0.0417') {
+    return (tick: number) =>
+      new Date(tick).toLocaleDateString('en-US', {
+        hour: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      });
+  }
   return (tick: number) =>
     new Date(tick).toLocaleDateString('en-US', {
       month: 'short',
@@ -139,7 +147,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
               padding={{ left: 60, bottom: 40, top: 10, right: 80 }}
             >
               {/* Time Axis */}
-              <VictoryAxis style={timeAxisStyle} tickFormat={formatTimeTick()} />
+              <VictoryAxis style={timeAxisStyle} tickFormat={formatTimeTick(days)} />
               {/* Value axis */}
               <VictoryAxis
                 dependentAxis

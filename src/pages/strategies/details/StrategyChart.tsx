@@ -19,6 +19,7 @@ import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
 import { getFailedChartDataSwaps } from './getFailedChartData';
+import { formatTimeTick } from './StrategyComparisonChart';
 
 function CustomLabel(props: VictoryTooltipProps) {
   return (
@@ -140,14 +141,11 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
               />
               <VictoryAxis
                 style={{
-                  tickLabels: { fill: 'white' },
+                  tickLabels: {
+                    fill: 'white',
+                  },
                 }}
-                tickFormat={(tick) =>
-                  new Date(tick).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                }
+                tickFormat={formatTimeTick(days)}
               />
 
               <VictoryScatter
