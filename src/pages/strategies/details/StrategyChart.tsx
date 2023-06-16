@@ -170,7 +170,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
               />
               <VictoryScatter
                 style={{
-                  data: { fill: 'grey', stroke: 'black', strokeWidth: 0.25, opacity: 0.7 },
+                  data: { fill: '#3B3C4E', stroke: 'black', strokeWidth: 1 },
                   labels: { fill: 'white', fontSize: 6 },
                 }}
                 size={6}
