@@ -10,7 +10,7 @@ function convertToSentence(reason: ExecutionSkippedReason) {
     swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
   };
 
-  return sentenceMap[reason] || 'Unknown reason.';
+  return sentenceMap[reason] || 'Failed swap';
 }
 
 function getFailedEventsWithAccumulation(failedEvents: StrategyEvent[] | undefined) {
@@ -54,14 +54,11 @@ export function getFailedChartDataSwaps(
 
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
-    const currentPriceInTime = findCurrentPriceInTime(date, fiatPrices);
     const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
-    if (currentPriceInTime === null) {
-      return null;
-    }
+
     return {
       date,
-      marketValue: currentPriceInTime,
+      marketValue: 0,
       currentPrice: currentDisplayPriceInTime,
       event,
     };

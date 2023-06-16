@@ -4,7 +4,6 @@ import useStrategyEvents from '@hooks/useStrategyEvents';
 import {
   VictoryArea,
   VictoryAxis,
-  VictoryBar,
   VictoryChart,
   VictoryScatter,
   VictoryTooltip,
@@ -169,15 +168,16 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 x="date"
                 y="marketValue"
               />
-              <VictoryBar
+              <VictoryScatter
                 style={{
-                  data: { fill: 'grey', fillOpacity: 0.5 },
+                  data: { fill: 'grey', stroke: 'black', strokeWidth: 0.25, opacity: 0.7 },
                   labels: { fill: 'white', fontSize: 6 },
                 }}
-                barWidth={0.5}
+                size={6}
                 data={swapsFailedDataWithLabel}
                 x="date"
                 y="marketValue"
+                symbol="triangleDown"
                 labelComponent={<CustomLabel />}
               />
             </VictoryChart>
