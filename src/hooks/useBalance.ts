@@ -21,7 +21,6 @@ const useBalanceEVM = (token: DenomInfo) => {
   const { address } = useWallet();
   const { provider} = useMetamask();
 
-
   return useQuery<Coin>(
     ['balance-evm', token?.id, address, provider],
     async () => {
@@ -31,18 +30,14 @@ const useBalanceEVM = (token: DenomInfo) => {
       if (!address) {
         throw new Error('No address provided');
       }
-      try {
         
-        const erc20 = new ethers.Contract(token.id, erc20json.abi, provider);
+      const erc20 = new ethers.Contract(token.id, erc20json.abi, provider);
 
-        const result = await erc20.totalSupply();
+      const result = await erc20.totalSupply();
 
-        return {
-          amount: formatEther(result),
-          denom: token.id,
-        }
-      } catch (e) {
-        console.log('error', e);
+      return {
+        amount: formatEther(result),
+        denom: token.id,
       }
     },
     {
@@ -96,7 +91,5 @@ const useBalance = (token: DenomInfo) => {
 
   // return walletType === WalletTypes.METAMASK ? evmBalance : cosmBalance;
 };
-
-  
 
 export default useBalance;

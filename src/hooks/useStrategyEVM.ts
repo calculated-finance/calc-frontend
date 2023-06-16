@@ -1,12 +1,9 @@
-import { useWallet } from '@hooks/useWallet';
-import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { useQuery } from '@tanstack/react-query';
-import vaultContractJson from 'src/Vault.json'
-import { Interface, ethers } from 'ethers';
+import vaultContractJson from 'src/Vault.json';
+import { ethers } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vaults';
 import { Strategy } from './useStrategies';
-import { isAddressAdmin } from './useAdmin';
-import { useChain } from './useChain';
 import { useMetamask } from './useMetamask';
 
 export const STRATEGY_KEY = 'strategy-evm';
@@ -73,7 +70,7 @@ export async function fetchStrategy(id: string, provider: any) {
 export default function useStrategyEVM(id: Strategy['id'] | undefined) {
   const provider = useMetamask(state => state.provider);
 
-  return useQuery<VaultResponse>(
+  return useQuery<Vault>(
     [STRATEGY_KEY, id, provider],
     async () => {
       if (!provider) {
@@ -83,12 +80,8 @@ export default function useStrategyEVM(id: Strategy['id'] | undefined) {
       if (!id) {
         throw new Error('No id');
       }
-  try {
-
-      return await fetchStrategy(id, provider);
-    } catch (e) {
-      console.log('error', e);
-    }
+      const result = await fetchStrategy(id, provider) as Vault;
+      return result;
     },
     {
       enabled: !!provider && !!id,

@@ -1,12 +1,10 @@
 import { useWallet } from '@hooks/useWallet';
 import { queryClient } from '@helpers/test/testQueryClient';
-import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
-import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { ethers } from 'ethers';
-import factoryContractJson from 'src/Factory.json'
+import factoryContractJson from 'src/Factory.json';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { useChain } from './useChain';
 import { useMetamask } from './useMetamask';

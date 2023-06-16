@@ -1,5 +1,4 @@
 import { Chains } from '@hooks/useChain/Chains';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { buildPriceThreshold } from './buildPriceThreshold';
 import { buildSlippageTolerance } from './buildSlippageTolerance';
 import { buildSwapAdjustmentStrategy } from './buildSwapAdjustmentStrategy';

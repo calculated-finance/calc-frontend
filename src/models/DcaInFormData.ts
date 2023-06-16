@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { ConditionBuilder } from 'yup/lib/Condition';
 import { MixedSchema } from 'yup/lib/mixed';
-import { Coin } from '@cosmjs/stargate';
 import { isNil } from 'lodash';
 import {
   DCA_PLUS_MIN_SWAP_COEFFICIENT,

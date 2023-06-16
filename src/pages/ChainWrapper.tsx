@@ -1,8 +1,5 @@
-import { Center, Text, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { ChainCards } from '@components/ChainSelection';
 import { LoadingState } from './LoadingState';
 
 
