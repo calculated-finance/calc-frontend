@@ -32,7 +32,7 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
   return currentPrice;
 };
 
-function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
+export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
   let totalAmount = 0;
 
   return completedEvents?.map((event) => {

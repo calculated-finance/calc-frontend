@@ -40,7 +40,7 @@ import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
 
-function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
+export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
     return undefined;
   }

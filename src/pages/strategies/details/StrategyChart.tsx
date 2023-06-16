@@ -18,6 +18,7 @@ import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } fro
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
+import { getFailedChartDataSwaps } from './getFailedChartData';
 
 function CustomLabel(props: VictoryTooltipProps) {
   return (
@@ -60,6 +61,18 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
 
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+
+  const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+  const swapsFailedDataWithLabel = swapsFailedData?.map((swap) => ({
+    ...swap,
+    label: `${swap?.event.failed}. \nDate: ${swap?.date
+      .toLocaleDateString('en-AU', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+      })
+      .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
+  }));
 
   const swapsDataWithLabel = swapsData?.map((swap) => ({
     ...swap,
@@ -133,6 +146,7 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                   })
                 }
               />
+
               <VictoryScatter
                 style={{
                   data: { fill: '#1AEFAF', stroke: 'white', strokeWidth: 1 },
@@ -153,6 +167,18 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 labelComponent={<CustomLabel />}
                 x="date"
                 y="marketValue"
+              />
+              <VictoryScatter
+                style={{
+                  data: { fill: '#3B3C4E', stroke: 'black', strokeWidth: 1 },
+                  labels: { fill: 'white', fontSize: 6 },
+                }}
+                size={6}
+                data={swapsFailedDataWithLabel}
+                x="date"
+                y="marketValue"
+                symbol="triangleDown"
+                labelComponent={<CustomLabel />}
               />
             </VictoryChart>
           )}
