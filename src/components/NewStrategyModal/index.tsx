@@ -33,6 +33,7 @@ import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
 import { Url, UrlObject } from 'url';
+import { routerPush } from '@helpers/routerPush';
 import Stepper from './Stepper';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
@@ -145,7 +146,7 @@ export function NewStrategyModalHeader({
   const { connected } = useWallet();
 
   const handleCancel = async () => {
-    await router.push(cancelUrl);
+    await routerPush(router, cancelUrl as string);
     if (resetForm) {
       resetForm();
     }
