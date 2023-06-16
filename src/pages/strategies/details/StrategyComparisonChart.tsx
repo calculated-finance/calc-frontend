@@ -121,7 +121,10 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
     <GridItem colSpan={6}>
       <Box layerStyle="panel" position="relative">
         {events && <StrategyComparisonChartStats strategy={strategy} />}
-        <Stack p={6} position="absolute" top={0} right={0}>
+        <Stack p={6} position="absolute" top={0} right={0} display={{ base: 'none', lg: 'initial' }}>
+          <DaysRadio value={days} onChange={setDays} />
+        </Stack>
+        <Stack pl={6} display={{ lg: 'none' }}>
           <DaysRadio value={days} onChange={setDays} />
         </Stack>
 

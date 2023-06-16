@@ -99,7 +99,10 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
     <GridItem colSpan={6}>
       <Box layerStyle="panel" position="relative">
         {events && <StrategyChartStats strategy={strategy} />}
-        <Box p={6} position="absolute" top={0} right={0}>
+        <Box p={6} position="absolute" top={0} right={0} display={{ base: 'none', lg: 'initial' }}>
+          <DaysRadio value={days} onChange={setDays} />
+        </Box>
+        <Box pl={6} display={{ lg: 'none' }}>
           <DaysRadio value={days} onChange={setDays} />
         </Box>
         <Box h={0}>
