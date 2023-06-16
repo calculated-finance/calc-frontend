@@ -161,13 +161,7 @@ export default function usePrice(
   enabled = true,
 ) {
   const { chain } = useChain();
-
-  const osmosisPrice = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Osmosis && enabled,
-  );
+  const config = useConfig();
 
   const client = useCosmWasmClient((state) => state.client);
 
@@ -175,10 +169,7 @@ export default function usePrice(
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-  const config = useConfig();
-
-  const isV3Enabled =
-    !!client && !!pair && chain === Chains.Kujira && !!config && !!config?.exchange_contract_address && enabled;
+  const isV3Enabled = !!client && !!pair && !!config && !!config?.exchange_contract_address && enabled;
 
   const isV2Enabled =
     !!client && !!pair && chain === Chains.Kujira && !!config && !config?.exchange_contract_address && enabled;
@@ -194,13 +185,12 @@ export default function usePrice(
     isV2Enabled,
   );
 
-  if (isV3Enabled) {
-    return v3Price;
-  }
+  const osmosisPrice = usePriceOsmosis(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Osmosis && !config?.exchange_contract_address && enabled,
+  );
 
-  if (chain === Chains.Osmosis) {
-    return osmosisPrice;
-  }
-
-  return kujiraPrice;
+  return isV3Enabled ? v3Price : chain === Chains.Osmosis ? osmosisPrice : kujiraPrice;
 }
