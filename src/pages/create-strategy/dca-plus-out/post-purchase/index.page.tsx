@@ -11,9 +11,12 @@ import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchas
 import { FormNames , useFormStore } from '@hooks/useFormStore';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaPlusOut);
+  const { actions, state, context } = useDcaInFormPostPurchase();
   const steps = dcaPlusOutSteps;
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -47,9 +50,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaPlusOut,
+    }}>
+      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

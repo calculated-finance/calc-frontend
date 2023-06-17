@@ -22,21 +22,18 @@ import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 import PriceThreshold from '@components/PriceThreshold';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function WeightedScaleCustomisePage({
-  formName,
   steps,
-  strategyType,
-  transactionType,
   formSchema,
 }: {
-  formName: FormNames;
   steps: StepConfig[];
-  strategyType: StrategyTypes;
-  transactionType: TransactionType;
   formSchema: AnySchema;
 }) {
-  const { actions, state } = useWeightedScaleStep2Form(formName);
+  const { actions, state } = useWeightedScaleStep2Form();
+
+  const { strategyType } = useStrategyInfo();
 
   const { validate } = useValidation(formSchema, {
     ...state?.step1,
@@ -82,7 +79,6 @@ export function WeightedScaleCustomisePage({
             <AdvancedSettingsSwitch />
             <Collapse in={values.advancedSettings}>
               <TriggerForm
-                transactionType={transactionType}
                 initialDenom={initialDenomInfo}
                 resultingDenom={resultingDenomInfo}
               />
@@ -92,21 +88,18 @@ export function WeightedScaleCustomisePage({
             <SwapMultiplier
               initialDenom={initialDenomInfo}
               resultingDenom={resultingDenomInfo}
-              transactionType={transactionType}
             />
             <Collapse in={values.advancedSettings}>
               <Box m="px">
                 <Stack spacing={4}>
-                  <ApplyMultiplier transactionType={transactionType} />
+                  <ApplyMultiplier  />
                   <BasePrice
                     initialDenom={initialDenomInfo}
                     resultingDenom={resultingDenomInfo}
-                    transactionType={transactionType}
                   />
                   <PriceThreshold
                     initialDenom={initialDenomInfo}
                     resultingDenom={resultingDenomInfo}
-                    transactionType={transactionType}
                   />
                   <SlippageTolerance />
                 </Stack>

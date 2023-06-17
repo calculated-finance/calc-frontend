@@ -5,12 +5,15 @@ import {
   step1ValidationSchema,
   step2ValidationSchema,
 } from '@models/DcaInFormData';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames, useFormStore } from './useFormStore';
 import { useWallet } from './useWallet';
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};
 
-const useDcaInForm = (formName: FormNames) => {
+const useDcaInForm = () => {
+
+  const { formName } = useStrategyInfo();
   const { address } = useWallet();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
 
@@ -37,9 +40,10 @@ const useDcaInForm = (formName: FormNames) => {
   }
 };
 
-export const useStep2Form = (formName: FormNames) => {
+export const useStep2Form = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
+  const { formName } = useStrategyInfo()
 
   try {
     const step1 = step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
@@ -68,9 +72,10 @@ export const useStep2Form = (formName: FormNames) => {
   }
 };
 
-export const useDcaInFormPostPurchase = (formName: FormNames) => {
+export const useDcaInFormPostPurchase = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
+  const { formName } = useStrategyInfo()
 
   try {
     return {
@@ -94,9 +99,9 @@ export const useDcaInFormPostPurchase = (formName: FormNames) => {
   }
 };
 
-export const useConfirmForm = (formName: FormNames) => {
+export const useConfirmForm = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
-
+  const { formName } = useStrategyInfo();
   const { address } = useWallet();
   try {
     dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true });

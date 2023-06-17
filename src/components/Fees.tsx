@@ -22,6 +22,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -184,7 +185,6 @@ function FeeBreakdown({
 }
 
 export default function Fees({
-  transactionType,
   swapFee,
   initialDenom,
   resultingDenom,
@@ -193,7 +193,6 @@ export default function Fees({
   swapFeeTooltip,
   excludeDepositFee = false,
 }: {
-  transactionType: TransactionType;
   swapFee: number;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
@@ -203,6 +202,8 @@ export default function Fees({
   excludeDepositFee?: boolean;
 }) {
   const { price } = useFiatPrice(initialDenom);
+  
+  const { transactionType} = useStrategyInfo();
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 

@@ -6,19 +6,19 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
-import { TransactionType } from '@components/TransactionType';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
 export function SummaryTheSwapWeightedScale({
   state,
-  transactionType,
 }: {
   state: WeightedScaleState;
-  transactionType: TransactionType;
 }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
+
+  const { transactionType } = useStrategyInfo();
 
   const initialDenomInfo = useDenom(initialDenom);
   const resultingDenomInfo = useDenom(resultingDenom);

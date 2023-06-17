@@ -5,11 +5,13 @@ import {
   DcaPlusPostPurchaseFormSchema,
 } from '@models/dcaPlusFormData';
 import { initialValues } from '@models/DcaInFormData';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { getFormState } from './useDcaInForm';
-import { FormNames, useFormStore } from './useFormStore';
+import {  useFormStore } from './useFormStore';
 import { useWallet } from './useWallet';
 
-export const useDCAPlusAssetsForm = (formName: FormNames) => {
+export const useDCAPlusAssetsForm = () => {
+  const { formName } = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -36,7 +38,8 @@ export const useDCAPlusAssetsForm = (formName: FormNames) => {
   }
 };
 
-export const useDCAPlusStep2Form = (formName: FormNames) => {
+export const useDCAPlusStep2Form = () => {
+  const { formName } = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -67,7 +70,8 @@ export const useDCAPlusStep2Form = (formName: FormNames) => {
   }
 };
 
-export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
+export const useDcaPlusInFormPostPurchase = () => {
+  const { formName } = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -93,7 +97,8 @@ export const useDcaPlusInFormPostPurchase = (formName: FormNames) => {
   }
 };
 
-export const useDcaPlusConfirmForm = (formName: FormNames) => {
+export const useDcaPlusConfirmForm = () => {
+  const { formName } = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 

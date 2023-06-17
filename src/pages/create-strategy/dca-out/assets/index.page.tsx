@@ -21,9 +21,12 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state } = useDcaInForm(FormNames.DcaOut);
+  const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
     isLoading,
@@ -81,6 +84,18 @@ function Page() {
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaOut,
+    }}>
+      <Page />
+    </StrategyInfoProvider>
+  );
+}
 
-export default Page;
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

@@ -30,6 +30,7 @@ import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
@@ -198,14 +199,12 @@ function FeeBreakdown({
 }
 
 export default function FeesDcaPlus({
-  transactionType,
   initialDenom,
   resultingDenom,
   initialDeposit,
   strategyDuration,
   autoStakeValidator,
 }: {
-  transactionType: TransactionType;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   initialDeposit: number;
@@ -213,6 +212,8 @@ export default function FeesDcaPlus({
   autoStakeValidator: string | null | undefined;
 }) {
   const { price } = useFiatPrice(initialDenom);
+
+  const { transactionType} = useStrategyInfo();
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 

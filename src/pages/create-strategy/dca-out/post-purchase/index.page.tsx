@@ -11,9 +11,12 @@ import dcaOutSteps from '@formConfig/dcaOut';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaOut);
+  const { actions, state, context } = useDcaInFormPostPurchase();
   const steps = dcaOutSteps;
 
   const { nextStep, goToStep } = useSteps(steps);
@@ -55,6 +58,18 @@ function Page() {
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaOut,
+    }}>
+      <Page />
+    </StrategyInfoProvider>
+  );
+}
 
-export default Page;
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

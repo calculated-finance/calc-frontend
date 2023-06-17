@@ -23,18 +23,18 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state } = useDcaInForm(FormNames.DcaPlusOut);
+  const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(dcaPlusOutSteps);
 
   const { data } = useBalances();
-
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances: data?.balances });
 
@@ -85,9 +85,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaPlusOut,
+    }}>
     <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
       <Page />
     </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

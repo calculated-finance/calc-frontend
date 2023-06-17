@@ -5,22 +5,22 @@ import StartImmediately from '@components/StartImmediately';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import PurchaseTime from './PurchaseTime';
 import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
 import { CollapseWithRender } from './CollapseWithRender';
 
 export function TriggerForm({
-  transactionType,
   initialDenom,
   resultingDenom,
 }: {
-  transactionType: TransactionType;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
 }) {
   const { values } = useFormikContext<DcaInFormDataAll>();
   const { startImmediately, triggerType, advancedSettings } = values;
+  const { transactionType} = useStrategyInfo();
 
   return (
     <Box>

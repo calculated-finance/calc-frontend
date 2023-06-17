@@ -5,18 +5,21 @@ import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { DenomInput } from './DenomInput';
+import { TransactionType } from './TransactionType';
 
 export default function SwapAmount({
   step1State,
-  isSell = false,
 }: {
   step1State: DcaInFormDataStep1;
-  isSell?: boolean;
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
+  const { transactionType} = useStrategyInfo();
+
+  const isSell = transactionType === TransactionType.Sell;
 
   const initialDenom = useDenom(step1State.initialDenom);
   const resultingDenom = useDenom(step1State.resultingDenom);

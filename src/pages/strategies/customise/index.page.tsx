@@ -32,6 +32,9 @@ import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
+import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { FormNames } from '@hooks/useFormStore';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
@@ -86,6 +89,11 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={customiseSteps} cancelUrl={generateStrategyDetailUrl(strategy.id)} />
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
+            <StrategyInfoProvider strategyInfo={{
+              strategyType: '' as StrategyTypes,
+              transactionType,
+              formName: '' as FormNames,
+            }}>
             <Form autoComplete="off">
               <Stack spacing={4}>
                 <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
@@ -100,7 +108,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                         forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                         resultingDenom={resultingDenom}
                         initialDenom={initialDenom}
-                        transactionType={transactionType}
                       />
                     </CollapseWithRender>
                   </Stack>
@@ -111,22 +118,19 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                     <SwapMultiplier
                       initialDenom={initialDenom}
                       resultingDenom={resultingDenom}
-                      transactionType={transactionType}
                       swapAmountInjected={context.swapAmount}
                     />
                     <CollapseWithRender isOpen={values.advancedSettings}>
                       <Stack spacing={4}>
-                        <ApplyMultiplier transactionType={transactionType} />
+                        <ApplyMultiplier  />
                         <BasePrice
                           initialDenom={initialDenom}
                           resultingDenom={resultingDenom}
-                          transactionType={transactionType}
                         />
                         <PriceThreshold
                           forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
-                          transactionType={transactionType}
                         />
                       </Stack>
                     </CollapseWithRender>
@@ -141,6 +145,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                 </FormControl>
               </Stack>
             </Form>
+            </StrategyInfoProvider>
           </NewStrategyModalBody>
         </NewStrategyModal>
       )}

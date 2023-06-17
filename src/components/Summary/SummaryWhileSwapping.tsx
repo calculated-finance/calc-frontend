@@ -3,22 +3,23 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { initialValues } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function SummaryWhileSwapping({
   initialDenom,
   resultingDenom,
   priceThresholdValue,
   slippageTolerance,
-  transactionType,
 }: {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   priceThresholdValue: number | null | undefined;
   slippageTolerance: number | null | undefined;
-  transactionType: string;
 }) {
   const { name: initialDenomName } = initialDenom;
   const { name: resultingDenomName } = resultingDenom;
+
+  const { transactionType } = useStrategyInfo();
 
   const showSlippage =
     slippageTolerance !== undefined &&

@@ -11,9 +11,12 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.WeightedScaleOut);
+  const { actions, state, context } = useDcaInFormPostPurchase();
   const steps = weightedScaleOutSteps;
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -47,9 +50,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.WeightedScaleOut,
+    }}>
+      <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

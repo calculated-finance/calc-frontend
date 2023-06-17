@@ -23,15 +23,16 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusOut);
+  const { state, actions } = useDcaPlusConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusOut, TransactionType.Sell);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -64,14 +65,12 @@ function Page() {
     return <InvalidData onRestart={handleRestart} />;
   }
 
-  const transactionType = TransactionType.Sell;
-
   return (
     <SigningState isSigning={isLoading}>
       <Stack spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
         <Divider />
-        <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusOut} />
+        <SummaryYourDeposit state={state} />
         <SummaryTheSwapDcaPlus
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
@@ -79,7 +78,6 @@ function Page() {
           initialDeposit={state.initialDeposit}
         />
         <SummaryWhileSwapping
-          transactionType={transactionType}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={undefined}
@@ -88,7 +86,6 @@ function Page() {
         <SummaryAfterEachSwap state={state} />
         <SummaryBenchmark state={state} />
         <FeesDcaPlus
-          transactionType={TransactionType.Sell}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           strategyDuration={state.strategyDuration}
@@ -104,9 +101,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaPlusOut,
+    }}>
+      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

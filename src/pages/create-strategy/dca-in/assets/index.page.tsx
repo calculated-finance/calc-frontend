@@ -4,7 +4,6 @@ import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormD
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -16,17 +15,18 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function DcaIn() {
-  const { actions, state } = useDcaInForm(FormNames.DcaIn);
+  const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
   } = usePairs();
   const { nextStep } = useSteps(steps);
 
   const { data } = useBalances();
-
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
 
@@ -70,6 +70,18 @@ function DcaIn() {
   );
 }
 
-DcaIn.getLayout = getFlowLayout;
+function Page() {
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.DcaIn,
+    }}>
+      <DcaIn />
+    </StrategyInfoProvider>
+  )
+}
 
-export default DcaIn;
+Page.getLayout = getFlowLayout;
+
+export default Page;

@@ -11,9 +11,12 @@ import { InvalidData } from '@components/InvalidData';
 import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormData';
 import getDenomInfo from '@utils/getDenomInfo';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state, context } = useWeightedScaleInFormPostPurchase(FormNames.WeightedScaleIn);
+  const { actions, state, context } = useWeightedScaleInFormPostPurchase();
   const steps = weightedScaleInSteps;
 
   const { nextStep, goToStep } = useSteps(steps);
@@ -46,9 +49,16 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.WeightedScaleIn,
+    }}>
+
     <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
       <Page />
     </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

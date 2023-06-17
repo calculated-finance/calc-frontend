@@ -17,9 +17,13 @@ import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
+import { TransactionType } from '@components/TransactionType';
+import dcaOutSteps from '@formConfig/dcaOut';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
-  const { actions, state } = useDCAPlusAssetsForm(FormNames.DcaPlusIn);
+  const { actions, state } = useDCAPlusAssetsForm();
   const {
     data: { pairs },
     isLoading,
@@ -75,7 +79,20 @@ function DcaIn() {
     </Formik>
   );
 }
+function PageWrapper() {
 
-DcaIn.getLayout = getFlowLayout;
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.DcaPlusIn,
+    }}>
+        <DcaIn />
+    </StrategyInfoProvider>
+  );
+}
 
-export default DcaIn;
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;
+

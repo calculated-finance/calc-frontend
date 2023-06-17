@@ -5,11 +5,13 @@ import {
   WeightedScalePostPurchaseFormSchema,
 } from '@models/weightedScaleFormData';
 import { initialValues } from '@models/DcaInFormData';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { getFormState } from './useDcaInForm';
 import { FormNames, useFormStore } from './useFormStore';
 import { useWallet } from './useWallet';
 
-export const useWeightedScaleAssetsForm = (formName: FormNames) => {
+export const useWeightedScaleAssetsForm = () => {
+  const {formName} = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -36,7 +38,8 @@ export const useWeightedScaleAssetsForm = (formName: FormNames) => {
   }
 };
 
-export const useWeightedScaleStep2Form = (formName: FormNames) => {
+export const useWeightedScaleStep2Form = () => {
+  const {formName} = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -67,7 +70,8 @@ export const useWeightedScaleStep2Form = (formName: FormNames) => {
   }
 };
 
-export const useWeightedScaleInFormPostPurchase = (formName: FormNames) => {
+export const useWeightedScaleInFormPostPurchase = () => {
+  const {formName} = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 
@@ -93,7 +97,8 @@ export const useWeightedScaleInFormPostPurchase = (formName: FormNames) => {
   }
 };
 
-export const useWeightedScaleConfirmForm = (formName: FormNames) => {
+export const useWeightedScaleConfirmForm = () => {
+  const {formName} = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
 

@@ -6,20 +6,24 @@ import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData'
 import { TransactionType } from '@components/TransactionType';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { WeightedScaleCustomisePage } from '@components/Forms/CustomiseForm/WeightedScaleCustomisePage';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
-      <WeightedScaleCustomisePage
-        formName={FormNames.WeightedScaleIn}
-        steps={weightedScaleInSteps}
-        strategyType={StrategyTypes.WeightedScaleIn}
-        transactionType={TransactionType.Buy}
-        formSchema={WeightedScaleCustomiseFormSchema}
-      />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.WeightedScaleIn,
+    }}>
+      <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
+        <WeightedScaleCustomisePage
+          steps={weightedScaleInSteps}
+          formSchema={WeightedScaleCustomiseFormSchema}
+        />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

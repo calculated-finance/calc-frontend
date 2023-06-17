@@ -1,9 +1,7 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import NewStrategyModal, {
-  NewStrategyModalBody,
-  NewStrategyModalHeader,
-  SigningState,
+import {
+  SigningState
 } from '@components/NewStrategyModal';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
@@ -28,10 +26,10 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { state, actions } = useDcaPlusConfirmForm(FormNames.DcaPlusIn);
-  const { isPageLoading } = usePageLoad();
+  const { state, actions } = useDcaPlusConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
 
   const initialDenom = useDenom(state?.initialDenom);
@@ -39,7 +37,7 @@ function Page() {
 
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(FormNames.DcaPlusIn, TransactionType.Buy);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -68,8 +66,6 @@ function Page() {
     goToStep(0);
   };
 
-  const transactionType = TransactionType.Buy;
-
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
@@ -79,7 +75,7 @@ function Page() {
       <Stack spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
         <Divider />
-        <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAPlusIn} />
+        <SummaryYourDeposit state={state} />
         <SummaryTheSwapDcaPlus
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
@@ -87,7 +83,6 @@ function Page() {
           strategyDuration={state.strategyDuration}
         />
         <SummaryWhileSwapping
-          transactionType={transactionType}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={undefined}
@@ -96,7 +91,6 @@ function Page() {
         <SummaryAfterEachSwap state={state} />
         <SummaryBenchmark state={state} />
         <FeesDcaPlus
-          transactionType={TransactionType.Buy}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           strategyDuration={state.strategyDuration}
@@ -108,16 +102,25 @@ function Page() {
     </SigningState>
   );
 }
+
 function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.DcaPlusIn,
+    }}>
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 
 PageWrapper.getLayout = getFlowLayout;
 
 export default PageWrapper;
+
+

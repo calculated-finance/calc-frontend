@@ -1,7 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import { FormNames } from 'src/hooks/useFormStore';
+import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import usePageLoad from '@hooks/usePageLoad';
@@ -17,18 +17,19 @@ import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
-  const { actions, state } = useWeightedScaleAssetsForm(FormNames.WeightedScaleIn);
+  const { actions, state } = useWeightedScaleAssetsForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(weightedScaleInSteps);
 
   const { data } = useBalances();
 
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
@@ -72,6 +73,18 @@ function DcaIn() {
   );
 }
 
-DcaIn.getLayout = getFlowLayout;
+function PageWrapper() {
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.WeightedScaleIn,
+    }}>
+      <DcaIn />
+    </StrategyInfoProvider>
+  );
+}
 
-export default DcaIn;
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;
