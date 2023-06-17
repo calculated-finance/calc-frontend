@@ -39,18 +39,15 @@ export function WeightedScaleCustomisePage({
     ...state?.step1,
     strategyType,
   });
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep } = useSteps(steps);
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   const initialDenomInfo = useDenom(state?.step1.initialDenom);
   const resultingDenomInfo = useDenom(state?.step1.resultingDenom);
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData/>;
   }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {

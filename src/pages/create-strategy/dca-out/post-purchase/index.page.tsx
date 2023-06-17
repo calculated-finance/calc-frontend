@@ -28,10 +28,7 @@ function Page() {
     await nextStep();
   };
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   const resultingDenom = useDenom(context?.resultingDenom);
   return (
@@ -49,7 +46,7 @@ function Page() {
             {state && context ? (
               <PostPurchaseForm resultingDenom={resultingDenom} />
             ) : (
-              <InvalidData onRestart={handleRestart} />
+              <InvalidData/>
             )}
           </NewStrategyModalBody>
         </NewStrategyModal>

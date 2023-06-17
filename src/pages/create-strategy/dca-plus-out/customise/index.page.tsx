@@ -30,16 +30,13 @@ function Page() {
   });
   const { nextStep, goToStep } = useSteps(steps);
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   const initialDenom = useDenom(state?.step1.initialDenom);
   const resultingDenom = useDenom(state?.step1.resultingDenom);
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData/>;
   }
 
   const onSubmit = async (data: DcaInFormDataStep2) => {

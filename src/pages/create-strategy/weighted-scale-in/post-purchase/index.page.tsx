@@ -27,10 +27,7 @@ function Page() {
     await nextStep();
   };
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,7 +36,7 @@ function Page() {
       {state && context ? (
         <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
       ) : (
-        <InvalidData onRestart={handleRestart} />
+        <InvalidData/>
       )}
     </Formik>
   );

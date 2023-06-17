@@ -63,13 +63,10 @@ export function CustomiseFormDcaWrapper({
     await nextStep();
   };
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData/>;
   }
 
   const initialValues = state.step2;

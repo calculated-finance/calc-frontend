@@ -6,7 +6,7 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
-export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
+export function SummaryTheSwap({ state }: { state: DcaInFormDataAll }) {
   const { initialDenom, resultingDenom, swapAmount } = state;
   const initialDenomInfo = useDenom(initialDenom);
   const resultingDenomInfo = useDenom(resultingDenom);
@@ -14,7 +14,7 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
     <Box data-testid="summary-the-swap">
       <Text textStyle="body-xs">The swap</Text>
       <Text lineHeight={8}>
-        <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap{' '}
+        <SummaryTriggerInfo state={state}  />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
             {String.fromCharCode(8275)} {swapAmount} {initialDenomInfo.name}

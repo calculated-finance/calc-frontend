@@ -53,15 +53,12 @@ function Page() {
       },
     );
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   const transactionType = TransactionType.Sell;
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData/>;
   }
 
   return (

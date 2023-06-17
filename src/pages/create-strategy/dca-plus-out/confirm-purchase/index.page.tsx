@@ -56,13 +56,10 @@ function Page() {
       },
     );
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData/>;
   }
 
   return (

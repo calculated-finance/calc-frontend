@@ -108,10 +108,7 @@ export function WeightedScaleConfirmPage({
       },
     );
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   return (
     <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
@@ -125,7 +122,7 @@ export function WeightedScaleConfirmPage({
           />
         </SigningState>
       ) : (
-        <InvalidData onRestart={handleRestart} />
+        <InvalidData/>
       )}
     </ModalWrapper>
   );

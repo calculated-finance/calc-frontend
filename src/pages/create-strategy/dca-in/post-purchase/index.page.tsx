@@ -16,7 +16,7 @@ import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep } = useSteps(steps);
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
@@ -24,10 +24,7 @@ function Page() {
     await nextStep();
   };
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
+
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -36,7 +33,7 @@ function Page() {
       {state && context ? (
         <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
       ) : (
-        <InvalidData onRestart={handleRestart} />
+        <InvalidData/>
       )}
     </Formik>
   );

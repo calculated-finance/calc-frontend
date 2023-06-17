@@ -7,6 +7,7 @@ import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function ImmediateTriggerInfo() {
   return (
@@ -101,11 +102,10 @@ export function PriceTriggerInfo({
 
 export function SummaryTriggerInfo({
   state,
-  transactionType,
 }: {
   state: DcaInFormDataAll | WeightedScaleState;
-  transactionType: string;
 }) {
+  const { transactionType } = useStrategyInfo();
   const { startImmediately, triggerType, initialDenom, resultingDenom, startPrice } = state;
 
   if (startImmediately === YesNoValues.Yes) {
