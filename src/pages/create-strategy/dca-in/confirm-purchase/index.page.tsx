@@ -50,15 +50,9 @@ function Page() {
       },
     );
 
-  const handleRestart = () => {
-    actions.resetAction();
-    goToStep(0);
-  };
-
-  const transactionType = TransactionType.Buy;
 
   if (!state) {
-    return <InvalidData onRestart={handleRestart} />;
+    return <InvalidData  />;
   }
 
   return (
@@ -67,7 +61,7 @@ function Page() {
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
         <Divider />
         <SummaryYourDeposit state={state} />
-        <SummaryTheSwap state={state} transactionType={transactionType} />
+        <SummaryTheSwap state={state} />
         <SummaryWhileSwapping
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
