@@ -19,7 +19,7 @@ type StrategyInfoStore = {
 
 
 
-export const useStrategyInfoStore = create<StrategyInfoStore>((set) => ({
+export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
   strategyInfo: null,
   setStrategyInfo: (strategyInfo: StrategyInfo) => set({ strategyInfo }),
 }));
@@ -37,13 +37,10 @@ export function useStrategyInfo() {
 export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo} & ChildrenProp) {
   const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
   const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
-
+  
   useEffect(() => {
-    // Set the state using the strategyInfo prop
-    if (strategyInfo) {
-      setStrategyInfo(strategyInfo);
-    }
-  }, [strategyInfo]);
+    setStrategyInfo(strategyInfo);
+  }, [setStrategyInfo, strategyInfo]);
 
   // Only render children if the state is set
   // eslint-disable-next-line react/jsx-no-useless-fragment
