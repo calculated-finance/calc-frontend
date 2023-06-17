@@ -144,13 +144,15 @@ function WalletModal() {
                     walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
-                <WalletListItem
-                  handleClick={handleMetamaskConnect}
-                  name="Metamask"
-                  icon="/images/metamask.png"
-                  isInstalled={isMetamaskInstalled}
-                  walletInstallLink="https://metamask.io/download/"
-                />
+                {isAdminPage && (
+                  <WalletListItem
+                    handleClick={handleMetamaskConnect}
+                    name="Metamask"
+                    icon="/images/metamask.png"
+                    isInstalled={isMetamaskInstalled}
+                    walletInstallLink="https://metamask.io/download/"
+                  />
+                )}
 
                 <Stack>
                   <Button

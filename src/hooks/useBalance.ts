@@ -1,4 +1,4 @@
-import { useWallet } from '@hooks/useWallet';
+import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
@@ -21,7 +21,7 @@ const useBalanceEVM = (token: DenomInfo) => {
   const { address } = useWallet();
   const { provider} = useMetamask();
 
-  return useQuery<Coin>(
+  const result = useQuery<Coin>(
     ['balance-evm', token?.id, address, provider],
     async () => {
       if (!provider) {
@@ -33,10 +33,10 @@ const useBalanceEVM = (token: DenomInfo) => {
         
       const erc20 = new ethers.Contract(token.id, erc20json.abi, provider);
 
-      const result = await erc20.totalSupply();
+      const supplyResult = await erc20.totalSupply();
 
       return {
-        amount: formatEther(result),
+        amount: supplyResult.toString(),
         denom: token.id,
       }
     },
@@ -48,6 +48,11 @@ const useBalanceEVM = (token: DenomInfo) => {
       },
     },
   );
+
+  return {
+    displayAmount: result.data ? Number(result.data.amount) : 0,
+    ...result,
+  };
 };
 
 
@@ -85,11 +90,12 @@ const useBalanceCosm = (token: DenomInfo) => {
 
 const useBalance = (token: DenomInfo) => {
 
-  const evmBalance = useBalanceEVM(token);
-  return evmBalance;
-  // const cosmBalance = useBalanceCosm(token);
+  const { walletType } = useWallet();
 
-  // return walletType === WalletTypes.METAMASK ? evmBalance : cosmBalance;
+  const evmBalance = useBalanceEVM(token);
+  const cosmBalance = useBalanceCosm(token);
+
+  return walletType === WalletTypes.METAMASK ? evmBalance : cosmBalance;
 };
 
 export default useBalance;

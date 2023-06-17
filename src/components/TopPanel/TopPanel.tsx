@@ -67,8 +67,8 @@ function Returning() {
   );
 }
 
-function ActiveWithOne({strategies}: {strategies: Strategy[]}) {
-  const activeStrategies = strategies.filter(isStrategyOperating) ?? [];
+function ActiveWithOne({strategies}: {strategies: Strategy[] | undefined}) {
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
   const balanceValue = new DenomValue(balance);
@@ -105,8 +105,8 @@ function ActiveWithOne({strategies}: {strategies: Strategy[]}) {
   );
 }
 
-function ActiveWithMany({strategies}: {strategies: Strategy[]}) {
-  const activeStrategies = strategies.filter(isStrategyOperating) ?? [];
+function ActiveWithMany({strategies}: {strategies: Strategy[] | undefined}) {
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   return (
     <>
       <HStack align="center">
@@ -143,7 +143,7 @@ function ActiveWithMany({strategies}: {strategies: Strategy[]}) {
   );
 }
 
-function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[], isLoading: boolean}) {
+function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[] | undefined, isLoading: boolean}) {
   const { connected } = useWallet();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
@@ -226,8 +226,7 @@ function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[]
 function StrategiesCosmos() {
   const { data, isLoading } = useStrategies();
 
-  return <TopPanelWithStrategies  strategies={data?.vaults} 
-  isLoading={isLoading} />;
+  return <TopPanelWithStrategies strategies={data?.vaults} isLoading={isLoading} />;
 }
 
 function StrategiesEVM() {
