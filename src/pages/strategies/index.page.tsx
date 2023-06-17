@@ -17,14 +17,6 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useChain } from '@hooks/useChain';
 import useStrategiesEVM from '@hooks/useStrategiesEVM';
 
-type SortedStrategies = {
-  activeStrategies: Strategy[];
-  scheduledStrategies: Strategy[];
-  completedStrategies: Strategy[];
-  cancelledStrategies: Strategy[];
-};
-
-
 function StrategyList({strategies = []}: {strategies: Strategy[]}) {
 
   return (
@@ -34,18 +26,18 @@ function StrategyList({strategies = []}: {strategies: Strategy[]}) {
   );
 }
 
-function Page({strategies, isLoading}: {strategies: Strategy[]; isLoading: boolean}) {
+function Page({strategies, isLoading}: {strategies: Strategy[] | undefined; isLoading: boolean}) {
   const { connected } = useWallet();
 
   const scheduledStrategies =
   strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-const completedStrategies =
-  strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies =
+    strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-const cancelledStrategies =
-  strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const cancelledStrategies =
+    strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <>
@@ -137,14 +129,11 @@ const cancelledStrategies =
 function StrategiesCosmos() {
   const { data, isLoading } = useStrategies();
 
-  return <Page  strategies={data?.vaults} 
-  isLoading={isLoading} />;
+  return <Page strategies={data?.vaults} isLoading={isLoading} />;
 }
 
 function StrategiesEVM() {
   const { data: strategies, isLoading } = useStrategiesEVM();
-
-
 
   return <Page strategies={strategies} isLoading={isLoading} />;
 }
