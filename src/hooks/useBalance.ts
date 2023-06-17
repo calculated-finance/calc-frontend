@@ -19,7 +19,7 @@ export function getDisplayAmount(token: DenomInfo, amount: number) {
 
 const useBalanceEVM = (token: DenomInfo) => {
   const { address } = useWallet();
-  const { provider} = useMetamask();
+  const provider = useMetamask(state => state.provider);
 
   const result = useQuery<Coin>(
     ['balance-evm', token?.id, address, provider],
@@ -41,7 +41,7 @@ const useBalanceEVM = (token: DenomInfo) => {
       }
     },
     {
-      // enabled: !!token && !!address && !!provider,
+      enabled: !!token && !!address && !!provider,
       keepPreviousData: true,
       meta: {
         errorMessage: 'Error fetching balance',

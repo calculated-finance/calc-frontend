@@ -30,7 +30,7 @@ export const useMetamask = create<IWallet>()(
       isConnecting: false,
       autoconnect: false,
       disconnect: async () => {
-        await get().provider?.disconnect();
+        set({provider: null, signer: null})
         set({ account: null });
         set({ autoconnect: false });
       },
