@@ -4,7 +4,6 @@ import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import { TransactionType } from '@components/TransactionType';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { getFeeMessage } from '@helpers/getFeeMessage';
 import { Denom } from '@models/Denom';
@@ -12,7 +11,6 @@ import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useChain } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
-import { FormNames } from '@hooks/useFormStore';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
 import * as Sentry from '@sentry/react';
@@ -20,6 +18,7 @@ import useStrategy from '@hooks/useStrategy';
 import { isNil } from 'lodash';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { Strategy } from '../useStrategies';
@@ -43,8 +42,6 @@ function getFunds(initialDenom: Denom, initialDeposit: number) {
 }
 
 const useCreateVault = (
-  formName: FormNames,
-  transactionType: TransactionType,
   state: DcaFormState | undefined,
   excludeCreationFee: boolean,
   dexPrice?: number | undefined,
@@ -53,6 +50,8 @@ const useCreateVault = (
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
+
+  const { formName, transactionType} = useStrategyInfo();
 
   const { walletType } = useWallet();
 
@@ -133,20 +132,22 @@ const useCreateVault = (
   );
 };
 
-export const useCreateVaultDca = (formName: FormNames, transactionType: TransactionType) => {
-  const { state } = useConfirmForm(formName);
+export const useCreateVaultDca = () => {
+  const { state } = useConfirmForm();
 
-  return useCreateVault(formName, transactionType, state, false);
+  return useCreateVault(state, false);
 };
 
-export const useCreateVaultDcaPlus = (formName: FormNames, transactionType: TransactionType) => {
-  const { state } = useDcaPlusConfirmForm(formName);
+export const useCreateVaultDcaPlus = () => {
+  const { state } = useDcaPlusConfirmForm();
 
-  return useCreateVault(formName, transactionType, state, false);
+  return useCreateVault(state, false);
 };
 
-export const useCreateVaultWeightedScale = (formName: FormNames, transactionType: TransactionType) => {
-  const { state } = useWeightedScaleConfirmForm(formName);
+export const useCreateVaultWeightedScale = () => {
+  const { state } = useWeightedScaleConfirmForm();
+
+  const { transactionType } = useStrategyInfo();
 
   const enablePriceCheck = isNil((state as WeightedScaleState)?.basePriceValue);
   const { price: dexPrice } = usePrice(
@@ -156,5 +157,5 @@ export const useCreateVaultWeightedScale = (formName: FormNames, transactionType
     enablePriceCheck,
   );
 
-  return useCreateVault(formName, transactionType, state, true, dexPrice);
+  return useCreateVault( state, true, dexPrice);
 };

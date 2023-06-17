@@ -22,18 +22,19 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import getDenomInfo from '@utils/getDenomInfo';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state } = useDcaInForm(FormNames.WeightedScaleOut);
+  const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(weightedScaleOutSteps);
 
   const { data } = useBalances();
 
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
@@ -80,6 +81,18 @@ function Page() {
   );
 }
 
-Page.getLayout = getFlowLayout;
+function PageWrapper() {
+  return (
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.WeightedScaleOut,
+    }}>
+      <Page />
+    </StrategyInfoProvider>
+  );
+}
 
-export default Page;
+PageWrapper.getLayout = getFlowLayout;
+
+export default PageWrapper;

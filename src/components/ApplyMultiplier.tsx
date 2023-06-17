@@ -3,6 +3,7 @@ import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import YesNoValues from '@models/YesNoValues';
+import {  useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { yesNoData } from './PriceThreshold';
 import { TransactionType } from './TransactionType';
 
@@ -19,8 +20,10 @@ function getHelperText(applyMultiplier: YesNoValues, transactionType: Transactio
   return 'The sell multiplier is only applied when the price delta > 0%';
 }
 
-export default function ApplyMultiplier({ transactionType }: { transactionType: TransactionType }) {
+export default function ApplyMultiplier() {
   const [field, , helpers] = useField({ name: 'applyMultiplier' });
+
+  const { transactionType } = useStrategyInfo();
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,

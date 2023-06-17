@@ -19,6 +19,7 @@ import { SWAP_FEE_WS } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
@@ -26,27 +27,25 @@ import { SigningState } from './NewStrategyModal';
 
 function PageInternal({
   state,
-  strategyType,
-  transactionType,
   isError,
   error,
   handleSubmit,
 }: {
   state: WeightedScaleState;
-  strategyType: StrategyTypes;
-  transactionType: TransactionType;
   isError: boolean;
   error: Error | null;
   handleSubmit: (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => void;
 }) {
   const initialDenom = getDenomInfo(state.initialDenom);
   const resultingDenom = getDenomInfo(state.resultingDenom);
+
+  const { transactionType } = useStrategyInfo();
   return (
     <Stack spacing={4}>
       <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
       <Divider />
-      <SummaryYourDeposit state={state} strategyType={strategyType} />
-      <SummaryTheSwapWeightedScale state={state} transactionType={transactionType} />
+      <SummaryYourDeposit state={state} />
+      <SummaryTheSwapWeightedScale state={state}  />
       <WeightSummary
         transactionType={transactionType}
         applyMultiplier={state.applyMultiplier}
@@ -62,7 +61,7 @@ function PageInternal({
         resultingDenom={resultingDenom}
         priceThresholdValue={state.priceThresholdValue}
         slippageTolerance={state.slippageTolerance}
-        transactionType={transactionType}
+        
       />
       <SummaryAfterEachSwap state={state} />
       <Fees
@@ -70,7 +69,7 @@ function PageInternal({
         resultingDenom={resultingDenom}
         autoStakeValidator={state.autoStakeValidator}
         swapAmount={state.swapAmount}
-        transactionType={transactionType}
+        
         swapFee={SWAP_FEE_WS}
         swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
         excludeDepositFee
@@ -81,22 +80,16 @@ function PageInternal({
 }
 
 export function WeightedScaleConfirmPage({
-  formName,
   steps,
-  transactionType,
-  strategyType,
 }: {
-  formName: FormNames;
   steps: StepConfig[];
-  transactionType: TransactionType;
-  strategyType: StrategyTypes;
 }) {
-  const { state, actions } = useWeightedScaleConfirmForm(formName);
+  const { state, actions } = useWeightedScaleConfirmForm();
   const { nextStep, goToStep } = useSteps(steps);
 
   const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
 
-  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(formName, transactionType);
+  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -125,8 +118,6 @@ export function WeightedScaleConfirmPage({
       {state ? (
         <SigningState isSigning={isLoading}>
           <PageInternal
-            transactionType={transactionType}
-            strategyType={strategyType}
             state={state}
             isError={isError}
             error={error}

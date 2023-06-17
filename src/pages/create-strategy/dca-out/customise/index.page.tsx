@@ -5,19 +5,23 @@ import { TransactionType } from '@components/TransactionType';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
-      <CustomiseFormDcaWrapper
-        formName={FormNames.DcaOut}
-        strategyType={StrategyTypes.DCAOut}
-        steps={dcaOutSteps}
-        transactionType={TransactionType.Sell}
-      />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaOut,
+    }}>
+      <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
+        <CustomiseFormDcaWrapper
+          steps={dcaOutSteps}
+        />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

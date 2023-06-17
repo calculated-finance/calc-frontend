@@ -1,7 +1,6 @@
 import { Stack } from '@chakra-ui/react';
 import { Form, Formik, useFormikContext } from 'formik';
 import Submit from '@components/Submit';
-import { TransactionType } from '@components/TransactionType';
 import ExecutionInterval from '@components/ExecutionInterval';
 import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
@@ -14,18 +13,15 @@ import { CollapseWithRender } from '@components/CollapseWithRender';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { InvalidData } from '@components/InvalidData';
 import { useStep2Form } from '@hooks/useDcaInForm';
-import { FormNames } from '@hooks/useFormStore';
 import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { StepConfig } from '@formConfig/StepConfig';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function CustomiseFormDca({
   step1,
-  transactionType,
 }: {
   step1: DcaInFormDataStep1;
-  transactionType: TransactionType;
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
 
@@ -36,14 +32,13 @@ export function CustomiseFormDca({
       <Stack direction="column" spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
         <AdvancedSettingsSwitch />
-        <TriggerForm transactionType={transactionType} initialDenom={initialDenom} resultingDenom={resultingDenom} />
+        <TriggerForm  initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
-        <SwapAmount step1State={step1} isSell={transactionType === TransactionType.Sell} />
+        <SwapAmount step1State={step1} />
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
-            transactionType={transactionType}
           />
           <SlippageTolerance />
         </CollapseWithRender>
@@ -54,17 +49,12 @@ export function CustomiseFormDca({
 }
 
 export function CustomiseFormDcaWrapper({
-  formName,
-  strategyType,
   steps,
-  transactionType,
 }: {
-  formName: FormNames;
-  strategyType: StrategyTypes;
   steps: StepConfig[];
-  transactionType: TransactionType;
 }) {
-  const { state, actions } = useStep2Form(formName);
+  const { strategyType} = useStrategyInfo();
+  const { state, actions } = useStep2Form();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);
 
@@ -92,7 +82,7 @@ export function CustomiseFormDcaWrapper({
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      <CustomiseFormDca step1={state.step1} transactionType={transactionType} />
+      <CustomiseFormDca step1={state.step1} />
     </Formik>
   );
 }

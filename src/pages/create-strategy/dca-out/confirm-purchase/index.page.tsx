@@ -23,9 +23,10 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { state, actions } = useConfirmForm(FormNames.DcaOut);
+  const { state, actions } = useConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
 
   const initialDenom = useDenom(state?.initialDenom);
@@ -33,7 +34,7 @@ function Page() {
 
   const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca(FormNames.DcaOut, TransactionType.Sell);
+  const { mutate, isError, error, isLoading } = useCreateVaultDca();
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
@@ -68,18 +69,16 @@ function Page() {
       <Stack spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
         <Divider />
-        <SummaryYourDeposit state={state} strategyType={StrategyTypes.DCAOut} />
+        <SummaryYourDeposit state={state}  />
         <SummaryTheSwap state={state} transactionType={transactionType} />
         <SummaryWhileSwapping
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={state.priceThresholdValue}
           slippageTolerance={state.slippageTolerance}
-          transactionType={transactionType}
         />
         <SummaryAfterEachSwap state={state} />
         <Fees
-          transactionType={TransactionType.Sell}
           swapFee={SWAP_FEE}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
@@ -95,9 +94,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaOut,
+    }}>
+      <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

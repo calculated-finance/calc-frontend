@@ -17,20 +17,21 @@ import YesNoValues from '@models/YesNoValues';
 import { getDenomName } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { TransactionType } from './TransactionType';
 import { WeightSummary } from './WeightSummary';
 
 export default function SwapMultiplier({
   initialDenom,
   resultingDenom,
-  transactionType,
   swapAmountInjected,
 }: {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
-  transactionType: TransactionType;
   swapAmountInjected?: number;
 }) {
+
+  const { transactionType} = useStrategyInfo();
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
 
   const [{ value: swapAmount }] = useField({ name: 'swapAmount' });

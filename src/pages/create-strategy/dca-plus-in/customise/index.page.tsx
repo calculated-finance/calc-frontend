@@ -17,9 +17,11 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state } = useDCAPlusStep2Form(FormNames.DcaPlusIn);
+  const { actions, state } = useDCAPlusStep2Form();
   const steps = dcaPlusInSteps;
 
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
@@ -82,9 +84,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAPlusIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.DcaPlusIn,
+    }}>
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

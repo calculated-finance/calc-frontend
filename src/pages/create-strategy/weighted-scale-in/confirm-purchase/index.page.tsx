@@ -4,15 +4,19 @@ import { TransactionType } from '@components/TransactionType';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { WeightedScaleConfirmPage } from '@components/WeightedScaleConfirmPage';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   return (
-    <WeightedScaleConfirmPage
-      formName={FormNames.WeightedScaleIn}
-      steps={weightedScaleInSteps}
-      transactionType={TransactionType.Buy}
-      strategyType={StrategyTypes.WeightedScaleIn}
-    />
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.WeightedScaleIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.WeightedScaleIn,
+    }}>
+      <WeightedScaleConfirmPage
+        steps={weightedScaleInSteps}
+      />
+    </StrategyInfoProvider>
   );
 }
 Page.getLayout = getFlowLayout;

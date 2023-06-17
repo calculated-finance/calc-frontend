@@ -10,9 +10,12 @@ import { InvalidData } from '@components/InvalidData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { ModalWrapper } from '@components/ModalWrapper';
+import { TransactionType } from '@components/TransactionType';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
-  const { actions, state, context } = useDcaInFormPostPurchase(FormNames.DcaIn);
+  const { actions, state, context } = useDcaInFormPostPurchase();
   const { nextStep, goToStep } = useSteps(steps);
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
 
@@ -43,9 +46,15 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAIn,
+      transactionType: TransactionType.Buy,
+      formName: FormNames.DcaIn,
+    }}>
+      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+        <Page />
+      </ModalWrapper>
+    </StrategyInfoProvider>
   );
 }
 

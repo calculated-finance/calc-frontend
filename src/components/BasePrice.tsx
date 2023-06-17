@@ -3,6 +3,7 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { TransactionType } from './TransactionType';
@@ -40,12 +41,13 @@ function BasePriceToggle() {
 type BasePriceProps = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
-  transactionType: TransactionType;
 };
 
-export default function BasePrice({ initialDenom, resultingDenom, transactionType }: BasePriceProps) {
+export default function BasePrice({ initialDenom, resultingDenom }: BasePriceProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'basePriceValue' });
   const [priceThresholdField] = useField({ name: 'basePriceIsCurrentPrice' });
+
+  const { transactionType } = useStrategyInfo();
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
