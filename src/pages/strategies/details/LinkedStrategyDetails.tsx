@@ -57,10 +57,14 @@ export function LinkedStrategyDetails({
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
+
+  // console.log(originalStrategy);
   return (
     <>
       <GridItem colSpan={1}>
-        <Heading size="xs">Linked strategy total value:</Heading>
+        <Heading id="1" size="xs">
+          Linked strategy total value:
+        </Heading>
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="strategy-asset-price">
