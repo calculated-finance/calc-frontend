@@ -35,7 +35,6 @@ export function useWallet() {
 
   const metamaskWallet = useMetamask((state) => ({
     account: state.account,
-    controller: state.provider,
     isConnecting: state.isConnecting,
     disconnect: state.disconnect,
   }));
@@ -50,7 +49,7 @@ export function useWallet() {
     return {
       address: metamaskWallet.account?.address,
       connected: true,
-      signingClient: metamaskWallet.controller,
+      signingClient: null,
       disconnect: metamaskWallet.disconnect,
       walletType: WalletTypes.METAMASK,
       isConnecting: false,

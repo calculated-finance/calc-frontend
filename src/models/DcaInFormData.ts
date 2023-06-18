@@ -12,6 +12,7 @@ import {
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
+import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 import { PostPurchaseOptions } from './PostPurchaseOptions';

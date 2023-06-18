@@ -36,6 +36,10 @@ const useBalances = () => {
           .then((res: { balances: Coin[] }) => res.balances);
       }
 
+      if (!provider) {
+        throw new Error('Provider not initialized');
+      }
+
       if (chain === Chains.Moonbeam) {
         // for each denom, fetch the balance using fetchBalanceEvm
 
