@@ -57,8 +57,6 @@ export function LinkedStrategyDetails({
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
-
-  // console.log(originalStrategy);
   return (
     <>
       <GridItem colSpan={1}>
@@ -143,7 +141,11 @@ export function LinkedStrategyDetails({
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Linked Strategy:
                 </Text>
-                <Code fontSize={{ base: 'xx-small', sm: 'x-small' }} bgColor="abyss.200">
+                <Code
+                  fontSize={{ base: 'xx-small', sm: 'x-small' }}
+                  bgColor="abyss.200"
+                  data-testid="linked-strategy-id"
+                >
                   id: {curStrategy.id}
                 </Code>
                 <LinkedStrategyModal strategy={linkedToStrategy} />

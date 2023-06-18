@@ -3,9 +3,55 @@ import '@testing-library/jest-dom/extend-expect';
 
 import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
-export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
+type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
 
-export const mockVault = {
+const mockLinkedVault = {
+  balance: {
+    amount: '12',
+    denom: 'ukuji',
+  },
+  created_at: '1686988860836',
+  deposited_amount: {
+    amount: '12',
+    denom: 'ukuji',
+  },
+  destinations: [
+    {
+      address: 'kujira1e6fjnq7q20sh9cca76wdkfg69esha5zn53jjewrtjgm4nktk824stzyysu',
+      allocation: '1',
+      msg: null,
+    },
+  ],
+  escrow_level: '0',
+  escrowed_amount: {
+    amount: '12',
+    denom: 'ukuji',
+  },
+  id: '222',
+  label: 'label',
+  minimum_receive_amount: '1',
+  owner: 'cosmos1mumzgqekvhvn9fkzj8tajen0qw9j7lj29tgcj2',
+  performance_assessment_strategy: null,
+  received_amount: {
+    amount: '12',
+    denom: 'ukuji',
+  },
+  slippage_tolerance: '0.5',
+  started_at: '1686988860836',
+  status: 'active' as VaultStatus,
+  swap_adjustment_strategy: null,
+  swap_amount: '2',
+  swapped_amount: {
+    amount: '12',
+    denom: 'ukuji',
+  },
+  target_denom: 'ukuji',
+  time_interval: {
+    custom: { seconds: 86400 },
+  },
+  trigger: null,
+};
+const mockVault = {
   balance: {
     amount: '12',
     denom: 'ukuji',
@@ -56,17 +102,13 @@ beforeEach(() => {
   jest.resetModules();
 });
 
-afterEach(() => {
-  jest.restoreAllMocks();
-});
-
 describe('LinkedStrategyDetails', () => {
   it('should render linked strategies component', async () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
         marketValueInFiat={10}
-        linkedToStrategy={mockVault}
+        linkedToStrategy={mockLinkedVault}
         initialDenomPrice={5}
       />,
     );
@@ -75,5 +117,8 @@ describe('LinkedStrategyDetails', () => {
 
     const totalValue = screen.getByTestId('strategy-asset-price');
     expect(totalValue).toHaveTextContent('$10.00 USD');
+
+    const linkedIdElement = screen.getByTestId('linked-strategy-id');
+    expect(linkedIdElement).toHaveTextContent('222');
   });
 });
