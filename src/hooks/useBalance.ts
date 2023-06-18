@@ -6,8 +6,20 @@ import { ethers, formatEther } from 'ethers';
 import * as erc20json from "@openzeppelin/contracts/build/contracts/ERC20.json";
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useMetamask } from './useMetamask';
+import { useChain } from './useChain';
+import { Chains } from './useChain/Chains';
 
+export async function fetchBalanceEvm(token: DenomInfo, provider: ethers.BrowserProvider, address: string) {
+  const erc20 = new ethers.Contract(token.id, erc20json.abi, provider);
 
+  const supplyResult = await erc20.balanceOf(address);
+
+  const amount = supplyResult.toString();
+  return {
+    amount,
+    denom: token.id,
+  };
+}
 
 export type BalanceResponse = {
   amount: number;
@@ -18,11 +30,12 @@ export function getDisplayAmount(token: DenomInfo, amount: number) {
 }
 
 const useBalanceEVM = (token: DenomInfo) => {
-  const { address } = useWallet();
   const provider = useMetamask(state => state.provider);
+  const { chain } = useChain();
+  const { address } = useWallet();
 
   const result = useQuery<Coin>(
-    ['balance-evm', token?.id, address, provider],
+    ['balance-evm', token?.id, provider],
     async () => {
       if (!provider) {
         throw new Error('Provider not initialized');
@@ -31,17 +44,10 @@ const useBalanceEVM = (token: DenomInfo) => {
         throw new Error('No address provided');
       }
         
-      const erc20 = new ethers.Contract(token.id, erc20json.abi, provider);
-
-      const supplyResult = await erc20.totalSupply();
-
-      return {
-        amount: supplyResult.toString(),
-        denom: token.id,
-      }
+      return fetchBalanceEvm(token, provider, address);
     },
     {
-      enabled: !!token && !!address && !!provider,
+      enabled: !!token  && !!provider && chain === Chains.Moonbeam && !!address,
       keepPreviousData: true,
       meta: {
         errorMessage: 'Error fetching balance',
@@ -58,6 +64,7 @@ const useBalanceEVM = (token: DenomInfo) => {
 
 const useBalanceCosm = (token: DenomInfo) => {
   const { address } = useWallet();
+  const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
   const result = useQuery<Coin>(
@@ -73,10 +80,10 @@ const useBalanceCosm = (token: DenomInfo) => {
       return client.getBalance(address, token.id);
     },
     {
-      enabled: !!token && !!address && !!client,
+      enabled: !!token && !!address && !!client && !!chain && chain !== Chains.Moonbeam,
       keepPreviousData: true,
       meta: {
-        errorMessage: 'Error fetching balance',
+        errorMessage: 'Error fetching balance cosmos',
       },
     },
   );
@@ -99,3 +106,5 @@ const useBalance = (token: DenomInfo) => {
 };
 
 export default useBalance;
+
+

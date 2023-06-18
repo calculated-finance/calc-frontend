@@ -7,12 +7,16 @@ import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useOsmosis } from './useOsmosis';
 import { useSupportedDenoms } from './useSupportedDenoms';
+import { useMetamask } from './useMetamask';
+import { fetchBalanceEvm } from './useBalance';
 
 const useBalances = () => {
   const { address } = useWallet();
   const kujiraQuery = useKujira((state) => state.query);
   const osmosisQuery = useOsmosis((state) => state.query);
   const { chain } = useChain();
+
+  const provider = useMetamask(state => state.provider);
 
   const supportedDenoms = useSupportedDenoms();
 
@@ -31,11 +35,22 @@ const useBalances = () => {
           .allBalances({ address })
           .then((res: { balances: Coin[] }) => res.balances);
       }
+
+      if (chain === Chains.Moonbeam) {
+        // for each denom, fetch the balance using fetchBalanceEvm
+
+        const balances = await Promise.all(supportedDenoms.map((denom) => fetchBalanceEvm(denom, provider, address)));
+        return balances;
+      }
+
       return [];
     },
     {
       enabled: !!address && !!kujiraQuery && !!osmosisQuery && !!chain,
       cacheTime: 0,
+      meta: {
+        errorMessage: 'Error fetching balances',
+      },
     },
   );
 

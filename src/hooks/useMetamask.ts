@@ -16,8 +16,8 @@ type IWallet = {
   autoconnect: boolean;
   init: () => void;
   isConnecting: boolean;
-  provider: any | null;
-  signer: any | null;
+  provider: ethers.BrowserProvider | null;
+  signer: ethers.JsonRpcSigner | null;
 };
 
 export const useMetamask = create<IWallet>()(

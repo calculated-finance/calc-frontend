@@ -54,22 +54,22 @@ export const allSchema = {
     .label('Initial Deposit')
     .positive()
     .required()
-    .nullable(),
-    // .test({
-    //   name: 'less-than-deposit',
-    //   message: ({ label }) => `${label} must be less than or equal to than your current balance`,
-    //   test(value, context) {
-    //     const { balances } = context?.options?.context || {};
-    //     if (!balances || !value || value <= 0) {
-    //       return true;
-    //     }
-    //     const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
-    //     if (!amount) {
-    //       return false;
-    //     }
-    //     return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
-    //   },
-    // }),
+    .nullable()
+    .test({
+      name: 'less-than-deposit',
+      message: ({ label }) => `${label} must be less than or equal to than your current balance`,
+      test(value, context) {
+        const { balances } = context?.options?.context || {};
+        if (!balances || !value || value <= 0) {
+          return true;
+        }
+        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
+        if (!amount) {
+          return false;
+        }
+        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
+      },
+    }),
   advancedSettings: Yup.boolean(),
   startImmediately: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
   triggerType: Yup.mixed<TriggerTypes>()
