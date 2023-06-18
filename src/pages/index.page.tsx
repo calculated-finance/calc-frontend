@@ -114,12 +114,12 @@ function InvestmentThesis() {
   );
 }
 
-function ActiveStrategies({strategies} : {strategies: Strategy[] | undefined}) {
+function ActiveStrategies({strategies, isLoading} : {strategies: Strategy[] | undefined, isLoading: boolean}) {
   const { connected } = useWallet();
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
-      {connected && !strategies ? (
+      {connected && isLoading ? (
         <Spinner />
       ) : (
         <Stack spacing={4}>
@@ -244,7 +244,7 @@ function WorkflowInformation() {
   );
 }
 
-function Home({strategies}: { strategies: Strategy[] | undefined  }) {
+function Home({strategies, isLoading}: { strategies: Strategy[] | undefined ; isLoading: boolean }) {
   const { connected } = useWallet();
   const { chain } = useChain();
 
@@ -272,7 +272,7 @@ function Home({strategies}: { strategies: Strategy[] | undefined  }) {
         <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
         {connected && (
           <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-            <ActiveStrategies strategies={strategies} />
+            <ActiveStrategies strategies={strategies} isLoading={isLoading} />
           </GridItem>
         )}
 
@@ -290,14 +290,14 @@ function Home({strategies}: { strategies: Strategy[] | undefined  }) {
 function StrategiesCosmos() {
   const { data, isLoading } = useStrategies();
 
-  return <Home  strategies={data?.vaults} 
+  return <Home isLoading={isLoading} strategies={data?.vaults} 
   />;
 }
 
 function StrategiesEVM() {
   const { data: strategies, isLoading } = useStrategiesEVM();
 
-  return <Home strategies={strategies} />;
+  return <Home strategies={strategies} isLoading={isLoading} />;
 }
 
 function Page() {

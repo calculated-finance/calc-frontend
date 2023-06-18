@@ -52,7 +52,7 @@ function Page({strategies, isLoading}: {strategies: Strategy[] | undefined; isLo
           <StrategyAccordionItem>
             <StrategiesAccordionButton>
               <Heading pb={2} size="md">
-                Active Strategies ({activeStrategies?.length})
+                Active Strategies ({activeStrategies?.length || 0})
               </Heading>
               <Text pb={2} textStyle="body">
                 Strategies actively swapping.
