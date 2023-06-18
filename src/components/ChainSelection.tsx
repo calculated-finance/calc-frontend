@@ -110,6 +110,19 @@ export function ChainSelection() {
             <Text>Kujira</Text>
           </HStack>
         </MenuItemOption>
+        <MenuItemOption
+          _checked={{ bg: 'blue.500', color: 'navy' }}
+          isChecked={chain === Chains.Osmosis}
+          onClick={() => {
+            setChain(Chains.Osmosis);
+            onClose();
+          }}
+        >
+          <HStack>
+            <Image src="/images/denoms/osmo.svg" w={5} />
+            <Text>Osmosis</Text>
+          </HStack>
+        </MenuItemOption>
         {chain === Chains.Moonbeam && (
           <MenuItemOption
             _checked={{ bg: 'blue.500', color: 'navy' }}
