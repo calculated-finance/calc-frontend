@@ -123,7 +123,7 @@ const useCreateVault = (
         msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
       }
 
-      return executeCreateVault(client, senderAddress, msgs).then((res) => {
+      return executeCreateVault( client, senderAddress, msgs).then((res) => {
         track('Strategy Created', { formName, chain, address: senderAddress, walletType });
         return res;
       });
