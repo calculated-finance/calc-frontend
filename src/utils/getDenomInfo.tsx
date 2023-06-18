@@ -76,15 +76,18 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
-  const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+  if (isMainnet()) {
 
-  if (kujiraMainnetAsset) {
-    return {
-      id: denom,
-      ...defaultDenom,
-      ...kujiraMainnetAsset,
-    };
-  }
+    const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+
+    if (kujiraMainnetAsset) {
+      return {
+        id: denom,
+        ...defaultDenom,
+        ...kujiraMainnetAsset,
+      };
+    }
+  } else {
 
   const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
   if (moonbeamTestnetAsset) {
@@ -108,6 +111,7 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
+}
 
   Sentry.captureException('didint find a denom', { tags: { denom } });
   return {
