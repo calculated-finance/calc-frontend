@@ -15,13 +15,9 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
-<<<<<<< HEAD
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
-import { getPairAddress } from 'src/fixtures/addresses';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-=======
->>>>>>> db94b77 (fix backward compatibility)
 
 function DcaIn() {
   const { actions, state } = useDcaInForm();

@@ -189,7 +189,7 @@ export default function usePrice(
     resultingDenom,
     initialDenom,
     transactionType,
-    chain === Chains.Osmosis && !config?.exchange_contract_address && enabled,
+    chain === Chains.Osmosis && !!config && !config?.exchange_contract_address && enabled,
   );
 
   return isV3Enabled ? v3Price : chain === Chains.Osmosis ? osmosisPrice : kujiraPrice;
