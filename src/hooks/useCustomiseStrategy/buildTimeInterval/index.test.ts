@@ -1,6 +1,5 @@
-import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { getExecutionInterval } from '@hooks/useCreateVault/buildCreateVaultParams';
-import dcaInStrategy, { dcaPlusStrategy } from 'src/fixtures/strategy';
+import {dcaInStrategy, dcaPlusStrategy } from 'src/fixtures/strategy';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TransactionType } from '@components/TransactionType';
