@@ -2,7 +2,7 @@ import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Fle
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
-import { Strategy , WithUseStrategyProps, withUseStrategies } from '@hooks/useStrategies';
+import { Strategy, useStrategiesCosmos } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
@@ -63,8 +63,8 @@ function Returning() {
   );
 }
 
-function ActiveWithOne({ useStrategies }: WithUseStrategyProps) {
-  const { data } = useStrategies();
+function ActiveWithOne() {
+  const { data } = useStrategiesCosmos();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
@@ -102,8 +102,8 @@ function ActiveWithOne({ useStrategies }: WithUseStrategyProps) {
   );
 }
 
-function ActiveWithMany({ useStrategies }: WithUseStrategyProps) {
-  const { data } = useStrategies();
+function ActiveWithMany() {
+  const { data } = useStrategiesCosmos();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   return (
     <>
@@ -141,10 +141,11 @@ function ActiveWithMany({ useStrategies }: WithUseStrategyProps) {
   );
 }
 
-function TopPanel({useStrategies}:  WithUseStrategyProps) {
+export default function TopPanel() {
+
   const { connected } = useWallet();
 
-  const { data, isLoading } = useStrategies();
+  const { data, isLoading } = useStrategiesCosmos();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const completedStrategies = data?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
@@ -174,13 +175,13 @@ function TopPanel({useStrategies}:  WithUseStrategyProps) {
       return {
         background: '/images/backgrounds/spiral-thin.svg',
         border: 'blue.200',
-        Content: withUseStrategies(ActiveWithOne),
+        Content: ActiveWithOne,
       };
     }
     return {
       background: '/images/backgrounds/star-thin.svg',
       border: 'green.200',
-      Content: withUseStrategies(ActiveWithMany),
+      Content: ActiveWithMany,
     };
   };
 
@@ -220,5 +221,3 @@ function TopPanel({useStrategies}:  WithUseStrategyProps) {
     </GridItem>
   );
 }
-
-export default withUseStrategies(TopPanel);
