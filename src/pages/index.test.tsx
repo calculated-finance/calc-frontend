@@ -50,7 +50,7 @@ describe('Home', () => {
       connected: true,
     }));
   });
-  it.only('renders the heading', async () => {
+  it('renders the heading', async () => {
     await renderTarget();
     expect(screen.getByText(/Welcome to CALC/)).toBeInTheDocument();
   });

@@ -129,25 +129,18 @@ function usePairsOsmosis() {
 function usePairsMoonbeam() {
   const { chain } = useChain();
 
-
   if (chain === Chains.Moonbeam) {
     return {
       isLoading: false,
       data: {
         pairs: [
-          {
-            address: 'evm1',
-            base_denom: TestnetDenomsMoonbeam.WDEV,
-            quote_denom: TestnetDenomsMoonbeam.SATURN,
-          },
+          [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN],
         ],
       },
     };
   }
 
   return null;
-
-
 }
 
 function usePairsKujira() {
@@ -166,21 +159,6 @@ function usePairsKujira() {
       enabled: !!client && chain === Chains.Kujira,
     },
   );
-
-  if (chain === Chains.Moonbeam) {
-    return {
-      isLoading: false,
-      data: {
-        pairs: [
-          {
-            address: 'evm1',
-            base_denom: TestnetDenomsMoonbeam.WDEV,
-            quote_denom: TestnetDenomsMoonbeam.SATURN,
-          },
-        ],
-      },
-    };
-  }
 
   return {
     ...queryResult,

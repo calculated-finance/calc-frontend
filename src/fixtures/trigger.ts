@@ -11,6 +11,7 @@ export const mockTimeTrigger: TriggerConfiguration = {
 
 export const mockPriceTrigger: TriggerConfiguration = {
   price: {
+    order_idx: '0',
     target_price: '0.5', // 0.5 DEMO
   },
 };
