@@ -9,6 +9,11 @@ import { Chains } from '@hooks/useChain/Chains';
 import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import { V2Pair, V3Pair } from '@models/Pair';
+import { useConfig } from '@hooks/useConfig';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { getPairAddress } from 'src/fixtures/addresses';
 import usePairs from '../usePairs';
 import { safeInvert } from './safeInvert';
 
@@ -63,62 +68,36 @@ function calculatePrice(result: BookResponse, initialDenom: DenomInfo, transacti
   return priceDeconversion(Number(quotePriceInfo.quote_price));
 }
 
-export default function usePrice(
+function usePriceKujira(
+  client: CosmWasmClient | null,
   resultingDenom: DenomInfo | undefined,
   initialDenom: DenomInfo | undefined,
+  pair: V2Pair | null | undefined,
   transactionType: TransactionType,
   enabled = true,
 ) {
-  const { chain } = useChain();
-  const client = useCosmWasmClient((state) => state.client);
-
-  const { data: pairsData } = usePairs();
-  const { pairs } = pairsData || {};
-  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
-
-  const { data, ...helpers } = useQuery<BookResponse>(
+  const { data, ...helpers } = useQuery<number>(
     ['price', pair, client],
     async () => {
-      if (!client) {
-        throw new Error('No client');
-      }
-
-      if (!pair) {
-        throw new Error('No pair');
-      }
-
-      const result = await client.queryContractSmart(pair.address, {
+      const result = await client!.queryContractSmart(getPairAddress(initialDenom!.id, resultingDenom!.id)!, {
         book: {
           limit: 1,
         },
       });
-      return result;
+      return result && calculatePrice(result, initialDenom!, transactionType);
     },
     {
-      enabled: !!client && !!pair && chain === Chains.Kujira && enabled,
+      enabled,
       meta: {
         errorMessage: 'Error fetching price',
       },
     },
   );
 
-  const osmosisPrice = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Osmosis && enabled,
-  );
-
-  if (chain === Chains.Osmosis) {
-    return osmosisPrice;
-  }
-
-  const price = data && calculatePrice(data, initialDenom!, transactionType);
-
   const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);
 
-  const formattedPrice = price
-    ? price.toLocaleString('en-US', {
+  const formattedPrice = data
+    ? data.toLocaleString('en-US', {
         maximumFractionDigits: pricePrecision || 3,
         minimumFractionDigits: 3,
       })
@@ -126,8 +105,92 @@ export default function usePrice(
 
   return {
     formattedPrice,
-    price,
-    pairAddress: pair?.address,
+    price: data,
     ...helpers,
   };
+}
+
+function usePriceV3(
+  client: CosmWasmClient | null,
+  resultingDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo | undefined,
+  pair: V3Pair | null | undefined,
+  config: Config | undefined,
+  enabled = true,
+) {
+  const { data, ...helpers } = useQuery<number>(
+    ['price', pair, client],
+    async () => {
+      const result = await client!.queryContractSmart(config!.exchange_contract_address, {
+        get_twap_to_now: {
+          swap_denom: initialDenom!.id,
+          target_denom: resultingDenom!.id,
+          period: config!.twap_period,
+        },
+      });
+      return result;
+    },
+    {
+      enabled,
+      meta: {
+        errorMessage: 'Error fetching price',
+      },
+    },
+  );
+
+  const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);
+
+  const formattedPrice = data
+    ? data.toLocaleString('en-US', {
+        maximumFractionDigits: pricePrecision || 3,
+        minimumFractionDigits: 3,
+      })
+    : undefined;
+
+  return {
+    formattedPrice,
+    price: data,
+    ...helpers,
+  };
+}
+
+export default function usePrice(
+  resultingDenom: DenomInfo | undefined,
+  initialDenom: DenomInfo | undefined,
+  transactionType: TransactionType,
+  enabled = true,
+) {
+  const { chain } = useChain();
+  const config = useConfig();
+
+  const client = useCosmWasmClient((state) => state.client);
+
+  const { data: pairsData } = usePairs();
+  const { pairs } = pairsData || {};
+  const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
+
+  const isV3Enabled = !!client && !!pair && !!config && !!config?.exchange_contract_address && enabled;
+
+  const isV2Enabled =
+    !!client && !!pair && chain === Chains.Kujira && !!config && !config?.exchange_contract_address && enabled;
+
+  const v3Price = usePriceV3(client, resultingDenom, initialDenom, pair as V3Pair, config, isV3Enabled);
+
+  const kujiraPrice = usePriceKujira(
+    client,
+    resultingDenom,
+    initialDenom,
+    pair as V2Pair,
+    transactionType,
+    isV2Enabled,
+  );
+
+  const osmosisPrice = usePriceOsmosis(
+    resultingDenom,
+    initialDenom,
+    transactionType,
+    chain === Chains.Osmosis && !!config && !config?.exchange_contract_address && enabled,
+  );
+
+  return isV3Enabled ? v3Price : chain === Chains.Osmosis ? osmosisPrice : kujiraPrice;
 }

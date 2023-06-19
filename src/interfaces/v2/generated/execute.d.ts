@@ -7,22 +7,6 @@
 
 export type ExecuteMsg =
   | {
-      create_pair: {
-        address: Addr;
-        base_denom: string;
-        quote_denom: string;
-      };
-    }
-  | {
-      delete_pair: {
-        /**
-         * @minItems 2
-         * @maxItems 2
-         */
-        denoms: [string, string];
-      };
-    }
-  | {
       create_vault: {
         destinations?: Destination[] | null;
         label?: string | null;
@@ -78,17 +62,6 @@ export type ExecuteMsg =
         risk_weighted_average_escrow_level?: Decimal | null;
         twap_period?: number | null;
         weighted_scale_swap_fee_percent?: Decimal | null;
-      };
-    }
-  | {
-      create_custom_swap_fee: {
-        denom: string;
-        swap_fee_percent: Decimal;
-      };
-    }
-  | {
-      remove_custom_swap_fee: {
-        denom: string;
       };
     }
   | {
@@ -157,6 +130,7 @@ export type SwapAdjustmentStrategyParams =
   | {
       risk_weighted_average: {
         base_denom: BaseDenom;
+        position_type: PositionType;
       };
     }
   | {
@@ -167,6 +141,7 @@ export type SwapAdjustmentStrategyParams =
       };
     };
 export type BaseDenom = "bitcoin";
+export type PositionType = "enter" | "exit";
 /**
  * A thin wrapper around u64 that is using strings for JSON encoding/decoding, such that the full u64 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
  *
@@ -211,7 +186,6 @@ export type SwapAdjustmentStrategy =
         multiplier: Decimal;
       };
     };
-export type PositionType = "enter" | "exit";
 
 export interface Destination {
   address: Addr;

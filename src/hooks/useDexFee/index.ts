@@ -5,7 +5,7 @@ import { FIN_TAKER_FEE } from 'src/constants';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
 import usePairs from '@hooks/usePairs';
-import { OsmosisPair } from '@models/Pair';
+import { V2Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 
 export default function useDexFee(
@@ -37,7 +37,7 @@ export default function useDexFee(
   }
 
   if (pair && 'route' in pair) {
-    const route = (pair as OsmosisPair)?.route;
+    const route = (pair as V2Pair)?.route;
     if (route) {
       if (route.length === 1) {
         const pool = pools?.find((p) => p.id.toNumber() === route[0]);

@@ -105,6 +105,7 @@ describe('DCA Out Assets page', () => {
       });
     });
   });
+
   describe('when initial denom is selected', () => {
     describe('and there are not available funds', () => {
       it('should show an amount of none', async () => {

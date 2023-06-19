@@ -78,10 +78,15 @@ export type Uint128 = string;
  */
 export type Decimal = string;
 export type ExecutionSkippedReason =
-  | ("slippage_tolerance_exceeded" | "swap_amount_adjusted_to_zero")
+  | ("slippage_tolerance_exceeded" | "swap_amount_adjusted_to_zero" | "slippage_query_error")
   | {
       price_threshold_exceeded: {
         price: Decimal;
+      };
+    }
+  | {
+      unknown_error: {
+        msg: string;
       };
     };
 export type CosmosMsgFor_Empty =

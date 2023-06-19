@@ -54,12 +54,10 @@ function Page() {
       .filter(isSupportedDenomForDcaPlus),
   );
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : quote_denom,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
@@ -85,14 +83,16 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaPlusOut,
-    }}>
-    <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut,
+      }}
+    >
+      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

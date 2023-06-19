@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within, act } from '@testing-library/react';
+import { render, screen, within, act } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
 import { queryClient } from '@helpers/test/testQueryClient';
@@ -7,7 +7,6 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-import userEvent from '@testing-library/user-event';
 import Page from './index.page';
 
 const mockRouter = {

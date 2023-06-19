@@ -9,7 +9,6 @@ import usePairs, {
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -35,7 +34,6 @@ function Page() {
 
   const { data } = useBalances();
 
-
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
@@ -52,12 +50,10 @@ function Page() {
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
   );
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : quote_denom,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
@@ -83,11 +79,13 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.WeightedScaleOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.WeightedScaleOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.WeightedScaleOut,
+      }}
+    >
       <Page />
     </StrategyInfoProvider>
   );

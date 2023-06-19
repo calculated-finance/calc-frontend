@@ -4,7 +4,6 @@ import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
@@ -30,7 +29,6 @@ function DcaIn() {
 
   const { data } = useBalances();
 
-
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
@@ -44,12 +42,10 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={weightedScaleInSteps} reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : base_denom,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
@@ -75,11 +71,13 @@ function DcaIn() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.WeightedScaleIn,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.WeightedScaleIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.WeightedScaleIn,
+      }}
+    >
       <DcaIn />
     </StrategyInfoProvider>
   );

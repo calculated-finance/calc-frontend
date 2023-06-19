@@ -29,13 +29,10 @@ function Page() {
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
-    isLoading,
   } = usePairs();
   const { nextStep } = useSteps(dcaOutSteps);
 
   const { data } = useBalances();
-
-  const { isPageLoading } = usePageLoad();
 
   const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
 
@@ -55,12 +52,10 @@ function Page() {
       .filter(isDenomVolatile),
   );
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : base_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : quote_denom,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
@@ -86,11 +81,13 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaOut,
+      }}
+    >
       <Page />
     </StrategyInfoProvider>
   );

@@ -41,12 +41,10 @@ function DcaIn() {
     return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
   }
 
-  const { quote_denom, base_denom } =
-    pairs.find((pair) => Boolean(pair.address) && pair.address === router.query.pair) || {};
   const initialValues = {
     ...state.step1,
-    initialDenom: state.step1.initialDenom ? state.step1.initialDenom : quote_denom,
-    resultingDenom: state.step1.resultingDenom ? state.step1.resultingDenom : base_denom,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
@@ -72,14 +70,16 @@ function DcaIn() {
 
 function Page() {
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaIn,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaIn,
+      }}
+    >
       <DcaIn />
     </StrategyInfoProvider>
-  )
+  );
 }
 
 Page.getLayout = getFlowLayout;

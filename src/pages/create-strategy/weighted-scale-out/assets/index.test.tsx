@@ -80,6 +80,7 @@ describe('DCA Out Assets page', () => {
       query: mockKujiraQuery as unknown as KujiraQueryClient,
     });
   });
+
   describe('on page load', () => {
     it('renders the heading', async () => {
       mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
@@ -106,6 +107,7 @@ describe('DCA Out Assets page', () => {
       });
     });
   });
+
   describe('when initial denom is selected', () => {
     describe('and there are not available funds', () => {
       it('should show an amount of none', async () => {

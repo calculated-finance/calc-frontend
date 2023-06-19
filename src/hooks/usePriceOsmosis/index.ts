@@ -3,11 +3,11 @@ import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Long from 'long';
-import { Pair as OsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/balancerPool';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import { V2Pair } from '@models/Pair';
 import usePairs from '../usePairs';
 
 interface Step {
@@ -67,9 +67,9 @@ export default function usePriceOsmosis(
 
       const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-      const route = pair && 'route' in pair ? (pair as OsmosisPair).route : undefined;
+      const route = pair && 'route' in pair ? (pair as V2Pair).route : undefined;
 
-      const isRouteReversed = initialDenom.id !== pair?.quote_denom;
+      const isRouteReversed = pair && 'quote_denom' in pair && initialDenom.id !== pair.quote_denom;
 
       const { significantFigures: initialSF } = initialDenom;
       const { significantFigures: resultingSF } = resultingDenom;
