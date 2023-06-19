@@ -103,7 +103,7 @@ beforeEach(() => {
 });
 
 describe('LinkedStrategyDetails', () => {
-  it('should render linked strategies component', async () => {
+  it('should render "total value" text ', async () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
@@ -114,10 +114,42 @@ describe('LinkedStrategyDetails', () => {
     );
     const titleElement = screen.getByText(/linked strategy total value:/i);
     expect(titleElement).toHaveTextContent('Linked strategy total value:');
+  });
 
-    const totalValue = screen.getByTestId('strategy-asset-price');
-    expect(totalValue).toHaveTextContent('$10.00 USD');
+  it('should render original strategies value', async () => {
+    render(
+      <LinkedStrategyDetails
+        originalStrategy={mockVault}
+        marketValueInFiat={10}
+        linkedToStrategy={mockLinkedVault}
+        initialDenomPrice={5}
+      />,
+    );
+    const originalValue = screen.getByTestId('strategy-asset-price');
+    expect(originalValue).toHaveTextContent('$10.00 USD');
+  });
+  it('should render combined strategies value', async () => {
+    render(
+      <LinkedStrategyDetails
+        originalStrategy={mockVault}
+        marketValueInFiat={2}
+        linkedToStrategy={mockLinkedVault}
+        initialDenomPrice={99}
+      />,
+    );
+    const combinedValue = screen.getByTestId('combined-strategy-value');
+    expect(combinedValue.textContent).toBe('$2.00 USD');
+  });
 
+  it('should render linked strategies ID', async () => {
+    render(
+      <LinkedStrategyDetails
+        originalStrategy={mockVault}
+        marketValueInFiat={10}
+        linkedToStrategy={mockLinkedVault}
+        initialDenomPrice={5}
+      />,
+    );
     const linkedIdElement = screen.getByTestId('linked-strategy-id');
     expect(linkedIdElement).toHaveTextContent('222');
   });

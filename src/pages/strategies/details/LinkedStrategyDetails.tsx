@@ -65,7 +65,7 @@ export function LinkedStrategyDetails({
         </Heading>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text fontSize="sm" data-testid="strategy-asset-price">
+        <Text fontSize="sm" data-testid="combined-strategy-value">
           {totalValue}
         </Text>
       </GridItem>
@@ -100,7 +100,7 @@ export function LinkedStrategyDetails({
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }}>
+                <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }} data-testid="strategy-asset-price">
                   {value}
                 </Text>
               </HStack>
