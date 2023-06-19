@@ -3,10 +3,10 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import { EncodeObject } from '@cosmjs/proto-signing';
+import { Coin  } from 'cosmjs-types/cosmos/base/v1beta1/coin';
+import { EncodeObject   } from '@cosmjs/proto-signing';
 import { getFeeMessage } from '@helpers/getFeeMessage';
-import { Denom } from '@models/Denom';
+
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useChain } from '@hooks/useChain';
@@ -19,14 +19,19 @@ import { isNil } from 'lodash';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { Chains } from '@hooks/useChain/Chains';
+import { Denom } from '@models/Denom';
+import { Strategy } from '@hooks/useStrategies';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
-import { Strategy } from '../useStrategies';
 import { getGrantMsg } from './getGrantMsg';
 import { getExecuteMsg } from './getCreateVaultExecuteMsg';
 import { buildCreateVaultParams } from './buildCreateVaultParams';
 import { executeCreateVault } from './executeCreateVault';
 import { DcaFormState } from './DcaFormState';
+import { useMoonbeamCreateVault } from './useMoonbeamCreateVault';
+
+
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {
   const { deconversion } = getDenomInfo(initialDenom);
@@ -59,7 +64,9 @@ const useCreateVault = (
 
   const { track } = useAnalytics();
 
-  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
+  const evmCreate = useMoonbeamCreateVault(state);
+
+  const cosmosCreate = useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
     ({ price }) => {
       if (!state) {
         throw new Error('No state');
@@ -116,7 +123,7 @@ const useCreateVault = (
         msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
       }
 
-      return executeCreateVault(client, senderAddress, msgs).then((res) => {
+      return executeCreateVault( client, senderAddress, msgs).then((res) => {
         track('Strategy Created', { formName, chain, address: senderAddress, walletType });
         return res;
       });
@@ -130,6 +137,8 @@ const useCreateVault = (
       },
     },
   );
+
+  return chain === Chains.Moonbeam ? evmCreate : cosmosCreate;
 };
 
 export const useCreateVaultDca = () => {

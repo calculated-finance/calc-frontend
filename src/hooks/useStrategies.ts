@@ -1,12 +1,17 @@
 import { useWallet } from '@hooks/useWallet';
-import { queryClient } from '@helpers/test/testQueryClient';
-import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
-import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { useChain } from './useChain';
+import { queryClient } from '@helpers/test/testQueryClient';
+import { Chains } from '@hooks/useChain/Chains';
+import { useMetamask } from '@hooks/useMetamask';
+import { fetchStrategy } from '@hooks/fetchStrategy';
+import { ethers } from 'ethers';
+import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
+import factoryContractJson from 'src/Factory.json';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { useChain } from './useChain';
 
 const QUERY_KEY = 'get_vaults_by_address';
 
@@ -15,24 +20,24 @@ export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_K
 export type Strategy = Vault;
 export type StrategyOsmosis = VaultOsmosis;
 
-export default function useStrategies() {
+export function useStrategiesCosmos() {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQuery<VaultsResponse>(
+  return useQuery<Strategy[]>(
     [QUERY_KEY, address, client],
-    () => {
+    async () => {
       if (!client) {
         throw new Error('No client');
       }
-      const result = client.queryContractSmart(getChainContractAddress(chain), {
+      const result = await client.queryContractSmart(getChainContractAddress(chain), {
         get_vaults_by_address: {
           address,
           limit: 1000,
         },
       });
-      return result;
+      return result?.vaults
     },
     {
       enabled: !!address && !!client && !!chain,
@@ -42,3 +47,32 @@ export default function useStrategies() {
     },
   );
 }
+
+
+export function useStrategiesEVM() {
+  const { address } = useWallet();
+  const { chain } = useChain();
+  const provider = useMetamask(state => state.provider);
+
+  return useQuery<Strategy[]>(
+    [QUERY_KEY, address, provider],
+    async () => {
+      if (!provider) {
+        throw new Error('No client');
+      }
+
+      const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
+
+      const result = await factoryContract.getVaultsByAddress(address).then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
+          
+      return result as Strategy[];
+    },
+    {
+      enabled: !!address && !!provider && !!chain && chain === Chains.Moonbeam,
+      meta: {
+        errorMessage: 'Error fetching strategies',
+      },
+    },
+  );
+}
+

@@ -165,6 +165,10 @@ export function getChainDexName(chain: Chains) {
   if (chain === Chains.Osmosis) {
     return 'Osmosis';
   }
+
+  if (chain === Chains.Moonbeam) {
+    return 'Moonbeam';
+  }
   return 'FIN';
 }
 

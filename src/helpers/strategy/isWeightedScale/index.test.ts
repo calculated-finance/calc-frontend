@@ -1,11 +1,11 @@
-import mockStrategy, { dcaPlusStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategy, dcaPlusStrategy } from 'src/fixtures/strategy';
 import { isWeightedScale } from '.';
 
 describe('isDcaPlus', () => {
   test('returns true for strategy with dca_plus_config property', () => {
     expect(
       isWeightedScale({
-        ...mockStrategy,
+        ...dcaInStrategy,
         swap_adjustment_strategy: {
           weighted_scale: { multiplier: '1', base_receive_amount: '0', increase_only: false },
         },

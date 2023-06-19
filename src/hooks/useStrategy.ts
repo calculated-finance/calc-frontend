@@ -10,7 +10,7 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 export const STRATEGY_KEY = 'strategy';
 
-export default function useStrategy(id?: Strategy['id']) {
+export default function useStrategy(id: Strategy['id'] | undefined) {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);

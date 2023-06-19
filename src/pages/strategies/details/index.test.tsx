@@ -13,9 +13,9 @@ import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockCancelVault } from '@helpers/test/mockCancelVault';
 import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
-import { truncate } from '@components/CosmosWallet';
 import { toBase64 } from '@helpers/base64';
 import { CONTRACT_ADDRESS } from 'src/constants';
+import { truncate } from '@helpers/truncate';
 import Page from './index.page';
 
 const mockRouter = {

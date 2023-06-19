@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import strategy from 'src/fixtures/strategy';
+import {dcaInStrategy} from 'src/fixtures/strategy';
 import { Strategy } from '@hooks/useStrategies';
 import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
@@ -10,7 +10,7 @@ import pairs from 'src/fixtures/pairs';
 
 export function mockStrategy(data?: Partial<Strategy>) {
   return {
-    ...strategy,
+    ...dcaInStrategy,
     ...data,
   };
 }

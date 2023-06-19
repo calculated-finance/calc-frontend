@@ -33,6 +33,9 @@ import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useChain } from '@hooks/useChain';
+import useStrategyEVM from '@hooks/useStrategyEVM';
+import { Chains } from '@hooks/useChain/Chains';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';
@@ -74,13 +77,7 @@ export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] |
   );
 }
 
-function Page() {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const { data } = useStrategy(id as string);
-  const { data: events } = useStrategyEvents(id as string);
-
+function Page({strategy, events}: {strategy: Strategy | undefined, events: StrategyEvent[] | undefined}) {
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
 
   const { connected } = useWallet();
@@ -89,14 +86,13 @@ function Page() {
     return <ConnectWallet layerStyle="panel" />;
   }
 
-  if (!data) {
+  if (!strategy) {
     return (
       <Center h="100vh">
         <Spinner />
       </Center>
     );
   }
-  const strategy = data.vault;
   const lastSwapSlippageError = getLatestSwapError(strategy, events);
 
   return (
@@ -154,6 +150,51 @@ function Page() {
   );
 }
 
-Page.getLayout = getSidebarLayout;
 
-export default Page;
+// const { data,  } = useStrategy(id);
+// const { data: events } = useStrategyEvents(id as string);
+
+// return <Page strategy={data?.vault} events={events} > {children}</Page>
+// }
+
+
+// function StrategyDetailsEVM({ id, children }: { id: string} & ChildrenProp) {
+// const { data: strategy  } = useStrategyEVM(id);
+// return <Page strategy={strategy} events={[]}> {children}</Page>
+// }
+
+// function StrategyProvider({id, children}: {id: string} & ChildrenProp) {
+// const { chain } = useChain();
+// return chain === Chains.Moonbeam ? 
+//   <StrategyProviderEVM id={id} >{children}</StrategyProviderEVM> 
+//   : 
+//   <StrategyProviderCosmos id={id} >{children}</StrategyProviderCosmos>
+
+
+function StrategyDetailsCosmos({id }: { id: string }) {
+  const { data,  } = useStrategy(id);
+  const { data: events } = useStrategyEvents(id as string);
+
+  return <Page strategy={data?.vault} events={events}  />;
+}
+
+
+function StrategyDetailsEVM({ id }: { id: string }) {
+  const { data: strategy  } = useStrategyEVM(id);
+  return <Page strategy={strategy} events={[]} />;
+}
+
+
+
+function PageWrapper() {
+  const { chain } = useChain();
+
+  const router = useRouter();
+  const { id } = router.query;
+  return chain === Chains.Moonbeam ? <StrategyDetailsEVM id={id as string}  /> : <StrategyDetailsCosmos id={id as string} />
+}
+
+PageWrapper.getLayout = getSidebarLayout;
+
+export default PageWrapper;
+

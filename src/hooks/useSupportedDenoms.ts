@@ -12,9 +12,12 @@ export function useSupportedDenoms(injectedChain?: Chains) {
 
   const { data: pairsData } = usePairs();
 
+
   const { pairs } = pairsData;
 
-  const allDenoms = chain === Chains.Osmosis ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
+
+
+  const allDenoms = chain !== Chains.Kujira ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
 
   const allDenomInfos = useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
 

@@ -4,6 +4,7 @@ import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import { TestnetDenomsMoonbeam } from '@models/Denom';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -98,6 +99,31 @@ function usePairsOsmosis() {
   };
 }
 
+
+function usePairsMoonbeam() {
+  const { chain } = useChain();
+
+
+  if (chain === Chains.Moonbeam) {
+    return {
+      isLoading: false,
+      data: {
+        pairs: [
+          {
+            address: 'evm1',
+            base_denom: TestnetDenomsMoonbeam.WDEV,
+            quote_denom: TestnetDenomsMoonbeam.SATURN,
+          },
+        ],
+      },
+    };
+  }
+
+  return null;
+
+
+}
+
 function usePairsKujira() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
@@ -115,6 +141,21 @@ function usePairsKujira() {
     },
   );
 
+  if (chain === Chains.Moonbeam) {
+    return {
+      isLoading: false,
+      data: {
+        pairs: [
+          {
+            address: 'evm1',
+            base_denom: TestnetDenomsMoonbeam.WDEV,
+            quote_denom: TestnetDenomsMoonbeam.SATURN,
+          },
+        ],
+      },
+    };
+  }
+
   return {
     ...queryResult,
     data: {
@@ -131,6 +172,7 @@ export default function usePairs() {
 
   const kujiraPairsData = usePairsKujira();
   const osmosisPairsData = usePairsOsmosis();
+  
 
-  return chain === Chains.Kujira ? kujiraPairsData : osmosisPairsData;
+  return usePairsMoonbeam() || chain === Chains.Kujira ? kujiraPairsData : osmosisPairsData;
 }

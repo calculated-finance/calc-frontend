@@ -2,7 +2,7 @@ import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Fle
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
-import useStrategies, { Strategy } from '@hooks/useStrategies';
+import { Strategy, useStrategiesCosmos } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
@@ -64,8 +64,8 @@ function Returning() {
 }
 
 function ActiveWithOne() {
-  const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+  const { data } = useStrategiesCosmos();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
   const balanceValue = new DenomValue(balance);
@@ -103,8 +103,8 @@ function ActiveWithOne() {
 }
 
 function ActiveWithMany() {
-  const { data } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+  const { data } = useStrategiesCosmos();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   return (
     <>
       <HStack align="center">
@@ -142,11 +142,12 @@ function ActiveWithMany() {
 }
 
 export default function TopPanel() {
+
   const { connected } = useWallet();
 
-  const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
-  const completedStrategies = data?.vaults.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
+  const { data, isLoading } = useStrategiesCosmos();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
+  const completedStrategies = data?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
     if (connected && isLoading) {

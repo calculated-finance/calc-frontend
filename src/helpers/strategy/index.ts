@@ -57,7 +57,7 @@ export function isStrategyCancelled(strategy: Strategy | StrategyOsmosis) {
   return ['cancelled'].includes(strategy.status);
 }
 
-export default function getStrategyBalance(strategy: Strategy | StrategyOsmosis) {
+export function getStrategyBalance(strategy: Strategy | StrategyOsmosis) {
   const { balance } = strategy || {};
 
   return convertDenomFromCoin(balance);

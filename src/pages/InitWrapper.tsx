@@ -9,6 +9,7 @@ import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { featureFlags } from 'src/constants';
+import { useMetamask } from '@hooks/useMetamask';
 
 function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {
@@ -27,6 +28,7 @@ export function InitWrapper({ children }: ChildrenProp) {
   const initKeplr = useKeplr((state) => state.init);
   const initLeap = useLeap((state) => state.init);
   const initXDEFI = useXDEFI((state) => state.init);
+  const initMetamask = useMetamask((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
 
@@ -76,6 +78,12 @@ export function InitWrapper({ children }: ChildrenProp) {
       initCosmWasmClient(chain);
     }
   }, [initCosmWasmClient, chain]);
+
+  useEffect(() => {
+    if (chain) {
+      initMetamask();
+    }
+  }, [initMetamask, chain]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{children}</>;

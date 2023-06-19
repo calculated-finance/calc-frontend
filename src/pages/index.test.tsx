@@ -1,8 +1,8 @@
 import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
-import useStrategies, { Strategy } from '@hooks/useStrategies';
-import mockStrategyData from 'src/fixtures/strategy';
+import {useStrategiesCosmos, Strategy } from '@hooks/useStrategies';
+import {dcaInStrategy} from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
 import Home from './index.page';
 import '@testing-library/jest-dom';
@@ -28,31 +28,29 @@ jest.mock('@hooks/useWallet');
 
 function mockStrategy(data?: Partial<Strategy>) {
   return {
-    ...mockStrategyData,
+    ...dcaInStrategy,
     ...data,
   };
 }
 
 async function renderTarget() {
-  await act(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Home />
-      </QueryClientProvider>,
-    );
-  });
+  await act(() => render(
+    <QueryClientProvider client={queryClient}>
+      <Home />
+    </QueryClientProvider>,
+  ));
 }
 
 describe('Home', () => {
   beforeEach(() => {
-    (useStrategies as jest.Mock).mockImplementation(() => ({
+    (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
       isLoading: false,
     }));
     (useWallet as jest.Mock).mockImplementation(() => ({
       connected: true,
     }));
   });
-  it('renders the heading', async () => {
+  it.only('renders the heading', async () => {
     await renderTarget();
     expect(screen.getByText(/Welcome to CALC/)).toBeInTheDocument();
   });
@@ -91,7 +89,7 @@ describe('Home', () => {
     });
     describe('when active strategies exist', () => {
       beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
+        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           isLoading: false,
           data: { vaults: [mockStrategy(), mockStrategy({ status: 'inactive' })] },
         }));

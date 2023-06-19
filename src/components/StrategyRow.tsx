@@ -15,6 +15,7 @@ import {
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import React from 'react';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -48,7 +49,30 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function StrategyRow({ strategy }: { strategy: Strategy }) {
+function StrategyRow({ strategy}: { strategy: Strategy}) {
+
+  // return (
+  //   <Link href={generateStrategyDetailUrl(strategy)}>
+  //     <Grid
+  //       templateRows="repeat(1, 1fr)"
+  //       templateColumns="repeat(15, 1fr)"
+  //       rowGap={6}
+  //       columnGap={2}
+  //       bg="gray.900"
+  //       py={4}
+  //       px={8}
+  //       layerStyle="panel"
+  //       borderWidth={isDcaPlus(strategy) ? 1 : 0}
+  //       borderColor="brand.200"
+  //       _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
+  //     >
+  //       <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
+  //         <Heading size="md">{strategy}</Heading>
+  //       </GridItem>
+  //       </Grid>
+  //   </Link>
+  // )
+
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 

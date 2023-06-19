@@ -3,7 +3,7 @@ import { mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
 
-const dcaInStrategy = {
+export const dcaInStrategy = {
   id: '1',
   created_at: '0',
   owner: 'kujiratestwallet',
@@ -149,5 +149,3 @@ export const osmosisStrategy = {
   time_interval: 'daily',
   trigger: null,
 } as StrategyOsmosis;
-
-export default dcaInStrategy;

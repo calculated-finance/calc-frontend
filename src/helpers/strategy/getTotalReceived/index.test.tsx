@@ -1,4 +1,4 @@
-import dcaInStrategy from 'src/fixtures/strategy';
+import {dcaInStrategy} from 'src/fixtures/strategy';
 import { getTotalReceived } from '..';
 
 describe('getTotalReceived', () => {

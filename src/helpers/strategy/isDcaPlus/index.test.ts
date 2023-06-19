@@ -1,4 +1,4 @@
-import mockStrategy, { dcaPlusStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategy, dcaPlusStrategy } from 'src/fixtures/strategy';
 import { isDcaPlus } from '.';
 
 describe('isDcaPlus', () => {
@@ -7,6 +7,6 @@ describe('isDcaPlus', () => {
   });
 
   test('returns false for strategy without dca_plus_config property', () => {
-    expect(isDcaPlus(mockStrategy)).toBe(false);
+    expect(isDcaPlus(dcaInStrategy)).toBe(false);
   });
 });
