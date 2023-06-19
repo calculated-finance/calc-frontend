@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
-import useStrategies from '@hooks/useStrategies';
 
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
+import { useStrategiesCosmos } from '@hooks/useStrategies';
 import TopPanel from './TopPanel';
 
 
@@ -28,11 +28,12 @@ jest.mock('next/router', () => ({
 }));
 
 jest.mock('@hooks/useWallet');
-ooks/useStrategies/useStrategies);
+jest.mock('@hooks/useStrategies');
+
 
 describe('top panel', () => {
   beforeEach(() => {
-    (useStrategies as jest.Mock).mockImplementation(() => ({
+    (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
       isLoading: false,
     }));
   });
@@ -45,7 +46,7 @@ describe('top panel', () => {
     });
     describe('when a user has no strategies set', () => {
       beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
+        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           isLoading: false,
         }));
       });
@@ -62,7 +63,7 @@ describe('top panel', () => {
     });
     describe('when a user has only completed strategies', () => {
       beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
+        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           data:  [{ id: 1, status: 'inactive' }],
           isLoading: false,
         }));
@@ -81,7 +82,7 @@ describe('top panel', () => {
     });
     describe('when a single strategy is set', () => {
       beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
+        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           data:  [{ id: 1, status: 'active' }],
           isLoading: false,
         }));
@@ -100,7 +101,7 @@ describe('top panel', () => {
     });
     describe('when multiple strategies are set', () => {
       beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
+        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           data:  [
               { id: 1, status: 'active' },
               { id: 2, status: 'active' },
