@@ -17,7 +17,7 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
-import useStrategies, { Strategy } from '@hooks/useStrategies';
+import { Strategy, useStrategiesCosmos, useStrategiesEVM } from '@hooks/useStrategies';
 import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
@@ -27,7 +27,7 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import useStrategiesEVM from '@hooks/useStrategiesEVM';
+
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -67,9 +67,8 @@ const isStrategyAcculumating = (strategy: Strategy) => isDenomStable(getStrategy
 
 const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
 
-function InvestmentThesis() {
-  const { data, isLoading } = useStrategies();
-  const activeStrategies = data?.vaults.filter(isStrategyOperating) ?? [];
+function InvestmentThesis({strategies, isLoading}: {strategies: Strategy[] | undefined; isLoading: boolean}) {
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   const acculumatingAssets = Array.from(
     new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
   ).map((id) => getDenomInfo(id));
@@ -112,7 +111,7 @@ function InvestmentThesis() {
       )}
     </Flex>
   );
-}
+};
 
 function ActiveStrategies({strategies, isLoading} : {strategies: Strategy[] | undefined, isLoading: boolean}) {
   const { connected } = useWallet();
@@ -145,7 +144,7 @@ function ActiveStrategies({strategies, isLoading} : {strategies: Strategy[] | un
       )}
     </Flex>
   );
-}
+};
 
 function TotalInvestment() {
   const kujiraSupportedDenoms = useSupportedDenoms(Chains.Kujira);
@@ -244,12 +243,56 @@ function WorkflowInformation() {
   );
 }
 
-function Home({strategies, isLoading}: { strategies: Strategy[] | undefined ; isLoading: boolean }) {
+function HomeGrid({strategies, isLoading}: { strategies: Strategy[] | undefined ; isLoading: boolean }) {
+
   const { connected } = useWallet();
   const { chain } = useChain();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
+  return (
+    <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
+      <TopPanel />
+      {Boolean(activeStrategies.length) && (
+        <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
+          <InvestmentThesis  strategies={strategies} isLoading={isLoading}/>
+        </GridItem>
+      )}
+
+      <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
+      {connected && (
+        <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
+          <ActiveStrategies  strategies={strategies} isLoading={isLoading}/>
+        </GridItem>
+      )}
+      <GridItem colSpan={{ base: 6, xl: 3 }}>
+        {chain !== Chains.Moonbeam && <TotalInvestment />}
+      </GridItem>
+      <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
+        <WorkflowInformation />
+      </GridItem>
+    </Grid>
+  )
+}
+
+function StrategiesCosmos() {
+  const { data, isLoading } = useStrategiesCosmos();
+
+  return <HomeGrid isLoading={isLoading} strategies={data} />;
+}
+
+function StrategiesEVM() {
+  const { data: strategies, isLoading } = useStrategiesEVM();
+
+  return <HomeGrid strategies={strategies} isLoading={isLoading} />;
+}
+
+function HomeGridWrapper() {
+  const { chain } = useChain();
+  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
+}
+
+function Home() {
   return (
     <>
       <Box pb={8}>
@@ -260,52 +303,11 @@ function Home({strategies, isLoading}: { strategies: Strategy[] | undefined ; is
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-
-      <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
-        <TopPanel />
-        {Boolean(activeStrategies.length) && (
-          <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
-            <InvestmentThesis />
-          </GridItem>
-        )}
-
-        <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
-        {connected && (
-          <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-            <ActiveStrategies strategies={strategies} isLoading={isLoading} />
-          </GridItem>
-        )}
-
-        <GridItem colSpan={{ base: 6, xl: 3 }}>
-          {chain !== Chains.Moonbeam && <TotalInvestment />}
-        </GridItem>
-        <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
-          <WorkflowInformation />
-        </GridItem>
-      </Grid>
+      <HomeGridWrapper />
     </>
   );
 }
 
-function StrategiesCosmos() {
-  const { data, isLoading } = useStrategies();
+Home.getLayout = getSidebarLayout;
 
-  return <Home isLoading={isLoading} strategies={data?.vaults} 
-  />;
-}
-
-function StrategiesEVM() {
-  const { data: strategies, isLoading } = useStrategiesEVM();
-
-  return <Home strategies={strategies} isLoading={isLoading} />;
-}
-
-function Page() {
-  const { chain } = useChain();
-  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
-}
-
-
-Page.getLayout = getSidebarLayout;
-
-export default Page;
+export default Home;

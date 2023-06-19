@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import useStrategies from '@hooks/useStrategies';
+
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import TopPanel from './TopPanel';
@@ -27,7 +28,7 @@ jest.mock('next/router', () => ({
 }));
 
 jest.mock('@hooks/useWallet');
-jest.mock('@hooks/useStrategies');
+ooks/useStrategies/useStrategies);
 
 describe('top panel', () => {
   beforeEach(() => {
@@ -62,9 +63,7 @@ describe('top panel', () => {
     describe('when a user has only completed strategies', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: {
-            vaults: [{ id: 1, status: 'inactive' }],
-          },
+          data:  [{ id: 1, status: 'inactive' }],
           isLoading: false,
         }));
       });
@@ -83,9 +82,7 @@ describe('top panel', () => {
     describe('when a single strategy is set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: {
-            vaults: [{ id: 1, status: 'active' }],
-          },
+          data:  [{ id: 1, status: 'active' }],
           isLoading: false,
         }));
       });
@@ -104,12 +101,10 @@ describe('top panel', () => {
     describe('when multiple strategies are set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: {
-            vaults: [
+          data:  [
               { id: 1, status: 'active' },
               { id: 2, status: 'active' },
             ],
-          },
           isLoading: false,
         }));
       });

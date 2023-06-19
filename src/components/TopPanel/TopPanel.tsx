@@ -2,15 +2,11 @@ import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Fle
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
-import useStrategies, { Strategy } from '@hooks/useStrategies';
+import { Strategy , WithUseStrategyProps, withUseStrategies } from '@hooks/useStrategies';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
-import React from 'react';
-import useStrategiesEVM from '@hooks/useStrategiesEVM';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -67,8 +63,9 @@ function Returning() {
   );
 }
 
-function ActiveWithOne({strategies}: {strategies: Strategy[] | undefined}) {
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+function ActiveWithOne({ useStrategies }: WithUseStrategyProps) {
+  const { data } = useStrategies();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const activeStrategy = activeStrategies[0];
   const { balance } = activeStrategy;
   const balanceValue = new DenomValue(balance);
@@ -105,8 +102,9 @@ function ActiveWithOne({strategies}: {strategies: Strategy[] | undefined}) {
   );
 }
 
-function ActiveWithMany({strategies}: {strategies: Strategy[] | undefined}) {
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+function ActiveWithMany({ useStrategies }: WithUseStrategyProps) {
+  const { data } = useStrategies();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   return (
     <>
       <HStack align="center">
@@ -143,18 +141,19 @@ function ActiveWithMany({strategies}: {strategies: Strategy[] | undefined}) {
   );
 }
 
-function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[] | undefined, isLoading: boolean}) {
+function TopPanel({useStrategies}:  WithUseStrategyProps) {
   const { connected } = useWallet();
 
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
-  const completedStrategies = strategies?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
+  const { data, isLoading } = useStrategies();
+  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
+  const completedStrategies = data?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
     if (connected && isLoading) {
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'transparent',
-        content: <Box />,
+        Content: Box,
       };
     }
     if (!activeStrategies.length) {
@@ -162,30 +161,30 @@ function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[]
         return {
           background: '/images/backgrounds/twist-thin.svg',
           border: 'brand.200',
-          content: <Onboarding />,
+          Content: Onboarding,
         };
       }
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'brand.200',
-        content: <Returning />,
+        Content: Returning,
       };
     }
     if (activeStrategies.length === 1) {
       return {
         background: '/images/backgrounds/spiral-thin.svg',
         border: 'blue.200',
-        content: <ActiveWithOne strategies={strategies} />,
+        Content: withUseStrategies(ActiveWithOne),
       };
     }
     return {
       background: '/images/backgrounds/star-thin.svg',
       border: 'green.200',
-      content: <ActiveWithMany strategies={strategies} />,
+      Content: withUseStrategies(ActiveWithMany),
     };
   };
 
-  const { background, border, content } = getConfig();
+  const { background, border, Content } = getConfig();
   const colSpan = { base: 6, lg: activeStrategies.length ? 4 : 6 };
 
   return (
@@ -214,7 +213,7 @@ function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[]
             borderRadius="2xl"
           />
           <Stack zIndex={1} spacing={4} m={0} p={8} bg="transparent">
-            {content}
+            <Content />
           </Stack>
         </Flex>
       )}
@@ -222,21 +221,4 @@ function TopPanelWithStrategies({strategies, isLoading}: {strategies: Strategy[]
   );
 }
 
-
-function StrategiesCosmos() {
-  const { data, isLoading } = useStrategies();
-
-  return <TopPanelWithStrategies strategies={data?.vaults} isLoading={isLoading} />;
-}
-
-function StrategiesEVM() {
-  const { data: strategies, isLoading } = useStrategiesEVM();
-
-  return <TopPanelWithStrategies strategies={strategies} isLoading={isLoading} />;
-}
-
-export default function TopPanel() {
-  const { chain } = useChain();
-  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
-}
-
+export default withUseStrategies(TopPanel);
