@@ -23,7 +23,6 @@ import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl'
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
 import LinkWithQuery from './LinkWithQuery';
 
-
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 

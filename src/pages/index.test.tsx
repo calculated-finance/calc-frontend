@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import {useStrategiesCosmos, Strategy } from '@hooks/useStrategies';
-import mockStrategyData from 'src/fixtures/strategy';
+import {dcaInStrategy} from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
 import Home from './index.page';
 import '@testing-library/jest-dom';
@@ -28,7 +28,7 @@ jest.mock('@hooks/useWallet');
 
 function mockStrategy(data?: Partial<Strategy>) {
   return {
-    ...mockStrategyData,
+    ...dcaInStrategy,
     ...data,
   };
 }

@@ -149,5 +149,3 @@ export const osmosisStrategy = {
   time_interval: 'daily',
   trigger: null,
 } as StrategyOsmosis;
-
-export default dcaInStrategy;
