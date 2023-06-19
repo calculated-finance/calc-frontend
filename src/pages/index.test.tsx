@@ -50,7 +50,7 @@ describe('Home', () => {
       connected: true,
     }));
   });
-  it.only('renders the heading', async () => {
+  it('renders the heading', async () => {
     await renderTarget();
     expect(screen.getByText(/Welcome to CALC/)).toBeInTheDocument();
   });
@@ -91,7 +91,7 @@ describe('Home', () => {
       beforeEach(() => {
         (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
           isLoading: false,
-          data: { vaults: [mockStrategy(), mockStrategy({ status: 'inactive' })] },
+          data: [mockStrategy(), mockStrategy({ status: 'inactive' })],
         }));
       });
       it('show active strategies count', async () => {
