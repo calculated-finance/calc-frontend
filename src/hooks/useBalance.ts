@@ -83,7 +83,7 @@ const useBalanceCosm = (token: DenomInfo) => {
       enabled: !!token && !!address && !!client && !!chain && chain !== Chains.Moonbeam,
       keepPreviousData: true,
       meta: {
-        errorMessage: 'Error fetching balance cosmos',
+        errorMessage: 'Error fetching balance',
       },
     },
   );

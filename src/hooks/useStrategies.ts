@@ -4,14 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useMetamask } from '@hooks/useMetamask';
-import { fetchStrategy } from '@hooks/useStrategyEVM';
+import { fetchStrategy } from '@hooks/fetchStrategy';
 import { ethers } from 'ethers';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
 import factoryContractJson from 'src/Factory.json';
-import { useCosmWasmClient } from '../useCosmWasmClient';
-import { useChain } from '../useChain';
+import { useCosmWasmClient } from './useCosmWasmClient';
+import { useChain } from './useChain';
 
 const QUERY_KEY = 'get_vaults_by_address';
 

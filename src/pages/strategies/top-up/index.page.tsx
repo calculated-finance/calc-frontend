@@ -13,7 +13,8 @@ import useBalance from '@hooks/useBalance';
 import DcaDiagram from '@components/DcaDiagram';
 import { Strategy } from '@hooks/useStrategies';
 import usePageLoad from '@hooks/usePageLoad';
-import getStrategyBalance, {
+import {
+  getStrategyBalance, 
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyName,

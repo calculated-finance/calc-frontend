@@ -14,7 +14,8 @@ import {
 } from '@helpers/strategy/dcaPlus';
 import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
-import getStrategyBalance, {
+import  {
+  getStrategyBalance,
   getStrategyResultingDenom,
   getStrategyInitialDenom,
   getTotalReceived,
