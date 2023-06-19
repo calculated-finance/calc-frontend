@@ -17,9 +17,10 @@ import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertT
 import { getDenomName } from '@utils/getDenomInfo';
 import Spinner from '@components/Spinner';
 import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
+import { ChartTimeRange } from '@components/TimeRange';
 import { DenomInfo } from '@utils/DenomInfo';
-import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
+import { getPriceData } from './getChartData';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
 
 function formatPriceTick(priceMax: number) {
@@ -32,7 +33,7 @@ function formatPriceTick(priceMax: number) {
 }
 
 export function formatTimeTick(days: string) {
-  if (days === '0.0417') {
+  if (days === ChartTimeRange.OneHour) {
     return (tick: number) =>
       new Date(tick).toLocaleDateString('en-US', {
         hour: 'numeric',

@@ -1,15 +1,16 @@
 import { useRadioGroup, HStack } from '@chakra-ui/react';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
+import { ChartTimeRange } from '@components/TimeRange';
 
-export const daysData = [
-  { value: '0.0417', label: '1Hr' },
-  { value: '1', label: '1D' },
-  { value: '3', label: '3D' },
-  { value: '7', label: '1W' },
-  { value: '30', label: '1M' },
-  { value: '90', label: '3M' },
-  { value: '365', label: '1Y' },
+const daysData = [
+  { value: ChartTimeRange.OneHour, label: '1Hr' },
+  { value: ChartTimeRange.OneDay, label: '1D' },
+  { value: ChartTimeRange.ThreeDays, label: '3D' },
+  { value: ChartTimeRange.OneWeek, label: '1W' },
+  { value: ChartTimeRange.OneMonth, label: '1M' },
+  { value: ChartTimeRange.ThreeMonths, label: '3M' },
+  { value: ChartTimeRange.OneYear, label: '1Y' },
 ];
 
 export function DaysRadio({ value, onChange }: { value: string; onChange: (value: string) => void }) {
