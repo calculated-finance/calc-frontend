@@ -26,8 +26,6 @@ export const dcaPlusSchema = Yup.object({
         return true;
       }
 
-      console.log(initialDenom);
-
       return context.createError({
         message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${getDenomName(
           getDenomInfo(initialDenom),
