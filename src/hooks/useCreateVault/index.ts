@@ -3,8 +3,8 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Coin  } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import { EncodeObject   } from '@cosmjs/proto-signing';
+import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
+import { EncodeObject } from '@cosmjs/proto-signing';
 import { getFeeMessage } from '@helpers/getFeeMessage';
 
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
@@ -22,6 +22,7 @@ import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useS
 import { Chains } from '@hooks/useChain/Chains';
 import { Denom } from '@models/Denom';
 import { Strategy } from '@hooks/useStrategies';
+import { useConfig } from '@hooks/useConfig';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { getGrantMsg } from './getGrantMsg';
@@ -30,8 +31,6 @@ import { buildCreateVaultParams } from './buildCreateVaultParams';
 import { executeCreateVault } from './executeCreateVault';
 import { DcaFormState } from './DcaFormState';
 import { useMoonbeamCreateVault } from './useMoonbeamCreateVault';
-
-
 
 function getFunds(initialDenom: Denom, initialDeposit: number) {
   const { deconversion } = getDenomInfo(initialDenom);
@@ -55,6 +54,7 @@ const useCreateVault = (
   const { address: senderAddress, signingClient: client } = useWallet();
   const { data: pairsData } = usePairs();
   const { chain } = useChain();
+  const config = useConfig();
 
   const { formName, transactionType } = useStrategyInfo();
 
@@ -106,13 +106,25 @@ const useCreateVault = (
         throw new Error('Reinvest strategy does not belong to user.');
       }
 
+      if (!config) {
+        throw new Error('Config not loaded');
+      }
+
       const { autoStakeValidator } = state;
 
       if (autoStakeValidator) {
         msgs.push(getGrantMsg(senderAddress, chain));
       }
 
-      const createVaultMsg = buildCreateVaultParams(formName, state, transactionType, senderAddress, dexPrice, chain);
+      const createVaultMsg = buildCreateVaultParams(
+        formName,
+        state,
+        transactionType,
+        senderAddress,
+        dexPrice,
+        chain,
+        config,
+      );
 
       const funds = getFunds(state.initialDenom, state.initialDeposit);
 
@@ -123,7 +135,7 @@ const useCreateVault = (
         msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
       }
 
-      return executeCreateVault( client, senderAddress, msgs).then((res) => {
+      return executeCreateVault(client, senderAddress, msgs).then((res) => {
         track('Strategy Created', { formName, chain, address: senderAddress, walletType });
         return res;
       });

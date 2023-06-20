@@ -25,9 +25,12 @@ export const dcaPlusSchema = Yup.object({
       if (value > dcaPlusMinimumDeposit) {
         return true;
       }
+
+      console.log(initialDenom);
+
       return context.createError({
         message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${getDenomName(
-          initialDenom,
+          getDenomInfo(initialDenom),
         )}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
       });
     },
