@@ -16,10 +16,9 @@ const useBalances = () => {
   const osmosisQuery = useOsmosis((state) => state.query);
   const { chain } = useChain();
 
-  const provider = useMetamask(state => state.provider);
+  const provider = useMetamask((state) => state.provider);
 
   const supportedDenoms = useSupportedDenoms();
-
 
   const { data, ...other } = useQueryWithNotification(
     ['balances', address, chain],
@@ -36,12 +35,12 @@ const useBalances = () => {
           .then((res: { balances: Coin[] }) => res.balances);
       }
 
-      if (!provider) {
-        throw new Error('Provider not initialized');
-      }
-
       if (chain === Chains.Moonbeam) {
         // for each denom, fetch the balance using fetchBalanceEvm
+
+        if (!provider) {
+          throw new Error('Provider not initialized');
+        }
 
         const balances = await Promise.all(supportedDenoms.map((denom) => fetchBalanceEvm(denom, provider, address)));
         return balances;
