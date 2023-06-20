@@ -35,8 +35,6 @@ function DcaIn() {
     await nextStep();
   };
 
-  const router = useRouter();
-
   if (!pairs) {
     return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
   }

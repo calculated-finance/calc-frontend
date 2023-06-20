@@ -37,6 +37,9 @@ const useBalances = () => {
 
       if (chain === Chains.Moonbeam) {
         // for each denom, fetch the balance using fetchBalanceEvm
+        if (!provider) {
+          throw new Error('Provider not initialized');
+        }
 
         if (!provider) {
           throw new Error('Provider not initialized');

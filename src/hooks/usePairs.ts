@@ -135,7 +135,7 @@ function usePairsMoonbeam() {
     return {
       isLoading: false,
       data: {
-        pairs: [[TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN]],
+        pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }],
       },
     };
   }
@@ -210,8 +210,9 @@ export default function usePairs() {
   const kujiraPairsData = usePairsKujira();
   const osmosisPairsData = usePairsOsmosis();
   const comsosPairsData = usePairsCosmos(config);
+  const moonbeamPairsData = usePairsMoonbeam();
 
-  return usePairsMoonbeam() || (!!config && !!config?.exchange_contract_address)
+  return moonbeamPairsData || (!!config && !!config?.exchange_contract_address)
     ? comsosPairsData
     : chain === Chains.Kujira
     ? kujiraPairsData
