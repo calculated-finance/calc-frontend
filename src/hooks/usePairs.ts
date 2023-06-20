@@ -1,15 +1,18 @@
 import { filter } from 'rambda';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { PairsResponse } from 'src/interfaces/v2/generated/response/get_pairs';
 import { V2Pair, V3Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TestnetDenomsMoonbeam } from '@models/Denom';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
+import { PairsResponse } from 'src/interfaces/generated-osmosis/response/get_pairs';
+import { PairsResponse as PairsResponseV3 } from 'src/interfaces/v2/generated/response/get_pairs';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { useConfig } from './useConfig';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -125,7 +128,6 @@ function usePairsOsmosis() {
   };
 }
 
-
 function usePairsMoonbeam() {
   const { chain } = useChain();
 
@@ -133,9 +135,7 @@ function usePairsMoonbeam() {
     return {
       isLoading: false,
       data: {
-        pairs: [
-          [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN],
-        ],
+        pairs: [[TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN]],
       },
     };
   }
@@ -163,6 +163,37 @@ function usePairsKujira() {
   return {
     ...queryResult,
     data: {
+      pairs: queryResult.data?.pairs.filter((pair) =>
+        isPairVisible({
+          denoms: [pair.base_denom, pair.quote_denom],
+        }),
+      ),
+    },
+    meta: {
+      errorMessage: 'Error fetching pairs',
+    },
+  };
+}
+
+function usePairsCosmos(config: Config | undefined) {
+  const client = useCosmWasmClient((state) => state.client);
+
+  const queryResult = useQuery<PairsResponseV3>(
+    ['pairs-cosmos', client],
+    async () => {
+      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
+        get_pairs: {},
+      });
+      return result;
+    },
+    {
+      enabled: !!client && !!config && !!config.exchange_contract_address,
+    },
+  );
+
+  return {
+    ...queryResult,
+    data: {
       pairs: queryResult.data?.pairs.filter(isPairVisible),
     },
     meta: {
@@ -173,10 +204,15 @@ function usePairsKujira() {
 
 export default function usePairs() {
   const { chain } = useChain();
+  const config = useConfig();
 
   const kujiraPairsData = usePairsKujira();
   const osmosisPairsData = usePairsOsmosis();
-  
+  const comsosPairsData = usePairsCosmos(config);
 
-  return usePairsMoonbeam() || chain === Chains.Kujira ? kujiraPairsData : osmosisPairsData;
+  return usePairsMoonbeam() || (!!config && !!config?.exchange_contract_address)
+    ? comsosPairsData
+    : chain === Chains.Kujira
+    ? kujiraPairsData
+    : osmosisPairsData;
 }
