@@ -1,73 +1,37 @@
 import { useWallet } from '@hooks/useWallet';
-import { Coin } from '@cosmjs/stargate';
-import { getChainFromAddress } from '@helpers/chains';
 import useQueryWithNotification from './useQueryWithNotification';
-import { useKujira } from './useKujira';
 import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
-import { useOsmosis } from './useOsmosis';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useMetamask } from './useMetamask';
-import { fetchBalanceEvm } from './useBalance';
+import { useCalcClient } from './useCalcClient';
 
 const useBalances = () => {
   const { address } = useWallet();
-  const kujiraQuery = useKujira((state) => state.query);
-  const osmosisQuery = useOsmosis((state) => state.query);
   const { chain } = useChain();
-
-  const provider = useMetamask((state) => state.provider);
-
+  const client = useCalcClient(chain);
   const supportedDenoms = useSupportedDenoms();
 
-  const { data, ...other } = useQueryWithNotification(
-    ['balances', address, chain],
+  return useQueryWithNotification(
+    ['balances', address, client, supportedDenoms],
     async () => {
       if (!address) {
         throw new Error('No address');
       }
-      if (chain === Chains.Kujira && getChainFromAddress(address) === Chains.Kujira) {
-        return kujiraQuery?.bank.allBalances(address);
+      if (!client) {
+        throw new Error('No client');
       }
-      if (chain === Chains.Osmosis && getChainFromAddress(address) === Chains.Osmosis) {
-        return osmosisQuery?.cosmos.bank.v1beta1
-          .allBalances({ address })
-          .then((res: { balances: Coin[] }) => res.balances);
-      }
-
-      if (chain === Chains.Moonbeam) {
-        // for each denom, fetch the balance using fetchBalanceEvm
-        if (!provider) {
-          throw new Error('Provider not initialized');
-        }
-
-        if (!provider) {
-          throw new Error('Provider not initialized');
-        }
-
-        const balances = await Promise.all(supportedDenoms.map((denom) => fetchBalanceEvm(denom, provider, address)));
-        return balances;
-      }
-
-      return [];
+      return client.fetchBalances(
+        address,
+        supportedDenoms.map((sd) => sd.id),
+      );
     },
     {
-      enabled: !!address && !!kujiraQuery && !!osmosisQuery && !!chain,
+      enabled: !!address && !!supportedDenoms && !!client,
       cacheTime: 0,
       meta: {
         errorMessage: 'Error fetching balances',
       },
     },
   );
-
-  return {
-    data: {
-      ...data,
-      balances:
-        data?.filter((balance: Coin) => supportedDenoms.map((sd) => sd.id).includes(balance.denom)) || undefined,
-    },
-    ...other,
-  };
 };
 
 export default useBalances;

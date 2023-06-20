@@ -26,9 +26,9 @@ function DcaIn() {
   } = usePairs();
   const { nextStep } = useSteps(steps);
 
-  const { data } = useBalances();
+  const { data: balances } = useBalances();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances: data?.balances });
+  const { validate } = useValidation(step1ValidationSchema, { balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

@@ -9,6 +9,7 @@ import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { PairsResponse } from 'src/interfaces/generated-osmosis/response/get_pairs';
 import { PairsResponse as PairsResponseV3 } from 'src/interfaces/v2/generated/response/get_pairs';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { Pair } from 'src/interfaces/v2/generated/query';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -135,7 +136,7 @@ function usePairsMoonbeam() {
     return {
       isLoading: false,
       data: {
-        pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }],
+        pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }] as Pair[],
       },
     };
   }

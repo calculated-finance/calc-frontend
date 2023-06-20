@@ -14,11 +14,8 @@ function getVaultContract(provider: ethers.BrowserProvider, strategyId: string) 
 }
 
 export async function executeTopUpEVM(
-  initialDenom: DenomInfo,
-  address: string,
   provider: ethers.BrowserProvider,
   signer: ethers.JsonRpcSigner,
-  chain: Chains,
   strategyId: string,
   topUpAmount: number,
 ) {
@@ -26,12 +23,11 @@ export async function executeTopUpEVM(
 
   const contractWithSigner = vaultContract.connect(signer);
 
+  console.log(topUpAmount);
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const tx = await contractWithSigner.deposit({
-    value: ethers.parseEther(topUpAmount.toString()),
-  });
-
+  const tx = await contractWithSigner.deposit(ethers.parseEther(topUpAmount.toString()));
   const receipt = await tx.wait();
 
   return receipt;

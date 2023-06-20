@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useMetamask } from '@hooks/useMetamask';
-import { fetchStrategy } from '@hooks/fetchStrategy';
+import { fetchStrategyEVM } from '@hooks/useCalcClient/fetchStrategy';
 import { ethers } from 'ethers';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
@@ -63,7 +63,7 @@ export function useStrategiesEVM() {
 
       const result = await factoryContract
         .getVaultsByAddress(address)
-        .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
+        .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategyEVM(id, provider))));
 
       return result as Strategy[];
     },

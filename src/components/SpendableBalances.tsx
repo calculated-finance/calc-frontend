@@ -77,5 +77,5 @@ export function BalanceList({ balances = [], showFiat = false }: { balances: Coi
 export function SpendableBalances() {
   const { data } = useBalances();
 
-  return <BalanceList balances={data?.balances} />;
+  return <BalanceList balances={data} />;
 }

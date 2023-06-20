@@ -1,9 +1,9 @@
 import vaultContractJson from 'src/Vault.json';
 import { BrowserProvider, ethers } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Strategy } from '../models/Strategy';
+import { Strategy } from '../../models/Strategy';
 
-export async function fetchStrategy(id: string, provider: BrowserProvider): Promise<Strategy> {
+export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
   const vaultContract = new ethers.Contract(id, vaultContractJson.abi, provider);
 
   const result = await vaultContract.getConfig();
@@ -38,15 +38,15 @@ export async function fetchStrategy(id: string, provider: BrowserProvider): Prom
   return {
     status: balance ? 'active' : 'inactive',
     balance: {
-      denom: result.tokenIn.toUpperCase(),
+      denom: result.tokenIn,
       amount: ethers.parseEther(balance.toString()).toString(),
     },
     received_amount: {
-      denom: result.tokenOut.toUpperCase(),
+      denom: result.tokenOut,
       amount: ethers.parseEther(result.totalTokenOutReceived.toString()).toString(),
     },
     swapped_amount: {
-      denom: result.tokenIn.toUpperCase(),
+      denom: result.tokenIn,
       amount: ethers.parseEther(result.totalTokenInSent.toString()).toString(),
     },
     destinations: [

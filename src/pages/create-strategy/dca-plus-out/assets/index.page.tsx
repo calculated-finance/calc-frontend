@@ -34,9 +34,9 @@ function Page() {
   } = usePairs();
   const { nextStep } = useSteps(dcaPlusOutSteps);
 
-  const { data } = useBalances();
+  const { data: balances } = useBalances();
 
-  const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances: data?.balances });
+  const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

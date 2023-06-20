@@ -1,27 +1,30 @@
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainContractAddress } from '@helpers/chains';
-import { DenomInfo } from '@utils/DenomInfo';
+import { Strategy } from '@models/Strategy';
+import { getStrategyInitialDenom } from '@helpers/strategy';
 import { Chains } from '../useChain/Chains';
 
 export function executeTopUpCosmos(
-  initialDenom: DenomInfo,
   address: string,
   client: SigningCosmWasmClient,
   chain: Chains,
-  strategyId: string,
+  strategy: Strategy,
   topUpAmount: number,
 ) {
-  const { deconversion } = initialDenom;
+  if (strategy.owner !== address) {
+    throw new Error('You are not the owner of this strategy');
+  }
+  const { deconversion, id } = getStrategyInitialDenom(strategy);
 
   const msg = {
     deposit: {
-      vault_id: strategyId,
+      vault_id: strategy.id,
       address,
     },
   } as ExecuteMsg;
 
-  const funds = [{ denom: initialDenom.id, amount: BigInt(deconversion(topUpAmount)).toString() }];
+  const funds = [{ denom: id, amount: BigInt(deconversion(topUpAmount)).toString() }];
 
   const result = client.execute(address, getChainContractAddress(chain), msg, 'auto', undefined, funds);
   return result;
