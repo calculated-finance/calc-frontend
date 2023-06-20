@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, Center, Stack } from '@chakra-ui/react';
 import { getDenomName } from '@utils/getDenomInfo';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import Spinner from '@components/Spinner';
 import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@helpers/strategy/dcaPlus';
 import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
-import  {
+import {
   getStrategyBalance,
   getStrategyResultingDenom,
   getStrategyInitialDenom,

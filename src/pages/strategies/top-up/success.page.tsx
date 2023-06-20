@@ -32,7 +32,7 @@ function Success() {
     );
   }
 
-  const initialDenomName = getDenomName(getStrategyInitialDenom(data.vault));
+  const initialDenomName = getDenomName(getStrategyInitialDenom(data));
 
   return (
     <NewStrategyModal>

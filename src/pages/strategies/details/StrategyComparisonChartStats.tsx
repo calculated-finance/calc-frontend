@@ -1,5 +1,5 @@
 import { Stat, StatNumber, Stack, StatLabel } from '@chakra-ui/react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { getStrategyResultingDenom, getTotalReceived, isBuyStrategy } from '@helpers/strategy';
 import { getDenomName } from '@utils/getDenomInfo';
 

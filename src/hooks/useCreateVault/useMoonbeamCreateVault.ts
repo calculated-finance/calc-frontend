@@ -6,22 +6,18 @@ import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
 import { ethers } from 'ethers';
 import factoryContractJson from 'src/Factory.json';
-import { Strategy } from '../useStrategies';
+import { Strategy } from '@models/Strategy';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { getExecutionInterval } from './buildCreateVaultParams';
-import { DcaFormState } from './DcaFormState';
 
-export function useMoonbeamCreateVault(
-  state: DcaFormState | undefined
-) {
-
+export function useMoonbeamCreateVault(state: DcaInFormDataAll | undefined) {
   const { address } = useWallet();
 
-  const provider = useMetamask(metaMaskState => metaMaskState.provider);
-  const signer = useMetamask(metaMaskState => metaMaskState.signer);
+  const provider = useMetamask((metaMaskState) => metaMaskState.provider);
+  const signer = useMetamask((metaMaskState) => metaMaskState.signer);
 
-  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined; }>(
+  return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
     async ({ price }) => {
-
       const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
 
       const contractWithSigner = factoryContract.connect(signer);
@@ -54,17 +50,19 @@ export function useMoonbeamCreateVault(
 
       const { deconversion } = getDenomInfo(state?.initialDenom);
 
-
       const params = {
         owner: address,
         tokenIn: state?.initialDenom,
         tokenOut: state?.resultingDenom,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+
         swapAmount: ethers.parseEther(deconversion(state!.swapAmount).toString()).toString(),
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        timeInterval: getExecutionInterval(state!.executionInterval, state!.executionIntervalIncrement).custom.seconds.toString(),
+
+        timeInterval: getExecutionInterval(
+          state!.executionInterval,
+          state!.executionIntervalIncrement,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+        ).custom.seconds.toString(),
         targetTime: Math.floor(Date.now() / 1000) + 100,
         swapAdjustmentType,
         preSwapAutomationType,
@@ -74,20 +72,14 @@ export function useMoonbeamCreateVault(
         performSwapConditionType,
         finaliseVaultConditionType,
         simulation: false,
-        referenceVaultAddress: ethers.ZeroAddress
+        referenceVaultAddress: ethers.ZeroAddress,
       };
 
-
-
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-      const tx = await contractWithSigner.createVault(
-        params
-      );
-
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const tx = await contractWithSigner.createVault(params);
 
       const receipt = await tx.wait();
-
 
       return receipt;
 
@@ -109,6 +101,6 @@ export function useMoonbeamCreateVault(
         }
         Sentry.captureException(error);
       },
-    }
+    },
   );
 }

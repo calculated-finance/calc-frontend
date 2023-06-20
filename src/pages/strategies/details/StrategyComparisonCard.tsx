@@ -1,6 +1,6 @@
 import { Heading, Text, Flex, Center, Stack } from '@chakra-ui/react';
 import { getDenomName } from '@utils/getDenomInfo';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import Spinner from '@components/Spinner';
 import {
   getAccumulationGained,

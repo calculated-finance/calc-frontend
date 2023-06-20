@@ -11,7 +11,7 @@ import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { buildCallbackDestinations } from '@helpers/destinations';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChain } from './useChain';
-import { Strategy } from './useStrategies';
+import { Strategy } from '../models/Strategy';
 import { getGrantMsg } from './useCreateVault/getGrantMsg';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';

@@ -4,18 +4,18 @@ import {
   getStrategyValidatorAddress,
   getStrategyReinvestStrategyId,
 } from '@helpers/destinations';
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Chains } from '@hooks/useChain/Chains';
-import { osmosisStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategy } from 'src/fixtures/strategy';
 import YesNoValues from '@models/YesNoValues';
+import { Strategy } from '@models/Strategy';
 import { getExistingValues } from './getExistingValues'; // update with the actual path
 
 jest.mock('@helpers/destinations');
 
 describe('getExistingValues', () => {
   // A mock strategy object
-  const mockStrategy: StrategyOsmosis = {
-    ...osmosisStrategy,
+  const mockStrategy: Strategy = {
+    ...dcaInStrategy,
     destinations: [{ address: 'mockAddress', allocation: '1.0' }],
   };
   const mockChain: Chains = Chains.Osmosis;

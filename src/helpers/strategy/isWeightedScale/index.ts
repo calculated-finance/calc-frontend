@@ -1,4 +1,5 @@
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { isNil } from 'lodash';
 
 export function getWeightedScaleConfig(strategy: Strategy | StrategyOsmosis) {
@@ -13,7 +14,7 @@ export function getWeightedScaleConfig(strategy: Strategy | StrategyOsmosis) {
   }
 
   const { base_receive_amount, increase_only, multiplier } = osmosisStrategy.swap_adjustment_strategy.weighted_scale;
-  
+
   return {
     base_receive_amount,
     increase_only,

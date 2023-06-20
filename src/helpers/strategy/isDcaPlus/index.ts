@@ -1,4 +1,5 @@
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { isNil } from 'lodash';
 
 export function getDcaPlusConfig(strategy: Strategy | StrategyOsmosis) {

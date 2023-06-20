@@ -8,15 +8,14 @@ import { getStrategyExecutionInterval, getStrategyResultingDenom, getStrategyTyp
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
-  const { data, isLoading } = useStrategy(reinvestStrategy);
+  const { data: strategy, isLoading } = useStrategy(reinvestStrategy);
   if (isLoading) {
     return <Spinner size="xs" />;
   }
-  if (!data) {
+  if (!strategy) {
     return null;
   }
 
-  const { vault: strategy } = data;
   return (
     <>
       After each swap, CALC will automatically reinvest those tokens into your{' '}

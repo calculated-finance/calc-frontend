@@ -11,7 +11,7 @@ import {
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { getTotalReceived } from '@helpers/strategy';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';

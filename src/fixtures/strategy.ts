@@ -1,4 +1,5 @@
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();

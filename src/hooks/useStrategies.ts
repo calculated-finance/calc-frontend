@@ -7,17 +7,16 @@ import { useMetamask } from '@hooks/useMetamask';
 import { fetchStrategy } from '@hooks/fetchStrategy';
 import { ethers } from 'ethers';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
 import factoryContractJson from 'src/Factory.json';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useChain } from './useChain';
+import { Strategy } from '../models/Strategy';
 
 const QUERY_KEY = 'get_vaults_by_address';
 
 export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
 
-export type Strategy = Vault;
 export type StrategyOsmosis = VaultOsmosis;
 
 export function useStrategiesCosmos() {
@@ -37,7 +36,7 @@ export function useStrategiesCosmos() {
           limit: 1000,
         },
       });
-      return result?.vaults
+      return result?.vaults;
     },
     {
       enabled: !!address && !!client && !!chain,
@@ -48,11 +47,10 @@ export function useStrategiesCosmos() {
   );
 }
 
-
 export function useStrategiesEVM() {
   const { address } = useWallet();
   const { chain } = useChain();
-  const provider = useMetamask(state => state.provider);
+  const provider = useMetamask((state) => state.provider);
 
   return useQuery<Strategy[]>(
     [QUERY_KEY, address, provider],
@@ -63,8 +61,10 @@ export function useStrategiesEVM() {
 
       const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
 
-      const result = await factoryContract.getVaultsByAddress(address).then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
-          
+      const result = await factoryContract
+        .getVaultsByAddress(address)
+        .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategy(id, provider))));
+
       return result as Strategy[];
     },
     {
@@ -75,4 +75,3 @@ export function useStrategiesEVM() {
     },
   );
 }
-

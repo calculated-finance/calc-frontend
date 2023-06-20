@@ -18,7 +18,7 @@ import CalcIcon from '@components/Icon';
 import { DenomValue, getDenomName } from '@utils/getDenomInfo';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
@@ -136,7 +136,6 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
-
   const { chain } = useChain();
   const { balance, destinations } = strategy;
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -298,7 +297,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </LinkWithQuery>
                 </Flex>
               </GridItem>
-              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain}/>}
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain} />}
             </Grid>
           </Box>
         </Box>

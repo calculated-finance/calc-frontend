@@ -6,7 +6,7 @@ import {
 } from '@helpers/strategy';
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
 import YesNoValues from '@models/YesNoValues';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { Chains } from '@hooks/useChain/Chains';
 import { getExistingValues } from './getExistingValues';
 

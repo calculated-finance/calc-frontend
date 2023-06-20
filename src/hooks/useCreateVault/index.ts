@@ -21,8 +21,9 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Chains } from '@hooks/useChain/Chains';
 import { Denom } from '@models/Denom';
-import { Strategy } from '@hooks/useStrategies';
 import { useConfig } from '@hooks/useConfig';
+import { Strategy } from '@models/Strategy';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { getGrantMsg } from './getGrantMsg';
@@ -64,7 +65,7 @@ const useCreateVault = (
 
   const { track } = useAnalytics();
 
-  const evmCreate = useMoonbeamCreateVault(state);
+  const evmCreate = useMoonbeamCreateVault(state as DcaInFormDataAll);
 
   const cosmosCreate = useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
     ({ price }) => {
@@ -102,7 +103,7 @@ const useCreateVault = (
         throw new Error('Invalid reinvest strategy.');
       }
 
-      if (reinvestStrategyData && reinvestStrategyData.vault.owner !== senderAddress) {
+      if (reinvestStrategyData && reinvestStrategyData.owner !== senderAddress) {
         throw new Error('Reinvest strategy does not belong to user.');
       }
 

@@ -17,7 +17,7 @@ import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
 import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { Pages } from '@components/Layout/Sidebar/Pages';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { DenomInfo } from '@utils/DenomInfo';

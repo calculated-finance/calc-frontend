@@ -2,7 +2,7 @@ import { TransactionType } from '@components/TransactionType';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Chains } from '@hooks/useChain/Chains';
-import { Strategy } from '../useStrategies';
+import { Strategy } from '@models/Strategy';
 
 export type ConfigureVariables = {
   values: CustomiseSchema;
@@ -13,7 +13,7 @@ export type ConfigureVariables = {
     resultingDenom: DenomInfo;
     transactionType: TransactionType;
     currentPrice: number | undefined;
-    chain: Chains
+    chain: Chains;
   };
   strategy: Strategy;
 };

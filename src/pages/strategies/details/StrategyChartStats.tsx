@@ -7,7 +7,7 @@ import {
   StatArrow,
   Spinner as ChakraSpinner,
 } from '@chakra-ui/react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';

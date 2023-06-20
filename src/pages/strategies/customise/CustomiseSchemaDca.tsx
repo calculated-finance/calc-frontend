@@ -3,7 +3,7 @@ import { allSchema } from '@models/DcaInFormData';
 import { weightedScaleSchemaFields } from '@models/weightedScaleFormData';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 
 export const customiseSchemaDca = Yup.object({
   advancedSettings: allSchema.advancedSettings,

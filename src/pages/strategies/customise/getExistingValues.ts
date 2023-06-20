@@ -1,4 +1,4 @@
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import {
   getBasePrice,
   getPriceCeilingFloor,

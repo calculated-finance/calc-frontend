@@ -1,4 +1,3 @@
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { Chains } from '@hooks/useChain/Chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -8,9 +7,10 @@ import {
   getStrategyValidatorAddress,
 } from '@helpers/destinations';
 import YesNoValues from '@models/YesNoValues';
+import { Strategy } from '@models/Strategy';
 
 export function getExistingValues(
-  strategy: StrategyOsmosis,
+  strategy: Strategy,
   chain: Chains,
   address: string,
 ): Partial<DcaInFormDataPostPurchase> {

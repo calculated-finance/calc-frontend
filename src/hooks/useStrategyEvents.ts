@@ -6,7 +6,7 @@ import {
 import { getChainContractAddress } from '@helpers/chains';
 import { QueryMsg } from '@models/index';
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from './useStrategies';
+import { Strategy } from '../models/Strategy';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 

@@ -3,7 +3,7 @@ import Spinner from '@components/Spinner';
 import StrategyRow from '@components/StrategyRow';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyScheduled } from '@helpers/strategy';
-import { Strategy } from 'src/hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { getSidebarLayout } from '@components/Layout';
 import ConnectWallet from '@components/ConnectWallet';
 import useAdminStrategies from '@hooks/useAdminStrategies';

@@ -1,10 +1,9 @@
 import vaultContractJson from 'src/Vault.json';
-import { ethers } from 'ethers';
+import { BrowserProvider, ethers } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
+import { Strategy } from '../models/Strategy';
 
-
-
-export async function fetchStrategy(id: string, provider: any) {
+export async function fetchStrategy(id: string, provider: BrowserProvider): Promise<Strategy> {
   const vaultContract = new ethers.Contract(id, vaultContractJson.abi, provider);
 
   const result = await vaultContract.getConfig();
@@ -59,5 +58,5 @@ export async function fetchStrategy(id: string, provider: any) {
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
     swap_amount: conversion(Number(result.swapAmount)).toString(),
     id,
-  };
+  } as Strategy;
 }

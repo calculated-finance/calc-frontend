@@ -1,7 +1,8 @@
 import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { invalidateStrategies, Strategy } from '@hooks/useStrategies';
+import { invalidateStrategies } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import {
@@ -49,8 +50,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
   );
 }
 
-function StrategyRow({ strategy}: { strategy: Strategy}) {
-
+function StrategyRow({ strategy }: { strategy: Strategy }) {
   // return (
   //   <Link href={generateStrategyDetailUrl(strategy)}>
   //     <Grid
