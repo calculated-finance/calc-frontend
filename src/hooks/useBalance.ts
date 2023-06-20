@@ -2,8 +2,8 @@ import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
-import { ethers, formatEther } from 'ethers';
-import * as erc20json from "@openzeppelin/contracts/build/contracts/ERC20.json";
+import { ethers } from 'ethers';
+import * as erc20json from '@openzeppelin/contracts/build/contracts/ERC20.json';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useMetamask } from './useMetamask';
 import { useChain } from './useChain';
@@ -30,7 +30,7 @@ export function getDisplayAmount(token: DenomInfo, amount: number) {
 }
 
 const useBalanceEVM = (token: DenomInfo) => {
-  const provider = useMetamask(state => state.provider);
+  const provider = useMetamask((state) => state.provider);
   const { chain } = useChain();
   const { address } = useWallet();
 
@@ -43,11 +43,11 @@ const useBalanceEVM = (token: DenomInfo) => {
       if (!address) {
         throw new Error('No address provided');
       }
-        
+
       return fetchBalanceEvm(token, provider, address);
     },
     {
-      enabled: !!token  && !!provider && chain === Chains.Moonbeam && !!address,
+      enabled: !!token && !!provider && chain === Chains.Moonbeam && !!address,
       keepPreviousData: true,
       meta: {
         errorMessage: 'Error fetching balance',
@@ -61,7 +61,6 @@ const useBalanceEVM = (token: DenomInfo) => {
   };
 };
 
-
 const useBalanceCosm = (token: DenomInfo) => {
   const { address } = useWallet();
   const { chain } = useChain();
@@ -70,7 +69,6 @@ const useBalanceCosm = (token: DenomInfo) => {
   const result = useQuery<Coin>(
     ['balance', token?.id, address, client],
     () => {
-
       if (!client) {
         throw new Error('Client not initialized');
       }
@@ -96,7 +94,6 @@ const useBalanceCosm = (token: DenomInfo) => {
 };
 
 const useBalance = (token: DenomInfo) => {
-
   const { walletType } = useWallet();
 
   const evmBalance = useBalanceEVM(token);
@@ -106,5 +103,3 @@ const useBalance = (token: DenomInfo) => {
 };
 
 export default useBalance;
-
-

@@ -1,5 +1,12 @@
 import * as Sentry from '@sentry/react';
-import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis, TestnetDenomsMoonbeam } from '@models/Denom';
+import {
+  Denom,
+  MainnetDenoms,
+  TestnetDenoms,
+  TestnetDenomsOsmosis,
+  MainnetDenomsOsmosis,
+  TestnetDenomsMoonbeam,
+} from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
@@ -29,8 +36,6 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
   }
 
   const { assetList } = useAssetListStore.getState();
-
-
 
   const asset = assetList?.assets && assetList.assets.find((a) => a.base === denom);
 
@@ -77,7 +82,6 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
   }
 
   if (isMainnet()) {
-
     const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
 
     if (kujiraMainnetAsset) {
@@ -88,37 +92,34 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
       };
     }
   } else {
+    const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
+    if (moonbeamTestnetAsset) {
+      return {
+        ...defaultDenom,
+        ...moonbeamTestnetAsset,
+        minimumSwapAmount: 0.05 / 1000,
+        conversion: (value: number) => value / 10 ** 18,
+        deconversion: (value: number) => Math.round(value * 10 ** 18),
+        id: denom,
+      };
+    }
 
-  const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
-  if (moonbeamTestnetAsset) {
-    return {
-      ...defaultDenom,
-      ...moonbeamTestnetAsset,
-      minimumSwapAmount: 0.05 / 1000,
-      conversion: (value: number) => value / 10 ** 18,
-      deconversion: (value: number) => Math.round(value * 10 ** 18),
-      id: denom,
-    };
+    const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
+
+    if (kujiraTestnetAsset) {
+      return {
+        id: denom,
+        ...defaultDenom,
+        ...testnetDenoms[denom as TestnetDenoms],
+      };
+    }
   }
-
-  const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
-
-  if (kujiraTestnetAsset) {
-    return {
-      id: denom,
-      ...defaultDenom,
-      ...testnetDenoms[denom as TestnetDenoms],
-    };
-  }
-
-}
 
   Sentry.captureException('didint find a denom', { tags: { denom } });
   return {
     id: denom,
     ...defaultDenom,
-  }
-  
+  };
 };
 
 export function getDenomName(denomInfo: DenomInfo) {

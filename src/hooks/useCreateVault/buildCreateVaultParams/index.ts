@@ -1,11 +1,10 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg, PositionType } from 'src/interfaces/v2/generated/execute';
 import { ExecuteMsg as OsmosisExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import { V2Pair, V3Pair } from '@models/Pair';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { FormNames } from '@hooks/useFormStore';
 import { Chains } from '@hooks/useChain/Chains';
@@ -16,6 +15,7 @@ import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_
 import { isNil } from 'lodash';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DcaFormState } from '../DcaFormState';
 
@@ -331,8 +331,10 @@ export function buildCreateVaultParamsWeightedScale(
 
 export function buildCreateVaultParamsDCAPlus(
   state: DcaPlusState,
+  transactionType: TransactionType,
   senderAddress: string,
   chain: Chains,
+  config: Config,
 ): ExecuteMsg | OsmosisExecuteMsg {
   const initialDenomInfo = getDenomInfo(state.initialDenom);
   const resultingDenomInfo = getDenomInfo(state.resultingDenom);
@@ -359,11 +361,15 @@ export function buildCreateVaultParamsDCAPlus(
       swap_adjustment_strategy: {
         risk_weighted_average: {
           base_denom: 'bitcoin',
+          ...(!!config &&
+            config.exchange_contract_address && {
+              position_type: (transactionType === TransactionType.Buy ? 'enter' : 'exit') as PositionType,
+            }),
         },
       },
       performance_assessment_strategy: 'compare_to_standard_dca',
     },
-  } as OsmosisExecuteMsg;
+  } as ExecuteMsg;
   return msg;
 }
 
@@ -374,13 +380,14 @@ export function buildCreateVaultParams(
   senderAddress: string,
   currentPrice: number | undefined,
   chain: Chains,
+  config: Config,
 ) {
   if (formType === FormNames.DcaIn || formType === FormNames.DcaOut) {
     return buildCreateVaultParamsDCA(state as DcaInFormDataAll, transactionType, senderAddress, chain);
   }
 
   if (formType === FormNames.DcaPlusIn || formType === FormNames.DcaPlusOut) {
-    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, senderAddress, chain);
+    return buildCreateVaultParamsDCAPlus(state as DcaPlusState, transactionType, senderAddress, chain, config);
   }
 
   if (formType === FormNames.WeightedScaleIn || formType === FormNames.WeightedScaleOut) {
