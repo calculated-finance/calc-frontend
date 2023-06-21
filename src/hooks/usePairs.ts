@@ -177,17 +177,18 @@ function usePairsKujira() {
 
 function usePairsCosmos(config: Config | undefined) {
   const client = useCosmWasmClient((state) => state.client);
+  const { chain } = useChain();
 
   const queryResult = useQuery<PairsResponseV3>(
     ['pairs-cosmos', client],
     async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
+      const result = await client!.queryContractSmart(getChainContractAddress(chain), {
         get_pairs: {},
       });
       return result;
     },
     {
-      enabled: !!client && !!config && !!config.exchange_contract_address,
+      enabled: !!client && !!config && !!config.exchange_contract_address && !!chain,
     },
   );
 
