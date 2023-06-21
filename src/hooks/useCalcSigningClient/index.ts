@@ -19,7 +19,7 @@ function getClient(
 
     return {
       topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
-        executeTopUpEVM(evmProvider, evmSigner, strategy.id, topUpAmount),
+        executeTopUpEVM(evmProvider, evmSigner, strategy, topUpAmount),
     };
   }
 

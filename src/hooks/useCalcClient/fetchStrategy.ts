@@ -1,4 +1,4 @@
-import { BrowserProvider, ethers } from 'ethers';
+import { BrowserProvider, ethers, formatEther } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
 import { getVaultContract } from 'src/interfaces/evm/getVaultContract';
 import { Strategy } from '../../models/Strategy';
@@ -32,22 +32,24 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
   // console.log('timeInterval', result.timeInterval)
   // console.log('targetTime', result.targetTime)
   // console.log('simulation', result.simulation)
-  const balance = ethers.parseEther(balanceResponse.toString());
+  const balance = balanceResponse;
 
-  const { conversion } = getDenomInfo(result.tokenIn);
+  console.log('balance', formatEther(balance));
+  const { deconversion } = getDenomInfo(result.tokenIn);
+
   return {
     status: balance ? 'active' : 'inactive',
     balance: {
       denom: result.tokenIn,
-      amount: ethers.parseEther(balance.toString()).toString(),
+      amount: deconversion(Number(formatEther(balance))).toString(),
     },
     received_amount: {
       denom: result.tokenOut,
-      amount: ethers.parseEther(result.totalTokenOutReceived.toString()).toString(),
+      amount: formatEther(result.totalTokenOutReceived),
     },
     swapped_amount: {
       denom: result.tokenIn,
-      amount: ethers.parseEther(result.totalTokenInSent.toString()).toString(),
+      amount: formatEther(result.totalTokenInSent),
     },
     destinations: [
       {
@@ -56,7 +58,7 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
       },
     ],
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
-    swap_amount: conversion(Number(result.swapAmount)).toString(),
+    swap_amount: formatEther(result.swapAmount),
     id,
   } as Strategy;
 }

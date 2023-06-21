@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
 import { ethers } from 'ethers';
-import factoryContractJson from 'src/Factory.json';
+import factoryContractJson from 'src/interfaces/evm/Factory.json';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { getExecutionInterval } from './buildCreateVaultParams';

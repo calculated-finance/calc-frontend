@@ -1,6 +1,6 @@
 import { getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@models/Strategy';
-import { ethers } from 'ethers';
+import { ethers, parseEther } from 'ethers';
 import { getDenomContract } from 'src/interfaces/evm/getDenomContract';
 import { getVaultContract } from '../../interfaces/evm/getVaultContract';
 
@@ -11,20 +11,18 @@ export async function executeTopUpEVM(
   topUpAmount: number,
 ) {
   const { deconversion, id: initialDenomId } = getStrategyInitialDenom(strategy);
-  const vaultContract = getVaultContract(provider, strategy.id);
+  const contractWithSigner = getVaultContract(signer, strategy.id);
 
-  const contractWithSigner = vaultContract.connect(signer);
+  const denom = getDenomContract(signer, initialDenomId);
 
-  const denom = getDenomContract(provider, initialDenomId);
+  const parsedAmount = parseEther(topUpAmount.toString());
 
-  console.log(topUpAmount);
-
-  const approveRes = await denom.approve(strategy.id, topUpAmount);
+  const approveRes = await denom.approve(strategy.id, parsedAmount);
   await approveRes.wait();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const tx = await contractWithSigner.deposit(ethers.parseEther(topUpAmount.toString()));
+  const tx = await contractWithSigner.deposit(parsedAmount);
   const receipt = await tx.wait();
 
   return receipt;
