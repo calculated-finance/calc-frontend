@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
 import { useChain } from './useChain';
-import { useCalcClient } from './useCalcClient';
+import { useChainClient } from './useChainClient';
 
 export type BalanceResponse = {
   amount: number;
@@ -17,7 +17,7 @@ function useBalance(token: DenomInfo) {
   const { address } = useWallet();
   const { chain } = useChain();
 
-  const client = useCalcClient(chain);
+  const client = useChainClient(chain);
 
   const result = useQuery<Coin>(
     ['balance', token?.id, address, client],

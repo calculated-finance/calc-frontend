@@ -126,7 +126,8 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
 
 function Page() {
   const { query } = useRouter();
-  const { data } = useStrategy(query?.id as string);
+  const result = useStrategy(query?.id as string);
+  const { data } = result;
 
   return (
     <NewStrategyModal>

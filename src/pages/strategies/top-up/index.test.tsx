@@ -8,13 +8,15 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { Chains } from '@hooks/useChain/Chains';
+import { useKujira } from '@hooks/useKujira';
+import { KujiraQueryClient } from 'kujira.js';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/strategies/top-up',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -73,6 +75,7 @@ async function renderTarget() {
 describe('Top up page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    useKujira.setState({ query: {} as KujiraQueryClient });
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
@@ -84,7 +87,7 @@ describe('Top up page', () => {
   it('renders remaining balance', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
     await renderTarget();
-    screen.getByText('Remaining balance: 10 DEMO');
+    waitFor(() => screen.getByText('Remaining balance: 10 DEMO'));
   });
   it('shows available funds', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());
