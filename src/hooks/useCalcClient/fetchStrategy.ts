@@ -1,10 +1,10 @@
-import vaultContractJson from 'src/Vault.json';
 import { BrowserProvider, ethers } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
+import { getVaultContract } from 'src/interfaces/evm/getVaultContract';
 import { Strategy } from '../../models/Strategy';
 
 export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
-  const vaultContract = new ethers.Contract(id, vaultContractJson.abi, provider);
+  const vaultContract = getVaultContract(provider, id);
 
   const result = await vaultContract.getConfig();
 

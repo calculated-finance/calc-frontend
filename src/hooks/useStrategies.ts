@@ -8,7 +8,7 @@ import { fetchStrategyEVM } from '@hooks/useCalcClient/fetchStrategy';
 import { ethers } from 'ethers';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
-import factoryContractJson from 'src/Factory.json';
+import factoryContractJson from 'src/interfaces/evm/Factory.json';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useChain } from './useChain';
 import { Strategy } from '../models/Strategy';

@@ -1,8 +1,8 @@
 import { ethers } from 'ethers';
-import * as erc20json from '@openzeppelin/contracts/build/contracts/ERC20.json';
+import { getDenomContract } from '../../interfaces/evm/getDenomContract';
 
 export async function fetchBalanceEvm(tokenId: string, provider: ethers.BrowserProvider, address: string) {
-  const erc20 = new ethers.Contract(tokenId, erc20json.abi, provider);
+  const erc20 = getDenomContract(provider, tokenId);
 
   const supplyResult = await erc20.balanceOf(address);
 
