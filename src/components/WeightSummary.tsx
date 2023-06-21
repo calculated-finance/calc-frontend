@@ -29,6 +29,8 @@ export function WeightsGrid({
   basePrice,
   price,
   priceThresholdValue,
+  initialDenom,
+  resultingDenom,
 }: {
   swapAmount: number;
   swapMultiplier: number;
@@ -37,6 +39,8 @@ export function WeightsGrid({
   basePrice: number | null | undefined;
   price: number | undefined;
   priceThresholdValue: number | undefined | null;
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
 }) {
   const swapAmountSafe = swapAmount ?? 0;
   const calcSwapFromPriceDelta = (priceDelta: number) => {
@@ -54,7 +58,9 @@ export function WeightsGrid({
 
   return (
     <Grid templateColumns="repeat(12, 1fr)" columnGap={2} rowGap={3}>
-      <GridItem colSpan={3}>Price (USD) $</GridItem>
+      <GridItem colSpan={3}>
+        Price ({transactionType === 'buy' ? initialDenom.name : transactionType === 'sell' && resultingDenom.name}) $
+      </GridItem>
 
       {weights.map((weight) => {
         const displayPrice = basePrice || price;
@@ -128,7 +134,9 @@ export function WeightSummary({
     <Box fontSize="10px" bg="deepHorizon" p={4} borderRadius="md" color="white">
       <Stack spacing={3}>
         <HStack justify="space-between">
-          <Text>Base Swap: {swapAmount || 0} {initialDenom.name}</Text>
+          <Text>
+            Base Swap: {swapAmount || 0} {initialDenom.name}
+          </Text>
           <Text>|</Text>
           <Text>Multiplier: {swapMultiplier}</Text>
           <Text>|</Text>
@@ -141,6 +149,8 @@ export function WeightSummary({
         </HStack>
         <Divider borderWidth={1} />
         <WeightsGrid
+          resultingDenom={resultingDenom}
+          initialDenom={initialDenom}
           swapAmount={swapAmount}
           swapMultiplier={swapMultiplier}
           transactionType={transactionType}
