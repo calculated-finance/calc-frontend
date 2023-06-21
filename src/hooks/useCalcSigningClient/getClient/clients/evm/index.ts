@@ -1,15 +1,11 @@
-import { getStrategyInitialDenom } from '@helpers/strategy';
-import { Strategy } from '@models/Strategy';
-import { ethers, parseEther } from 'ethers';
-import { getDenomContract } from 'src/interfaces/evm/getDenomContract';
-import { getVaultContract } from '../../interfaces/evm/getVaultContract';
+import { JsonRpcSigner, ethers, parseEther } from 'ethers';
 
-export async function executeTopUpEVM(
-  provider: ethers.BrowserProvider,
-  signer: ethers.JsonRpcSigner,
-  strategy: Strategy,
-  topUpAmount: number,
-) {
+import { getStrategyInitialDenom } from '@helpers/strategy';
+import { getDenomContract } from 'src/interfaces/evm/getDenomContract';
+import { Strategy } from '@models/Strategy';
+import getVaultContract from 'src/interfaces/evm/getVaultContract';
+
+async function executeTopUpEVM(signer: ethers.JsonRpcSigner, strategy: Strategy, topUpAmount: number) {
   const { deconversion, id: initialDenomId } = getStrategyInitialDenom(strategy);
   const contractWithSigner = getVaultContract(signer, strategy.id);
 
@@ -26,4 +22,11 @@ export async function executeTopUpEVM(
   const receipt = await tx.wait();
 
   return receipt;
+}
+
+export function getEVMSigningClient(evmSigner: JsonRpcSigner) {
+  return {
+    topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
+      executeTopUpEVM(evmSigner, strategy, topUpAmount),
+  };
 }
