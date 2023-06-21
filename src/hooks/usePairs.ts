@@ -213,9 +213,12 @@ export default function usePairs() {
   const comsosPairsData = usePairsCosmos(config);
   const moonbeamPairsData = usePairsMoonbeam();
 
-  return moonbeamPairsData || (!!config && !!config?.exchange_contract_address)
-    ? comsosPairsData
-    : chain === Chains.Kujira
-    ? kujiraPairsData
-    : osmosisPairsData;
+  return (
+    moonbeamPairsData ||
+    (!!config && !!config?.exchange_contract_address
+      ? comsosPairsData
+      : chain === Chains.Kujira
+      ? kujiraPairsData
+      : osmosisPairsData)
+  );
 }
