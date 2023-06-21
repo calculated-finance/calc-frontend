@@ -1,7 +1,7 @@
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { buildWeightedScaleAdjustmentStrategy } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { buildSwapAdjustmentStrategy } from './buildSwapAdjustmentStrategy';
 import { ConfigureVariables } from './ConfigureVariables';
 

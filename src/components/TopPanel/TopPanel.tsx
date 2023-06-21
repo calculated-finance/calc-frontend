@@ -2,7 +2,8 @@ import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Fle
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
-import { Strategy, useStrategiesCosmos } from '@hooks/useStrategies';
+import { useStrategiesCosmos } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
@@ -142,7 +143,6 @@ function ActiveWithMany() {
 }
 
 export default function TopPanel() {
-
   const { connected } = useWallet();
 
   const { data, isLoading } = useStrategiesCosmos();

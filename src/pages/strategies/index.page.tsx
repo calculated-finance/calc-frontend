@@ -10,23 +10,19 @@ import {
   StrategyAccordionPanel,
   StrategyAccordion,
 } from '@components/StrategyAccordion';
-import { Strategy, useStrategiesCosmos, useStrategiesEVM } from '@hooks/useStrategies';
+import { useStrategiesCosmos, useStrategiesEVM } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { StrategyList } from './StrategyList';
 
-
-function StrategyAccordians({strategies, isLoading}: {strategies: Strategy[] | undefined; isLoading: boolean}) {
-
-  const scheduledStrategies =
-    strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+function StrategyAccordians({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
+  const scheduledStrategies = strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-  const completedStrategies =
-    strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies = strategies?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
-  const cancelledStrategies =
-    strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const cancelledStrategies = strategies?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <StrategyAccordion>
@@ -40,12 +36,17 @@ function StrategyAccordians({strategies, isLoading}: {strategies: Strategy[] | u
           </Text>
         </StrategiesAccordionButton>
         <StrategyAccordionPanel>
-          {!activeStrategies?.length ? <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+          {!activeStrategies?.length ? (
+            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
               {isLoading ? <Spinner /> : <Text>No active strategies</Text>}
-            </Flex> : <StrategyList strategies={activeStrategies} />}
+            </Flex>
+          ) : (
+            <StrategyList strategies={activeStrategies} />
+          )}
         </StrategyAccordionPanel>
       </StrategyAccordionItem>
-      {Boolean(scheduledStrategies.length) && <StrategyAccordionItem>
+      {Boolean(scheduledStrategies.length) && (
+        <StrategyAccordionItem>
           <StrategiesAccordionButton>
             <Heading pb={2} size="md">
               Scheduled Strategies ({scheduledStrategies.length})
@@ -55,11 +56,16 @@ function StrategyAccordians({strategies, isLoading}: {strategies: Strategy[] | u
             </Text>
           </StrategiesAccordionButton>
           <StrategyAccordionPanel>
-            {!scheduledStrategies.length ? <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+            {!scheduledStrategies.length ? (
+              <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
                 {isLoading ? <Spinner /> : <Text>No scheduled strategies</Text>}
-              </Flex> : <StrategyList strategies={scheduledStrategies} />}
+              </Flex>
+            ) : (
+              <StrategyList strategies={scheduledStrategies} />
+            )}
           </StrategyAccordionPanel>
-        </StrategyAccordionItem>}
+        </StrategyAccordionItem>
+      )}
       <StrategyAccordionItem>
         <StrategiesAccordionButton>
           <Heading size="md" pb={2}>
@@ -70,9 +76,13 @@ function StrategyAccordians({strategies, isLoading}: {strategies: Strategy[] | u
           </Text>
         </StrategiesAccordionButton>
         <StrategyAccordionPanel>
-          {!completedStrategies.length ? <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+          {!completedStrategies.length ? (
+            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
               {isLoading ? <Spinner /> : <Text>No completed strategies</Text>}
-            </Flex> : <StrategyList strategies={completedStrategies} />}
+            </Flex>
+          ) : (
+            <StrategyList strategies={completedStrategies} />
+          )}
         </StrategyAccordionPanel>
       </StrategyAccordionItem>
       <StrategyAccordionItem>
@@ -85,15 +95,18 @@ function StrategyAccordians({strategies, isLoading}: {strategies: Strategy[] | u
           </Text>
         </StrategiesAccordionButton>
         <StrategyAccordionPanel>
-          {!cancelledStrategies.length ? <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
+          {!cancelledStrategies.length ? (
+            <Flex bg="gray.900" justifyContent="center" py={8} px={4} layerStyle="panel">
               {isLoading ? <Spinner /> : <Text>No cancelled strategies</Text>}
-            </Flex> : <StrategyList strategies={cancelledStrategies} />}
+            </Flex>
+          ) : (
+            <StrategyList strategies={cancelledStrategies} />
+          )}
         </StrategyAccordionPanel>
       </StrategyAccordionItem>
     </StrategyAccordion>
   );
 }
-
 
 function StrategiesCosmos() {
   const { data, isLoading } = useStrategiesCosmos();
@@ -109,7 +122,7 @@ function StrategiesEVM() {
 
 function StrategyAccordiansWrapper() {
   const { chain } = useChain();
-  return chain === Chains.Moonbeam ? <StrategiesEVM  /> : <StrategiesCosmos />
+  return chain === Chains.Moonbeam ? <StrategiesEVM /> : <StrategiesCosmos />;
 }
 
 function Page() {
@@ -121,15 +134,11 @@ function Page() {
         My CALC Strategies
       </Heading>
 
-      {!connected ? (
-        <ConnectWallet layerStyle="panel" />
-      ) : (
-        <StrategyAccordiansWrapper />
-      )}
+      {!connected ? <ConnectWallet layerStyle="panel" /> : <StrategyAccordiansWrapper />}
     </>
   );
 }
 
 Page.getLayout = getSidebarLayout;
 
-export default Page
+export default Page;

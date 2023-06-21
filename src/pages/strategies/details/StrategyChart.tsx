@@ -11,7 +11,7 @@ import {
   VictoryVoronoiContainer,
 } from 'victory';
 import { useRef, useState } from 'react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';

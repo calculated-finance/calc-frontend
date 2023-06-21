@@ -1,6 +1,6 @@
 import { getMinimumReceiveAmount } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { Chains } from '@hooks/useChain/Chains';
 import { buildPriceThreshold } from './buildPriceThreshold';
 import { ConfigureVariables } from './ConfigureVariables';

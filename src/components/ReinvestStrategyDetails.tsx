@@ -1,7 +1,7 @@
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import {
   getStrategyInitialDenom,
   getStrategyResultingDenom,
@@ -110,7 +110,8 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy, chain)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                    {getPriceCeilingFloor(strategy, chain)}{' '}
+                    {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>

@@ -2,7 +2,7 @@ import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center }
 import DenomIcon from '@components/DenomIcon';
 import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import { HiTrendingUp, HiTrendingDown } from 'react-icons/hi';
@@ -37,7 +37,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
-  const linkedToStrategy = data?.vault;
+  const linkedToStrategy = data;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 

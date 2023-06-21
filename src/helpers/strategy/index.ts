@@ -1,4 +1,5 @@
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/useStrategyEvents';
 import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -335,7 +336,6 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
 }
 
 export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: Chains) {
-
   if (chain === Chains.Osmosis) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
   }

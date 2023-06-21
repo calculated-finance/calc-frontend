@@ -11,7 +11,7 @@ import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import useFiatPrice from './useFiatPrice';
-import { Strategy } from './useStrategies';
+import { Strategy } from '../models/Strategy';
 import { useChain } from './useChain';
 
 function getCancelVaultExecuteMsg(

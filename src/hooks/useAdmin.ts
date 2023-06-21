@@ -18,7 +18,8 @@ const admins = [
   'osmo1y4k0re9q905nvvcvvmxug3sqtd9e7du48u595n', // j
   'osmo1mumzgqekvhvn9fkzj8tajen0qw9j7lj2dsmgyw', // n
   'osmo1a0uqtx4erytfy2hgeysccjqusrz8ygq9frr65e', // f
-  '0xfc0b5423C193953e55446aa75d24c167620F293a', // d
+  '0xfc0b5423c193953e55446aa75d24c167620f293a', // d
+  '0x1Af6fca482cD73c198b8C0f3C883be8d9Bf5cF74', // a
 ];
 
 export function isAddressAdmin(address: string | undefined | null) {

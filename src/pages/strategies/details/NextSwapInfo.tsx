@@ -1,5 +1,5 @@
 import { Heading, Text, HStack, Flex, Stack, Icon, Box } from '@chakra-ui/react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';

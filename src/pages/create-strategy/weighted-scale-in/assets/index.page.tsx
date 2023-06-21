@@ -27,9 +27,9 @@ function DcaIn() {
   } = usePairs();
   const { nextStep } = useSteps(weightedScaleInSteps);
 
-  const { data } = useBalances();
+  const { data: balances } = useBalances();
 
-  const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances: data?.balances });
+  const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);

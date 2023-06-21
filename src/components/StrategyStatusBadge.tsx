@@ -1,5 +1,5 @@
 import { Badge, Tooltip } from '@chakra-ui/react';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { getStrategyStatus } from '@helpers/strategy';
 
 export function StrategyStatusBadge({ strategy }: { strategy: Strategy }) {

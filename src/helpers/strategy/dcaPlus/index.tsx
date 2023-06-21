@@ -1,11 +1,12 @@
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import totalExecutions from '@utils/totalExecutions';
 
 import { SWAP_FEE } from 'src/constants';
 import { getModelFromId } from '@helpers/ml/getModel';
 import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
-import { getStrategyBalance, 
+import {
+  getStrategyBalance,
   getTotalReceived,
   getConvertedSwapAmount,
   getStrategyInitialDenom,

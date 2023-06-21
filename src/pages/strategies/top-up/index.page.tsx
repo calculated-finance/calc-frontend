@@ -11,10 +11,10 @@ import * as Yup from 'yup';
 import useTopUpStrategy from '@hooks/useTopUpStrategy';
 import useBalance from '@hooks/useBalance';
 import DcaDiagram from '@components/DcaDiagram';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import {
-  getStrategyBalance, 
+  getStrategyBalance,
   getStrategyInitialDenom,
   getStrategyResultingDenom,
   getStrategyName,
@@ -78,7 +78,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     { setSubmitting }: FormikHelpers<Yup.InferType<typeof validationSchema>>,
   ) =>
     mutate(
-      { values, initialDenom, strategy },
+      { values, strategy },
       {
         onSuccess: async () => {
           await nextStep({
@@ -126,7 +126,8 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
 
 function Page() {
   const { query } = useRouter();
-  const { data } = useStrategy(query?.id as string);
+  const result = useStrategy(query?.id as string);
+  const { data } = result;
 
   return (
     <NewStrategyModal>
@@ -135,7 +136,7 @@ function Page() {
         showStepper={false}
         cancelUrl={generateStrategyDetailUrl(query?.id)}
       />
-      {data?.vault && <TopUpForm strategy={data.vault} />}
+      {data && <TopUpForm strategy={data} />}
     </NewStrategyModal>
   );
 }

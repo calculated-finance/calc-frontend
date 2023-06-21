@@ -3,7 +3,7 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/v2/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from './useStrategies';
+import { Strategy } from '../models/Strategy';
 import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 

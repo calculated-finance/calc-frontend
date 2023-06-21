@@ -1,11 +1,10 @@
-import vaultContractJson from 'src/Vault.json';
-import { ethers } from 'ethers';
+import { BrowserProvider, ethers, formatEther } from 'ethers';
 import getDenomInfo from '@utils/getDenomInfo';
+import { getVaultContract } from 'src/interfaces/evm/getVaultContract';
+import { Strategy } from '../../models/Strategy';
 
-
-
-export async function fetchStrategy(id: string, provider: any) {
-  const vaultContract = new ethers.Contract(id, vaultContractJson.abi, provider);
+export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
+  const vaultContract = getVaultContract(provider, id);
 
   const result = await vaultContract.getConfig();
 
@@ -33,22 +32,24 @@ export async function fetchStrategy(id: string, provider: any) {
   // console.log('timeInterval', result.timeInterval)
   // console.log('targetTime', result.targetTime)
   // console.log('simulation', result.simulation)
-  const balance = ethers.parseEther(balanceResponse.toString());
+  const balance = balanceResponse;
 
-  const { conversion } = getDenomInfo(result.tokenIn);
+  console.log('balance', formatEther(balance));
+  const { deconversion } = getDenomInfo(result.tokenIn);
+
   return {
     status: balance ? 'active' : 'inactive',
     balance: {
-      denom: result.tokenIn.toUpperCase(),
-      amount: ethers.parseEther(balance.toString()).toString(),
+      denom: result.tokenIn,
+      amount: deconversion(Number(formatEther(balance))).toString(),
     },
     received_amount: {
-      denom: result.tokenOut.toUpperCase(),
-      amount: ethers.parseEther(result.totalTokenOutReceived.toString()).toString(),
+      denom: result.tokenOut,
+      amount: formatEther(result.totalTokenOutReceived),
     },
     swapped_amount: {
-      denom: result.tokenIn.toUpperCase(),
-      amount: ethers.parseEther(result.totalTokenInSent.toString()).toString(),
+      denom: result.tokenIn,
+      amount: formatEther(result.totalTokenInSent),
     },
     destinations: [
       {
@@ -57,7 +58,7 @@ export async function fetchStrategy(id: string, provider: any) {
       },
     ],
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
-    swap_amount: conversion(Number(result.swapAmount)).toString(),
+    swap_amount: formatEther(result.swapAmount),
     id,
-  };
+  } as Strategy;
 }

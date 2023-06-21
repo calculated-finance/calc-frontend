@@ -2,7 +2,7 @@ import { useDisclosure, Button } from '@chakra-ui/react';
 import CancelStrategyModal from '@components/CancelStrategyModal';
 import CalcIcon from '@components/Icon';
 import { CloseBoxedIcon } from '@fusion-icons/react/interface';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { useRouter } from 'next/router';
 
 export function CancelButton({ strategy }: { strategy: Strategy }) {

@@ -4,7 +4,7 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { Form, Formik, FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import useStrategy from '@hooks/useStrategy';
-import { Strategy } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import { initialValues as globalInitialValues } from '@models/DcaInFormData';
 import { useChain } from '@hooks/useChain';
@@ -89,62 +89,61 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
         <NewStrategyModal>
           <NewStrategyModalHeader stepsConfig={customiseSteps} cancelUrl={generateStrategyDetailUrl(strategy.id)} />
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
-            <StrategyInfoProvider strategyInfo={{
-              strategyType: '' as StrategyTypes,
-              transactionType,
-              formName: '' as FormNames,
-            }}>
-            <Form autoComplete="off">
-              <Stack spacing={4}>
-                <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
-                <Divider />
-                {/* {!isDcaPlus(strategy) && <AdvancedSettingsSwitch />} */}
+            <StrategyInfoProvider
+              strategyInfo={{
+                strategyType: '' as StrategyTypes,
+                transactionType,
+                formName: '' as FormNames,
+              }}
+            >
+              <Form autoComplete="off">
+                <Stack spacing={4}>
+                  <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                  <Divider />
+                  {/* {!isDcaPlus(strategy) && <AdvancedSettingsSwitch />} */}
 
-                {!isDcaPlus(strategy) && !isWeightedScale(strategy) && (
-                  <Stack spacing={4}>
-                    <ExecutionInterval />
-                    <CollapseWithRender isOpen={values.advancedSettings}>
-                      <PriceThreshold
-                        forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
-                        resultingDenom={resultingDenom}
-                        initialDenom={initialDenom}
-                      />
-                    </CollapseWithRender>
-                  </Stack>
-                )}
-                {isWeightedScale(strategy) && (
-                  <Stack spacing={4}>
-                    <ExecutionInterval />
-                    <SwapMultiplier
-                      initialDenom={initialDenom}
-                      resultingDenom={resultingDenom}
-                      swapAmountInjected={context.swapAmount}
-                    />
-                    <CollapseWithRender isOpen={values.advancedSettings}>
-                      <Stack spacing={4}>
-                        <ApplyMultiplier  />
-                        <BasePrice
-                          initialDenom={initialDenom}
-                          resultingDenom={resultingDenom}
-                        />
+                  {!isDcaPlus(strategy) && !isWeightedScale(strategy) && (
+                    <Stack spacing={4}>
+                      <ExecutionInterval />
+                      <CollapseWithRender isOpen={values.advancedSettings}>
                         <PriceThreshold
                           forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
-                      </Stack>
-                    </CollapseWithRender>
-                  </Stack>
-                )}
-                <CollapseWithRender isOpen={values.advancedSettings}>
-                  <SlippageTolerance />
-                </CollapseWithRender>
-                <FormControl isInvalid={isError}>
-                  <Submit disabledUnlessDirty>Confirm</Submit>
-                  <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
-                </FormControl>
-              </Stack>
-            </Form>
+                      </CollapseWithRender>
+                    </Stack>
+                  )}
+                  {isWeightedScale(strategy) && (
+                    <Stack spacing={4}>
+                      <ExecutionInterval />
+                      <SwapMultiplier
+                        initialDenom={initialDenom}
+                        resultingDenom={resultingDenom}
+                        swapAmountInjected={context.swapAmount}
+                      />
+                      <CollapseWithRender isOpen={values.advancedSettings}>
+                        <Stack spacing={4}>
+                          <ApplyMultiplier />
+                          <BasePrice initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                          <PriceThreshold
+                            forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
+                            resultingDenom={resultingDenom}
+                            initialDenom={initialDenom}
+                          />
+                        </Stack>
+                      </CollapseWithRender>
+                    </Stack>
+                  )}
+                  <CollapseWithRender isOpen={values.advancedSettings}>
+                    <SlippageTolerance />
+                  </CollapseWithRender>
+                  <FormControl isInvalid={isError}>
+                    <Submit disabledUnlessDirty>Confirm</Submit>
+                    <FormErrorMessage>Failed to update strategy (Reason: {error?.message})</FormErrorMessage>
+                  </FormControl>
+                </Stack>
+              </Form>
             </StrategyInfoProvider>
           </NewStrategyModalBody>
         </NewStrategyModal>
@@ -155,11 +154,9 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
 function Page() {
   const { query } = useRouter();
-  const { data, isLoading } = useStrategy(query?.id as string);
+  const { data: strategy, isLoading } = useStrategy(query?.id as string);
   const { chain } = useChain();
   const { address } = useWallet();
-
-  const { vault: strategy } = data || {};
 
   if (!strategy || !chain || !address) {
     return (

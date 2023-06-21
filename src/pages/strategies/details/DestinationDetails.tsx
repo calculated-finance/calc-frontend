@@ -13,7 +13,8 @@ import {
   Spinner,
   Code,
 } from '@chakra-ui/react';
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
@@ -52,8 +53,7 @@ export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsm
 
 export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   const id = getStrategyReinvestStrategyId(strategy);
-  const { data } = useStrategy(id);
-  const { vault: reinvestStrategy } = data || {};
+  const { data: reinvestStrategy } = useStrategy(id);
   const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
   const isLooped = checkLoopedStrategy === strategy.id;
 
@@ -121,7 +121,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOs
   );
 }
 
-export function DestinationDetails({ strategy, chain }: { strategy: Strategy | StrategyOsmosis ; chain: Chains }) {
+export function DestinationDetails({ strategy, chain }: { strategy: Strategy | StrategyOsmosis; chain: Chains }) {
   const { destinations } = strategy;
 
   const { address } = useWallet();

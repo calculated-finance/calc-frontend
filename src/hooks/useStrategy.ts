@@ -1,41 +1,40 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/v2/generated/query';
-import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
-import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from './useStrategies';
+import { Strategy } from '../models/Strategy';
 import { isAddressAdmin } from './useAdmin';
 import { useChain } from './useChain';
-import { useCosmWasmClient } from './useCosmWasmClient';
+import { useCalcClient } from './useCalcClient';
 
 export const STRATEGY_KEY = 'strategy';
 
 export default function useStrategy(id: Strategy['id'] | undefined) {
   const { address } = useWallet();
   const { chain } = useChain();
-  const client = useCosmWasmClient((state) => state.client);
+  const client = useCalcClient(chain);
 
-  return useQuery<VaultResponse>(
+  return useQuery<Strategy>(
     [STRATEGY_KEY, id, client, address],
     async () => {
       if (!client) {
         throw new Error('No client');
       }
-      if (!chain) {
-        throw new Error('No chain');
+      if (!id) {
+        throw new Error('No id');
       }
-      const result = await client.queryContractSmart(getChainContractAddress(chain), {
-        get_vault: {
-          vault_id: id,
-        },
-      } as QueryMsg);
-      if (result.vault.owner !== address && !isAddressAdmin(address)) {
+      if (!address) {
+        throw new Error('No address');
+      }
+
+      const result = await client.fetchStrategy(id);
+
+      if (result.owner !== address && !isAddressAdmin(address)) {
         throw new Error('Strategy not found');
       }
+
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && !!chain,
+      enabled: !!client && !!id && !!address,
       meta: {
         errorMessage: 'Error fetching strategy',
       },

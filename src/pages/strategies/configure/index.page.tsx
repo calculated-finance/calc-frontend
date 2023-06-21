@@ -5,7 +5,8 @@ import { Formik, FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
-import { Strategy, StrategyOsmosis } from '@hooks/useStrategies';
+import { StrategyOsmosis } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import { getStrategyResultingDenom } from '@helpers/strategy';
 import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema } from '@models/DcaInFormData';
@@ -92,7 +93,7 @@ function Page() {
   const { chain } = useChain();
   const { address } = useWallet();
 
-  if (!data?.vault || !chain || !address) {
+  if (!data || !chain || !address) {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader
@@ -115,7 +116,7 @@ function Page() {
     autoStakeValidator: initialValues.autoStakeValidator,
     yieldOption: initialValues.yieldOption,
     reinvestStrategy: initialValues.reinvestStrategy,
-    ...getExistingValues(data.vault as unknown as StrategyOsmosis, chain, address),
+    ...getExistingValues(data, chain, address),
   };
 
   return (
@@ -125,7 +126,7 @@ function Page() {
         showStepper={false}
         cancelUrl={generateStrategyDetailUrl(query?.id)}
       />
-      <ConfigureForm strategy={data.vault} configureStrategyInitialValues={configureStrategyInitialValues} />
+      <ConfigureForm strategy={data} configureStrategyInitialValues={configureStrategyInitialValues} />
     </NewStrategyModal>
   );
 }
