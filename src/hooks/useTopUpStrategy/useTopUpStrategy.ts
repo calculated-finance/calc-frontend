@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { Strategy } from '@models/Strategy';
-import { useCalcClient } from '@hooks/useCalcClient';
+import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useChain } from '../useChain';
 
 type TopUpVariables = {
@@ -16,7 +16,7 @@ type TopUpVariables = {
 
 const useTopUpStrategy = () => {
   const { chain } = useChain();
-  const client = useCalcClient(chain);
+  const client = useCalcSigningClient(chain);
   const { address } = useWallet();
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(

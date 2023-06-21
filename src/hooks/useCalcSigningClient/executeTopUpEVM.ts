@@ -1,8 +1,5 @@
-import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
-import { DenomInfo } from '@utils/DenomInfo';
 import { ethers } from 'ethers';
 import vaultContractJson from 'src/Vault.json';
-import { Chains } from '../useChain/Chains';
 
 type VaultContract = {
   deposit: (value: ethers.BigNumberish) => Promise<ethers.ContractTransaction>;
@@ -19,7 +16,7 @@ export async function executeTopUpEVM(
   strategyId: string,
   topUpAmount: number,
 ) {
-  const vaultContract = new ethers.Contract(strategyId, vaultContractJson.abi, provider);
+  const vaultContract = getVaultContract(provider, strategyId);
 
   const contractWithSigner = vaultContract.connect(signer);
 
