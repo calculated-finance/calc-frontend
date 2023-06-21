@@ -22,17 +22,18 @@ import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
 import { featureFlags } from 'src/constants';
+import usePrice from '@hooks/usePrice';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-
+  const transactionType = TransactionType;
   const { dexFee } = useDexFee(
     initialDenom,
     resultingDenom,
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
+    isBuyStrategy(strategy) ? transactionType.Buy : transactionType.Sell,
   );
 
   const id = getStrategyReinvestStrategyId(strategy);
@@ -40,6 +41,11 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const linkedToStrategy = data;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
+
+  const { price: stableCoinPrice } = usePrice(resultingDenom, initialDenom, TransactionType.Sell);
+
+  console.log(initialDenomPrice, resultingDenomPrice);
+  console.log(initialDenom);
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (
@@ -149,6 +155,57 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </Flex>
         )}
       </GridItem>
+
+      {isBuyStrategy(strategy) && initialDenom.stable ? (
+        <>
+          <GridItem colSpan={1}>
+            <Heading size="xs">
+              <Text fontSize="sm">
+                {getDenomName(resultingDenom)} price ({resultingDenom.name})
+              </Text>
+            </Heading>
+          </GridItem>
+          <GridItem colSpan={1}>
+            {isNil(priceChange) ? (
+              <Spinner size="xs" />
+            ) : (
+              <Flex>
+                <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
+                  <Text fontSize="sm" data-testid="strategy-asset-price">
+                    ${Number(stableCoinPrice).toFixed(2)} {initialDenom.name}
+                  </Text>
+                </HStack>
+              </Flex>
+            )}
+          </GridItem>
+        </>
+      ) : (
+        !isBuyStrategy(strategy) &&
+        resultingDenom.stable && (
+          <>
+            <GridItem colSpan={1}>
+              <Heading size="xs">
+                <Text fontSize="sm">
+                  {getDenomName(initialDenom)} price ({resultingDenom.name})
+                </Text>
+              </Heading>
+            </GridItem>
+            <GridItem colSpan={1}>
+              {isNil(priceChange) ? (
+                <Spinner size="xs" />
+              ) : (
+                <Flex>
+                  <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
+                    <Text fontSize="sm" data-testid="strategy-asset-price">
+                      ${Number(stableCoinPrice).toFixed(2)} {resultingDenom.name}
+                    </Text>
+                  </HStack>
+                </Flex>
+              )}
+            </GridItem>
+          </>
+        )
+      )}
 
       <GridItem colSpan={1}>
         <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Profit taken'}</Heading>
