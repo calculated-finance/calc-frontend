@@ -2,12 +2,12 @@ import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChain } from './useChain';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useCalcClient } from './useCalcClient';
+import { useChainClient } from './useChainClient';
 
 const useBalances = () => {
   const { address } = useWallet();
   const { chain } = useChain();
-  const client = useCalcClient(chain);
+  const client = useChainClient(chain);
   const supportedDenoms = useSupportedDenoms();
 
   return useQueryWithNotification(
