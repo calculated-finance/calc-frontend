@@ -44,8 +44,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
 
   const { price: stableCoinPrice } = usePrice(resultingDenom, initialDenom, TransactionType.Sell);
 
-  console.log(initialDenomPrice, resultingDenomPrice);
-  console.log(initialDenom);
+  console.log(resultingDenomPrice);
+  console.log(getAveragePurchasePrice(strategy, dexFee));
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (
@@ -64,6 +64,12 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenomPrice,
     dexFee,
   );
+
+  //////////////////////
+  // show average token cost and average sell in stable coins
+  // so for now we just need to show in sell scenarios
+  // also apply to dca+
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1}>
@@ -120,6 +126,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
             ? formatFiat(getAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
+            : !isBuyStrategy(strategy) && resultingDenom.stable
+            ? formatFiat(getAverageSellPrice(strategy, dexFee), getStrategyResultingDenom(strategy).name)
             : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
@@ -161,7 +169,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           <GridItem colSpan={1}>
             <Heading size="xs">
               <Text fontSize="sm">
-                {getDenomName(resultingDenom)} price ({resultingDenom.name})
+                {getDenomName(resultingDenom)} price ({initialDenom.name})
               </Text>
             </Heading>
           </GridItem>
