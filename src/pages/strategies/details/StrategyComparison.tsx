@@ -14,7 +14,7 @@ import {
 } from '@helpers/strategy/dcaPlus';
 import { formatFiat } from '@helpers/format/formatFiat';
 import useFiatPrice from '@hooks/useFiatPrice';
-import  {
+import {
   getStrategyBalance,
   getStrategyResultingDenom,
   getStrategyInitialDenom,
@@ -47,7 +47,7 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
-          {standardDcaEndDate && differenceInDays(standardDcaEndDate, new Date())}
+          {isStrategyOperating(strategy) && standardDcaEndDate ? differenceInDays(standardDcaEndDate, new Date()) : 0}
         </Text>
       </GridItem>
     </>
