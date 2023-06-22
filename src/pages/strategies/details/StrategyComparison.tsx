@@ -136,6 +136,8 @@ function StrategyComparisonDetails({
         <Text fontSize="sm" as="span">
           {isBuyStrategy(strategy)
             ? formatFiat(getAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
+            : !isBuyStrategy(strategy) && resultingDenom.stable
+            ? formatFiat(getAverageSellPrice(strategy, dexFee), getStrategyResultingDenom(strategy).name)
             : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
@@ -143,6 +145,8 @@ function StrategyComparisonDetails({
         <Text fontSize="sm" as="span" color="grey.200">
           {isBuyStrategy(strategy)
             ? formatFiat(getStandardDcaAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
+            : !isBuyStrategy(strategy) && resultingDenom.stable
+            ? formatFiat(getStandardDcaAverageSellPrice(strategy, dexFee), getStrategyResultingDenom(strategy).name)
             : formatFiat(getStandardDcaAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>

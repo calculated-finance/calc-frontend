@@ -22,7 +22,6 @@ import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
 import { featureFlags } from 'src/constants';
-import usePrice from '@hooks/usePrice';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
@@ -41,11 +40,6 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const linkedToStrategy = data;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
-
-  const { price: stableCoinPrice } = usePrice(resultingDenom, initialDenom, TransactionType.Sell);
-
-  console.log(resultingDenomPrice);
-  console.log(getAveragePurchasePrice(strategy, dexFee));
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (
