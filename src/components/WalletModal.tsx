@@ -24,6 +24,7 @@ import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
+import { Chains } from '@hooks/useChain/Chains';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -144,7 +145,7 @@ function WalletModal() {
                     walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
-                {isAdminPage && (
+                {(chain === Chains.Moonbeam || isAdminPage) && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}
                     name="Metamask"

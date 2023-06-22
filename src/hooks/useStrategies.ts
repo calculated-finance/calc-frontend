@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useMetamask } from '@hooks/useMetamask';
-import { fetchStrategyEVM } from '@hooks/useCalcClient/fetchStrategy';
 import { ethers } from 'ethers';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { Vault as VaultOsmosis } from 'src/interfaces/generated-osmosis/response/get_vault';
@@ -12,6 +11,7 @@ import factoryContractJson from 'src/interfaces/evm/Factory.json';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useChain } from './useChain';
 import { Strategy } from '../models/Strategy';
+import { fetchStrategyEVM } from './useCalcClient/getClient/clients/evm';
 
 const QUERY_KEY = 'get_vaults_by_address';
 

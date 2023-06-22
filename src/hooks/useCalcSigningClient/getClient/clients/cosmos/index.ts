@@ -3,9 +3,9 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { getStrategyInitialDenom } from '@helpers/strategy';
-import { Chains } from '../useChain/Chains';
+import { Chains } from '@hooks/useChain/Chains';
 
-export function executeTopUpCosmos(
+function executeTopUpCosmos(
   address: string,
   client: SigningCosmWasmClient,
   chain: Chains,
@@ -28,4 +28,11 @@ export function executeTopUpCosmos(
 
   const result = client.execute(address, getChainContractAddress(chain), msg, 'auto', undefined, funds);
   return result;
+}
+
+export function getCosmosSigningClient(cosmSigner: SigningCosmWasmClient, chain: Chains) {
+  return {
+    topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
+      executeTopUpCosmos(address, cosmSigner, chain, strategy, topUpAmount),
+  };
 }
