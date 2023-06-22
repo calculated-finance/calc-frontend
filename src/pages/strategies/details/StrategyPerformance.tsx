@@ -65,11 +65,6 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     dexFee,
   );
 
-  //////////////////////
-  // show average token cost and average sell in stable coins
-  // so for now we just need to show in sell scenarios
-  // also apply to dca+
-
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1}>
@@ -163,57 +158,6 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </Flex>
         )}
       </GridItem>
-
-      {isBuyStrategy(strategy) && initialDenom.stable ? (
-        <>
-          <GridItem colSpan={1}>
-            <Heading size="xs">
-              <Text fontSize="sm">
-                {getDenomName(resultingDenom)} price ({initialDenom.name})
-              </Text>
-            </Heading>
-          </GridItem>
-          <GridItem colSpan={1}>
-            {isNil(priceChange) ? (
-              <Spinner size="xs" />
-            ) : (
-              <Flex>
-                <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
-                  <Text fontSize="sm" data-testid="strategy-asset-price">
-                    ${Number(stableCoinPrice).toFixed(2)} {initialDenom.name}
-                  </Text>
-                </HStack>
-              </Flex>
-            )}
-          </GridItem>
-        </>
-      ) : (
-        !isBuyStrategy(strategy) &&
-        resultingDenom.stable && (
-          <>
-            <GridItem colSpan={1}>
-              <Heading size="xs">
-                <Text fontSize="sm">
-                  {getDenomName(initialDenom)} price ({resultingDenom.name})
-                </Text>
-              </Heading>
-            </GridItem>
-            <GridItem colSpan={1}>
-              {isNil(priceChange) ? (
-                <Spinner size="xs" />
-              ) : (
-                <Flex>
-                  <HStack color={priceChange > 0 ? 'green.200' : 'red.200'} whiteSpace="nowrap">
-                    <Text fontSize="sm" data-testid="strategy-asset-price">
-                      ${Number(stableCoinPrice).toFixed(2)} {resultingDenom.name}
-                    </Text>
-                  </HStack>
-                </Flex>
-              )}
-            </GridItem>
-          </>
-        )
-      )}
 
       <GridItem colSpan={1}>
         <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Profit taken'}</Heading>
