@@ -180,23 +180,38 @@ function usePairsCosmos(config: Config | undefined) {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
 
-  const queryResult = useQuery<PairsResponseV3>(
-    ['pairs-cosmos', client],
-    async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(chain), {
-        get_pairs: {},
+  function fetchPairsRecursively(startAfter = null, allPairs = [] as V3Pair[]): Promise<V3Pair[]> {
+    return client!
+      .queryContractSmart(getChainContractAddress(chain), {
+        get_pairs: {
+          limit: GET_PAIRS_LIMIT,
+          start_after: startAfter,
+        },
+      })
+      .then((result) => {
+        allPairs.push(...result.pairs);
+
+        if (result.pairs.length === GET_PAIRS_LIMIT) {
+          const newStartAfter = result.pairs[result.pairs.length - 1];
+          return fetchPairsRecursively(newStartAfter, allPairs);
+        }
+        return allPairs;
       });
-      return result;
-    },
-    {
-      enabled: !!client && !!config && !!config.exchange_contract_address && !!chain,
-    },
-  );
+  }
+
+  const queryResult = useQuery<V3Pair[]>(['pairs-cosmos', client], () => fetchPairsRecursively(), {
+    enabled: !!client && !!config && !!config?.exchange_contract_address && !!chain,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return {
     ...queryResult,
     data: {
-      pairs: queryResult.data?.pairs.filter(isPairVisible),
+      pairs: queryResult.data?.filter((pair) =>
+        isPairVisible({
+          denoms: pair.denoms,
+        }),
+      ),
     },
     meta: {
       errorMessage: 'Error fetching pairs',
