@@ -4,7 +4,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import * as Sentry from '@sentry/react';
 import { ETH_DCA_FACTORY_CONTRACT_ADDRESS } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import factoryContractJson from 'src/interfaces/evm/Factory.json';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
@@ -18,7 +18,7 @@ export function useMoonbeamCreateVault(state: DcaInFormDataAll | undefined) {
 
   return useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
     async ({ price }) => {
-      const factoryContract = new ethers.Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
+      const factoryContract = new Contract(ETH_DCA_FACTORY_CONTRACT_ADDRESS, factoryContractJson.abi, provider);
 
       const contractWithSigner = factoryContract.connect(signer);
 

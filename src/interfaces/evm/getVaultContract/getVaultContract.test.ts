@@ -1,4 +1,4 @@
-import { ContractRunner, ethers } from 'ethers';
+import { ContractRunner, Contract } from 'ethers';
 import vaultContractJson from '../Vault.json';
 import getVaultContract from './getVaultContract';
 
@@ -9,7 +9,7 @@ describe('getVaultContract', () => {
 
   beforeEach(() => {
     mockContractRunner = {} as ContractRunner;
-    (ethers.Contract as jest.Mock).mockClear();
+    (Contract as jest.Mock).mockClear();
   });
 
   it('should create and return an ethers contract with the correct parameters', () => {
@@ -17,6 +17,6 @@ describe('getVaultContract', () => {
 
     getVaultContract(mockContractRunner, strategyId);
 
-    expect(ethers.Contract).toHaveBeenCalledWith(strategyId, vaultContractJson.abi, mockContractRunner);
+    expect(Contract).toHaveBeenCalledWith(strategyId, vaultContractJson.abi, mockContractRunner);
   });
 });
