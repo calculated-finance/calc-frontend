@@ -12,6 +12,7 @@ import {
   HStack,
   Divider,
   Wrap,
+  Spacer,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -27,9 +28,11 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { motion } from 'framer-motion';
 
 import { useStrategies } from '@hooks/useStrategies';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 
 function InfoPanel() {
   return (
@@ -210,13 +213,13 @@ function TotalInvestment() {
           </Heading>
         </Stack>
       </Flex>
-      {!connected && chain === Chains.Kujira && (
+      {/* {!connected && chain === Chains.Kujira && (
         <LinkWithQuery href="/how-it-works">
           <Button w={44} variant="outline" colorScheme="blue">
             Learn how CALC works
           </Button>
         </LinkWithQuery>
-      )}
+      )} */}
       {!connected && chain === Chains.Osmosis && (
         <LinkWithQuery href="/create-strategy">
           <Button w={44} variant="outline" colorScheme="blue">
@@ -228,19 +231,70 @@ function TotalInvestment() {
   );
 }
 
-function WorkflowInformation() {
+// function WorkflowInformation() {
+//   return (
+//     <Center p={8}>
+//       <Flex direction="column">
+//         <Stack spacing={2} pb={8} textAlign="center" px={{ lg: 20 }}>
+//           <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
+//           <Text fontSize="md">Recurring payments means no stress. Set &amp; forget.</Text>
+//         </Stack>
+//         <Flex w="full" justifyContent="center">
+//           <Image src="/images/workflow.svg" />
+//         </Flex>
+//       </Flex>
+//     </Center>
+//   );
+// }
+
+const shakeVariants = {
+  initial: {
+    rotate: 0,
+  },
+  shake: {
+    rotate: [-2.5, 2.5, -2.5, 2.5, 0],
+    transition: {
+      delay: 5,
+      duration: 0.7,
+      loop: 3,
+    },
+  },
+};
+
+function LearnAboutCalc() {
   return (
-    <Center p={8}>
-      <Flex direction="column">
-        <Stack spacing={2} pb={8} textAlign="center" px={{ lg: 20 }}>
-          <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
-          <Text fontSize="md">Recurring payments means no stress. Set &amp; forget.</Text>
-        </Stack>
-        <Flex w="full" justifyContent="center">
-          <Image src="/images/workflow.svg" />
-        </Flex>
+    <motion.div variants={shakeVariants} initial="initial" animate="shake">
+      <Flex
+        layerStyle="panel"
+        p={8}
+        alignItems="center"
+        borderColor="green.400"
+        borderWidth={2}
+        backgroundImage="/images/backgrounds/twist-thin.svg"
+      >
+        <Box>
+          <Stack spacing={4}>
+            <HStack>
+              <Heading data-testid="active-strategy-count" size="lg">
+                New to CALC?
+              </Heading>
+              <Spacer />
+              <Image src="images/learn.svg" alt="learn-icon" boxSize={6} p={0} />
+            </HStack>
+            <Heading data-testid="active-strategy-count" fontSize="md">
+              Get to know more about our extensive suite of DeFi products.
+            </Heading>
+            <Stack direction={{ base: 'column', sm: 'row' }}>
+              <LinkWithQuery href="/how-it-works">
+                <Button w={44} variant="outline" colorScheme="blue">
+                  Learn how CALC works
+                </Button>
+              </LinkWithQuery>
+            </Stack>
+          </Stack>{' '}
+        </Box>
       </Flex>
-    </Center>
+    </motion.div>
   );
 }
 
@@ -261,15 +315,25 @@ function HomeGrid() {
       )}
 
       <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
-      {connected && (
+      {connected && activeStrategies.length ? (
         <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
           <ActiveStrategies strategies={strategies} isLoading={isLoading} />
         </GridItem>
+      ) : (
+        ''
       )}
+
+      {/* Below we will add the CTA to learn more about CALC  */}
+      {(!activeStrategies.length || !connected) && (
+        <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
+          <LearnAboutCalc />
+        </GridItem>
+      )}
+
       <GridItem colSpan={{ base: 6, xl: 3 }}>{chain !== Chains.Moonbeam && <TotalInvestment />}</GridItem>
-      <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
+      {/* <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
         <WorkflowInformation />
-      </GridItem>
+      </GridItem> */}
     </Grid>
   );
 }
