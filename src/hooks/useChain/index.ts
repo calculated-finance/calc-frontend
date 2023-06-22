@@ -80,12 +80,13 @@ export const useChain = () => {
 
   const setChain = useCallback(
     (newChain: Chains) => {
+      if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
       useCosmWasmClient.setState({ client: null });
       updateStores(newChain);
       updateQueryParam(newChain);
     },
-    [updateQueryParam, updateStores],
+    [updateQueryParam, updateStores, chain],
   );
 
   useEffect(() => {
