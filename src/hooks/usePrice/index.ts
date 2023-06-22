@@ -94,18 +94,6 @@ function usePriceKujira(
     },
   );
 
-  const osmosisPrice = usePriceOsmosis(
-    resultingDenom,
-    initialDenom,
-    transactionType,
-    chain === Chains.Osmosis && enabled,
-  );
-
-  if (chain === Chains.Osmosis) {
-    return osmosisPrice;
-  }
-
-  const price = data && calculatePrice(data, initialDenom!, transactionType);
   const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);
 
   const formattedPrice = data
