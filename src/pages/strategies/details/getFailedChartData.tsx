@@ -55,7 +55,9 @@ export function getFailedChartDataSwaps(
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
     const currentDisplayPriceInTime = findCurrentPriceInTime(date, displayPrices);
-
+    if (!currentDisplayPriceInTime) {
+      return null;
+    }
     return {
       date,
       marketValue: 0,
