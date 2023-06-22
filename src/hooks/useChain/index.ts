@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { ParsedUrlQuery } from 'querystring';
 import { Chains } from './Chains';
 
 type ChainState = {
@@ -23,9 +24,35 @@ export const useChainStore = create<ChainState>()(
   ),
 );
 
+function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
+  // get chain from query
+  const { chain } = query;
+
+  // if chain is not defined, return undefined
+  if (!chain) {
+    return {};
+  }
+
+  // if chain is defined, check if it is a valid chain
+  if (Object.values(Chains).includes(chain as Chains)) {
+    return { chain: chain as Chains };
+  }
+  // check if chain starts with a valid chain
+  const filteredChainName = Object.values(Chains).find((c) =>
+    // check if c starts with chain
+    (chain as string).startsWith(c as string),
+  );
+
+  if (filteredChainName) {
+    return { chain: filteredChainName, wasFiltered: true };
+  }
+
+  return {};
+}
+
 export const useChain = () => {
   const router = useRouter();
-  const { chain } = useMemo(() => router.query, [router.query]);
+  const { chain, wasFiltered } = useMemo(() => getChainNameFromRouterQuery(router.query), [router.query]);
   const storedChain = useChainStore((state) => state.chain);
   const setStoredChain = useChainStore((state) => state.setChain);
 
@@ -42,19 +69,34 @@ export const useChain = () => {
     [router],
   );
 
-  const setChain = useCallback(
+  const updateStores = useCallback(
     (newChain: Chains) => {
       useFormStore.setState({ forms: {} });
       useCosmWasmClient.setState({ client: null });
       setStoredChain(newChain);
+    },
+    [setStoredChain],
+  );
+
+  const setChain = useCallback(
+    (newChain: Chains) => {
+      useFormStore.setState({ forms: {} });
+      useCosmWasmClient.setState({ client: null });
+      updateStores(newChain);
       updateQueryParam(newChain);
     },
-    [setStoredChain, updateQueryParam],
+    [updateQueryParam, updateStores],
   );
 
   useEffect(() => {
     if (router.isReady) {
       if (chain) {
+        if (storedChain !== chain) {
+          updateStores(chain);
+        }
+        if (wasFiltered) {
+          updateQueryParam(chain);
+        }
         setData({ chain: chain as Chains, setChain });
       } else if (storedChain) {
         updateQueryParam(storedChain);
@@ -62,7 +104,7 @@ export const useChain = () => {
       }
       setIsLoading(false);
     }
-  }, [router.isReady, setChain, chain, updateQueryParam, storedChain]);
+  }, [router.isReady, setChain, chain, updateQueryParam, storedChain, updateStores, wasFiltered]);
 
   return { ...(data as ChainState), isLoading };
 };
