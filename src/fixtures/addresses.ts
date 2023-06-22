@@ -96,6 +96,8 @@ const addresses: Record<string, Record<string, string>> = {
       'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
     'ibc/DA59C009A0B3B95E0549E6BF7B075C8239285989FF457A8EDDBB56F10B2A6986ukuji':
       'kujira1xqhakgvn3jeqfade0z4aufer9xylx7ft45fgyhg6z75mauhkjwks9cucyq',
+    'factory/kujira1643jxg8wasy5cfcn7xm8rd742yeazcksqlg4d7/umntaukuji':
+      'kujira1nkgq8xl4flsau7v3vphr3ayc7tprgazg6pzjmq8plkr76v385fhsx26qfa',
   },
 };
 
