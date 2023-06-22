@@ -26,13 +26,15 @@ import {
   isStrategyOperating,
   isStrategyCancelled,
 } from '@helpers/strategy';
-import { differenceInDays } from 'date-fns';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
 
 function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
   const standardDcaEndDate = getStandardDcaEndDate(strategy, strategyEvents);
+  const remainingDays =
+    Number(getRemainingExecutionsRange(strategy).max) - Number(getRemainingExecutionsRange(strategy).min);
+
   return (
     <>
       <GridItem colSpan={1}>
@@ -47,7 +49,7 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
-          {isStrategyOperating(strategy) && standardDcaEndDate ? differenceInDays(standardDcaEndDate, new Date()) : 0}
+          {Math.max(remainingDays, 0) ? remainingDays : 0}
         </Text>
       </GridItem>
     </>
