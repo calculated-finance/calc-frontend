@@ -6,8 +6,8 @@ import getClient from '.';
 import getCosmosClient from './clients/cosmos';
 import getEVMClient from './clients/evm';
 
-jest.mock('../getEVMClient');
-jest.mock('../getCosmosClient');
+jest.mock('./clients/evm/');
+jest.mock('./clients/cosmos/');
 jest.mock('@helpers/chains');
 
 describe('getClient', () => {
