@@ -20,45 +20,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useRouter } from 'next/router';
 
-
-export function ChainCards({onChainSelect}: { onChainSelect: (chain: Chains) => void }) {
-  const chains = [
-    { id: Chains.Kujira, name: 'Kujira', imageSrc: '/images/denoms/kuji.svg' },
-    { id: Chains.Osmosis, name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg' },
-  ];
-
-  return (
-
-      <Wrap justify="center" >
-        {chains.map((chain) => (
-          <WrapItem>
-            <Flex alignItems="center" justifyContent="center"
-              key={chain.id}
-              w={32}
-              h={32}
-              p={2}
-              bg="abyss.200"
-              borderRadius="md"
-              cursor="pointer"
-              onClick={() => onChainSelect(chain.id)}
-              _hover={{
-                borderWidth:1,
-                borderColor: 'blue.200',
-              }}
-              >
-              <Flex direction="column" align="center">
-                <Image src={chain.imageSrc} w={10} />
-                <Text mt={2} fontSize="sm">
-                  {chain.name}
-                </Text>
-              </Flex>
-            </Flex>
-          </WrapItem>
-        ))}
-      </Wrap>
-  );
-}
-
 const chainSelectionAllowedUrls = [
   '/',
   '/strategies',
