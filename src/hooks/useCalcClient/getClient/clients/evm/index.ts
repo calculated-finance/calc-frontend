@@ -1,9 +1,10 @@
 import { Strategy } from '@models/Strategy';
 import { BrowserProvider, formatEther, formatUnits, parseEther } from 'ethers';
-import getVaultContract from 'src/interfaces/evm/getVaultContract';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import getEventManagerContract from 'src/interfaces/evm/getEventManagerContract';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
+import getFactoryContract from 'src/interfaces/evm/getFactoryContract';
+import getVaultContract from 'src/interfaces/evm/getVaultContract/getVaultContract';
 import { transformToStrategy } from './transformToStrategy';
 
 export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
@@ -68,9 +69,21 @@ export async function fetchStrategyEvents(id: string, provider: BrowserProvider)
   return transformedEvents;
 }
 
+async function fetchStrategies(userAddress: string, provider: BrowserProvider): Promise<Strategy[]> {
+  const factoryContract = getFactoryContract(provider);
+
+  const result = await factoryContract
+    .getVaultsByAddress(userAddress)
+    .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategyEVM(id, provider))));
+
+  console.log(result);
+  return result as Strategy[];
+}
+
 export default function getEVMClient(evmProvider: BrowserProvider) {
   return {
     fetchStrategy: (id: string) => fetchStrategyEVM(id, evmProvider),
     fetchStrategyEvents: (id: string) => fetchStrategyEvents(id, evmProvider),
+    fetchStrategies: (userAddress: string) => fetchStrategies(userAddress, evmProvider),
   };
 }

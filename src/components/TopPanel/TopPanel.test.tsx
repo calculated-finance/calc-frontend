@@ -5,15 +5,14 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
-import { useStrategiesCosmos } from '@hooks/useStrategies';
+import { useStrategies } from '@hooks/useStrategies';
 import TopPanel from './TopPanel';
-
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/',
-  query: {  chain: Chains.Kujira },
+  query: { chain: Chains.Kujira },
   events: {
     on: jest.fn(),
   },
@@ -30,10 +29,9 @@ jest.mock('next/router', () => ({
 jest.mock('@hooks/useWallet');
 jest.mock('@hooks/useStrategies');
 
-
 describe('top panel', () => {
   beforeEach(() => {
-    (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
+    (useStrategies as jest.Mock).mockImplementation(() => ({
       isLoading: false,
     }));
   });
@@ -46,7 +44,7 @@ describe('top panel', () => {
     });
     describe('when a user has no strategies set', () => {
       beforeEach(() => {
-        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
+        (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
         }));
       });
@@ -63,8 +61,8 @@ describe('top panel', () => {
     });
     describe('when a user has only completed strategies', () => {
       beforeEach(() => {
-        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
-          data:  [{ id: 1, status: 'inactive' }],
+        (useStrategies as jest.Mock).mockImplementation(() => ({
+          data: [{ id: 1, status: 'inactive' }],
           isLoading: false,
         }));
       });
@@ -82,8 +80,8 @@ describe('top panel', () => {
     });
     describe('when a single strategy is set', () => {
       beforeEach(() => {
-        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
-          data:  [{ id: 1, status: 'active' }],
+        (useStrategies as jest.Mock).mockImplementation(() => ({
+          data: [{ id: 1, status: 'active' }],
           isLoading: false,
         }));
       });
@@ -101,11 +99,11 @@ describe('top panel', () => {
     });
     describe('when multiple strategies are set', () => {
       beforeEach(() => {
-        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
-          data:  [
-              { id: 1, status: 'active' },
-              { id: 2, status: 'active' },
-            ],
+        (useStrategies as jest.Mock).mockImplementation(() => ({
+          data: [
+            { id: 1, status: 'active' },
+            { id: 2, status: 'active' },
+          ],
           isLoading: false,
         }));
       });

@@ -42,7 +42,7 @@ import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategiesCosmos } from '@hooks/useStrategies';
+import { useStrategies } from '@hooks/useStrategies';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -156,9 +156,10 @@ export function Reinvest({ resultingDenom }: { resultingDenom: DenomInfo }) {
     onChange: helpers.setValue,
   });
 
-  const { data, isLoading } = useStrategiesCosmos();
+  const { data, isLoading } = useStrategies();
 
-  const filteredStrategies = data?.sort((a, b) => Number(b.id) - Number(a.id))
+  const filteredStrategies = data
+    ?.sort((a, b) => Number(b.id) - Number(a.id))
     .filter((strategy: Strategy) => {
       if (getStrategyInitialDenom(strategy).id !== resultingDenom.id) {
         return false;

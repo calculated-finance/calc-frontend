@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
-import { useStrategiesCosmos } from '@hooks/useStrategies';
+import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { dcaInStrategy } from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
@@ -46,7 +46,7 @@ async function renderTarget() {
 
 describe('Home', () => {
   beforeEach(() => {
-    (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
+    (useStrategies as jest.Mock).mockImplementation(() => ({
       isLoading: false,
     }));
     (useWallet as jest.Mock).mockImplementation(() => ({
@@ -92,7 +92,7 @@ describe('Home', () => {
     });
     describe('when active strategies exist', () => {
       beforeEach(() => {
-        (useStrategiesCosmos as jest.Mock).mockImplementation(() => ({
+        (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
           data: [mockStrategy(), mockStrategy({ status: 'inactive' })],
         }));

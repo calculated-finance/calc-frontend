@@ -4,8 +4,12 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 
-async function fetchStrategy(client: CosmWasmClient, address: string, id: string | undefined): Promise<Strategy> {
-  const result = (await client.queryContractSmart(address, {
+async function fetchStrategy(
+  client: CosmWasmClient,
+  contractAddress: string,
+  id: string | undefined,
+): Promise<Strategy> {
+  const result = (await client.queryContractSmart(contractAddress, {
     get_vault: {
       vault_id: id,
     },
@@ -16,10 +20,10 @@ async function fetchStrategy(client: CosmWasmClient, address: string, id: string
 
 export const GET_EVENTS_LIMIT = 400;
 
-async function fetchStrategyEvents(client: CosmWasmClient, address: string, id: string | undefined) {
+async function fetchStrategyEvents(client: CosmWasmClient, contractAddress: string, id: string | undefined) {
   function fetchEventsRecursively(startAfter = null, allEvents = [] as StrategyEvent[]): Promise<StrategyEvent[]> {
     return client
-      .queryContractSmart(address, {
+      .queryContractSmart(contractAddress, {
         get_events_by_resource_id: {
           resource_id: id,
           limit: GET_EVENTS_LIMIT,
@@ -43,9 +47,20 @@ async function fetchStrategyEvents(client: CosmWasmClient, address: string, id: 
   return fetchEventsRecursively();
 }
 
-export default function getCosmosClient(address: string, cosmClient: CosmWasmClient) {
+async function fetchStrategies(client: CosmWasmClient, contractAddress: string, userAddress: string) {
+  const result = await client.queryContractSmart(contractAddress, {
+    get_vaults_by_address: {
+      address: userAddress,
+      limit: 1000,
+    },
+  });
+  return result?.vaults as Strategy[];
+}
+
+export default function getCosmosClient(contractAddress: string, cosmClient: CosmWasmClient) {
   return {
-    fetchStrategy: (id: string) => fetchStrategy(cosmClient, address, id),
-    fetchStrategyEvents: (id: string) => fetchStrategyEvents(cosmClient, address, id),
+    fetchStrategy: (id: string) => fetchStrategy(cosmClient, contractAddress, id),
+    fetchStrategyEvents: (id: string) => fetchStrategyEvents(cosmClient, contractAddress, id),
+    fetchStrategies: (userAddress: string) => fetchStrategies(cosmClient, contractAddress, userAddress),
   };
 }

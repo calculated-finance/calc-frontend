@@ -10,13 +10,11 @@ import {
   StrategyAccordionPanel,
   StrategyAccordion,
 } from '@components/StrategyAccordion';
-import { useStrategiesCosmos, useStrategiesEVM } from '@hooks/useStrategies';
-import { Strategy } from '@models/Strategy';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useStrategies } from '@hooks/useStrategies';
 import { StrategyList } from './StrategyList';
 
-function StrategyAccordians({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
+function StrategyAccordians() {
+  const { data: strategies, isLoading } = useStrategies();
   const scheduledStrategies = strategies?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
 
   const activeStrategies = strategies?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
@@ -108,23 +106,6 @@ function StrategyAccordians({ strategies, isLoading }: { strategies: Strategy[] 
   );
 }
 
-function StrategiesCosmos() {
-  const { data, isLoading } = useStrategiesCosmos();
-
-  return <StrategyAccordians strategies={data} isLoading={isLoading} />;
-}
-
-function StrategiesEVM() {
-  const { data: strategies, isLoading } = useStrategiesEVM();
-
-  return <StrategyAccordians strategies={strategies} isLoading={isLoading} />;
-}
-
-function StrategyAccordiansWrapper() {
-  const { chain } = useChain();
-  return chain === Chains.Moonbeam ? <StrategiesEVM /> : <StrategiesCosmos />;
-}
-
 function Page() {
   const { connected } = useWallet();
 
@@ -134,7 +115,7 @@ function Page() {
         My CALC Strategies
       </Heading>
 
-      {!connected ? <ConnectWallet layerStyle="panel" /> : <StrategyAccordiansWrapper />}
+      {!connected ? <ConnectWallet layerStyle="panel" /> : <StrategyAccordians />}
     </>
   );
 }
