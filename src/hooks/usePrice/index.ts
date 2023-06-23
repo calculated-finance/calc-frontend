@@ -169,12 +169,8 @@ export default function usePrice(
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
-  const isV3Enabled = !!client && !!pair && !!config && !!config?.exchange_contract_address && enabled;
-
   const isV2Enabled =
     !!client && !!pair && chain === Chains.Kujira && !!config && !config?.exchange_contract_address && enabled;
-
-  const v3Price = usePriceV3(client, resultingDenom, initialDenom, pair as V3Pair, config, isV3Enabled);
 
   const kujiraPrice = usePriceKujira(
     client,
@@ -189,8 +185,8 @@ export default function usePrice(
     resultingDenom,
     initialDenom,
     transactionType,
-    chain === Chains.Osmosis && !!config && !config?.exchange_contract_address && enabled,
+    chain === Chains.Osmosis && enabled,
   );
 
-  return isV3Enabled ? v3Price : chain === Chains.Osmosis ? osmosisPrice : kujiraPrice;
+  return chain === Chains.Osmosis ? osmosisPrice : kujiraPrice;
 }
