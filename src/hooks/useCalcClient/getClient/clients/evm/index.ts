@@ -15,5 +15,6 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
 export default function getEVMClient(evmProvider: BrowserProvider) {
   return {
     fetchStrategy: (id: string) => fetchStrategyEVM(id, evmProvider),
+    fetchStrategyEvents: (id: string) => Promise.resolve([]),
   };
 }
