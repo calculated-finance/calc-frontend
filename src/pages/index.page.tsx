@@ -13,6 +13,7 @@ import {
   Divider,
   Wrap,
   Spacer,
+  VStack,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -32,7 +33,6 @@ import { motion } from 'framer-motion';
 
 import { useStrategies } from '@hooks/useStrategies';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
-import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 
 function InfoPanel() {
   return (
@@ -220,13 +220,13 @@ function TotalInvestment() {
           </Button>
         </LinkWithQuery>
       )} */}
-      {!connected && chain === Chains.Osmosis && (
+      {/* {!connected && chain === Chains.Osmosis && (
         <LinkWithQuery href="/create-strategy">
           <Button w={44} variant="outline" colorScheme="blue">
             Create a strategy
           </Button>
         </LinkWithQuery>
-      )}
+      )} */}
     </Stack>
   );
 }
@@ -247,53 +247,56 @@ function TotalInvestment() {
 //   );
 // }
 
-const shakeVariants = {
-  initial: {
-    rotate: 0,
-  },
-  shake: {
-    rotate: [-2.5, 2.5, -2.5, 2.5, 0],
-    transition: {
-      delay: 5,
-      duration: 0.7,
-      loop: 3,
-    },
-  },
-};
+// const shakeVariants = {
+//   initial: {
+//     rotate: 0,
+//   },
+//   shake: {
+//     rotate: [-2.5, 2.5, -2.5, 2.5, 0],
+//     transition: {
+//       delay: 5,
+//       duration: 0.7,
+//       loop: 3,
+//     },
+//   },
+// };
+
+// variants={shakeVariants}
 
 function LearnAboutCalc() {
   return (
-    <motion.div variants={shakeVariants} initial="initial" animate="shake">
-      <Flex
+    <motion.div initial="initial" animate="shake">
+      <VStack
         layerStyle="panel"
         p={8}
-        alignItems="center"
+        alignItems="left"
         borderColor="green.400"
         borderWidth={2}
         backgroundImage="/images/backgrounds/twist-thin.svg"
       >
-        <Box>
+        <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
+
+        <Flex>
           <Stack spacing={4}>
             <HStack>
               <Heading data-testid="active-strategy-count" size="lg">
                 New to CALC?
               </Heading>
               <Spacer />
-              <Image src="images/learn.svg" alt="learn-icon" boxSize={6} p={0} />
             </HStack>
             <Heading data-testid="active-strategy-count" fontSize="md">
               Get to know more about our extensive suite of DeFi products.
             </Heading>
             <Stack direction={{ base: 'column', sm: 'row' }}>
               <LinkWithQuery href="/how-it-works">
-                <Button w={44} variant="outline" colorScheme="blue">
+                <Button w={44} variant="outline" color="green.400">
                   Learn how CALC works
                 </Button>
               </LinkWithQuery>
             </Stack>
           </Stack>{' '}
-        </Box>
-      </Flex>
+        </Flex>
+      </VStack>
     </motion.div>
   );
 }
