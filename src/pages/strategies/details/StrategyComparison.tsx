@@ -33,7 +33,7 @@ import { StrategyComparisonCard } from './StrategyComparisonCard';
 
 function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
   const standardDcaEndDate = getStandardDcaEndDate(strategy, strategyEvents);
-  const remainingDays = standardDcaEndDate && differenceInDays(standardDcaEndDate, new Date());
+  const remainingDays = standardDcaEndDate && Math.max(differenceInDays(standardDcaEndDate, new Date()), 0);
 
   return (
     <>
@@ -49,7 +49,7 @@ function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strate
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" as="span" color="grey.200">
-          {remainingDays && Math.max(remainingDays, 0) && standardDcaEndDate ? remainingDays : 0}
+          {remainingDays}
         </Text>
       </GridItem>
     </>
