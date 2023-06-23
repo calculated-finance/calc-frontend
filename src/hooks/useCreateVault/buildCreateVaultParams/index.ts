@@ -74,7 +74,7 @@ export function getOsmosisReceiveAmount(
   const scalingFactor = 10 ** (resultingSF - initialSF);
   const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
 
-  return Math.floor(scaledReceiveAmount).toString();
+  return BigInt(Math.floor(scaledReceiveAmount)).toString();
 }
 
 export function getMinimumReceiveAmount(
@@ -253,6 +253,16 @@ export function buildWeightedScaleAdjustmentStrategy(
   currentPrice: number,
   chain: Chains,
 ) {
+  console.log(
+    getBaseReceiveAmount(
+      initialDenom,
+      swapAmount,
+      basePriceValue || currentPrice,
+      resultingDenom,
+      transactionType,
+      chain,
+    ),
+  );
   return {
     weighted_scale: {
       base_receive_amount: getBaseReceiveAmount(

@@ -128,7 +128,7 @@ function usePriceV3(
           period: config!.twap_period,
         },
       });
-      return result;
+      return result * 10 ** (resultingDenom!.significantFigures - initialDenom!.significantFigures);
     },
     {
       enabled,

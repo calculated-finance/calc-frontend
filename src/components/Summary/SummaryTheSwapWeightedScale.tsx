@@ -3,19 +3,13 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
-import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
-export function SummaryTheSwapWeightedScale({
-  state,
-}: {
-  state: WeightedScaleState;
-}) {
+export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
 
   const { transactionType } = useStrategyInfo();
@@ -23,15 +17,7 @@ export function SummaryTheSwapWeightedScale({
   const initialDenomInfo = useDenom(initialDenom);
   const resultingDenomInfo = useDenom(resultingDenom);
 
-  const { chain } = useChain();
-  const { formattedPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);
-  const { price: osmosisPrice } = usePriceOsmosis(
-    resultingDenomInfo,
-    initialDenomInfo,
-    transactionType,
-    chain === Chains.Osmosis,
-  );
-
+  const { formattedPrice, price: osmosisPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);
   const priceOfDenom = transactionType === 'buy' ? resultingDenomInfo : initialDenomInfo;
   const priceInDenom = transactionType === 'buy' ? initialDenomInfo : resultingDenomInfo;
 
