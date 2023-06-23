@@ -1,16 +1,13 @@
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { isNil } from 'lodash';
 
-export function getDcaPlusConfig(strategy: Strategy | StrategyOsmosis) {
-  const osmosisStrategy = strategy as StrategyOsmosis;
-
-  if (isNil(osmosisStrategy.performance_assessment_strategy) || isNil(osmosisStrategy.swap_adjustment_strategy)) {
+export function getDcaPlusConfig(strategy: Strategy) {
+  if (isNil(strategy.performance_assessment_strategy) || isNil(strategy.swap_adjustment_strategy)) {
     return null;
   }
 
   const { swap_adjustment_strategy, performance_assessment_strategy, deposited_amount, escrow_level, escrowed_amount } =
-    osmosisStrategy;
+    strategy;
 
   if ('risk_weighted_average' in swap_adjustment_strategy) {
     return {

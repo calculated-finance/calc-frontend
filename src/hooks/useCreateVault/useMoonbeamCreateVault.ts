@@ -43,7 +43,7 @@ export function useMoonbeamCreateVault(state: DcaInFormDataAll | undefined) {
         // },
       ];
 
-      const triggerCreationConditionType = 0; // when vault has funds
+      const triggerCreationConditionType = 3; // when vault has funds
       const performSwapConditionType = 0; // when vault has funds
       const finaliseVaultConditionType = 1; // when vault has no funds
       const finaliserType = 0;

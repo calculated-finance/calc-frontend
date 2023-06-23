@@ -13,7 +13,6 @@ import {
   Spinner,
   Code,
 } from '@chakra-ui/react';
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
@@ -35,7 +34,7 @@ import LinkWithQuery from '@components/LinkWithQuery';
 import { Chains } from '@hooks/useChain/Chains';
 import { truncate } from '@helpers/truncate';
 
-export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+export function ConfigureButton({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
   const { address } = useWallet();
   return (
@@ -51,7 +50,7 @@ export function ConfigureButton({ strategy }: { strategy: Strategy | StrategyOsm
   );
 }
 
-export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
+export function ReinvestDetails({ strategy }: { strategy: Strategy }) {
   const id = getStrategyReinvestStrategyId(strategy);
   const { data: reinvestStrategy } = useStrategy(id);
   const checkLoopedStrategy = reinvestStrategy && getStrategyReinvestStrategyId(reinvestStrategy);
@@ -96,7 +95,7 @@ export function ReinvestDetails({ strategy }: { strategy: StrategyOsmosis }) {
   );
 }
 
-export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOsmosis }) {
+export function ValidatorDetails({ strategy }: { strategy: Strategy }) {
   const validatorAddress = getStrategyValidatorAddress(strategy);
   const { validator, isLoading } = useValidator(validatorAddress);
 
@@ -121,7 +120,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy | StrategyOs
   );
 }
 
-export function DestinationDetails({ strategy, chain }: { strategy: Strategy | StrategyOsmosis; chain: Chains }) {
+export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: Chains }) {
   const { destinations } = strategy;
 
   const { address } = useWallet();
@@ -164,7 +163,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy | S
   }
 
   if (postSwapExecutionType === PostPurchaseOptions.Reinvest) {
-    return <ReinvestDetails strategy={strategy as StrategyOsmosis} />;
+    return <ReinvestDetails strategy={strategy} />;
   }
 
   if (destinations[0].address !== address) {

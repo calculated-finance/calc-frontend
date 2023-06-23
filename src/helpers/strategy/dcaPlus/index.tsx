@@ -15,7 +15,7 @@ import {
   hasSwapFees,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { DcaPlusPerformanceResponse } from '@hooks/useDcaPlusPerformance';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';

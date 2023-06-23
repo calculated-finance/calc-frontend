@@ -7,7 +7,6 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
 import useAdminStrategies from '@hooks/useAdminStrategies';
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
@@ -155,7 +154,7 @@ const timeIntervalMap: Record<any, (date: Date) => number> = {
   monthly: monthsUntil,
 };
 
-function getSwapCountForStrategyUntilDate(strategy: Strategy | StrategyOsmosis, date: Date) {
+function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
   // const timeFunction = timeIntervalMap[strategy.time_interval] || (() => 0);
   // return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
 

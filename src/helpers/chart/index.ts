@@ -1,5 +1,5 @@
 import { createDcaPlusSwapEvent, createTradSwapEvent, getCreationDate, SwapEvent } from '@helpers/strategyEvents';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 
 type AccumulatedSwapEvent = {
   time: Date;

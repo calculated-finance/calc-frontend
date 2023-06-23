@@ -19,7 +19,8 @@ import useStrategy from '@hooks/useStrategy';
 import { useRouter } from 'next/router';
 import { FiArrowLeft } from 'react-icons/fi';
 import { useWallet } from '@hooks/useWallet';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import useStrategyEvents from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import ConnectWallet from '@components/ConnectWallet';
 import { findLastIndex } from 'lodash';
 import {

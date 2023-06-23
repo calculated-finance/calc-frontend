@@ -1,6 +1,5 @@
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
@@ -39,7 +38,7 @@ export function getStrategyStatus(strategy: Strategy) {
   return strategy.status;
 }
 
-export function isStrategyOperating(strategy: Strategy | StrategyOsmosis) {
+export function isStrategyOperating(strategy: Strategy) {
   return ['active', 'scheduled'].includes(strategy.status);
 }
 
@@ -47,7 +46,7 @@ export function isStrategyActive(strategy: Strategy) {
   return ['active'].includes(strategy.status);
 }
 
-export function isStrategyScheduled(strategy: Strategy | StrategyOsmosis) {
+export function isStrategyScheduled(strategy: Strategy) {
   return ['scheduled'].includes(strategy.status);
 }
 
@@ -55,11 +54,11 @@ export function isStrategyCompleted(strategy: Strategy) {
   return ['inactive'].includes(strategy.status);
 }
 
-export function isStrategyCancelled(strategy: Strategy | StrategyOsmosis) {
+export function isStrategyCancelled(strategy: Strategy) {
   return ['cancelled'].includes(strategy.status);
 }
 
-export function getStrategyBalance(strategy: Strategy | StrategyOsmosis) {
+export function getStrategyBalance(strategy: Strategy) {
   const { balance } = strategy || {};
 
   return convertDenomFromCoin(balance);
@@ -77,7 +76,7 @@ export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
   return getDenomInfo(strategy.received_amount.denom);
 }
 
-export function getStrategyExecutionIntervalData(strategy: Strategy | StrategyOsmosis): {
+export function getStrategyExecutionIntervalData(strategy: Strategy): {
   timeInterval: ExecutionIntervals;
   timeIncrement: number | undefined;
 } {
@@ -124,7 +123,7 @@ export function getStrategyExecutionIntervalData(strategy: Strategy | StrategyOs
   };
 }
 
-export function getStrategyExecutionInterval(strategy: Strategy | StrategyOsmosis) {
+export function getStrategyExecutionInterval(strategy: Strategy) {
   const { timeInterval, timeIncrement } = getStrategyExecutionIntervalData(strategy);
 
   if (timeIncrement) {
@@ -162,12 +161,12 @@ export function getSlippageToleranceFormatted(strategy: Strategy) {
   return slippageTolerance ? `${getSlippageTolerance(strategy)}%` : '-';
 }
 
-export function getSwapAmount(strategy: Strategy | StrategyOsmosis) {
+export function getSwapAmount(strategy: Strategy) {
   const { swap_amount } = strategy || {};
   return Number(swap_amount);
 }
 
-export function getConvertedSwapAmount(strategy: Strategy | StrategyOsmosis) {
+export function getConvertedSwapAmount(strategy: Strategy) {
   const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
@@ -186,7 +185,7 @@ export function getStrategyType(strategy: Strategy) {
   return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
 }
 
-export function getStrategyRemainingExecutions(strategy: Strategy | StrategyOsmosis) {
+export function getStrategyRemainingExecutions(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);
   const swapAmount = getConvertedSwapAmount(strategy);
 
@@ -268,7 +267,7 @@ export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pai
 }
 
 export function getStrategyEndDateFromRemainingExecutions(
-  strategy: Strategy | StrategyOsmosis,
+  strategy: Strategy,
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {

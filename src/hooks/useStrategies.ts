@@ -17,8 +17,6 @@ const QUERY_KEY = 'get_vaults_by_address';
 
 export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
 
-export type StrategyOsmosis = VaultOsmosis;
-
 export function useStrategiesCosmos() {
   const { address } = useWallet();
   const { chain } = useChain();

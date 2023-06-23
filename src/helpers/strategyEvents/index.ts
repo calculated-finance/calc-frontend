@@ -1,4 +1,4 @@
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 export type SwapEvent = {

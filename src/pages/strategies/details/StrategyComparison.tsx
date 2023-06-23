@@ -2,7 +2,8 @@ import { Heading, Grid, GridItem, Text, Divider, Flex, Center, Stack } from '@ch
 import { getDenomName } from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import Spinner from '@components/Spinner';
-import useStrategyEvents, { StrategyEvent } from '@hooks/useStrategyEvents';
+import useStrategyEvents from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import {
   getRemainingExecutionsRange,
   getStandardDcaEndDate,

@@ -1,4 +1,3 @@
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { mockTimeTrigger } from './trigger';
 
@@ -111,42 +110,3 @@ export const dcaPlusStrategy = {
     },
   },
 } as Strategy;
-
-export const osmosisStrategy = {
-  balance: {
-    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '10000000', // 10 DEMO
-  },
-  created_at: '0',
-  owner: 'kujiratestwallet',
-  deposited_amount: {
-    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '10000000', // 10 DEMO
-  },
-  destinations: [],
-  escrow_level: '0',
-  escrowed_amount: {
-    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '0',
-  },
-  id: '1',
-  label: null,
-  minimum_receive_amount: null,
-  performance_assessment_strategy: null,
-  received_amount: {
-    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '10000000', // 10 DEMO
-  },
-  slippage_tolerance: '0.01',
-  started_at: '1',
-  status: 'active',
-  swap_adjustment_strategy: null,
-  swap_amount: '1000',
-  swapped_amount: {
-    denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-    amount: '0',
-  },
-  target_denom: 'ukuji',
-  time_interval: 'daily',
-  trigger: null,
-} as StrategyOsmosis;
