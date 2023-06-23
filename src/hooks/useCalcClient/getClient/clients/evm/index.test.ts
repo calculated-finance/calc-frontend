@@ -1,6 +1,6 @@
 import { BrowserProvider } from 'ethers';
 import getVaultContract from 'src/interfaces/evm/getVaultContract';
-import { transformToStrategy } from './transformToStrategy';
+import { transformToStrategyEVM } from './transformToStrategy';
 import getEVMClient from '.';
 
 jest.mock('src/interfaces/evm/getVaultContract');
@@ -30,7 +30,7 @@ describe('EVMClient', () => {
 
       mockVaultContract.getConfig.mockResolvedValue(config);
       mockVaultContract.getBalance.mockResolvedValue(balance);
-      (transformToStrategy as jest.Mock).mockReturnValue(transformedStrategy);
+      (transformToStrategyEVM as jest.Mock).mockReturnValue(transformedStrategy);
 
       const evmClient = getEVMClient(mockProvider);
       const result = await evmClient.fetchStrategy(id);
@@ -38,7 +38,7 @@ describe('EVMClient', () => {
       expect(getVaultContract).toHaveBeenCalledWith(mockProvider, id);
       expect(mockVaultContract.getConfig).toHaveBeenCalled();
       expect(mockVaultContract.getBalance).toHaveBeenCalled();
-      expect(transformToStrategy).toHaveBeenCalledWith(config, balance, id);
+      expect(transformToStrategyEVM).toHaveBeenCalledWith(config, balance, id);
       expect(result).toEqual(transformedStrategy);
     });
 

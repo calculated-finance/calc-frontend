@@ -7,7 +7,7 @@ export function getDcaPlusConfig(strategy: Strategy) {
   }
 
   const { swap_adjustment_strategy, performance_assessment_strategy, deposited_amount, escrow_level, escrowed_amount } =
-    strategy;
+    strategy.rawData;
 
   if ('risk_weighted_average' in swap_adjustment_strategy) {
     return {

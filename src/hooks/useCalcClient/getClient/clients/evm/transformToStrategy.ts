@@ -1,12 +1,15 @@
 import { Strategy } from '@models/Strategy';
 import getDenomInfo from '@utils/getDenomInfo';
 import { formatEther } from 'ethers';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 
-export function transformToStrategy(result: any, balance: any, id: string) {
+export function transformToStrategyEVM(result: any, balance: any, id: string): Strategy {
   const { deconversion } = getDenomInfo(result.tokenIn);
 
+  const owner = result.owner as string;
+  const status = balance ? 'active' : 'inactive';
+
   const vaultRawData = {
-    status: balance ? 'active' : 'inactive',
     balance: {
       denom: result.tokenIn,
       amount: deconversion(Number(formatEther(balance))).toString(),
@@ -28,7 +31,7 @@ export function transformToStrategy(result: any, balance: any, id: string) {
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
     swap_amount: formatEther(result.swapAmount),
     id,
-  };
+  } as Vault;
 
-  return { id, rawData: vaultRawData } as Strategy;
+  return { id, owner, status, rawData: vaultRawData };
 }

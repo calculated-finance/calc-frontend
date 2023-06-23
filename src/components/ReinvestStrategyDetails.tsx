@@ -24,7 +24,7 @@ import { useChain } from '@hooks/useChain';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
-  const { balance } = strategy;
+  const { balance } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 

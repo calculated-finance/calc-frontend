@@ -72,7 +72,7 @@ function ActiveWithOne() {
   if (!activeStrategy) {
     return null;
   }
-  const { balance } = activeStrategy;
+  const { balance } = activeStrategy.rawData;
   const balanceValue = new DenomValue(balance);
 
   const displayBalance = balanceValue.toConverted().toLocaleString('en-US', {

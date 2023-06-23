@@ -5,7 +5,7 @@ import getEventManagerContract from 'src/interfaces/evm/getEventManagerContract'
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
 import getFactoryContract from 'src/interfaces/evm/getFactoryContract';
 import getVaultContract from 'src/interfaces/evm/getVaultContract/getVaultContract';
-import { transformToStrategy } from './transformToStrategy';
+import { transformToStrategyEVM } from './transformToStrategy';
 
 export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
   const vaultContract = getVaultContract(provider, id);
@@ -13,7 +13,7 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
   const balanceResponse = await vaultContract.getBalance();
   const balance = balanceResponse;
 
-  return transformToStrategy(result, balance, id);
+  return transformToStrategyEVM(result, balance, id);
 }
 
 // {

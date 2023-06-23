@@ -38,7 +38,7 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; re
 export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   let nextSwapInfo;
 
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
 
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);

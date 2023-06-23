@@ -220,7 +220,7 @@ function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string
   const strategiesGroupedByOwnerThenStatus: Record<string, Record<string, Strategy[]>> = {};
 
   strategies.forEach((strategy: Strategy) => {
-    const { owner, status } = strategy;
+    const { owner, status } = strategy.rawData;
 
     if (!strategiesGroupedByOwnerThenStatus[owner]) {
       strategiesGroupedByOwnerThenStatus[owner] = {};

@@ -4,9 +4,11 @@ import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Strategy } from '@models/Strategy';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 
 const QUERY_KEY = 'get_vaults';
 
@@ -53,12 +55,14 @@ export default function useAdminStrategies(customChain?: Chains) {
     }
   }, [customChain]);
 
-  return useQuery<Vault[]>(
+  return useQuery<Strategy[]>(
     [QUERY_KEY, client, chain],
-    () => {
+    async () => {
       if (!client) throw new Error('No client');
       if (!chain) throw new Error('No chain');
-      return fetchVaultsRecursively(client, chain);
+      const result = await fetchVaultsRecursively(client, chain);
+
+      return result.map((vault) => transformToStrategyCosmos(vault));
     },
     {
       enabled: !!client && !!chain,

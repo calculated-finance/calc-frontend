@@ -65,7 +65,7 @@ export function buildCallbackDestinations(
 }
 
 export function getStrategyPostSwapDetails(strategy: Strategy) {
-  const { destinations } = strategy;
+  const { destinations } = strategy.rawData;
   const [destination] = destinations;
   const { msg } = destination;
 
@@ -91,7 +91,7 @@ export function getStrategyValidatorAddress(strategy: Strategy) {
 }
 
 export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
-  const { destinations } = strategy;
+  const { destinations } = strategy.rawData;
   const [destination] = destinations;
 
   if (destination.address === getMarsAddress()) {
@@ -109,7 +109,7 @@ export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
 }
 
 export function getStrategyPostSwapSendToAnotherWallet(strategy: Strategy, chain: Chains, address: string | undefined) {
-  const { destinations } = strategy;
+  const { destinations } = strategy.rawData;
   if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
     const [destination] = destinations;
     if (destination.address !== address) {
@@ -134,7 +134,7 @@ export function getStrategyProvideLiquidityConfig():
     }
   | undefined {
   return undefined;
-  // const { destinations } = strategy;
+  // const { destinations } = strategy.rawData;
 
   // const provideLiquidityDestination = destinations?.find((destination: Destination) => {
   //   if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {

@@ -7,16 +7,20 @@ import {
   EventsResponse,
   Event as GeneratedEvent,
 } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
-import { transformToStrategy } from './transformToStrategy';
+import { transformToStrategyCosmos } from './transformToStrategy';
 
-async function fetchStrategy(client: CosmWasmClient, contractAddress: string, id: string | undefined): Promise<Vault> {
+async function fetchStrategy(
+  client: CosmWasmClient,
+  contractAddress: string,
+  id: string | undefined,
+): Promise<Strategy> {
   const result = (await client.queryContractSmart(contractAddress, {
     get_vault: {
       vault_id: id,
     },
   } as QueryMsg)) as VaultResponse;
 
-  return result.vault;
+  return transformToStrategyCosmos(result.vault);
 }
 
 export const GET_EVENTS_LIMIT = 400;
@@ -57,7 +61,7 @@ async function fetchStrategies(client: CosmWasmClient, contractAddress: string, 
     },
   })) as VaultsResponse;
 
-  const transformedStrategies = result.vaults.map((vault) => transformToStrategy(vault) as Strategy);
+  const transformedStrategies = result.vaults.map((vault) => transformToStrategyCosmos(vault) as Strategy);
   return transformedStrategies as Strategy[];
 }
 

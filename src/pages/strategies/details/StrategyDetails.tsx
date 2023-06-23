@@ -137,7 +137,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
-  const { balance, destinations } = strategy;
+  const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 

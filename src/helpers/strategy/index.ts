@@ -4,7 +4,6 @@ import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { V2Pair, V3Pair } from '@models/Pair';
@@ -59,7 +58,7 @@ export function isStrategyCancelled(strategy: Strategy) {
 }
 
 export function getStrategyBalance(strategy: Strategy) {
-  const { balance } = strategy || {};
+  const { balance } = strategy.rawData || {};
 
   return convertDenomFromCoin(balance);
 }
@@ -115,7 +114,7 @@ export function getStrategyExecutionIntervalData(strategy: Strategy): {
       }
     }
   }
-  const { time_interval } = strategy as Strategy;
+  const { time_interval } = strategy.rawData;
 
   return {
     timeInterval: time_interval as ExecutionIntervals,
@@ -152,7 +151,7 @@ export function getStrategyName(strategy: Strategy) {
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
-  const { slippage_tolerance } = strategy;
+  const { slippage_tolerance } = strategy.rawData;
   return slippage_tolerance ? Number((Number(slippage_tolerance) * 100).toFixed(2)) : undefined;
 }
 
@@ -162,7 +161,7 @@ export function getSlippageToleranceFormatted(strategy: Strategy) {
 }
 
 export function getSwapAmount(strategy: Strategy) {
-  const { swap_amount } = strategy || {};
+  const { swap_amount } = strategy.rawData || {};
   return Number(swap_amount);
 }
 
@@ -201,7 +200,7 @@ export function isBuyStrategy(strategy: Strategy) {
 }
 
 export function getStrategyPriceTrigger(strategy: Strategy) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
   if (trigger && 'price' in trigger) {
     return trigger.price.target_price;
   }
@@ -231,7 +230,7 @@ export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | 
 }
 
 export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)
     : getStrategyInitialDenom(strategy);
@@ -271,7 +270,7 @@ export function getStrategyEndDateFromRemainingExecutions(
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
@@ -350,7 +349,7 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getPriceCeilingFloor(strategy: Vault, chain: Chains) {
+export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
   if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
@@ -358,7 +357,7 @@ export function getPriceCeilingFloor(strategy: Vault, chain: Chains) {
   return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
 }
 
-export function getBasePrice(strategy: Vault, chain: Chains) {
+export function getBasePrice(strategy: Strategy, chain: Chains) {
   const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
   if (!base_receive_amount) {
     return undefined;
@@ -396,10 +395,10 @@ export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 
-export function getAverageSellPrice(strategy: Vault, dexFee: number) {
+export function getAverageSellPrice(strategy: Strategy, dexFee: number) {
   return getTotalReceivedBeforeFees(strategy, dexFee) / getTotalSwapped(strategy);
 }
 
-export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
+export function getAveragePurchasePrice(strategy: Strategy, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
 }

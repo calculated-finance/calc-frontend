@@ -15,7 +15,7 @@ export function getExistingValues(
   address: string,
 ): Partial<DcaInFormDataPostPurchase> {
   const postPurchaseOption = getStrategyPostSwapType(strategy, chain);
-  const { destinations } = strategy;
+  const { destinations } = strategy.rawData;
   const [destination] = destinations;
 
   if (postPurchaseOption === PostPurchaseOptions.SendToWallet) {

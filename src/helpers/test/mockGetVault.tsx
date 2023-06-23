@@ -2,13 +2,13 @@
 import { when } from 'jest-when';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { dcaInStrategy } from 'src/fixtures/strategy';
-import { Strategy } from '@models/Strategy';
 import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { GET_EVENTS_LIMIT } from '@hooks/useStrategyEvents';
 import pairs from 'src/fixtures/pairs';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vaults';
 
-export function mockStrategy(data?: Partial<Strategy>) {
+export function mockStrategy(data?: Partial<Vault>) {
   return {
     ...dcaInStrategy,
     ...data,

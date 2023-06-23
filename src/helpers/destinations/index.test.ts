@@ -2,7 +2,7 @@ import { Destination } from 'src/interfaces/generated-osmosis/execute';
 import { Chains } from '@hooks/useChain/Chains';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import { dcaInStrategy as mockStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategyViewModal as mockStrategy } from 'src/fixtures/strategy';
 import { Strategy } from '@models/Strategy';
 import { buildCallbackDestinations, getStrategyPostSwapType } from '.';
 
@@ -123,13 +123,16 @@ describe('buildCallbackDestinations', () => {
     it('should return GenerateYield if destination address is equal to Mars Address', () => {
       const strategy: Strategy = {
         ...mockStrategy,
-        destinations: [
-          {
-            address: getMarsAddress(),
-            allocation: '1.0',
-            msg: null,
-          },
-        ],
+        rawData: {
+          ...mockStrategy.rawData,
+          destinations: [
+            {
+              address: getMarsAddress(),
+              allocation: '1.0',
+              msg: null,
+            },
+          ],
+        },
       };
       const chain = Chains.Osmosis;
 
@@ -140,15 +143,18 @@ describe('buildCallbackDestinations', () => {
     it('should return Stake if destination address is equal to Chain Contract Address and validator address exists', () => {
       const strategy: Strategy = {
         ...mockStrategy,
-        destinations: [
-          {
-            address: getChainContractAddress(Chains.Osmosis),
-            allocation: '1.0',
-            msg: Buffer.from(JSON.stringify({ z_delegate: { validator_address: 'validator_address' } })).toString(
-              'base64',
-            ),
-          },
-        ],
+        rawData: {
+          ...mockStrategy.rawData,
+          destinations: [
+            {
+              address: getChainContractAddress(Chains.Osmosis),
+              allocation: '1.0',
+              msg: Buffer.from(JSON.stringify({ z_delegate: { validator_address: 'validator_address' } })).toString(
+                'base64',
+              ),
+            },
+          ],
+        },
       };
       const chain = Chains.Osmosis;
 
@@ -159,13 +165,16 @@ describe('buildCallbackDestinations', () => {
     it('should return Reinvest if destination address is equal to Chain Contract Address and validator address does not exist', () => {
       const strategy: Strategy = {
         ...mockStrategy,
-        destinations: [
-          {
-            address: getChainContractAddress(Chains.Osmosis),
-            allocation: '1.0',
-            msg: Buffer.from(JSON.stringify({})).toString('base64'),
-          },
-        ],
+        rawData: {
+          ...mockStrategy.rawData,
+          destinations: [
+            {
+              address: getChainContractAddress(Chains.Osmosis),
+              allocation: '1.0',
+              msg: Buffer.from(JSON.stringify({})).toString('base64'),
+            },
+          ],
+        },
       };
       const chain = Chains.Osmosis;
 
@@ -176,13 +185,16 @@ describe('buildCallbackDestinations', () => {
     it('should return SendToWallet if destination address is not equal to Mars Address or Chain Contract Address', () => {
       const strategy: Strategy = {
         ...mockStrategy,
-        destinations: [
-          {
-            address: 'address',
-            allocation: '1.0',
-            msg: null,
-          },
-        ],
+        rawData: {
+          ...mockStrategy.rawData,
+          destinations: [
+            {
+              address: 'address',
+              allocation: '1.0',
+              msg: null,
+            },
+          ],
+        },
       };
       const chain = Chains.Osmosis;
 

@@ -211,7 +211,7 @@ function Strategies() {
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {accumulationStratgies().map((strategy) => (
-            <StrategyCard key={strategy.rawData.name} {...strategy} />
+            <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>
       </Stack>
@@ -226,7 +226,7 @@ function Strategies() {
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {takeProfitStrategies().map((strategy) => (
-            <StrategyCard key={strategy.rawData.name} {...strategy} />
+            <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>
       </Stack>

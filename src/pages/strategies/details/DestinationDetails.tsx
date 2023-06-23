@@ -121,7 +121,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy }) {
 }
 
 export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: Chains }) {
-  const { destinations } = strategy;
+  const { destinations } = strategy.rawData;
 
   const { address } = useWallet();
 

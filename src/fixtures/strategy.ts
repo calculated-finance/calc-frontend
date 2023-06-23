@@ -1,3 +1,6 @@
+import { VaultStatus } from 'src/interfaces/v2/generated/query';
+import { BaseDenom, TimeInterval } from 'src/interfaces/v2/generated/execute';
+import { PositionType } from 'src/interfaces/generated-osmosis/response/get_vault';
 import { Strategy } from '@models/Strategy';
 import { mockTimeTrigger } from './trigger';
 
@@ -17,14 +20,14 @@ export const dcaInStrategy = {
     amount: '0',
   },
 
-  time_interval: 'weekly',
+  time_interval: 'weekly' as TimeInterval,
   deposited_amount: {
     denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
     amount: '10000000', // 10 DEMO
   },
   target_denom: 'ukuji',
   swap_amount: '1000000', // 1 DEMO
-  status: 'active',
+  status: 'active' as VaultStatus,
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
   received_amount: {
@@ -44,7 +47,7 @@ export const dcaInStrategy = {
   trigger: mockTimeTrigger,
   dca_plus_config: null,
   slippage_tolerance: '0.2',
-} as Strategy;
+};
 
 export const dcaOutStrategy = {
   id: '1',
@@ -55,7 +58,7 @@ export const dcaOutStrategy = {
     amount: '10000000',
   },
 
-  time_interval: 'weekly',
+  time_interval: 'weekly' as TimeInterval,
   target_denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
   escrow_level: '0',
   escrowed_amount: {
@@ -68,7 +71,7 @@ export const dcaOutStrategy = {
   },
   swap_amount: '1000000',
   slippage_tolerance: '0.2',
-  status: 'active',
+  status: 'active' as VaultStatus,
   trigger_variant: 'time',
   started_at: (startedAt * 1000000).toString(),
   swapped_amount: {
@@ -86,7 +89,14 @@ export const dcaOutStrategy = {
     },
   ],
   dca_plus_config: null,
-} as Strategy;
+};
+
+export const dcaInStrategyViewModal = {
+  id: '1',
+  owner: 'kujiratestwallet',
+  rawData: dcaInStrategy,
+  status: 'active',
+};
 
 export const dcaPlusStrategy = {
   ...dcaInStrategy,
@@ -104,9 +114,16 @@ export const dcaPlusStrategy = {
   },
   swap_adjustment_strategy: {
     risk_weighted_average: {
-      base_denom: 'bitcoin',
+      base_denom: 'bitcoin' as BaseDenom,
       model_id: 1,
-      position_type: 'enter',
+      position_type: 'enter' as PositionType,
     },
   },
-} as Strategy;
+};
+
+export const dcaPlusStrategyViewModal: Strategy = {
+  id: '1',
+  owner: 'kujiratestwallet',
+  status: 'active',
+  rawData: dcaPlusStrategy,
+};
