@@ -123,12 +123,15 @@ function usePriceV3(
     async () => {
       const result = await client!.queryContractSmart(config!.exchange_contract_address, {
         get_twap_to_now: {
-          swap_denom: initialDenom!.id,
-          target_denom: resultingDenom!.id,
+          swap_denom: pair?.denoms[1],
+          target_denom: pair?.denoms[0],
           period: config!.twap_period,
         },
       });
-      return result * 10 ** (resultingDenom!.significantFigures - initialDenom!.significantFigures);
+      return (
+        result *
+        10 ** (getDenomInfo(pair?.denoms[0])!.significantFigures - getDenomInfo(pair?.denoms[1])!.significantFigures)
+      );
     },
     {
       enabled,
