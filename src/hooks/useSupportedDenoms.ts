@@ -12,10 +12,7 @@ export function useSupportedDenoms(injectedChain?: Chains) {
 
   const { data: pairsData } = usePairs();
 
-
   const { pairs } = pairsData;
-
-
 
   const allDenoms = chain !== Chains.Kujira ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
 

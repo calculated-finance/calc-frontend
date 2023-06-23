@@ -1,6 +1,6 @@
 import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';

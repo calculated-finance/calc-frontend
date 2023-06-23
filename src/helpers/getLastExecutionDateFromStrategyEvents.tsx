@@ -1,5 +1,5 @@
 import { findLast } from 'lodash';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 
 export function getLastExecutionDateFromStrategyEvents(events: StrategyEvent[]) {
   const lastExecutionEvent = findLast(events, (event: StrategyEvent) => {

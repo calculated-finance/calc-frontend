@@ -1,5 +1,5 @@
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { findCurrentPriceInTime } from './getChartData';
 
 type ExecutionSkippedReason = 'slippage_tolerance_exceeded' | 'swap_amount_adjusted_to_zero';

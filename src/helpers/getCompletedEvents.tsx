@@ -1,4 +1,4 @@
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 
 export function getCompletedEvents(events: StrategyEvent[] | undefined) {
   return events?.filter((event) => {

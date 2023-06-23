@@ -1,5 +1,5 @@
 import getDenomInfo from '@utils/getDenomInfo';
-import { StrategyEvent } from '@hooks/useStrategyEvents';
+import { StrategyEvent } from '@hooks/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getCompletedEvents } from '@helpers/getCompletedEvents';
 
