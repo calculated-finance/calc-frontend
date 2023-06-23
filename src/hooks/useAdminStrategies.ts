@@ -10,8 +10,6 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 const QUERY_KEY = 'get_vaults';
 
-export type Strategy = Vault;
-
 const GET_VAULTS_LIMIT = 300;
 
 function fetchVaultsRecursively(
@@ -53,7 +51,7 @@ export default function useAdminStrategies(customChain?: Chains) {
         .then(setStoredClient)
         .catch((error) => Sentry.captureException(error, { tags: { page: 'useAdminStrategies' } }));
     }
-  }, [ customChain]);
+  }, [customChain]);
 
   return useQuery<Vault[]>(
     [QUERY_KEY, client, chain],

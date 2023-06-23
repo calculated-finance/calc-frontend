@@ -68,7 +68,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
             label={
               <Text>
                 A maximum of 5% swap volume, this amount with be returned in full if DCA+ does not outperform
-                traditional DCA at the end of the strategy.
+                traditional DCA at the end of the strategy.rawData.
               </Text>
             }
           >
@@ -247,7 +247,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               {!isWeightedScale(strategy) && <SwapEachCycle strategy={strategy} />}
               {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
-              {Boolean(strategy.slippage_tolerance) && (
+              {Boolean(strategy.rawData.slippage_tolerance) && (
                 <>
                   <GridItem colSpan={1}>
                     <Heading size="xs">Slippage tolerance</Heading>
@@ -259,7 +259,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </GridItem>
                 </>
               )}
-              {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
+              {Boolean(strategy.rawData.minimum_receive_amount) && strategy.rawData.minimum_receive_amount && (
                 <>
                   <GridItem colSpan={1}>
                     <Heading size="xs">{isBuyStrategy(strategy) ? 'Price ceiling' : 'Price floor'}</Heading>

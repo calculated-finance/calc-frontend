@@ -52,7 +52,7 @@ function HowItWorks() {
                 <ListItem>
                   Customize your strategy
                   <Text textStyle="body">
-                    This is where you can get fine-grained control over the execution of your strategy.
+                    This is where you can get fine-grained control over the execution of your strategy.rawData.
                   </Text>
                 </ListItem>
                 <ListItem>
@@ -72,7 +72,7 @@ function HowItWorks() {
                 </ListItem>
               </OrderedList>
               <Text textStyle="body" pb={2}>
-                Then you sign and approve the execution of the strategy.
+                Then you sign and approve the execution of the strategy.rawData.
               </Text>
             </AccordionPanel>
           </AccordionItem>
@@ -123,7 +123,7 @@ function HowItWorks() {
               <Text textStyle="body" pb={2}>
                 It&apos;s just a term that we use to refer to where your capital is stored before your strategy is
                 executed. You can think about it like a savings account where money is directly debited from that
-                account to perform your strategy.
+                account to perform your strategy.rawData.
               </Text>
             </AccordionPanel>
           </AccordionItem>

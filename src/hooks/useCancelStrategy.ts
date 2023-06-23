@@ -65,7 +65,7 @@ const useCancelStrategy = (initialDenom: DenomInfo) => {
         throw new Error('No fiat price information');
       }
 
-      if (address !== strategy.owner) {
+      if (address !== strategy.rawData.owner) {
         throw new Error('You are not the owner of this strategy');
       }
 

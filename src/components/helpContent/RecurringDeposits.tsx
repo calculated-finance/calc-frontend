@@ -9,10 +9,10 @@ export function RecurringDeposits() {
       </Text>
 
       <Text>
-        CALC is focused on ease of use and knows that recurring payments are part of a complete set-and-forget strategy.
-        At the moment, we are waiting for the Axelar team to push the General Message Passing module to production and
-        for Kado money to support recurring payments. Once that is ready, we will integrate with Kado Money and allow
-        you to set up recurring payments directly from your bank account to CALC, automatically.
+        CALC is focused on ease of use and knows that recurring payments are part of a complete set-and-forget
+        strategy.rawData. At the moment, we are waiting for the Axelar team to push the General Message Passing module
+        to production and for Kado money to support recurring payments. Once that is ready, we will integrate with Kado
+        Money and allow you to set up recurring payments directly from your bank account to CALC, automatically.
       </Text>
 
       <Text>

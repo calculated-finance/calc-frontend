@@ -32,30 +32,30 @@ import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
 
 export function getStrategyStatus(strategy: Strategy) {
-  if (strategy.status === 'inactive') {
+  if (strategy.rawData.status === 'inactive') {
     return 'completed';
   }
-  return strategy.status;
+  return strategy.rawData.status;
 }
 
 export function isStrategyOperating(strategy: Strategy) {
-  return ['active', 'scheduled'].includes(strategy.status);
+  return ['active', 'scheduled'].includes(strategy.rawData.status);
 }
 
 export function isStrategyActive(strategy: Strategy) {
-  return ['active'].includes(strategy.status);
+  return ['active'].includes(strategy.rawData.status);
 }
 
 export function isStrategyScheduled(strategy: Strategy) {
-  return ['scheduled'].includes(strategy.status);
+  return ['scheduled'].includes(strategy.rawData.status);
 }
 
 export function isStrategyCompleted(strategy: Strategy) {
-  return ['inactive'].includes(strategy.status);
+  return ['inactive'].includes(strategy.rawData.status);
 }
 
 export function isStrategyCancelled(strategy: Strategy) {
-  return ['cancelled'].includes(strategy.status);
+  return ['cancelled'].includes(strategy.rawData.status);
 }
 
 export function getStrategyBalance(strategy: Strategy) {
@@ -65,23 +65,23 @@ export function getStrategyBalance(strategy: Strategy) {
 }
 
 export function getStrategyInitialDenomId(strategy: Strategy): string {
-  return strategy.balance.denom;
+  return strategy.rawData.balance.denom;
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.balance.denom);
+  return getDenomInfo(strategy.rawData.balance.denom);
 }
 
 export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.received_amount.denom);
+  return getDenomInfo(strategy.rawData.received_amount.denom);
 }
 
 export function getStrategyExecutionIntervalData(strategy: Strategy): {
   timeInterval: ExecutionIntervals;
   timeIncrement: number | undefined;
 } {
-  if (strategy.time_interval instanceof Object) {
-    const { custom } = strategy.time_interval;
+  if (strategy.rawData.time_interval instanceof Object) {
+    const { custom } = strategy.rawData.time_interval;
 
     const weeks = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
     const days = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
@@ -167,7 +167,7 @@ export function getSwapAmount(strategy: Strategy) {
 }
 
 export function getConvertedSwapAmount(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
+  const { conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
 
@@ -257,8 +257,8 @@ export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pai
     });
   }
 
-  return strategy.started_at
-    ? new Date(Number(strategy.started_at) / 1000000).toLocaleDateString('en-US', {
+  return strategy.rawData.started_at
+    ? new Date(Number(strategy.rawData.started_at) / 1000000).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -310,7 +310,7 @@ export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] |
 }
 
 export function isStrategyAutoStaking(strategy: Strategy) {
-  return isAutoStaking(strategy.destinations);
+  return isAutoStaking(strategy.rawData.destinations);
 }
 
 export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: string) {
@@ -344,18 +344,18 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
   const price = isBuyStrategy(strategy)
-    ? parseFloat(strategy.swap_amount) / parseFloat(receiveAmount)
-    : parseFloat(receiveAmount) / parseFloat(strategy.swap_amount);
+    ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
+    : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
 export function getPriceCeilingFloor(strategy: Vault, chain: Chains) {
-  if (!strategy.minimum_receive_amount) {
+  if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, strategy.minimum_receive_amount, chain);
+  return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
 }
 
 export function getBasePrice(strategy: Vault, chain: Chains) {
@@ -368,7 +368,7 @@ export function getBasePrice(strategy: Vault, chain: Chains) {
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
-  const costAmount = strategy.swapped_amount.amount;
+  const costAmount = strategy.rawData.swapped_amount.amount;
   const feeFactor = isDcaPlus(strategy)
     ? 0
     : SWAP_FEE + dexFee + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
@@ -376,11 +376,11 @@ export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
 }
 
 export function getTotalSwapped(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.swapped_amount);
+  return convertDenomFromCoin(strategy.rawData.swapped_amount);
 }
 
 export function getTotalReceived(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.received_amount);
+  return convertDenomFromCoin(strategy.rawData.received_amount);
 }
 
 export function hasSwapFees(strategy: Strategy) {

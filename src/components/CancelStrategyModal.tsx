@@ -90,7 +90,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                 <Heading size="sm">Amount to be returned:</Heading>
                 <Spacer />
                 <Text as="span" fontSize="lg" color="blue.200">
-                  {convertDenomFromCoin(strategy.balance)} {initialDenom.name}
+                  {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
                 </Text>
               </Flex>
               {isDcaPlus(strategy) && (

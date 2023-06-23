@@ -5,7 +5,7 @@ import { formatEther } from 'ethers';
 export function transformToStrategy(result: any, balance: any, id: string) {
   const { deconversion } = getDenomInfo(result.tokenIn);
 
-  return {
+  const vaultRawData = {
     status: balance ? 'active' : 'inactive',
     balance: {
       denom: result.tokenIn,
@@ -28,5 +28,7 @@ export function transformToStrategy(result: any, balance: any, id: string) {
     time_interval: { custom: { seconds: Number(result.timeInterval.toString()) } },
     swap_amount: formatEther(result.swapAmount),
     id,
-  } as Strategy;
+  };
+
+  return { id, rawData: vaultRawData } as Strategy;
 }

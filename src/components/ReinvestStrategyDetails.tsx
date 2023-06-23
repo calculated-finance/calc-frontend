@@ -90,7 +90,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
             </Text>
           </GridItem>
           {!isWeightedScale(strategy) && <SwapEachCycle strategy={strategy} />}
-          {Boolean(strategy.slippage_tolerance) && (
+          {Boolean(strategy.rawData.slippage_tolerance) && (
             <>
               <GridItem colSpan={1}>
                 <Heading size="xs">Slippage tolerance</Heading>
@@ -102,7 +102,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
             </>
           )}
-          {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
+          {Boolean(strategy.rawData.minimum_receive_amount) && strategy.rawData.minimum_receive_amount && (
             <>
               <GridItem colSpan={1}>
                 <Heading size="xs">{isBuyStrategy(strategy) ? 'Price ceiling' : 'Price floor'}</Heading>

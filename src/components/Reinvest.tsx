@@ -36,13 +36,13 @@ import {
   getStrategyType,
   isStrategyCancelled,
 } from '@helpers/strategy';
-import { Strategy } from '@hooks/useAdminStrategies';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategies } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
 import Spinner from './Spinner';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';

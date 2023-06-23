@@ -135,7 +135,7 @@ function Strategies() {
     const strategies = [
       {
         name: 'Standard DCA In',
-        description: 'Customise your own dollar-cost average buying strategy.',
+        description: 'Customise your own dollar-cost average buying strategy.rawData.',
         icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
         enabled: true,
         href: StrategyUrls.DCAIn,
@@ -211,7 +211,7 @@ function Strategies() {
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {accumulationStratgies().map((strategy) => (
-            <StrategyCard key={strategy.name} {...strategy} />
+            <StrategyCard key={strategy.rawData.name} {...strategy} />
           ))}
         </Flex>
       </Stack>
@@ -226,7 +226,7 @@ function Strategies() {
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
           {takeProfitStrategies().map((strategy) => (
-            <StrategyCard key={strategy.name} {...strategy} />
+            <StrategyCard key={strategy.rawData.name} {...strategy} />
           ))}
         </Flex>
       </Stack>

@@ -35,7 +35,7 @@ export function useCustomiseStrategy() {
         throw new Error('chain is null or empty');
       }
 
-      if (variables.strategy.owner !== address) {
+      if (variables.strategy.rawData.owner !== address) {
         throw new Error('You are not the owner of this strategy');
       }
 
