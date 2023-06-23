@@ -67,7 +67,7 @@ function LearnNewUsers() {
   return (
     <>
       <HStack>
-        <Image src="/images/learn-blue.svg" w={6} h={6} />
+        <Icon as={KnowledgeIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text color="grey.200" textStyle="body">
           CALC learning hub
         </Text>
