@@ -89,23 +89,29 @@ export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: Den
 
 const GET_PAIRS_LIMIT = 400;
 
-function usePairsOsmosis() {
+export function usePairsOsmosis() {
   const client = useCosmWasmClient((state) => state.client);
   const { chain } = useChain();
+  const config = useConfig();
 
   function fetchPairsRecursively(startAfter = null, allPairs = [] as V2Pair[]): Promise<V2Pair[]> {
     return client!
-      .queryContractSmart(getChainContractAddress(Chains.Osmosis), {
-        get_pairs: {
-          limit: GET_PAIRS_LIMIT,
-          start_after: startAfter,
+      .queryContractSmart(config!.exchange_contract_address, {
+        internal_query: {
+          msg: Buffer.from(
+            JSON.stringify({
+              get_pairs: {
+                limit: GET_PAIRS_LIMIT,
+                start_after: startAfter,
+              },
+            }),
+          ).toString('base64'),
         },
       })
       .then((result) => {
-        allPairs.push(...result.pairs);
-
-        if (result.pairs.length === GET_PAIRS_LIMIT) {
-          const newStartAfter = result.pairs[result.pairs.length - 1];
+        allPairs.push(...result);
+        if (result.length === GET_PAIRS_LIMIT) {
+          const newStartAfter = result[result.length - 1];
           return fetchPairsRecursively(newStartAfter, allPairs);
         }
         return allPairs;
@@ -113,7 +119,7 @@ function usePairsOsmosis() {
   }
 
   const queryResult = useQuery<V2Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
-    enabled: !!client && chain === Chains.Osmosis,
+    enabled: !!client && chain === Chains.Osmosis && !!config && !!config.exchange_contract_address,
     staleTime: 1000 * 60 * 5,
   });
 
