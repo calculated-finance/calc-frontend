@@ -25,10 +25,10 @@ import {
   BoxedImportIcon,
   Graph2Icon,
   ViewListIcon,
+  KnowledgeIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
@@ -48,9 +48,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
-  // { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
-  { name: 'Learning hub', icon: QuestionOutlineIcon, href: Pages.LearnAboutCalc },
+  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 

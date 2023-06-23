@@ -1,7 +1,7 @@
 import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Flex } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
-import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
+import { Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
@@ -10,27 +10,6 @@ import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
-
-function Onboarding() {
-  return (
-    <>
-      <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
-      <Stack spacing={1}>
-        <Heading size="md">Ready to set up a CALC Strategy?</Heading>
-        <Text fontSize="sm">
-          CALC offers a range of mid-long term trading tools to help automate your investments, remove emotions and take
-          back your time. In just 4 minutes, you can have CALC working for you with either take profit strategies or
-          accumulation strategies.
-        </Text>
-      </Stack>
-      <LinkWithQuery passHref href="/create-strategy">
-        <Button maxWidth={402} size="sm">
-          Get started
-        </Button>
-      </LinkWithQuery>
-    </>
-  );
-}
 
 function Returning() {
   return (
@@ -187,20 +166,6 @@ export default function TopPanel() {
         Content: Box,
       };
     }
-    // if (!activeStrategies.length) {
-    //   if (!completedStrategies.length) {
-    //     return {
-    //       background: '/images/backgrounds/twist-thin.svg',
-    //       border: 'brand.200',
-    //       Content: Onboarding,
-    //     };
-    //   }
-    //   return {
-    //     background: '/images/backgrounds/twist-thin.svg',
-    //     border: 'brand.200',
-    //     Content: Returning,
-    //   };
-    // }
     if (!activeStrategies.length || !connected) {
       if (!completedStrategies.length) {
         return {

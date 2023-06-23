@@ -12,7 +12,6 @@ import {
   HStack,
   Divider,
   Wrap,
-  Spacer,
   VStack,
   Icon,
 } from '@chakra-ui/react';
@@ -30,7 +29,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { motion } from 'framer-motion';
 
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon } from '@fusion-icons/react/interface';
@@ -215,55 +213,9 @@ function TotalInvestment() {
           </Heading>
         </Stack>
       </Flex>
-      {/* {!connected && chain === Chains.Kujira && (
-        <LinkWithQuery href="/how-it-works">
-          <Button w={44} variant="outline" colorScheme="blue">
-            Learn how CALC works
-          </Button>
-        </LinkWithQuery>
-      )} */}
-      {/* {!connected && chain === Chains.Osmosis && (
-        <LinkWithQuery href="/create-strategy">
-          <Button w={44} variant="outline" colorScheme="blue">
-            Create a strategy
-          </Button>
-        </LinkWithQuery>
-      )} */}
     </Stack>
   );
 }
-
-// function WorkflowInformation() {
-//   return (
-//     <Center p={8}>
-//       <Flex direction="column">
-//         <Stack spacing={2} pb={8} textAlign="center" px={{ lg: 20 }}>
-//           <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
-//           <Text fontSize="md">Recurring payments means no stress. Set &amp; forget.</Text>
-//         </Stack>
-//         <Flex w="full" justifyContent="center">
-//           <Image src="/images/workflow.svg" />
-//         </Flex>
-//       </Flex>
-//     </Center>
-//   );
-// }
-
-// const shakeVariants = {
-//   initial: {
-//     rotate: 0,
-//   },
-//   shake: {
-//     rotate: [-2.5, 2.5, -2.5, 2.5, 0],
-//     transition: {
-//       delay: 5,
-//       duration: 0.7,
-//       loop: 3,
-//     },
-//   },
-// };
-
-// variants={shakeVariants}
 
 function OnboardingPanel() {
   return (
@@ -328,6 +280,7 @@ export function LearnAboutCalcPanel() {
 }
 
 function HomeGrid() {
+function HomeGrid({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
   const { connected } = useWallet();
   const { chain } = useChain();
   const { data: strategies, isLoading } = useStrategies();
@@ -351,19 +304,12 @@ function HomeGrid() {
       ) : (
         ''
       )}
-
-      {/* Below we will add the CTA to learn more about CALC  */}
       {(!activeStrategies.length || !connected) && (
         <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
           <OnboardingPanel />
-          {/* <LearnAboutCalcPanel /> */}
         </GridItem>
       )}
-
       <GridItem colSpan={{ base: 6, xl: 3 }}>{chain !== Chains.Moonbeam && <TotalInvestment />}</GridItem>
-      {/* <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
-        <WorkflowInformation />
-      </GridItem> */}
     </Grid>
   );
 }
