@@ -6,7 +6,20 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useStrategies } from '@hooks/useStrategies';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { Strategy } from '@models/Strategy';
 import TopPanel from './TopPanel';
+
+function buildStrategy(data: Partial<Vault> = {}): Strategy {
+  return {
+    ...dcaInStrategyViewModal,
+    rawData: {
+      ...dcaInStrategyViewModal.rawData,
+      ...data,
+    },
+  };
+}
 
 const mockRouter = {
   isReady: true,
@@ -62,7 +75,7 @@ describe('top panel', () => {
     describe('when a user has only completed strategies', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: [{ id: 1, status: 'inactive' }],
+          data: [buildStrategy({ id: '1', status: 'inactive' })],
           isLoading: false,
         }));
       });
@@ -81,7 +94,7 @@ describe('top panel', () => {
     describe('when a single strategy is set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: [{ id: 1, status: 'active' }],
+          data: [buildStrategy({ id: '1', status: 'active' })],
           isLoading: false,
         }));
       });
@@ -100,10 +113,7 @@ describe('top panel', () => {
     describe('when multiple strategies are set', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: [
-            { id: 1, status: 'active' },
-            { id: 2, status: 'active' },
-          ],
+          data: [buildStrategy({ id: '1', status: 'active' }), buildStrategy({ id: '2', status: 'active' })],
           isLoading: false,
         }));
       });

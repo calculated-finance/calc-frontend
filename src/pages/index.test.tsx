@@ -2,8 +2,8 @@ import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { useStrategies } from '@hooks/useStrategies';
-import { Strategy } from '@models/Strategy';
-import { dcaInStrategy } from 'src/fixtures/strategy';
+import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
 import Home from './index.page';
 import '@testing-library/jest-dom';
@@ -27,10 +27,13 @@ jest.mock('next/router', () => ({
 jest.mock('@hooks/useStrategies');
 jest.mock('@hooks/useWallet');
 
-function mockStrategy(data?: Partial<Strategy>) {
+function mockStrategy(data?: Partial<Vault>) {
   return {
-    ...dcaInStrategy,
-    ...data,
+    ...dcaInStrategyViewModal,
+    rawData: {
+      ...dcaInStrategyViewModal.rawData,
+      ...data,
+    },
   };
 }
 
