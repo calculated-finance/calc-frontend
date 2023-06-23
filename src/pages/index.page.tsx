@@ -14,6 +14,7 @@ import {
   Wrap,
   Spacer,
   VStack,
+  Icon,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -32,6 +33,7 @@ import LinkWithQuery from '@components/LinkWithQuery';
 import { motion } from 'framer-motion';
 
 import { useStrategies } from '@hooks/useStrategies';
+import { BarChartIcon } from '@fusion-icons/react/interface';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -263,7 +265,31 @@ function TotalInvestment() {
 
 // variants={shakeVariants}
 
-function LearnAboutCalc() {
+function OnboardingPanel() {
+  return (
+    <VStack
+      layerStyle="panel"
+      p={8}
+      alignItems="left"
+      borderColor="brand.200"
+      borderWidth={2}
+      backgroundImage="/images/backgrounds/twist-thin.svg"
+    >
+      <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
+      <Stack spacing={1}>
+        <Heading size="md">Ready to set up a CALC Strategy?</Heading>
+        <Text fontSize="sm">Feeling comfortable with your understanding of our products?</Text>
+      </Stack>
+      <LinkWithQuery passHref href="/create-strategy">
+        <Button w={44} variant="outline" size="sm">
+          Get started
+        </Button>
+      </LinkWithQuery>
+    </VStack>
+  );
+}
+
+export function LearnAboutCalcPanel() {
   return (
     <motion.div initial="initial" animate="shake">
       <VStack
@@ -288,7 +314,7 @@ function LearnAboutCalc() {
               Get to know more about our extensive suite of DeFi products.
             </Heading>
             <Stack direction={{ base: 'column', sm: 'row' }}>
-              <LinkWithQuery href="/how-it-works">
+              <LinkWithQuery href="/learn-about-calc">
                 <Button w={44} variant="outline" color="green.400">
                   Learn how CALC works
                 </Button>
@@ -329,7 +355,8 @@ function HomeGrid() {
       {/* Below we will add the CTA to learn more about CALC  */}
       {(!activeStrategies.length || !connected) && (
         <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-          <LearnAboutCalc />
+          <OnboardingPanel />
+          {/* <LearnAboutCalcPanel /> */}
         </GridItem>
       )}
 

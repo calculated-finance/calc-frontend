@@ -10,7 +10,6 @@ import {
   Tooltip,
   Text,
   HStack,
-  Box,
   Flex,
   Wrap,
   WrapItem,
@@ -66,6 +65,7 @@ const chainSelectionAllowedUrls = [
   '/stats-and-totals',
   '/bridge-assets',
   '/how-it-works',
+  '/learn-about-calc',
   '/experimental-features',
 ];
 

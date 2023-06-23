@@ -63,6 +63,32 @@ function Returning() {
     </>
   );
 }
+function LearnNewUsers() {
+  return (
+    <>
+      <HStack>
+        <Image src="/images/learn-blue.svg" w={6} h={6} />
+        <Text color="grey.200" textStyle="body">
+          CALC learning hub
+        </Text>
+      </HStack>
+      <Stack spacing={1}>
+        <Heading size="md">New to CALC?</Heading>
+        <Text fontSize="sm">Get to know more about our extensive suite of DeFi products.</Text>
+        <Text fontSize="sm" textStyle="body">
+          DCA | DCA+ | Weighted Scale
+        </Text>
+      </Stack>
+      <Stack direction={{ base: 'column', sm: 'row' }}>
+        <LinkWithQuery href="/learn-about-calc">
+          <Button px={12} maxWidth={402} size="sm" bgColor="blue.200" _hover={{ bgColor: 'blue.300' }}>
+            Learn how CALC works
+          </Button>
+        </LinkWithQuery>
+      </Stack>
+    </>
+  );
+}
 
 function ActiveWithOne() {
   const { data } = useStrategies();
@@ -161,12 +187,26 @@ export default function TopPanel() {
         Content: Box,
       };
     }
-    if (!activeStrategies.length) {
+    // if (!activeStrategies.length) {
+    //   if (!completedStrategies.length) {
+    //     return {
+    //       background: '/images/backgrounds/twist-thin.svg',
+    //       border: 'brand.200',
+    //       Content: Onboarding,
+    //     };
+    //   }
+    //   return {
+    //     background: '/images/backgrounds/twist-thin.svg',
+    //     border: 'brand.200',
+    //     Content: Returning,
+    //   };
+    // }
+    if (!activeStrategies.length || !connected) {
       if (!completedStrategies.length) {
         return {
           background: '/images/backgrounds/twist-thin.svg',
-          border: 'brand.200',
-          Content: Onboarding,
+          border: 'transparent',
+          Content: LearnNewUsers,
         };
       }
       return {

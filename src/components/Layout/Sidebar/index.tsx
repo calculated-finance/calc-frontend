@@ -49,7 +49,8 @@ const LinkItems: Array<LinkItem> = [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
-  { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
+  // { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
+  { name: 'Learning hub', icon: QuestionOutlineIcon, href: Pages.LearnAboutCalc },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
