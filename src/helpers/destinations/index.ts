@@ -1,6 +1,5 @@
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { Chains } from '@hooks/useChain/Chains';
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { Destination, LockableDuration } from 'src/interfaces/generated-osmosis/execute';
@@ -65,7 +64,7 @@ export function buildCallbackDestinations(
   return destinations.length ? destinations : undefined;
 }
 
-export function getStrategyPostSwapDetails(strategy: StrategyOsmosis | Strategy) {
+export function getStrategyPostSwapDetails(strategy: Strategy) {
   const { destinations } = strategy;
   const [destination] = destinations;
   const { msg } = destination;
@@ -78,8 +77,8 @@ export function getStrategyPostSwapDetails(strategy: StrategyOsmosis | Strategy)
   return null;
 }
 
-export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy) {
-  const postSwapDetails = getStrategyPostSwapDetails(strategy as StrategyOsmosis) || {};
+export function getStrategyValidatorAddress(strategy: Strategy) {
+  const postSwapDetails = getStrategyPostSwapDetails(strategy) || {};
   if (postSwapDetails?.z_delegate) {
     return postSwapDetails.z_delegate.validator_address;
   }
@@ -91,7 +90,7 @@ export function getStrategyValidatorAddress(strategy: StrategyOsmosis | Strategy
   return undefined;
 }
 
-export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, chain: Chains) {
+export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
   const { destinations } = strategy;
   const [destination] = destinations;
 
@@ -109,11 +108,7 @@ export function getStrategyPostSwapType(strategy: StrategyOsmosis | Strategy, ch
   return PostPurchaseOptions.SendToWallet;
 }
 
-export function getStrategyPostSwapSendToAnotherWallet(
-  strategy: StrategyOsmosis,
-  chain: Chains,
-  address: string | undefined,
-) {
+export function getStrategyPostSwapSendToAnotherWallet(strategy: Strategy, chain: Chains, address: string | undefined) {
   const { destinations } = strategy;
   if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
     const [destination] = destinations;
@@ -124,7 +119,7 @@ export function getStrategyPostSwapSendToAnotherWallet(
   return undefined;
 }
 
-export function getStrategyReinvestStrategyId(strategy: StrategyOsmosis | Strategy) {
+export function getStrategyReinvestStrategyId(strategy: Strategy) {
   const postSwapDetails = getStrategyPostSwapDetails(strategy);
   if (postSwapDetails && 'deposit' in postSwapDetails) {
     return postSwapDetails.deposit.vault_id;

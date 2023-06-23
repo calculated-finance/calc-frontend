@@ -5,7 +5,6 @@ import { Formik, FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import useStrategy from '@hooks/useStrategy';
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import { getStrategyResultingDenom } from '@helpers/strategy';

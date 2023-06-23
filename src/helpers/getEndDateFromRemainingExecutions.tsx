@@ -1,9 +1,8 @@
-import { StrategyOsmosis } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 
 export function getEndDateFromRemainingExecutions(
-  strategy: Strategy | StrategyOsmosis,
+  strategy: Strategy,
   startDate: Date,
   remainingExecutions: number,
 ): Date | undefined {

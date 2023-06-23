@@ -6,6 +6,12 @@ const ignoredErrors = ['Load failed', 'Failed to fetch'];
 
 // disable retries on testnet
 export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+
   queryCache: new QueryCache({
     onError: (error, query) => {
       const label = query.queryKey[0] as string;
@@ -15,7 +21,7 @@ export const queryClient = new QueryClient({
         Sentry.captureException(error, { tags: { queryKey: label, errorMessage } });
       }
 
-      console.error('error', error)
+      console.error('error', error);
 
       toast({
         title: 'Something went wrong',
