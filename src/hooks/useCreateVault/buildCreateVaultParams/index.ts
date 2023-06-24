@@ -72,7 +72,7 @@ export function getOsmosisReceiveAmount(
 
   // get scaled receive amount
   const scalingFactor = 10 ** (resultingSF - initialSF);
-  const scaledReceiveAmount = BigInt(unscaledReceiveAmount * scalingFactor);
+  const scaledReceiveAmount = BigInt(Math.floor(unscaledReceiveAmount * scalingFactor));
 
   return scaledReceiveAmount.toString();
 }
