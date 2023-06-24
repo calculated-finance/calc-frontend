@@ -24,8 +24,6 @@ export default function getClient(
   }
 
   if (chain === Chains.Osmosis) {
-    console.log('hi');
-
     if (!cosmClient) return null;
 
     return getCosmosClient(getChainContractAddress(chain), cosmClient);
