@@ -72,9 +72,9 @@ export function getOsmosisReceiveAmount(
 
   // get scaled receive amount
   const scalingFactor = 10 ** (resultingSF - initialSF);
-  const scaledReceiveAmount = unscaledReceiveAmount * scalingFactor;
+  const scaledReceiveAmount = BigInt(unscaledReceiveAmount * scalingFactor);
 
-  return Math.floor(scaledReceiveAmount).toString();
+  return scaledReceiveAmount.toString();
 }
 
 export function getMinimumReceiveAmount(
