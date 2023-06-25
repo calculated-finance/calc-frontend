@@ -80,7 +80,7 @@ function getTotalReceived(strategies: Strategy[], supportedDenoms: DenomInfo[]) 
 }
 
 function getStrategiesByStatus(allStrategies: Strategy[], status: string) {
-  const strategiesByStatus = allStrategies.filter((strategy) => strategy.rawData.status === status) || [];
+  const strategiesByStatus = allStrategies.filter((strategy) => strategy.status === status) || [];
   const percentage = (Number(strategiesByStatus.length / allStrategies.length) * 100).toFixed(2);
   return { strategiesByStatus, percentage };
 }
@@ -220,7 +220,7 @@ function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string
   const strategiesGroupedByOwnerThenStatus: Record<string, Record<string, Strategy[]>> = {};
 
   strategies.forEach((strategy: Strategy) => {
-    const { owner, status } = strategy.rawData;
+    const { owner, status } = strategy;
 
     if (!strategiesGroupedByOwnerThenStatus[owner]) {
       strategiesGroupedByOwnerThenStatus[owner] = {};
@@ -277,7 +277,7 @@ function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
 }
 
 export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
-  return Array.from(new Set(allStrategies?.map((strategy) => strategy.rawData.owner) || []));
+  return Array.from(new Set(allStrategies?.map((strategy) => strategy.owner) || []));
 }
 
 function Page() {
@@ -456,7 +456,7 @@ function Page() {
                 const strategiesByStatus = Array.from(
                   new Set(
                     (getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map(
-                      (strategy) => strategy.rawData.owner,
+                      (strategy) => strategy.owner,
                     ),
                   ),
                 );

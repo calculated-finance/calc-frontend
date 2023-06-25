@@ -40,7 +40,7 @@ export function useConfigureStrategy() {
         throw new Error('chain is null or empty');
       }
 
-      if (strategy.rawData.owner !== address) {
+      if (strategy.owner !== address) {
         throw new Error('You are not the owner of this strategy');
       }
 

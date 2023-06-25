@@ -12,7 +12,7 @@ function executeTopUpCosmos(
   strategy: Strategy,
   topUpAmount: number,
 ) {
-  if (strategy.rawData.owner !== address) {
+  if (strategy.owner !== address) {
     throw new Error('You are not the owner of this strategy');
   }
   const { deconversion, id } = getStrategyInitialDenom(strategy);

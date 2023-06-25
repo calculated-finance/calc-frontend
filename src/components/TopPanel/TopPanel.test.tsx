@@ -11,13 +11,10 @@ import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { Strategy } from '@models/Strategy';
 import TopPanel from './TopPanel';
 
-function buildStrategy(data: Partial<Vault> = {}): Strategy {
+function buildStrategy(data: Partial<Strategy> = {}): Strategy {
   return {
     ...dcaInStrategyViewModal,
-    rawData: {
-      ...dcaInStrategyViewModal.rawData,
-      ...data,
-    },
+    ...data,
   };
 }
 
@@ -75,7 +72,7 @@ describe('top panel', () => {
     describe('when a user has only completed strategies', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
-          data: [buildStrategy({ id: '1', status: 'inactive' })],
+          data: [buildStrategy({ id: '1', status: 'completed' })],
           isLoading: false,
         }));
       });

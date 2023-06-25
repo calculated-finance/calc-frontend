@@ -30,31 +30,24 @@ import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
 
-export function getStrategyStatus(strategy: Strategy) {
-  if (strategy.rawData.status === 'inactive') {
-    return 'completed';
-  }
-  return strategy.rawData.status;
-}
-
 export function isStrategyOperating(strategy: Strategy) {
-  return ['active', 'scheduled'].includes(strategy.rawData.status);
+  return ['active', 'scheduled'].includes(strategy.status);
 }
 
 export function isStrategyActive(strategy: Strategy) {
-  return ['active'].includes(strategy.rawData.status);
+  return ['active'].includes(strategy.status);
 }
 
 export function isStrategyScheduled(strategy: Strategy) {
-  return ['scheduled'].includes(strategy.rawData.status);
+  return ['scheduled'].includes(strategy.status);
 }
 
 export function isStrategyCompleted(strategy: Strategy) {
-  return ['inactive'].includes(strategy.rawData.status);
+  return ['inactive'].includes(strategy.status);
 }
 
 export function isStrategyCancelled(strategy: Strategy) {
-  return ['cancelled'].includes(strategy.rawData.status);
+  return ['cancelled'].includes(strategy.status);
 }
 
 export function getStrategyBalance(strategy: Strategy) {

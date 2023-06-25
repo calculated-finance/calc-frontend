@@ -7,7 +7,7 @@ export function transformToStrategyEVM(result: any, balance: any, id: string): S
   const { deconversion } = getDenomInfo(result.tokenIn);
 
   const owner = result.owner as string;
-  const status = balance ? 'active' : 'inactive';
+  const status = balance ? 'active' : 'completed';
 
   const vaultRawData = {
     balance: {

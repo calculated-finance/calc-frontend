@@ -1,7 +1,7 @@
 import { VaultStatus } from 'src/interfaces/v2/generated/query';
 import { BaseDenom, TimeInterval } from 'src/interfaces/v2/generated/execute';
 import { PositionType } from 'src/interfaces/generated-osmosis/response/get_vault';
-import { Strategy } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 import { mockTimeTrigger } from './trigger';
 
 const startedAt = new Date(2022, 4, 21, 17, 0, 0, 0).getTime();
@@ -95,7 +95,7 @@ export const dcaInStrategyViewModal = {
   id: '1',
   owner: 'kujiratestwallet',
   rawData: dcaInStrategy,
-  status: 'active',
+  status: 'active' as StrategyStatus,
 };
 
 export const dcaPlusStrategy = {
@@ -124,6 +124,6 @@ export const dcaPlusStrategy = {
 export const dcaPlusStrategyViewModal: Strategy = {
   id: '1',
   owner: 'kujiratestwallet',
-  status: 'active',
+  status: 'active' as StrategyStatus,
   rawData: dcaPlusStrategy,
 };
