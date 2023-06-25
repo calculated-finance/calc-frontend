@@ -100,7 +100,7 @@ const useCreateVault = (
       }
 
       if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
-        throw new Error('Invalid reinvest strategy.rawData.');
+        throw new Error('Invalid reinvest strategy.');
       }
 
       if (reinvestStrategyData && reinvestStrategyData.owner !== senderAddress) {

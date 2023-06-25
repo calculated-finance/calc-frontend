@@ -68,7 +68,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
             label={
               <Text>
                 A maximum of 5% swap volume, this amount with be returned in full if DCA+ does not outperform
-                traditional DCA at the end of the strategy.rawData.
+                traditional DCA at the end of the strategy.
               </Text>
             }
           >

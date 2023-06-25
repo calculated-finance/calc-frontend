@@ -135,7 +135,7 @@ function Strategies() {
     const strategies = [
       {
         name: 'Standard DCA In',
-        description: 'Customise your own dollar-cost average buying strategy.rawData.',
+        description: 'Customise your own dollar-cost average buying strategy.',
         icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
         enabled: true,
         href: StrategyUrls.DCAIn,

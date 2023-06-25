@@ -56,7 +56,7 @@ const steps: StepConfig[] = [
                 If the slippage exceeds your tolerance, the swap will fail, be skipped for that increment and your
                 strategy length will increase by 1 increment. This is automatically set to 2%, but you can change it to
                 anything you like between 0% and 100%. You can see if a strategy failed because of slippage on the
-                &ldquo;view performance&rdquo; page of each strategy.rawData.
+                &ldquo;view performance&rdquo; page of each strategy.
               </ListItem>
             </UnorderedList>
           </ListItem>

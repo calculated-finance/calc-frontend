@@ -73,7 +73,7 @@ export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
       {Boolean(field.value) && !meta.error && (
         <Stack>
           <FormHelperText color="brand.200" fontSize="xs">
-            An additional {displaySwaps} will be added to your strategy.rawData.
+            An additional {displaySwaps} will be added to your strategy.
           </FormHelperText>
           {isDcaPlus(strategy) && additionalSwaps > 180 && (
             <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
