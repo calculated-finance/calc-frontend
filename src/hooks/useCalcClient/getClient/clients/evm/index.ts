@@ -1,10 +1,10 @@
 import { Strategy } from '@models/Strategy';
-import { BrowserProvider, formatEther, formatUnits, parseEther } from 'ethers';
+import { BrowserProvider, formatEther, formatUnits } from 'ethers';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import getEventManagerContract from 'src/interfaces/evm/getEventManagerContract';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
+import getVaultContract from 'src/interfaces/evm/getVaultContract/';
 import getFactoryContract from 'src/interfaces/evm/getFactoryContract';
-import getVaultContract from 'src/interfaces/evm/getVaultContract/getVaultContract';
 import { transformToStrategyEVM } from './transformToStrategy';
 
 export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
@@ -33,7 +33,6 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
 // }
 
 export async function fetchStrategyEvents(id: string, provider: BrowserProvider): Promise<StrategyEvent[]> {
-  console.log('fetch for', id);
   const contract = getEventManagerContract(provider);
   const events = await contract.getDcaVaultExecutionCompletedEvents(id, '0', '100');
 
@@ -65,7 +64,6 @@ export async function fetchStrategyEvents(id: string, provider: BrowserProvider)
     block_height: event.blockHeight,
   }));
 
-  console.log(transformedEvents);
   return transformedEvents;
 }
 
@@ -76,7 +74,6 @@ async function fetchStrategies(userAddress: string, provider: BrowserProvider): 
     .getVaultsByAddress(userAddress)
     .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategyEVM(id, provider))));
 
-  console.log(result);
   return result as Strategy[];
 }
 

@@ -2,9 +2,9 @@ import { act, render, screen } from '@testing-library/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { useStrategies } from '@hooks/useStrategies';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
+import { Strategy } from '@models/Strategy';
 import Home from './index.page';
 import '@testing-library/jest-dom';
 
@@ -27,13 +27,10 @@ jest.mock('next/router', () => ({
 jest.mock('@hooks/useStrategies');
 jest.mock('@hooks/useWallet');
 
-function mockStrategy(data?: Partial<Vault>) {
+function mockStrategy(data?: Partial<Strategy>) {
   return {
     ...dcaInStrategyViewModal,
-    rawData: {
-      ...dcaInStrategyViewModal.rawData,
-      ...data,
-    },
+    ...data,
   };
 }
 
@@ -97,7 +94,7 @@ describe('Home', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
-          data: [mockStrategy(), mockStrategy({ status: 'inactive' })],
+          data: [mockStrategy(), mockStrategy({ status: 'completed' })],
         }));
       });
       it('show active strategies count', async () => {
