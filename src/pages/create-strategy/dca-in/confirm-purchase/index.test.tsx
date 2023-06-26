@@ -18,7 +18,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-in/confirm-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -51,6 +51,7 @@ const mockStateMachine = {
       swapAmount: 1,
       triggerType: 'date',
       autoStakeValidator: null,
+      autoCompoundStakingRewards: true,
       recipientAccount: null,
       sendToWallet: 'yes',
     },

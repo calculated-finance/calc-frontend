@@ -81,14 +81,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/deployment-role
-          role-session-name: run-tests-${{ inputs.ENVIRONMENT }}
-          role-duration-seconds: 1200
-
       - name: Run Lint
         run: yarn lint
 

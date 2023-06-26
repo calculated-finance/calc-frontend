@@ -14,7 +14,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-out/post-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -93,6 +93,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStakeValidator: null,
+        autoCompoundStakingRewards: true,
         sendToWallet: 'no',
         postPurchaseOption: 'sendToWallet',
         recipientAccount: 'kujira000000000000000000000000000000000000000',
@@ -102,7 +103,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });
@@ -120,6 +121,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStakeValidator: null,
+        autoCompoundStakingRewards: true,
         recipientAccount: '',
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'yes',
@@ -129,7 +131,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });

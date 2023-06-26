@@ -20,7 +20,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-out/confirm-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -53,6 +53,7 @@ const mockStateMachine = {
       swapAmount: 1,
       triggerType: 'date',
       autoStakeValidator: null,
+      autoCompoundStakingRewards: true,
       recipientAccount: null,
       sendToWallet: 'yes',
     },
@@ -185,7 +186,6 @@ describe('DCA Out confirm page', () => {
           strategyId: '59',
           timeSaved: 10,
           chain: Chains.Kujira,
-
         },
       });
     });
