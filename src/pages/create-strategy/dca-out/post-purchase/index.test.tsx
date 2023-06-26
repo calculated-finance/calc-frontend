@@ -107,7 +107,7 @@ describe('DCA Out post-purchase page', () => {
     });
   });
 
-  describe.only('when form is filled and submitted', () => {
+  describe('when form is filled and submitted', () => {
     it('submits form successfully', async () => {
       mockValidators();
 

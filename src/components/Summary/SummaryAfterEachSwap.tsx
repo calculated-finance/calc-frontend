@@ -72,9 +72,9 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
                 <Text>{validator && validator.description?.moniker}</Text>
               </BadgeButton>
             )}
+            {autoCompoundStakingRewards && <>. Yieldmos will auto-compound your staking rewards.</>}
           </>
         )}
-        {autoCompoundStakingRewards && <>. Yeildmos will auto-compound your staking rewards.</>}
         {recipientAccount && (
           <>
             After each swap, CALC will send the funds to{' '}

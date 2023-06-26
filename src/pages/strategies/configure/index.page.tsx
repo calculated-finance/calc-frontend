@@ -73,6 +73,7 @@ function ConfigureForm({
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading} isSigning={isSubmitting}>
           <PostPurchaseForm
             resultingDenom={resultingDenom}
+            autoCompoundStakingRewardsEnabled={false}
             submitButton={
               <FormControl isInvalid={isError}>
                 <Submit disabledUnlessDirty>Confirm</Submit>

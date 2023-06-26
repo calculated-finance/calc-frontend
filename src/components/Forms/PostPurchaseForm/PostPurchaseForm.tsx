@@ -88,14 +88,15 @@ function CollapseWithRender({ in: inProp, children }: { in: boolean } & Children
 
 export function PostPurchaseForm({
   resultingDenom,
+  autoCompoundStakingRewardsEnabled,
   submitButton,
 }: {
   resultingDenom: DenomInfo;
+  autoCompoundStakingRewardsEnabled?: boolean;
   submitButton?: JSX.Element;
 }) {
-  const stakeingPossible = resultingDenom.stakeable;
-
-  const stakeingUnsupported = !resultingDenom.stakeableAndSupported;
+  const stakingPossible = resultingDenom.stakeable;
+  const stakingUnsupported = !resultingDenom.stakeableAndSupported;
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
   const [{ value: postPurchaseOption }] = useField('postPurchaseOption');
@@ -103,7 +104,7 @@ export function PostPurchaseForm({
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={6}>
-        <PostPurchaseOptionRadio autoStakeSupported={stakeingPossible} />
+        <PostPurchaseOptionRadio autoStakeSupported={stakingPossible} />
         <Box>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
             <Stack>
@@ -114,13 +115,13 @@ export function PostPurchaseForm({
             </Stack>
           </CollapseWithRender>
 
-          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-            {stakeingUnsupported ? (
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakingPossible}>
+            {stakingUnsupported ? (
               <DummyAutoStakeValidator />
             ) : (
               <Stack>
                 <AutoStakeValidator />
-                <AutoCompoundStakingRewards />
+                <AutoCompoundStakingRewards enabled={autoCompoundStakingRewardsEnabled ?? true} />
               </Stack>
             )}
           </CollapseWithRender>
