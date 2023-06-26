@@ -1,4 +1,4 @@
-import { Strategy } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
@@ -31,23 +31,23 @@ import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
 
 export function isStrategyOperating(strategy: Strategy) {
-  return ['active', 'scheduled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
 }
 
 export function isStrategyActive(strategy: Strategy) {
-  return ['active'].includes(strategy.status);
+  return strategy.status === StrategyStatus.ACTIVE;
 }
 
 export function isStrategyScheduled(strategy: Strategy) {
-  return ['scheduled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.SCHEDULED;
 }
 
 export function isStrategyCompleted(strategy: Strategy) {
-  return ['inactive'].includes(strategy.status);
+  return strategy.status === StrategyStatus.COMPLETED;
 }
 
 export function isStrategyCancelled(strategy: Strategy) {
-  return ['cancelled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.CANCELLED;
 }
 
 export function getStrategyBalance(strategy: Strategy) {

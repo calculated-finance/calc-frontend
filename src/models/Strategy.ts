@@ -1,7 +1,12 @@
 import { DenomInfo } from '@utils/DenomInfo';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 
-export type StrategyStatus = 'active' | 'completed' | 'cancelled' | 'scheduled';
+export enum StrategyStatus {
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  SCHEDULED = 'scheduled',
+}
 
 export type Strategy = {
   id: string;

@@ -4,7 +4,7 @@ import { useWallet } from '@hooks/useWallet';
 import { useStrategies } from '@hooks/useStrategies';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { queryClient } from '@helpers/test/testQueryClient';
-import { Strategy } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 import Home from './index.page';
 import '@testing-library/jest-dom';
 
@@ -94,7 +94,7 @@ describe('Home', () => {
       beforeEach(() => {
         (useStrategies as jest.Mock).mockImplementation(() => ({
           isLoading: false,
-          data: [mockStrategy(), mockStrategy({ status: 'completed' })],
+          data: [mockStrategy(), mockStrategy({ status: StrategyStatus.COMPLETED })],
         }));
       });
       it('show active strategies count', async () => {

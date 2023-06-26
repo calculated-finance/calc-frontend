@@ -1,4 +1,4 @@
-import { Strategy } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 import getDenomInfo from '@utils/getDenomInfo';
 import { formatEther } from 'ethers';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
@@ -7,7 +7,7 @@ export function transformToStrategyEVM(result: any, balance: any, id: string): S
   const { deconversion } = getDenomInfo(result.tokenIn);
 
   const owner = result.owner as string;
-  const status = balance ? 'active' : 'completed';
+  const status = balance ? StrategyStatus.ACTIVE : StrategyStatus.COMPLETED;
 
   const vaultRawData = {
     balance: {

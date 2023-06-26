@@ -1,17 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { when } from 'jest-when';
-import { dcaInStrategy } from 'src/fixtures/strategy';
-import { Strategy } from '@models/Strategy';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { encode } from '../encode';
 
-export function mockStrategy(data?: Partial<Strategy>) {
-  return {
-    ...dcaInStrategy,
-    ...data,
-  };
-}
 const defaultExecuteMsg: ExecuteMsg = {
   create_vault: {
     label: '',
