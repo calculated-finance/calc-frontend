@@ -1,10 +1,9 @@
-import { Strategy } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { V2Pair, V3Pair } from '@models/Pair';
@@ -31,57 +30,50 @@ import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
 
-export function getStrategyStatus(strategy: Strategy) {
-  if (strategy.status === 'inactive') {
-    return 'completed';
-  }
-  return strategy.status;
-}
-
 export function isStrategyOperating(strategy: Strategy) {
-  return ['active', 'scheduled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
 }
 
 export function isStrategyActive(strategy: Strategy) {
-  return ['active'].includes(strategy.status);
+  return strategy.status === StrategyStatus.ACTIVE;
 }
 
 export function isStrategyScheduled(strategy: Strategy) {
-  return ['scheduled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.SCHEDULED;
 }
 
 export function isStrategyCompleted(strategy: Strategy) {
-  return ['inactive'].includes(strategy.status);
+  return strategy.status === StrategyStatus.COMPLETED;
 }
 
 export function isStrategyCancelled(strategy: Strategy) {
-  return ['cancelled'].includes(strategy.status);
+  return strategy.status === StrategyStatus.CANCELLED;
 }
 
 export function getStrategyBalance(strategy: Strategy) {
-  const { balance } = strategy || {};
+  const { balance } = strategy.rawData || {};
 
   return convertDenomFromCoin(balance);
 }
 
 export function getStrategyInitialDenomId(strategy: Strategy): string {
-  return strategy.balance.denom;
+  return strategy.rawData.balance.denom;
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.balance.denom);
+  return getDenomInfo(strategy.rawData.balance.denom);
 }
 
 export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.received_amount.denom);
+  return getDenomInfo(strategy.rawData.received_amount.denom);
 }
 
 export function getStrategyExecutionIntervalData(strategy: Strategy): {
   timeInterval: ExecutionIntervals;
   timeIncrement: number | undefined;
 } {
-  if (strategy.time_interval instanceof Object) {
-    const { custom } = strategy.time_interval;
+  if (strategy.rawData.time_interval instanceof Object) {
+    const { custom } = strategy.rawData.time_interval;
 
     const weeks = Math.floor(custom.seconds / SECONDS_IN_A_DAY / DAYS_IN_A_WEEK);
     const days = Math.floor(custom.seconds / SECONDS_IN_A_HOUR / HOURS_IN_A_DAY);
@@ -115,7 +107,7 @@ export function getStrategyExecutionIntervalData(strategy: Strategy): {
       }
     }
   }
-  const { time_interval } = strategy as Strategy;
+  const { time_interval } = strategy.rawData;
 
   return {
     timeInterval: time_interval as ExecutionIntervals,
@@ -152,7 +144,7 @@ export function getStrategyName(strategy: Strategy) {
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
-  const { slippage_tolerance } = strategy;
+  const { slippage_tolerance } = strategy.rawData;
   return slippage_tolerance ? Number((Number(slippage_tolerance) * 100).toFixed(2)) : undefined;
 }
 
@@ -162,12 +154,12 @@ export function getSlippageToleranceFormatted(strategy: Strategy) {
 }
 
 export function getSwapAmount(strategy: Strategy) {
-  const { swap_amount } = strategy || {};
+  const { swap_amount } = strategy.rawData || {};
   return Number(swap_amount);
 }
 
 export function getConvertedSwapAmount(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.swapped_amount.denom);
+  const { conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
 
@@ -201,7 +193,7 @@ export function isBuyStrategy(strategy: Strategy) {
 }
 
 export function getStrategyPriceTrigger(strategy: Strategy) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
   if (trigger && 'price' in trigger) {
     return trigger.price.target_price;
   }
@@ -231,7 +223,7 @@ export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | 
 }
 
 export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)
     : getStrategyInitialDenom(strategy);
@@ -257,8 +249,8 @@ export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pai
     });
   }
 
-  return strategy.started_at
-    ? new Date(Number(strategy.started_at) / 1000000).toLocaleDateString('en-US', {
+  return strategy.rawData.started_at
+    ? new Date(Number(strategy.rawData.started_at) / 1000000).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -271,7 +263,7 @@ export function getStrategyEndDateFromRemainingExecutions(
   events: StrategyEvent[] | undefined,
   executions: number,
 ) {
-  const { trigger } = strategy;
+  const { trigger } = strategy.rawData;
 
   if (isStrategyScheduled(strategy) && trigger && 'time' in trigger) {
     const startDate = new Date(Number(trigger.time.target_time) / 1000000);
@@ -310,7 +302,7 @@ export function getStrategyEndDate(strategy: Strategy, events: StrategyEvent[] |
 }
 
 export function isStrategyAutoStaking(strategy: Strategy) {
-  return isAutoStaking(strategy.destinations);
+  return isAutoStaking(strategy.rawData.destinations);
 }
 
 export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: string) {
@@ -344,21 +336,21 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
   const price = isBuyStrategy(strategy)
-    ? parseFloat(strategy.swap_amount) / parseFloat(receiveAmount)
-    : parseFloat(receiveAmount) / parseFloat(strategy.swap_amount);
+    ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
+    : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getPriceCeilingFloor(strategy: Vault, chain: Chains) {
-  if (!strategy.minimum_receive_amount) {
+export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
+  if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, strategy.minimum_receive_amount, chain);
+  return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
 }
 
-export function getBasePrice(strategy: Vault, chain: Chains) {
+export function getBasePrice(strategy: Strategy, chain: Chains) {
   const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
   if (!base_receive_amount) {
     return undefined;
@@ -368,7 +360,7 @@ export function getBasePrice(strategy: Vault, chain: Chains) {
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
-  const costAmount = strategy.swapped_amount.amount;
+  const costAmount = strategy.rawData.swapped_amount.amount;
   const feeFactor = isDcaPlus(strategy)
     ? 0
     : SWAP_FEE + dexFee + (isStrategyAutoStaking(strategy) ? DELEGATION_FEE : 0);
@@ -376,11 +368,11 @@ export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
 }
 
 export function getTotalSwapped(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.swapped_amount);
+  return convertDenomFromCoin(strategy.rawData.swapped_amount);
 }
 
 export function getTotalReceived(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.received_amount);
+  return convertDenomFromCoin(strategy.rawData.received_amount);
 }
 
 export function hasSwapFees(strategy: Strategy) {
@@ -396,10 +388,10 @@ export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 
-export function getAverageSellPrice(strategy: Vault, dexFee: number) {
+export function getAverageSellPrice(strategy: Strategy, dexFee: number) {
   return getTotalReceivedBeforeFees(strategy, dexFee) / getTotalSwapped(strategy);
 }
 
-export function getAveragePurchasePrice(strategy: Vault, dexFee: number) {
+export function getAveragePurchasePrice(strategy: Strategy, dexFee: number) {
   return getTotalSwapped(strategy) / getTotalReceivedBeforeFees(strategy, dexFee);
 }

@@ -1,6 +1,9 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import getCosmosClient, { GET_EVENTS_LIMIT } from '.';
+import { transformToStrategyCosmos } from './transformToStrategy';
+
+jest.mock('./transformToStrategy');
 
 describe('CosmosClient', () => {
   let mockClient: CosmWasmClient;
@@ -19,6 +22,7 @@ describe('CosmosClient', () => {
         vault: { id: vaultId, data: 'dummy_data' },
       };
       (mockClient.queryContractSmart as jest.Mock).mockResolvedValue(expectedResponse);
+      (transformToStrategyCosmos as jest.Mock).mockReturnValue('strategy');
 
       const cosmosClient = getCosmosClient(address, mockClient);
       const result = await cosmosClient.fetchStrategy(vaultId);
@@ -28,7 +32,9 @@ describe('CosmosClient', () => {
           vault_id: vaultId,
         },
       });
-      expect(result).toEqual(expectedResponse.vault);
+      expect(result).toEqual('strategy');
+
+      expect(transformToStrategyCosmos).toHaveBeenCalledWith(expectedResponse.vault);
     });
 
     it('should handle errors gracefully', async () => {

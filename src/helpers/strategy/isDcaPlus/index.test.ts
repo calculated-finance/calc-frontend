@@ -1,12 +1,12 @@
-import { dcaInStrategy, dcaPlusStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategyViewModal, dcaPlusStrategyViewModal } from 'src/fixtures/strategy';
 import { isDcaPlus } from '.';
 
 describe('isDcaPlus', () => {
   test('returns true for strategy with dca_plus_config property', () => {
-    expect(isDcaPlus(dcaPlusStrategy)).toBe(true);
+    expect(isDcaPlus(dcaPlusStrategyViewModal)).toBe(true);
   });
 
   test('returns false for strategy without dca_plus_config property', () => {
-    expect(isDcaPlus(dcaInStrategy)).toBe(false);
+    expect(isDcaPlus(dcaInStrategyViewModal)).toBe(false);
   });
 });

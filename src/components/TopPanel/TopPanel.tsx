@@ -2,7 +2,7 @@ import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Fle
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
-import { useStrategiesCosmos } from '@hooks/useStrategies';
+import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
@@ -65,10 +65,14 @@ function Returning() {
 }
 
 function ActiveWithOne() {
-  const { data } = useStrategiesCosmos();
-  const activeStrategies = data?.filter(isStrategyOperating) ?? [];
-  const activeStrategy = activeStrategies[0];
-  const { balance } = activeStrategy;
+  const { data } = useStrategies();
+  const activeStrategies = data?.filter(isStrategyOperating);
+  const activeStrategy = activeStrategies && activeStrategies[0];
+
+  if (!activeStrategy) {
+    return null;
+  }
+  const { balance } = activeStrategy.rawData;
   const balanceValue = new DenomValue(balance);
 
   const displayBalance = balanceValue.toConverted().toLocaleString('en-US', {
@@ -104,7 +108,7 @@ function ActiveWithOne() {
 }
 
 function ActiveWithMany() {
-  const { data } = useStrategiesCosmos();
+  const { data } = useStrategies();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   return (
     <>
@@ -145,7 +149,7 @@ function ActiveWithMany() {
 export default function TopPanel() {
   const { connected } = useWallet();
 
-  const { data, isLoading } = useStrategiesCosmos();
+  const { data, isLoading } = useStrategies();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const completedStrategies = data?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 

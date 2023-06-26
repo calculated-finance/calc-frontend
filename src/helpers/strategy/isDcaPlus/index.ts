@@ -2,12 +2,12 @@ import { Strategy } from '@models/Strategy';
 import { isNil } from 'lodash';
 
 export function getDcaPlusConfig(strategy: Strategy) {
-  if (isNil(strategy.performance_assessment_strategy) || isNil(strategy.swap_adjustment_strategy)) {
+  if (isNil(strategy.rawData.performance_assessment_strategy) || isNil(strategy.rawData.swap_adjustment_strategy)) {
     return null;
   }
 
   const { swap_adjustment_strategy, performance_assessment_strategy, deposited_amount, escrow_level, escrowed_amount } =
-    strategy;
+    strategy.rawData;
 
   if ('risk_weighted_average' in swap_adjustment_strategy) {
     return {

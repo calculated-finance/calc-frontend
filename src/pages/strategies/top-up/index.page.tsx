@@ -83,7 +83,7 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
         onSuccess: async () => {
           await nextStep({
             strategyId: strategy.id,
-            timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.swap_amount)),
+            timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.rawData.swap_amount)),
           });
         },
         onSettled: () => {

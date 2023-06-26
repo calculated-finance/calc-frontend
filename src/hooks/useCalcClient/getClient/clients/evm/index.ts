@@ -1,10 +1,11 @@
 import { Strategy } from '@models/Strategy';
-import { BrowserProvider, formatEther, formatUnits, parseEther } from 'ethers';
-import getVaultContract from 'src/interfaces/evm/getVaultContract';
+import { BrowserProvider, formatEther, formatUnits } from 'ethers';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import getEventManagerContract from 'src/interfaces/evm/getEventManagerContract';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
-import { transformToStrategy } from './transformToStrategy';
+import getVaultContract from 'src/interfaces/evm/getVaultContract/';
+import getFactoryContract from 'src/interfaces/evm/getFactoryContract';
+import { transformToStrategyEVM } from './transformToStrategy';
 
 export async function fetchStrategyEVM(id: string, provider: BrowserProvider): Promise<Strategy> {
   const vaultContract = getVaultContract(provider, id);
@@ -12,7 +13,7 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
   const balanceResponse = await vaultContract.getBalance();
   const balance = balanceResponse;
 
-  return transformToStrategy(result, balance, id);
+  return transformToStrategyEVM(result, balance, id);
 }
 
 // {
@@ -32,7 +33,6 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
 // }
 
 export async function fetchStrategyEvents(id: string, provider: BrowserProvider): Promise<StrategyEvent[]> {
-  console.log('fetch for', id);
   const contract = getEventManagerContract(provider);
   const events = await contract.getDcaVaultExecutionCompletedEvents(id, '0', '100');
 
@@ -64,13 +64,23 @@ export async function fetchStrategyEvents(id: string, provider: BrowserProvider)
     block_height: event.blockHeight,
   }));
 
-  console.log(transformedEvents);
   return transformedEvents;
+}
+
+async function fetchStrategies(userAddress: string, provider: BrowserProvider): Promise<Strategy[]> {
+  const factoryContract = getFactoryContract(provider);
+
+  const result = await factoryContract
+    .getVaultsByAddress(userAddress)
+    .then((ids: string[]) => Promise.all(ids.map((id: string) => fetchStrategyEVM(id, provider))));
+
+  return result as Strategy[];
 }
 
 export default function getEVMClient(evmProvider: BrowserProvider) {
   return {
     fetchStrategy: (id: string) => fetchStrategyEVM(id, evmProvider),
     fetchStrategyEvents: (id: string) => fetchStrategyEvents(id, evmProvider),
+    fetchStrategies: (userAddress: string) => fetchStrategies(userAddress, evmProvider),
   };
 }

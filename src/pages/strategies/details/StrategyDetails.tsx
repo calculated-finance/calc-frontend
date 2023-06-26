@@ -137,7 +137,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
-  const { balance, destinations } = strategy;
+  const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
@@ -247,7 +247,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               {!isWeightedScale(strategy) && <SwapEachCycle strategy={strategy} />}
               {isDcaPlus(strategy) && <Escrowed strategy={strategy} />}
-              {Boolean(strategy.slippage_tolerance) && (
+              {Boolean(strategy.rawData.slippage_tolerance) && (
                 <>
                   <GridItem colSpan={1}>
                     <Heading size="xs">Slippage tolerance</Heading>
@@ -259,7 +259,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </GridItem>
                 </>
               )}
-              {Boolean(strategy.minimum_receive_amount) && strategy.minimum_receive_amount && (
+              {Boolean(strategy.rawData.minimum_receive_amount) && strategy.rawData.minimum_receive_amount && (
                 <>
                   <GridItem colSpan={1}>
                     <Heading size="xs">{isBuyStrategy(strategy) ? 'Price ceiling' : 'Price floor'}</Heading>

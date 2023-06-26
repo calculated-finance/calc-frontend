@@ -17,7 +17,6 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import useAdminStrategies from '@hooks/useAdminStrategies';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useStrategiesCosmos, useStrategiesEVM } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
@@ -29,6 +28,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 
+import { useStrategies } from '@hooks/useStrategies';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -244,9 +244,10 @@ function WorkflowInformation() {
   );
 }
 
-function HomeGrid({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
+function HomeGrid() {
   const { connected } = useWallet();
   const { chain } = useChain();
+  const { data: strategies, isLoading } = useStrategies();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
@@ -273,23 +274,6 @@ function HomeGrid({ strategies, isLoading }: { strategies: Strategy[] | undefine
   );
 }
 
-function StrategiesCosmos() {
-  const { data, isLoading } = useStrategiesCosmos();
-
-  return <HomeGrid isLoading={isLoading} strategies={data} />;
-}
-
-function StrategiesEVM() {
-  const { data: strategies, isLoading } = useStrategiesEVM();
-
-  return <HomeGrid strategies={strategies} isLoading={isLoading} />;
-}
-
-function HomeGridWrapper() {
-  const { chain } = useChain();
-  return chain === Chains.Moonbeam ? <StrategiesEVM /> : <StrategiesCosmos />;
-}
-
 function Home() {
   return (
     <>
@@ -301,7 +285,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <HomeGridWrapper />
+      <HomeGrid />
     </>
   );
 }

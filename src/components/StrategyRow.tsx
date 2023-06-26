@@ -122,7 +122,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Balance:</Text>
           <Text textStyle="body-xs">
-            {convertDenomFromCoin(strategy.balance)} {initialDenom.name}
+            {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
           </Text>
         </GridItem>
         <GridItem

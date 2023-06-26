@@ -1,5 +1,5 @@
 import { getExecutionInterval } from '@hooks/useCreateVault/buildCreateVaultParams';
-import {dcaInStrategy, dcaPlusStrategy } from 'src/fixtures/strategy';
+import { dcaInStrategyViewModal, dcaPlusStrategyViewModal } from 'src/fixtures/strategy';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TransactionType } from '@components/TransactionType';
@@ -36,7 +36,7 @@ describe('buildTimeInterval', () => {
         currentPrice: undefined,
         chain: Chains.Kujira,
       },
-      strategy: dcaPlusStrategy,
+      strategy: dcaPlusStrategyViewModal,
     });
 
     expect(result).toEqual({});
@@ -49,7 +49,7 @@ describe('buildTimeInterval', () => {
       values: { executionInterval: 'hourly', executionIntervalIncrement: 2 } as CustomiseSchema,
       initialValues: { executionInterval: 'daily', executionIntervalIncrement: 2 } as CustomiseSchema,
       context: defaultContext,
-      strategy: dcaInStrategy,
+      strategy: dcaInStrategyViewModal,
     });
 
     expect(result).toEqual({ time_interval: 'mocked-execution-interval' });
@@ -60,7 +60,7 @@ describe('buildTimeInterval', () => {
       values: { executionInterval: 'hourly', executionIntervalIncrement: 2 } as CustomiseSchema,
       initialValues: { executionInterval: 'hourly', executionIntervalIncrement: 2 } as CustomiseSchema,
       context: defaultContext,
-      strategy: dcaInStrategy,
+      strategy: dcaInStrategyViewModal,
     });
 
     expect(result).toEqual({});

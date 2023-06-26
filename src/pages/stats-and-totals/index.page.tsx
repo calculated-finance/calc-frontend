@@ -41,8 +41,8 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
 
 function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
-    .filter((strategy) => strategy.swapped_amount.denom === denom.id)
-    .map((strategy) => strategy.swapped_amount.amount)
+    .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
+    .map((strategy) => strategy.rawData.swapped_amount.amount)
     .reduce((total, amount) => total + Number(amount), 0)
     .toFixed(6);
 }
@@ -61,8 +61,8 @@ export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomIn
 
 function getTotalReceivedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
-    .filter((strategy) => strategy.received_amount.denom === denom.id)
-    .map((strategy) => strategy.received_amount.amount)
+    .filter((strategy) => strategy.rawData.received_amount.denom === denom.id)
+    .map((strategy) => strategy.rawData.received_amount.amount)
     .reduce((total, amount) => total + Number(amount), 0)
     .toFixed(6);
 }
@@ -86,7 +86,8 @@ function getStrategiesByStatus(allStrategies: Strategy[], status: string) {
 }
 
 function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: string) {
-  const strategiesByTimeInterval = allStrategies.filter((strategy) => strategy.time_interval === timeInterval) || [];
+  const strategiesByTimeInterval =
+    allStrategies.filter((strategy) => strategy.rawData.time_interval === timeInterval) || [];
   const percentage = (Number(strategiesByTimeInterval.length / allStrategies.length) * 100).toFixed(2);
   return { strategiesByTimeInterval, percentage };
 }
@@ -155,18 +156,18 @@ const timeIntervalMap: Record<any, (date: Date) => number> = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  // const timeFunction = timeIntervalMap[strategy.time_interval] || (() => 0);
+  // const timeFunction = timeIntervalMap[strategy.rawData.time_interval] || (() => 0);
   // return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
 
-  if (typeof strategy.time_interval === 'string') {
-    return Math.min(timeIntervalMap[strategy.time_interval](date), getStrategyRemainingExecutions(strategy));
+  if (typeof strategy.rawData.time_interval === 'string') {
+    return Math.min(timeIntervalMap[strategy.rawData.time_interval](date), getStrategyRemainingExecutions(strategy));
   }
-  return Math.min(strategy.time_interval.custom.seconds, getStrategyRemainingExecutions(strategy));
+  return Math.min(strategy.rawData.time_interval.custom.seconds, getStrategyRemainingExecutions(strategy));
 }
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
-  const fees = SWAP_FEE * Number(strategy.swap_amount);
-  const { conversion } = getDenomInfo(strategy.balance.denom);
+  const fees = SWAP_FEE * Number(strategy.rawData.swap_amount);
+  const { conversion } = getDenomInfo(strategy.rawData.balance.denom);
   const convertedFees = conversion(fees);
 
   return convertedFees;
@@ -184,7 +185,7 @@ function getFiatPriceFromList(fiatPrices: any, denom: string) {
 
 function getProjectedRevenueForStrategyForDate(strategy: Strategy, date: Date, fiatPrices: any) {
   const fees = getFeesUntilDate(strategy, date);
-  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.balance.denom);
+  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.rawData.balance.denom);
   return fees * fiatPrice;
 }
 

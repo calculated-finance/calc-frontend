@@ -1,9 +1,8 @@
 import { Badge, Tooltip } from '@chakra-ui/react';
 import { Strategy } from '@models/Strategy';
-import { getStrategyStatus } from '@helpers/strategy';
 
 export function StrategyStatusBadge({ strategy }: { strategy: Strategy }) {
-  const status = getStrategyStatus(strategy);
+  const { status } = strategy;
 
   const statusColorSchemes = {
     active: 'green',
