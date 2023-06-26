@@ -5,8 +5,8 @@ import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 export function getGrantMsg(
   granter: string,
   grantee: string,
-  typeUrl: string = '/cosmos.authz.v1beta1.GenericAuthorization',
-  value: Uint8Array = GenericAuthorization.encode(
+  typeUrl = '/cosmos.authz.v1beta1.GenericAuthorization',
+  value = GenericAuthorization.encode(
     GenericAuthorization.fromPartial({ msg: '/cosmos.staking.v1beta1.MsgDelegate' }),
   ).finish(),
   seconds: number = new Date().getTime() / 1000 + 31536000, // 31536000 seconds in a year
