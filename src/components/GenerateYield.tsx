@@ -151,18 +151,24 @@ function MarsOption({
   );
 }
 
-function useMars(resultingDenom: DenomInfo | undefined) {
+function useMarket(resultingDenom: DenomInfo | undefined) {
   const client = useCosmWasmClient((state) => state.client);
 
-  return useQuery<Market[]>(
-    ['mars-check', client, resultingDenom?.id],
+  return useQuery<Market>(
+    ['mars-market', client, resultingDenom?.id],
     async () => {
       if (!client) {
         throw new Error('No client');
       }
+
+      if (!resultingDenom) {
+        throw new Error('No resulting denom');
+      }
+
       const result = await client.queryContractSmart(getMarsAddress(), {
-        markets: { limit: 100 },
+        market: { denom: resultingDenom.id },
       });
+
       return result;
     },
     {
@@ -176,10 +182,10 @@ function useMars(resultingDenom: DenomInfo | undefined) {
 
 export default function GenerateYield({ resultingDenom }: { resultingDenom: DenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
-  const { data, isLoading } = useMars(resultingDenom);
 
-  const marsData = data?.find((market) => market.denom === resultingDenom.id);
-  const marsEnabled = Boolean(marsData);
+  const { data: marketData, isLoading } = useMarket(resultingDenom);
+
+  const marsEnabled = marketData && marketData.deposit_enabled;
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -211,7 +217,7 @@ export default function GenerateYield({ resultingDenom }: { resultingDenom: Deno
             </GridItem>
           </Grid>
           <Stack {...getRootProps} maxH={200} overflow="auto">
-            <MarsOption {...marsRadio} resultingDenom={resultingDenom} marsData={marsData} />
+            <MarsOption {...marsRadio} resultingDenom={resultingDenom} marsData={marketData} />
           </Stack>
         </>
       ) : (
