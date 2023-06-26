@@ -18,7 +18,6 @@ export default function getClient(
 
   if (chain === Chains.Kujira) {
     if (!cosmClient) return null;
-    console.log(getCosmosClient(getChainContractAddress(chain), cosmClient));
 
     return getCosmosClient(getChainContractAddress(chain), cosmClient);
   }

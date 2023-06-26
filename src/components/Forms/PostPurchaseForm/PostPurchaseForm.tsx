@@ -12,6 +12,7 @@ import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
+import AutoCompoundStakingRewards from '@components/AutocompoundStakingRewards';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
@@ -114,7 +115,14 @@ export function PostPurchaseForm({
           </CollapseWithRender>
 
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-            {stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}
+            {stakeingUnsupported ? (
+              <DummyAutoStakeValidator />
+            ) : (
+              <Stack>
+                <AutoStakeValidator />
+                <AutoCompoundStakingRewards />
+              </Stack>
+            )}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
             {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest resultingDenom={resultingDenom} />}

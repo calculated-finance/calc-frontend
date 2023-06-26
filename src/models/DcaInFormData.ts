@@ -27,7 +27,6 @@ export const initialValues = {
   startDate: null,
   purchaseTime: '',
   startPrice: null,
-
   executionInterval: 'daily',
   executionIntervalIncrement: 1,
   swapAmount: null,
@@ -37,6 +36,7 @@ export const initialValues = {
   sendToWallet: YesNoValues.Yes,
   recipientAccount: '',
   autoStakeValidator: '',
+  autoCompoundStakingRewards: true,
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
   yieldOption: null,
@@ -149,7 +149,6 @@ export const allSchema = {
       }
       return value;
     }),
-
   swapAmount: Yup.number()
     .label('Swap Amount')
     .required()
@@ -160,7 +159,6 @@ export const allSchema = {
       }
       return value;
     })
-
     .test({
       name: 'less-than-deposit',
       message: 'Swap amount must be less than initial deposit',
@@ -270,12 +268,12 @@ export const allSchema = {
     })
     .test({
       name: 'correct-length',
-      message: ({ label}) => `${label} is not a valid address`,
+      message: ({ label }) => `${label} is not a valid address`,
       test(value, context) {
         if (!value) {
           return true;
         }
-        const { chain } = context.options.context || {}
+        const { chain } = context.options.context || {};
         return value?.length === getChainAddressLength(chain);
       },
     })
@@ -287,7 +285,7 @@ export const allSchema = {
         if (!value) {
           return true;
         }
-        const { chain } = context.options.context || {}
+        const { chain } = context.options.context || {};
         return value?.startsWith(getChainAddressPrefix(chain));
       },
     }),
@@ -299,6 +297,7 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
+  autoCompoundStakingRewards: Yup.bool().label('Auto-compound Staking Rewards'),
   yieldOption: Yup.string()
     .label('Yield Option')
     .nullable()
@@ -315,7 +314,6 @@ export const allSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-
   strategyDuration: Yup.number()
     .label('Strategy Duration')
     .min(MIN_DCA_PLUS_STRATEGY_DURATION)
@@ -368,6 +366,7 @@ export const dcaSchema = Yup.object({
   sendToWallet: allSchema.sendToWallet,
   recipientAccount: allSchema.recipientAccount,
   autoStakeValidator: allSchema.autoStakeValidator,
+  autoCompoundStakingRewards: allSchema.autoCompoundStakingRewards,
   postPurchaseOption: allSchema.postPurchaseOption,
   yieldOption: allSchema.yieldOption,
   reinvestStrategy: allSchema.reinvestStrategy,
@@ -386,6 +385,7 @@ export const postPurchaseValidationSchema = dcaSchema.pick([
   'sendToWallet',
   'recipientAccount',
   'autoStakeValidator',
+  'autoCompoundStakingRewards',
   'yieldOption',
   'reinvestStrategy',
 ]);
@@ -405,5 +405,4 @@ export const step2ValidationSchema = dcaSchema.pick([
   'priceThresholdEnabled',
   'priceThresholdValue',
 ]);
-
 export type DcaInFormDataStep2 = Yup.InferType<typeof step2ValidationSchema>;

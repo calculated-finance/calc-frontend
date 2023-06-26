@@ -33,7 +33,14 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
 }
 
 export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
-  const { resultingDenom, autoStakeValidator, recipientAccount, yieldOption, reinvestStrategy } = state;
+  const {
+    resultingDenom,
+    autoStakeValidator,
+    autoCompoundStakingRewards,
+    recipientAccount,
+    yieldOption,
+    reinvestStrategy,
+  } = state;
 
   const resultingDenomInfo = getDenomInfo(resultingDenom);
   const { validator, isLoading } = useValidator(autoStakeValidator);
@@ -67,6 +74,7 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
             )}
           </>
         )}
+        {autoCompoundStakingRewards && <>. Yeildmos will auto-compound your staking rewards.</>}
         {recipientAccount && (
           <>
             After each swap, CALC will send the funds to{' '}

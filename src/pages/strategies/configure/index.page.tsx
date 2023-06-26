@@ -113,6 +113,7 @@ function Page() {
     sendToWallet: initialValues.sendToWallet,
     recipientAccount: initialValues.recipientAccount,
     autoStakeValidator: initialValues.autoStakeValidator,
+    autoCompoundStakingRewards: initialValues.autoCompoundStakingRewards,
     yieldOption: initialValues.yieldOption,
     reinvestStrategy: initialValues.reinvestStrategy,
     ...getExistingValues(data, chain, address),

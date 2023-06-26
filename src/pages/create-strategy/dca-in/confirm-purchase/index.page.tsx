@@ -91,14 +91,16 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaIn,
-    }}>
-    <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaIn,
+      }}
+    >
+      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }
