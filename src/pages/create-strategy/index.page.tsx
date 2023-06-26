@@ -10,6 +10,7 @@ import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAnalytics } from '@hooks/useAnalytics';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
 
@@ -39,6 +40,7 @@ function InfoPanel(): JSX.Element {
 
 function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, enabled }: StrategyCardProps) {
   const { query } = useRouter();
+  const { track } = useAnalytics();
   return (
     <Stack direction={['row', null, null, 'column']} p={4} layerStyle="panel" width={['full', null, null, 56]} gap={4}>
       <Flex direction="column" flexGrow={1}>
@@ -59,7 +61,9 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
           <LinkWithQuery href={{ pathname: href ?? '', query }}>
-            <Button mb={2}>Get started</Button>
+            <Button mb={2} onClick={() => track('Create Strategy Button')}>
+              Get started
+            </Button>
           </LinkWithQuery>
         ) : (
           <Button mb={2} cursor="unset" color="navy" colorScheme="grey">

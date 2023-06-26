@@ -25,6 +25,7 @@ import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
 import { Chains } from '@hooks/useChain/Chains';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -34,6 +35,8 @@ function WalletModal() {
   const { isConnecting } = useWallet();
 
   const { isAdminPage } = useAdmin();
+
+  const { track } = useAnalytics();
 
   // const { isStationInstalled, connect: connectStation } = useStation((state) => ({
   //   isStationInstalled: state.isStationInstalled,
@@ -75,21 +78,26 @@ function WalletModal() {
 
   const handleKeplrConnect = () => {
     connectKeplr(chain);
+    track('Connect Keplr Button');
     handleClose();
   };
 
   const handleLeapConnect = () => {
     connectLeap(chain);
+    track('Connect Leap Button');
+
     handleClose();
   };
 
   const handleXDEFIConnect = () => {
     connectXDEFI(chain);
+    track('Connect XDefi Button');
     handleClose();
   };
 
   const handleMetamaskConnect = () => {
     connectMetamask();
+    track('Connect Keplr Button');
     handleClose();
   };
 

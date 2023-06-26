@@ -8,10 +8,12 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
 function Onboarding() {
+  const { track } = useAnalytics();
   return (
     <>
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
@@ -24,7 +26,7 @@ function Onboarding() {
         </Text>
       </Stack>
       <LinkWithQuery passHref href="/create-strategy">
-        <Button maxWidth={402} size="sm">
+        <Button maxWidth={402} size="sm" onClick={() => track('Get Started Button Clicked')}>
           Get started
         </Button>
       </LinkWithQuery>
