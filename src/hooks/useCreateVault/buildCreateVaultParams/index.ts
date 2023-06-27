@@ -1,8 +1,16 @@
 import { DcaInFormDataAll, initialValues } from '@models/DcaInFormData';
 import { TransactionType } from '@components/TransactionType';
 import { DcaPlusState } from '@models/dcaPlusFormData';
-import { ExecuteMsg, PositionType } from 'src/interfaces/v2/generated/execute';
-import { ExecuteMsg as OsmosisExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
+import {
+  ExecuteMsg,
+  PerformanceAssessmentStrategyParams,
+  PositionType,
+  SwapAdjustmentStrategy,
+} from 'src/interfaces/v2/generated/execute';
+import {
+  ExecuteMsg as OsmosisExecuteMsg,
+  SwapAdjustmentStrategyParams,
+} from 'src/interfaces/generated-osmosis/execute';
 import getDenomInfo from '@utils/getDenomInfo';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
@@ -24,16 +32,12 @@ export function getSlippageWithoutTrailingZeros(slippage: number) {
 }
 
 export function getReceiveAmount(
-  price: number | null | undefined,
+  price: number,
   deconversion: (value: number) => number,
   swapAmount: number,
   transactionType: TransactionType,
   significantFigures: number,
 ) {
-  if (!price) {
-    return undefined;
-  }
-
   if (transactionType === TransactionType.Buy) {
     return BigInt(deconversion(Number((swapAmount / price).toFixed(significantFigures)))).toString();
   }
@@ -43,17 +47,13 @@ export function getReceiveAmount(
 export function getOsmosisReceiveAmount(
   initialDenom: DenomInfo | undefined, // osmo
   swapAmount: number, // 1.2
-  price: number | null | undefined, // 5.0
+  price: number, // 5.0
   resultingDenom: DenomInfo | undefined, // weth
   transactionType: TransactionType,
 ) {
   // convert swap amount to microns e.g. 1.2 -> 1 200 000
   // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
   // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
-
-  if (!price) {
-    return undefined;
-  }
 
   const { deconversion: initialDeconversion, significantFigures: initialSF } = initialDenom || {};
   const { significantFigures: resultingSF } = resultingDenom || {};
@@ -80,7 +80,7 @@ export function getOsmosisReceiveAmount(
 export function getMinimumReceiveAmount(
   initialDenom: DenomInfo | undefined,
   swapAmount: number,
-  priceThresholdValue: number | null | undefined,
+  priceThresholdValue: number,
   resultingDenom: DenomInfo | undefined,
   transactionType: TransactionType,
   chain: Chains,
@@ -114,19 +114,16 @@ export function getSlippageTolerance(
 }
 
 function getStartTime(startDate: Date | undefined, purchaseTime: string | undefined) {
-  let startTimeSeconds;
-
   if (startDate) {
-    const startTime = combineDateAndTime(startDate, purchaseTime);
-    startTimeSeconds = (startTime.valueOf() / 1000).toString();
+    return combineDateAndTime(startDate, purchaseTime);
   }
-  return startTimeSeconds;
+  return undefined;
 }
 
 function getTargetReceiveAmount(
   initialDenom: DenomInfo,
   swapAmount: number,
-  startPrice: number | null | undefined,
+  startPrice: number,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
   chain: Chains,
@@ -143,7 +140,7 @@ function getTargetReceiveAmount(
 function getBaseReceiveAmount(
   initialDenom: DenomInfo,
   swapAmount: number,
-  basePrice: number | null | undefined,
+  basePrice: number,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
   chain: Chains,
@@ -163,16 +160,11 @@ function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
   return BigInt(deconversion(swapAmount)).toString();
 }
 
-function calculateSwapAmountFromDuration(initialDenom: DenomInfo, strategyDuration: number, initialDeposit: number) {
-  const { deconversion } = initialDenom;
-
-  return BigInt(deconversion(getSwapAmountFromDuration(initialDeposit, strategyDuration)));
+function calculateSwapAmountFromDuration(strategyDuration: number, initialDeposit: number) {
+  return getSwapAmountFromDuration(initialDeposit, strategyDuration);
 }
 
-export function getExecutionInterval(
-  executionInterval: ExecutionIntervals,
-  executionIntervalIncrement: number | undefined | null,
-) {
+export function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {
   const conversion: Record<ExecutionIntervals, number> = {
     minute: SECONDS_IN_A_MINUTE,
     half_hourly: SECONDS_IN_A_HOUR / 2,
@@ -183,15 +175,81 @@ export function getExecutionInterval(
     fortnightly: SECONDS_IN_A_WEEK * 2,
     monthly: SECONDS_IN_A_WEEK * 4,
   };
-  if (!isNil(executionIntervalIncrement) && executionIntervalIncrement > 0) {
-    return {
-      custom: {
-        seconds: executionIntervalIncrement * conversion[executionInterval],
-      },
-    };
-  }
 
-  return executionInterval;
+  return executionIntervalIncrement * conversion[executionInterval];
+}
+
+type BuildCreateVaultContext = {
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  timeInterval: number;
+  startDateTime: Date | undefined;
+  startPrice: number | null | undefined;
+  swapAmount: number;
+  priceThreshold: number | null | undefined;
+  transactionType: TransactionType;
+  chain: Chains;
+  advancedSettings: boolean | undefined;
+  slippageTolerance: number | null | undefined;
+  autoStakeValidator: string | null | undefined;
+  recipientAccount: string | null | undefined;
+  yieldOption: string | null | undefined;
+  senderAddress: string;
+  reinvestStrategyId: string | null | undefined;
+  swapAdjustmentStrategy: SwapAdjustmentStrategyParams | undefined;
+  performanceAssessmentStrategy: PerformanceAssessmentStrategyParams | undefined;
+};
+
+export function buildCreateVaultMsg({
+  initialDenom,
+  resultingDenom,
+  timeInterval,
+  startDateTime,
+  startPrice,
+  swapAmount,
+  priceThreshold,
+  transactionType,
+  chain,
+  advancedSettings,
+  slippageTolerance,
+  autoStakeValidator,
+  recipientAccount,
+  yieldOption,
+  senderAddress,
+  reinvestStrategyId,
+  swapAdjustmentStrategy,
+  performanceAssessmentStrategy,
+}: BuildCreateVaultContext) {
+  const msg = {
+    create_vault: {
+      label: '',
+      time_interval: {
+        custom: { seconds: timeInterval },
+      },
+      target_denom: resultingDenom.id,
+      swap_amount: getSwapAmount(initialDenom, swapAmount),
+      target_start_time_utc_seconds: startDateTime && (startDateTime.valueOf() / 1000).toString(),
+      minimum_receive_amount: priceThreshold
+        ? getMinimumReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, chain)
+        : undefined,
+      slippage_tolerance: getSlippageTolerance(advancedSettings, slippageTolerance),
+      destinations: buildCallbackDestinations(
+        chain,
+        autoStakeValidator,
+        recipientAccount,
+        yieldOption,
+        senderAddress,
+        reinvestStrategyId,
+      ),
+      target_receive_amount: startPrice
+        ? getTargetReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType, chain)
+        : undefined,
+      swap_adjustment_strategy: swapAdjustmentStrategy,
+      performance_assessment_strategy: performanceAssessmentStrategy,
+    },
+  } as ExecuteMsg;
+
+  return msg;
 }
 
 export function buildCreateVaultParamsDCA(
@@ -200,45 +258,46 @@ export function buildCreateVaultParamsDCA(
   senderAddress: string,
   chain: Chains,
 ) {
-  const { executionInterval, executionIntervalIncrement } = state;
+  const {
+    executionInterval,
+    executionIntervalIncrement,
+    startDate,
+    purchaseTime,
+    swapAmount,
+    startPrice,
+    advancedSettings,
+    slippageTolerance,
+    autoStakeValidator,
+    recipientAccount,
+    yieldOption,
+    reinvestStrategy,
+    priceThresholdValue,
+  } = state;
 
-  const initialDenomInfo = getDenomInfo(state.initialDenom);
-  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
 
-  const msg = {
-    create_vault: {
-      label: '',
-      time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
-      target_denom: resultingDenomInfo.id,
-      swap_amount: getSwapAmount(initialDenomInfo, state.swapAmount),
-      target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
-      minimum_receive_amount: getMinimumReceiveAmount(
-        initialDenomInfo,
-        state.swapAmount,
-        state.priceThresholdValue,
-        resultingDenomInfo,
-        transactionType,
-        chain,
-      ),
-      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: buildCallbackDestinations(
-        chain,
-        state.autoStakeValidator,
-        state.recipientAccount,
-        state.yieldOption,
-        senderAddress,
-        state.reinvestStrategy,
-      ),
-      target_receive_amount: getTargetReceiveAmount(
-        initialDenomInfo,
-        state.swapAmount,
-        state.startPrice,
-        resultingDenomInfo,
-        transactionType,
-        chain,
-      ),
-    },
-  } as OsmosisExecuteMsg;
+  const msg = buildCreateVaultMsg({
+    initialDenom,
+    resultingDenom,
+    timeInterval: getExecutionInterval(executionInterval, executionIntervalIncrement),
+    startDateTime: getStartTime(startDate, purchaseTime),
+    startPrice,
+    swapAmount,
+    priceThreshold: priceThresholdValue,
+    transactionType,
+    chain,
+    advancedSettings,
+    slippageTolerance,
+    autoStakeValidator,
+    recipientAccount,
+    yieldOption,
+    senderAddress,
+    reinvestStrategyId: reinvestStrategy,
+    swapAdjustmentStrategy: undefined,
+    performanceAssessmentStrategy: undefined,
+  });
+
   return msg;
 }
 
@@ -276,56 +335,56 @@ export function buildCreateVaultParamsWeightedScale(
   currentPrice: number,
   chain: Chains,
 ) {
-  const { executionInterval, executionIntervalIncrement } = state;
+  const {
+    executionInterval,
+    executionIntervalIncrement,
+    startDate,
+    purchaseTime,
+    swapAmount,
+    startPrice,
+    advancedSettings,
+    slippageTolerance,
+    autoStakeValidator,
+    recipientAccount,
+    yieldOption,
+    reinvestStrategy,
+    priceThresholdValue,
+  } = state;
 
-  const initialDenomInfo = getDenomInfo(state.initialDenom);
-  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
 
-  const msg = {
-    create_vault: {
-      label: '',
-      time_interval: getExecutionInterval(executionInterval, executionIntervalIncrement),
-      target_denom: resultingDenomInfo.id,
-      swap_amount: getSwapAmount(initialDenomInfo, state.swapAmount),
-      target_start_time_utc_seconds: getStartTime(state.startDate, state.purchaseTime),
-      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: buildCallbackDestinations(
-        chain,
-        state.autoStakeValidator,
-        state.recipientAccount,
-        state.yieldOption,
-        senderAddress,
-        state.reinvestStrategy,
-      ),
-      target_receive_amount: getTargetReceiveAmount(
-        initialDenomInfo,
-        state.swapAmount,
-        state.startPrice,
-        resultingDenomInfo,
-        transactionType,
-        chain,
-      ),
-      minimum_receive_amount: getMinimumReceiveAmount(
-        initialDenomInfo,
-        state.swapAmount,
-        state.priceThresholdValue,
-        resultingDenomInfo,
-        transactionType,
-        chain,
-      ),
-      swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
-        initialDenomInfo,
-        state.swapAmount,
-        state.basePriceValue,
-        resultingDenomInfo,
-        transactionType,
-        state.applyMultiplier,
-        state.swapMultiplier,
-        currentPrice,
-        chain,
-      ),
-    },
-  } as OsmosisExecuteMsg;
+  const msg = buildCreateVaultMsg({
+    initialDenom,
+    resultingDenom,
+    timeInterval: getExecutionInterval(executionInterval, executionIntervalIncrement),
+    startDateTime: getStartTime(startDate, purchaseTime),
+    startPrice,
+    swapAmount,
+    priceThreshold: priceThresholdValue,
+    transactionType,
+    chain,
+    advancedSettings,
+    slippageTolerance,
+    autoStakeValidator,
+    recipientAccount,
+    yieldOption,
+    senderAddress,
+    reinvestStrategyId: reinvestStrategy,
+    swapAdjustmentStrategy: buildWeightedScaleAdjustmentStrategy(
+      initialDenom,
+      state.swapAmount,
+      state.basePriceValue,
+      resultingDenom,
+      transactionType,
+      state.applyMultiplier,
+      state.swapMultiplier,
+      currentPrice,
+      chain,
+    ),
+    performanceAssessmentStrategy: undefined,
+  });
+
   return msg;
 }
 
@@ -336,40 +395,38 @@ export function buildCreateVaultParamsDCAPlus(
   chain: Chains,
   config: Config,
 ): ExecuteMsg | OsmosisExecuteMsg {
-  const initialDenomInfo = getDenomInfo(state.initialDenom);
-  const resultingDenomInfo = getDenomInfo(state.resultingDenom);
+  const initialDenom = getDenomInfo(state.initialDenom);
+  const resultingDenom = getDenomInfo(state.resultingDenom);
 
-  const swapAmount = calculateSwapAmountFromDuration(initialDenomInfo, state.strategyDuration, state.initialDeposit);
-
-  const msg = {
-    create_vault: {
-      label: '',
-      time_interval: 'daily',
-      target_denom: resultingDenomInfo.id,
-      swap_amount: swapAmount.toString(),
-      target_start_time_utc_seconds: undefined,
-      target_receive_amount: undefined,
-      slippage_tolerance: getSlippageTolerance(state.advancedSettings, state.slippageTolerance),
-      destinations: buildCallbackDestinations(
-        chain,
-        state.autoStakeValidator,
-        state.recipientAccount,
-        state.yieldOption,
-        senderAddress,
-        state.reinvestStrategy,
-      ),
-      swap_adjustment_strategy: {
-        risk_weighted_average: {
-          base_denom: 'bitcoin',
-          ...(!!config &&
-            config.exchange_contract_address && {
-              position_type: (transactionType === TransactionType.Buy ? 'enter' : 'exit') as PositionType,
-            }),
-        },
+  const msg = buildCreateVaultMsg({
+    initialDenom,
+    resultingDenom,
+    timeInterval: SECONDS_IN_A_DAY,
+    startDateTime: undefined,
+    startPrice: undefined,
+    swapAmount: getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
+    priceThreshold: undefined,
+    transactionType,
+    chain,
+    advancedSettings: state.advancedSettings,
+    slippageTolerance: state.slippageTolerance,
+    autoStakeValidator: state.autoStakeValidator,
+    recipientAccount: state.recipientAccount,
+    yieldOption: state.yieldOption,
+    senderAddress,
+    reinvestStrategyId: state.reinvestStrategy,
+    swapAdjustmentStrategy: {
+      risk_weighted_average: {
+        base_denom: 'bitcoin',
+        ...(!!config &&
+          config.exchange_contract_address && {
+            position_type: (transactionType === TransactionType.Buy ? 'enter' : 'exit') as PositionType,
+          }),
       },
-      performance_assessment_strategy: 'compare_to_standard_dca',
     },
-  } as ExecuteMsg;
+    performanceAssessmentStrategy: 'compare_to_standard_dca',
+  });
+
   return msg;
 }
 
