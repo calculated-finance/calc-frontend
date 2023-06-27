@@ -49,7 +49,7 @@ export function useConfigureStrategy() {
       const { autoStakeValidator } = values;
 
       if (autoStakeValidator) {
-        msgs.push(getGrantMsg(address, chain));
+        msgs.push(getGrantMsg(address, getChainContractAddress(chain)));
       }
 
       const updateVaultMsg = {

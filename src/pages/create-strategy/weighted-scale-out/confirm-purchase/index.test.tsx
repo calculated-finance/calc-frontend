@@ -21,7 +21,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-out/confirm-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -43,6 +43,7 @@ const mockStateMachine = {
       resultingDenom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
       advancedSettings: true,
       autoStakeValidator: null,
+      autoCompoundStakingRewards: true,
       recipientAccount: null,
       sendToWallet: 'yes',
       strategyDuration: 30,
@@ -171,7 +172,6 @@ describe('DCA Plus Out confirm page', () => {
           strategyId: '59',
           timeSaved: 300,
           chain: Chains.Kujira,
-
         },
       });
     });

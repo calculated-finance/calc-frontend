@@ -19,7 +19,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-plus-in/confirm-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -41,6 +41,7 @@ const mockStateMachine = {
       resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
       advancedSettings: false,
       autoStakeValidator: null,
+      autoCompoundStakingRewards: true,
       recipientAccount: null,
       sendToWallet: 'yes',
       strategyDuration: 30,
@@ -176,7 +177,6 @@ describe('DCA Plus In confirm page', () => {
           strategyId: '59',
           timeSaved: 300,
           chain: Chains.Kujira,
-
         },
       });
     });

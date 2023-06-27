@@ -12,6 +12,7 @@ import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
+import AutoCompoundStakingRewards from '@components/AutocompoundStakingRewards';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
@@ -87,14 +88,15 @@ function CollapseWithRender({ in: inProp, children }: { in: boolean } & Children
 
 export function PostPurchaseForm({
   resultingDenom,
+  autoCompoundStakingRewardsEnabled,
   submitButton,
 }: {
   resultingDenom: DenomInfo;
+  autoCompoundStakingRewardsEnabled?: boolean;
   submitButton?: JSX.Element;
 }) {
-  const stakeingPossible = resultingDenom.stakeable;
-
-  const stakeingUnsupported = !resultingDenom.stakeableAndSupported;
+  const stakingPossible = resultingDenom.stakeable;
+  const stakingUnsupported = !resultingDenom.stakeableAndSupported;
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
   const [{ value: postPurchaseOption }] = useField('postPurchaseOption');
@@ -102,7 +104,7 @@ export function PostPurchaseForm({
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={6}>
-        <PostPurchaseOptionRadio autoStakeSupported={stakeingPossible} />
+        <PostPurchaseOptionRadio autoStakeSupported={stakingPossible} />
         <Box>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.SendToWallet}>
             <Stack>
@@ -113,8 +115,15 @@ export function PostPurchaseForm({
             </Stack>
           </CollapseWithRender>
 
-          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakeingPossible}>
-            {stakeingUnsupported ? <DummyAutoStakeValidator /> : <AutoStakeValidator />}
+          <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Stake && stakingPossible}>
+            {stakingUnsupported ? (
+              <DummyAutoStakeValidator />
+            ) : (
+              <Stack>
+                <AutoStakeValidator />
+                <AutoCompoundStakingRewards enabled={autoCompoundStakingRewardsEnabled ?? true} />
+              </Stack>
+            )}
           </CollapseWithRender>
           <CollapseWithRender in={postPurchaseOption === PostPurchaseOptions.Reinvest}>
             {postPurchaseOption === PostPurchaseOptions.Reinvest && <Reinvest resultingDenom={resultingDenom} />}

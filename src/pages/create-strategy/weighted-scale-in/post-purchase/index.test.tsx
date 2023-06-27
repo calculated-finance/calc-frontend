@@ -24,7 +24,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-in/post-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -111,6 +111,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStakeValidator: null,
+        autoCompoundStakingRewards: true,
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
         recipientAccount: 'kujira000000000000000000000000000000000000000',
@@ -120,7 +121,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });
@@ -144,6 +145,7 @@ describe('DCA In post-purchase page', () => {
       });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        autoCompoundStakingRewards: true,
         autoStakeValidator: 'kujiravalopertestvalidator',
         postPurchaseOption: 'stake',
         recipientAccount: '',
@@ -154,7 +156,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });
@@ -170,6 +172,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStakeValidator: null,
+        autoCompoundStakingRewards: true,
         recipientAccount: '',
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'yes',
@@ -179,7 +182,7 @@ describe('DCA In post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });

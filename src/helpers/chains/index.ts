@@ -139,6 +139,12 @@ export function getChainContractAddress(chain: Chains) {
   return CONTRACT_ADDRESS;
 }
 
+export function getAutocompoundStakingRewardsAddress(chain: Chains): string {
+  return chain === Chains.Osmosis
+    ? 'osmo1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx626kj2'
+    : 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj';
+}
+
 export function getChainFeeTakerAddress(chain: Chains) {
   if (chain === Chains.Osmosis) {
     if (isMainnet()) {

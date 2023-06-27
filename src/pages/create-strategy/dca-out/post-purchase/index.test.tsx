@@ -14,7 +14,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-out/post-purchase',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -92,6 +92,7 @@ describe('DCA Out post-purchase page', () => {
       await waitFor(() => userEvent.click(screen.getByText(/Next/)), { timeout: 10000 });
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+        autoCompoundStakingRewards: true,
         autoStakeValidator: null,
         postPurchaseOption: 'sendToWallet',
         sendToWallet: 'no',
@@ -102,7 +103,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });
@@ -120,6 +121,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
         autoStakeValidator: null,
+        autoCompoundStakingRewards: true,
         postPurchaseOption: 'sendToWallet',
         recipientAccount: '',
         sendToWallet: 'yes',
@@ -129,7 +131,7 @@ describe('DCA Out post-purchase page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-out/confirm-purchase',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
     });
   });

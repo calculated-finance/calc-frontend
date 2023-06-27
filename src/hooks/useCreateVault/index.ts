@@ -10,7 +10,11 @@ import { getFeeMessage } from '@helpers/getFeeMessage';
 import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useChain } from '@hooks/useChain';
-import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import {
+  getChainContractAddress,
+  getChainFeeTakerAddress,
+  getAutocompoundStakingRewardsAddress,
+} from '@helpers/chains';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import usePrice from '@hooks/usePrice';
 import * as Sentry from '@sentry/react';
@@ -24,6 +28,7 @@ import { Denom } from '@models/Denom';
 import { useConfig } from '@hooks/useConfig';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { StakeAuthorization, AuthorizationType } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
 import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { getGrantMsg } from './getGrantMsg';
@@ -111,10 +116,28 @@ const useCreateVault = (
         throw new Error('Config not loaded');
       }
 
-      const { autoStakeValidator } = state;
+      const { autoStakeValidator, autoCompoundStakingRewards } = state;
 
       if (autoStakeValidator) {
-        msgs.push(getGrantMsg(senderAddress, chain));
+        msgs.push(getGrantMsg(senderAddress, getChainContractAddress(chain)));
+
+        if (autoCompoundStakingRewards) {
+          msgs.push(
+            getGrantMsg(
+              senderAddress,
+              getAutocompoundStakingRewardsAddress(chain),
+              '/cosmos.staking.v1beta1.StakeAuthorization',
+              StakeAuthorization.encode(
+                StakeAuthorization.fromPartial({
+                  authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE,
+                  allowList: {
+                    address: [autoStakeValidator],
+                  },
+                }),
+              ).finish(),
+            ),
+          );
+        }
       }
 
       const createVaultMsg = buildCreateVaultParams(

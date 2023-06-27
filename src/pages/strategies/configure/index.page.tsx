@@ -73,6 +73,7 @@ function ConfigureForm({
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isPageLoading} isSigning={isSubmitting}>
           <PostPurchaseForm
             resultingDenom={resultingDenom}
+            autoCompoundStakingRewardsEnabled={false}
             submitButton={
               <FormControl isInvalid={isError}>
                 <Submit disabledUnlessDirty>Confirm</Submit>
@@ -113,6 +114,7 @@ function Page() {
     sendToWallet: initialValues.sendToWallet,
     recipientAccount: initialValues.recipientAccount,
     autoStakeValidator: initialValues.autoStakeValidator,
+    autoCompoundStakingRewards: initialValues.autoCompoundStakingRewards,
     yieldOption: initialValues.yieldOption,
     reinvestStrategy: initialValues.reinvestStrategy,
     ...getExistingValues(data, chain, address),
