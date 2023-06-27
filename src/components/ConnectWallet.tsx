@@ -1,16 +1,12 @@
 import { Button, Flex, FlexProps, Heading, Link, Stack, Text, Image } from '@chakra-ui/react';
 import { useWallet } from '@hooks/useWallet';
-import { useAnalytics } from '@hooks/useAnalytics';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import Spinner from './Spinner';
 
 function ConnectWallet(props: FlexProps) {
   const { isConnecting } = useWallet();
   const { setVisible } = useWalletModal();
-  const { track } = useAnalytics();
-
   const handleConnect = () => {
-    track('Connect Wallet Button Clicked');
     setVisible(true);
   };
   return (

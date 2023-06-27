@@ -18,7 +18,7 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
-import { useWallet } from '@hooks/useWallet';
+import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useChain } from '@hooks/useChain';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
@@ -67,6 +67,10 @@ function WalletModal() {
 
   const { isOpen, onToggle } = useDisclosure();
 
+  const trackConnectedWallet = (walletType: WalletTypes) => {
+    track('Wallet Connected', { walletType });
+  };
+
   const handleClose = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
@@ -78,26 +82,25 @@ function WalletModal() {
 
   const handleKeplrConnect = () => {
     connectKeplr(chain);
-    track('Connect Keplr Button');
+    trackConnectedWallet(WalletTypes.KEPLR);
     handleClose();
   };
 
   const handleLeapConnect = () => {
     connectLeap(chain);
-    track('Connect Leap Button');
-
+    trackConnectedWallet(WalletTypes.LEAP);
     handleClose();
   };
 
   const handleXDEFIConnect = () => {
     connectXDEFI(chain);
-    track('Connect XDefi Button');
+    trackConnectedWallet(WalletTypes.XDEFI);
     handleClose();
   };
 
   const handleMetamaskConnect = () => {
     connectMetamask();
-    track('Connect Keplr Button');
+    trackConnectedWallet(WalletTypes.METAMASK);
     handleClose();
   };
 
