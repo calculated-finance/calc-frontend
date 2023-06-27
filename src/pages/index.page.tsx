@@ -127,7 +127,7 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
       ) : (
         <Stack spacing={4}>
           <Heading size="md">My active CALC strategies</Heading>
-          <Heading data-testid="active-strategy-count" fontSize="5xl">
+          <Heading data-testid="my-active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
           <Stack direction={{ base: 'column', sm: 'row' }}>
@@ -227,7 +227,7 @@ function OnboardingPanel() {
     >
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={1}>
-        <Heading size="md">Ready to set up a CALC Strategy?</Heading>
+        <Heading size="md">Ready to set up a CALC strategy?</Heading>
         <Text fontSize="sm">Feeling comfortable with your understanding of our products?</Text>
       </Stack>
       <LinkWithQuery passHref href="/create-strategy">

@@ -64,8 +64,9 @@ describe('top panel', () => {
           </QueryClientProvider>,
         );
 
-        expect(screen.getByText(/Ready to set up a CALC Strategy?/)).toBeInTheDocument();
-        expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
+        expect(screen.getByText(/New to CALC?/)).toBeInTheDocument();
+        expect(screen.getByText(/Learn how CALC works/)).toContainHTML('a');
+        expect(screen.getByText(/Learn how CALC works/)).toHaveAttribute('href', '/learn-about-calc');
       });
     });
     describe('when a user has only completed strategies', () => {
