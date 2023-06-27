@@ -44,3 +44,8 @@ jobs:
       NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
       NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
       NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
+
+  e2e-calc-fi-frontend-production:
+    name: E2E (production)
+    uses: ./.github/workflows/cypress-production.yml
+    needs: [deploy-calc-fi-frontend-sandbox]
