@@ -89,3 +89,7 @@ jobs:
 
       - name: Run Tests
         run: yarn test
+
+  e2e-calc-fi-frontend-production:
+    name: E2E (production)
+    uses: ./.github/workflows/cypress-production.yml
