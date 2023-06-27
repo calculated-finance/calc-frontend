@@ -58,7 +58,7 @@ function LearnNewUsers() {
           DCA | DCA+ | Weighted Scale
         </Text>
       </Stack>
-      <Stack data-testid="learn-link-parent" direction={{ base: 'column', sm: 'row' }}>
+      <Stack direction={{ base: 'column', sm: 'row' }}>
         <LinkWithQuery href="/learn-about-calc">
           <Button px={12} maxWidth={402} size="sm" bgColor="blue.200" _hover={{ bgColor: 'blue.300' }}>
             Learn how CALC works
@@ -169,7 +169,7 @@ export default function TopPanel() {
     if (!activeStrategies.length || !connected) {
       if (!completedStrategies.length) {
         return {
-          background: '/images/backgrounds/twist-thin.svg',
+          background: '/images/backgrounds/twist-thin-blue.svg',
           border: 'transparent',
           Content: LearnNewUsers,
         };
