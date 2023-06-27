@@ -38,5 +38,5 @@
     "__mocks__/styleMock.ts",
     "cypress.config.ignore"
   ],
-  "exclude": ["node_modules", "cypress"]
+  "exclude": ["node_modules", "cypress", "./cypress.config.ts"]
 }
