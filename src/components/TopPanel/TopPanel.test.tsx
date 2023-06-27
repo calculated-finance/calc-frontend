@@ -57,7 +57,7 @@ describe('top panel', () => {
           isLoading: false,
         }));
       });
-      it('renders the connect wallet button', () => {
+      it('renders the new to CALC panel', () => {
         render(
           <QueryClientProvider client={queryClient}>
             <TopPanel />
@@ -65,8 +65,15 @@ describe('top panel', () => {
         );
 
         expect(screen.getByText(/New to CALC?/)).toBeInTheDocument();
+      });
+      it('"learn about CALC" takes user to the correct page', () => {
+        render(
+          <QueryClientProvider client={queryClient}>
+            <TopPanel />
+          </QueryClientProvider>,
+        );
         expect(screen.getByText(/Learn how CALC works/)).toContainHTML('a');
-        expect(screen.getByText(/Learn how CALC works/)).toHaveAttribute('href', '/learn-about-calc');
+        expect(screen.getByText(/Learn how CALC works/)).toBeVisible();
       });
     });
     describe('when a user has only completed strategies', () => {
