@@ -14,6 +14,7 @@ import {
   Wrap,
   VStack,
   Icon,
+  Spacer,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -29,7 +30,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon } from '@fusion-icons/react/interface';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
@@ -159,8 +159,6 @@ function TotalInvestment() {
   ]);
   const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
   const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
-  const { connected } = useWallet();
-  const { chain } = useChain();
 
   if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
     return (
@@ -243,44 +241,41 @@ function OnboardingPanel() {
 
 export function LearnAboutCalcPanel() {
   return (
-    <motion.div initial="initial" animate="shake">
-      <VStack
-        layerStyle="panel"
-        p={8}
-        alignItems="left"
-        borderColor="green.400"
-        borderWidth={2}
-        backgroundImage="/images/backgrounds/twist-thin.svg"
-      >
-        <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
+    <VStack
+      layerStyle="panel"
+      p={8}
+      alignItems="left"
+      borderColor="green.400"
+      borderWidth={2}
+      backgroundImage="/images/backgrounds/twist-thin.svg"
+    >
+      <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
 
-        <Flex>
-          <Stack spacing={4}>
-            <HStack>
-              <Heading data-testid="active-strategy-count" size="lg">
-                New to CALC?
-              </Heading>
-              <Spacer />
-            </HStack>
-            <Heading data-testid="active-strategy-count" fontSize="md">
-              Get to know more about our extensive suite of DeFi products.
+      <Flex>
+        <Stack spacing={4}>
+          <HStack>
+            <Heading data-testid="active-strategy-count" size="lg">
+              New to CALC?
             </Heading>
-            <Stack direction={{ base: 'column', sm: 'row' }}>
-              <LinkWithQuery href="/learn-about-calc">
-                <Button w={44} variant="outline" color="green.400">
-                  Learn how CALC works
-                </Button>
-              </LinkWithQuery>
-            </Stack>
-          </Stack>{' '}
-        </Flex>
-      </VStack>
-    </motion.div>
+            <Spacer />
+          </HStack>
+          <Heading data-testid="active-strategy-count" fontSize="md">
+            Get to know more about our extensive suite of DeFi products.
+          </Heading>
+          <Stack direction={{ base: 'column', sm: 'row' }}>
+            <LinkWithQuery href="/learn-about-calc">
+              <Button w={44} variant="outline" color="green.400">
+                Learn how CALC works
+              </Button>
+            </LinkWithQuery>
+          </Stack>
+        </Stack>{' '}
+      </Flex>
+    </VStack>
   );
 }
 
 function HomeGrid() {
-function HomeGrid({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
   const { connected } = useWallet();
   const { chain } = useChain();
   const { data: strategies, isLoading } = useStrategies();
