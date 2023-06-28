@@ -73,6 +73,7 @@ export const featureFlags =
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
+        learningHubEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -85,6 +86,7 @@ export const featureFlags =
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: false,
+        learningHubEnabled: false,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

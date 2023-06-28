@@ -74,6 +74,7 @@ describe('top panel', () => {
         );
         expect(screen.getByText(/Learn how CALC works/)).toContainHTML('a');
         expect(screen.getByText(/Learn how CALC works/)).toBeVisible();
+        expect(screen.getByText(/Learn how CALC works/)).toHaveAttribute('href', '/learn-about-calc?chain=Kujira');
       });
     });
     describe('when a user has only completed strategies', () => {
