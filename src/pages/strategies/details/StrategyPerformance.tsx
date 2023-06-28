@@ -28,11 +28,10 @@ import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const transactionType = TransactionType;
   const { dexFee } = useDexFee(
     initialDenom,
     resultingDenom,
-    isBuyStrategy(strategy) ? transactionType.Buy : transactionType.Sell,
+    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
   );
 
   const id = getStrategyReinvestStrategyId(strategy);
