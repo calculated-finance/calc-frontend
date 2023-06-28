@@ -2,10 +2,11 @@ import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
 import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { TestnetDenoms } from '@models/Denom';
 import {
+  BuildCreateVaultContext,
+  buildCreateVaultMsg,
   getExecutionInterval,
-  getMinimumReceiveAmount,
-  getOsmosisReceiveAmount,
   getReceiveAmount,
   getSlippageWithoutTrailingZeros,
 } from '.';
@@ -50,62 +51,6 @@ describe('build params', () => {
   });
 
   describe('getReceiveAmount', () => {
-    it('returns undefined when price is null', () => {
-      expect(getReceiveAmount(null, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBeUndefined();
-    });
-
-    it('returns undefined when price is undefined', () => {
-      expect(getReceiveAmount(undefined, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBeUndefined();
-    });
-
-    it('returns the correct receive amount when transaction type is "Buy"', () => {
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBe('10000');
-      expect(getReceiveAmount(10, (value) => value * 100000, 100, TransactionType.Buy, 3)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000000, 100, TransactionType.Buy, 4)).toBe('10000000');
-    });
-
-    it('returns the correct receive amount when transaction type is "Sell"', () => {
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 2)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 3)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 4)).toBe('1000000');
-    });
-  });
-
-  describe('getOsmosisReceiveAmount', () => {
-    it('returns undefined if price is null', () => {
-      const result = getOsmosisReceiveAmount(undefined, 1.2, null, undefined, TransactionType.Buy);
-      expect(result).toBeUndefined();
-    });
-
-    it('returns undefined if price is undefined', () => {
-      const result = getOsmosisReceiveAmount(undefined, 1.2, undefined, undefined, TransactionType.Buy);
-      expect(result).toBeUndefined();
-    });
-
-    it('throws an error if initialDenom is missing properties', () => {
-      expect(() =>
-        getOsmosisReceiveAmount(
-          undefined,
-          1.2,
-          5,
-          { ...defaultDenom, id: '', significantFigures: 18 },
-          TransactionType.Buy,
-        ),
-      ).toThrowError('Missing denom info');
-    });
-
-    it('throws an error if resultingDenom is missing properties', () => {
-      expect(() =>
-        getOsmosisReceiveAmount(
-          { ...defaultDenom, id: '', deconversion: (amount) => amount, significantFigures: 6 },
-          1.2,
-          5,
-          undefined,
-          TransactionType.Buy,
-        ),
-      ).toThrowError('Missing denom info');
-    });
-
     it('calculates correct receive amount for Buy transaction', () => {
       const initialDenom: DenomInfo = {
         ...defaultDenom,
@@ -118,7 +63,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
       expect(result).toEqual('240000000000000000');
     });
 
@@ -134,7 +79,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Sell);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Sell);
       expect(result).toEqual('6000000000000000000');
     });
 
@@ -150,7 +95,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
       expect(result).toEqual('480000000000000000');
     });
   });
@@ -172,19 +117,198 @@ describe('build params', () => {
         expect(result).toEqual({ custom: { seconds: expected } });
       });
     });
+  });
 
-    it('should return the execution interval when executionIntervalIncrement is null, undefined or 0 or less', () => {
-      const testCases = [
-        { interval: 'minute' as ExecutionIntervals, increment: null },
-        { interval: 'half_hourly' as ExecutionIntervals, increment: undefined },
-        { interval: 'hourly' as ExecutionIntervals, increment: 0 },
-        { interval: 'daily' as ExecutionIntervals, increment: -1 },
-      ];
+  describe('buildCreateVaultMsg', () => {
+    const initialDenom = { id: TestnetDenoms.AXL, ...defaultDenom };
+    const resultingDenom = { id: TestnetDenoms.Kuji, ...defaultDenom };
 
-      testCases.forEach(({ interval, increment }) => {
-        const result = getExecutionInterval(interval, increment);
-        expect(result).toEqual(interval);
+    it('should return correct message when neither dca plus or swap adjustment is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+      };
+
+      const msg = buildCreateVaultMsg(context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: undefined,
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
       });
+    });
+
+    it('should return correct message when DCA+ is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+      };
+
+      const msg = buildCreateVaultMsg(context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: 'compare_to_standard_dca',
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            risk_weighted_average: {
+              base_denom: 'bitcoin',
+              position_type: 'enter',
+            },
+          },
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when weighted scale is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+      };
+
+      const msg = buildCreateVaultMsg(context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            weighted_scale: {
+              base_receive_amount: '1200000',
+              increase_only: true,
+              multiplier: '2',
+            },
+          },
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when time trigger is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        timeTrigger: { startDate: new Date('2022-01-02T00:00:00Z'), startTime: '11:11' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+      };
+
+      const msg = buildCreateVaultMsg(context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: '1641121860',
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when time trigger is set without start time', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        timeTrigger: { startDate: new Date('2022-01-02T00:00:00Z'), startTime: undefined },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+      };
+
+      const msg = buildCreateVaultMsg(context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: '1641081600',
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw error when DCA+ and weighted scale are both set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+      };
+
+      expect(() => buildCreateVaultMsg(context)).toThrowError('Swap adjustment is not supported for DCA+');
     });
   });
 });

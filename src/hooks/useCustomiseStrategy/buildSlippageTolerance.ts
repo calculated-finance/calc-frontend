@@ -1,13 +1,10 @@
-import { getSlippageTolerance } from '../useCreateVault/buildCreateVaultParams';
+import { getSlippageWithoutTrailingZeros } from '../useCreateVault/buildCreateVaultParams';
 
-export function buildSlippageTolerance(
-  slippageTolerance: number | null | undefined,
-  initialSlippageTolerance: number | null | undefined,
-) {
+export function buildSlippageTolerance(slippageTolerance: number, initialSlippageTolerance: number) {
   const isSlippageToleranceDirty = slippageTolerance !== initialSlippageTolerance;
   if (isSlippageToleranceDirty) {
     return {
-      slippage_tolerance: getSlippageTolerance(true, slippageTolerance),
+      slippage_tolerance: getSlippageWithoutTrailingZeros(slippageTolerance),
     };
   }
   return {};

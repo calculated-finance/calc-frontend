@@ -29,7 +29,6 @@ import { useConfig } from '@hooks/useConfig';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { StakeAuthorization, AuthorizationType } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
-import usePairs from '../usePairs';
 import { useConfirmForm } from '../useDcaInForm';
 import { getGrantMsg } from './getGrantMsg';
 import { getExecuteMsg } from './getCreateVaultExecuteMsg';
@@ -58,7 +57,6 @@ const useCreateVault = (
 ) => {
   const msgs: EncodeObject[] = [];
   const { address: senderAddress, signingClient: client } = useWallet();
-  const { data: pairsData } = usePairs();
   const { chain } = useChain();
   const config = useConfig();
 
@@ -92,16 +90,6 @@ const useCreateVault = (
 
       if (!senderAddress) {
         throw Error('Invalid sender address');
-      }
-
-      const { pairs } = pairsData || {};
-
-      if (!pairs) {
-        throw Error('No pairs found');
-      }
-
-      if (!price) {
-        throw Error('No price data found');
       }
 
       if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {

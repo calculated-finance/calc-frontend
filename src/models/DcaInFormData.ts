@@ -189,10 +189,10 @@ export const allSchema = {
       },
     }),
   slippageTolerance: Yup.number()
-    .nullable()
     .label('Slippage Tolerance')
     .lessThan(100)
     .min(0)
+    .default(initialValues.slippageTolerance)
     .when('advancedSettings', {
       is: true,
       then: (schema) => schema.required(),
@@ -260,7 +260,6 @@ export const allSchema = {
     }),
   recipientAccount: Yup.string()
     .label('Recipient Account')
-    .nullable()
     .when('sendToWallet', {
       is: YesNoValues.No,
       then: (schema) => schema.required(),
@@ -291,35 +290,31 @@ export const allSchema = {
     }),
   autoStakeValidator: Yup.string()
     .label('Validator')
-    .nullable()
     .when(['postPurchaseOption'], {
       is: PostPurchaseOptions.Stake,
       then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
+      otherwise: (schema) => schema.transform(() => ''),
     }),
   autoCompoundStakingRewards: Yup.bool().label('Auto-compound Staking Rewards'),
   yieldOption: Yup.string()
     .label('Yield Option')
-    .nullable()
     .when('postPurchaseOption', {
       is: PostPurchaseOptions.GenerateYield,
       then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
+      otherwise: (schema) => schema.transform(() => ''),
     }),
   reinvestStrategy: Yup.string()
     .label('Reinvest Strategy')
-    .nullable()
     .when('postPurchaseOption', {
       is: PostPurchaseOptions.Reinvest,
       then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
+      otherwise: (schema) => schema.transform(() => ''),
     }),
   strategyDuration: Yup.number()
     .label('Strategy Duration')
     .min(MIN_DCA_PLUS_STRATEGY_DURATION)
     .max(MAX_DCA_PLUS_STRATEGY_DURATION)
     .required()
-    .nullable()
     .test({
       name: 'swaps-greater-than-minimum',
       test(value, context) {
