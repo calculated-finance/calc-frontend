@@ -1,6 +1,13 @@
 import { Box, Button, Center, Flex, Grid, GridItem, Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 
+enum LearningHubLinks {
+  Dca = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/dollar-cost-averaging-dca',
+  DcaPlus = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/algorithm-dca+',
+  WeightedScale = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/weighted-scale-swaps',
+  MoreAboutCalc = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/',
+}
+
 function DcaLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
@@ -10,7 +17,7 @@ function DcaLearn() {
           Regularly invest a fixed amount of funds into a particular asset or investment over custom time invervals you
           set.
         </Text>
-        <Link href="https://calculated.fi/standard-dca-in" isExternal>
+        <Link href={LearningHubLinks.Dca} isExternal>
           <Button w={44} variant="outline" color="brand.200">
             Start learning
           </Button>
@@ -27,7 +34,7 @@ function DcaPlusLearn() {
         <Text textStyle="body">
           Similar to regular DCA, but let our machine learning algorithm decide when to make swaps.
         </Text>
-        <Link href="https://calculated.fi/algorithm-dca-in" isExternal>
+        <Link href={LearningHubLinks.DcaPlus} isExternal>
           <Button w={44} variant="outline" color="brand.200">
             Start learning
           </Button>
@@ -44,7 +51,7 @@ function WeightedScaleLearn() {
         <Text textStyle="body">
           Swap more when the price moves in the right direction and less when it doesn&apos;t.
         </Text>
-        <Link href="https://calculated.fi/weighted-scale-in" isExternal>
+        <Link href={LearningHubLinks.WeightedScale} isExternal>
           <Button w={44} variant="outline" color="brand.200">
             Start learning
           </Button>
@@ -89,7 +96,7 @@ function GeneralLearn() {
       <Stack spacing={4}>
         <Heading size="md">More About CALC</Heading>
         <Text textStyle="body">Get to know us on a personal level.</Text>
-        <Link href="/strategies">
+        <Link href={LearningHubLinks.MoreAboutCalc}>
           <Button w={44} variant="outline" colorScheme="blue">
             Start learning
           </Button>
