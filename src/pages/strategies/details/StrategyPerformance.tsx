@@ -28,7 +28,6 @@ import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-
   const { dexFee } = useDexFee(
     initialDenom,
     resultingDenom,
@@ -58,6 +57,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenomPrice,
     dexFee,
   );
+
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
       <GridItem colSpan={1}>
@@ -114,6 +114,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-average-token-cost">
           {isBuyStrategy(strategy)
             ? formatFiat(getAveragePurchasePrice(strategy, dexFee), getStrategyInitialDenom(strategy).name)
+            : !isBuyStrategy(strategy) && resultingDenom.stable
+            ? formatFiat(getAverageSellPrice(strategy, dexFee), getStrategyResultingDenom(strategy).name)
             : formatFiat(getAverageSellPrice(strategy, dexFee) * resultingDenomPrice)}
         </Text>
       </GridItem>
