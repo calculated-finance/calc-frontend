@@ -3,8 +3,13 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { TestnetDenoms } from '@models/Denom';
+import { Chains } from '@hooks/useChain/Chains';
+import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import {
   BuildCreateVaultContext,
+  buildCallbackDestinations,
   buildCreateVaultMsg,
   getExecutionInterval,
   getReceiveAmount,
@@ -12,6 +17,136 @@ import {
 } from '.';
 
 describe('build params', () => {
+  describe('buildCallbackDestinations', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('throws error when sender address does not match reinvest strategy owner', () => {
+      const senderAddress = 'sender_address';
+      const reinvestStrategy = { ...dcaInStrategyViewModal, owner: 'different_address' };
+
+      expect(() =>
+        buildCallbackDestinations(Chains.Osmosis, null, null, null, senderAddress, reinvestStrategy),
+      ).toThrowError('Reinvest strategy does not belong to user.');
+    });
+
+    it('returns an auto-stake destination when autoStakeValidator is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const autoStakeValidator = 'validator_address';
+
+      const result = buildCallbackDestinations(
+        Chains.Osmosis,
+        autoStakeValidator,
+        null,
+        null,
+        senderAddress,
+        undefined,
+      );
+      const expectedDestination: Destination = {
+        address: getChainContractAddress(Chains.Osmosis),
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            z_delegate: {
+              delegator_address: senderAddress,
+              validator_address: autoStakeValidator,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a recipient destination when recipientAccount is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const recipientAccount = 'recipient_account';
+
+      const result = buildCallbackDestinations(Chains.Osmosis, null, recipientAccount, null, senderAddress, undefined);
+      const expectedDestination: Destination = {
+        address: recipientAccount,
+        allocation: '1.0',
+        msg: null,
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a reinvest destination when reinvestStrategy is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const reinvestStrategy = dcaInStrategyViewModal;
+      const chain = Chains.Osmosis;
+
+      const result = buildCallbackDestinations(chain, null, null, null, senderAddress, reinvestStrategy);
+      const expectedDestination: Destination = {
+        address: getChainContractAddress(chain),
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              vault_id: reinvestStrategy.id,
+              address: senderAddress,
+            },
+          } as ExecuteMsg),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a reinvest destination when reinvestStrategy is provided for kujira', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const reinvestStrategy = dcaInStrategyViewModal;
+      const chain = Chains.Kujira;
+
+      const result = buildCallbackDestinations(chain, null, null, null, senderAddress, reinvestStrategy);
+      const expectedDestination: Destination = {
+        address: getChainContractAddress(chain),
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              vault_id: reinvestStrategy.id,
+              address: senderAddress,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a mars destination when yieldOption is "mars"', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const yieldOption = 'mars';
+      const marsAddress = getMarsAddress();
+
+      const result = buildCallbackDestinations(Chains.Osmosis, null, null, yieldOption, senderAddress, undefined);
+      const expectedDestination: Destination = {
+        address: marsAddress,
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              on_behalf_of: senderAddress,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns undefined when no input is provided', () => {
+      const senderAddress = 'sender_address';
+
+      const result = buildCallbackDestinations(Chains.Osmosis, null, null, null, senderAddress, undefined);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('getSlippageWithoutTrailingZeros', () => {
     it('returns "0" when slippage is 0', () => {
       expect(getSlippageWithoutTrailingZeros(0)).toBe('0');
@@ -131,6 +266,15 @@ describe('build params', () => {
         swapAmount: 1.2,
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       const msg = buildCreateVaultMsg(context);
@@ -164,6 +308,15 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         isDcaPlus: true,
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       const msg = buildCreateVaultMsg(context);
@@ -202,6 +355,15 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       const msg = buildCreateVaultMsg(context);
@@ -241,6 +403,15 @@ describe('build params', () => {
         swapAmount: 1.2,
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       const msg = buildCreateVaultMsg(context);
@@ -273,6 +444,15 @@ describe('build params', () => {
         swapAmount: 1.2,
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       const msg = buildCreateVaultMsg(context);
@@ -306,6 +486,15 @@ describe('build params', () => {
         slippageTolerance: 1.0,
         isDcaPlus: true,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+        destinationConfig: {
+          chain: Chains.Kujira,
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyData: undefined,
+        },
       };
 
       expect(() => buildCreateVaultMsg(context)).toThrowError('Swap adjustment is not supported for DCA+');

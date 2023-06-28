@@ -5,6 +5,7 @@ import { ExecuteMsg as ExecutMsgOsmosis } from 'src/interfaces/generated-osmosis
 
 export function encodeMsg(createVaultExecuteMsg: ExecuteMsg | ExecutMsgOsmosis) {
   const raw = JSON.stringify(createVaultExecuteMsg);
+
   const textEncoder = new TextEncoder();
   const encoded_msg = textEncoder.encode(raw);
   return encoded_msg;

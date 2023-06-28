@@ -3,192 +3,288 @@ import { useWallet } from '@hooks/useWallet';
 
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
-import { EncodeObject } from '@cosmjs/proto-signing';
-import { getFeeMessage } from '@helpers/getFeeMessage';
 
-import { useDcaPlusConfirmForm } from '@hooks/useDcaPlusForm';
-import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useChain } from '@hooks/useChain';
-import {
-  getChainContractAddress,
-  getChainFeeTakerAddress,
-  getAutocompoundStakingRewardsAddress,
-} from '@helpers/chains';
-import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
-import usePrice from '@hooks/usePrice';
 import * as Sentry from '@sentry/react';
-import useStrategy from '@hooks/useStrategy';
 import { isNil } from 'lodash';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { Chains } from '@hooks/useChain/Chains';
-import { Denom } from '@models/Denom';
-import { useConfig } from '@hooks/useConfig';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
-import { StakeAuthorization, AuthorizationType } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
-import { useConfirmForm } from '../useDcaInForm';
-import { getGrantMsg } from './getGrantMsg';
-import { getExecuteMsg } from './getCreateVaultExecuteMsg';
-import { buildCreateVaultParams } from './buildCreateVaultParams';
-import { executeCreateVault } from './executeCreateVault';
-import { DcaFormState } from './DcaFormState';
-import { useMoonbeamCreateVault } from './useMoonbeamCreateVault';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import YesNoValues from '@models/YesNoValues';
+import { DcaPlusState } from '@models/dcaPlusFormData';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { DenomInfo } from '@utils/DenomInfo';
+import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
+import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { BuildCreateVaultContext } from './buildCreateVaultParams';
 
-function getFunds(initialDenom: Denom, initialDeposit: number) {
-  const { deconversion } = getDenomInfo(initialDenom);
-  const funds = [{ denom: initialDenom, amount: BigInt(deconversion(initialDeposit)).toString() }];
+export type UseCreateVaultVariables = {
+  createFee: boolean;
+  createVaultContext: BuildCreateVaultContext;
+  initialDeposit: number;
+};
 
-  const fundsInCoin = [
-    Coin.fromPartial({
-      amount: funds[0].amount,
-      denom: funds[0].denom,
-    }),
-  ];
-  return fundsInCoin;
+function getSentryCreateVaultTags(createVaultContext: BuildCreateVaultContext) {
+  return {
+    ...createVaultContext,
+    initialDenom: createVaultContext.initialDenom.name,
+    resultingDenom: createVaultContext.resultingDenom.name,
+    timeInterval: `${createVaultContext.timeInterval.increment} ${createVaultContext.timeInterval.interval}`,
+    timeTrigger: `${createVaultContext.timeTrigger?.startDate} ${createVaultContext.timeTrigger?.startTime}`,
+    destinationConfig: JSON.stringify(createVaultContext.destinationConfig),
+    swapAdjustment: JSON.stringify(createVaultContext.swapAdjustment),
+  };
 }
 
-const useCreateVault = (
-  state: DcaFormState | undefined,
-  excludeCreationFee: boolean,
-  dexPrice?: number | undefined,
-) => {
-  const msgs: EncodeObject[] = [];
-  const { address: senderAddress, signingClient: client } = useWallet();
+function handleError(
+  createVaultContext: BuildCreateVaultContext,
+): ((reason: any) => PromiseLike<never>) | null | undefined {
+  return (error) => {
+    if (error instanceof Error) {
+      if (!error.message.includes('Request rejected')) {
+        Sentry.captureException(error, {
+          tags: getSentryCreateVaultTags(createVaultContext),
+        });
+        throw new Error(error.message);
+      }
+      throw new Error('Transaction cancelled');
+    }
+    throw new Error('Unknown error');
+  };
+}
+
+function useTrackCreateVault() {
   const { chain } = useChain();
-  const config = useConfig();
-
-  const { formName, transactionType } = useStrategyInfo();
-
+  const { formName } = useStrategyInfo();
+  const { address: senderAddress } = useWallet();
   const { walletType } = useWallet();
-
-  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy || undefined);
-
   const { track } = useAnalytics();
 
-  const evmCreate = useMoonbeamCreateVault(state as DcaInFormDataAll);
+  return () => {
+    track('Strategy Created', { formName, chain, address: senderAddress, walletType });
+  };
+}
 
-  const cosmosCreate = useMutation<Strategy['id'] | undefined, Error, { price: number | undefined }>(
-    ({ price }) => {
-      if (!state) {
-        throw new Error('No state');
-      }
+export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
+  const { transactionType } = useStrategyInfo();
+  const { chain } = useChain();
+  const client = useCalcSigningClient(chain);
+  const { address } = useWallet();
 
-      if (!price) {
-        throw new Error('No fiat price');
-      }
+  const track = useTrackCreateVault();
 
-      if (!client) {
-        throw Error('Invalid client');
-      }
+  const { price } = useFiatPrice(initialDenom);
 
-      if (!chain) {
-        throw Error('Invalid chain');
-      }
-
-      if (!senderAddress) {
-        throw Error('Invalid sender address');
-      }
-
-      if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
-        throw new Error('Invalid reinvest strategy.');
-      }
-
-      if (reinvestStrategyData && reinvestStrategyData.owner !== senderAddress) {
-        throw new Error('Reinvest strategy does not belong to user.');
-      }
-
-      if (!config) {
-        throw new Error('Config not loaded');
-      }
-
-      const { autoStakeValidator, autoCompoundStakingRewards } = state;
-
-      if (autoStakeValidator) {
-        msgs.push(getGrantMsg(senderAddress, getChainContractAddress(chain)));
-
-        if (autoCompoundStakingRewards) {
-          msgs.push(
-            getGrantMsg(
-              senderAddress,
-              getAutocompoundStakingRewardsAddress(chain),
-              '/cosmos.staking.v1beta1.StakeAuthorization',
-              StakeAuthorization.encode(
-                StakeAuthorization.fromPartial({
-                  authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE,
-                  allowList: {
-                    address: [autoStakeValidator],
-                  },
-                }),
-              ).finish(),
-            ),
-          );
-        }
-      }
-
-      const createVaultMsg = buildCreateVaultParams(
-        formName,
-        state,
-        transactionType,
-        senderAddress,
-        dexPrice,
-        chain,
-        config,
-      );
-
-      const funds = getFunds(state.initialDenom, state.initialDeposit);
-
-      msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, getChainContractAddress(chain)));
-
-      if (!excludeCreationFee) {
-        const tokensToCoverFee = createStrategyFeeInTokens(price);
-        msgs.push(getFeeMessage(senderAddress, state.initialDenom, tokensToCoverFee, getChainFeeTakerAddress(chain)));
-      }
-
-      return executeCreateVault(client, senderAddress, msgs).then((res) => {
-        track('Strategy Created', { formName, chain, address: senderAddress, walletType });
-        return res;
-      });
-    },
+  return useMutation<
+    Strategy['id'] | undefined,
+    Error,
     {
-      onError: (error) => {
-        if (error.message.includes('Request rejected')) {
-          return;
-        }
-        Sentry.captureException(error, { tags: { chain, formName, ...state } });
+      state: DcaInFormDataAll | undefined;
+      reinvestStrategyData: Strategy | undefined;
+    }
+  >(({ state, reinvestStrategyData }) => {
+    if (!state) {
+      throw new Error('No state');
+    }
+
+    if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
+      throw new Error('Invalid reinvest strategy.');
+    }
+
+    if (!client) {
+      throw Error('Invalid client');
+    }
+
+    if (!price) {
+      throw Error('Invalid price');
+    }
+
+    if (!address) {
+      throw new Error('No sender address');
+    }
+
+    const createVaultContext = {
+      initialDenom: getDenomInfo(state.initialDenom),
+      resultingDenom: getDenomInfo(state.resultingDenom),
+      timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
+      timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
+      startPrice: state.startPrice || undefined,
+      swapAmount: state.swapAmount,
+      priceThreshold: state.priceThresholdValue || undefined,
+      transactionType,
+      slippageTolerance: state.slippageTolerance,
+      swapAdjustment: undefined,
+      performanceAssessmentStrategy: undefined,
+      destinationConfig: {
+        chain,
+        autoStakeValidator: state.autoStakeValidator,
+        autoCompoundStakingRewards: state.autoCompoundStakingRewards,
+        recipientAccount: state.recipientAccount,
+        yieldOption: state.yieldOption,
+        reinvestStrategyData,
+        senderAddress: address,
       },
-    },
-  );
+    };
 
-  return chain === Chains.Moonbeam ? evmCreate : cosmosCreate;
+    const fee = createStrategyFeeInTokens(price);
+
+    return client
+      .createStrategy(address, state.initialDeposit, fee, createVaultContext)
+      .then((result) => {
+        track();
+        return result;
+      })
+      .catch(handleError(createVaultContext));
+  });
 };
 
-export const useCreateVaultDca = () => {
-  const { state } = useConfirmForm();
+export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
+  const { transactionType } = useStrategyInfo();
+  const { address } = useWallet();
 
-  return useCreateVault(state, false);
-};
+  const { chain } = useChain();
 
-export const useCreateVaultDcaPlus = () => {
-  const { state } = useDcaPlusConfirmForm();
+  const client = useCalcSigningClient(chain);
+  const track = useTrackCreateVault();
 
-  return useCreateVault(state, false);
+  const { price } = useFiatPrice(initialDenom);
+
+  return useMutation<
+    Strategy['id'] | undefined,
+    Error,
+    {
+      state: DcaPlusState | undefined;
+      reinvestStrategyData: Strategy | undefined;
+    }
+  >(({ state, reinvestStrategyData }) => {
+    if (!client) {
+      throw Error('Invalid client');
+    }
+
+    if (!state) {
+      throw new Error('No state');
+    }
+
+    if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
+      throw new Error('Invalid reinvest strategy.');
+    }
+
+    if (!price) {
+      throw Error('Invalid price');
+    }
+
+    if (!address) {
+      throw new Error('No sender address');
+    }
+
+    const createVaultContext = {
+      initialDenom: getDenomInfo(state.initialDenom),
+      resultingDenom: getDenomInfo(state.resultingDenom),
+      timeInterval: { interval: 'daily' as ExecutionIntervals, increment: 1 },
+      timeTrigger: undefined,
+      startPrice: undefined,
+      swapAmount: getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
+      priceThreshold: undefined,
+      transactionType,
+      slippageTolerance: state.slippageTolerance,
+      isDcaPlus: true,
+      destinationConfig: {
+        chain,
+        autoStakeValidator: state.autoStakeValidator,
+        autoCompoundStakingRewards: state.autoCompoundStakingRewards,
+        recipientAccount: state.recipientAccount,
+        yieldOption: state.yieldOption,
+        reinvestStrategyData,
+        senderAddress: address,
+      },
+    };
+    const fee = createStrategyFeeInTokens(price);
+
+    return client
+      .createStrategy(address, state.initialDeposit, fee, createVaultContext)
+      .then((result) => {
+        track();
+        return result;
+      })
+      .catch(handleError(createVaultContext));
+  });
 };
 
 export const useCreateVaultWeightedScale = () => {
-  const { state } = useWeightedScaleConfirmForm();
-
   const { transactionType } = useStrategyInfo();
+  const { address } = useWallet();
 
-  const enablePriceCheck = isNil((state as WeightedScaleState)?.basePriceValue);
-  const { price: dexPrice } = usePrice(
-    state && getDenomInfo(state.resultingDenom),
-    state && getDenomInfo(state.initialDenom),
-    transactionType,
-    enablePriceCheck,
-  );
+  const { chain } = useChain();
 
-  return useCreateVault(state, true, dexPrice);
+  const client = useCalcSigningClient(chain);
+  const track = useTrackCreateVault();
+
+  return useMutation<
+    Strategy['id'] | undefined,
+    Error,
+    {
+      state: WeightedScaleState | undefined;
+      dexPrice: number | undefined;
+      reinvestStrategyData: Strategy | undefined;
+    }
+  >(({ state, dexPrice, reinvestStrategyData }) => {
+    if (!client) {
+      throw Error('Invalid client');
+    }
+
+    if (!dexPrice) {
+      throw new Error('No dex price');
+    }
+
+    if (!state) {
+      throw new Error('No state');
+    }
+
+    if (!address) {
+      throw new Error('No sender address');
+    }
+
+    if (Boolean(state.reinvestStrategy) && !reinvestStrategyData) {
+      throw new Error('Invalid reinvest strategy.');
+    }
+
+    const createVaultContext = {
+      initialDenom: getDenomInfo(state.initialDenom),
+      resultingDenom: getDenomInfo(state.resultingDenom),
+      timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
+      timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
+      startPrice: state.startPrice || undefined,
+      swapAmount: state.swapAmount,
+      priceThreshold: state.priceThresholdValue || undefined,
+      transactionType,
+      slippageTolerance: state.slippageTolerance,
+      swapAdjustment: {
+        basePrice: state.basePriceValue || dexPrice,
+        swapMultiplier: state.swapMultiplier,
+        applyMultiplier: state.applyMultiplier === YesNoValues.Yes,
+      },
+      isDcaPlus: false,
+      destinationConfig: {
+        chain,
+        autoStakeValidator: state.autoStakeValidator,
+        autoCompoundStakingRewards: state.autoCompoundStakingRewards,
+        recipientAccount: state.recipientAccount,
+        yieldOption: state.yieldOption,
+        reinvestStrategyData,
+        senderAddress: address,
+      },
+    };
+
+    return client
+      .createStrategy(address, state.initialDeposit, undefined, createVaultContext)
+      .then((result) => {
+        track();
+        return result;
+      })
+      .catch(handleError(createVaultContext));
+  });
 };

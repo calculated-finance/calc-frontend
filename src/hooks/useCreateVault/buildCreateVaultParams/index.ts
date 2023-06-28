@@ -7,14 +7,89 @@ import {
   SwapAdjustmentStrategyParams,
 } from 'src/interfaces/v2/generated/execute';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
-import YesNoValues from '@models/YesNoValues';
 import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DenomInfo } from '@utils/DenomInfo';
+import { Strategy } from '@models/Strategy';
+import { ChainConfig, getMarsAddress } from '@helpers/chains';
 
 export function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
+}
+
+export function buildCallbackDestinations(
+  chainConfig: ChainConfig,
+  autoStakeValidator: string | null | undefined,
+  recipientAccount: string | null | undefined,
+  yieldOption: string | null | undefined,
+  senderAddress: string,
+  reinvestStrategy: Strategy | undefined,
+) {
+  const destinations = [] as Destination[];
+
+  if (autoStakeValidator) {
+    console.log(
+      JSON.stringify({
+        z_delegate: {
+          delegator_address: senderAddress,
+          validator_address: autoStakeValidator,
+        },
+      }),
+    );
+    destinations.push({
+      address: chainConfig.contractAddress,
+      allocation: '1.0',
+      msg: Buffer.from(
+        JSON.stringify({
+          z_delegate: {
+            delegator_address: senderAddress,
+            validator_address: autoStakeValidator,
+          },
+        } as ExecuteMsg),
+      ).toString('base64'),
+    });
+  }
+
+  if (recipientAccount) {
+    destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
+  }
+
+  if (reinvestStrategy) {
+    if (reinvestStrategy.owner !== senderAddress) {
+      throw new Error('Reinvest strategy does not belong to user.');
+    }
+
+    const msg = {
+      deposit: {
+        vault_id: reinvestStrategy.id,
+        address: senderAddress,
+      },
+    } as ExecuteMsg;
+
+    destinations.push({
+      address: chainConfig.contractAddress,
+      allocation: '1.0',
+      msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
+    });
+  }
+
+  if (yieldOption) {
+    if (yieldOption === 'mars') {
+      const msg = {
+        deposit: {
+          on_behalf_of: senderAddress,
+        },
+      };
+      destinations.push({
+        address: getMarsAddress(),
+        allocation: '1.0',
+        msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
+      });
+    }
+  }
+
+  return destinations.length ? destinations : undefined;
 }
 
 export function getReceiveAmount(
@@ -123,6 +198,16 @@ type SwapAdjustment = {
   applyMultiplier: boolean;
 };
 
+export type DestinationConfig = {
+  chainConfig: ChainConfig;
+  autoStakeValidator: string | undefined;
+  autoCompoundStakingRewards: boolean | undefined;
+  recipientAccount: string | undefined;
+  yieldOption: string | undefined;
+  reinvestStrategyData: Strategy | undefined;
+  senderAddress: string;
+};
+
 export type BuildCreateVaultContext = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
@@ -136,10 +221,10 @@ export type BuildCreateVaultContext = {
   priceThreshold?: number;
   transactionType: TransactionType;
   slippageTolerance: number;
-  destinations?: Destination[];
   swapAdjustment?: SwapAdjustment;
   performanceAssessmentStrategy?: PerformanceAssessmentStrategyParams;
   isDcaPlus?: boolean;
+  destinationConfig: DestinationConfig;
 };
 
 export function buildCreateVaultMsg({
@@ -152,7 +237,7 @@ export function buildCreateVaultMsg({
   priceThreshold,
   transactionType,
   slippageTolerance,
-  destinations,
+  destinationConfig,
   swapAdjustment,
   isDcaPlus,
 }: BuildCreateVaultContext): ExecuteMsg {
@@ -188,7 +273,14 @@ export function buildCreateVaultMsg({
         ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType)
         : undefined,
       slippage_tolerance: getSlippageWithoutTrailingZeros(slippageTolerance),
-      destinations,
+      destinations: buildCallbackDestinations(
+        destinationConfig.chainConfig,
+        destinationConfig.autoStakeValidator,
+        destinationConfig.recipientAccount,
+        destinationConfig.yieldOption,
+        destinationConfig.senderAddress,
+        destinationConfig.reinvestStrategyData,
+      ),
       target_receive_amount: startPrice
         ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType)
         : undefined,
