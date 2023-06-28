@@ -12,7 +12,7 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
 
   const { data, isLoading } = useBalance(denom);
 
-  const createStrategyFee = Number(createStrategyFeeInTokens(price));
+  const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
   const balance = Number(data?.amount);
 
   const displayAmount = getDisplayAmount(denom, Math.max(balance - createStrategyFee, 0));

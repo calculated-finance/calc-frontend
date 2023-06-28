@@ -7,6 +7,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
 import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { mockChainConfig } from 'src/fixtures/mockChainConfig';
 import {
   BuildCreateVaultContext,
   buildCallbackDestinations,
@@ -27,7 +28,7 @@ describe('build params', () => {
       const reinvestStrategy = { ...dcaInStrategyViewModal, owner: 'different_address' };
 
       expect(() =>
-        buildCallbackDestinations(Chains.Osmosis, null, null, null, senderAddress, reinvestStrategy),
+        buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy),
       ).toThrowError('Reinvest strategy does not belong to user.');
     });
 
@@ -36,7 +37,7 @@ describe('build params', () => {
       const autoStakeValidator = 'validator_address';
 
       const result = buildCallbackDestinations(
-        Chains.Osmosis,
+        mockChainConfig,
         autoStakeValidator,
         null,
         null,
@@ -63,7 +64,7 @@ describe('build params', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
       const recipientAccount = 'recipient_account';
 
-      const result = buildCallbackDestinations(Chains.Osmosis, null, recipientAccount, null, senderAddress, undefined);
+      const result = buildCallbackDestinations(mockChainConfig, null, recipientAccount, null, senderAddress, undefined);
       const expectedDestination: Destination = {
         address: recipientAccount,
         allocation: '1.0',
@@ -76,11 +77,10 @@ describe('build params', () => {
     it('returns a reinvest destination when reinvestStrategy is provided', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
       const reinvestStrategy = dcaInStrategyViewModal;
-      const chain = Chains.Osmosis;
 
-      const result = buildCallbackDestinations(chain, null, null, null, senderAddress, reinvestStrategy);
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
       const expectedDestination: Destination = {
-        address: getChainContractAddress(chain),
+        address: mockChainConfig.contractAddress,
         allocation: '1.0',
         msg: Buffer.from(
           JSON.stringify({
@@ -100,7 +100,7 @@ describe('build params', () => {
       const reinvestStrategy = dcaInStrategyViewModal;
       const chain = Chains.Kujira;
 
-      const result = buildCallbackDestinations(chain, null, null, null, senderAddress, reinvestStrategy);
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
       const expectedDestination: Destination = {
         address: getChainContractAddress(chain),
         allocation: '1.0',
@@ -122,7 +122,7 @@ describe('build params', () => {
       const yieldOption = 'mars';
       const marsAddress = getMarsAddress();
 
-      const result = buildCallbackDestinations(Chains.Osmosis, null, null, yieldOption, senderAddress, undefined);
+      const result = buildCallbackDestinations(mockChainConfig, null, null, yieldOption, senderAddress, undefined);
       const expectedDestination: Destination = {
         address: marsAddress,
         allocation: '1.0',
@@ -141,7 +141,7 @@ describe('build params', () => {
     it('returns undefined when no input is provided', () => {
       const senderAddress = 'sender_address';
 
-      const result = buildCallbackDestinations(Chains.Osmosis, null, null, null, senderAddress, undefined);
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, undefined);
 
       expect(result).toBeUndefined();
     });
@@ -267,7 +267,7 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
@@ -309,7 +309,7 @@ describe('build params', () => {
         slippageTolerance: 1.0,
         isDcaPlus: true,
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
@@ -356,7 +356,7 @@ describe('build params', () => {
         slippageTolerance: 1.0,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
@@ -404,7 +404,7 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
@@ -445,7 +445,7 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
@@ -487,7 +487,7 @@ describe('build params', () => {
         isDcaPlus: true,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
         destinationConfig: {
-          chain: Chains.Kujira,
+          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,

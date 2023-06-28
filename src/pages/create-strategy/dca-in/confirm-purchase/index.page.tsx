@@ -22,20 +22,21 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
+import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useConfirmForm();
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
-  const { price } = useFiatPrice(initialDenom);
   const { nextStep, goToStep } = useSteps(steps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca();
+  const { mutate, isError, error, isLoading } = useCreateVaultDca(initialDenom);
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
-      { price },
+      { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
           await nextStep({

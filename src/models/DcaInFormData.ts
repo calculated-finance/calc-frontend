@@ -39,7 +39,7 @@ export const initialValues = {
   autoCompoundStakingRewards: true,
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
-  yieldOption: null,
+  yieldOption: '',
   reinvestStrategy: '',
   basePriceIsCurrentPrice: YesNoValues.Yes,
   basePriceValue: null,

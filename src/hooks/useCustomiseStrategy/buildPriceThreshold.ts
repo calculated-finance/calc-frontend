@@ -1,20 +1,20 @@
-import { getMinimumReceiveAmount } from '../useCreateVault/buildCreateVaultParams';
-import { Chains } from '../useChain/Chains';
+import { getReceiveAmount } from '../useCreateVault/buildCreateVaultParams';
 import { ConfigureVariables } from './ConfigureVariables';
 
-export function buildPriceThreshold({ values, initialValues, context, strategy }: ConfigureVariables, chain: Chains) {
+export function buildPriceThreshold({ values, initialValues, context }: ConfigureVariables) {
   const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
 
   if (isPriceThresholdDirty) {
     return {
-      minimum_receive_amount: getMinimumReceiveAmount(
-        context.initialDenom,
-        context.swapAmount,
-        values.priceThresholdValue,
-        context.resultingDenom,
-        context.transactionType,
-        chain,
-      ),
+      minimum_receive_amount: values.priceThresholdValue
+        ? getReceiveAmount(
+            context.initialDenom,
+            context.swapAmount,
+            values.priceThresholdValue,
+            context.resultingDenom,
+            context.transactionType,
+          )
+        : undefined,
     };
   }
   return {};

@@ -23,6 +23,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
+import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -30,13 +31,14 @@ function Page() {
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
-  const { price } = useFiatPrice(initialDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus();
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(initialDenom);
+
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
-      { price },
+      { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
           await nextStep({
@@ -101,11 +103,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaPlusOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut,
+      }}
+    >
       <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
         <Page />
       </ModalWrapper>

@@ -1,13 +1,10 @@
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { getStrategyInitialDenom } from '@helpers/strategy';
-import { Chains } from '@hooks/useChain/Chains';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TestnetDenoms } from '@models/Denom';
 import { TransactionType } from '@components/TransactionType';
-import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { BuildCreateVaultContext } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { encodeMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
 import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
@@ -15,6 +12,7 @@ import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import timekeeper from 'timekeeper';
 import { AuthorizationType, StakeAuthorization } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
 import { getCosmosSigningClient } from '.';
+import { mockChainConfig } from '../../../../../fixtures/mockChainConfig';
 
 // Import the function from its module
 
@@ -22,13 +20,6 @@ import { getCosmosSigningClient } from '.';
 jest.mock('@cosmjs/cosmwasm-stargate');
 jest.mock('@helpers/chains');
 jest.mock('@helpers/strategy');
-
-const mockChainConfig = {
-  chainId: 'chainId',
-  contractAddress: 'contractAddress',
-  feeTakerAddress: 'feeTakerAddress',
-  autoCompoundStakingRewardsAddress: 'autoCompoundStakingRewardsAddress',
-};
 
 describe('getCosmosSigningClient', () => {
   let mockClient: jest.Mocked<SigningCosmWasmClient>;

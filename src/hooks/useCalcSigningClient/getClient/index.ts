@@ -1,31 +1,23 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Chains } from '@hooks/useChain/Chains';
 import { JsonRpcSigner } from 'ethers';
+import { ChainConfig, ChainType } from '@helpers/chains';
 import { getEVMSigningClient } from './clients/evm';
 import { getCosmosSigningClient } from './clients/cosmos';
 
 export default function getClient(
-  chain: Chains,
+  chainConfig: ChainConfig,
   evmSigner: JsonRpcSigner | null,
   cosmSigner: SigningCosmWasmClient | null | undefined,
 ) {
-  if (chain === Chains.Moonbeam) {
+  if (chainConfig.chainType === ChainType.EVM) {
     if (!evmSigner) return null;
 
     return getEVMSigningClient(evmSigner);
   }
 
-  if (chain === Chains.Kujira) {
+  if (chainConfig.chainType === ChainType.Cosmos) {
     if (!cosmSigner) return null;
 
-    return getCosmosSigningClient(cosmSigner, chain);
+    return getCosmosSigningClient(cosmSigner, chainConfig);
   }
-
-  if (chain === Chains.Osmosis) {
-    if (!cosmSigner) return null;
-
-    return getCosmosSigningClient(cosmSigner, chain);
-  }
-
-  throw new Error('Unsupported chain');
 }

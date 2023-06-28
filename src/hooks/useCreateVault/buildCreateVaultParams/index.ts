@@ -155,12 +155,8 @@ export function getExecutionInterval(executionInterval: ExecutionIntervals, exec
     },
   };
 }
-// console
-// console
-// console
-// console
 
-function buildWeightedScaleAdjustmentStrategy(
+export function buildWeightedScaleAdjustmentStrategy(
   initialDenom: DenomInfo,
   swapAmount: number,
   basePriceValue: number,

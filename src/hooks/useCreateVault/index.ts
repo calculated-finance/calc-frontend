@@ -71,7 +71,7 @@ function useTrackCreateVault() {
 
 export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
-  const { chain } = useChain();
+  const { chain, chainConfig } = useChain();
   const client = useCalcSigningClient(chain);
   const { address } = useWallet();
 
@@ -120,7 +120,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       swapAdjustment: undefined,
       performanceAssessmentStrategy: undefined,
       destinationConfig: {
-        chain,
+        chainConfig,
         autoStakeValidator: state.autoStakeValidator,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,
@@ -146,7 +146,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
 
-  const { chain } = useChain();
+  const { chain, chainConfig } = useChain();
 
   const client = useCalcSigningClient(chain);
   const track = useTrackCreateVault();
@@ -193,7 +193,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       slippageTolerance: state.slippageTolerance,
       isDcaPlus: true,
       destinationConfig: {
-        chain,
+        chainConfig,
         autoStakeValidator: state.autoStakeValidator,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,
@@ -218,7 +218,7 @@ export const useCreateVaultWeightedScale = () => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
 
-  const { chain } = useChain();
+  const { chain, chainConfig } = useChain();
 
   const client = useCalcSigningClient(chain);
   const track = useTrackCreateVault();
@@ -269,7 +269,7 @@ export const useCreateVaultWeightedScale = () => {
       },
       isDcaPlus: false,
       destinationConfig: {
-        chain,
+        chainConfig,
         autoStakeValidator: state.autoStakeValidator,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,

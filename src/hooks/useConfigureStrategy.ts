@@ -8,27 +8,28 @@ import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
-import { buildCallbackDestinations } from '@helpers/destinations';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChain } from './useChain';
 import { Strategy } from '../models/Strategy';
-import { getGrantMsg } from './useCreateVault/getGrantMsg';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';
+import { getGrantMsg } from './useCalcSigningClient/getClient/clients/cosmos';
+import { buildCallbackDestinations } from './useCreateVault/buildCreateVaultParams';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;
   strategy: Strategy;
+  reinvestStrategyData: Strategy;
 };
 
 export function useConfigureStrategy() {
   const { address, signingClient: client } = useWallet();
 
-  const { chain } = useChain();
+  const { chain, chainConfig } = useChain();
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
-    ({ values, strategy }) => {
+    ({ values, strategy, reinvestStrategyData }) => {
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
@@ -36,7 +37,7 @@ export function useConfigureStrategy() {
         throw new Error('client is null or empty');
       }
 
-      if (isNil(chain)) {
+      if (isNil(chainConfig)) {
         throw new Error('chain is null or empty');
       }
 
@@ -49,19 +50,19 @@ export function useConfigureStrategy() {
       const { autoStakeValidator } = values;
 
       if (autoStakeValidator) {
-        msgs.push(getGrantMsg(address, getChainContractAddress(chain)));
+        msgs.push(getGrantMsg(address, chainConfig.contractAddress));
       }
 
       const updateVaultMsg = {
         update_vault: {
           destinations:
             buildCallbackDestinations(
-              chain,
+              chainConfig,
               values.autoStakeValidator,
               values.recipientAccount,
               values.yieldOption,
               address,
-              values.reinvestStrategy,
+              reinvestStrategyData,
             ) || [],
           vault_id: strategy.id,
         },
