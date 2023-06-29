@@ -33,7 +33,6 @@ import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAdmin } from '@hooks/useAdmin';
-import { useAnalytics } from '@hooks/useAnalytics';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
 
@@ -76,13 +75,6 @@ interface NavItemProps extends FlexProps {
   href: LinkItem['href'];
 }
 function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
-  const { track } = useAnalytics();
-
-  const handleClick = () => {
-    if (children === 'Create strategy') {
-      track('Sidebar Create Strategy Clicked');
-    }
-  };
   return (
     <LinkWithQuery href={href}>
       <Flex
@@ -100,7 +92,6 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
 
           color: isActive ? 'brand.200' : 'white',
         }}
-        onClick={handleClick}
         {...rest}
       >
         {icon && (
