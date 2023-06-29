@@ -2,6 +2,7 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { JsonRpcSigner } from 'ethers';
 import { ChainType } from '@helpers/chains';
 import { mockChainConfig } from 'src/fixtures/mockChainConfig';
+import { mockConfig } from 'src/fixtures/mockConfig';
 import { getEVMSigningClient } from './clients/evm';
 import { getCosmosSigningClient } from './clients/cosmos';
 import getClient from '.';
@@ -24,7 +25,7 @@ describe('getClient', () => {
     const mockEVMClient = { name: 'Mocked EVM Client' };
     (getEVMSigningClient as jest.Mock).mockReturnValue(mockEVMClient);
 
-    const client = getClient({ ...mockChainConfig, chainType: ChainType.EVM }, evmSigner, null);
+    const client = getClient({ ...mockChainConfig, chainType: ChainType.EVM }, mockConfig, evmSigner, null);
     expect(client).toEqual(mockEVMClient);
     expect(getEVMSigningClient).toHaveBeenCalledWith(evmSigner);
   });
@@ -34,13 +35,22 @@ describe('getClient', () => {
     const mockCosmosClient = { name: 'Mocked Cosmos Client' };
     (getCosmosSigningClient as jest.Mock).mockReturnValue(mockCosmosClient);
 
-    const client = getClient(mockChainConfig, null, cosmSigner);
+    const client = getClient(mockChainConfig, mockConfig, null, cosmSigner);
     expect(client).toEqual(mockCosmosClient);
-    expect(getCosmosSigningClient).toHaveBeenCalledWith(cosmSigner, mockChainConfig);
+    expect(getCosmosSigningClient).toHaveBeenCalledWith(cosmSigner, mockChainConfig, mockConfig);
   });
 
   it('returns null if cosmSigner is not present for Kujira chain', () => {
-    const client = getClient(mockChainConfig, null, null);
+    const client = getClient(mockChainConfig, mockConfig, null, null);
+    expect(client).toBeNull();
+  });
+
+  it('returns null if config is not present for Kujira chain', () => {
+    const cosmSigner = {} as SigningCosmWasmClient;
+    const mockCosmosClient = { name: 'Mocked Cosmos Client' };
+    (getCosmosSigningClient as jest.Mock).mockReturnValue(mockCosmosClient);
+
+    const client = getClient(mockChainConfig, undefined, null, cosmSigner);
     expect(client).toBeNull();
   });
 });

@@ -7,6 +7,8 @@ import { getMarsAddress } from '@helpers/chains';
 import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { mockChainConfig } from 'src/fixtures/mockChainConfig';
+import { mockConfig } from 'src/fixtures/mockConfig';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import {
   BuildCreateVaultContext,
   buildCallbackDestinations,
@@ -265,7 +267,7 @@ describe('build params', () => {
         },
       };
 
-      const msg = buildCreateVaultMsg(mockChainConfig, context);
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -274,6 +276,55 @@ describe('build params', () => {
           performance_assessment_strategy: undefined,
           slippage_tolerance: '0.01',
           swap_adjustment_strategy: undefined,
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when DCA+ is set on v2', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(
+        mockChainConfig,
+        { ...mockConfig, exchange_contract_address: undefined } as unknown as Config,
+        context,
+      );
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: 'compare_to_standard_dca',
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            risk_weighted_average: {
+              base_denom: 'bitcoin',
+            },
+          },
           swap_amount: '1200000',
           target_denom: 'ukuji',
           target_receive_amount: undefined,
@@ -306,7 +357,7 @@ describe('build params', () => {
         },
       };
 
-      const msg = buildCreateVaultMsg(mockChainConfig, context);
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -352,7 +403,7 @@ describe('build params', () => {
         },
       };
 
-      const msg = buildCreateVaultMsg(mockChainConfig, context);
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -399,7 +450,7 @@ describe('build params', () => {
         },
       };
 
-      const msg = buildCreateVaultMsg(mockChainConfig, context);
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -439,7 +490,7 @@ describe('build params', () => {
         },
       };
 
-      const msg = buildCreateVaultMsg(mockChainConfig, context);
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -480,7 +531,7 @@ describe('build params', () => {
         },
       };
 
-      expect(() => buildCreateVaultMsg(mockChainConfig, context)).toThrowError(
+      expect(() => buildCreateVaultMsg(mockChainConfig, mockConfig, context)).toThrowError(
         'Swap adjustment is not supported for DCA+',
       );
     });

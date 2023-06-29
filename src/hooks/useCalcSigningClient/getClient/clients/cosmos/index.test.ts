@@ -11,6 +11,7 @@ import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import timekeeper from 'timekeeper';
 import { AuthorizationType, StakeAuthorization } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
+import { mockConfig } from 'src/fixtures/mockConfig';
 import { getCosmosSigningClient } from '.';
 import { mockChainConfig } from '../../../../../fixtures/mockChainConfig';
 
@@ -51,7 +52,7 @@ describe('getCosmosSigningClient', () => {
   });
   describe('executeTopUpCosmos function', () => {
     it('should successfully execute top up and be called with correct arguments', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
       const address = 'address1';
       const topUpAmount = 10;
       const expectedMsg: ExecuteMsg = {
@@ -76,7 +77,7 @@ describe('getCosmosSigningClient', () => {
     });
 
     it('should throw error if not owner of the strategy', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
 
       try {
         await cosmosSigningClient.topUpStrategy('address2', strategy, 10);
@@ -89,7 +90,7 @@ describe('getCosmosSigningClient', () => {
 
   describe('createVault function', () => {
     it('should successfully create vault', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
       const address = 'address1';
       const createVaultContext: BuildCreateVaultContext = {
         initialDenom: { ...defaultDenom, id: 'ukuji' },
@@ -148,7 +149,7 @@ describe('getCosmosSigningClient', () => {
     });
 
     it('should successfully create vault with no fee', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
       const address = 'address1';
       const createVaultContext: BuildCreateVaultContext = {
         initialDenom: { ...defaultDenom, id: 'ukuji' },
@@ -199,7 +200,7 @@ describe('getCosmosSigningClient', () => {
     });
 
     it('should successfully create vault with autostaking', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
       const address = 'address1';
       const createVaultContext: BuildCreateVaultContext = {
         initialDenom: { ...defaultDenom, id: 'ukuji' },
@@ -277,7 +278,7 @@ describe('getCosmosSigningClient', () => {
     });
 
     it('should successfully create vault with autostaking and autocompounding', async () => {
-      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig);
+      const cosmosSigningClient = getCosmosSigningClient(mockClient, mockChainConfig, mockConfig);
       const address = 'address1';
       const createVaultContext: BuildCreateVaultContext = {
         initialDenom: { ...defaultDenom, id: 'ukuji' },
