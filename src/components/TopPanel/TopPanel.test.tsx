@@ -7,9 +7,9 @@ import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useStrategies } from '@hooks/useStrategies';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { featureFlags } from 'src/constants';
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import TopPanel from './TopPanel';
-import { featureFlags } from 'src/constants';
 
 function buildStrategy(data: Partial<Strategy> = {}): Strategy {
   return {
