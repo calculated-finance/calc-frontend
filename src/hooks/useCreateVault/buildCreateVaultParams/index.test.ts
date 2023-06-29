@@ -392,7 +392,7 @@ describe('build params', () => {
         swapAmount: 1.2,
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
-        swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, increaseOnly: true },
         destinationConfig: {
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
@@ -520,7 +520,7 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         isDcaPlus: true,
-        swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, increaseOnly: true },
         destinationConfig: {
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
