@@ -33,8 +33,6 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
 
-  const { price } = useFiatPrice(initialDenom);
-
   const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(initialDenom);
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 

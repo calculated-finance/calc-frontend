@@ -189,7 +189,6 @@ export const allSchema = {
       },
     }),
   slippageTolerance: Yup.number()
-    .nullable()
     .label('Slippage Tolerance')
     .lessThan(100)
     .min(0)

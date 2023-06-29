@@ -107,7 +107,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       throw new Error('No sender address');
     }
 
-    const createVaultContext = {
+    const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
@@ -120,11 +120,11 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       swapAdjustment: undefined,
       performanceAssessmentStrategy: undefined,
       destinationConfig: {
-        autoStakeValidator: state.autoStakeValidator,
+        autoStakeValidator: state.autoStakeValidator || undefined,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
-        recipientAccount: state.recipientAccount,
-        yieldOption: state.yieldOption,
-        reinvestStrategyId: state.reinvestStrategy,
+        recipientAccount: state.recipientAccount || undefined,
+        yieldOption: state.yieldOption || undefined,
+        reinvestStrategyId: state.reinvestStrategy || undefined,
         senderAddress: address,
       },
     };
@@ -180,7 +180,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       throw new Error('No sender address');
     }
 
-    const createVaultContext = {
+    const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: 'daily' as ExecutionIntervals, increment: 1 },
@@ -192,12 +192,11 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       slippageTolerance: state.slippageTolerance,
       isDcaPlus: true,
       destinationConfig: {
-        chainConfig,
-        autoStakeValidator: state.autoStakeValidator,
+        autoStakeValidator: state.autoStakeValidator || undefined,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
-        recipientAccount: state.recipientAccount,
-        yieldOption: state.yieldOption,
-        reinvestStrategyId: state.reinvestStrategy,
+        recipientAccount: state.recipientAccount || undefined,
+        yieldOption: state.yieldOption || undefined,
+        reinvestStrategyId: state.reinvestStrategy || undefined,
         senderAddress: address,
       },
     };
@@ -251,7 +250,7 @@ export const useCreateVaultWeightedScale = () => {
       throw new Error('Invalid reinvest strategy.');
     }
 
-    const createVaultContext = {
+    const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
@@ -268,11 +267,11 @@ export const useCreateVaultWeightedScale = () => {
       },
       isDcaPlus: false,
       destinationConfig: {
-        autoStakeValidator: state.autoStakeValidator,
+        autoStakeValidator: state.autoStakeValidator || undefined,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
-        recipientAccount: state.recipientAccount,
-        yieldOption: state.yieldOption,
-        reinvestStrategyId: state.reinvestStrategy,
+        recipientAccount: state.recipientAccount || undefined,
+        yieldOption: state.yieldOption || undefined,
+        reinvestStrategyId: state.reinvestStrategy || undefined,
         senderAddress: address,
       },
     };

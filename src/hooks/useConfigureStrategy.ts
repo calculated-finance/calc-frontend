@@ -61,7 +61,7 @@ export function useConfigureStrategy() {
               values.recipientAccount,
               values.yieldOption,
               address,
-              values.reinvestStrategy,
+              values.reinvestStrategy || undefined,
             ) || [],
           vault_id: strategy.id,
         },
