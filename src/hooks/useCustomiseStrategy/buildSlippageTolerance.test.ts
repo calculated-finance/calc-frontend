@@ -8,7 +8,7 @@ describe('buildSlippageTolerance', () => {
   it('should return an object with slippage_tolerance if slippageTolerance is different from initialSlippageTolerance', () => {
     const result = buildSlippageTolerance(10, 20);
 
-    expect(result).toEqual({ slippage_tolerance: '0.01' });
+    expect(result).toEqual({ slippage_tolerance: '0.1' });
   });
 
   it('should return an empty object if slippageTolerance is the same as initialSlippageTolerance', () => {
