@@ -144,8 +144,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
 export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
-
-  const { chain, chainConfig } = useChain();
+  const { chain } = useChain();
 
   const client = useCalcSigningClient(chain);
   const track = useTrackCreateVault();

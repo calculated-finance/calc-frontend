@@ -1,5 +1,6 @@
 import { TransactionType } from '@components/TransactionType';
 import {
+  BaseDenom,
   Destination,
   ExecuteMsg,
   PerformanceAssessmentStrategyParams,
@@ -11,8 +12,8 @@ import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DenomInfo } from '@utils/DenomInfo';
-import { Strategy } from '@models/Strategy';
 import { ChainConfig, getMarsAddress } from '@helpers/chains';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 
 export function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -162,11 +163,24 @@ export function buildWeightedScaleAdjustmentStrategy(
   };
 }
 
-function buildDcaPlusAdjustmentStrategy(transactionType: TransactionType): SwapAdjustmentStrategyParams {
+function buildDcaPlusAdjustmentStrategy(
+  transactionType: TransactionType,
+  fetchedConfig: Config,
+):
+  | SwapAdjustmentStrategyParams
+  // TODO: remove after backend is updated
+  | {
+      risk_weighted_average: {
+        base_denom: BaseDenom;
+      };
+    } {
   return {
     risk_weighted_average: {
       base_denom: 'bitcoin',
-      position_type: (transactionType === TransactionType.Buy ? 'enter' : 'exit') as PositionType,
+      ...(!!fetchedConfig &&
+        fetchedConfig.exchange_contract_address && {
+          position_type: (transactionType === TransactionType.Buy ? 'enter' : 'exit') as PositionType,
+        }),
     },
   };
 }
@@ -212,6 +226,7 @@ export type BuildCreateVaultContext = {
 
 export function buildCreateVaultMsg(
   chainConfig: ChainConfig,
+  fetchedConfig: Config,
   {
     initialDenom,
     resultingDenom,
@@ -241,7 +256,7 @@ export function buildCreateVaultMsg(
         swapAdjustment.swapMultiplier,
       )
     : isDcaPlus
-    ? buildDcaPlusAdjustmentStrategy(transactionType)
+    ? (buildDcaPlusAdjustmentStrategy(transactionType, fetchedConfig) as SwapAdjustmentStrategyParams)
     : undefined;
 
   const performanceAssessmentStrategy = isDcaPlus

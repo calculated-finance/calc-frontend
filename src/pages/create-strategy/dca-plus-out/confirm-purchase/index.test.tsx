@@ -11,7 +11,7 @@ import { encode } from '@helpers/encode';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useFormStore } from '@hooks/useFormStore';
-import { CONTRACT_ADDRESS } from 'src/constants';
+import { CONTRACT_ADDRESS, SECONDS_IN_A_DAY } from 'src/constants';
 import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
@@ -113,7 +113,7 @@ describe('DCA Plus Out confirm page', () => {
       const executeMsg = {
         create_vault: {
           label: '',
-          time_interval: 'daily',
+          time_interval: { custom: { seconds: SECONDS_IN_A_DAY } },
           target_denom: 'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518',
           swap_amount: '1000000',
           slippage_tolerance: '0.02',

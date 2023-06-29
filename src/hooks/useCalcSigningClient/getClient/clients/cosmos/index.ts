@@ -14,6 +14,7 @@ import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 
 function executeTopUpCosmos(
   address: string,
@@ -110,12 +111,13 @@ function getFunds(initialDenom: DenomInfo, initialDeposit: number) {
 async function createVault(
   signer: SigningCosmWasmClient,
   chainConfig: ChainConfig,
+  fetchedConfig: Config,
   senderAddress: string,
   initialDeposit: number,
   fee: string | undefined,
   createVaultContext: BuildCreateVaultContext,
 ) {
-  const createVaultMsg = buildCreateVaultMsg(chainConfig, createVaultContext);
+  const createVaultMsg = buildCreateVaultMsg(chainConfig, fetchedConfig, createVaultContext);
 
   const msgs: EncodeObject[] = [];
   const funds = getFunds(createVaultContext.initialDenom, initialDeposit);
@@ -135,7 +137,11 @@ async function createVault(
   return executeCreateVault(signer, senderAddress, msgs);
 }
 
-export function getCosmosSigningClient(cosmSigner: SigningCosmWasmClient, chainConfig: ChainConfig) {
+export function getCosmosSigningClient(
+  cosmSigner: SigningCosmWasmClient,
+  chainConfig: ChainConfig,
+  fetchedConfig: Config,
+) {
   return {
     topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
       executeTopUpCosmos(address, cosmSigner, chainConfig, strategy, topUpAmount),
@@ -144,6 +150,6 @@ export function getCosmosSigningClient(cosmSigner: SigningCosmWasmClient, chainC
       initialDeposit: number,
       fee: string | undefined,
       variables: BuildCreateVaultContext,
-    ) => createVault(cosmSigner, chainConfig, address, initialDeposit, fee, variables),
+    ) => createVault(cosmSigner, chainConfig, fetchedConfig, address, initialDeposit, fee, variables),
   };
 }
