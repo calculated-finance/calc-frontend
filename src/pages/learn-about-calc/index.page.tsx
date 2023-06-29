@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, Grid, GridItem, Heading, Link, Stack, Text } from '@chakra-ui/react';
+import { Button, Flex, Grid, GridItem, Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 
 export enum LearningHubLinks {
@@ -61,35 +61,6 @@ function WeightedScaleLearn() {
   );
 }
 
-function ComingSoonLearn() {
-  return (
-    <Flex layerStyle="panel" position="relative">
-      <Center
-        h="full"
-        w="full"
-        zIndex={1}
-        position="absolute"
-        backdropFilter="auto"
-        backdropBlur="6px"
-        borderRadius={16}
-      >
-        <Heading size="md">New product coming soon</Heading>
-      </Center>{' '}
-      <Flex p={8} alignItems="center">
-        <Stack spacing={4}>
-          <Heading size="md">Secret Strateegy</Heading>
-          <Text textStyle="body">Something you won&apos;t want to miss.</Text>
-
-          <Link href="/strategies">
-            <Button as={Box} w={44} variant="outline" color="brand.200">
-              Start learning
-            </Button>
-          </Link>
-        </Stack>
-      </Flex>
-    </Flex>
-  );
-}
 function GeneralLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
@@ -125,9 +96,6 @@ export function LearnAboutCalc() {
         </GridItem>
         <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
           <WeightedScaleLearn />
-        </GridItem>
-        <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
-          <ComingSoonLearn />
         </GridItem>
       </Grid>
       <Heading size="md">General education</Heading>
