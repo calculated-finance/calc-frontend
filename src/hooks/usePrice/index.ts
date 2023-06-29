@@ -161,16 +161,11 @@ export default function usePrice(
   enabled = true,
 ) {
   const { chain } = useChain();
-  const config = useConfig();
-
   const client = useCosmWasmClient((state) => state.client);
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
-
-  const isV2Enabled =
-    !!client && !!pair && chain === Chains.Kujira && !!config && !config?.exchange_contract_address && enabled;
 
   const kujiraPrice = usePriceKujira(
     client,
@@ -178,7 +173,7 @@ export default function usePrice(
     initialDenom,
     pair as V2Pair,
     transactionType,
-    isV2Enabled,
+    !!client && !!pair && chain === Chains.Kujira && enabled,
   );
 
   const osmosisPrice = usePriceOsmosis(
