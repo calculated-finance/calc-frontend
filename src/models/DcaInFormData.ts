@@ -189,8 +189,8 @@ export const allSchema = {
       },
     }),
   slippageTolerance: Yup.number()
-    .label('Slippage Tolerance')
     .nullable()
+    .label('Slippage Tolerance')
     .lessThan(100)
     .min(0)
     .default(initialValues.slippageTolerance)
@@ -309,6 +309,7 @@ export const allSchema = {
     }),
   reinvestStrategy: Yup.string()
     .label('Reinvest Strategy')
+    .nullable()
     .when('postPurchaseOption', {
       is: PostPurchaseOptions.Reinvest,
       then: (schema) => schema.required(),
@@ -319,6 +320,7 @@ export const allSchema = {
     .min(MIN_DCA_PLUS_STRATEGY_DURATION)
     .max(MAX_DCA_PLUS_STRATEGY_DURATION)
     .required()
+    .nullable()
     .test({
       name: 'swaps-greater-than-minimum',
       test(value, context) {
