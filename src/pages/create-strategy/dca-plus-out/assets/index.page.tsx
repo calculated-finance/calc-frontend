@@ -44,11 +44,9 @@ function Page() {
 
   if (!pairs) {
     return (
-      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction}>
-        <Center h={56}>
-          <Spinner />
-        </Center>
-      </ModalWrapper>
+      <Center h={56}>
+        <Spinner />
+      </Center>
     );
   }
   const denoms = orderAlphabetically(
