@@ -12,6 +12,7 @@ import { useWallet } from '@hooks/useWallet';
 import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
+import { LearningHubLinks } from '../learn-about-calc/index.page';
 
 type StrategyCardProps = {
   name: string;
@@ -139,7 +140,7 @@ function Strategies() {
         icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen2Icon} width={8} height={8} />,
         enabled: true,
         href: StrategyUrls.DCAIn,
-        learnMoreHref: 'https://calculated.fi/standard-dca-in',
+        learnMoreHref: LearningHubLinks.Dca,
       },
       {
         name: 'Algorithm DCA+ In',
@@ -148,7 +149,7 @@ function Strategies() {
         href: StrategyUrls.DCAPlusIn,
         enabled: true,
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-        learnMoreHref: 'https://calculated.fi/algorithm-dca-in',
+        learnMoreHref: LearningHubLinks.DcaPlus,
       },
     ] as StrategyCardProps[];
 
@@ -160,7 +161,7 @@ function Strategies() {
         enabled: true,
         icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
         href: StrategyUrls.WeightedScaleIn,
-        learnMoreHref: 'https://calculated.fi/weighted-scale-in',
+        learnMoreHref: LearningHubLinks.WeightedScale,
       });
     }
     return strategies;
@@ -174,7 +175,7 @@ function Strategies() {
         icon: <Icon stroke="white" strokeWidth={2} as={Fullscreen1Icon} width={8} height={8} />,
         enabled: true,
         href: StrategyUrls.DCAOut,
-        learnMoreHref: 'https://calculated.fi/standard-dca-out',
+        learnMoreHref: LearningHubLinks.Dca,
       },
       {
         name: 'Algorithm DCA+ Out',
@@ -183,7 +184,7 @@ function Strategies() {
         href: StrategyUrls.DCAPlusOut,
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
         enabled: true,
-        learnMoreHref: 'https://calculated.fi/algorithm-dca-out',
+        learnMoreHref: LearningHubLinks.DcaPlus,
       },
     ] as StrategyCardProps[];
 
@@ -195,7 +196,7 @@ function Strategies() {
         enabled: true,
         href: StrategyUrls.WeightedScaleOut,
         icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
-        learnMoreHref: 'https://calculated.fi/weighted-scale-in',
+        learnMoreHref: LearningHubLinks.WeightedScale,
       });
     }
 

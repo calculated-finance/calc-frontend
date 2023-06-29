@@ -1,7 +1,7 @@
 import { Box, Button, Center, Flex, Grid, GridItem, Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 
-enum LearningHubLinks {
+export enum LearningHubLinks {
   Dca = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/dollar-cost-averaging-dca',
   DcaPlus = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/algorithm-dca+',
   WeightedScale = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/overview/calc-swap-tools/weighted-scale-swaps',
