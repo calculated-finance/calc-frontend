@@ -3,8 +3,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { TestnetDenoms } from '@models/Denom';
-import { Chains } from '@hooks/useChain/Chains';
-import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { getMarsAddress } from '@helpers/chains';
 import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { mockChainConfig } from 'src/fixtures/mockChainConfig';
@@ -36,7 +35,7 @@ describe('build params', () => {
         undefined,
       );
       const expectedDestination: Destination = {
-        address: getChainContractAddress(Chains.Osmosis),
+        address: mockChainConfig.contractAddress,
         allocation: '1.0',
         msg: Buffer.from(
           JSON.stringify({
@@ -89,11 +88,10 @@ describe('build params', () => {
     it('returns a reinvest destination when reinvestStrategy is provided for kujira', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
       const reinvestStrategy = '1';
-      const chain = Chains.Kujira;
 
       const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
       const expectedDestination: Destination = {
-        address: getChainContractAddress(chain),
+        address: mockChainConfig.contractAddress,
         allocation: '1.0',
         msg: Buffer.from(
           JSON.stringify({
