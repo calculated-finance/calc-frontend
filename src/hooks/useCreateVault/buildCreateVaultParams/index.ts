@@ -151,13 +151,13 @@ export function buildWeightedScaleAdjustmentStrategy(
   basePriceValue: number,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
-  applyMultiplier: boolean,
+  increaseOnly: boolean,
   swapMultiplier: number,
 ): SwapAdjustmentStrategyParams {
   return {
     weighted_scale: {
       base_receive_amount: getReceiveAmount(initialDenom, swapAmount, basePriceValue, resultingDenom, transactionType),
-      increase_only: applyMultiplier,
+      increase_only: increaseOnly,
       multiplier: swapMultiplier.toString(),
     },
   };
@@ -193,7 +193,7 @@ type TimeTrigger = {
 type SwapAdjustment = {
   basePrice: number;
   swapMultiplier: number;
-  applyMultiplier: boolean;
+  increaseOnly: boolean;
 };
 
 export type DestinationConfig = {
@@ -252,7 +252,7 @@ export function buildCreateVaultMsg(
         swapAdjustment.basePrice,
         resultingDenom,
         transactionType,
-        swapAdjustment.applyMultiplier,
+        swapAdjustment.increaseOnly,
         swapAdjustment.swapMultiplier,
       )
     : isDcaPlus

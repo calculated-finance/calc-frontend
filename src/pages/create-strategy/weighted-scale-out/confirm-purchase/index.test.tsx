@@ -15,6 +15,9 @@ import TriggerTypes from '@models/TriggerTypes';
 import YesNoValues from '@models/YesNoValues';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Chains } from '@hooks/useChain/Chains';
+import usePrice from '@hooks/usePrice';
+import { when } from 'jest-when';
+import getDenomInfo from '@utils/getDenomInfo';
 import Page from './index.page';
 
 const mockRouter = {
@@ -28,6 +31,7 @@ const mockRouter = {
 };
 
 jest.mock('@hooks/useWallet');
+jest.mock('@hooks/usePrice');
 
 jest.mock('next/router', () => ({
   useRouter() {
@@ -80,7 +84,7 @@ async function renderTarget() {
   });
 }
 
-describe('DCA Plus Out confirm page', () => {
+describe('Weighted Scale Out confirm page', () => {
   beforeEach(() => {
     mockFiatPrice();
     useFormStore.setState({
@@ -88,6 +92,14 @@ describe('DCA Plus Out confirm page', () => {
       updateForm: () => mockStateMachine.actions.updateAction,
       resetForm: () => mockStateMachine.actions.resetAction,
     });
+
+    when(usePrice as jest.Mock)
+      .expectCalledWith(
+        getDenomInfo('ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518'),
+        getDenomInfo('ukuji'),
+        'sell',
+      )
+      .mockReturnValue({ price: 1.5, loading: false });
 
     jest.clearAllMocks();
   });

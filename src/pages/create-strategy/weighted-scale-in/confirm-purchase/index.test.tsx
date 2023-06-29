@@ -15,6 +15,10 @@ import YesNoValues from '@models/YesNoValues';
 import TriggerTypes from '@models/TriggerTypes';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { Chains } from '@hooks/useChain/Chains';
+import usePrice from '@hooks/usePrice';
+import { when } from 'jest-when';
+import getDenomInfo from '@utils/getDenomInfo';
+import { TestnetDenoms } from '@models/Denom';
 import Page from './index.page';
 
 const mockRouter = {
@@ -28,6 +32,7 @@ const mockRouter = {
 };
 
 jest.mock('@hooks/useWallet');
+jest.mock('@hooks/usePrice');
 
 jest.mock('next/router', () => ({
   useRouter() {
@@ -38,9 +43,9 @@ jest.mock('next/router', () => ({
 const mockStateMachine = {
   state: {
     weightedScaleIn: {
-      initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+      initialDenom: TestnetDenoms.USK,
       initialDeposit: '30',
-      resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+      resultingDenom: TestnetDenoms.OSMO,
       advancedSettings: true,
       autoStakeValidator: null,
       autoCompoundStakingRewards: true,
@@ -85,6 +90,10 @@ describe('Confirm page', () => {
   beforeEach(() => {
     mockFiatPrice();
 
+    when(usePrice as jest.Mock)
+      .expectCalledWith(getDenomInfo(TestnetDenoms.OSMO), getDenomInfo(TestnetDenoms.USK), 'buy')
+      .mockReturnValue({ price: 1.5, loading: false });
+
     useFormStore.setState({
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,
@@ -126,7 +135,7 @@ describe('Confirm page', () => {
         create_vault: {
           label: '',
           time_interval: { custom: { seconds: 86400 } },
-          target_denom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+          target_denom: TestnetDenoms.OSMO,
           swap_amount: '1000000',
           slippage_tolerance: '0.0001',
           swap_adjustment_strategy: {
@@ -143,7 +152,7 @@ describe('Confirm page', () => {
             funds: [
               {
                 amount: '30000000',
-                denom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+                denom: TestnetDenoms.USK,
               },
             ],
             msg: encode(executeMsg),

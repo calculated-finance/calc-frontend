@@ -118,7 +118,6 @@ async function createVault(
   createVaultContext: BuildCreateVaultContext,
 ) {
   const createVaultMsg = buildCreateVaultMsg(chainConfig, fetchedConfig, createVaultContext);
-
   const msgs: EncodeObject[] = [];
   const funds = getFunds(createVaultContext.initialDenom, initialDeposit);
   msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));

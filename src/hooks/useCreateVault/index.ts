@@ -262,7 +262,7 @@ export const useCreateVaultWeightedScale = () => {
       swapAdjustment: {
         basePrice: state.basePriceValue || dexPrice,
         swapMultiplier: state.swapMultiplier,
-        applyMultiplier: state.applyMultiplier === YesNoValues.Yes,
+        increaseOnly: state.applyMultiplier === YesNoValues.No,
       },
       isDcaPlus: false,
       destinationConfig: {
