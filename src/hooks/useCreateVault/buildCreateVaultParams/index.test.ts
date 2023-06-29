@@ -23,15 +23,6 @@ describe('build params', () => {
       jest.clearAllMocks();
     });
 
-    it('throws error when sender address does not match reinvest strategy owner', () => {
-      const senderAddress = 'sender_address';
-      const reinvestStrategy = { ...dcaInStrategyViewModal, owner: 'different_address' };
-
-      expect(() =>
-        buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy),
-      ).toThrowError('Reinvest strategy does not belong to user.');
-    });
-
     it('returns an auto-stake destination when autoStakeValidator is provided', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
       const autoStakeValidator = 'validator_address';
@@ -76,7 +67,7 @@ describe('build params', () => {
 
     it('returns a reinvest destination when reinvestStrategy is provided', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
-      const reinvestStrategy = dcaInStrategyViewModal;
+      const reinvestStrategy = '1';
 
       const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
       const expectedDestination: Destination = {
@@ -85,7 +76,7 @@ describe('build params', () => {
         msg: Buffer.from(
           JSON.stringify({
             deposit: {
-              vault_id: reinvestStrategy.id,
+              vault_id: reinvestStrategy,
               address: senderAddress,
             },
           } as ExecuteMsg),
@@ -97,7 +88,7 @@ describe('build params', () => {
 
     it('returns a reinvest destination when reinvestStrategy is provided for kujira', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
-      const reinvestStrategy = dcaInStrategyViewModal;
+      const reinvestStrategy = '1';
       const chain = Chains.Kujira;
 
       const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
@@ -107,7 +98,7 @@ describe('build params', () => {
         msg: Buffer.from(
           JSON.stringify({
             deposit: {
-              vault_id: reinvestStrategy.id,
+              vault_id: reinvestStrategy,
               address: senderAddress,
             },
           }),
@@ -267,17 +258,16 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      const msg = buildCreateVaultMsg(context);
+      const msg = buildCreateVaultMsg(mockChainConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -309,17 +299,16 @@ describe('build params', () => {
         slippageTolerance: 1.0,
         isDcaPlus: true,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      const msg = buildCreateVaultMsg(context);
+      const msg = buildCreateVaultMsg(mockChainConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -356,17 +345,16 @@ describe('build params', () => {
         slippageTolerance: 1.0,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      const msg = buildCreateVaultMsg(context);
+      const msg = buildCreateVaultMsg(mockChainConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -404,17 +392,16 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      const msg = buildCreateVaultMsg(context);
+      const msg = buildCreateVaultMsg(mockChainConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -445,17 +432,16 @@ describe('build params', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1.0,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      const msg = buildCreateVaultMsg(context);
+      const msg = buildCreateVaultMsg(mockChainConfig, context);
       expect(msg).toEqual({
         create_vault: {
           destinations: undefined,
@@ -487,17 +473,18 @@ describe('build params', () => {
         isDcaPlus: true,
         swapAdjustment: { basePrice: 1, swapMultiplier: 2, applyMultiplier: true },
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
-      expect(() => buildCreateVaultMsg(context)).toThrowError('Swap adjustment is not supported for DCA+');
+      expect(() => buildCreateVaultMsg(mockChainConfig, context)).toThrowError(
+        'Swap adjustment is not supported for DCA+',
+      );
     });
   });
 });

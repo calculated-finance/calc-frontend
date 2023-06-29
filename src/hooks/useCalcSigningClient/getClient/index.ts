@@ -20,4 +20,6 @@ export default function getClient(
 
     return getCosmosSigningClient(cosmSigner, chainConfig);
   }
+
+  throw new Error('Unsupported chain');
 }

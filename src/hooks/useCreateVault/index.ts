@@ -71,7 +71,7 @@ function useTrackCreateVault() {
 
 export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
-  const { chain, chainConfig } = useChain();
+  const { chain } = useChain();
   const client = useCalcSigningClient(chain);
   const { address } = useWallet();
 
@@ -120,12 +120,11 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       swapAdjustment: undefined,
       performanceAssessmentStrategy: undefined,
       destinationConfig: {
-        chainConfig,
         autoStakeValidator: state.autoStakeValidator,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,
         yieldOption: state.yieldOption,
-        reinvestStrategyData,
+        reinvestStrategyId: state.reinvestStrategy,
         senderAddress: address,
       },
     };
@@ -198,7 +197,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,
         yieldOption: state.yieldOption,
-        reinvestStrategyData,
+        reinvestStrategyId: state.reinvestStrategy,
         senderAddress: address,
       },
     };
@@ -218,7 +217,7 @@ export const useCreateVaultWeightedScale = () => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
 
-  const { chain, chainConfig } = useChain();
+  const { chain } = useChain();
 
   const client = useCalcSigningClient(chain);
   const track = useTrackCreateVault();
@@ -269,12 +268,11 @@ export const useCreateVaultWeightedScale = () => {
       },
       isDcaPlus: false,
       destinationConfig: {
-        chainConfig,
         autoStakeValidator: state.autoStakeValidator,
         autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount,
         yieldOption: state.yieldOption,
-        reinvestStrategyData,
+        reinvestStrategyId: state.reinvestStrategy,
         senderAddress: address,
       },
     };

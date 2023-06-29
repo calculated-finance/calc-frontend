@@ -19,7 +19,6 @@ import { buildCallbackDestinations } from './useCreateVault/buildCreateVaultPara
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;
   strategy: Strategy;
-  reinvestStrategyData: Strategy;
 };
 
 export function useConfigureStrategy() {
@@ -29,7 +28,7 @@ export function useConfigureStrategy() {
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
-    ({ values, strategy, reinvestStrategyData }) => {
+    ({ values, strategy }) => {
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
@@ -62,7 +61,7 @@ export function useConfigureStrategy() {
               values.recipientAccount,
               values.yieldOption,
               address,
-              reinvestStrategyData,
+              values.reinvestStrategy,
             ) || [],
           vault_id: strategy.id,
         },

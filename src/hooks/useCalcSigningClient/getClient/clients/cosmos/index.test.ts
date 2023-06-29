@@ -102,13 +102,12 @@ describe('getCosmosSigningClient', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
@@ -162,13 +161,12 @@ describe('getCosmosSigningClient', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: undefined,
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
@@ -214,13 +212,12 @@ describe('getCosmosSigningClient', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: 'autostakevalidator',
           autoCompoundStakingRewards: undefined,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 
@@ -293,13 +290,12 @@ describe('getCosmosSigningClient', () => {
         transactionType: TransactionType.Buy,
         slippageTolerance: 1,
         destinationConfig: {
-          chainConfig: mockChainConfig,
           senderAddress: 'kujira1',
           autoStakeValidator: 'autostakevalidator',
           autoCompoundStakingRewards: true,
           recipientAccount: undefined,
           yieldOption: undefined,
-          reinvestStrategyData: undefined,
+          reinvestStrategyId: undefined,
         },
       };
 

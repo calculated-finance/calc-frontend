@@ -24,19 +24,11 @@ export function buildCallbackDestinations(
   recipientAccount: string | null | undefined,
   yieldOption: string | null | undefined,
   senderAddress: string,
-  reinvestStrategy: Strategy | undefined,
+  reinvestStrategyId: string | undefined,
 ) {
   const destinations = [] as Destination[];
 
   if (autoStakeValidator) {
-    console.log(
-      JSON.stringify({
-        z_delegate: {
-          delegator_address: senderAddress,
-          validator_address: autoStakeValidator,
-        },
-      }),
-    );
     destinations.push({
       address: chainConfig.contractAddress,
       allocation: '1.0',
@@ -55,14 +47,10 @@ export function buildCallbackDestinations(
     destinations.push({ address: recipientAccount, allocation: '1.0', msg: null });
   }
 
-  if (reinvestStrategy) {
-    if (reinvestStrategy.owner !== senderAddress) {
-      throw new Error('Reinvest strategy does not belong to user.');
-    }
-
+  if (reinvestStrategyId) {
     const msg = {
       deposit: {
-        vault_id: reinvestStrategy.id,
+        vault_id: reinvestStrategyId,
         address: senderAddress,
       },
     } as ExecuteMsg;
@@ -195,12 +183,11 @@ type SwapAdjustment = {
 };
 
 export type DestinationConfig = {
-  chainConfig: ChainConfig;
   autoStakeValidator: string | undefined;
   autoCompoundStakingRewards: boolean | undefined;
   recipientAccount: string | undefined;
   yieldOption: string | undefined;
-  reinvestStrategyData: Strategy | undefined;
+  reinvestStrategyId: string | undefined;
   senderAddress: string;
 };
 
@@ -223,20 +210,23 @@ export type BuildCreateVaultContext = {
   destinationConfig: DestinationConfig;
 };
 
-export function buildCreateVaultMsg({
-  initialDenom,
-  resultingDenom,
-  timeTrigger,
-  startPrice,
-  timeInterval,
-  swapAmount,
-  priceThreshold,
-  transactionType,
-  slippageTolerance,
-  destinationConfig,
-  swapAdjustment,
-  isDcaPlus,
-}: BuildCreateVaultContext): ExecuteMsg {
+export function buildCreateVaultMsg(
+  chainConfig: ChainConfig,
+  {
+    initialDenom,
+    resultingDenom,
+    timeTrigger,
+    startPrice,
+    timeInterval,
+    swapAmount,
+    priceThreshold,
+    transactionType,
+    slippageTolerance,
+    destinationConfig,
+    swapAdjustment,
+    isDcaPlus,
+  }: BuildCreateVaultContext,
+): ExecuteMsg {
   if (isDcaPlus && swapAdjustment) {
     throw new Error('Swap adjustment is not supported for DCA+');
   }
@@ -270,12 +260,12 @@ export function buildCreateVaultMsg({
         : undefined,
       slippage_tolerance: getSlippageWithoutTrailingZeros(slippageTolerance),
       destinations: buildCallbackDestinations(
-        destinationConfig.chainConfig,
+        chainConfig,
         destinationConfig.autoStakeValidator,
         destinationConfig.recipientAccount,
         destinationConfig.yieldOption,
         destinationConfig.senderAddress,
-        destinationConfig.reinvestStrategyData,
+        destinationConfig.reinvestStrategyId,
       ),
       target_receive_amount: startPrice
         ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType)

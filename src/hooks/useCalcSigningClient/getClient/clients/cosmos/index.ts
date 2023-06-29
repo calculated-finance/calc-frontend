@@ -115,7 +115,7 @@ async function createVault(
   fee: string | undefined,
   createVaultContext: BuildCreateVaultContext,
 ) {
-  const createVaultMsg = buildCreateVaultMsg(createVaultContext);
+  const createVaultMsg = buildCreateVaultMsg(chainConfig, createVaultContext);
 
   const msgs: EncodeObject[] = [];
   const funds = getFunds(createVaultContext.initialDenom, initialDeposit);

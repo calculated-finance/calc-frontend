@@ -41,7 +41,7 @@ export function useCustomiseStrategy() {
 
       const msgs: EncodeObject[] = [];
 
-      const updateVaultMsg = getUpdateVaultMessage(variables, chain);
+      const updateVaultMsg = getUpdateVaultMessage(variables);
 
       msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
 
@@ -49,7 +49,7 @@ export function useCustomiseStrategy() {
     },
     {
       onSuccess: (data, variables) => {
-        track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables, chain) });
+        track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables) });
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, variables.strategy.id] });
       },
       onError: (error, { values }) => {
