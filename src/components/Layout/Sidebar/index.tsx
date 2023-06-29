@@ -25,7 +25,6 @@ import {
   BoxedImportIcon,
   Graph2Icon,
   ViewListIcon,
-  KnowledgeIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -48,7 +47,7 @@ const LinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
+  // { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 

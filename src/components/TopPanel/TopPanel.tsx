@@ -1,17 +1,17 @@
 import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Flex } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import Spinner from '@components/Spinner';
-import { Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
+import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { featureFlags } from 'src/constants';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
-import { useAnalytics } from '@hooks/useAnalytics';
 
 function Onboarding() {
   return (
@@ -197,12 +197,23 @@ export default function TopPanel() {
         Content: Box,
       };
     }
-    if ((featureFlags.learningHubEnabled && !activeStrategies.length) || !connected) {
-      if (!completedStrategies.length) {
+
+    if (featureFlags.learningHubEnabled) {
+      if (!activeStrategies.length || !connected) {
         return {
           background: '/images/backgrounds/twist-thin-blue.svg',
           border: 'transparent',
           Content: LearnNewUsers,
+        };
+      }
+    }
+
+    if (!activeStrategies.length) {
+      if (!completedStrategies.length) {
+        return {
+          background: '/images/backgrounds/twist-thin.svg',
+          border: 'brand.200',
+          Content: Onboarding,
         };
       }
       return {
@@ -211,6 +222,7 @@ export default function TopPanel() {
         Content: Returning,
       };
     }
+
     if (activeStrategies.length === 1) {
       return {
         background: '/images/backgrounds/spiral-thin.svg',
