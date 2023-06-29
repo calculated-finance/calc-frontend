@@ -73,7 +73,7 @@ export const featureFlags =
         isKujiraV2Enabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
-        learningHubEnabled: true,
+        learningHubEnabled: false,
       }
     : {
         extraTimeOptions: true,
