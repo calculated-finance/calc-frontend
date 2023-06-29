@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -22,6 +22,7 @@ import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
+import Spinner from '@components/Spinner';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
@@ -44,7 +45,13 @@ function Page() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction} />;
+    return (
+      <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
+        <Center h={56}>
+          <Spinner />
+        </Center>
+      </ModalWrapper>
+    );
   }
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))

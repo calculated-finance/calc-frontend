@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { FormNames } from 'src/hooks/useFormStore';
@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import Spinner from '@components/Spinner';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
@@ -39,7 +40,13 @@ function DcaIn() {
   const router = useRouter();
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaPlusInSteps} reset={actions.resetAction} />;
+    return (
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={actions.resetAction}>
+        <Center h={56}>
+          <Spinner />
+        </Center>
+      </ModalWrapper>
+    );
   }
 
   const initialValues = {
