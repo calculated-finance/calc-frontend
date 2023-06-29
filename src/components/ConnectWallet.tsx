@@ -6,7 +6,6 @@ import Spinner from './Spinner';
 function ConnectWallet(props: FlexProps) {
   const { isConnecting } = useWallet();
   const { setVisible } = useWalletModal();
-
   const handleConnect = () => {
     setVisible(true);
   };

@@ -6,7 +6,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useStrategies } from '@hooks/useStrategies';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import TopPanel from './TopPanel';

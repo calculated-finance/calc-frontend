@@ -116,7 +116,7 @@ const sidebarLogoUrls = {
   [Chains.Osmosis]: '/images/osmoMascot.svg',
   [Chains.Kujira]: '/images/kujiMascot.svg',
   [Chains.Moonbeam]: '/images/moonbeam-large.png',
-}
+};
 
 function SidebarContent({ onClose, ...rest }: SidebarProps) {
   const router = useRouter();
@@ -230,7 +230,6 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
               />
             </LinkWithQuery>
           ))}
-
       </Flex>
     </Flex>
   );

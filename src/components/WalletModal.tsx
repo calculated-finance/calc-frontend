@@ -18,13 +18,14 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
-import { useWallet } from '@hooks/useWallet';
+import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useChain } from '@hooks/useChain';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
 import { Chains } from '@hooks/useChain/Chains';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -34,6 +35,8 @@ function WalletModal() {
   const { isConnecting } = useWallet();
 
   const { isAdminPage } = useAdmin();
+
+  const { track } = useAnalytics();
 
   // const { isStationInstalled, connect: connectStation } = useStation((state) => ({
   //   isStationInstalled: state.isStationInstalled,
@@ -64,6 +67,10 @@ function WalletModal() {
 
   const { isOpen, onToggle } = useDisclosure();
 
+  const trackConnectedWallet = (walletType: WalletTypes) => {
+    track('Wallet Connected', { walletType });
+  };
+
   const handleClose = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
@@ -75,21 +82,25 @@ function WalletModal() {
 
   const handleKeplrConnect = () => {
     connectKeplr(chain);
+    trackConnectedWallet(WalletTypes.KEPLR);
     handleClose();
   };
 
   const handleLeapConnect = () => {
     connectLeap(chain);
+    trackConnectedWallet(WalletTypes.LEAP);
     handleClose();
   };
 
   const handleXDEFIConnect = () => {
     connectXDEFI(chain);
+    trackConnectedWallet(WalletTypes.XDEFI);
     handleClose();
   };
 
   const handleMetamaskConnect = () => {
     connectMetamask();
+    trackConnectedWallet(WalletTypes.METAMASK);
     handleClose();
   };
 
