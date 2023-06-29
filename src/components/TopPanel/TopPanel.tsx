@@ -11,6 +11,7 @@ import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
+import { useAnalytics } from '@hooks/useAnalytics';
 
 function Onboarding() {
   return (
@@ -65,6 +66,7 @@ function Returning() {
   );
 }
 function LearnNewUsers() {
+  const { track } = useAnalytics();
   return (
     <>
       <HStack>
@@ -82,7 +84,14 @@ function LearnNewUsers() {
       </Stack>
       <Stack direction={{ base: 'column', sm: 'row' }}>
         <LinkWithQuery passHref href="/learn-about-calc">
-          <Button px={12} maxWidth={402} size="sm" bgColor="blue.200" _hover={{ bgColor: 'blue.300' }}>
+          <Button
+            px={12}
+            maxWidth={402}
+            size="sm"
+            bgColor="blue.200"
+            _hover={{ bgColor: 'blue.300' }}
+            onClick={() => track('Learning hub button clicked')}
+          >
             Learn how CALC works
           </Button>
         </LinkWithQuery>
