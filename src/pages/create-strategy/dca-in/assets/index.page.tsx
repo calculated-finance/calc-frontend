@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -9,7 +9,6 @@ import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
-import { useRouter } from 'next/router';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -17,6 +16,7 @@ import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
+import Spinner from '@components/Spinner';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function DcaIn() {
@@ -36,7 +36,13 @@ function DcaIn() {
   };
 
   if (!pairs) {
-    return <ModalWrapper stepsConfig={steps} reset={actions.resetAction} />;
+    return (
+      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+        <Center h={56}>
+          <Spinner />
+        </Center>
+      </ModalWrapper>
+    );
   }
 
   const initialValues = {
