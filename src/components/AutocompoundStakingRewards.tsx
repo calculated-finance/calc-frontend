@@ -11,7 +11,6 @@ import {
   chakra,
   useCheckbox,
 } from '@chakra-ui/react';
-import { useAdmin } from '@hooks/useAdmin';
 import { useField } from 'formik';
 import { FiCheck } from 'react-icons/fi';
 
@@ -23,9 +22,7 @@ export default function AutoCompoundStakingRewards({ enabled }: { enabled: boole
     ...field,
   });
 
-  const { isAdmin } = useAdmin();
-
-  return isAdmin && enabled ? (
+  return enabled ? (
     <Flex>
       <FormControl isInvalid={meta.touched && !!meta.error}>
         <HStack spacing={2}>
