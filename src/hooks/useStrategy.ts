@@ -7,7 +7,7 @@ import { useCalcClient } from './useCalcClient';
 
 export const STRATEGY_KEY = 'strategy';
 
-export default function useStrategy(id: Strategy['id'] | undefined) {
+export default function useStrategy(id: Strategy['id'] | null | undefined) {
   const { address } = useWallet();
   const { chain } = useChain();
   const client = useCalcClient(chain);

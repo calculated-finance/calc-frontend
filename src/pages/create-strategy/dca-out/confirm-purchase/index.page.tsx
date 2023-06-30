@@ -2,7 +2,7 @@ import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { SigningState } from '@components/NewStrategyModal';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
-import { useCreateVaultDca } from '@hooks/useCreateVault';
+import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import { FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
@@ -19,10 +19,10 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
-import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -32,13 +32,12 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
-  const { price } = useFiatPrice(initialDenom);
-
-  const { mutate, isError, error, isLoading } = useCreateVaultDca();
+  const { mutate, isError, error, isLoading } = useCreateVaultDca(initialDenom);
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
-      { price },
+      { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
           await nextStep({
@@ -69,7 +68,7 @@ function Page() {
       <Stack spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
         <Divider />
-        <SummaryYourDeposit state={state}  />
+        <SummaryYourDeposit state={state} />
         <SummaryTheSwap state={state} transactionType={transactionType} />
         <SummaryWhileSwapping
           initialDenom={initialDenom}
@@ -94,11 +93,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaOut,
+      }}
+    >
       <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
         <Page />
       </ModalWrapper>

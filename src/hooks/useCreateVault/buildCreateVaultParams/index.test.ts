@@ -2,15 +2,142 @@ import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
 import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { TestnetDenoms } from '@models/Denom';
+import { getMarsAddress } from '@helpers/chains';
+import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { mockChainConfig } from 'src/fixtures/mockChainConfig';
+import { mockConfig } from 'src/fixtures/mockConfig';
+import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import {
+  BuildCreateVaultContext,
+  buildCallbackDestinations,
+  buildCreateVaultMsg,
   getExecutionInterval,
-  getMinimumReceiveAmount,
-  getOsmosisReceiveAmount,
   getReceiveAmount,
   getSlippageWithoutTrailingZeros,
 } from '.';
 
 describe('build params', () => {
+  describe('buildCallbackDestinations', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('returns an auto-stake destination when autoStakeValidator is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const autoStakeValidator = 'validator_address';
+
+      const result = buildCallbackDestinations(
+        mockChainConfig,
+        autoStakeValidator,
+        null,
+        null,
+        senderAddress,
+        undefined,
+      );
+      const expectedDestination: Destination = {
+        address: mockChainConfig.contractAddress,
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            z_delegate: {
+              delegator_address: senderAddress,
+              validator_address: autoStakeValidator,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a recipient destination when recipientAccount is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const recipientAccount = 'recipient_account';
+
+      const result = buildCallbackDestinations(mockChainConfig, null, recipientAccount, null, senderAddress, undefined);
+      const expectedDestination: Destination = {
+        address: recipientAccount,
+        allocation: '1.0',
+        msg: null,
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a reinvest destination when reinvestStrategy is provided', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const reinvestStrategy = '1';
+
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
+      const expectedDestination: Destination = {
+        address: mockChainConfig.contractAddress,
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              vault_id: reinvestStrategy,
+              address: senderAddress,
+            },
+          } as ExecuteMsg),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a reinvest destination when reinvestStrategy is provided for kujira', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const reinvestStrategy = '1';
+
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, reinvestStrategy);
+      const expectedDestination: Destination = {
+        address: mockChainConfig.contractAddress,
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              vault_id: reinvestStrategy,
+              address: senderAddress,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns a mars destination when yieldOption is "mars"', () => {
+      const senderAddress = dcaInStrategyViewModal.owner;
+      const yieldOption = 'mars';
+      const marsAddress = getMarsAddress();
+
+      const result = buildCallbackDestinations(mockChainConfig, null, null, yieldOption, senderAddress, undefined);
+      const expectedDestination: Destination = {
+        address: marsAddress,
+        allocation: '1.0',
+        msg: Buffer.from(
+          JSON.stringify({
+            deposit: {
+              on_behalf_of: senderAddress,
+            },
+          }),
+        ).toString('base64'),
+      };
+
+      expect(result).toEqual([expectedDestination]);
+    });
+
+    it('returns undefined when no input is provided', () => {
+      const senderAddress = 'sender_address';
+
+      const result = buildCallbackDestinations(mockChainConfig, null, null, null, senderAddress, undefined);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('getSlippageWithoutTrailingZeros', () => {
     it('returns "0" when slippage is 0', () => {
       expect(getSlippageWithoutTrailingZeros(0)).toBe('0');
@@ -50,62 +177,6 @@ describe('build params', () => {
   });
 
   describe('getReceiveAmount', () => {
-    it('returns undefined when price is null', () => {
-      expect(getReceiveAmount(null, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBeUndefined();
-    });
-
-    it('returns undefined when price is undefined', () => {
-      expect(getReceiveAmount(undefined, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBeUndefined();
-    });
-
-    it('returns the correct receive amount when transaction type is "Buy"', () => {
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Buy, 2)).toBe('10000');
-      expect(getReceiveAmount(10, (value) => value * 100000, 100, TransactionType.Buy, 3)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000000, 100, TransactionType.Buy, 4)).toBe('10000000');
-    });
-
-    it('returns the correct receive amount when transaction type is "Sell"', () => {
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 2)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 3)).toBe('1000000');
-      expect(getReceiveAmount(10, (value) => value * 1000, 100, TransactionType.Sell, 4)).toBe('1000000');
-    });
-  });
-
-  describe('getOsmosisReceiveAmount', () => {
-    it('returns undefined if price is null', () => {
-      const result = getOsmosisReceiveAmount(undefined, 1.2, null, undefined, TransactionType.Buy);
-      expect(result).toBeUndefined();
-    });
-
-    it('returns undefined if price is undefined', () => {
-      const result = getOsmosisReceiveAmount(undefined, 1.2, undefined, undefined, TransactionType.Buy);
-      expect(result).toBeUndefined();
-    });
-
-    it('throws an error if initialDenom is missing properties', () => {
-      expect(() =>
-        getOsmosisReceiveAmount(
-          undefined,
-          1.2,
-          5,
-          { ...defaultDenom, id: '', significantFigures: 18 },
-          TransactionType.Buy,
-        ),
-      ).toThrowError('Missing denom info');
-    });
-
-    it('throws an error if resultingDenom is missing properties', () => {
-      expect(() =>
-        getOsmosisReceiveAmount(
-          { ...defaultDenom, id: '', deconversion: (amount) => amount, significantFigures: 6 },
-          1.2,
-          5,
-          undefined,
-          TransactionType.Buy,
-        ),
-      ).toThrowError('Missing denom info');
-    });
-
     it('calculates correct receive amount for Buy transaction', () => {
       const initialDenom: DenomInfo = {
         ...defaultDenom,
@@ -118,7 +189,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
       expect(result).toEqual('240000000000000000');
     });
 
@@ -134,7 +205,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Sell);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Sell);
       expect(result).toEqual('6000000000000000000');
     });
 
@@ -150,7 +221,7 @@ describe('build params', () => {
         id: '',
         significantFigures: 18,
       };
-      const result = getOsmosisReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
+      const result = getReceiveAmount(initialDenom, 1.2, 5.0, resultingDenom, TransactionType.Buy);
       expect(result).toEqual('480000000000000000');
     });
   });
@@ -172,19 +243,297 @@ describe('build params', () => {
         expect(result).toEqual({ custom: { seconds: expected } });
       });
     });
+  });
 
-    it('should return the execution interval when executionIntervalIncrement is null, undefined or 0 or less', () => {
-      const testCases = [
-        { interval: 'minute' as ExecutionIntervals, increment: null },
-        { interval: 'half_hourly' as ExecutionIntervals, increment: undefined },
-        { interval: 'hourly' as ExecutionIntervals, increment: 0 },
-        { interval: 'daily' as ExecutionIntervals, increment: -1 },
-      ];
+  describe('buildCreateVaultMsg', () => {
+    const initialDenom = { id: TestnetDenoms.AXL, ...defaultDenom };
+    const resultingDenom = { id: TestnetDenoms.Kuji, ...defaultDenom };
 
-      testCases.forEach(({ interval, increment }) => {
-        const result = getExecutionInterval(interval, increment);
-        expect(result).toEqual(interval);
+    it('should return correct message when neither dca plus or swap adjustment is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: undefined,
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
       });
+    });
+
+    it('should return correct message when DCA+ is set on v2', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(
+        mockChainConfig,
+        { ...mockConfig, exchange_contract_address: undefined } as unknown as Config,
+        context,
+      );
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: 'compare_to_standard_dca',
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            risk_weighted_average: {
+              base_denom: 'bitcoin',
+            },
+          },
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when DCA+ is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: 'compare_to_standard_dca',
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            risk_weighted_average: {
+              base_denom: 'bitcoin',
+              position_type: 'enter',
+            },
+          },
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when weighted scale is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, increaseOnly: true },
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_adjustment_strategy: {
+            weighted_scale: {
+              base_receive_amount: '1200000',
+              increase_only: true,
+              multiplier: '2',
+            },
+          },
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: undefined,
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when time trigger is set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        timeTrigger: { startDate: new Date('2022-01-02T00:00:00Z'), startTime: '11:11' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: '1641121860',
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should return correct message when time trigger is set without start time', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        timeTrigger: { startDate: new Date('2022-01-02T00:00:00Z'), startTime: undefined },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      const msg = buildCreateVaultMsg(mockChainConfig, mockConfig, context);
+      expect(msg).toEqual({
+        create_vault: {
+          destinations: undefined,
+          label: '',
+          minimum_receive_amount: undefined,
+          performance_assessment_strategy: undefined,
+          slippage_tolerance: '0.01',
+          swap_amount: '1200000',
+          target_denom: 'ukuji',
+          target_receive_amount: undefined,
+          target_start_time_utc_seconds: '1641081600',
+          time_interval: {
+            custom: {
+              seconds: 86400,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw error when DCA+ and weighted scale are both set', () => {
+      const context: BuildCreateVaultContext = {
+        initialDenom,
+        resultingDenom,
+        timeInterval: { increment: 1, interval: 'daily' },
+        swapAmount: 1.2,
+        transactionType: TransactionType.Buy,
+        slippageTolerance: 1.0,
+        isDcaPlus: true,
+        swapAdjustment: { basePrice: 1, swapMultiplier: 2, increaseOnly: true },
+        destinationConfig: {
+          senderAddress: 'kujira1',
+          autoStakeValidator: undefined,
+          autoCompoundStakingRewards: undefined,
+          recipientAccount: undefined,
+          yieldOption: undefined,
+          reinvestStrategyId: undefined,
+        },
+      };
+
+      expect(() => buildCreateVaultMsg(mockChainConfig, mockConfig, context)).toThrowError(
+        'Swap adjustment is not supported for DCA+',
+      );
     });
   });
 });

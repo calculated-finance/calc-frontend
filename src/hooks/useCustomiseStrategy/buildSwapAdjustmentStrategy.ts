@@ -1,6 +1,7 @@
 import { CustomiseSchemaWeightedScale } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
-import { buildWeightedScaleAdjustmentStrategy } from '../useCreateVault/buildCreateVaultParams';
+import { buildWeightedScaleAdjustmentStrategy } from '@hooks/useCreateVault/buildCreateVaultParams';
+import YesNoValues from '@models/YesNoValues';
 import { ConfigureVariables } from './ConfigureVariables';
 
 export function buildSwapAdjustmentStrategy({ values, initialValues, context, strategy }: ConfigureVariables) {
@@ -26,13 +27,11 @@ export function buildSwapAdjustmentStrategy({ values, initialValues, context, st
       swap_adjustment_strategy: buildWeightedScaleAdjustmentStrategy(
         context.initialDenom,
         context.swapAmount,
-        castedValues.basePriceValue,
+        castedValues.basePriceValue || context.currentPrice,
         context.resultingDenom,
         context.transactionType,
-        castedValues.applyMultiplier,
+        castedValues.applyMultiplier === YesNoValues.Yes,
         castedValues.swapMultiplier,
-        context.currentPrice,
-        context.chain
       ),
     };
   }

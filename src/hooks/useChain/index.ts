@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
+import { getChainConfig } from '@helpers/chains';
 import { Chains } from './Chains';
 
 type ChainState = {
@@ -107,5 +108,7 @@ export const useChain = () => {
     }
   }, [router.isReady, setChain, chain, updateQueryParam, storedChain, updateStores, wasFiltered]);
 
-  return { ...(data as ChainState), isLoading };
+  const chainConfig = useMemo(() => getChainConfig(data.chain), [data.chain]);
+
+  return { ...(data as ChainState), chainConfig, isLoading };
 };

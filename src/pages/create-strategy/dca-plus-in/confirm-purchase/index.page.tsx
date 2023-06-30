@@ -2,7 +2,7 @@ import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { SigningState } from '@components/NewStrategyModal';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
-import { useCreateVaultDcaPlus } from '@hooks/useCreateVault';
+import { useCreateVaultDcaPlus } from '@hooks/useCreateVault/useCreateVaultDcaPlus';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
@@ -23,6 +23,7 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
+import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -32,13 +33,12 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
 
-  const { price } = useFiatPrice(initialDenom);
-
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus();
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(initialDenom);
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
-      { price },
+      { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
           await nextStep({

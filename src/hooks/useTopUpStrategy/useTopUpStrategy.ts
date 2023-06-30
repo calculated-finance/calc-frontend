@@ -15,8 +15,7 @@ type TopUpVariables = {
 };
 
 const useTopUpStrategy = () => {
-  const { chain } = useChain();
-  const client = useCalcSigningClient(chain);
+  const client = useCalcSigningClient();
   const { address } = useWallet();
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(
@@ -33,7 +32,7 @@ const useTopUpStrategy = () => {
     },
     {
       onError: (error, { values }) => {
-        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
+        Sentry.captureException(error, { tags: { values: JSON.stringify(values) } });
       },
     },
   );

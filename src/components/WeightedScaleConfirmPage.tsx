@@ -1,8 +1,6 @@
 import { Divider, Stack } from '@chakra-ui/react';
-import { FormNames } from 'src/hooks/useFormStore';
-import { useCreateVaultWeightedScale } from '@hooks/useCreateVault';
+import { useCreateVaultWeightedScale } from '@hooks/useCreateVault/useCreateVaultWeightedScale';
 import useSteps from '@hooks/useSteps';
-import { TransactionType } from '@components/TransactionType';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
 import { SummaryAfterEachSwap } from '@components/Summary/SummaryAfterEachSwap';
@@ -11,15 +9,15 @@ import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { useWeightedScaleConfirmForm } from '@hooks/useWeightedScaleForm';
 import { FormikHelpers } from 'formik';
 import { SummaryTheSwapWeightedScale } from '@components/Summary/SummaryTheSwapWeightedScale';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
 import { SWAP_FEE_WS } from 'src/constants';
-import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import useStrategy from '@hooks/useStrategy';
+import usePrice from '@hooks/usePrice';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
@@ -45,7 +43,7 @@ function PageInternal({
       <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
       <Divider />
       <SummaryYourDeposit state={state} />
-      <SummaryTheSwapWeightedScale state={state}  />
+      <SummaryTheSwapWeightedScale state={state} />
       <WeightSummary
         transactionType={transactionType}
         applyMultiplier={state.applyMultiplier}
@@ -61,7 +59,6 @@ function PageInternal({
         resultingDenom={resultingDenom}
         priceThresholdValue={state.priceThresholdValue}
         slippageTolerance={state.slippageTolerance}
-        
       />
       <SummaryAfterEachSwap state={state} />
       <Fees
@@ -69,7 +66,6 @@ function PageInternal({
         resultingDenom={resultingDenom}
         autoStakeValidator={state.autoStakeValidator}
         swapAmount={state.swapAmount}
-        
         swapFee={SWAP_FEE_WS}
         swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
         excludeDepositFee
@@ -79,21 +75,24 @@ function PageInternal({
   );
 }
 
-export function WeightedScaleConfirmPage({
-  steps,
-}: {
-  steps: StepConfig[];
-}) {
+export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   const { state, actions } = useWeightedScaleConfirmForm();
   const { nextStep, goToStep } = useSteps(steps);
 
-  const { price } = useFiatPrice(state && getDenomInfo(state.initialDenom));
+  const initialDenom = getDenomInfo(state?.initialDenom);
+  const resultingDenom = getDenomInfo(state?.resultingDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale();
 
+  const { transactionType } = useStrategyInfo();
+
+  const { price: dexPrice } = usePrice(resultingDenom, initialDenom, transactionType);
+
+  const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
+
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
-      { price },
+      { state, dexPrice, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
           await nextStep({
@@ -117,12 +116,7 @@ export function WeightedScaleConfirmPage({
     <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
       {state ? (
         <SigningState isSigning={isLoading}>
-          <PageInternal
-            state={state}
-            isError={isError}
-            error={error}
-            handleSubmit={handleSubmit}
-          />
+          <PageInternal state={state} isError={isError} error={error} handleSubmit={handleSubmit} />
         </SigningState>
       ) : (
         <InvalidData onRestart={handleRestart} />

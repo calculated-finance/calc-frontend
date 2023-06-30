@@ -1,4 +1,8 @@
 import { Chains } from '@hooks/useChain/Chains';
+import { defaultDenom } from '@utils/defaultDenom';
+import { TransactionType } from '@components/TransactionType';
+import YesNoValues from '@models/YesNoValues';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { buildPriceThreshold } from './buildPriceThreshold';
 import { buildSlippageTolerance } from './buildSlippageTolerance';
 import { buildSwapAdjustmentStrategy } from './buildSwapAdjustmentStrategy';
@@ -13,17 +17,34 @@ jest.mock('./buildPriceThreshold');
 describe('getUpdateVaultMessage', () => {
   it('should return an object with proper structure', () => {
     const variables = {
-      strategy: { id: 'test-id' },
-      values: { slippageTolerance: 'test-slippage' },
-      initialValues: { slippageTolerance: 'test-initial-slippage' },
+      strategy: { ...dcaInStrategyViewModal, id: 'test-id' },
+      values: {
+        slippageTolerance: 0.1,
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: undefined,
+        advancedSettings: false,
+      },
+      initialValues: {
+        slippageTolerance: 0.1,
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: undefined,
+        advancedSettings: false,
+      },
+      context: {
+        initialDenom: { ...defaultDenom, id: 'test-denom' },
+        swapAmount: 1,
+        resultingDenom: { ...defaultDenom, id: 'test-denom' },
+        transactionType: TransactionType.Buy,
+        currentPrice: 1.5,
+        chain: Chains.Kujira,
+      },
     };
-    const chain = Chains.Kujira;
 
-    const result = getUpdateVaultMessage(variables as any, chain) as any;
+    const result = getUpdateVaultMessage(variables);
 
     expect(typeof result).toBe('object');
     expect(result).toHaveProperty('update_vault');
-    expect(result.update_vault).toHaveProperty('vault_id');
+    expect(result).toEqual({ update_vault: { vault_id: 'test-id' } });
   });
 
   it('should merge objects from helper functions correctly', () => {
@@ -38,20 +59,39 @@ describe('getUpdateVaultMessage', () => {
     (buildPriceThreshold as jest.Mock).mockReturnValue(mockPriceThreshold);
 
     const variables = {
-      strategy: { id: 'test-id' },
-      values: { slippageTolerance: 'test-slippage' },
-      initialValues: { slippageTolerance: 'test-initial-slippage' },
+      strategy: { ...dcaInStrategyViewModal, id: 'test-id' },
+      values: {
+        slippageTolerance: 0.1,
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: undefined,
+        advancedSettings: false,
+      },
+      initialValues: {
+        slippageTolerance: 0.1,
+        priceThresholdEnabled: YesNoValues.No,
+        priceThresholdValue: undefined,
+        advancedSettings: false,
+      },
+      context: {
+        initialDenom: { ...defaultDenom, id: 'test-denom' },
+        swapAmount: 1,
+        resultingDenom: { ...defaultDenom, id: 'test-denom' },
+        transactionType: TransactionType.Buy,
+        currentPrice: 1.5,
+        chain: Chains.Kujira,
+      },
     };
-    const chain = Chains.Kujira;
 
-    const result = getUpdateVaultMessage(variables as any, chain) as any;
+    const result = getUpdateVaultMessage(variables);
 
-    expect(result.update_vault).toMatchObject({
-      vault_id: 'test-id',
-      ...mockPriceThreshold,
-      ...mockSlippageTolerance,
-      ...mockTimeInterval,
-      ...mockSwapAdjustmentStrategy,
+    expect(result).toMatchObject({
+      update_vault: {
+        vault_id: 'test-id',
+        ...mockPriceThreshold,
+        ...mockSlippageTolerance,
+        ...mockTimeInterval,
+        ...mockSwapAdjustmentStrategy,
+      },
     });
   });
 });

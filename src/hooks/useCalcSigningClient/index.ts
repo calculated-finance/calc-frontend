@@ -1,13 +1,16 @@
-import { Chains } from '@hooks/useChain/Chains';
 import { useMetamask } from '@hooks/useMetamask';
 import { useWallet } from '@hooks/useWallet';
+import { useConfig } from '@hooks/useConfig';
+import { useChain } from '@hooks/useChain';
 import getClient from './getClient';
 
-export function useCalcSigningClient(chain: Chains) {
+export function useCalcSigningClient() {
+  const { chainConfig } = useChain();
+  const fetchedConfig = useConfig();
   const evmSigner = useMetamask((state) => state.signer);
   const { signingClient: cosmSigner } = useWallet();
 
-  if (!chain) return null;
+  if (!chainConfig) return null;
 
-  return getClient(chain, evmSigner, cosmSigner);
+  return getClient(chainConfig, fetchedConfig, evmSigner, cosmSigner);
 }

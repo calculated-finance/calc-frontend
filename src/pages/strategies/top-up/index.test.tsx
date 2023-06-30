@@ -10,6 +10,8 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { Chains } from '@hooks/useChain/Chains';
 import { useKujira } from '@hooks/useKujira';
 import { KujiraQueryClient } from 'kujira.js';
+import { useConfig } from '@hooks/useConfig';
+import { mockConfig } from 'src/fixtures/mockConfig';
 import Page from './index.page';
 
 const mockRouter = {
@@ -25,6 +27,7 @@ const mockRouter = {
 const mockToast = jest.fn();
 
 jest.mock('@hooks/useWallet');
+jest.mock('@hooks/useConfig');
 jest.mock('@chakra-ui/react', () => ({
   ...jest.requireActual('@chakra-ui/react'),
   useToast: () => mockToast,
@@ -48,13 +51,13 @@ function mockDeposit(execute = jest.fn(), success = true) {
   };
   if (success) {
     when(execute)
-      .calledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockResolvedValueOnce('');
   } else {
     when(execute)
-      .calledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
+      .expectCalledWith('kujiratestwallet', CONTRACT_ADDRESS, msg, 'auto', undefined, [
         { amount: '1000000', denom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo' },
       ])
       .mockRejectedValueOnce(new Error('test error'));
@@ -76,6 +79,8 @@ describe('Top up page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useKujira.setState({ query: {} as KujiraQueryClient });
+
+    (useConfig as jest.Mock).mockReturnValue(mockConfig);
   });
   it('renders the heading', async () => {
     mockUseWallet(mockUseStrategy(), mockDeposit(), mockGetBalance());

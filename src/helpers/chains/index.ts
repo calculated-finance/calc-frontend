@@ -217,3 +217,29 @@ export function getMarsAddress() {
 export function getMarsUrl() {
   return isMainnet() ? 'https://mars.osmosis.zone' : 'https://testnet-osmosis.marsprotocol.io/';
 }
+
+export enum ChainType {
+  Cosmos = 'cosmos',
+  EVM = 'evm',
+}
+
+export type ChainConfig = {
+  name: Chains;
+  chainType: ChainType;
+  contractAddress: string;
+  feeTakerAddress: string;
+  autoCompoundStakingRewardsAddress: string;
+};
+
+export function getChainConfig(chain: Chains) {
+  if (!chain) {
+    return undefined;
+  }
+  return {
+    name: chain,
+    chainType: ChainType.Cosmos,
+    contractAddress: getChainContractAddress(chain),
+    feeTakerAddress: getChainFeeTakerAddress(chain),
+    autoCompoundStakingRewardsAddress: getAutocompoundStakingRewardsAddress(chain),
+  };
+}
