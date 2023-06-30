@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react';
+import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -10,12 +10,10 @@ import usePairs, {
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
@@ -25,6 +23,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
+import Spinner from '@components/Spinner';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -43,10 +42,12 @@ function Page() {
     await nextStep();
   };
 
-  const router = useRouter();
-
   if (!pairs) {
-    return <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={actions.resetAction} />;
+    return (
+      <Center h={56}>
+        <Spinner />
+      </Center>
+    );
   }
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
