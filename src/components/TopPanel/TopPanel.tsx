@@ -77,7 +77,9 @@ function LearnNewUsers() {
       </HStack>
       <Stack spacing={1}>
         <Heading size="md">New to CALC?</Heading>
-        <Text fontSize="sm">Get to know more about our extensive suite of DeFi products.</Text>
+        <Text fontSize="sm">
+          Find out why people are raving about their experiences leveraging CALC to make smarter swaps.
+        </Text>
         <Text fontSize="sm" textStyle="body">
           DCA | DCA+ | Weighted Scale
         </Text>

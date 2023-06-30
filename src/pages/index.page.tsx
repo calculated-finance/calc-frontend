@@ -239,7 +239,7 @@ function OnboardingPanel() {
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={1}>
         <Heading size="md">Ready to set up a CALC strategy?</Heading>
-        <Text fontSize="sm">Feeling comfortable with your understanding of our products?</Text>
+        <Text fontSize="sm">Set up smart recurring swaps such as DCA or Weighted Scale in just 30 seconds.</Text>
       </Stack>
       <LinkWithQuery passHref href="/create-strategy">
         <Button w={44} variant="outline" size="sm">
