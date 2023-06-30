@@ -146,7 +146,7 @@ export function NewStrategyModalHeader({
   const { connected } = useWallet();
 
   const handleCancel = async () => {
-    await routerPush(router, cancelUrl as string);
+    await routerPush(router, cancelUrl);
     if (resetForm) {
       resetForm();
     }
