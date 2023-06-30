@@ -8,8 +8,9 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { featureFlags } from 'src/constants';
+import { HOTJAR_SITE_ID, featureFlags } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
+import { hotjar } from 'react-hotjar';
 
 function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {
@@ -31,6 +32,12 @@ export function InitWrapper({ children }: ChildrenProp) {
   const initMetamask = useMetamask((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
+
+  useEffect(() => {
+    if (HOTJAR_SITE_ID) {
+      hotjar.initialize(parseInt(HOTJAR_SITE_ID, 10), 0);
+    }
+  });
 
   useEffect(() => {
     initAmplitude();
