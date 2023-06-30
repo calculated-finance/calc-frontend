@@ -2,20 +2,13 @@ import { Box, Code, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
-import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
-export function SummaryTheSwapWeightedScale({
-  state,
-}: {
-  state: WeightedScaleState;
-}) {
+export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
 
   const { transactionType } = useStrategyInfo();
@@ -23,14 +16,7 @@ export function SummaryTheSwapWeightedScale({
   const initialDenomInfo = useDenom(initialDenom);
   const resultingDenomInfo = useDenom(resultingDenom);
 
-  const { chain } = useChain();
   const { formattedPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);
-  const { price: osmosisPrice } = usePriceOsmosis(
-    resultingDenomInfo,
-    initialDenomInfo,
-    transactionType,
-    chain === Chains.Osmosis,
-  );
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenomInfo : initialDenomInfo;
   const priceInDenom = transactionType === 'buy' ? initialDenomInfo : resultingDenomInfo;
@@ -56,7 +42,7 @@ export function SummaryTheSwapWeightedScale({
         Where price delta is calculated from the base price of
         <BadgeButton url="customise">
           <Text>
-            1 {priceOfDenomName} = {basePriceValue || formattedPrice || osmosisPrice} {priceInDenomName}
+            1 {priceOfDenomName} = {basePriceValue || formattedPrice} {priceInDenomName}
           </Text>
         </BadgeButton>
         for{' '}

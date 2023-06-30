@@ -59,7 +59,7 @@ export default function usePriceOsmosis(
     isLoading: isPriceLoading,
     ...helpers
   } = useQuery<{ price: number }>(
-    ['price-osmosis', initialDenom, resultingDenom],
+    ['price-osmosis', initialDenom, resultingDenom, pairs],
     async () => {
       if (!resultingDenom || !initialDenom) {
         throw new Error('Denoms not found');
@@ -96,7 +96,7 @@ export default function usePriceOsmosis(
       return { price };
     },
     {
-      enabled: !!enabled && !!pools && !!initialDenom && !!resultingDenom,
+      enabled: !!enabled && !!pools && !!initialDenom && !!resultingDenom && !!pairs,
       meta: {
         errorMessage: 'Error fetching price',
       },
