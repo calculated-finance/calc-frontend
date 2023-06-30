@@ -32,7 +32,7 @@ export function DcaPlusLearn() {
       <Stack spacing={4}>
         <Heading size="md">Algorithm DCA+</Heading>
         <Text textStyle="body">
-          Similar to regular DCA, but let our machine learning algorithm decide when to make swaps.
+          Similar to regular DCA, but let a machine learning algorithm decide when to make swaps.
         </Text>
         <Link href={LearningHubLinks.DcaPlus} isExternal>
           <Button w={44} variant="outline" color="brand.200">
@@ -66,7 +66,9 @@ export function GeneralLearn() {
     <Flex layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
         <Heading size="md">More About CALC</Heading>
-        <Text textStyle="body">Get to know us on a personal level.</Text>
+        <Text textStyle="body">
+          Interested in why Calculated Finance was built and why so many contributors help pitch in?
+        </Text>
         <Link href={LearningHubLinks.MoreAboutCalc}>
           <Button w={44} variant="outline" colorScheme="blue">
             Start learning
