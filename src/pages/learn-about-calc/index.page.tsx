@@ -8,7 +8,7 @@ export enum LearningHubLinks {
   MoreAboutCalc = 'https://docs.calculated.fi/~/changes/KJ6lWJHrW4nR8itAdDCF/',
 }
 
-function DcaLearn() {
+export function DcaLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
@@ -26,7 +26,7 @@ function DcaLearn() {
     </Flex>
   );
 }
-function DcaPlusLearn() {
+export function DcaPlusLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
@@ -43,7 +43,7 @@ function DcaPlusLearn() {
     </Flex>
   );
 }
-function WeightedScaleLearn() {
+export function WeightedScaleLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
@@ -61,7 +61,7 @@ function WeightedScaleLearn() {
   );
 }
 
-function GeneralLearn() {
+export function GeneralLearn() {
   return (
     <Flex layerStyle="panel" p={8} alignItems="center">
       <Stack spacing={4}>
