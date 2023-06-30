@@ -7,6 +7,7 @@ import { queryClient } from '@helpers/test/testQueryClient';
 import { Chains } from '@hooks/useChain/Chains';
 import { useStrategies } from '@hooks/useStrategies';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { featureFlags } from 'src/constants';
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import TopPanel from './TopPanel';
 
@@ -57,15 +58,28 @@ describe('top panel', () => {
           isLoading: false,
         }));
       });
-      it('renders the connect wallet button', () => {
-        render(
-          <QueryClientProvider client={queryClient}>
-            <TopPanel />
-          </QueryClientProvider>,
-        );
+      it('renders the new to CALC panel', () => {
+        if (featureFlags.learningHubEnabled) {
+          render(
+            <QueryClientProvider client={queryClient}>
+              <TopPanel />
+            </QueryClientProvider>,
+          );
 
-        expect(screen.getByText(/Ready to set up a CALC Strategy?/)).toBeInTheDocument();
-        expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
+          expect(screen.getByText(/New to CALC?/)).toBeInTheDocument();
+        }
+      });
+      it('"learn about CALC" takes user to the correct page', () => {
+        if (featureFlags.learningHubEnabled) {
+          render(
+            <QueryClientProvider client={queryClient}>
+              <TopPanel />
+            </QueryClientProvider>,
+          );
+          expect(screen.getByText(/Learn how CALC works/)).toContainHTML('a');
+          expect(screen.getByText(/Learn how CALC works/)).toBeVisible();
+          expect(screen.getByText(/Learn how CALC works/)).toHaveAttribute('href', '/learn-about-calc?chain=Kujira');
+        }
       });
     });
     describe('when a user has only completed strategies', () => {
@@ -76,15 +90,17 @@ describe('top panel', () => {
         }));
       });
       it('renders the connect wallet button', () => {
-        render(
-          <QueryClientProvider client={queryClient}>
-            <TopPanel />
-          </QueryClientProvider>,
-        );
+        if (!featureFlags.learningHubEnabled) {
+          render(
+            <QueryClientProvider client={queryClient}>
+              <TopPanel />
+            </QueryClientProvider>,
+          );
 
-        expect(screen.getByText(/Ready to fire up CALC again?/)).toBeInTheDocument();
-        expect(screen.getByText(/Create new strategy/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
-        expect(screen.getByText(/Review past strategies/)).toHaveAttribute('href', '/strategies?chain=Kujira');
+          expect(screen.getByText(/Ready to fire up CALC again?/)).toBeInTheDocument();
+          expect(screen.getByText(/Create new strategy/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
+          expect(screen.getByText(/Review past strategies/)).toHaveAttribute('href', '/strategies?chain=Kujira');
+        }
       });
     });
     describe('when a single strategy is set', () => {

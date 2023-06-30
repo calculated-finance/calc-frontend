@@ -8,6 +8,8 @@ import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAnalytics } from '@hooks/useAnalytics';
+import { featureFlags } from 'src/constants';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -57,6 +59,40 @@ function Returning() {
         <LinkWithQuery passHref href="/strategies">
           <Button maxWidth={402} size="sm" variant="outline">
             Review past strategies
+          </Button>
+        </LinkWithQuery>
+      </Stack>
+    </>
+  );
+}
+function LearnNewUsers() {
+  const { track } = useAnalytics();
+  return (
+    <>
+      <HStack>
+        <Icon as={KnowledgeIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+        <Text color="grey.200" textStyle="body">
+          CALC learning hub
+        </Text>
+      </HStack>
+      <Stack spacing={1}>
+        <Heading size="md">New to CALC?</Heading>
+        <Text fontSize="sm">Get to know more about our extensive suite of DeFi products.</Text>
+        <Text fontSize="sm" textStyle="body">
+          DCA | DCA+ | Weighted Scale
+        </Text>
+      </Stack>
+      <Stack direction={{ base: 'column', sm: 'row' }}>
+        <LinkWithQuery passHref href="/learn-about-calc">
+          <Button
+            px={12}
+            maxWidth={402}
+            size="sm"
+            bgColor="blue.200"
+            _hover={{ bgColor: 'blue.300' }}
+            onClick={() => track('Learning hub button clicked')}
+          >
+            Learn how CALC works
           </Button>
         </LinkWithQuery>
       </Stack>
@@ -161,6 +197,17 @@ export default function TopPanel() {
         Content: Box,
       };
     }
+
+    if (featureFlags.learningHubEnabled) {
+      if (!activeStrategies.length || !connected) {
+        return {
+          background: '/images/backgrounds/twist-thin-blue.svg',
+          border: 'transparent',
+          Content: LearnNewUsers,
+        };
+      }
+    }
+
     if (!activeStrategies.length) {
       if (!completedStrategies.length) {
         return {
@@ -175,6 +222,7 @@ export default function TopPanel() {
         Content: Returning,
       };
     }
+
     if (activeStrategies.length === 1) {
       return {
         background: '/images/backgrounds/spiral-thin.svg',

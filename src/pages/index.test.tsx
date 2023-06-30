@@ -66,7 +66,8 @@ describe('Home', () => {
     });
     it('does not show active strategies count', async () => {
       await renderTarget();
-      expect(screen.queryByText(/My active CALC strategies/)).toBeNull();
+      expect(screen.queryByText(/Ready to set up a CALC strategy/)).toBeInTheDocument();
+      expect(screen.getByText(/Get started/)).toHaveAttribute('href', '/create-strategy?chain=Kujira');
     });
   });
   describe('when wallet is connected', () => {
@@ -79,44 +80,38 @@ describe('Home', () => {
         await renderTarget();
         expect(screen.queryByText(/Be Aware/)).toBeNull();
       });
-      it('show active strategies count', async () => {
-        await renderTarget();
-        expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
-        expect(screen.getByText(/Set up a strategy/)).toBeInTheDocument();
-        expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('0');
-      });
-      it('does not show investment thesis', async () => {
-        await renderTarget();
-        expect(screen.queryByText(/My thesis/)).toBeNull();
-      });
     });
-    describe('when active strategies exist', () => {
-      beforeEach(() => {
-        (useStrategies as jest.Mock).mockImplementation(() => ({
-          isLoading: false,
-          data: [mockStrategy(), mockStrategy({ status: StrategyStatus.COMPLETED })],
-        }));
-      });
-      it('show active strategies count', async () => {
-        await renderTarget();
-        expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
-        expect(screen.getByTestId('active-strategy-count').innerHTML).toBe('1');
-        expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
-        expect(screen.getByText(/Review my strategies/)).toBeInTheDocument();
-      });
-      it('does not show info panel', async () => {
-        await renderTarget();
-        expect(screen.queryByText(/Dollar-cost averaging/)).toBeNull();
-      });
-      it('shows warning panel', async () => {
-        await renderTarget();
-        expect(screen.getByText(/Be Aware/)).toBeInTheDocument();
-      });
-      it('shows investment thesis', async () => {
-        await renderTarget();
-        expect(screen.getByText(/My thesis/)).toBeInTheDocument();
-        expect(screen.queryAllByTestId('denom-icon-ukuji').length).toEqual(1);
-      });
+    it('does not show investment thesis', async () => {
+      await renderTarget();
+      expect(screen.queryByText(/My thesis/)).toBeNull();
+    });
+  });
+  describe('when active strategies exist', () => {
+    beforeEach(() => {
+      (useStrategies as jest.Mock).mockImplementation(() => ({
+        isLoading: false,
+        data: [mockStrategy(), mockStrategy({ status: StrategyStatus.COMPLETED })],
+      }));
+    });
+    it('show active strategies count', async () => {
+      await renderTarget();
+      expect(screen.getByText(/My active CALC strategies/)).toBeInTheDocument();
+      expect(screen.getByTestId('my-active-strategy-count').innerHTML).toBe('1');
+      expect(screen.getByText(/Create new strategy/)).toBeInTheDocument();
+      expect(screen.getByText(/Review my strategies/)).toBeInTheDocument();
+    });
+    it('does not show info panel', async () => {
+      await renderTarget();
+      expect(screen.queryByText(/Dollar-cost averaging/)).toBeNull();
+    });
+    it('shows warning panel', async () => {
+      await renderTarget();
+      expect(screen.getByText(/Be Aware/)).toBeInTheDocument();
+    });
+    it('shows investment thesis', async () => {
+      await renderTarget();
+      expect(screen.getByText(/My thesis/)).toBeInTheDocument();
+      expect(screen.queryAllByTestId('denom-icon-ukuji').length).toEqual(1);
     });
   });
 });

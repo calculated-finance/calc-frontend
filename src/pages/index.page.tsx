@@ -12,6 +12,9 @@ import {
   HStack,
   Divider,
   Wrap,
+  VStack,
+  Icon,
+  Spacer,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -27,8 +30,9 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-
 import { useStrategies } from '@hooks/useStrategies';
+import { featureFlags } from 'src/constants';
+import { BarChartIcon } from '@fusion-icons/react/interface';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -124,7 +128,7 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
       ) : (
         <Stack spacing={4}>
           <Heading size="md">My active CALC strategies</Heading>
-          <Heading data-testid="active-strategy-count" fontSize="5xl">
+          <Heading data-testid="my-active-strategy-count" fontSize="5xl">
             {activeStrategies.length}
           </Heading>
           <Stack direction={{ base: 'column', sm: 'row' }}>
@@ -156,8 +160,6 @@ function TotalInvestment() {
   ]);
   const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
   const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
-  const { connected } = useWallet();
-  const { chain } = useChain();
 
   if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
     return (
@@ -210,37 +212,77 @@ function TotalInvestment() {
           </Heading>
         </Stack>
       </Flex>
-      {!connected && chain === Chains.Kujira && (
-        <LinkWithQuery href="/how-it-works">
-          <Button w={44} variant="outline" colorScheme="blue">
-            Learn how CALC works
-          </Button>
-        </LinkWithQuery>
-      )}
-      {!connected && chain === Chains.Osmosis && (
-        <LinkWithQuery href="/create-strategy">
-          <Button w={44} variant="outline" colorScheme="blue">
-            Create a strategy
-          </Button>
-        </LinkWithQuery>
-      )}
     </Stack>
   );
 }
 
-function WorkflowInformation() {
+function WorkflowPanel() {
   return (
-    <Center p={8}>
-      <Flex direction="column">
-        <Stack spacing={2} pb={8} textAlign="center" px={{ lg: 20 }}>
-          <Heading size="md">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
-          <Text fontSize="md">Recurring payments means no stress. Set &amp; forget.</Text>
-        </Stack>
-        <Flex w="full" justifyContent="center">
-          <Image src="/images/workflow.svg" />
-        </Flex>
+    <VStack p={8} spacing={4}>
+      <Heading size="sm">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
+      <Heading size="xs">Recurring payments means no stress. Set & forget.</Heading>
+      <Image src="/images/workflow.svg" alt="workflow-image" />
+    </VStack>
+  );
+}
+
+function OnboardingPanel() {
+  return (
+    <VStack
+      layerStyle="panel"
+      p={8}
+      alignItems="left"
+      borderColor="brand.200"
+      borderWidth={2}
+      backgroundImage="/images/backgrounds/twist-thin.svg"
+    >
+      <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
+      <Stack spacing={1}>
+        <Heading size="md">Ready to set up a CALC strategy?</Heading>
+        <Text fontSize="sm">Feeling comfortable with your understanding of our products?</Text>
+      </Stack>
+      <LinkWithQuery passHref href="/create-strategy">
+        <Button w={44} variant="outline" size="sm">
+          Get started
+        </Button>
+      </LinkWithQuery>
+    </VStack>
+  );
+}
+
+export function LearnAboutCalcPanel() {
+  return (
+    <VStack
+      layerStyle="panel"
+      p={8}
+      alignItems="left"
+      borderColor="green.400"
+      borderWidth={2}
+      backgroundImage="/images/backgrounds/twist-thin.svg"
+    >
+      <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
+
+      <Flex>
+        <Stack spacing={4}>
+          <HStack>
+            <Heading data-testid="active-strategy-count" size="lg">
+              New to CALC?
+            </Heading>
+            <Spacer />
+          </HStack>
+          <Heading data-testid="active-strategy-count" fontSize="md">
+            Get to know more about our extensive suite of DeFi products.
+          </Heading>
+          <Stack direction={{ base: 'column', sm: 'row' }}>
+            <LinkWithQuery href="/learn-about-calc">
+              <Button w={44} variant="outline" color="green.400">
+                Learn how CALC works
+              </Button>
+            </LinkWithQuery>
+          </Stack>
+        </Stack>{' '}
       </Flex>
-    </Center>
+    </VStack>
   );
 }
 
@@ -261,15 +303,19 @@ function HomeGrid() {
       )}
 
       <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
-      {connected && (
+      {connected && activeStrategies.length ? (
         <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
           <ActiveStrategies strategies={strategies} isLoading={isLoading} />
         </GridItem>
+      ) : (
+        ''
+      )}
+      {(!activeStrategies.length || !connected) && (
+        <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
+          {featureFlags.learningHubEnabled ? <OnboardingPanel /> : <WorkflowPanel />}
+        </GridItem>
       )}
       <GridItem colSpan={{ base: 6, xl: 3 }}>{chain !== Chains.Moonbeam && <TotalInvestment />}</GridItem>
-      <GridItem hidden={!!activeStrategies.length} colSpan={{ base: 6, xl: connected ? 6 : 3 }}>
-        <WorkflowInformation />
-      </GridItem>
     </Grid>
   );
 }

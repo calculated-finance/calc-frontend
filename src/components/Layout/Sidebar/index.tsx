@@ -25,14 +25,15 @@ import {
   BoxedImportIcon,
   Graph2Icon,
   ViewListIcon,
+  KnowledgeIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAdmin } from '@hooks/useAdmin';
+import { featureFlags } from 'src/constants';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
 
@@ -43,13 +44,12 @@ interface LinkItem {
   href: Pages;
   exclude?: Chains[];
 }
+
 const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  // { name: 'Performance', icon: BarChartIcon, href: Pages.Performance },
-  { name: 'How it works', icon: QuestionOutlineIcon, href: Pages.HowItWorks, exclude: [Chains.Osmosis] },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
 ];
 
@@ -60,6 +60,9 @@ const getLinkItems = (isAdmin: boolean) => [
         { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
         { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
       ]
+    : []),
+  ...(featureFlags.learningHubEnabled
+    ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
     : []),
 ];
 
