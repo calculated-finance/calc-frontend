@@ -2,7 +2,7 @@ import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { SigningState } from '@components/NewStrategyModal';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
-import { useCreateVaultDca } from '@hooks/useCreateVault';
+import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import { FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';

@@ -219,7 +219,6 @@ export type BuildCreateVaultContext = {
   transactionType: TransactionType;
   slippageTolerance: number;
   swapAdjustment?: SwapAdjustment;
-  performanceAssessmentStrategy?: PerformanceAssessmentStrategyParams;
   isDcaPlus?: boolean;
   destinationConfig: DestinationConfig;
 };

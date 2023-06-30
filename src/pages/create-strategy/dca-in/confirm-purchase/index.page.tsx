@@ -1,7 +1,7 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
-import { useCreateVaultDca } from '@hooks/useCreateVault';
+import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';

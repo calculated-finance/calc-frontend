@@ -1,5 +1,5 @@
 import { Divider, Stack } from '@chakra-ui/react';
-import { useCreateVaultWeightedScale } from '@hooks/useCreateVault';
+import { useCreateVaultWeightedScale } from '@hooks/useCreateVault/useCreateVaultWeightedScale';
 import useSteps from '@hooks/useSteps';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import DcaDiagram from '@components/DcaDiagram';
