@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { convertDenomFromCoin, getDenomName } from '@utils/getDenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -21,9 +21,8 @@ import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { featureFlags } from 'src/constants';
-import useValueAtCreation from '@hooks/useValueAtCreation';
+import usePriceAtCreation from '@hooks/usePriceAtCreation';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
@@ -41,8 +40,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const linkedToStrategy = data;
   const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
   const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
-
-  console.log(useValueAtCreation(initialDenom, Number(data?.rawData.created_at)));
+  const priceAtStart = usePriceAtCreation(initialDenom, Number(strategy.rawData.created_at));
+  const costInFiat = Number((getTotalSwapped(strategy) * priceAtStart).toFixed(2));
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (
@@ -61,13 +60,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenomPrice,
     dexFee,
   );
-  const converted = convertDenomFromCoin(strategy.rawData.deposited_amount);
 
-  // const initialDenomPriceNum = Number(initialDenomPrice);
-  // const linkedMarketValueInFiat = Number((getTotalReceived(data) * initialDenomPriceNum).toFixed(2));
-  // const totalValue = marketValueInFiat + linkedMarketValueInFiat;
-  // const costInFiat = Number((getTotalSwapped(strategy) * initialDenomPrice).toFixed(2));
-  // const profitReinvested = (totalValue - costInFiat).toFixed(2);
+  const realStrategyProfit = marketValueInFiat - costInFiat;
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
@@ -173,8 +167,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </Text>
         ) : (
           <Text color={marketValueInFiat > 0 ? 'green.200' : 'white'} data-testid="strategy-profit-taken" fontSize="sm">
-            {/* {formatFiat(marketValueInFiat)} */}
-            {formatFiat(profit)}
+            {formatFiat(realStrategyProfit)}
           </Text>
         )}
       </GridItem>

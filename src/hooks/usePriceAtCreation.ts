@@ -4,17 +4,17 @@ import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 
-export type FiatPriceHistoryResponse = {
-  prices: number[][];
-  total_volumes: number[][];
-  market_caps: number[][];
-};
+// export type FiatPriceHistoryResponse = {
+//   market_data: number[][];
+//   current_price: number;
+//   usd:number;
+// };
 
-const useValueAtCreation = (denom: DenomInfo | undefined, dateCreated: number) => {
+const usePriceAtCreation = (denom: DenomInfo | undefined, dateCreated: number) => {
   const { coingeckoId } = denom || {};
   const fiatCurrencyId = 'usd';
 
-  const timestamp = dateCreated / 1000000; // Divide by 1 million to convert nanoseconds to milliseconds
+  const timestamp = dateCreated / 1000000;
   const date = new Date(timestamp);
   const formatedDate = date
     .toLocaleDateString('en-AU', {
@@ -26,8 +26,8 @@ const useValueAtCreation = (denom: DenomInfo | undefined, dateCreated: number) =
 
   console.log(formatedDate);
 
-  return useQuery<FiatPriceHistoryResponse>(
-    ['fiat-price-history', coingeckoId, fiatCurrencyId, dateCreated],
+  const { data } = useQuery(
+    ['market_data', 'current_price', 'usd'],
     async () => {
       const result = await fetch(`${COINGECKO_ENDPOINT}/coins/${coingeckoId}/history?date=${formatedDate}`);
       if (!result.ok) {
@@ -45,6 +45,8 @@ const useValueAtCreation = (denom: DenomInfo | undefined, dateCreated: number) =
       },
     },
   );
+  console.log(data?.market_data.current_price.usd);
+  return data?.market_data.current_price.usd;
 };
 
-export default useValueAtCreation;
+export default usePriceAtCreation;
