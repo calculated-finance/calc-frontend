@@ -57,6 +57,7 @@ export function LinkedStrategyDetails({
   const value = formatFiat(marketValueInFiat);
   const linkedValue = formatFiat(linkedMarketValueInFiat);
   const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
+
   return (
     <>
       <GridItem colSpan={1}>
