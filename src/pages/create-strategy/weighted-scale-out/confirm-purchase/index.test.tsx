@@ -98,8 +98,10 @@ describe('Weighted Scale Out confirm page', () => {
         getDenomInfo('ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518'),
         getDenomInfo('ukuji'),
         'sell',
+        true,
       )
-      .mockReturnValue({ price: 1.5, loading: false });
+      .mockReturnValue({ price: 1.5, loading: false })
+      .defaultReturnValue({});
 
     jest.clearAllMocks();
   });

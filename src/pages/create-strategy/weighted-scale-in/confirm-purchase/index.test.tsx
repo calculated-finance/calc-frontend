@@ -91,8 +91,9 @@ describe('Confirm page', () => {
     mockFiatPrice();
 
     when(usePrice as jest.Mock)
-      .expectCalledWith(getDenomInfo(TestnetDenoms.OSMO), getDenomInfo(TestnetDenoms.USK), 'buy')
-      .mockReturnValue({ price: 1.5, loading: false });
+      .expectCalledWith(getDenomInfo(TestnetDenoms.OSMO), getDenomInfo(TestnetDenoms.USK), 'buy', true)
+      .mockReturnValue({ price: 1.5, loading: false })
+      .defaultReturnValue({});
 
     useFormStore.setState({
       forms: mockStateMachine.state,
