@@ -153,7 +153,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
       </GridItem>
 
       <GridItem colSpan={1}>
-        <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Profit taken'}</Heading>
+        <Heading size="xs">{isBuyStrategy(strategy) ? 'Profit/Loss' : 'Amount swapped'}</Heading>
       </GridItem>
       <GridItem colSpan={1}>
         {isBuyStrategy(strategy) ? (
