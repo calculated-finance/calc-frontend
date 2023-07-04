@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import '@fontsource/karla';
-import {  ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
@@ -37,14 +37,13 @@ Sentry.init({
   enabled: isMainnet(),
 });
 
-
 function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
 
   const { chain } = useChain();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return (chain !== Chains.Osmosis || assetList) ? <>{children}</> : <LoadingState />;
+  return <>{children}</>;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
@@ -76,9 +75,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
               <QueryClientProvider client={queryClient}>
                 <AssetListWrapper>
                   <ChainWrapper>
-                    <AssetListLoader>
-                      {getLayout(<Component {...pageProps} />)}
-                    </AssetListLoader>
+                    <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
                   </ChainWrapper>
                 </AssetListWrapper>
               </QueryClientProvider>
