@@ -56,12 +56,12 @@ export function LinkedStrategyDetails({
   const convertedOriginalStrategyBalance = convertDenomFromCoin(originalStrategy.rawData.balance);
   const originalStrategyValue = originalStrategyInitialPrice * convertedOriginalStrategyBalance;
   const originalTotalValue = formatFiat(originalStrategyValue);
-  console.log(originalStrategyInitialPrice, linkedStrategyInitialPrice);
 
   const convertedLinkedStrategyBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
   const linkedStrategyValue = linkedStrategyInitialPrice * convertedLinkedStrategyBalance;
-  const linkedValue = formatFiat(linkedStrategyValue);
-  const totalValue = formatFiat(originalStrategyValue + linkedStrategyValue);
+
+  const linkedTotalValue = formatFiat(linkedStrategyValue);
+  const totalCombinedValue = formatFiat(originalStrategyValue + linkedStrategyValue);
 
   return (
     <>
@@ -72,7 +72,7 @@ export function LinkedStrategyDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="combined-strategy-value">
-          {totalValue}
+          {totalCombinedValue}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
@@ -80,6 +80,7 @@ export function LinkedStrategyDetails({
           <GridItem colSpan={3}>
             <Stack
               borderRadius={16}
+              g
               flexGrow={1}
               alignItems="start"
               bgColor="gray.800"
@@ -160,7 +161,7 @@ export function LinkedStrategyDetails({
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text fontSize={{ base: 10, md: 12 }}>{linkedValue}</Text>
+                <Text fontSize={{ base: 10, md: 12 }}>{linkedTotalValue}</Text>
               </HStack>
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
