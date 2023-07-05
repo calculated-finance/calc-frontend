@@ -80,7 +80,6 @@ export function LinkedStrategyDetails({
           <GridItem colSpan={3}>
             <Stack
               borderRadius={16}
-              g
               flexGrow={1}
               alignItems="start"
               bgColor="gray.800"
