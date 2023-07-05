@@ -13,12 +13,12 @@ import {
 } from '@chakra-ui/react';
 import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { getConvertedBalanceAmount, getTotalReceived } from '@helpers/strategy';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,13 +52,13 @@ export function LinkedStrategyDetails({
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
-  const resultingDenomPriceNum = Number(resultingDenomPrice);
-  const linkedMarketValueInFiat = Number((getTotalReceived(curStrategy) * resultingDenomPriceNum).toFixed(2));
   const value = formatFiat(originalStrategyValue);
 
-  const convertedBalance = getConvertedBalanceAmount(linkedToStrategy);
-  const linkedValue = formatFiat(resultingDenomPrice * convertedBalance);
-  const totalValue = formatFiat(originalStrategyValue + linkedMarketValueInFiat);
+  const convertedBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
+  const linkedStrategyValue = resultingDenomPrice * convertedBalance;
+  const linkedValue = formatFiat(linkedStrategyValue);
+  const totalValue = formatFiat(originalStrategyValue + linkedStrategyValue);
+
   return (
     <>
       <GridItem colSpan={1}>

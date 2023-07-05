@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { getDenomName } from '@utils/getDenomInfo';
+import { convertDenomFromCoin, getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -15,7 +15,6 @@ import {
   getAverageSellPrice,
   getTotalReceived,
   getTotalSwapped,
-  getConvertedBalanceAmount,
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
@@ -59,7 +58,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     dexFee,
   );
 
-  const convertedBalance = getConvertedBalanceAmount(strategy);
+  const convertedBalance = convertDenomFromCoin(strategy.rawData.balance);
   const strategyValue = initialDenomPrice * convertedBalance;
 
   return (
