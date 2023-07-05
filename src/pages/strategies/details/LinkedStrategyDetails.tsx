@@ -40,22 +40,26 @@ function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
 
 export function LinkedStrategyDetails({
   originalStrategy,
-  originalStrategyValue,
   linkedToStrategy,
-  resultingDenomPrice,
+  linkedStrategyInitialPrice,
+  originalStrategyInitialPrice,
 }: {
   originalStrategy: Strategy;
-  originalStrategyValue: number;
   linkedToStrategy: Strategy;
-  resultingDenomPrice: number;
+  linkedStrategyInitialPrice: number;
+  originalStrategyInitialPrice: number;
 }) {
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
-  const value = formatFiat(originalStrategyValue);
 
-  const convertedBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
-  const linkedStrategyValue = resultingDenomPrice * convertedBalance;
+  const convertedOriginalStrategyBalance = convertDenomFromCoin(originalStrategy.rawData.balance);
+  const originalStrategyValue = originalStrategyInitialPrice * convertedOriginalStrategyBalance;
+  const originalTotalValue = formatFiat(originalStrategyValue);
+  console.log(originalStrategyInitialPrice, linkedStrategyInitialPrice);
+
+  const convertedLinkedStrategyBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
+  const linkedStrategyValue = linkedStrategyInitialPrice * convertedLinkedStrategyBalance;
   const linkedValue = formatFiat(linkedStrategyValue);
   const totalValue = formatFiat(originalStrategyValue + linkedStrategyValue);
 
@@ -103,7 +107,7 @@ export function LinkedStrategyDetails({
                   Value:
                 </Text>
                 <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }} data-testid="strategy-asset-price">
-                  {value}
+                  {originalTotalValue}
                 </Text>
               </HStack>
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">

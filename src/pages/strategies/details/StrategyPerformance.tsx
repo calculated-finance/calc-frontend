@@ -189,9 +189,9 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <LinkedStrategyDetails
             originalStrategy={strategy}
-            originalStrategyValue={strategyValue}
             linkedToStrategy={linkedToStrategy}
-            resultingDenomPrice={resultingDenomPrice}
+            linkedStrategyInitialPrice={resultingDenomPrice}
+            originalStrategyInitialPrice={initialDenomPrice}
           />
         </>
       )}

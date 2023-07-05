@@ -12,12 +12,12 @@ const mockLinkedVault = {
   owner: 'cosmos1mumzgqekvhvn9fkzj8tajen0qw9j7lj29tgcj2',
   rawData: {
     balance: {
-      amount: '12',
+      amount: '2000000',
       denom: 'ukuji',
     },
     created_at: '1686988860836',
     deposited_amount: {
-      amount: '12',
+      amount: '2000000',
       denom: 'ukuji',
     },
     destinations: [
@@ -63,12 +63,12 @@ const mockVault = {
   owner: 'cosmos1mumzgqekvhvn9fkzj8tajen0qw9j7lj29tgcj2',
   rawData: {
     balance: {
-      amount: '12',
+      amount: '1000000',
       denom: 'ukuji',
     },
     created_at: '1686988860836',
     deposited_amount: {
-      amount: '12',
+      amount: '1000000',
       denom: 'ukuji',
     },
     destinations: [
@@ -118,9 +118,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        resultingDenomPrice={5}
+        originalStrategyInitialPrice={10}
+        linkedStrategyInitialPrice={5}
       />,
     );
     const titleElement = screen.getByText(/linked strategy total value:/i);
@@ -131,9 +131,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        resultingDenomPrice={5}
+        originalStrategyInitialPrice={10}
+        linkedStrategyInitialPrice={5}
       />,
     );
     const originalValue = screen.getByTestId('strategy-asset-price');
@@ -143,22 +143,22 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        originalStrategyValue={2}
         linkedToStrategy={mockLinkedVault}
-        resultingDenomPrice={99}
+        originalStrategyInitialPrice={99}
+        linkedStrategyInitialPrice={2}
       />,
     );
     const combinedValue = screen.getByTestId('combined-strategy-value');
-    expect(combinedValue.textContent).toBe('$2.00 USD');
+    expect(combinedValue.textContent).toBe('$103.00 USD');
   });
 
   it('should render linked strategies ID', async () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        resultingDenomPrice={5}
+        originalStrategyInitialPrice={10}
+        linkedStrategyInitialPrice={5}
       />,
     );
     const linkedIdElement = screen.getByTestId('linked-strategy-id');
