@@ -163,6 +163,16 @@ export function getConvertedSwapAmount(strategy: Strategy) {
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
 
+export function getBalanceAmount(strategy: Strategy) {
+  const { balance } = strategy.rawData || {};
+  return Number(balance.amount);
+}
+
+export function getConvertedBalanceAmount(strategy: Strategy) {
+  const { conversion } = getDenomInfo(strategy.rawData.balance.amount);
+  return Number(conversion(getBalanceAmount(strategy)).toFixed(6));
+}
+
 export function getStrategyType(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
 

@@ -15,6 +15,7 @@ import {
   getAverageSellPrice,
   getTotalReceived,
   getTotalSwapped,
+  getConvertedBalanceAmount,
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
 import { TransactionType } from '@components/TransactionType';
@@ -57,6 +58,9 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenomPrice,
     dexFee,
   );
+
+  const convertedBalance = getConvertedBalanceAmount(strategy);
+  const strategyValue = initialDenomPrice * convertedBalance;
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
@@ -186,9 +190,9 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <LinkedStrategyDetails
             originalStrategy={strategy}
-            marketValueInFiat={marketValueInFiat}
+            originalStrategyValue={strategyValue}
             linkedToStrategy={linkedToStrategy}
-            initialDenomPrice={initialDenomPrice}
+            resultingDenomPrice={resultingDenomPrice}
           />
         </>
       )}
