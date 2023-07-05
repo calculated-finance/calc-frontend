@@ -118,9 +118,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        marketValueInFiat={10}
+        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        initialDenomPrice={5}
+        resultingDenomPrice={5}
       />,
     );
     const titleElement = screen.getByText(/linked strategy total value:/i);
@@ -131,9 +131,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        marketValueInFiat={10}
+        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        initialDenomPrice={5}
+        resultingDenomPrice={5}
       />,
     );
     const originalValue = screen.getByTestId('strategy-asset-price');
@@ -143,9 +143,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        marketValueInFiat={2}
+        originalStrategyValue={2}
         linkedToStrategy={mockLinkedVault}
-        initialDenomPrice={99}
+        resultingDenomPrice={99}
       />,
     );
     const combinedValue = screen.getByTestId('combined-strategy-value');
@@ -156,9 +156,9 @@ describe('LinkedStrategyDetails', () => {
     render(
       <LinkedStrategyDetails
         originalStrategy={mockVault}
-        marketValueInFiat={10}
+        originalStrategyValue={10}
         linkedToStrategy={mockLinkedVault}
-        initialDenomPrice={5}
+        resultingDenomPrice={5}
       />,
     );
     const linkedIdElement = screen.getByTestId('linked-strategy-id');

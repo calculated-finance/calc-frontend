@@ -13,12 +13,12 @@ import {
 } from '@chakra-ui/react';
 import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { getTotalReceived } from '@helpers/strategy';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,23 +40,25 @@ function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
 
 export function LinkedStrategyDetails({
   originalStrategy,
-  marketValueInFiat,
+  originalStrategyValue,
   linkedToStrategy,
-  initialDenomPrice,
+  resultingDenomPrice,
 }: {
   originalStrategy: Strategy;
-  marketValueInFiat: number;
+  originalStrategyValue: number;
   linkedToStrategy: Strategy;
-  initialDenomPrice: number;
+  resultingDenomPrice: number;
 }) {
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
-  const initialDenomPriceNum = Number(initialDenomPrice);
-  const linkedMarketValueInFiat = Number((getTotalReceived(curStrategy) * initialDenomPriceNum).toFixed(2));
-  const value = formatFiat(marketValueInFiat);
-  const linkedValue = formatFiat(linkedMarketValueInFiat);
-  const totalValue = formatFiat(marketValueInFiat + linkedMarketValueInFiat);
+  const value = formatFiat(originalStrategyValue);
+
+  const convertedBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
+  const linkedStrategyValue = resultingDenomPrice * convertedBalance;
+  const linkedValue = formatFiat(linkedStrategyValue);
+  const totalValue = formatFiat(originalStrategyValue + linkedStrategyValue);
+
   return (
     <>
       <GridItem colSpan={1}>
