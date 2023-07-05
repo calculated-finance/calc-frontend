@@ -73,7 +73,7 @@ export function StrategyModal({ strategy, isOpen, onClose }: { strategy: Strateg
 function LoopingDiagram() {
   return (
     <Box pb={4}>
-      <Image src="/images/reinvest-diagram-lite.svg" alt="reinvest-diagram" />
+      <Image src="/images/reinvest-diagram-light.svg" alt="reinvest-diagram" />
       <Text px={4}>
         For example, you can set price floors and ceilings and set up automated strategies that buy low and sell high.
       </Text>
@@ -198,7 +198,7 @@ export function Reinvest({ resultingDenom }: { resultingDenom: DenomInfo }) {
         <Stack>
           <Center p={6}>No suitable strategies available</Center>
           {isEmpty(filteredStrategies) && (
-            <Image src="/images/reinvest-diagram-dark.svg" alt="reinvest-diagram" mb={4} borderRadius="md" />
+            <Image src="/images/dark-reinvest-diagram.svg" alt="reinvest-diagram" mb={4} borderRadius="md" />
           )}
         </Stack>
       ) : (
