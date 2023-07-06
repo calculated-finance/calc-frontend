@@ -1,6 +1,6 @@
 import { Heading, Grid, GridItem, Text, Divider, Flex, HStack, Spinner, Center } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { convertDenomFromCoin, getDenomName } from '@utils/getDenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@models/Strategy';
 import { formatFiat } from '@helpers/format/formatFiat';
@@ -57,9 +57,6 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
     resultingDenomPrice,
     dexFee,
   );
-
-  const convertedBalance = convertDenomFromCoin(strategy.rawData.balance);
-  const strategyValue = initialDenomPrice * convertedBalance;
 
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={3} px={8} py={6} w="full">
@@ -189,9 +186,9 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <LinkedStrategyDetails
             originalStrategy={strategy}
-            originalStrategyValue={strategyValue}
             linkedToStrategy={linkedToStrategy}
-            resultingDenomPrice={resultingDenomPrice}
+            linkedStrategyInitialPrice={resultingDenomPrice}
+            originalStrategyInitialPrice={initialDenomPrice}
           />
         </>
       )}

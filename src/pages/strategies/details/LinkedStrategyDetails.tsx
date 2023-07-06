@@ -40,24 +40,28 @@ function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
 
 export function LinkedStrategyDetails({
   originalStrategy,
-  originalStrategyValue,
   linkedToStrategy,
-  resultingDenomPrice,
+  linkedStrategyInitialPrice,
+  originalStrategyInitialPrice,
 }: {
   originalStrategy: Strategy;
-  originalStrategyValue: number;
   linkedToStrategy: Strategy;
-  resultingDenomPrice: number;
+  linkedStrategyInitialPrice: number;
+  originalStrategyInitialPrice: number;
 }) {
   const curStrategy = linkedToStrategy;
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
-  const value = formatFiat(originalStrategyValue);
 
-  const convertedBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
-  const linkedStrategyValue = resultingDenomPrice * convertedBalance;
-  const linkedValue = formatFiat(linkedStrategyValue);
-  const totalValue = formatFiat(originalStrategyValue + linkedStrategyValue);
+  const convertedOriginalStrategyBalance = convertDenomFromCoin(originalStrategy.rawData.balance);
+  const originalStrategyValue = originalStrategyInitialPrice * convertedOriginalStrategyBalance;
+  const originalTotalValue = formatFiat(originalStrategyValue);
+
+  const convertedLinkedStrategyBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
+  const linkedStrategyValue = linkedStrategyInitialPrice * convertedLinkedStrategyBalance;
+
+  const linkedTotalValue = formatFiat(linkedStrategyValue);
+  const totalCombinedValue = formatFiat(originalStrategyValue + linkedStrategyValue);
 
   return (
     <>
@@ -68,7 +72,7 @@ export function LinkedStrategyDetails({
       </GridItem>
       <GridItem colSpan={1}>
         <Text fontSize="sm" data-testid="combined-strategy-value">
-          {totalValue}
+          {totalCombinedValue}
         </Text>
       </GridItem>
       <GridItem colSpan={2}>
@@ -103,7 +107,7 @@ export function LinkedStrategyDetails({
                   Value:
                 </Text>
                 <Text whiteSpace="nowrap" fontSize={{ base: 10, md: 12 }} data-testid="strategy-asset-price">
-                  {value}
+                  {originalTotalValue}
                 </Text>
               </HStack>
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
@@ -156,7 +160,7 @@ export function LinkedStrategyDetails({
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
                   Value:
                 </Text>
-                <Text fontSize={{ base: 10, md: 12 }}>{linkedValue}</Text>
+                <Text fontSize={{ base: 10, md: 12 }}>{linkedTotalValue}</Text>
               </HStack>
               <HStack display={{ base: 'initial', sm: 'none' }} whiteSpace="nowrap">
                 <Text fontSize={{ base: 10, md: 12 }} fontWeight="bold">
