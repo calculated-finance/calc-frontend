@@ -30,7 +30,7 @@ export function buildSwapAdjustmentStrategy({ values, initialValues, context, st
         castedValues.basePriceValue || context.currentPrice,
         context.resultingDenom,
         context.transactionType,
-        castedValues.applyMultiplier === YesNoValues.Yes,
+        castedValues.applyMultiplier === YesNoValues.No,
         castedValues.swapMultiplier,
       ),
     };
