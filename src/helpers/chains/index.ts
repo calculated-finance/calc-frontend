@@ -8,7 +8,7 @@ import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, RPC_ENDPOINT } from 'src
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',
   chainName: 'Osmosis Mainnet',
-  rpc: 'https://osmosis-rpc.polkachu.com',
+  rpc: 'https://rpc.osmosis.zone',
   rest: 'https://lcd.osmosis.zone',
   bip44: {
     coinType: 118,
