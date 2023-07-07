@@ -20,6 +20,7 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -109,6 +110,16 @@ function FlowLayout({ children }: { children: ReactElement }) {
   const { address } = useWallet();
   const { chain } = useChain();
 
+  const router = useRouter();
+  const { pathname } = router;
+
+  function isStepOne(path: string) {
+    if (path.includes('assets')) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <>
       <AppHeader />
@@ -123,12 +134,14 @@ function FlowLayout({ children }: { children: ReactElement }) {
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
         </Box>
-        {address ? (
+        {isStepOne(pathname) && featureFlags.unconnectedFirstStepEnabled ? (
           children
-        ) : (
+        ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
             <ConnectWallet h={80} />
           </ModalWrapper>
+        ) : (
+          children
         )}
       </Content>
     </>

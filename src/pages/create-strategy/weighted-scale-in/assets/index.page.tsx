@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import { FormNames, useFormStore } from 'src/hooks/useFormStore';
+import { FormNames } from 'src/hooks/useFormStore';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -14,14 +14,16 @@ import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { useRouter } from 'next/router';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
+  const { connected } = useWallet();
   const { actions, state } = useWeightedScaleAssetsForm();
   const {
     data: { pairs },
@@ -36,8 +38,6 @@ function DcaIn() {
     await actions.updateAction(formData);
     await nextStep();
   };
-
-  const router = useRouter();
 
   if (!pairs) {
     return (
@@ -67,7 +67,7 @@ function DcaIn() {
               <DCAInResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              <Submit>Next</Submit>
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
         </ModalWrapper>

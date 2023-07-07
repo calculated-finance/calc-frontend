@@ -24,9 +24,12 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
+  const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
@@ -72,7 +75,7 @@ function Page() {
             <DCAOutResultingDenom
               denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
             />
-            <Submit>Next</Submit>
+            {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
           </Stack>
         </Form>
       )}

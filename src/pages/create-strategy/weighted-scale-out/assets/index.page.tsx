@@ -13,7 +13,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
@@ -24,9 +23,12 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
+  const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
@@ -41,8 +43,6 @@ function Page() {
     await actions.updateAction(formData);
     await nextStep();
   };
-
-  const router = useRouter();
 
   if (!pairs) {
     return (
@@ -75,7 +75,7 @@ function Page() {
               <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              <Submit>Next</Submit>
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
         </ModalWrapper>
