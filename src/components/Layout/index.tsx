@@ -106,8 +106,18 @@ function FlowBreadcrumbs() {
 }
 
 function FlowLayout({ children }: { children: ReactElement }) {
-  const { address } = useWallet();
+  const { address, connected } = useWallet();
   const { chain } = useChain();
+
+  const router = useRouter();
+  const { pathname } = router;
+
+  function isStepOne(path: string) {
+    if (path.includes('assets')) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <>
@@ -123,12 +133,14 @@ function FlowLayout({ children }: { children: ReactElement }) {
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
         </Box>
-        {address ? (
+        {isStepOne(pathname) ? (
           children
-        ) : (
+        ) : !address && !connected ? (
           <ModalWrapper stepsConfig={[]}>
             <ConnectWallet h={80} />
           </ModalWrapper>
+        ) : (
+          children
         )}
       </Content>
     </>

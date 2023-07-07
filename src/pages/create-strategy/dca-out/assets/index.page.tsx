@@ -9,12 +9,10 @@ import usePairs, {
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
-import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import { useRouter } from 'next/router';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -22,6 +20,8 @@ import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { useWallet } from '@hooks/useWallet';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import Spinner from '@components/Spinner';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -32,6 +32,7 @@ function Page() {
     data: { pairs },
   } = usePairs();
   const { nextStep } = useSteps(dcaOutSteps);
+  const { connected } = useWallet();
 
   const { data: balances } = useBalances();
 
@@ -41,8 +42,6 @@ function Page() {
     await actions.updateAction(formData);
     await nextStep();
   };
-
-  const router = useRouter();
 
   if (!pairs) {
     return (
@@ -77,7 +76,7 @@ function Page() {
               <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              <Submit>Next</Submit>
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
         </ModalWrapper>

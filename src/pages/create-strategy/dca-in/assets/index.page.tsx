@@ -5,7 +5,6 @@ import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
-import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
@@ -17,9 +16,13 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
+import { useWallet } from '@hooks/useWallet';
+import Submit from '@components/Submit';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function DcaIn() {
+  const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
@@ -63,7 +66,7 @@ function DcaIn() {
               <DCAInResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              <Submit>Next</Submit>
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
         </ModalWrapper>

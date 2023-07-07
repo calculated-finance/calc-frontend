@@ -4,8 +4,11 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useWallet } from '@hooks/useWallet';
+import { useWalletModal } from '@hooks/useWalletModal';
 
 export function AvailableFunds({ denom }: { denom: DenomInfo }) {
+  const { connected } = useWallet();
   const [, , helpers] = useField('initialDeposit');
 
   const { price } = useFiatPrice(denom);
@@ -22,6 +25,10 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
     helpers.setValue(displayAmount);
   };
 
+  const { setVisible } = useWalletModal();
+  const handleConnect = () => {
+    setVisible(true);
+  };
   return (
     <Center textStyle="body-xs">
       <Tooltip
@@ -32,18 +39,23 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>
-
-      <Button
-        size="xs"
-        isLoading={isLoading || !price}
-        colorScheme="blue"
-        variant="link"
-        cursor="pointer"
-        isDisabled={!displayAmount}
-        onClick={handleClick}
-      >
-        {displayAmount || 'None'}
-      </Button>
+      {connected ? (
+        <Button
+          size="xs"
+          isLoading={isLoading}
+          colorScheme="blue"
+          variant="link"
+          cursor="pointer"
+          isDisabled={!displayAmount}
+          onClick={handleClick}
+        >
+          {displayAmount || 'None'}
+        </Button>
+      ) : (
+        <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
+          Connect wallet
+        </Button>
+      )}
     </Center>
   );
 }
