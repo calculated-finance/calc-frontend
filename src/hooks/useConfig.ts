@@ -1,4 +1,3 @@
-import { useWallet } from '@hooks/useWallet';
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
@@ -7,7 +6,6 @@ import { useChain } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 export function useConfig(): Config | undefined {
-  const { address } = useWallet();
   const { chain } = useChain();
   const client = useCosmWasmClient((state) => state.client);
 
@@ -24,7 +22,7 @@ export function useConfig(): Config | undefined {
       return result;
     },
     {
-      enabled: !!client && !!address && !!chain,
+      enabled: !!client && !!chain,
       meta: {
         errorMessage: 'Error fetching config',
       },
