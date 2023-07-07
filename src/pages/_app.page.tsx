@@ -43,7 +43,7 @@ function AssetListLoader({ children }: ChildrenProp) {
   const { chain } = useChain();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{children}</>;
+  return chain !== Chains.Osmosis || assetList ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
