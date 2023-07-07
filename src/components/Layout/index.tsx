@@ -20,6 +20,7 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
@@ -106,7 +107,7 @@ function FlowBreadcrumbs() {
 }
 
 function FlowLayout({ children }: { children: ReactElement }) {
-  const { address, connected } = useWallet();
+  const { address } = useWallet();
   const { chain } = useChain();
 
   const router = useRouter();
@@ -133,9 +134,9 @@ function FlowLayout({ children }: { children: ReactElement }) {
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
         </Box>
-        {isStepOne(pathname) ? (
+        {isStepOne(pathname) && featureFlags.unconnectedFirstStepEnabled ? (
           children
-        ) : !address && !connected ? (
+        ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
             <ConnectWallet h={80} />
           </ModalWrapper>
