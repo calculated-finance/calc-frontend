@@ -274,6 +274,9 @@ export const allSchema = {
           return true;
         }
         const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
         return value?.length === getChainAddressLength(chain);
       },
     })
@@ -286,6 +289,9 @@ export const allSchema = {
           return true;
         }
         const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
         return value?.startsWith(getChainAddressPrefix(chain));
       },
     }),
