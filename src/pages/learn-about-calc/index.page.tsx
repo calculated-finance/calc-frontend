@@ -14,7 +14,7 @@ export function DcaLearn() {
       <Stack spacing={4}>
         <Heading size="md">Dollar Cost Averaging (DCA)</Heading>
         <Text textStyle="body">
-          Regularly invest a fixed amount of funds into a particular asset or investment over custom time invervals you
+          Regularly invest a fixed amount of funds into a particular asset or investment over custom time intervals you
           set.
         </Text>
         <Link href={LearningHubLinks.Dca} isExternal>
