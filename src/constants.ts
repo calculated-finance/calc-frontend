@@ -74,7 +74,7 @@ export const featureFlags =
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
         learningHubEnabled: true,
-        unconnectedFirstStepEnabled: false,
+        unconnectedFirstStepEnabled: true,
       }
     : {
         extraTimeOptions: true,
