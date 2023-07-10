@@ -22,7 +22,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/weighted-scale-in/assets',
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
   },
@@ -192,8 +192,24 @@ describe('Assets page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/weighted-scale-in/customise',
-        query: { chain: 'Kujira'},
+        query: { chain: 'Kujira' },
       });
+    });
+  });
+
+  describe('connect wallet button behaviour', () => {
+    it('shows connect wallet when not connected', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), false);
+
+      await renderTarget();
+      expect(screen.getByText(/Connect to a wallet/)).toBeInTheDocument();
+    });
+
+    it('does not show connect wallet when connected', async () => {
+      mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), true);
+      await renderTarget();
+
+      expect(screen.getByText(/Next/)).toBeInTheDocument();
     });
   });
 });

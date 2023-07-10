@@ -1,12 +1,13 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useWallet } from '@hooks/useWallet';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 export function mockUseWallet(
   mockQuery?: jest.Mock,
   mockExecute?: jest.Mock,
   mockGetBalance?: jest.Mock,
   mockSignAndBroadcast?: jest.Mock,
+  connected = true,
 ) {
   useCosmWasmClient.setState({
     client: {
@@ -17,29 +18,7 @@ export function mockUseWallet(
 
   (useWallet as jest.Mock).mockImplementation(() => ({
     address: 'kujiratestwallet',
-    connected: true,
-    signingClient: {
-      execute: mockExecute,
-      signAndBroadcast: mockSignAndBroadcast,
-    },
-  }));
-}
-export function mockUseWalletNotConnected(
-  mockQuery?: jest.Mock,
-  mockExecute?: jest.Mock,
-  mockGetBalance?: jest.Mock,
-  mockSignAndBroadcast?: jest.Mock,
-) {
-  useCosmWasmClient.setState({
-    client: {
-      queryContractSmart: mockQuery,
-      getBalance: mockGetBalance,
-    } as unknown as CosmWasmClient,
-  });
-
-  (useWallet as jest.Mock).mockImplementation(() => ({
-    address: 'kujiratestwallet',
-    connected: false,
+    connected,
     signingClient: {
       execute: mockExecute,
       signAndBroadcast: mockSignAndBroadcast,
