@@ -172,7 +172,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
-        <Heading size="sm">currentStep?.title</Heading>
+        <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />
       {showStepper && <Stepper steps={stepsConfig} />}
