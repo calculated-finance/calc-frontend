@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
+import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
@@ -112,13 +113,6 @@ function FlowLayout({ children }: { children: ReactElement }) {
 
   const router = useRouter();
   const { pathname } = router;
-
-  function isStepOne(path: string) {
-    if (path.includes('assets')) {
-      return true;
-    }
-    return false;
-  }
 
   return (
     <>

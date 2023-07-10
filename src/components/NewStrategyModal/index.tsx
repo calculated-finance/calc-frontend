@@ -172,7 +172,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
-        <Heading size="sm">{connected ? currentStep?.title : 'No wallet connected'}</Heading>
+        <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />
       {showStepper && <Stepper steps={stepsConfig} />}
