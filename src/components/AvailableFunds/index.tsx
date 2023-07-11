@@ -1,4 +1,4 @@
-import { Text, Button, Center, Tooltip } from '@chakra-ui/react';
+import { Text, Button, Center, Tooltip, Link, HStack } from '@chakra-ui/react';
 import useBalance, { getDisplayAmount } from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
@@ -6,6 +6,17 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { useWalletModal } from '@hooks/useWalletModal';
+
+function GetFundsButton() {
+  return (
+    <HStack>
+      <Text fontSize="xs">None </Text>
+      <Link colorScheme="blue" variant="link" cursor="pointer" href="www.google.com">
+        Get funds
+      </Link>
+    </HStack>
+  );
+}
 
 export function AvailableFunds({ denom }: { denom: DenomInfo }) {
   const { connected } = useWallet();
@@ -39,7 +50,7 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>
-      {connected ? (
+      {connected && displayAmount ? (
         <Button
           size="xs"
           isLoading={isLoading}
@@ -49,8 +60,10 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
           isDisabled={!displayAmount}
           onClick={handleClick}
         >
-          {displayAmount || 'None'}
+          {displayAmount}
         </Button>
+      ) : connected && !displayAmount ? (
+        <GetFundsButton />
       ) : (
         <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
           Connect wallet
