@@ -96,7 +96,14 @@ function GetFundsButton() {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
-      <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={onOpen}>
+      <Button
+        size="xs"
+        data-testid="get-funds-button"
+        colorScheme="blue"
+        variant="link"
+        cursor="pointer"
+        onClick={onOpen}
+      >
         Get funds
       </Button>
       <GetFundsModal isOpen={isOpen} onClose={onClose} />
