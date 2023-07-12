@@ -75,6 +75,7 @@ export const featureFlags =
         amplitudeEnabled: true,
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
+        getFundsModalEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -89,6 +90,7 @@ export const featureFlags =
         amplitudeEnabled: false,
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
+        getFundsModalEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

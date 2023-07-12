@@ -25,14 +25,20 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useWallet } from '@hooks/useWallet';
-import { useWalletModal } from '@hooks/useWalletModal';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
+import { featureFlags } from 'src/constants';
 
-function GetFundsDetails() {
+function GetFundsDetails({ onClose }: Omit<ModalProps, 'children'>) {
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
+
+  function handleOpen(onOpen: () => void) {
+    return onOpen;
+  }
+  function handleClose(onCloseOriginal: () => void) {
+    return onCloseOriginal;
+  }
 
   return (
     <Box px={8} py={4} bg="abyss.200" fontSize="sm" borderRadius="xl" borderWidth={1} borderColor="slateGrey" w="full">
@@ -57,7 +63,7 @@ function GetFundsDetails() {
           <FormHelperText>Good for getting crypto with cash.</FormHelperText>
         </GridItem>
         <GridItem>
-          <Button w={40} onClick={onSquidOpen}>
+          <Button w={40} onClick={handleOpen(onSquidOpen) && handleClose(onClose)}>
             Move assets here
           </Button>
           <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
@@ -82,7 +88,7 @@ function GetFundsModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
         <ModalCloseButton />
         <ModalBody>
           <Stack justify="center" gap={6} align="center">
-            <GetFundsDetails />
+            <GetFundsDetails isOpen={isOpen} onClose={onClose} />
           </Stack>
         </ModalBody>
       </ModalContent>
@@ -96,23 +102,26 @@ function GetFundsButton() {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
-      <Button
-        size="xs"
-        data-testid="get-funds-button"
-        colorScheme="blue"
-        variant="link"
-        cursor="pointer"
-        onClick={onOpen}
-      >
-        Get funds
-      </Button>
-      <GetFundsModal isOpen={isOpen} onClose={onClose} />
+      {featureFlags.getFundsModalEnabled && (
+        <>
+          <Button
+            size="xs"
+            data-testid="get-funds-button"
+            colorScheme="blue"
+            variant="link"
+            cursor="pointer"
+            onClick={onOpen}
+          >
+            Get funds
+          </Button>
+          <GetFundsModal isOpen={isOpen} onClose={onClose} />
+        </>
+      )}
     </HStack>
   );
 }
 
 export function AvailableFunds({ denom }: { denom: DenomInfo }) {
-  const { connected } = useWallet();
   const [, , helpers] = useField('initialDeposit');
 
   const { price } = useFiatPrice(denom);
@@ -129,10 +138,6 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
     helpers.setValue(displayAmount);
   };
 
-  const { setVisible } = useWalletModal();
-  const handleConnect = () => {
-    setVisible(true);
-  };
   return (
     <Center textStyle="body-xs">
       <Tooltip
@@ -143,7 +148,7 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>
-      {connected && displayAmount ? (
+      {displayAmount ? (
         <Button
           size="xs"
           isLoading={isLoading}
@@ -155,12 +160,8 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
         >
           {displayAmount}
         </Button>
-      ) : connected && !displayAmount ? (
-        <GetFundsButton />
       ) : (
-        <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
-          Connect wallet
-        </Button>
+        <GetFundsButton />
       )}
     </Center>
   );

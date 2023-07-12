@@ -8,6 +8,7 @@ import {
   Spacer,
   Text,
   Center,
+  Button,
 } from '@chakra-ui/react';
 import usePairs, { orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
@@ -15,11 +16,18 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
+import { useWallet } from '@hooks/useWallet';
+import { useWalletModal } from '@hooks/useWalletModal';
 
 export default function DCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
+  const { connected } = useWallet();
+  const { setVisible } = useWalletModal();
+  const handleConnect = () => {
+    setVisible(true);
+  };
 
   if (!pairs) {
     return null;
@@ -38,7 +46,13 @@ export default function DCAInInitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose stablecoin</Text>
           <Spacer />
-          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
+          {field.value && connected ? (
+            <AvailableFunds denom={getDenomInfo(field.value)} />
+          ) : (
+            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
+              Connect wallet
+            </Button>
+          )}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
