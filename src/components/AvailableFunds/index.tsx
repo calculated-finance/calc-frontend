@@ -33,11 +33,10 @@ function GetFundsDetails({ onClose }: Omit<ModalProps, 'children'>) {
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
 
-  function handleOpen(onOpen: () => void) {
+  function handleOpen(onCloseOriginal: () => void, onOpen: () => void) {
+    onCloseOriginal();
+
     return onOpen;
-  }
-  function handleClose(onCloseOriginal: () => void) {
-    return onCloseOriginal;
   }
 
   return (
@@ -63,7 +62,12 @@ function GetFundsDetails({ onClose }: Omit<ModalProps, 'children'>) {
           <FormHelperText>Good for getting crypto with cash.</FormHelperText>
         </GridItem>
         <GridItem>
-          <Button w={40} onClick={handleOpen(onSquidOpen) && handleClose(onClose)}>
+          <Button
+            w={40}
+            onClick={() => {
+              handleOpen(onSquidOpen, onClose);
+            }}
+          >
             Move assets here
           </Button>
           <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
