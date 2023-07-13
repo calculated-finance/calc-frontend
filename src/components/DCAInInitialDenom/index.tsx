@@ -8,7 +8,6 @@ import {
   Spacer,
   Text,
   Center,
-  Button,
 } from '@chakra-ui/react';
 import usePairs, { orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
@@ -16,8 +15,6 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
-import { useWallet } from '@hooks/useWallet';
-import { useWalletModal } from '@hooks/useWalletModal';
 
 export default function DCAInInitialDenom() {
   const { data } = usePairs();

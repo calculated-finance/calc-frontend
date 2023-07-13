@@ -21,12 +21,7 @@ describe('available funds component', () => {
     (useFiatPrice as jest.Mock).mockReturnValue({
       price: 23,
     });
-    (useBalance as jest.Mock).mockReturnValue({
-      data: {
-        denom: 'ukuji',
-        amount: '10000000',
-      },
-    });
+    (useBalance as jest.Mock).mockReturnValue({});
   });
 
   describe('connect wallet button link', () => {
@@ -57,6 +52,13 @@ describe('available funds component', () => {
 
   describe('Get funds button link', () => {
     it('Display amount shows in available funds', () => {
+      (useBalance as jest.Mock).mockReturnValue({
+        data: {
+          denom: 'ukuji',
+          amount: '10000000',
+        },
+      });
+
       render(
         <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
           <AvailableFunds denom={mockResultingDenom} />
@@ -72,6 +74,7 @@ describe('available funds component', () => {
         </Formik>,
       );
       expect(screen.getByText(/Get funds/)).toBeInTheDocument();
+
       expect(screen.getByTestId('get-funds-button')).toBeInTheDocument();
     });
 
