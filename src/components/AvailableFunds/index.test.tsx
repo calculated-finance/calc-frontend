@@ -2,10 +2,9 @@ import { defaultDenom } from '@utils/defaultDenom';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Formik } from 'formik';
-import useBalance, { getDisplayAmount } from '@hooks/useBalance';
-import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { useWallet } from '@hooks/useWallet';
+import useFiatPrice from '@hooks/useFiatPrice';
+import useBalance from '@hooks/useBalance';
 import { AvailableFunds } from '.';
 
 jest.mock('@hooks/useFiatPrice');
@@ -13,43 +12,12 @@ jest.mock('@hooks/useBalance');
 jest.mock('@hooks/useWallet');
 
 describe('available funds component', () => {
-  const mockResultingDenom = { ...defaultDenom, id: 'mockDenomId' };
-  (useWallet as jest.Mock).mockReturnValue({
-    connected: true,
-  });
+  const mockResultingDenom = { ...defaultDenom, id: 'ukuji' };
 
-  describe('connect wallet button link', () => {
-    it('shows connect wallet when not connected', () => {
-      const { connected } = useWallet();
-
-      render(
-        <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
-          <AvailableFunds denom={mockResultingDenom} />
-        </Formik>,
-      );
-
-      if (!connected) {
-        expect(screen.getByText(/Connect wallet/)).toBeInTheDocument();
-      }
+  beforeEach(() => {
+    (useWallet as jest.Mock).mockReturnValue({
+      connected: true,
     });
-
-    it('does not show connect wallet when connected', () => {
-      const { connected } = useWallet();
-
-      render(
-        <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
-          <AvailableFunds denom={mockResultingDenom} />
-        </Formik>,
-      );
-
-      if (connected) {
-        expect(screen.getByText(/None/)).toBeInTheDocument();
-      }
-    });
-  });
-
-  describe('Get funds button link', () => {
-    const mockInitialDenom = { ...defaultDenom, id: 'mockDenomId' };
     (useFiatPrice as jest.Mock).mockReturnValue({
       price: 23,
     });
@@ -59,23 +27,42 @@ describe('available funds component', () => {
         amount: '10000000',
       },
     });
+  });
 
-    const { connected } = useWallet();
-    const { price } = useFiatPrice(mockInitialDenom);
-    const { data } = useBalance(mockInitialDenom);
-    const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
-    const balance = Number(data?.amount);
-    const displayAmount = getDisplayAmount(mockInitialDenom, Math.max(balance - createStrategyFee, 0));
+  describe('connect wallet button link', () => {
+    it('shows connect wallet when not connected', () => {
+      (useWallet as jest.Mock).mockReturnValue({
+        connected: false,
+      });
 
+      render(
+        <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
+          <AvailableFunds denom={mockResultingDenom} />
+        </Formik>,
+      );
+
+      expect(screen.getByText(/Connect wallet/)).toBeInTheDocument();
+    });
+
+    it('does not show connect wallet when connected', () => {
+      render(
+        <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
+          <AvailableFunds denom={mockResultingDenom} />
+        </Formik>,
+      );
+
+      expect(screen.getByText(/None/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Get funds button link', () => {
     it('Display amount shows in available funds', () => {
       render(
         <Formik initialValues={{ initalDenom: 'ukuji' }} onSubmit={jest.fn()}>
           <AvailableFunds denom={mockResultingDenom} />
         </Formik>,
       );
-      if (displayAmount && connected) {
-        expect(screen.getByText(displayAmount)).toBeInTheDocument();
-      }
+      expect(screen.getByText(/9.995652/)).toBeInTheDocument();
     });
 
     it('Get funds button appears when no funds', () => {
@@ -84,10 +71,8 @@ describe('available funds component', () => {
           <AvailableFunds denom={mockResultingDenom} />
         </Formik>,
       );
-      if (!displayAmount && connected) {
-        expect(screen.getByText(/Get funds/)).toBeInTheDocument();
-        expect(screen.getByTestId('get-funds-button')).toBeInTheDocument();
-      }
+      expect(screen.getByText(/Get funds/)).toBeInTheDocument();
+      expect(screen.getByTestId('get-funds-button')).toBeInTheDocument();
     });
 
     it('None appears when no funds', () => {
@@ -96,9 +81,7 @@ describe('available funds component', () => {
           <AvailableFunds denom={mockResultingDenom} />
         </Formik>,
       );
-      if (!displayAmount && connected) {
-        expect(screen.getByText(/None/)).toBeInTheDocument();
-      }
+      expect(screen.getByText(/None/)).toBeInTheDocument();
     });
   });
 });

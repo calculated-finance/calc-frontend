@@ -9,10 +9,6 @@ export type BalanceResponse = {
   amount: number;
 };
 
-export function getDisplayAmount(token: DenomInfo, amount: number) {
-  return token.conversion(amount);
-}
-
 function useBalance(token: DenomInfo) {
   const { address } = useWallet();
   const { chain } = useChain();
@@ -43,7 +39,7 @@ function useBalance(token: DenomInfo) {
   );
 
   return {
-    displayAmount: result.data ? getDisplayAmount(token, Number(result.data.amount)) : 0,
+    displayAmount: result.data ? token.conversion(Number(result.data.amount)) : 0,
 
     ...result,
   };

@@ -20,7 +20,7 @@ import {
   FormHelperText,
   Image,
 } from '@chakra-ui/react';
-import useBalance, { getDisplayAmount } from '@hooks/useBalance';
+import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
@@ -28,18 +28,20 @@ import { DenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
 import { featureFlags } from 'src/constants';
+import { useWallet } from '@hooks/useWallet';
+import { useWalletModal } from '@hooks/useWalletModal';
+import { Coin } from '@cosmjs/proto-signing';
 
-function GetFundsDetails({ onClose }: Omit<ModalProps, 'children'>) {
-  const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
-  const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
+interface GetFundsDetailsProps {
+  onSquidOpen: () => void;
+  onOnRampOpen: () => void;
+}
 
-  function handleOpen(onCloseOriginal: () => void, onOpen: () => void) {
-    return () => {
-      onCloseOriginal();
-      onOpen();
-    };
-  }
+interface GetFundsButtonProps {
+  onOpen: () => void;
+}
 
+function GetFundsDetails({ onSquidOpen, onOnRampOpen }: GetFundsDetailsProps) {
   return (
     <Box px={8} py={4} bg="abyss.200" fontSize="sm" borderRadius="xl" borderWidth={1} borderColor="slateGrey" w="full">
       <Grid templateColumns="repeat(2, 1fr)" gap={2} alignItems="center" justifyItems="center" textAlign="center">
@@ -63,23 +65,26 @@ function GetFundsDetails({ onClose }: Omit<ModalProps, 'children'>) {
           <FormHelperText>Good for getting crypto with cash.</FormHelperText>
         </GridItem>
         <GridItem>
-          <Button w={40} onClick={handleOpen(onClose, onSquidOpen)}>
+          <Button w={40} onClick={onSquidOpen}>
             Move assets here
           </Button>
-          <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
         </GridItem>
         <GridItem>
           <Button w={40} onClick={onOnRampOpen}>
             Buy crypto
           </Button>
-          <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
         </GridItem>
       </Grid>
     </Box>
   );
 }
 
-function GetFundsModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+function GetFundsModal({
+  onSquidOpen,
+  onOnRampOpen,
+  isOpen,
+  onClose,
+}: Omit<ModalProps, 'children'> & GetFundsDetailsProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -88,7 +93,7 @@ function GetFundsModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
         <ModalCloseButton />
         <ModalBody>
           <Stack justify="center" gap={6} align="center">
-            <GetFundsDetails isOpen={isOpen} onClose={onClose} />
+            <GetFundsDetails onSquidOpen={onSquidOpen} onOnRampOpen={onOnRampOpen} />
           </Stack>
         </ModalBody>
       </ModalContent>
@@ -96,47 +101,108 @@ function GetFundsModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   );
 }
 
-function GetFundsButton() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+function GetFundsButton({ onOpen }: GetFundsButtonProps) {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
       {featureFlags.getFundsModalEnabled && (
-        <>
-          <Button
-            size="xs"
-            data-testid="get-funds-button"
-            colorScheme="blue"
-            variant="link"
-            cursor="pointer"
-            onClick={onOpen}
-          >
-            Get funds
-          </Button>
-          <GetFundsModal isOpen={isOpen} onClose={onClose} />
-        </>
+        <Button
+          size="xs"
+          data-testid="get-funds-button"
+          colorScheme="blue"
+          variant="link"
+          cursor="pointer"
+          onClick={onOpen}
+        >
+          Get funds
+        </Button>
       )}
     </HStack>
   );
 }
 
-export function AvailableFunds({ denom }: { denom: DenomInfo }) {
+function AvailableFundsButton({
+  denom,
+  isLoading,
+  data,
+}: {
+  denom: DenomInfo;
+  isLoading: boolean;
+  data: Coin | undefined;
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
+  const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
+
+  const { connected } = useWallet();
   const [, , helpers] = useField('initialDeposit');
-
+  const { setVisible } = useWalletModal();
   const { price } = useFiatPrice(denom);
-
-  const { data, isLoading } = useBalance(denom);
 
   const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
   const balance = Number(data?.amount);
+  const displayAmount = denom.conversion(Math.max(balance - createStrategyFee, 0));
 
-  const displayAmount = getDisplayAmount(denom, Math.max(balance - createStrategyFee, 0));
-  const displayFee = getDisplayAmount(denom, createStrategyFee);
-
+  const handleConnect = () => {
+    setVisible(true);
+  };
   const handleClick = () => {
     helpers.setValue(displayAmount);
   };
+
+  function handleOpen(onOpener: () => void) {
+    return () => {
+      onClose();
+      onOpener();
+    };
+  }
+
+  if (displayAmount) {
+    return (
+      <Button
+        size="xs"
+        isLoading={isLoading}
+        colorScheme="blue"
+        variant="link"
+        cursor="pointer"
+        isDisabled={!displayAmount}
+        onClick={handleClick}
+      >
+        {displayAmount}
+      </Button>
+    );
+  }
+
+  if (connected) {
+    return (
+      <>
+        <GetFundsButton onOpen={onOpen} />
+        <GetFundsModal
+          isOpen={isOpen}
+          onClose={onClose}
+          onSquidOpen={handleOpen(onSquidOpen)}
+          onOnRampOpen={handleOpen(onOnRampOpen)}
+        />
+        <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
+        <OnRampModal isOpen={isOnRampOpen} onClose={onOnRampClose} />
+      </>
+    );
+  }
+
+  return (
+    <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
+      Connect wallet
+    </Button>
+  );
+}
+
+export function AvailableFunds({ denom }: { denom: DenomInfo }) {
+  const { price } = useFiatPrice(denom);
+  const { data, isLoading } = useBalance(denom);
+  const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
+  const balance = Number(data?.amount);
+
+  const displayFee = denom.conversion(createStrategyFee);
 
   return (
     <Center textStyle="body-xs">
@@ -148,21 +214,7 @@ export function AvailableFunds({ denom }: { denom: DenomInfo }) {
       >
         <Text mr={1}>Max*: </Text>
       </Tooltip>
-      {displayAmount ? (
-        <Button
-          size="xs"
-          isLoading={isLoading}
-          colorScheme="blue"
-          variant="link"
-          cursor="pointer"
-          isDisabled={!displayAmount}
-          onClick={handleClick}
-        >
-          {displayAmount}
-        </Button>
-      ) : (
-        <GetFundsButton />
-      )}
+      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} />
     </Center>
   );
 }

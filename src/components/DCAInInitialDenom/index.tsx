@@ -23,11 +23,6 @@ export default function DCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
-  const { connected } = useWallet();
-  const { setVisible } = useWalletModal();
-  const handleConnect = () => {
-    setVisible(true);
-  };
 
   if (!pairs) {
     return null;
@@ -46,13 +41,7 @@ export default function DCAInInitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose stablecoin</Text>
           <Spacer />
-          {field.value && connected ? (
-            <AvailableFunds denom={getDenomInfo(field.value)} />
-          ) : (
-            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
-              Connect wallet
-            </Button>
-          )}
+          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
