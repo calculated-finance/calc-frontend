@@ -30,7 +30,7 @@ export default function ProStrategyNotificationCard({
             </Text>
           </Center>
         </Flex>
-        <Spacer></Spacer>
+        <Spacer />
         <Heading size="md">{title}</Heading>
         <Stack alignItems="center" spacing={6}>
           <Text textAlign="center" textStyle="body">

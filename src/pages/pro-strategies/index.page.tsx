@@ -50,7 +50,7 @@ export function ProStrategies() {
           />
         </GridItem>
       </Grid>
-      <Spacer></Spacer>
+      <Spacer />
       <InfoPanel />
     </Stack>
   );
