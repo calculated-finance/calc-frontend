@@ -1,4 +1,4 @@
-import { Center, Stack } from '@chakra-ui/react';
+import { Center, Stack, Tab, TabIndicator, TabList, Tabs, VStack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -20,6 +20,27 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+
+function AssetsTabSelectors() {
+  return (
+    <VStack pb={8} spacing={4}>
+      <Tabs position="relative" variant="unstyled">
+        <TabList>
+          <Tab>Buy strategies</Tab>
+          <Tab>Sell strategies</Tab>
+        </TabList>
+        <TabIndicator mt="-1.5px" height="2px" bg="blue.500" borderRadius="1px" />
+      </Tabs>
+      <Tabs variant="line" colorScheme="green" gap={24}>
+        <TabList>
+          <Tab>DCA</Tab>
+          <Tab>DCA+</Tab>
+          <Tab>Weighted Scale</Tab>
+        </TabList>
+      </Tabs>
+    </VStack>
+  );
+}
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -60,6 +81,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
+          <AssetsTabSelectors />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
