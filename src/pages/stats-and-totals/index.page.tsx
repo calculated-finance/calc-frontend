@@ -23,6 +23,7 @@ import { Chains } from '@hooks/useChain/Chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
+import { isNaN } from 'lodash';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -34,6 +35,9 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
       const denomConvertedAmount = conversion(Number(coin.amount));
       const fiatPriceInfo = fiatPrices[coingeckoId];
       const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
+      if (isNaN(fiatAmount)) {
+        return { ...coin, fiatAmount: 0 };
+      }
       return { ...coin, fiatAmount };
     })
     .sort((a, b) => Number(b.fiatAmount) - Number(a.fiatAmount));
@@ -112,6 +116,10 @@ export function totalFromCoins(
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatPriceInfo = fiatPrices[coingeckoId];
         const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
+
+        if (isNaN(fiatAmount)) {
+          return 0;
+        }
         return fiatAmount;
       })
       .reduce((amount, total) => total + amount, 0) || 0
