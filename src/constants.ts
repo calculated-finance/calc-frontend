@@ -75,7 +75,7 @@ export const featureFlags =
         amplitudeEnabled: true,
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
-        getFundsModalEnabled: true,
+        getFundsModalEnabled: false,
       }
     : {
         extraTimeOptions: true,
