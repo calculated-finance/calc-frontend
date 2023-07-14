@@ -21,32 +21,26 @@ export function ProStrategies() {
       <Grid gap={8} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch" pb={6}>
         <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
           <ProStrategyNotificationCard
-            title={'ETH/BTC Pair Trading'}
-            description={
-              'Stay exposed to the ETH and BTC market while profiting by capturing fluctuations in price relative to each other.'
-            }
-            link={'https://t.me/+M--Y_6bWhVpiMTEx'}
-            backgroundImage={'/images/prostrategy1.svg'}
+            title="ETH/BTC Pair Trading"
+            description="Stay exposed to the ETH and BTC market while profiting by capturing fluctuations in price relative to each other."
+            link="https://t.me/+M--Y_6bWhVpiMTEx"
+            backgroundImage="/images/prostrategy1.svg"
           />
         </GridItem>
         <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
           <ProStrategyNotificationCard
-            title={'Mean Reversion Trading'}
-            description={
-              'Profit after an extreme price move, if an assets price tends back to normal or average levels.'
-            }
-            link={'https://t.me/+pMothLCSNiw3YTVh'}
-            backgroundImage={'/images/prostrategy2.svg'}
+            title="Mean Reversion Trading"
+            description="Profit after an extreme price move, if an assets price tends back to normal or average levels."
+            link="https://t.me/+pMothLCSNiw3YTVh"
+            backgroundImage="/images/prostrategy2.svg"
           />
         </GridItem>
         <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
           <ProStrategyNotificationCard
-            title={'Stoikov Market-Making'}
-            description={
-              'Run your own market-making trading strategy that seeks to profit by providing liquidity to other traders.'
-            }
-            link={'https://t.me/+QrYYOTnTfsIyMWI5'}
-            backgroundImage={'/images/prostrategy3.svg'}
+            title="Stoikov Market-Making"
+            description="Run your own market-making trading strategy that seeks to profit by providing liquidity to other traders."
+            link="https://t.me/+QrYYOTnTfsIyMWI5"
+            backgroundImage="/images/prostrategy3.svg"
           />
         </GridItem>
       </Grid>
