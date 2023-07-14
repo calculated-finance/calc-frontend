@@ -16,6 +16,7 @@ import {
   IconButton,
   ComponentWithAs,
   IconProps,
+  Badge,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import {
@@ -26,6 +27,7 @@ import {
   Graph2Icon,
   ViewListIcon,
   KnowledgeIcon,
+  CrownIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -39,6 +41,7 @@ import { Pages } from './Pages';
 
 interface LinkItem {
   name: string;
+  child?: JSX.Element;
   icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
   href: Pages;
@@ -48,6 +51,16 @@ interface LinkItem {
 const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
+  {
+    name: 'Pro strategies',
+    icon: CrownIcon,
+    href: Pages.ProStrategies,
+    child: (
+      <Badge colorScheme="yellow" marginLeft={2}>
+        New
+      </Badge>
+    ),
+  },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
@@ -156,6 +169,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}
+              {link.child}
             </NavItem>
           ))}
       </Box>

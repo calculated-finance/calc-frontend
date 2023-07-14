@@ -10,4 +10,5 @@ export enum Pages {
   LearnAboutCalc = '/learn-about-calc',
   StatsAndTotals = '/stats-and-totals',
   AllStrategies = '/admin/strategies',
+  ProStrategies = '/pro-strategies',
 }
