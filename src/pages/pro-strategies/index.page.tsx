@@ -25,7 +25,7 @@ export function ProStrategies() {
             description={
               'Stay exposed to the ETH and BTC market while profiting by capturing fluctuations in price relative to each other.'
             }
-            link={''}
+            link={'https://t.me/+M--Y_6bWhVpiMTEx'}
             backgroundImage={'/images/prostrategy1.svg'}
           />
         </GridItem>
@@ -35,7 +35,7 @@ export function ProStrategies() {
             description={
               'Profit after an extreme price move, if an assets price tends back to normal or average levels.'
             }
-            link={''}
+            link={'https://t.me/+pMothLCSNiw3YTVh'}
             backgroundImage={'/images/prostrategy2.svg'}
           />
         </GridItem>
@@ -45,7 +45,7 @@ export function ProStrategies() {
             description={
               'Run your own market-making trading strategy that seeks to profit by providing liquidity to other traders.'
             }
-            link={''}
+            link={'https://t.me/+QrYYOTnTfsIyMWI5'}
             backgroundImage={'/images/prostrategy3.svg'}
           />
         </GridItem>
