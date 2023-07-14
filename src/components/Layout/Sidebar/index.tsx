@@ -26,6 +26,7 @@ import {
   Graph2Icon,
   ViewListIcon,
   KnowledgeIcon,
+  CrownIcon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -48,6 +49,7 @@ interface LinkItem {
 const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
+  { name: 'Pro strategies', icon: CrownIcon, href: Pages.ProStrategies },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
