@@ -56,7 +56,7 @@ const LinkItems: Array<LinkItem> = [
     icon: CrownIcon,
     href: Pages.ProStrategies,
     child: (
-      <Badge colorScheme="yellow" marginLeft={2}>
+      <Badge colorScheme="brand" marginLeft={2}>
         New
       </Badge>
     ),

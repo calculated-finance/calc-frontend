@@ -16,9 +16,9 @@ function InfoPanel(): JSX.Element {
 export function ProStrategies() {
   return (
     <Stack spacing="1.3rem">
-      <Heading size="lg">Pro Strategies Minus The Complexity.</Heading>
+      <Heading size="lg">Pro strategies, minus the complexity</Heading>
       <Heading size="md">Bot and Trading Strategies</Heading>
-      <Grid gap={8} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch" pb={6}>
+      <Grid gap={8} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch" pb={0}>
         <GridItem colSpan={{ base: 6, lg: 6, xl: 2 }}>
           <ProStrategyNotificationCard
             title="ETH/BTC Pair Trading"
