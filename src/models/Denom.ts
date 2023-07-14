@@ -4,10 +4,9 @@ import { isMainnet } from '@utils/isMainnet';
 export type Denom = Coin['denom'];
 
 export enum TestnetDenomsMoonbeam {
-  WDEV ='0xd909178cc99d318e4d46e7e66a972955859670e1',
-  SATURN ='0xe75f9ae61926ff1d27d16403c938b4cd15c756d5'
+  WDEV = '0xd909178cc99d318e4d46e7e66a972955859670e1',
+  SATURN = '0xe75f9ae61926ff1d27d16403c938b4cd15c756d5',
 }
-
 
 export enum MainnetDenomsOsmosis {
   AXL = 'ibc/D189335C6E4A68B513C10AB227BF1C1D38C746766278BA3EEB4FB14124F1D858',
