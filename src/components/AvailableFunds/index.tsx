@@ -44,37 +44,56 @@ interface GetFundsButtonProps {
 function GetFundsDetails({ onSquidOpen, onOnRampOpen }: GetFundsDetailsProps) {
   return (
     <Box px={8} py={4} bg="abyss.200" fontSize="sm" borderRadius="xl" borderWidth={1} borderColor="slateGrey" w="full">
-      <Grid templateColumns="repeat(2, 1fr)" gap={2} alignItems="center" justifyItems="center" textAlign="center">
-        <GridItem>
-          <Center pb={4}>
-            <Image src="/images/squid-icon-logo-yellow.svg" alt="squid-logo" w={8} />
-          </Center>
-        </GridItem>
-        <GridItem>
-          <Center pb={4}>
-            <Image src="/images/kado.svg" alt="kado-logo" w={20} />
-          </Center>
-        </GridItem>
+      <Stack direction={{ base: 'column', sm: 'row' }} spacing={4}>
+        <Grid
+          templateColumns="repeat(1, 1fr)"
+          gap={2}
+          alignItems="center"
+          justifyItems="center"
+          textAlign="center"
+          px={2}
+        >
+          <GridItem>
+            <Center pb={4}>
+              <Image src="/images/squid-icon-logo-yellow.svg" alt="squid-logo" w={8} />
+            </Center>
+          </GridItem>
+          <GridItem>
+            <Heading size="xs">Squid Cross Chain Bridge</Heading>
+            <FormHelperText>Good for getting assets from other chains here.</FormHelperText>
+          </GridItem>
+          <GridItem>
+            <Button w={40} onClick={onSquidOpen}>
+              Move assets here
+            </Button>
+          </GridItem>
+        </Grid>
 
-        <GridItem>
-          <Heading size="xs">Squid Cross Chain Bridge</Heading>
-          <FormHelperText>Good for getting assets from other chains here.</FormHelperText>
-        </GridItem>
-        <GridItem mb={4}>
-          <Heading size="xs">Buy Crypto</Heading>
-          <FormHelperText>Good for getting crypto with cash.</FormHelperText>
-        </GridItem>
-        <GridItem>
-          <Button w={40} onClick={onSquidOpen}>
-            Move assets here
-          </Button>
-        </GridItem>
-        <GridItem>
-          <Button w={40} onClick={onOnRampOpen}>
-            Buy crypto
-          </Button>
-        </GridItem>
-      </Grid>
+        <Grid
+          templateColumns="repeat(1, 1fr)"
+          gap={2}
+          alignItems="center"
+          justifyItems="center"
+          textAlign="center"
+          px={2}
+        >
+          <GridItem>
+            <Center pb={{ base: 2, sm: 4 }} pt={{ base: 4, sm: 'initial' }}>
+              <Image src="/images/kado.svg" alt="kado-logo" w={20} />
+            </Center>
+          </GridItem>
+
+          <GridItem>
+            <Heading size="xs">Buy Crypto</Heading>
+            <FormHelperText>Good for getting crypto with cash.</FormHelperText>
+          </GridItem>
+          <GridItem>
+            <Button w={40} onClick={onOnRampOpen}>
+              Buy crypto
+            </Button>
+          </GridItem>
+        </Grid>
+      </Stack>
     </Box>
   );
 }
