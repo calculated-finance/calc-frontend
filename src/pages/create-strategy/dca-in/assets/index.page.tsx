@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Center,
   HStack,
   Icon,
@@ -42,6 +43,7 @@ import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { useState } from 'react';
 
 function StrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
@@ -73,6 +75,11 @@ function CategoryRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
   const input = getInputProps();
   const checkbox = getRadioProps();
 
+  const handleRadioChange = () => {
+    // console.log(input);
+    // setClickedRadio(input);
+  };
+
   return (
     <Box as="label">
       <input {...input} />
@@ -93,6 +100,7 @@ function CategoryRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
         py={1}
         w={44}
         justifyContent="center"
+        // onClick={handleRadioChange(input)}
       >
         <Center>
           <HStack>
@@ -107,86 +115,58 @@ function CategoryRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
     </Box>
   );
 }
+const buttonStyles = {
+  cursor: 'pointer',
+  borderWidth: '1px',
+  borderRadius: 'lg',
+  _checked: {
+    color: 'brand.200',
+    borderColor: 'brand.200',
+  },
+  fontSize: 14,
+  w: 32,
+  px: 1,
+  py: 1,
+  variant: 'outline',
+  size: 'sm',
+};
 
-function StrategyTypeRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
-  const { getInputProps, getRadioProps } = useRadio(props);
-
-  const input = getInputProps();
-  const checkbox = getRadioProps();
-
+function BuyButtons() {
   return (
-    <Box as="label">
-      <input {...input} />
-      <Box
-        {...checkbox}
-        cursor="pointer"
-        borderWidth="1px"
-        borderRadius="lg"
-        _checked={{
-          color: 'brand.200',
-          borderColor: 'brand.200',
-        }}
-        fontSize={14}
-        textAlign="center"
-        whiteSpace="nowrap"
-        w={32}
-        px={1}
-        py={1}
-      >
-        {props.children}
-      </Box>
-    </Box>
+    <ButtonGroup>
+      <Button {...buttonStyles}>DCA</Button>
+      <Button {...buttonStyles}>DCA+</Button>
+      <Button {...buttonStyles}>Weighted Scale</Button>
+    </ButtonGroup>
+  );
+}
+function SellButtons() {
+  return (
+    <ButtonGroup>
+      <Button {...buttonStyles}>DCA</Button>
+      <Button {...buttonStyles}>DCA+</Button>
+      <Button {...buttonStyles}>Weighted Scale</Button>
+    </ButtonGroup>
   );
 }
 
 function AssetsTabSelectors() {
-  // const [group1Value, setGroup1Value] = useState('');
-  // const [group2Value, setGroup2Value] = useState('');
+  const [buttonClicked, setButtonClicked] = useState('Buy');
 
-  // const handleGroup1Change = (value: any) => {
-  //   setGroup1Value(value);
-  // };
-
-  // const handleGroup2Change = (value: any) => {
-  //   setGroup2Value(value);
-  // };
-
-  const buttonOptions = {
-    category: ['Buy strategies', 'Sell strategies'],
-    strategyType: {
-      displayName: ['DCA', 'DCA+', 'Weighted scale'],
-      pathName: ['dca', 'dca-plus', 'weighted-scale'],
-    },
-  };
+  const buttonOptions = ['Buy strategies', 'Sell strategies'];
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'category',
     defaultValue: 'Buy strategies',
-    onChange: console.log,
-  });
-  const { getRootProps: rootPropsStrategyType, getRadioProps: radioPropsStrategyType } = useRadioGroup({
-    name: 'strategy-type',
-    defaultValue: 'DCA',
-    onChange: (value) => {
-      const selectedPathName =
-        buttonOptions.strategyType.pathName[buttonOptions.strategyType.displayName.indexOf(value)];
-      console.log(selectedPathName);
-    },
+    onChange: setButtonClicked,
   });
 
   const categoryGroup = getRootProps();
-  const strategyTypeGroup = rootPropsStrategyType();
-
-  const handleStrategyType = () => {
-    const url = `/create-strategy/${rootPropsStrategyType}-${getRootProps}/assets`;
-
-    console.log(url);
-  };
 
   return (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={8}>
-        {buttonOptions.category.map((value) => {
+        {buttonOptions.map((value) => {
           const radio = getRadioProps({ value });
           return (
             <CategoryRadioCard key={value} {...radio}>
@@ -195,16 +175,7 @@ function AssetsTabSelectors() {
           );
         })}
       </HStack>
-      <HStack {...strategyTypeGroup} spacing={2}>
-        {buttonOptions.strategyType.displayName.map((value) => {
-          const radio = radioPropsStrategyType({ value });
-          return (
-            <StrategyTypeRadioCard key={value} {...radio}>
-              {value}
-            </StrategyTypeRadioCard>
-          );
-        })}
-      </HStack>
+      {buttonClicked.includes('Buy') ? <BuyButtons /> : <SellButtons />}
     </VStack>
   );
 }
