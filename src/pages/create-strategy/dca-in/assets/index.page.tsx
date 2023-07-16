@@ -40,10 +40,10 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-import { useState } from 'react';
 
 function StrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
@@ -119,33 +119,37 @@ const buttonStyles = {
   cursor: 'pointer',
   borderWidth: '1px',
   borderRadius: 'lg',
-  _checked: {
+  textColor: 'slategrey',
+  borderColor: 'slategrey',
+  _focus: {
     color: 'brand.200',
     borderColor: 'brand.200',
   },
-  fontSize: 14,
-  w: 32,
-  px: 1,
-  py: 1,
+  _hover: { bgColor: 'transparent' },
+  fontSize: 12,
+  width: 32,
   variant: 'outline',
-  size: 'sm',
+  size: 'xs',
 };
 
 function BuyButtons() {
   return (
     <ButtonGroup>
-      <Button {...buttonStyles}>DCA</Button>
-      <Button {...buttonStyles}>DCA+</Button>
-      <Button {...buttonStyles}>Weighted Scale</Button>
+      <Button {...buttonStyles}>DCA In</Button>
+      <Button {...buttonStyles}>DCA+ In</Button>
+      <Button {...buttonStyles}>Weighted Scale In</Button>
     </ButtonGroup>
   );
 }
 function SellButtons() {
   return (
     <ButtonGroup>
-      <Button {...buttonStyles}>DCA</Button>
-      <Button {...buttonStyles}>DCA+</Button>
-      <Button {...buttonStyles}>Weighted Scale</Button>
+      <Button {...buttonStyles}>
+        {/* <Button as={Link} href={StrategyUrls.DCAOut} {...buttonStyles}> */}
+        DCA Out
+      </Button>
+      <Button {...buttonStyles}>DCA+ Out</Button>
+      <Button {...buttonStyles}>Weighted Scale Out</Button>
     </ButtonGroup>
   );
 }
