@@ -7,12 +7,12 @@ import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
-import { LearningHubLinks } from '../learn-about-calc/index.page';
 
 type StrategyCardProps = {
   name: string;

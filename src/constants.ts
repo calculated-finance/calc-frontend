@@ -76,6 +76,7 @@ export const featureFlags =
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
+        assetPageStrategyButtonsEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -91,6 +92,7 @@ export const featureFlags =
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
+        assetPageStrategyButtonsEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

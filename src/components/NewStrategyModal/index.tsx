@@ -33,6 +33,7 @@ import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
 import { Url, UrlObject } from 'url';
+import { isStepOne } from '@helpers/isStepOne';
 import { routerPush } from '@helpers/routerPush';
 import Stepper from './Stepper';
 
@@ -172,6 +173,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
+        <Heading size="sm">{!connected && !isStepOne(router.pathname) && 'No wallet connected'}</Heading>
         <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />

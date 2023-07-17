@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
@@ -132,6 +133,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
           children
         ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
+            <AssetPageStrategyButtons />
             <ConnectWallet h={80} />
           </ModalWrapper>
         ) : (
