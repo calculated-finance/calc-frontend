@@ -143,7 +143,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
                   Algorithm DCA+ Out
                 </Heading>
                 <Text fontSize="sm" color="slategrey">
-                  DCA into large cap assets based on market risk.
+                  DCA out of large cap assets based on market risk.
                 </Text>
                 <Link href={LearningHubLinks.DcaPlus} fontSize={12} target="_blank" isExternal>
                   Read docs <ExternalLinkIcon />
@@ -154,7 +154,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
                   Weighted Scale Out
                 </Heading>
                 <Text fontSize="sm" color="slategrey">
-                  Buy more when the price is low, and less when the price is high.
+                  Sell more when the price is high, and less when the price is low.
                 </Text>
                 <Link href={LearningHubLinks.WeightedScale} fontSize={12} target="_blank" isExternal>
                   Read docs <ExternalLinkIcon />
