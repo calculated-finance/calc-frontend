@@ -3,8 +3,11 @@ import {
   Button,
   ButtonGroup,
   Center,
+  Flex,
   HStack,
+  Heading,
   Icon,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -39,46 +42,121 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { ExternalLinkIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/index.page';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
-function StrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Performance free</ModalHeader>
+        <ModalHeader>Buy Strategies</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Stack spacing={8}>
-            <Stack spacing={1}>
-              <Text>Figure 1: A visual representation of a performance fee</Text>
+          <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+            <Stack spacing={4}>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Standard DCA In
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  Consistently swap the same amount on a time interval.
+                </Text>
+                <Link href={LearningHubLinks.Dca} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Algorithm DCA+ In
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  DCA into large cap assets based on market risk.
+                </Text>
+                <Link href={LearningHubLinks.DcaPlus} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Weighted Scale In
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  Buy more when the price is low, and less when the price is high.
+                </Text>
+                <Link href={LearningHubLinks.WeightedScale} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
             </Stack>
-            <Stack spacing={1}>
-              <Text>Figure 2: A visual representation of when no performance fees are charged</Text>
+          </Flex>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Sell Strategies</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+            <Stack spacing={4}>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Standard DCA Out
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  Consistently swap the same amount on a time interval.
+                </Text>
+                <Link href={LearningHubLinks.Dca} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Algorithm DCA+ Out
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  DCA into large cap assets based on market risk.
+                </Text>
+                <Link href={LearningHubLinks.DcaPlus} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
+              <Stack spacing={1}>
+                <Heading size="xs" fontWeight="bold">
+                  Weighted Scale Out
+                </Heading>
+                <Text fontSize="sm" color="slategrey">
+                  Buy more when the price is low, and less when the price is high.
+                </Text>
+                <Link href={LearningHubLinks.WeightedScale} fontSize={12} target="_blank">
+                  Read docs <ExternalLinkIcon />
+                </Link>
+              </Stack>
             </Stack>
-          </Stack>
+          </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 }
 
-function CategoryRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
+function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string } & UseRadioProps & ChildrenProp) {
   const { getInputProps, getRadioProps } = useRadio(props);
   const { isOpen: isBuyOpen, onOpen: onBuyOpen, onClose: onBuyClose } = useDisclosure();
-  // const { isOpen: isSellOpen, onOpen: onSellOpen, onClose: onSellClose } = useDisclosure();
+  const { isOpen: isSellOpen, onOpen: onSellOpen, onClose: onSellClose } = useDisclosure();
 
   const input = getInputProps();
   const checkbox = getRadioProps();
-
-  const handleRadioChange = () => {
-    // console.log(input);
-    // setClickedRadio(input);
-  };
 
   return (
     <Box as="label">
@@ -105,13 +183,19 @@ function CategoryRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
         <Center>
           <HStack>
             <Box> {props.children}</Box>
-            <Button variant="link" size="xs" color="slategrey" onClick={onBuyOpen}>
+            <Button
+              variant="link"
+              size="xs"
+              color="slategrey"
+              onClick={props.value?.includes('Buy') ? onBuyOpen : onSellOpen}
+            >
               <Icon as={QuestionOutlineIcon} />
             </Button>
           </HStack>
         </Center>
       </Box>
-      <StrategyInfoModal isOpen={isBuyOpen} onClose={onBuyClose} />
+      <BuyStrategyInfoModal isOpen={isBuyOpen} onClose={onBuyClose} />
+      <SellStrategyInfoModal isOpen={isSellOpen} onClose={onSellClose} />
     </Box>
   );
 }
@@ -173,7 +257,7 @@ function AssetsTabSelectors() {
         {buttonOptions.map((value) => {
           const radio = getRadioProps({ value });
           return (
-            <CategoryRadioCard key={value} {...radio}>
+            <CategoryRadioCard key={value} {...radio} buttonClicked={buttonClicked}>
               {value}
             </CategoryRadioCard>
           );
