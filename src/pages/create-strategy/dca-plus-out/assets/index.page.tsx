@@ -27,7 +27,7 @@ import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { AssetsTabSelectors } from '@components/AssetsTabSelectors';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 function Page() {
   const { connected } = useWallet();
@@ -71,7 +71,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <>
-          <AssetsTabSelectors />
+          <AssetPageStrategyButtons />
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

@@ -25,7 +25,7 @@ import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import Spinner from '@components/Spinner';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { AssetsTabSelectors } from '@components/AssetsTabSelectors';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -71,7 +71,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
-          <AssetsTabSelectors />
+          <AssetPageStrategyButtons />
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

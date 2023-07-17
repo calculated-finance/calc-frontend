@@ -17,7 +17,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
-import { AssetsTabSelectors } from '@components/AssetsTabSelectors';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
@@ -60,7 +60,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
-          <AssetsTabSelectors />
+          <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />

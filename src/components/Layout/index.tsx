@@ -25,7 +25,7 @@ import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
-import { AssetsTabSelectors } from '@components/AssetsTabSelectors';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 const HEADER_HEIGHT = '64px';
 
@@ -133,7 +133,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
           children
         ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
-            <AssetsTabSelectors />
+            <AssetPageStrategyButtons />
             <ConnectWallet h={80} />
           </ModalWrapper>
         ) : (

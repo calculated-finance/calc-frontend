@@ -271,7 +271,7 @@ function SellButtons() {
   );
 }
 
-export function AssetsTabSelectors() {
+export function AssetPageStrategyButtons() {
   const buttonOptions = ['Buy strategies', 'Sell strategies'];
   const router = useRouter();
   const currentCategory = router.pathname.includes('-in') ? 'Buy strategies' : 'Sell strategies';
