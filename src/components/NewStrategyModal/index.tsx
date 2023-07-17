@@ -35,6 +35,7 @@ import { StepConfig } from '@formConfig/StepConfig';
 import { Url, UrlObject } from 'url';
 import { routerPush } from '@helpers/routerPush';
 import Stepper from './Stepper';
+import { isStepOne } from '@helpers/isStepOne';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
@@ -172,6 +173,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
+        <Heading size="sm">{!connected && !isStepOne(router.pathname) && 'No wallet connected'}</Heading>
         <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />

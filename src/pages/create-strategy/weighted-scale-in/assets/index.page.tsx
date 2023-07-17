@@ -21,6 +21,7 @@ import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { AssetsTabSelectors } from '@components/AssetsTabSelectors';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -61,6 +62,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={weightedScaleInSteps}>
+          <AssetsTabSelectors />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
