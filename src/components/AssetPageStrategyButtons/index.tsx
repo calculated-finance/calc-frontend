@@ -226,7 +226,7 @@ function BuyButtons() {
   };
 
   return (
-    <ButtonGroup>
+    <ButtonGroup data-testid="strategy-type-buttons">
       {buttonLabelsIn.path.map((el, index) => {
         if (router.pathname.includes(el)) {
           return (
