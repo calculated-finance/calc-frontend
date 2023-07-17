@@ -48,6 +48,7 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/index.page';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { useRouter } from 'next/router';
 
 function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
@@ -178,7 +179,6 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
         py={1}
         w={44}
         justifyContent="center"
-        // onClick={handleRadioChange(input)}
       >
         <Center>
           <HStack>
@@ -217,30 +217,52 @@ const buttonStyles = {
 };
 
 function BuyButtons() {
+  const router = useRouter();
+  const buttonLabelsIn = {
+    path: ['dca-in', 'dca-plus-in', 'weighted-scale-in'],
+    buttonText: ['DCA In', 'DCA+ In', 'Weighted Scale In'],
+  };
+
   return (
     <ButtonGroup>
-      <Button {...buttonStyles}>DCA In</Button>
-      <Button {...buttonStyles}>DCA+ In</Button>
-      <Button {...buttonStyles}>Weighted Scale In</Button>
+      {buttonLabelsIn.path.map((el, index) => {
+        if (router.pathname.includes(el)) {
+          return (
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
+              {buttonLabelsIn.buttonText[index]}
+            </Button>
+          );
+        }
+        return <Button {...buttonStyles}>{buttonLabelsIn.buttonText[index]}</Button>;
+      })}
     </ButtonGroup>
   );
 }
 function SellButtons() {
+  const router = useRouter();
+  const buttonLabelsIn = {
+    path: ['dca-out', 'dca-plus-out', 'weighted-scale-out'],
+    buttonText: ['DCA Out', 'DCA+ Out', 'Weighted Scale Out'],
+  };
+
   return (
     <ButtonGroup>
-      <Button {...buttonStyles}>
-        {/* <Button as={Link} href={StrategyUrls.DCAOut} {...buttonStyles}> */}
-        DCA Out
-      </Button>
-      <Button {...buttonStyles}>DCA+ Out</Button>
-      <Button {...buttonStyles}>Weighted Scale Out</Button>
+      {buttonLabelsIn.path.map((el, index) => {
+        if (router.pathname.includes(el)) {
+          return (
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
+              {buttonLabelsIn.buttonText[index]}
+            </Button>
+          );
+        }
+        return <Button {...buttonStyles}>{buttonLabelsIn.buttonText[index]}</Button>;
+      })}
     </ButtonGroup>
   );
 }
 
 function AssetsTabSelectors() {
   const [buttonClicked, setButtonClicked] = useState('Buy');
-
   const buttonOptions = ['Buy strategies', 'Sell strategies'];
 
   const { getRootProps, getRadioProps } = useRadioGroup({
