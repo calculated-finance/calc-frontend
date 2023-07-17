@@ -42,8 +42,8 @@ const buttonStyles = {
     borderColor: 'brand.200',
   },
   _hover: { bgColor: 'transparent' },
-  fontSize: 12,
-  width: 32,
+  fontSize: { base: 10, sm: 12 },
+  width: { base: 28, sm: 32 },
   variant: 'outline',
   size: 'xs',
 };
@@ -193,7 +193,7 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
         textAlign="center"
         px={1}
         py={1}
-        w={44}
+        w={{ base: 40, sm: 44 }}
         justifyContent="center"
       >
         <Center>
@@ -287,7 +287,7 @@ export function AssetPageStrategyButtons() {
 
   return (
     <VStack spacing={4} pb={6}>
-      <HStack {...categoryGroup} spacing={8}>
+      <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
         {buttonOptions.map((value) => {
           const radio = getRadioProps({ value });
           return (
