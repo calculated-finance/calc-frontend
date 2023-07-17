@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { DcaLearn, DcaPlusLearn, GeneralLearn, LearningHubLinks, WeightedScaleLearn } from './index.page';
+import { DcaLearn, DcaPlusLearn, GeneralLearn, WeightedScaleLearn } from './index.page';
 import '@testing-library/jest-dom';
+import { LearningHubLinks } from './LearningHubLinks';
 
 describe('learning hub page tests', () => {
   describe('learning hub displays panels', () => {
