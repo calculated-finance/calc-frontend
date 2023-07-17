@@ -76,7 +76,7 @@ export const featureFlags =
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
-        assetPageStrategyButtonsEnabled: false,
+        assetPageStrategyButtonsEnabled: true,
       }
     : {
         extraTimeOptions: true,
