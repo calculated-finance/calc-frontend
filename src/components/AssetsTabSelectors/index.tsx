@@ -26,10 +26,10 @@ import {
 import { ExternalLinkIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { LearningHubLinks } from 'src/pages/learn-about-calc/index.page';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
-import LinkWithQuery from './LinkWithQuery';
+import { LearningHubLinks } from '@components/LearningHubLinks';
+import LinkWithQuery from '../LinkWithQuery';
 
 const buttonStyles = {
   cursor: 'pointer',
