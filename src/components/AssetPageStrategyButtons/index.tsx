@@ -206,7 +206,7 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
               color="slategrey"
               onClick={props.value?.includes('Buy') ? onBuyOpen : onSellOpen}
             >
-              <Icon as={QuestionOutlineIcon} />
+              <Icon as={QuestionOutlineIcon} _hover={{ color: 'blue.200' }} />
             </Button>
           </HStack>
         </Center>
