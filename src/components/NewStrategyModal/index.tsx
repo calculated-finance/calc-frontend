@@ -33,9 +33,9 @@ import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
 import { Url, UrlObject } from 'url';
+import { isStepOne } from '@helpers/isStepOne';
 import { routerPush } from '@helpers/routerPush';
 import Stepper from './Stepper';
-import { isStepOne } from '@helpers/isStepOne';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
