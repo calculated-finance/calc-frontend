@@ -29,7 +29,7 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { featureFlags } from 'src/constants';
-import { LearningHubLinks } from '@components/LearningHubLinks';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '../LinkWithQuery';
 
 const buttonStyles = {
@@ -299,7 +299,5 @@ export function AssetPageStrategyButtons() {
       </HStack>
       {buttonClicked.includes('Buy strategies') ? <BuyButtons /> : <SellButtons />}
     </VStack>
-  ) : (
-    <Box hidden />
-  );
+  ) : null;
 }

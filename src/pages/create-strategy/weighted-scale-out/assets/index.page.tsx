@@ -24,9 +24,9 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 function Page() {
   const { connected } = useWallet();

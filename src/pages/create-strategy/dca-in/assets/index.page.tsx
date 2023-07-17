@@ -17,8 +17,8 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import Submit from '@components/Submit';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 

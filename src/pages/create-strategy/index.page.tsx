@@ -7,7 +7,7 @@ import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
-import { LearningHubLinks } from '@components/LearningHubLinks';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import LinkWithQuery from '@components/LinkWithQuery';

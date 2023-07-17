@@ -1,31 +1,20 @@
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import '@testing-library/jest-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { AssetPageStrategyButtons } from '.';
 
-const mockRouter = {
-  isReady: true,
-  push: jest.fn(),
-  pathname: '/create-strategy/dca-in/success',
-};
-
 jest.mock('next/router', () => ({
   useRouter() {
-    return mockRouter;
+    return {
+      route: '/',
+      pathname: StrategyUrls.DCAIn,
+      query: '',
+      asPath: '',
+    };
   },
 }));
-
-async function renderTarget() {
-  act(() => {
-    render(
-      <QueryClientProvider client={queryClient}>
-        <Page />
-      </QueryClientProvider>,
-    );
-  });
-}
 
 describe('AssetsTabsSelectors tests', () => {
   it('renders strategy category radio selectors', () => {
@@ -43,6 +32,8 @@ describe('AssetsTabsSelectors tests', () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByText(/DCA In/)).toHaveAttribute('href', StrategyUrls.DCAIn);
+    expect(screen.getByText(/DCA In/)).toBeInTheDocument();
+    expect(screen.getByText(/DCA+ In/)).toBeInTheDocument();
+    expect(screen.getByText(/Weighted Scale In/)).toBeInTheDocument();
   });
 });

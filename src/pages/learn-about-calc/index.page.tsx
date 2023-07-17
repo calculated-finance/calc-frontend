@@ -1,6 +1,6 @@
 import { Button, Flex, Grid, GridItem, Heading, Link, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
-import { LearningHubLinks } from '@components/LearningHubLinks';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 
 export function DcaLearn() {
   return (
