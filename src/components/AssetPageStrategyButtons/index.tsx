@@ -28,6 +28,7 @@ import { useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
+import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from '@components/LearningHubLinks';
 import LinkWithQuery from '../LinkWithQuery';
 
@@ -43,7 +44,7 @@ const buttonStyles = {
   },
   _hover: { bgColor: 'transparent' },
   fontSize: { base: 10, sm: 12 },
-  width: { base: 28, sm: 32 },
+  width: { base: '108px', sm: 32 },
   variant: 'outline',
   size: 'xs',
 };
@@ -282,10 +283,9 @@ export function AssetPageStrategyButtons() {
     defaultValue: router.pathname.includes('-in') ? 'Buy strategies' : 'Sell strategies',
     onChange: setButtonClicked,
   });
-
   const categoryGroup = getRootProps();
 
-  return (
+  return featureFlags.assetPageStrategyButtonsEnabled ? (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
         {buttonOptions.map((value) => {
@@ -299,5 +299,7 @@ export function AssetPageStrategyButtons() {
       </HStack>
       {buttonClicked.includes('Buy strategies') ? <BuyButtons /> : <SellButtons />}
     </VStack>
+  ) : (
+    <Box hidden />
   );
 }

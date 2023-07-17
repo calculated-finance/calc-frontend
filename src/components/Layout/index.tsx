@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
@@ -25,7 +26,6 @@ import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 const HEADER_HEIGHT = '64px';
 
