@@ -21,11 +21,9 @@ import {
 } from '@chakra-ui/react';
 import { getStrategyInitialDenomId, getStrategyResultingDenom } from '@helpers/strategy';
 import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { Strategy } from '@models/Strategy';
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
-import { CANCEL_VAULT_FEE } from 'src/constants';
 import { formatDate } from '@helpers/format/formatDate';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -38,9 +36,7 @@ type CancelStrategyModalProps = {
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
   const initialDenom = useDenom(getStrategyInitialDenomId(strategy));
-  const { mutate: cancelStrategy, isLoading } = useCancelStrategy(initialDenom);
-
-  const { price } = useFiatPrice(initialDenom);
+  const { mutate: cancelStrategy, isLoading } = useCancelStrategy();
 
   const toast = useToast();
 
@@ -103,10 +99,6 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                 </Flex>
               )}
             </Stack>
-            <Text textAlign="center" textStyle="body-xs" data-testid="cancel-strategy-model-fee">
-              Cancellation Fee: {price ? parseFloat((CANCEL_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-              {initialDenom.name}
-            </Text>
             {isDcaPlus(strategy) && (
               <Box fontSize="xs" bg="abyss.200" p={4} borderRadius="md">
                 {isEventsLoading ? (

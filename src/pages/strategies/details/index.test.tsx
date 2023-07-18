@@ -21,7 +21,7 @@ import Page from './index.page';
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  query: { id: '1' , chain: 'Kujira'},
+  query: { id: '1', chain: 'Kujira' },
 };
 
 const mockKujiraQuery = {
@@ -525,17 +525,6 @@ describe('Detail page', () => {
           fireEvent.click(screen.getByTestId('cancel-strategy-button'));
         });
         await waitFor(() => expect(screen.getByTestId('cancel-strategy-modal')).toBeInTheDocument());
-      });
-      it('renders cancellation fee', async () => {
-        mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn(), mockCancelVault());
-
-        await renderTarget();
-        await waitFor(() => {
-          fireEvent.click(screen.getByTestId('cancel-strategy-button'));
-        });
-        await waitFor(() =>
-          expect(screen.getByTestId('cancel-strategy-model-fee').textContent).toBe('Cancellation Fee: 0.2 DEMO'),
-        );
       });
     });
     describe('when cancel modal is closed', () => {
