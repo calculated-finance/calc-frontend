@@ -3,12 +3,18 @@ import { Chains } from '@hooks/useChain/Chains';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
-import { CHAIN_ID, CONTRACT_ADDRESS, FEE_TAKER_ADDRESS, RPC_ENDPOINT } from 'src/constants';
+import {
+  CHAIN_ID,
+  CONTRACT_ADDRESS,
+  FEE_TAKER_ADDRESS,
+  OSMOSIS_RPC_ENDPOINT_MAINNET,
+  RPC_ENDPOINT,
+} from 'src/constants';
 
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',
   chainName: 'Osmosis Mainnet',
-  rpc: 'https://rpc.osmosis.zone',
+  rpc: OSMOSIS_RPC_ENDPOINT_MAINNET,
   rest: 'https://lcd.osmosis.zone',
   bip44: {
     coinType: 118,
