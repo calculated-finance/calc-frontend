@@ -240,40 +240,44 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
   );
 }
 
-function BuyButtons({ pathname }: RouterType) {
+export function BuyButtons({ pathname }: RouterType) {
   return (
-    <ButtonGroup data-testid="strategy-type-buttons">
+    <ButtonGroup>
       {buttonLabels.buttonLabelsIn.path.map((el, index) => {
         if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
               {buttonLabels.buttonLabelsIn.buttonText[index]}
             </Button>
           );
         }
         return (
           <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
-            <Button {...buttonStyles}>{buttonLabels.buttonLabelsIn.buttonText[index]}</Button>
+            <Button {...buttonStyles} data-testid={el}>
+              {buttonLabels.buttonLabelsIn.buttonText[index]}
+            </Button>
           </LinkWithQuery>
         );
       })}
     </ButtonGroup>
   );
 }
-function SellButtons({ pathname }: RouterType) {
+export function SellButtons({ pathname }: RouterType) {
   return (
-    <ButtonGroup>
+    <ButtonGroup data-testid="sell-buttons">
       {buttonLabels.buttonLabelsOut.path.map((el, index) => {
         if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
               {buttonLabels.buttonLabelsOut.buttonText[index]}
             </Button>
           );
         }
         return (
           <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
-            <Button {...buttonStyles}>{buttonLabels.buttonLabelsOut.buttonText[index]}</Button>
+            <Button {...buttonStyles} data-testid={el}>
+              {buttonLabels.buttonLabelsOut.buttonText[index]}
+            </Button>
           </LinkWithQuery>
         );
       })}
@@ -287,7 +291,7 @@ export function AssetPageStrategyButtons() {
   const buttonOptions = ['Buy strategies', 'Sell strategies'];
   const currentStrategyCategory = useStrategyInfo();
   const initialButtonSelected =
-    currentStrategyCategory.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
+    currentStrategyCategory?.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
   const [buttonClicked, setButtonClicked] = useState(initialButtonSelected);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'category',
@@ -295,7 +299,6 @@ export function AssetPageStrategyButtons() {
     onChange: (nextValue: BuySellButtons) => setButtonClicked(nextValue),
   });
   const categoryGroup = getRootProps();
-
   return featureFlags.assetPageStrategyButtonsEnabled ? (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
