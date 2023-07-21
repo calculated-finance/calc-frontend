@@ -45,7 +45,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
 
 export function BalanceList({ balances = [], showFiat = false }: { balances: Coin[] | undefined; showFiat?: boolean }) {
   return (
-    <>
+    <Stack overflow="auto" maxH={220}>
       <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
         <GridItem colSpan={1}>
           <Text fontSize="xs" noOfLines={1}>
@@ -55,27 +55,23 @@ export function BalanceList({ balances = [], showFiat = false }: { balances: Coi
         <GridItem colSpan={showFiat ? 1 : 2}>
           <Text textStyle="body-xs">Asset</Text>
         </GridItem>
+        {showFiat && (
+          <GridItem colSpan={1}>
+            <Text textStyle="body-xs">Fiat value</Text>
+          </GridItem>
+        )}
         <GridItem colSpan={3}>
           <Divider />
         </GridItem>
+        {balances?.map((balance: Coin) =>
+          showFiat ? (
+            <CoinBalanceWithFiat balance={balance} key={balance.denom} />
+          ) : (
+            <CoinBalance balance={balance} key={balance.denom} />
+          ),
+        )}
       </Grid>
-      <Stack overflow="auto" maxH={220} hidden={balances.length < 5}>
-        <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-          {showFiat && (
-            <GridItem colSpan={1}>
-              <Text textStyle="body-xs">Fiat value</Text>
-            </GridItem>
-          )}
-          {balances?.map((balance: Coin) =>
-            showFiat ? (
-              <CoinBalanceWithFiat balance={balance} key={balance.denom} />
-            ) : (
-              <CoinBalance balance={balance} key={balance.denom} />
-            ),
-          )}
-        </Grid>
-      </Stack>
-    </>
+    </Stack>
   );
 }
 
