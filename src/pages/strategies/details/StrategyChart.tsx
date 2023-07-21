@@ -15,6 +15,7 @@ import { Strategy } from '@models/Strategy';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
+import { COIN_DECIMAL_LIMIT, COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS } from 'src/constants';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
@@ -38,14 +39,23 @@ function CustomLabel(props: VictoryTooltipProps) {
   );
 }
 
-enum SmallerThanThreeDecimals {
-  decimal = 0.001,
-}
-function roundedDisplay(value: number | undefined) {
-  if (value && value < SmallerThanThreeDecimals.decimal) {
-    return Number(value).toFixed(5);
+function roundedDisplay(amount: number | undefined) {
+  if (!amount) {
+    return '0';
   }
-  return Number(value).toFixed(2);
+
+  const showLessThanAmount = amount < 10 ** -COIN_DECIMAL_LIMIT;
+  const showMoreThanAmount = amount > 10 ** -COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS;
+
+  if (showLessThanAmount) {
+    return `<${10 ** -COIN_DECIMAL_LIMIT}`;
+  }
+
+  if (showMoreThanAmount) {
+    return amount.toFixed(2);
+  }
+
+  return amount.toFixed(6);
 }
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
