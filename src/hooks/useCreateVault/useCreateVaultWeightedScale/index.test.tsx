@@ -1,9 +1,8 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useWallet } from '@hooks/useWallet';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { defaultDenom } from '@utils/defaultDenom';
-import { TestnetDenoms } from '@models/Denom';
 import { dcaInStrategyViewModal, dcaPlusStrategyViewModal } from 'src/fixtures/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -25,11 +24,6 @@ jest.mock('@hooks/useWallet');
 jest.mock('@hooks/useFiatPrice');
 jest.mock('../useTrackCreateVault');
 jest.mock('../handleError');
-
-const initialDenom = {
-  ...defaultDenom,
-  id: TestnetDenoms.Kuji,
-};
 
 const mockCreateStrategy = jest.fn();
 const mockTrackCreateVault = jest.fn();

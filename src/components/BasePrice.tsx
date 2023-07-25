@@ -6,7 +6,6 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
-import { TransactionType } from './TransactionType';
 import { DenomPriceInput } from './DenomPriceInput';
 import { yesNoData } from './PriceThreshold';
 import { CollapseWithRender } from './CollapseWithRender';

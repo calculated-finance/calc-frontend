@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import { getStrategyInitialDenom } from '@helpers/strategy';
 import { getDenomContract } from 'src/interfaces/evm/getDenomContract';
 import getVaultContract from 'src/interfaces/evm/getVaultContract';

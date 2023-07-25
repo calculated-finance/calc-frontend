@@ -1,5 +1,5 @@
 import { mockStrategy } from '@helpers/test/mockStrategy';
-import { Strategy, StrategyStatus } from '@models/Strategy';
+import { StrategyStatus } from '@models/Strategy';
 import { sortAndCategorizeStrategies } from './index';
 
 describe('sortAndCategorizeStrategies', () => {

@@ -8,7 +8,7 @@ import { Pool } from 'osmojs/types/codegen/osmosis/gamm/pool-models/balancer/bal
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { V2Pair } from '@models/Pair';
-import usePairs, { usePairsOsmosis } from '../usePairs';
+import { usePairsOsmosis } from '../usePairs';
 
 interface Step {
   poolId: Long;

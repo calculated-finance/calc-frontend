@@ -10,7 +10,6 @@ import usePriceOsmosis from '@hooks/usePriceOsmosis';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { V2Pair, V3Pair } from '@models/Pair';
-import { useConfig } from '@hooks/useConfig';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { getPairAddress } from 'src/fixtures/addresses';

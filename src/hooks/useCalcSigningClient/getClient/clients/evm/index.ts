@@ -7,7 +7,7 @@ import getVaultContract from 'src/interfaces/evm/getVaultContract';
 import { BuildCreateVaultContext } from '@hooks/useCreateVault/buildCreateVaultParams';
 
 async function executeTopUpEVM(signer: ethers.JsonRpcSigner, strategy: Strategy, topUpAmount: number) {
-  const { deconversion, id: initialDenomId } = getStrategyInitialDenom(strategy);
+  const { id: initialDenomId } = getStrategyInitialDenom(strategy);
   const contractWithSigner = getVaultContract(signer, strategy.id);
 
   const denom = getDenomContract(signer, initialDenomId);

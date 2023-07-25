@@ -7,7 +7,6 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { TestnetDenomsMoonbeam } from '@models/Denom';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { PairsResponse } from 'src/interfaces/generated-osmosis/response/get_pairs';
-import { PairsResponse as PairsResponseV3 } from 'src/interfaces/v2/generated/response/get_pairs';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { Pair } from 'src/interfaces/v2/generated/query';
 import { useChain } from './useChain';

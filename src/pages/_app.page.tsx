@@ -14,7 +14,6 @@ import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { useMetamask } from '@hooks/useMetamask';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { ChainWrapper } from './ChainWrapper';

@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { getStrategyPostSwapType } from '@helpers/destinations';
-import { dcaInStrategy, dcaInStrategyViewModal } from 'src/fixtures/strategy';
+import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { Destination } from 'src/interfaces/generated-osmosis/response/get_vault';
 import { Chains } from '@hooks/useChain/Chains';
 import { QueryClientProvider } from '@tanstack/react-query';

@@ -18,7 +18,6 @@ import { getDenomName } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { TransactionType } from './TransactionType';
 import { WeightSummary } from './WeightSummary';
 
 export default function SwapMultiplier({
@@ -30,8 +29,7 @@ export default function SwapMultiplier({
   resultingDenom: DenomInfo;
   swapAmountInjected?: number;
 }) {
-
-  const { transactionType} = useStrategyInfo();
+  const { transactionType } = useStrategyInfo();
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
 
   const [{ value: swapAmount }] = useField({ name: 'swapAmount' });

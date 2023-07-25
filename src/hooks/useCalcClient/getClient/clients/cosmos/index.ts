@@ -1,5 +1,5 @@
 import { QueryMsg } from 'src/interfaces/v2/generated/query';
-import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
+import { VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
 import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';

@@ -31,7 +31,6 @@ import { useChain } from '@hooks/useChain';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
   initialDenomName,
@@ -213,7 +212,7 @@ export default function FeesDcaPlus({
 }) {
   const { price } = useFiatPrice(initialDenom);
 
-  const { transactionType} = useStrategyInfo();
+  const { transactionType } = useStrategyInfo();
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 

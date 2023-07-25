@@ -4,7 +4,6 @@ import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useKujira } from './useKujira';
 import { useOsmosis } from './useOsmosis';
-import useQueryWithNotification from './useQueryWithNotification';
 
 const useValidators = () => {
   const kujiraQuery = useKujira((state) => state.query);
