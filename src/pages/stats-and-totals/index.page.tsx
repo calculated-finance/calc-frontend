@@ -369,14 +369,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(contractBalances, fiatPrices)} showFiat />
+            <BalanceList balances={orderCoinList(contractBalances, fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(feeTakerBalances, fiatPrices)} showFiat />
+            <BalanceList balances={orderCoinList(feeTakerBalances, fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
@@ -396,14 +396,14 @@ function Page() {
           <Heading size="md">Amount Swapped</Heading>
           <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalSwappedAmounts, fiatPrices)} showFiat />
+            <BalanceList balances={orderCoinList(totalSwappedAmounts, fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount Received</Heading>
           <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalReceivedAmounts, fiatPrices)} showFiat />
+            <BalanceList balances={orderCoinList(totalReceivedAmounts, fiatPrices)} />
           </Box>
         </Stack>
 
