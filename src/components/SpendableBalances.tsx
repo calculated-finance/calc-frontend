@@ -43,40 +43,56 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
   );
 }
 
-export function BalanceList({ balances = [], showFiat = false }: { balances: Coin[] | undefined; showFiat?: boolean }) {
+export function BalanceList({ balances = [] }: { balances: Coin[] | undefined }) {
   return (
-    <Stack overflow="auto" maxH={220}>
-      <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-        <GridItem colSpan={1}>
-          <Text fontSize="xs" noOfLines={1}>
-            Balance
-          </Text>
-        </GridItem>
-        <GridItem colSpan={showFiat ? 1 : 2}>
-          <Text textStyle="body-xs">Asset</Text>
-        </GridItem>
-        {showFiat && (
-          <GridItem colSpan={1}>
-            <Text textStyle="body-xs">Fiat value</Text>
-          </GridItem>
-        )}
-        <GridItem colSpan={3}>
-          <Divider />
-        </GridItem>
-        {balances?.map((balance: Coin) =>
-          showFiat ? (
-            <CoinBalanceWithFiat balance={balance} key={balance.denom} />
-          ) : (
-            <CoinBalance balance={balance} key={balance.denom} />
-          ),
-        )}
-      </Grid>
-    </Stack>
+    <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
+      <GridItem colSpan={1}>
+        <Text fontSize="xs" noOfLines={1}>
+          Balance
+        </Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text textStyle="body-xs">Asset</Text>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Text textStyle="body-xs">Fiat value</Text>
+      </GridItem>
+      <GridItem colSpan={3}>
+        <Divider />
+      </GridItem>
+      {balances?.map((balance: Coin) => (
+        <CoinBalanceWithFiat balance={balance} key={balance.denom} />
+      ))}
+    </Grid>
   );
 }
 
 export function SpendableBalances() {
   const { data } = useBalances();
-
-  return <BalanceList balances={data} />;
+  return (
+    <>
+      <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(2, 1fr)" gap={2}>
+        <GridItem colSpan={1}>
+          <Text fontSize="xs" noOfLines={1}>
+            Balance
+          </Text>
+        </GridItem>
+        <GridItem colSpan={1}>
+          <Text textStyle="body-xs" ml={4}>
+            Asset
+          </Text>
+        </GridItem>
+        <GridItem colSpan={2}>
+          <Divider />
+        </GridItem>
+      </Grid>
+      <Stack overflow="auto" maxH={220}>
+        <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
+          {data?.map((balance: Coin) => (
+            <CoinBalance balance={balance} key={balance.denom} />
+          ))}
+        </Grid>
+      </Stack>
+    </>
+  );
 }
