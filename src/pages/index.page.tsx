@@ -262,6 +262,9 @@ export function LearnAboutCalcPanel() {
       borderColor="green.400"
       borderWidth={2}
       backgroundImage="/images/backgrounds/twist-thin.svg"
+      bgSize="cover"
+      h="full"
+      w="full"
     >
       <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
 
