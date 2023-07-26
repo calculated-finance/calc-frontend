@@ -37,8 +37,8 @@ import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
   return (
-    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
-      <Image src="/images/iceblock.svg" />
+    <Stack direction="row" layerStyle="panel" p={4} spacing={4} alignItems="center">
+      <Image src="/images/iceblock.svg" boxSize={10} />
       <Flex alignItems="center">
         <Text textStyle="body">
           Stay ice cold and calculated by using Calculated Finance &ndash; the smartest way to enter and exit positions
@@ -235,6 +235,9 @@ function OnboardingPanel() {
       borderColor="brand.200"
       borderWidth={2}
       backgroundImage="/images/backgrounds/twist-thin.svg"
+      bgSize="cover"
+      h="full"
+      w="full"
     >
       <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
       <Stack spacing={1}>

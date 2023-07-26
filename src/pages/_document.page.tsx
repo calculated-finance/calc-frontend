@@ -11,7 +11,7 @@ export default class Document extends NextDocument {
           <meta property="og:description" content="Smarter swaps for all." />
 
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon-opt.ico" />
         </Head>
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />

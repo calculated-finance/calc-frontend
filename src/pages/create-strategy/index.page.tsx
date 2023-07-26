@@ -26,8 +26,8 @@ type StrategyCardProps = {
 
 function InfoPanel(): JSX.Element {
   return (
-    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
-      <Image src="/images/iceblock.svg" />
+    <Stack direction="row" layerStyle="panel" p={4} spacing={4} alignItems="center">
+      <Image src="/images/iceblock.svg" boxSize={10} />
       <Flex alignItems="center">
         <Text textStyle="body">
           Remember, marketing material is typically designed to make you feel emotional and impulsive. Don&apos;t let
