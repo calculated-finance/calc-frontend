@@ -28,6 +28,7 @@ import { useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '../LinkWithQuery';
@@ -47,6 +48,28 @@ const buttonStyles = {
   width: { base: '108px', sm: 32 },
   variant: 'outline',
   size: 'xs',
+};
+
+enum BuySellButtons {
+  Buy = 'Buy strategies',
+  Sell = 'Sell strategies',
+}
+
+const buttonLabels = {
+  buttonLabelsIn: {
+    path: ['dca-in', 'dca-plus-in', 'weighted-scale-in'],
+    buttonText: ['DCA In', 'DCA+ In', 'Weighted Scale In'],
+    buttonLinks: [StrategyUrls.DCAIn, StrategyUrls.DCAPlusIn, StrategyUrls.WeightedScaleIn],
+  },
+  buttonLabelsOut: {
+    path: ['dca-out', 'dca-plus-out', 'weighted-scale-out'],
+    buttonText: ['DCA Out', 'DCA+ Out', 'Weighted Scale Out'],
+    buttonLinks: [StrategyUrls.DCAOut, StrategyUrls.DCAPlusOut, StrategyUrls.WeightedScaleOut],
+  },
+};
+
+type RouterType = {
+  pathname: string;
 };
 
 function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
@@ -75,7 +98,7 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
                 <Text fontSize="sm" color="slategrey">
                   Consistently swap the same amount on a time interval.
                 </Text>
-                <Link href={LearningHubLinks.Dca} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.Dca} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -86,7 +109,7 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
                 <Text fontSize="sm" color="slategrey">
                   DCA into large cap assets based on market risk.
                 </Text>
-                <Link href={LearningHubLinks.DcaPlus} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.DcaPlus} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -97,7 +120,7 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
                 <Text fontSize="sm" color="slategrey">
                   Buy more when the price is low, and less when the price is high.
                 </Text>
-                <Link href={LearningHubLinks.WeightedScale} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.WeightedScale} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -134,7 +157,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
                 <Text fontSize="sm" color="slategrey">
                   Consistently swap the same amount on a time interval.
                 </Text>
-                <Link href={LearningHubLinks.Dca} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.Dca} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -145,7 +168,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
                 <Text fontSize="sm" color="slategrey">
                   DCA out of large cap assets based on market risk.
                 </Text>
-                <Link href={LearningHubLinks.DcaPlus} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.DcaPlus} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -156,7 +179,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
                 <Text fontSize="sm" color="slategrey">
                   Sell more when the price is high, and less when the price is low.
                 </Text>
-                <Link href={LearningHubLinks.WeightedScale} fontSize={12} target="_blank" isExternal>
+                <Link href={LearningHubLinks.WeightedScale} fontSize={12} isExternal>
                   Read docs <ExternalLinkIcon />
                 </Link>
               </Stack>
@@ -217,54 +240,44 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
   );
 }
 
-function BuyButtons() {
-  const router = useRouter();
-  const buttonLabelsIn = {
-    path: ['dca-in', 'dca-plus-in', 'weighted-scale-in'],
-    buttonText: ['DCA In', 'DCA+ In', 'Weighted Scale In'],
-    buttonLinks: [StrategyUrls.DCAIn, StrategyUrls.DCAPlusIn, StrategyUrls.WeightedScaleIn],
-  };
-
+export function BuyButtons({ pathname }: RouterType) {
   return (
-    <ButtonGroup data-testid="strategy-type-buttons">
-      {buttonLabelsIn.path.map((el, index) => {
-        if (router.pathname.includes(el)) {
+    <ButtonGroup>
+      {buttonLabels.buttonLabelsIn.path.map((el, index) => {
+        if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
-              {buttonLabelsIn.buttonText[index]}
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
+              {buttonLabels.buttonLabelsIn.buttonText[index]}
             </Button>
           );
         }
         return (
-          <LinkWithQuery href={buttonLabelsIn.buttonLinks[index]} passHref>
-            <Button {...buttonStyles}>{buttonLabelsIn.buttonText[index]}</Button>
+          <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
+            <Button {...buttonStyles} data-testid={el}>
+              {buttonLabels.buttonLabelsIn.buttonText[index]}
+            </Button>
           </LinkWithQuery>
         );
       })}
     </ButtonGroup>
   );
 }
-function SellButtons() {
-  const router = useRouter();
-  const buttonLabelsOut = {
-    path: ['dca-out', 'dca-plus-out', 'weighted-scale-out'],
-    buttonText: ['DCA Out', 'DCA+ Out', 'Weighted Scale Out'],
-    buttonLinks: [StrategyUrls.DCAOut, StrategyUrls.DCAPlusOut, StrategyUrls.WeightedScaleOut],
-  };
-
+export function SellButtons({ pathname }: RouterType) {
   return (
-    <ButtonGroup>
-      {buttonLabelsOut.path.map((el, index) => {
-        if (router.pathname.includes(el)) {
+    <ButtonGroup data-testid="sell-buttons">
+      {buttonLabels.buttonLabelsOut.path.map((el, index) => {
+        if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el}>
-              {buttonLabelsOut.buttonText[index]}
+            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
+              {buttonLabels.buttonLabelsOut.buttonText[index]}
             </Button>
           );
         }
         return (
-          <LinkWithQuery href={buttonLabelsOut.buttonLinks[index]} passHref>
-            <Button {...buttonStyles}>{buttonLabelsOut.buttonText[index]}</Button>
+          <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
+            <Button {...buttonStyles} data-testid={el}>
+              {buttonLabels.buttonLabelsOut.buttonText[index]}
+            </Button>
           </LinkWithQuery>
         );
       })}
@@ -273,18 +286,19 @@ function SellButtons() {
 }
 
 export function AssetPageStrategyButtons() {
-  const buttonOptions = ['Buy strategies', 'Sell strategies'];
   const router = useRouter();
-  const currentCategory = router.pathname.includes('-in') ? 'Buy strategies' : 'Sell strategies';
-  const [buttonClicked, setButtonClicked] = useState(currentCategory);
-
+  const { pathname } = router;
+  const buttonOptions = ['Buy strategies', 'Sell strategies'];
+  const currentStrategyCategory = useStrategyInfo();
+  const initialButtonSelected =
+    currentStrategyCategory?.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
+  const [buttonClicked, setButtonClicked] = useState(initialButtonSelected);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'category',
-    defaultValue: router.pathname.includes('-in') ? 'Buy strategies' : 'Sell strategies',
-    onChange: setButtonClicked,
+    defaultValue: initialButtonSelected,
+    onChange: (nextValue: BuySellButtons) => setButtonClicked(nextValue),
   });
   const categoryGroup = getRootProps();
-
   return featureFlags.assetPageStrategyButtonsEnabled ? (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
@@ -297,7 +311,11 @@ export function AssetPageStrategyButtons() {
           );
         })}
       </HStack>
-      {buttonClicked.includes('Buy strategies') ? <BuyButtons /> : <SellButtons />}
+      {buttonClicked.includes(BuySellButtons.Buy) ? (
+        <BuyButtons pathname={pathname} />
+      ) : (
+        <SellButtons pathname={pathname} />
+      )}
     </VStack>
   ) : null;
 }
