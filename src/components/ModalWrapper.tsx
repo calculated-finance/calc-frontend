@@ -1,8 +1,12 @@
-import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
+import { Box } from '@chakra-ui/react';
+import { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
+import { lazy, Suspense } from 'react';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
-export function ModalWrapper({
+const NewStrategyModal = lazy(() => import('@components/NewStrategyModal'));
+
+export default function ModalWrapper({
   reset,
   children,
   stepsConfig,
@@ -14,11 +18,13 @@ export function ModalWrapper({
   const { isPageLoading } = usePageLoad();
 
   return (
-    <NewStrategyModal>
-      <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset} cancelUrl="/create-strategy" />
-      <NewStrategyModalBody stepsConfig={stepsConfig} isLoading={isPageLoading}>
-        {children}
-      </NewStrategyModalBody>
-    </NewStrategyModal>
+    <Suspense fallback={<Box />}>
+      <NewStrategyModal>
+        <NewStrategyModalHeader stepsConfig={stepsConfig} resetForm={reset} cancelUrl="/create-strategy" />
+        <NewStrategyModalBody stepsConfig={stepsConfig} isLoading={isPageLoading}>
+          {children}
+        </NewStrategyModalBody>
+      </NewStrategyModal>
+    </Suspense>
   );
 }

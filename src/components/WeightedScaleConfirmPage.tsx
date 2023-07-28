@@ -18,10 +18,12 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import useStrategy from '@hooks/useStrategy';
 import usePrice from '@hooks/usePrice';
+import { lazy, Suspense } from 'react';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
-import { ModalWrapper } from './ModalWrapper';
 import { SigningState } from './NewStrategyModal';
+
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
 
 function PageInternal({
   state,
@@ -113,14 +115,16 @@ export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   };
 
   return (
-    <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
-      {state ? (
-        <SigningState isSigning={isLoading}>
-          <PageInternal state={state} isError={isError} error={error} handleSubmit={handleSubmit} />
-        </SigningState>
-      ) : (
-        <InvalidData onRestart={handleRestart} />
-      )}
-    </ModalWrapper>
+    <Suspense>
+      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+        {state ? (
+          <SigningState isSigning={isLoading}>
+            <PageInternal state={state} isError={isError} error={error} handleSubmit={handleSubmit} />
+          </SigningState>
+        ) : (
+          <InvalidData onRestart={handleRestart} />
+        )}
+      </ModalWrapper>
+    </Suspense>
   );
 }

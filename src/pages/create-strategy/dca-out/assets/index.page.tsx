@@ -8,6 +8,8 @@ import usePairs, {
   uniqueBaseDenoms,
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
+import { lazy, Suspense } from 'react';
+
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
@@ -15,7 +17,6 @@ import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
-import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
@@ -26,6 +27,8 @@ import Spinner from '@components/Spinner';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -46,11 +49,13 @@ function Page() {
 
   if (!pairs) {
     return (
-      <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
-        <Center h={56}>
-          <Spinner />
-        </Center>
-      </ModalWrapper>
+      <Suspense>
+        <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
+          <Center h={56}>
+            <Spinner />
+          </Center>
+        </ModalWrapper>
+      </Suspense>
     );
   }
   const denoms = orderAlphabetically(
@@ -70,19 +75,21 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
-          <AssetPageStrategyButtons />
+        <Suspense>
+          <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
+            <AssetPageStrategyButtons />
 
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={6}>
-              <DCAOutInitialDenom denoms={denoms} />
-              <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
+            <Form autoComplete="off">
+              <Stack direction="column" spacing={6}>
+                <DCAOutInitialDenom denoms={denoms} />
+                <DCAOutResultingDenom
+                  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                />
+                {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              </Stack>
+            </Form>
+          </ModalWrapper>
+        </Suspense>
       )}
     </Formik>
   );

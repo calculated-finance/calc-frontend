@@ -15,10 +15,12 @@ import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
+import { lazy, Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form();
@@ -84,14 +86,18 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaPlusOut,
-    }}>
-      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-        <Page />
-      </ModalWrapper>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut,
+      }}
+    >
+      <Suspense>
+        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+          <Page />
+        </ModalWrapper>
+      </Suspense>
     </StrategyInfoProvider>
   );
 }

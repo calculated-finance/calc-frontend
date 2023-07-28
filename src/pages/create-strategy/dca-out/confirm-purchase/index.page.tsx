@@ -15,15 +15,17 @@ import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Fees from '@components/Fees';
+import { lazy, Suspense } from 'react';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
 
 function Page() {
   const { state, actions } = useConfirmForm();
@@ -100,9 +102,11 @@ function PageWrapper() {
         formName: FormNames.DcaOut,
       }}
     >
-      <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
-        <Page />
-      </ModalWrapper>
+      <Suspense>
+        <ModalWrapper stepsConfig={dcaOutSteps} reset={resetForm(FormNames.DcaOut)}>
+          <Page />
+        </ModalWrapper>
+      </Suspense>
     </StrategyInfoProvider>
   );
 }

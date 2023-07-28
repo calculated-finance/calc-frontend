@@ -1,4 +1,4 @@
-import { Center, Stack } from '@chakra-ui/react';
+import { Box, Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -10,10 +10,10 @@ import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
-import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { lazy, Suspense } from 'react';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
@@ -21,6 +21,8 @@ import Submit from '@components/Submit';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -40,11 +42,13 @@ function DcaIn() {
 
   if (!pairs) {
     return (
-      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
-        <Center h={56}>
-          <Spinner />
-        </Center>
-      </ModalWrapper>
+      <Suspense fallback={<Box />}>
+        <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+          <Center h={56}>
+            <Spinner />
+          </Center>
+        </ModalWrapper>
+      </Suspense>
     );
   }
 
@@ -59,18 +63,20 @@ function DcaIn() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
-          <AssetPageStrategyButtons />
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={6}>
-              <DCAInInitialDenom />
-              <DCAInResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
+        <Suspense fallback={<Box />}>
+          <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
+            <AssetPageStrategyButtons />
+            <Form autoComplete="off">
+              <Stack direction="column" spacing={6}>
+                <DCAInInitialDenom />
+                <DCAInResultingDenom
+                  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                />
+                {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              </Stack>
+            </Form>
+          </ModalWrapper>
+        </Suspense>
       )}
     </Formik>
   );

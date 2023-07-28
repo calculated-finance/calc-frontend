@@ -9,7 +9,7 @@ import {
   BreadcrumbLink,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, lazy, Suspense } from 'react';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
@@ -20,14 +20,16 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
-import { ModalWrapper } from '@components/ModalWrapper';
+// import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
 
-const HEADER_HEIGHT = '64px';
+const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+
+export const HEADER_HEIGHT = '64px';
 
 function AppHeaderForSidebar() {
   return (
@@ -132,10 +134,12 @@ function FlowLayout({ children }: { children: ReactElement }) {
         {isStepOne(pathname) && featureFlags.unconnectedFirstStepEnabled ? (
           children
         ) : !address ? (
-          <ModalWrapper stepsConfig={[]}>
-            <AssetPageStrategyButtons />
-            <ConnectWallet h={80} />
-          </ModalWrapper>
+          <Suspense fallback={<Box />}>
+            <ModalWrapper stepsConfig={[]}>
+              <AssetPageStrategyButtons />
+              <ConnectWallet h={80} />
+            </ModalWrapper>
+          </Suspense>
         ) : (
           children
         )}
