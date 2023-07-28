@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 
 const withImages = require('next-images');
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig = {
   swcMinify: true,
@@ -35,4 +38,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withImages(nextConfig);
+module.exports = withBundleAnalyzer(withImages(nextConfig));
