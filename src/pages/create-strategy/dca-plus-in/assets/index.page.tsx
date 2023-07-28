@@ -14,7 +14,7 @@ import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import getDenomInfo from '@utils/getDenomInfo';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
@@ -23,7 +23,9 @@ import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function DcaIn() {
   const { connected } = useWallet();

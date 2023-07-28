@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
@@ -14,7 +14,9 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();

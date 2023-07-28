@@ -3,12 +3,14 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { WeightedScaleCustomisePage } from '@components/Forms/CustomiseForm/WeightedScaleCustomisePage';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { resetForm } = useFormStore();

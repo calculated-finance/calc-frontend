@@ -3,13 +3,15 @@ import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategy
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
 import { Pages } from './Layout/Sidebar/Pages';
 import LinkWithQuery from './LinkWithQuery';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function ThatsCalculatedThinkingText() {
   return (

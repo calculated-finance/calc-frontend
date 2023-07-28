@@ -1,12 +1,12 @@
 import { Box } from '@chakra-ui/react';
 import { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const NewStrategyModal = lazy(() => import('@components/NewStrategyModal'));
 
-export default function ModalWrapper({
+export function ModalWrapper({
   reset,
   children,
   stepsConfig,

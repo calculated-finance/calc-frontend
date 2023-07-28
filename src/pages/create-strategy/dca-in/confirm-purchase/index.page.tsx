@@ -18,14 +18,15 @@ import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
-import {lazy, Suspense} from 'react'
+import React, { Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
-
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { state, actions } = useConfirmForm();
@@ -101,10 +102,10 @@ function PageWrapper() {
         formName: FormNames.DcaIn,
       }}
     >
-      <Suspense fallback={<Box/>}>
-      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
-        <Page />
-      </ModalWrapper>
+      <Suspense fallback={<Box />}>
+        <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+          <Page />
+        </ModalWrapper>
       </Suspense>
     </StrategyInfoProvider>
   );

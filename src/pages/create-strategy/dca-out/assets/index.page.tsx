@@ -8,7 +8,7 @@ import usePairs, {
   uniqueBaseDenoms,
   uniqueQuoteDenoms,
 } from '@hooks/usePairs';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -28,7 +28,9 @@ import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { actions, state } = useDcaInForm();

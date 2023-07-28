@@ -18,12 +18,14 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import useStrategy from '@hooks/useStrategy';
 import usePrice from '@hooks/usePrice';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { SigningState } from './NewStrategyModal';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function PageInternal({
   state,

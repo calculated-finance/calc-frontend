@@ -13,7 +13,7 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
@@ -22,7 +22,9 @@ import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function DcaIn() {
   const { connected } = useWallet();

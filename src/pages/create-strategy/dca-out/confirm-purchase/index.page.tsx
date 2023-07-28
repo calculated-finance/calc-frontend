@@ -15,7 +15,7 @@ import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Fees from '@components/Fees';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
@@ -25,7 +25,9 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { state, actions } = useConfirmForm();

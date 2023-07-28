@@ -1,5 +1,5 @@
 import { CustomiseFormDcaWrapper } from '@components/Forms/CustomiseForm/CustomiseFormDca';
-import { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { getFlowLayout } from '@components/Layout';
 import { TransactionType } from '@components/TransactionType';
 import dcaOutSteps from '@formConfig/dcaOut';
@@ -7,7 +7,9 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-const ModalWrapper = lazy(() => import('@components/ModalWrapper'));
+const ModalWrapper = React.lazy(() =>
+  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
+);
 
 function Page() {
   const { resetForm } = useFormStore();
