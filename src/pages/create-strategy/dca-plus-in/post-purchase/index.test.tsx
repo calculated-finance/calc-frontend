@@ -8,7 +8,7 @@ import theme from 'src/theme';
 import userEvent from '@testing-library/user-event';
 import { mockValidators } from '@helpers/test/mockValidators';
 import selectEvent from 'react-select-event';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';

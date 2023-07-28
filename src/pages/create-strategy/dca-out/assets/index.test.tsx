@@ -10,7 +10,7 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
@@ -35,7 +35,7 @@ jest.mock('next/router', () => ({
   },
 }));
 
-jest.mock('kujira.js');
+jest.mock('kujira.js/lib/cjs/queryClient');
 
 const mockStateMachine = {
   state: {},

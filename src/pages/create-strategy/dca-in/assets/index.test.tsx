@@ -13,7 +13,7 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { Chains } from '@hooks/useChain/Chains';

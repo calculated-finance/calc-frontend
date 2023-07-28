@@ -9,7 +9,7 @@ import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { Chains } from '@hooks/useChain/Chains';
 import { useKujira } from '@hooks/useKujira';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { useConfig } from '@hooks/useConfig';
 import { mockConfig } from 'src/fixtures/mockConfig';
 import Page from './index.page';

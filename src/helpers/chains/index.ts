@@ -2,7 +2,7 @@ import { GasPrice } from '@cosmjs/stargate';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
-import { CHAIN_INFO } from 'kujira.js';
+import { CHAIN_INFO } from 'kujira.js/lib/cjs/network';
 import {
   CHAIN_ID,
   CONTRACT_ADDRESS,

@@ -1,4 +1,4 @@
-import { NETWORK } from 'kujira.js';
+import { NETWORK } from 'kujira.js/lib/cjs/network';
 
 // Environment specific constants
 export const CONTRACT_ADDRESS =

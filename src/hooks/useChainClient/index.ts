@@ -5,7 +5,7 @@ import { useMetamask } from '@hooks/useMetamask';
 import { BrowserProvider } from 'ethers';
 import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { Coin } from '@models/index';
 import { fetchBalanceEvm } from './fetchBalanceEvm';
 

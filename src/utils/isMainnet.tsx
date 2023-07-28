@@ -1,4 +1,4 @@
-import { NETWORK } from 'kujira.js';
+import { NETWORK } from 'kujira.js/lib/cjs/network';
 import { CHAIN_ID } from 'src/constants';
 
 export function isMainnet() {

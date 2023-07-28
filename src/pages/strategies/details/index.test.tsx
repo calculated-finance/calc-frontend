@@ -5,7 +5,7 @@ import { queryClient } from '@helpers/test/testQueryClient';
 import { mockValidators } from '@helpers/test/mockValidators';
 import { dcaOutStrategy } from 'src/fixtures/strategy';
 import { mockPriceTrigger } from 'src/fixtures/trigger';
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';

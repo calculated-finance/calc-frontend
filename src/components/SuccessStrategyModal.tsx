@@ -1,10 +1,10 @@
-import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter } from '@chakra-ui/react';
+import { Button, Stack, Text, Divider, Heading, Box } from '@chakra-ui/react';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
+import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
-import * as Confetti from '../animations/confetti.json';
 import { Pages } from './Layout/Sidebar/Pages';
 import { ModalWrapper } from './ModalWrapper';
 import LinkWithQuery from './LinkWithQuery';
@@ -31,18 +31,13 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
   const { strategyId, timeSaved } = query;
   return (
     <ModalWrapper stepsConfig={stepConfig}>
-      <AbsoluteCenter w="100%" h="100%" top="10%">
-        <Lottie animationData={Confetti} loop={1} />
-      </AbsoluteCenter>
-
       <Stack spacing={6} alignItems="center">
         <ThatsCalculatedThinkingText />
-        <Image src="/images/fire.svg" />
-        <Text>CALC is now working for you!</Text>
+        <Box as={Lottie} animationData={Configure} />
         <>
           <Divider />
           <Stack spacing={2} alignItems="center">
-            <Text>Plus, you have saved yourself an average of</Text>
+            <Text>You have saved yourself an average of</Text>
             <Heading size="md">{timeSaved} minutes</Heading>
             <Text>and removed the emotions from your trades! 💪</Text>
           </Stack>

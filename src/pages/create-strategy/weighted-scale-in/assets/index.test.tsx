@@ -10,7 +10,7 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 
-import { KujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';

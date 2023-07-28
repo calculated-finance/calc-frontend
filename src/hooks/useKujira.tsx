@@ -1,5 +1,5 @@
 import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
+import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js/lib/cjs/queryClient';
 import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
 import { getChainEndpoint } from '@helpers/chains';
