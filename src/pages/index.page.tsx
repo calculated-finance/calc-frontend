@@ -27,13 +27,15 @@ import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom
 import { getSidebarLayout } from '@components/Layout';
 import TopPanel from '@components/TopPanel';
 import { useChain } from '@hooks/useChain';
+import React, { Suspense } from 'react';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { useStrategies } from '@hooks/useStrategies';
 import { featureFlags } from 'src/constants';
 import { BarChartIcon } from '@fusion-icons/react/interface';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 function InfoPanel() {
   return (
@@ -132,17 +134,21 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
             {activeStrategies.length}
           </Heading>
           <Stack direction={{ base: 'column', sm: 'row' }}>
-            <LinkWithQuery href="/create-strategy">
-              <Button w={44} variant="outline" colorScheme="blue">
-                {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
-              </Button>
-            </LinkWithQuery>
-            {Boolean(activeStrategies.length) && (
-              <LinkWithQuery href="/strategies">
+            <Suspense>
+              <LinkWithQuery href="/create-strategy">
                 <Button w={44} variant="outline" colorScheme="blue">
-                  Review my strategies
+                  {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
                 </Button>
               </LinkWithQuery>
+            </Suspense>
+            {Boolean(activeStrategies.length) && (
+              <Suspense>
+                <LinkWithQuery href="/strategies">
+                  <Button w={44} variant="outline" colorScheme="blue">
+                    Review my strategies
+                  </Button>
+                </LinkWithQuery>
+              </Suspense>
             )}
           </Stack>
         </Stack>
@@ -244,11 +250,13 @@ function OnboardingPanel() {
         <Heading size="md">Ready to set up a CALC strategy?</Heading>
         <Text fontSize="sm">Set up smart recurring swaps such as DCA or Weighted Scale in just 30 seconds.</Text>
       </Stack>
-      <LinkWithQuery passHref href="/create-strategy">
-        <Button w={44} variant="outline" size="sm">
-          Get started
-        </Button>
-      </LinkWithQuery>
+      <Suspense>
+        <LinkWithQuery passHref href="/create-strategy">
+          <Button w={44} variant="outline" size="sm">
+            Get started
+          </Button>
+        </LinkWithQuery>
+      </Suspense>
     </VStack>
   );
 }
@@ -280,11 +288,13 @@ export function LearnAboutCalcPanel() {
             Get to know more about our extensive suite of DeFi products.
           </Heading>
           <Stack direction={{ base: 'column', sm: 'row' }}>
-            <LinkWithQuery href="/learn-about-calc">
-              <Button w={44} variant="outline" color="green.400">
-                Learn how CALC works
-              </Button>
-            </LinkWithQuery>
+            <Suspense>
+              <LinkWithQuery href="/learn-about-calc">
+                <Button w={44} variant="outline" color="green.400">
+                  Learn how CALC works
+                </Button>
+              </LinkWithQuery>
+            </Suspense>
           </Stack>
         </Stack>{' '}
       </Flex>

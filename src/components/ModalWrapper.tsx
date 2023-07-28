@@ -4,7 +4,7 @@ import usePageLoad from '@hooks/usePageLoad';
 import React, { Suspense } from 'react';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
-const NewStrategyModal = lazy(() => import('@components/NewStrategyModal'));
+const NewStrategyModal = React.lazy(() => import('@components/NewStrategyModal'));
 
 export function ModalWrapper({
   reset,

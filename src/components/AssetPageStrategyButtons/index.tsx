@@ -24,14 +24,15 @@ import {
   useRadioGroup,
 } from '@chakra-ui/react';
 import { ExternalLinkIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
-import LinkWithQuery from '../LinkWithQuery';
+
+const LinkWithQuery = React.lazy(() => import('../LinkWithQuery'));
 
 const buttonStyles = {
   cursor: 'pointer',
@@ -252,11 +253,13 @@ export function BuyButtons({ pathname }: RouterType) {
           );
         }
         return (
-          <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
-            <Button {...buttonStyles} data-testid={el}>
-              {buttonLabels.buttonLabelsIn.buttonText[index]}
-            </Button>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
+              <Button {...buttonStyles} data-testid={el}>
+                {buttonLabels.buttonLabelsIn.buttonText[index]}
+              </Button>
+            </LinkWithQuery>
+          </Suspense>
         );
       })}
     </ButtonGroup>
@@ -274,11 +277,13 @@ export function SellButtons({ pathname }: RouterType) {
           );
         }
         return (
-          <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
-            <Button {...buttonStyles} data-testid={el}>
-              {buttonLabels.buttonLabelsOut.buttonText[index]}
-            </Button>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
+              <Button {...buttonStyles} data-testid={el}>
+                {buttonLabels.buttonLabelsOut.buttonText[index]}
+              </Button>
+            </LinkWithQuery>
+          </Suspense>
         );
       })}
     </ButtonGroup>

@@ -9,7 +9,7 @@ import {
   BreadcrumbLink,
   useDisclosure,
 } from '@chakra-ui/react';
-import { ReactElement, useEffect, lazy, Suspense } from 'react';
+import React, { ReactElement, useEffect, Suspense } from 'react';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
@@ -20,8 +20,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
-// import { ModalWrapper } from '@components/ModalWrapper';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
@@ -30,6 +28,8 @@ import { SidebarControls } from './SidebarControls';
 const ModalWrapper = React.lazy(() =>
   import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
 );
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 export const HEADER_HEIGHT = '64px';
 
@@ -52,13 +52,15 @@ function AppHeader() {
   const { chain } = useChain();
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
-      <LinkWithQuery href="/">
-        {chain === Chains.Osmosis ? (
-          <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
-        ) : (
-          <Image cursor="pointer" src="/images/logo.svg" w={105} />
-        )}
-      </LinkWithQuery>
+      <Suspense>
+        <LinkWithQuery href="/">
+          {chain === Chains.Osmosis ? (
+            <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
+          ) : (
+            <Image cursor="pointer" src="/images/logo.svg" w={105} />
+          )}
+        </LinkWithQuery>
+      </Suspense>
       <Spacer />
       <SidebarControls />
     </Flex>
@@ -102,9 +104,11 @@ function FlowBreadcrumbs() {
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
           <BreadcrumbItem key={`breadcrum-item-${String(index)}`}>
-            <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
-              <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
-            </LinkWithQuery>
+            <Suspense>
+              <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
+                <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
+              </LinkWithQuery>
+            </Suspense>
           </BreadcrumbItem>
         ) : null;
       })}

@@ -51,12 +51,14 @@ import { TransactionType } from '@components/TransactionType';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isNil } from 'lodash';
 import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
+import React, { Suspense } from 'react';
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
   return (
@@ -160,16 +162,18 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <HStack align="center" pb={4}>
             <Heading size="md">Strategy details</Heading>
             {showEditButton && (
-              <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id)}>
-                <Button
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="brand"
-                  leftIcon={<CalcIcon as={EditIcon} stroke="brand.200" width={4} height={4} />}
-                >
-                  Edit
-                </Button>
-              </LinkWithQuery>
+              <Suspense>
+                <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id)}>
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    colorScheme="brand"
+                    leftIcon={<CalcIcon as={EditIcon} stroke="brand.200" width={4} height={4} />}
+                  >
+                    Edit
+                  </Button>
+                </LinkWithQuery>
+              </Suspense>
             )}
           </HStack>
           <Box px={8} py={6} layerStyle="panel">
@@ -285,16 +289,18 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
                 <Flex justify="end">
-                  <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      colorScheme="brand"
-                      leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                    >
-                      Add more funds
-                    </Button>
-                  </LinkWithQuery>
+                  <Suspense>
+                    <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        colorScheme="brand"
+                        leftIcon={<CalcIcon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                      >
+                        Add more funds
+                      </Button>
+                    </LinkWithQuery>
+                  </Suspense>
                 </Flex>
               </GridItem>
               {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain} />}

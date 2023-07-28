@@ -5,10 +5,12 @@ import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategy
 import usePageLoad from '@hooks/usePageLoad';
 import useStrategy from '@hooks/useStrategy';
 import { useRouter } from 'next/router';
+import React, { Suspense } from 'react';
 import { getStrategyInitialDenom } from '@helpers/strategy';
 import { getDenomName } from '@utils/getDenomInfo';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { topUpSteps } from './index.page';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 function Success() {
   const { isPageLoading } = usePageLoad();
@@ -56,9 +58,11 @@ function Success() {
               <Text>and removed the emotions from your trades! 💪</Text>
             </Stack>
           </>
-          <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
-            <Button isLoading={isPageLoading}>View strategy details</Button>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
+              <Button isLoading={isPageLoading}>View strategy details</Button>
+            </LinkWithQuery>
+          </Suspense>
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>

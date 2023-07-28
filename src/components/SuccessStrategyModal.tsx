@@ -7,11 +7,11 @@ import React, { Suspense } from 'react';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
 import { Pages } from './Layout/Sidebar/Pages';
-import LinkWithQuery from './LinkWithQuery';
 
 const ModalWrapper = React.lazy(() =>
   import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
 );
+const LinkWithQuery = React.lazy(() => import('./LinkWithQuery'));
 
 function ThatsCalculatedThinkingText() {
   return (
@@ -48,13 +48,17 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
             </Stack>
           </>
           {strategyId ? (
-            <LinkWithQuery passHref href={generateStrategyDetailUrl(strategyId as string)}>
-              <Button isLoading={isPageLoading}>View strategy details</Button>
-            </LinkWithQuery>
+            <Suspense>
+              <LinkWithQuery passHref href={generateStrategyDetailUrl(strategyId as string)}>
+                <Button isLoading={isPageLoading}>View strategy details</Button>
+              </LinkWithQuery>
+            </Suspense>
           ) : (
-            <LinkWithQuery passHref href={Pages.Strategies}>
-              <Button isLoading={isPageLoading}>View strategies</Button>
-            </LinkWithQuery>
+            <Suspense>
+              <LinkWithQuery passHref href={Pages.Strategies}>
+                <Button isLoading={isPageLoading}>View strategies</Button>
+              </LinkWithQuery>
+            </Suspense>
           )}
         </Stack>
       </ModalWrapper>

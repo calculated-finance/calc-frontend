@@ -4,10 +4,12 @@ import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
+import React, { Suspense } from 'react';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { customiseSteps } from './customiseSteps';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 function Success() {
   const { isPageLoading } = usePageLoad();
@@ -25,9 +27,11 @@ function Success() {
           <Box as={Lottie} animationData={Configure} mt={-10} mb={-12} />
           <Text textAlign="center">Strategy updated</Text>
           <Divider />
-          <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
-            <Button isLoading={isPageLoading}>View strategy details</Button>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery passHref href={generateStrategyDetailUrl(query.strategyId as string)}>
+              <Button isLoading={isPageLoading}>View strategy details</Button>
+            </LinkWithQuery>
+          </Suspense>
         </Stack>
       </NewStrategyModalBody>
     </NewStrategyModal>

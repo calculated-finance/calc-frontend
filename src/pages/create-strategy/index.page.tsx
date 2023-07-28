@@ -1,7 +1,7 @@
 import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
-import { ReactElement } from 'react';
+import React, { ReactElement, Suspense } from 'react';
 import { FiDivide } from 'react-icons/fi';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
@@ -10,9 +10,10 @@ import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
-import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyUrls from './StrategyUrls';
 import 'isomorphic-fetch';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 type StrategyCardProps = {
   name: string;
@@ -59,20 +60,24 @@ function StrategyCard({ name, description, advanced, icon, href, learnMoreHref, 
       </Flex>
       <Flex justifyContent="center" direction="column" alignContent="center">
         {enabled ? (
-          <LinkWithQuery href={{ pathname: href ?? '', query }}>
-            <Button mb={2}>Get started</Button>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery href={{ pathname: href ?? '', query }}>
+              <Button mb={2}>Get started</Button>
+            </LinkWithQuery>
+          </Suspense>
         ) : (
           <Button mb={2} cursor="unset" color="navy" colorScheme="grey">
             Coming soon
           </Button>
         )}
 
-        <LinkWithQuery href={learnMoreHref} passHref>
-          <Button as="a" target="_blank" colorScheme="blue" variant="ghost">
-            Learn more
-          </Button>
-        </LinkWithQuery>
+        <Suspense>
+          <LinkWithQuery href={learnMoreHref} passHref>
+            <Button as="a" target="_blank" colorScheme="blue" variant="ghost">
+              Learn more
+            </Button>
+          </LinkWithQuery>
+        </Suspense>
       </Flex>
     </Stack>
   );
@@ -110,11 +115,13 @@ function FearGreedStrategyRecommendation({ isAccumulation }: { isAccumulation?: 
       ) : index ? (
         <>
           According to the{' '}
-          <LinkWithQuery passHref href="https://alternative.me/crypto/fear-and-greed-index/">
-            <Text as="a" textDecoration="underline" target="_blank">
-              Fear &amp; Greed index score
-            </Text>
-          </LinkWithQuery>
+          <Suspense>
+            <LinkWithQuery passHref href="https://alternative.me/crypto/fear-and-greed-index/">
+              <Text as="a" textDecoration="underline" target="_blank">
+                Fear &amp; Greed index score
+              </Text>
+            </LinkWithQuery>
+          </Suspense>
           : {index} ({classification}), it may be a good time to use {setStrategyRecommendation} strategies
         </>
       ) : null}

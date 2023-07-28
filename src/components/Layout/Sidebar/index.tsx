@@ -1,4 +1,4 @@
-import { ReactNode, SVGProps } from 'react';
+import React, { ReactNode, SVGProps, Suspense } from 'react';
 import {
   Box,
   CloseButton,
@@ -36,8 +36,9 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAdmin } from '@hooks/useAdmin';
 import { featureFlags } from 'src/constants';
-import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
+
+const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 interface LinkItem {
   name: string;
@@ -92,39 +93,41 @@ interface NavItemProps extends FlexProps {
 }
 function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   return (
-    <LinkWithQuery href={href}>
-      <Flex
-        align="center"
-        p="4"
-        pl={8}
-        borderLeftWidth={2}
-        borderColor={isActive ? 'brand.200' : 'transparent'}
-        role="group"
-        cursor="pointer"
-        color={isActive ? 'brand.200' : 'blue.200'}
-        _hover={{
-          bg: 'navy',
-          boxShadow: 'inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)',
+    <Suspense>
+      <LinkWithQuery href={href}>
+        <Flex
+          align="center"
+          p="4"
+          pl={8}
+          borderLeftWidth={2}
+          borderColor={isActive ? 'brand.200' : 'transparent'}
+          role="group"
+          cursor="pointer"
+          color={isActive ? 'brand.200' : 'blue.200'}
+          _hover={{
+            bg: 'navy',
+            boxShadow: 'inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)',
 
-          color: isActive ? 'brand.200' : 'white',
-        }}
-        {...rest}
-      >
-        {icon && (
-          <Icon
-            mr="5"
-            width="16px"
-            height="16px"
-            stroke={isActive ? 'brand.200' : 'blue.200'}
-            _groupHover={{
-              stroke: isActive ? 'brand.200' : 'white',
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
-    </LinkWithQuery>
+            color: isActive ? 'brand.200' : 'white',
+          }}
+          {...rest}
+        >
+          {icon && (
+            <Icon
+              mr="5"
+              width="16px"
+              height="16px"
+              stroke={isActive ? 'brand.200' : 'blue.200'}
+              _groupHover={{
+                stroke: isActive ? 'brand.200' : 'white',
+              }}
+              as={icon}
+            />
+          )}
+          {children}
+        </Flex>
+      </LinkWithQuery>
+    </Suspense>
   );
 }
 
@@ -153,13 +156,15 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       {...rest}
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
-        <LinkWithQuery href="/">
-          {chain === Chains.Osmosis ? (
-            <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
-          ) : (
-            <Image cursor="pointer" src="/images/logo.svg" w={105} />
-          )}
-        </LinkWithQuery>
+        <Suspense>
+          <LinkWithQuery href="/">
+            {chain === Chains.Osmosis ? (
+              <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
+            ) : (
+              <Image cursor="pointer" src="/images/logo.svg" w={105} />
+            )}
+          </LinkWithQuery>
+        </Suspense>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -222,30 +227,32 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         {getLinkItems(isAdmin)
           .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
-            <LinkWithQuery href={link.href} key={link.name}>
-              <IconButton
-                aria-label={link.name}
-                variant="link"
-                width={12}
-                height={12}
-                p={0}
-                borderBottomWidth={2}
-                borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
-                borderRadius="none"
-                _hover={{
-                  bg: 'darkGrey',
-                  stroke: link.href === router.asPath ? 'brand.200' : 'white',
-                }}
-                icon={
-                  <Icon
-                    as={link.icon}
-                    cursor="pointer"
-                    color={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
-                    stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
-                  />
-                }
-              />
-            </LinkWithQuery>
+            <Suspense>
+              <LinkWithQuery href={link.href} key={link.name}>
+                <IconButton
+                  aria-label={link.name}
+                  variant="link"
+                  width={12}
+                  height={12}
+                  p={0}
+                  borderBottomWidth={2}
+                  borderColor={link.href === router.asPath ? 'brand.200' : 'transparent'}
+                  borderRadius="none"
+                  _hover={{
+                    bg: 'darkGrey',
+                    stroke: link.href === router.asPath ? 'brand.200' : 'white',
+                  }}
+                  icon={
+                    <Icon
+                      as={link.icon}
+                      cursor="pointer"
+                      color={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                      stroke={link.href === router.asPath ? 'brand.200' : '#D5F8F9'}
+                    />
+                  }
+                />
+              </LinkWithQuery>
+            </Suspense>
           ))}
       </Flex>
     </Flex>
