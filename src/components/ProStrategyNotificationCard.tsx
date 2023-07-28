@@ -38,7 +38,7 @@ export default function ProStrategyNotificationCard({
           </Text>
           <Link width="full" href={link} isExternal>
             <Button width="full" variant="outline" color="brand.200">
-              Notify Me
+              Get Whitelisted
             </Button>
           </Link>
         </Stack>
