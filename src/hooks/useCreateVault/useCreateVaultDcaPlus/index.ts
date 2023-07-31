@@ -8,6 +8,7 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { MINIMUM_SWAP_AMOUNT } from 'src/constants';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
@@ -50,6 +51,13 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     if (!address) {
       throw new Error('No sender address');
+    }
+
+    const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
+    const swapAmountValue = swapAmount * price;
+
+    if (!(swapAmountValue >= MINIMUM_SWAP_AMOUNT)) {
+      throw new Error(`Minimum swap amount must be greater than $${MINIMUM_SWAP_AMOUNT}.00`);
     }
 
     const createVaultContext: BuildCreateVaultContext = {

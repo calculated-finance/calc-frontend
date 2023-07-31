@@ -2,6 +2,7 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
+import { MINIMUM_SWAP_AMOUNT } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
@@ -48,6 +49,8 @@ export default function BaseSwapAmount({
         </Flex>{' '}
       </FormHelperText>
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+      <FormHelperText>Swap amount must be greater than ${MINIMUM_SWAP_AMOUNT}.00.</FormHelperText>
+
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

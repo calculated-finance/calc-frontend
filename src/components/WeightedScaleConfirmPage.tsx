@@ -82,7 +82,7 @@ export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   const initialDenom = getDenomInfo(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale();
+  const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(initialDenom);
 
   const { transactionType } = useStrategyInfo();
 

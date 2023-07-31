@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useWallet } from '@hooks/useWallet';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -124,7 +124,7 @@ describe('useCreateVaultWeightedScale', () => {
   it('should throw an error if client is not defined', () => {
     (useCalcSigningClient as jest.Mock).mockReturnValueOnce(undefined);
 
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -140,7 +140,7 @@ describe('useCreateVaultWeightedScale', () => {
   });
 
   it('should throw an error if state is not defined', () => {
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -155,7 +155,7 @@ describe('useCreateVaultWeightedScale', () => {
   });
 
   it('should throw an error if reinvest strategy is set but strategy doesnt exist', () => {
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -173,7 +173,7 @@ describe('useCreateVaultWeightedScale', () => {
     (useFiatPrice as jest.Mock).mockReturnValue({
       price: undefined,
     });
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -189,7 +189,7 @@ describe('useCreateVaultWeightedScale', () => {
 
   it('should throw an error if addresss doesnt exist', () => {
     (useWallet as jest.Mock).mockReturnValue({});
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -210,7 +210,7 @@ describe('useCreateVaultWeightedScale', () => {
       createStrategy: mockSuccess,
     });
 
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),
@@ -264,7 +264,7 @@ describe('useCreateVaultWeightedScale', () => {
       createStrategy: mockSuccess,
     });
 
-    const { result } = renderHook(() => useCreateVaultWeightedScale(), {
+    const { result } = renderHook(() => useCreateVaultWeightedScale(initialDenom), {
       wrapper: ({ children }: ChildrenProp) => (
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       ),

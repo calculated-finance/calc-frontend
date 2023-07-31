@@ -1,7 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { useChain } from '@hooks/useChain';
 import { isNil } from 'lodash';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -9,6 +8,7 @@ import { DcaInFormDataAll } from '@models/DcaInFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
+import { MINIMUM_SWAP_AMOUNT } from 'src/constants';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
@@ -49,6 +49,12 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
 
     if (!address) {
       throw new Error('No sender address');
+    }
+
+    const swapAmountValue = state.swapAmount * price;
+
+    if (!(swapAmountValue >= MINIMUM_SWAP_AMOUNT)) {
+      throw new Error(`Minimum swap amount must be greater than $${MINIMUM_SWAP_AMOUNT}.00`);
     }
 
     const createVaultContext: BuildCreateVaultContext = {
