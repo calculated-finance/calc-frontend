@@ -48,13 +48,13 @@ function AppHeader() {
   const { chain } = useChain();
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
-        <LinkWithQuery href="/">
-          {chain === Chains.Osmosis ? (
-            <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
-          ) : (
-            <Image cursor="pointer" src="/images/logo.svg" w={105} />
-          )}
-        </LinkWithQuery>
+      <LinkWithQuery href="/">
+        {chain === Chains.Osmosis ? (
+          <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
+        ) : (
+          <Image cursor="pointer" src="/images/logo.svg" w={105} />
+        )}
+      </LinkWithQuery>
       <Spacer />
       <SidebarControls />
     </Flex>
@@ -98,9 +98,9 @@ function FlowBreadcrumbs() {
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
           <BreadcrumbItem key={`breadcrum-item-${String(index)}`}>
-              <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
-                <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
-              </LinkWithQuery>
+            <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
+              <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
+            </LinkWithQuery>
           </BreadcrumbItem>
         ) : null;
       })}

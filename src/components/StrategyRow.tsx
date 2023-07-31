@@ -16,14 +16,13 @@ import {
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import React, { Suspense } from 'react';
+import React from 'react';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
-
-const LinkWithQuery = React.lazy(() => import('./LinkWithQuery'));
+import LinkWithQuery from './LinkWithQuery';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,90 +77,84 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   return (
-    <Suspense>
-      <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
-        <Grid
-          templateRows="repeat(1, 1fr)"
-          templateColumns="repeat(15, 1fr)"
-          rowGap={6}
-          columnGap={2}
-          bg="gray.900"
-          py={4}
-          px={8}
-          layerStyle="panel"
-          borderWidth={isDcaPlus(strategy) ? 1 : 0}
-          borderColor="brand.200"
-          _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
+    <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
+      <Grid
+        templateRows="repeat(1, 1fr)"
+        templateColumns="repeat(15, 1fr)"
+        rowGap={6}
+        columnGap={2}
+        bg="gray.900"
+        py={4}
+        px={8}
+        layerStyle="panel"
+        borderWidth={isDcaPlus(strategy) ? 1 : 0}
+        borderColor="brand.200"
+        _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
+      >
+        <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
+          <Heading size="md">{getStrategyType(strategy)}</Heading>
+          <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
+        </GridItem>
+        <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
+          <Text fontSize="sm" pb={1}>
+            Assets:
+          </Text>
+          <HStack spacing={1}>
+            <DenomIcon showTooltip denomInfo={initialDenom} />
+            <Icon as={ArrowRightIcon} stroke="grey" />
+            <DenomIcon showTooltip denomInfo={resultingDenom} />
+          </HStack>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 8, sm: 3, xl: 2 }}>
+          <Text fontSize="sm">Status:</Text>
+          <StrategyStatusBadge strategy={strategy} />
+        </GridItem>
+
+        <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
+          <Text fontSize="sm">Interval:</Text>
+          <Text textStyle="body-xs">
+            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getConvertedSwapAmount(strategy)}{' '}
+            {initialDenom.name}
+          </Text>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
+          <Text fontSize="sm">Balance:</Text>
+          <Text textStyle="body-xs">
+            {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
+          </Text>
+        </GridItem>
+        <GridItem
+          visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}
+          colSpan={{ base: 15, sm: 7, xl: 1 }}
+          rowStart={{ base: 0, sm: 1, xl: 'auto' }}
         >
-          <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
-            <Heading size="md">{getStrategyType(strategy)}</Heading>
-            <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
-          </GridItem>
-          <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
-            <Text fontSize="sm" pb={1}>
-              Assets:
-            </Text>
-            <HStack spacing={1}>
-              <DenomIcon showTooltip denomInfo={initialDenom} />
-              <Icon as={ArrowRightIcon} stroke="grey" />
-              <DenomIcon showTooltip denomInfo={resultingDenom} />
-            </HStack>
-          </GridItem>
-
-          <GridItem colSpan={{ base: 8, sm: 3, xl: 2 }}>
-            <Text fontSize="sm">Status:</Text>
-            <StrategyStatusBadge strategy={strategy} />
-          </GridItem>
-
-          <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
-            <Text fontSize="sm">Interval:</Text>
-            <Text textStyle="body-xs">
-              <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getConvertedSwapAmount(strategy)}{' '}
-              {initialDenom.name}
-            </Text>
-          </GridItem>
-
-          <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
-            <Text fontSize="sm">Balance:</Text>
-            <Text textStyle="body-xs">
-              {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
-            </Text>
-          </GridItem>
-          <GridItem
-            visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}
-            colSpan={{ base: 15, sm: 7, xl: 1 }}
-            rowStart={{ base: 0, sm: 1, xl: 'auto' }}
-          >
-            <Flex justifyContent={{ base: 'left', sm: 'end' }} alignItems="center" h="full">
-              <Stack direction={{ base: 'column', sm: 'row' }} w="full">
-                <Suspense>
-                <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
-                  <Button
-                    size="xs"
-                    variant={{ base: 'outline', sm: 'ghost' }}
-                    leftIcon={<Icon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
-                    width={{ base: 'full', xl: 'initial' }}
-                  >
-                    Top up
-                  </Button>
-                </LinkWithQuery>
-                </Suspense>
-                <CancelButton strategy={strategy} />
-              </Stack>
-            </Flex>
-          </GridItem>
-          <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
-            <Flex justifyContent="end" alignItems="center" h="full">
-              <Suspense>
-                <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
-                  <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
-                </LinkWithQuery>
-              </Suspense>
-            </Flex>
-          </GridItem>
-        </Grid>
-      </LinkWithQuery>
-    </Suspense>
+          <Flex justifyContent={{ base: 'left', sm: 'end' }} alignItems="center" h="full">
+            <Stack direction={{ base: 'column', sm: 'row' }} w="full">
+              <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
+                <Button
+                  size="xs"
+                  variant={{ base: 'outline', sm: 'ghost' }}
+                  leftIcon={<Icon as={PlusSquareIcon} stroke="brand.200" width={4} height={4} />}
+                  width={{ base: 'full', xl: 'initial' }}
+                >
+                  Top up
+                </Button>
+              </LinkWithQuery>
+              <CancelButton strategy={strategy} />
+            </Stack>
+          </Flex>
+        </GridItem>
+        <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
+          <Flex justifyContent="end" alignItems="center" h="full">
+            <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
+              <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
+            </LinkWithQuery>
+          </Flex>
+        </GridItem>
+      </Grid>
+    </LinkWithQuery>
   );
 }
 

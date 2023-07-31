@@ -27,14 +27,12 @@ import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrat
 import { isStrategyCancelled, getStrategyResultingDenom } from '@helpers/strategy';
 import useStrategy from '@hooks/useStrategy';
 import useValidator from '@hooks/useValidator';
-import React, { Suspense } from 'react';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { Chains } from '@hooks/useChain/Chains';
 import { truncate } from '@helpers/truncate';
-
-const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
@@ -42,13 +40,11 @@ export function ConfigureButton({ strategy }: { strategy: Strategy }) {
   return (
     <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain, address) ? 'hidden' : 'visible'}>
       <Flex justify="end">
-        <Suspense>
-          <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id)}>
-            <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
-              Configure
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
+        <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id)}>
+          <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
+            Configure
+          </Button>
+        </LinkWithQuery>
       </Flex>
     </GridItem>
   );

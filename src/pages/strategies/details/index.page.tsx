@@ -33,15 +33,13 @@ import { getSidebarLayout } from '@components/Layout';
 import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import React, { Suspense } from 'react';
+import LinkWithQuery from '@components/LinkWithQuery';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
-
-const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
@@ -103,13 +101,11 @@ function Page() {
   return (
     <>
       <HStack spacing={6} pb={6}>
-        <Suspense>
-          <LinkWithQuery href="/strategies">
-            <IconButton aria-label="back" variant="outline">
-              <Icon as={FiArrowLeft} stroke="brand.200" />
-            </IconButton>
-          </LinkWithQuery>
-        </Suspense>
+        <LinkWithQuery href="/strategies">
+          <IconButton aria-label="back" variant="outline">
+            <Icon as={FiArrowLeft} stroke="brand.200" />
+          </IconButton>
+        </LinkWithQuery>
 
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">{getStrategyName(strategy)}</Heading>

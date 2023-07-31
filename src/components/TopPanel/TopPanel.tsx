@@ -5,15 +5,13 @@ import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/in
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
-import React, { Suspense } from 'react';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
+import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { featureFlags } from 'src/constants';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
-
-const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
 
 function Onboarding() {
   return (
@@ -27,13 +25,11 @@ function Onboarding() {
           accumulation strategies.
         </Text>
       </Stack>
-      <Suspense>
-        <LinkWithQuery passHref href="/create-strategy">
-          <Button maxWidth={402} size="sm">
-            Get started
-          </Button>
-        </LinkWithQuery>
-      </Suspense>
+      <LinkWithQuery passHref href="/create-strategy">
+        <Button maxWidth={402} size="sm">
+          Get started
+        </Button>
+      </LinkWithQuery>
     </>
   );
 }
@@ -55,20 +51,16 @@ function Returning() {
         </Text>
       </Stack>
       <Stack direction={{ base: 'column', sm: 'row' }}>
-        <Suspense>
-          <LinkWithQuery passHref href="/create-strategy">
-            <Button maxWidth={402} size="sm">
-              Create new strategy
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
-        <Suspense>
-          <LinkWithQuery passHref href="/strategies">
-            <Button maxWidth={402} size="sm" variant="outline">
-              Review past strategies
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
+        <LinkWithQuery passHref href="/create-strategy">
+          <Button maxWidth={402} size="sm">
+            Create new strategy
+          </Button>
+        </LinkWithQuery>
+        <LinkWithQuery passHref href="/strategies">
+          <Button maxWidth={402} size="sm" variant="outline">
+            Review past strategies
+          </Button>
+        </LinkWithQuery>
       </Stack>
     </>
   );
@@ -93,20 +85,18 @@ function LearnNewUsers() {
         </Text>
       </Stack>
       <Stack direction={{ base: 'column', sm: 'row' }}>
-        <Suspense>
-          <LinkWithQuery passHref href="/learn-about-calc">
-            <Button
-              px={12}
-              maxWidth={402}
-              size="sm"
-              bgColor="blue.200"
-              _hover={{ bgColor: 'blue.300' }}
-              onClick={() => track('Learning hub button clicked')}
-            >
-              Learn how CALC works
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
+        <LinkWithQuery passHref href="/learn-about-calc">
+          <Button
+            px={12}
+            maxWidth={402}
+            size="sm"
+            bgColor="blue.200"
+            _hover={{ bgColor: 'blue.300' }}
+            onClick={() => track('Learning hub button clicked')}
+          >
+            Learn how CALC works
+          </Button>
+        </LinkWithQuery>
       </Stack>
     </>
   );
@@ -140,20 +130,16 @@ function ActiveWithOne() {
         <Text fontSize="sm">You have the ability to edit and fine tune your strategy at any time.</Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <Suspense>
-          <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>
-            <Button w="full" size="sm" colorScheme="blue">
-              Top up my strategy
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
-        <Suspense>
-          <LinkWithQuery passHref href={generateStrategyDetailUrl(activeStrategy?.id)}>
-            <Button w="full" size="sm" colorScheme="blue" variant="outline">
-              Review performance
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
+        <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>
+          <Button w="full" size="sm" colorScheme="blue">
+            Top up my strategy
+          </Button>
+        </LinkWithQuery>
+        <LinkWithQuery passHref href={generateStrategyDetailUrl(activeStrategy?.id)}>
+          <Button w="full" size="sm" colorScheme="blue" variant="outline">
+            Review performance
+          </Button>
+        </LinkWithQuery>
       </Stack>
     </>
   );
@@ -176,14 +162,11 @@ function ActiveWithMany() {
         </Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <Suspense>
-          <LinkWithQuery passHref href="/strategies">
-            <Button w="full" size="sm" colorScheme="green">
-              See my strategies
-            </Button>
-          </LinkWithQuery>
-        </Suspense>
-
+        <LinkWithQuery passHref href="/strategies">
+          <Button w="full" size="sm" colorScheme="green">
+            See my strategies
+          </Button>
+        </LinkWithQuery>
         <Button
           as="a"
           w="full"

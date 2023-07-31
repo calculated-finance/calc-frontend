@@ -17,13 +17,11 @@ import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
 import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
-import React, { Suspense } from 'react';
 import { Strategy } from '@models/Strategy';
 import { Pages } from '@components/Layout/Sidebar/Pages';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { DenomInfo } from '@utils/DenomInfo';
-
-const LinkWithQuery = React.lazy(() => import('@components/LinkWithQuery'));
+import LinkWithQuery from '@components/LinkWithQuery';
 
 function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
   const { displayAmount, isLoading } = useBalance(initialDenom);
@@ -84,11 +82,9 @@ export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
                 <Text>
                   Please note that this will increase your strategy duration by more than 6 months. Perhaps it&apos;s
                   best to{' '}
-                  <Suspense>
-                    <LinkWithQuery href={Pages.CreateStrategy} passHref>
-                      <ChakraLink color="brand.200">start a new strategy</ChakraLink>
-                    </LinkWithQuery>
-                  </Suspense>{' '}
+                  <LinkWithQuery href={Pages.CreateStrategy} passHref>
+                    <ChakraLink color="brand.200">start a new strategy</ChakraLink>
+                  </LinkWithQuery>{' '}
                   with a higher daily base allocation.
                 </Text>
               </HStack>
