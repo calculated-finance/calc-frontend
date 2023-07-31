@@ -15,14 +15,10 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
-import React, { Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form();
@@ -95,11 +91,9 @@ function PageWrapper() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

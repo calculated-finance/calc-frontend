@@ -9,15 +9,11 @@ import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormDa
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
-import React, { Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();
@@ -61,11 +57,9 @@ function PageWrapper() {
         formName: FormNames.WeightedScaleOut,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

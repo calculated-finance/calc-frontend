@@ -21,13 +21,9 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import React, { Suspense } from 'react';
+import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm();
@@ -114,11 +110,9 @@ function PageWrapper() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

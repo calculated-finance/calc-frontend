@@ -3,14 +3,10 @@ import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
-import React, { Suspense } from 'react';
 import { TransactionType } from '@components/TransactionType';
+import { ModalWrapper } from '@components/ModalWrapper';
 import { WeightedScaleCustomisePage } from '@components/Forms/CustomiseForm/WeightedScaleCustomisePage';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { resetForm } = useFormStore();
@@ -23,11 +19,9 @@ function Page() {
         formName: FormNames.WeightedScaleIn,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
-          <WeightedScaleCustomisePage steps={weightedScaleInSteps} formSchema={WeightedScaleCustomiseFormSchema} />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={weightedScaleInSteps} reset={resetForm(FormNames.WeightedScaleIn)}>
+        <WeightedScaleCustomisePage steps={weightedScaleInSteps} formSchema={WeightedScaleCustomiseFormSchema} />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

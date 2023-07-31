@@ -17,21 +17,17 @@ import useBalances from '@hooks/useBalances';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
+import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import getDenomInfo from '@utils/getDenomInfo';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import React, { Suspense } from 'react';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { connected } = useWallet();
@@ -103,11 +99,9 @@ function PageWrapper() {
         formName: FormNames.DcaPlusOut,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Divider, Stack } from '@chakra-ui/react';
+import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
@@ -18,15 +18,11 @@ import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
-import React, { Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { state, actions } = useConfirmForm();
@@ -102,11 +98,9 @@ function PageWrapper() {
         formName: FormNames.DcaIn,
       }}
     >
-      <Suspense fallback={<Box />}>
-        <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

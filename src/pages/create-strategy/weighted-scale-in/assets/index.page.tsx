@@ -13,19 +13,15 @@ import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
+import { ModalWrapper } from '@components/ModalWrapper';
 import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
-import React, { Suspense } from 'react';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -65,20 +61,18 @@ function DcaIn() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <Suspense>
-          <ModalWrapper reset={actions.resetAction} stepsConfig={weightedScaleInSteps}>
-            <AssetPageStrategyButtons />
-            <Form autoComplete="off">
-              <Stack direction="column" spacing={6}>
-                <DCAInInitialDenom />
-                <DCAInResultingDenom
-                  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-                />
-                {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-              </Stack>
-            </Form>
-          </ModalWrapper>
-        </Suspense>
+        <ModalWrapper reset={actions.resetAction} stepsConfig={weightedScaleInSteps}>
+          <AssetPageStrategyButtons />
+          <Form autoComplete="off">
+            <Stack direction="column" spacing={6}>
+              <DCAInInitialDenom />
+              <DCAInResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+            </Stack>
+          </Form>
+        </ModalWrapper>
       )}
     </Formik>
   );

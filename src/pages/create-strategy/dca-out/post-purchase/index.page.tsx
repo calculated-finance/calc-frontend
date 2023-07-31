@@ -60,13 +60,11 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <StrategyInfoProvider
-      strategyInfo={{
-        strategyType: StrategyTypes.DCAOut,
-        transactionType: TransactionType.Sell,
-        formName: FormNames.DcaOut,
-      }}
-    >
+    <StrategyInfoProvider strategyInfo={{
+      strategyType: StrategyTypes.DCAOut,
+      transactionType: TransactionType.Sell,
+      formName: FormNames.DcaOut,
+    }}>
       <Page />
     </StrategyInfoProvider>
   );

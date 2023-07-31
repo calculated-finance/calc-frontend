@@ -9,15 +9,11 @@ import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
-import React, { Suspense } from 'react';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
 
 function Page() {
   const { actions, state, context } = useDcaPlusInFormPostPurchase();
@@ -61,11 +57,9 @@ function PageWrapper() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-      <Suspense>
-        <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-          <Page />
-        </ModalWrapper>
-      </Suspense>
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

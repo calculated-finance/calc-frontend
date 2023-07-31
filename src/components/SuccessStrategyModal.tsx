@@ -3,15 +3,11 @@ import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategy
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
-import React, { Suspense } from 'react';
 import * as Configure from 'src/animations/configure.json';
 import Lottie from 'lottie-react';
 import { Pages } from './Layout/Sidebar/Pages';
-
-const ModalWrapper = React.lazy(() =>
-  import('@components/ModalWrapper').then((module) => ({ default: module.ModalWrapper })),
-);
-const LinkWithQuery = React.lazy(() => import('./LinkWithQuery'));
+import { ModalWrapper } from './ModalWrapper';
+import LinkWithQuery from './LinkWithQuery';
 
 function ThatsCalculatedThinkingText() {
   return (
@@ -34,34 +30,28 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
   const { query } = useRouter();
   const { strategyId, timeSaved } = query;
   return (
-    <Suspense fallback={<Box />}>
-      <ModalWrapper stepsConfig={stepConfig}>
-        <Stack spacing={6} alignItems="center">
-          <ThatsCalculatedThinkingText />
-          <Box as={Lottie} animationData={Configure} />
-          <>
-            <Divider />
-            <Stack spacing={2} alignItems="center">
-              <Text>You have saved yourself an average of</Text>
-              <Heading size="md">{timeSaved} minutes</Heading>
-              <Text>and removed the emotions from your trades! 💪</Text>
-            </Stack>
-          </>
-          {strategyId ? (
-            <Suspense>
-              <LinkWithQuery passHref href={generateStrategyDetailUrl(strategyId as string)}>
-                <Button isLoading={isPageLoading}>View strategy details</Button>
-              </LinkWithQuery>
-            </Suspense>
-          ) : (
-            <Suspense>
-              <LinkWithQuery passHref href={Pages.Strategies}>
-                <Button isLoading={isPageLoading}>View strategies</Button>
-              </LinkWithQuery>
-            </Suspense>
-          )}
-        </Stack>
-      </ModalWrapper>
-    </Suspense>
+    <ModalWrapper stepsConfig={stepConfig}>
+      <Stack spacing={6} alignItems="center">
+        <ThatsCalculatedThinkingText />
+        <Box as={Lottie} animationData={Configure} />
+        <>
+          <Divider />
+          <Stack spacing={2} alignItems="center">
+            <Text>You have saved yourself an average of</Text>
+            <Heading size="md">{timeSaved} minutes</Heading>
+            <Text>and removed the emotions from your trades! 💪</Text>
+          </Stack>
+        </>
+        {strategyId ? (
+          <LinkWithQuery passHref href={generateStrategyDetailUrl(strategyId as string)}>
+            <Button isLoading={isPageLoading}>View strategy details</Button>
+          </LinkWithQuery>
+        ) : (
+          <LinkWithQuery passHref href={Pages.Strategies}>
+            <Button isLoading={isPageLoading}>View strategies</Button>
+          </LinkWithQuery>
+        )}
+      </Stack>
+    </ModalWrapper>
   );
 }
