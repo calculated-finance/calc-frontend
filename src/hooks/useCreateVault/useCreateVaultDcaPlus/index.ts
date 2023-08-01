@@ -55,10 +55,9 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
     }
 
     const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
-    const swapAmountValue = swapAmount * price;
 
     if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(swapAmountValue);
+      checkSwapAmountValue(swapAmount, price);
     }
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),

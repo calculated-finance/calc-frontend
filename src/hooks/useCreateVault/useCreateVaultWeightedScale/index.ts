@@ -53,10 +53,9 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
     if (Boolean(state.reinvestStrategy) && !reinvestStrategyData) {
       throw new Error('Invalid reinvest strategy.');
     }
-    const swapAmountValue = state.swapAmount * price;
 
     if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(swapAmountValue);
+      checkSwapAmountValue(state.swapAmount, price);
     }
 
     const createVaultContext: BuildCreateVaultContext = {
