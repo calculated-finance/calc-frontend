@@ -2,7 +2,8 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
-import { MINIMUM_SWAP_AMOUNT } from 'src/constants';
+import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
+import { formatFiat } from '@helpers/format/formatFiat';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
@@ -49,7 +50,9 @@ export default function BaseSwapAmount({
         </Flex>{' '}
       </FormHelperText>
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
-      <FormHelperText>Swap amount must be greater than ${MINIMUM_SWAP_AMOUNT}.00.</FormHelperText>
+      {featureFlags.adjustedMinimumSwapAmountEnabled && (
+        <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      )}
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (

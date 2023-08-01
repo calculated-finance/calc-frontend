@@ -4,8 +4,9 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
-import { MINIMUM_SWAP_AMOUNT } from 'src/constants';
+import { featureFlags } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
@@ -54,8 +55,8 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
     }
     const swapAmountValue = state.swapAmount * price;
 
-    if (!(swapAmountValue >= MINIMUM_SWAP_AMOUNT)) {
-      throw new Error(`Minimum swap amount must be greater than $${MINIMUM_SWAP_AMOUNT}.00`);
+    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
+      checkSwapAmountValue(swapAmountValue);
     }
 
     const createVaultContext: BuildCreateVaultContext = {
