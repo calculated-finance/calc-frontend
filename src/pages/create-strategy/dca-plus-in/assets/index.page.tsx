@@ -69,11 +69,14 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={undefined} />
-              <ResultingDenom denoms={
-                values.initialDenom
-                  ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
-                  : []
-              } />
+              <ResultingDenom
+                strategyType={StrategyTypes.DCAPlusIn}
+
+                denoms={
+                  values.initialDenom
+                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
+                    : []
+                } />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

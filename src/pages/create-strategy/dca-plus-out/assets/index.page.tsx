@@ -80,6 +80,8 @@ function Page() {
               <InitialDenom denomsOut={denoms} />
 
               <ResultingDenom
+                strategyType={StrategyTypes.DCAPlusOut}
+
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
