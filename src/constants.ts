@@ -81,7 +81,7 @@ export const featureFlags =
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
-        adjustedMinimumSwapAmountEnabled: false,
+        adjustedMinimumSwapAmountEnabled: true,
       }
     : {
         extraTimeOptions: true,
