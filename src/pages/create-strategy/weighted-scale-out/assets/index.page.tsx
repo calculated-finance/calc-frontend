@@ -66,6 +66,7 @@ function Page() {
     resultingDenom: state.step1.resultingDenom,
   };
 
+
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -78,7 +79,7 @@ function Page() {
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={denoms} />
               <ResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>

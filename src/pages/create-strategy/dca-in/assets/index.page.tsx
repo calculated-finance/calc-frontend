@@ -66,7 +66,10 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={undefined} />
-              <ResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <ResultingDenom
+                strategyType={StrategyTypes.DCAIn}
+
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {/* <InitialAndResultingDenoms denomsOut={undefined}  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} /> */}
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>

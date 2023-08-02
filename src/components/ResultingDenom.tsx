@@ -7,8 +7,25 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
 import { TransactionType } from './TransactionType';
 import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
+import { StrategyTypes } from '@models/StrategyTypes';
 
-export function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
+// we can use this for now but can get this through the state of buttons selected - we can discuss.
+function getIsInStrategy(strategyType: string) {
+  if (strategyType === StrategyTypes.DCAIn) {
+    return true;
+  }
+  if (strategyType === StrategyTypes.DCAPlusIn) {
+    return true
+  }
+
+  if (strategyType === StrategyTypes.WeightedScaleIn) {
+    return true
+  }
+
+  return false;
+}
+
+export function ResultingDenom({ denoms, strategyType }: { denoms: DenomInfo[]; strategyType: string }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chain } = useChain();
 
@@ -16,15 +33,21 @@ export function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
     values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
 
-  const initialDenomInfo = getDenomInfo(initialDenom)
-  const isInitialDenomStable = isDenomStable(initialDenomInfo)
+  const isInStrategy = getIsInStrategy(strategyType)
+  console.log(isInStrategy)
 
   return (
+
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <FormLabel>{isInitialDenomStable ? 'What asset do you want to invest in?' : 'How do you want to hold your profits?'}</FormLabel>
+      <FormLabel hidden={!isInStrategy}>What asset do you want to invest in?</FormLabel>
+      <FormLabel hidden={isInStrategy}>How do you want to hold your profits?</FormLabel>
+
       <FormHelperText>
-        <Text textStyle="body-xs">{isInitialDenomStable ? 'CALC will purchase this asset for you' : 'You will have the choice to move these funds into another strategy at the end.'}</Text>
+        <Text textStyle="body-xs">{isInStrategy ? 'CALC will purchase this asset for you' : 'You will have the choice to move these funds into another strategy at the end.'}</Text>
       </FormHelperText>
+
+
+
       <DenomSelect
         denoms={denoms}
         placeholder="Choose asset"

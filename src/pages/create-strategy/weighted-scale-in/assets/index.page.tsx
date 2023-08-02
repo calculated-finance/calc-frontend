@@ -69,6 +69,7 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={undefined} />
               <ResultingDenom
+                strategyType={StrategyTypes.WeightedScaleIn}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
