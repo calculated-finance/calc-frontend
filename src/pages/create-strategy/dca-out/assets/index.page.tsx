@@ -30,6 +30,7 @@ import { InitialDenom } from '@components/InitialDenom';
 import { isBuyStrategy } from '@helpers/strategy';
 import { useRouter } from 'next/router';
 import { ResultingDenom } from '@components/ResultingDenom';
+import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -80,14 +81,16 @@ function Page() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               {/* <DCAOutInitialDenom denoms={denoms} /> */}
-              <InitialDenom denomsOut={denoms} />
+              {/* <InitialDenom denomsOut={denoms} /> */}
               {/* <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               /> */}
-              <ResultingDenom
+              {/* <ResultingDenom
                 strategyType={StrategyTypes.DCAOut}
 
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} /> */}
+              <InitialAndResultingDenoms strategyType={StrategyTypes.DCAOut}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} denomsOut={denoms} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
