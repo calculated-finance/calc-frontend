@@ -6,8 +6,9 @@ import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
 import { TransactionType } from './TransactionType';
+import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 
-export default function DCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
+export function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chain } = useChain();
 
@@ -15,13 +16,14 @@ export default function DCAInResultingDenom({ denoms }: { denoms: DenomInfo[] })
     values: { initialDenom },
   } = useFormikContext<DcaInFormDataStep1>();
 
-  
+  const initialDenomInfo = getDenomInfo(initialDenom)
+  const isInitialDenomStable = isDenomStable(initialDenomInfo)
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <FormLabel>What asset do you want to invest in?</FormLabel>
+      <FormLabel>{isInitialDenomStable ? 'What asset do you want to invest in?' : 'How do you want to hold your profits?'}</FormLabel>
       <FormHelperText>
-        <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
+        <Text textStyle="body-xs">{isInitialDenomStable ? 'CALC will purchase this asset for you' : 'You will have the choice to move these funds into another strategy at the end.'}</Text>
       </FormHelperText>
       <DenomSelect
         denoms={denoms}
@@ -33,25 +35,4 @@ export default function DCAInResultingDenom({ denoms }: { denoms: DenomInfo[] })
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );
-
-
-
-  // DCA OUT 
-
-  (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <FormLabel>How do you want to hold your profits?</FormLabel>
-      <FormHelperText>
-        <Text textStyle="body-xs">You will have the choice to move these funds into another strategy at the end.</Text>
-      </FormHelperText>
-      <DenomSelect
-        denoms={denoms}
-        placeholder="Choose asset"
-        value={field.value}
-        onChange={helpers.setValue}
-        showPromotion
-      />
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-    </FormControl>
- );
 }
