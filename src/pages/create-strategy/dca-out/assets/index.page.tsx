@@ -26,6 +26,7 @@ import Spinner from '@components/Spinner';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { InitialDenom } from '@components/InitialDenom';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -43,6 +44,8 @@ function Page() {
     await actions.updateAction(formData);
     await nextStep();
   };
+
+  console.log(state)
 
   if (!pairs) {
     return (
@@ -75,7 +78,8 @@ function Page() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <DCAOutInitialDenom denoms={denoms} />
+              {/* <DCAOutInitialDenom denoms={denoms} /> */}
+              <InitialDenom denomsOut={denoms} />
               <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />

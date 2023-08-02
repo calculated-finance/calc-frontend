@@ -21,6 +21,7 @@ import Submit from '@components/Submit';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { InitialDenom } from '@components/InitialDenom';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -63,7 +64,7 @@ function DcaIn() {
           <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <DCAInInitialDenom />
+              <InitialDenom denomsOut={undefined} />
               <DCAInResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
