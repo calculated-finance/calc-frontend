@@ -29,6 +29,7 @@ import { useWallet } from '@hooks/useWallet';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
+import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 
 function Page() {
   const { connected } = useWallet();
@@ -77,8 +78,12 @@ function Page() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialDenom denomsOut={denoms} />
+              {/* <InitialDenom denomsOut={denoms} />
               <ResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
+              /> */}
+
+              <InitialAndResultingDenoms denomsOut={denoms}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
