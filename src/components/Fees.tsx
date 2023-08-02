@@ -202,8 +202,8 @@ export default function Fees({
   excludeDepositFee?: boolean;
 }) {
   const { price } = useFiatPrice(initialDenom);
-  
-  const { transactionType} = useStrategyInfo();
+
+  const { transactionType } = useStrategyInfo();
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 

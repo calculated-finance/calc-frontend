@@ -26,6 +26,7 @@ export const SWAP_FEE = 0.005;
 export const SWAP_FEE_WS = 0.01;
 export const DELEGATION_FEE = 0.0;
 export const FIN_TAKER_FEE = 0.0015;
+export const MINIMUM_SWAP_VALUE_IN_USD = 0.5;
 
 export const OUT_OF_GAS_ERROR_MESSAGE = 'The transaction ran out of gas during execution. Please provide more gas.';
 export const PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE =
@@ -80,6 +81,7 @@ export const featureFlags =
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
+        adjustedMinimumSwapAmountEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -96,6 +98,7 @@ export const featureFlags =
         unconnectedFirstStepEnabled: true,
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
+        adjustedMinimumSwapAmountEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

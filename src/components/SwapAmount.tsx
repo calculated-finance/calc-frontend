@@ -5,19 +5,17 @@ import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { formatFiat } from '@helpers/format/formatFiat';
+import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
-export default function SwapAmount({
-  step1State,
-}: {
-  step1State: DcaInFormDataStep1;
-}) {
+export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-  const { transactionType} = useStrategyInfo();
+  const { transactionType } = useStrategyInfo();
 
   const isSell = transactionType === TransactionType.Sell;
 
@@ -57,6 +55,9 @@ export default function SwapAmount({
         </Flex>{' '}
       </FormHelperText>
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+      {featureFlags.adjustedMinimumSwapAmountEnabled && (
+        <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      )}
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

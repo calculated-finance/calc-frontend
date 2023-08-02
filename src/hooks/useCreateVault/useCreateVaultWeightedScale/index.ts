@@ -4,16 +4,20 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
+import { featureFlags } from 'src/constants';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
+import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { useTrackCreateVault } from '../useTrackCreateVault';
 import { handleError } from '../handleError';
 
-export const useCreateVaultWeightedScale = () => {
+export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
-
+  const { price } = useFiatPrice(initialDenom);
   const client = useCalcSigningClient();
   const track = useTrackCreateVault();
 
@@ -42,8 +46,16 @@ export const useCreateVaultWeightedScale = () => {
       throw new Error('No sender address');
     }
 
+    if (!price) {
+      throw Error('Invalid price');
+    }
+
     if (Boolean(state.reinvestStrategy) && !reinvestStrategyData) {
       throw new Error('Invalid reinvest strategy.');
+    }
+
+    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
+      checkSwapAmountValue(state.swapAmount, price);
     }
 
     const createVaultContext: BuildCreateVaultContext = {
