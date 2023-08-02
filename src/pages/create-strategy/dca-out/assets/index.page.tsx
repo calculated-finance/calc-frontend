@@ -17,7 +17,7 @@ import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
-import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { useWallet } from '@hooks/useWallet';
@@ -27,6 +27,9 @@ import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { InitialDenom } from '@components/InitialDenom';
+import { isBuyStrategy } from '@helpers/strategy';
+import { useRouter } from 'next/router';
+import { ResultingDenom } from '@components/ResultingDenom';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -44,8 +47,6 @@ function Page() {
     await actions.updateAction(formData);
     await nextStep();
   };
-
-  console.log(state)
 
   if (!pairs) {
     return (
@@ -80,9 +81,10 @@ function Page() {
             <Stack direction="column" spacing={6}>
               {/* <DCAOutInitialDenom denoms={denoms} /> */}
               <InitialDenom denomsOut={denoms} />
-              <DCAOutResultingDenom
+              {/* <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+              /> */}
+              <ResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
