@@ -31,12 +31,15 @@ import { isBuyStrategy } from '@helpers/strategy';
 import { useRouter } from 'next/router';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 
 function Page() {
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
   } = usePairs();
+
+  console.log(pairs)
   const { nextStep } = useSteps(dcaOutSteps);
   const { connected } = useWallet();
 
@@ -58,6 +61,8 @@ function Page() {
       </ModalWrapper>
     );
   }
+  console.log(state)
+
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
       .map((denom) => getDenomInfo(denom))
@@ -76,7 +81,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper stepsConfig={dcaOutSteps} reset={actions.resetAction}>
-          <AssetPageStrategyButtons />
+          <AssetPageStrategyButtonsRefactored />
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

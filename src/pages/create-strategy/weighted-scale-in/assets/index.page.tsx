@@ -25,6 +25,7 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -65,7 +66,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={weightedScaleInSteps}>
-          <AssetPageStrategyButtons />
+          <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               {/* <InitialDenom denomsOut={undefined} />

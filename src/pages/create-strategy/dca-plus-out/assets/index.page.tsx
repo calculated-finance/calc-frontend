@@ -31,6 +31,7 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 
 function Page() {
   const { connected } = useWallet();
@@ -40,6 +41,7 @@ function Page() {
   } = usePairs();
   const { nextStep } = useSteps(dcaPlusOutSteps);
 
+  console.log(pairs)
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances });
@@ -74,7 +76,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <>
-          <AssetPageStrategyButtons />
+          <AssetPageStrategyButtonsRefactored />
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
