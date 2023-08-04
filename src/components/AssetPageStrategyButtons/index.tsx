@@ -40,9 +40,9 @@ const buttonStyles = {
   textColor: 'slategrey',
   borderColor: 'slategrey',
   _focus: {
-    color: 'brand.200',
-    borderColor: 'brand.200',
-    opacity: '100%'
+    color: 'blue.200',
+    borderColor: 'blue.200',
+    opacity: '90%'
   },
   _hover: { bgColor: 'transparent' },
   fontSize: { base: 10, sm: 12 },
@@ -210,11 +210,11 @@ function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
         borderRadius={0}
         color="slategrey"
         _checked={{
-          color: 'brand.200',
-          borderBottomColor: 'brand.200',
-          opacity: '100%'
+          color: 'blue.200',
+          borderBottomColor: 'blue.200',
+          opacity: '90%'
         }}
-        opacity='50%'
+        opacity='90%'
         fontSize={14}
         fontWeight="bold"
         textAlign="center"
@@ -249,14 +249,14 @@ export function BuyButtons({ pathname }: RouterType) {
       {buttonLabels.buttonLabelsIn.path.map((el, index) => {
         if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
+            <Button {...buttonStyles} color="blue.200" borderColor="blue.200" opacity='90%' key={el} data-testid={el}>
               {buttonLabels.buttonLabelsIn.buttonText[index]}
             </Button>
           );
         }
         return (
           <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
-            <Button {...buttonStyles} data-testid={el} opacity='50%'>
+            <Button {...buttonStyles} data-testid={el} opacity='90%'>
               {buttonLabels.buttonLabelsIn.buttonText[index]}
             </Button>
           </LinkWithQuery>
@@ -271,14 +271,14 @@ export function SellButtons({ pathname }: RouterType) {
       {buttonLabels.buttonLabelsOut.path.map((el, index) => {
         if (pathname.includes(el)) {
           return (
-            <Button {...buttonStyles} color="brand.200" borderColor="brand.200" key={el} data-testid={el}>
+            <Button {...buttonStyles} color="blue.200" borderColor="blue.200" opacity='90%' key={el} data-testid={el}>
               {buttonLabels.buttonLabelsOut.buttonText[index]}
             </Button>
           );
         }
         return (
           <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
-            <Button {...buttonStyles} data-testid={el} opacity='50%'>
+            <Button {...buttonStyles} data-testid={el} opacity='90%'>
               {buttonLabels.buttonLabelsOut.buttonText[index]}
             </Button>
           </LinkWithQuery>
