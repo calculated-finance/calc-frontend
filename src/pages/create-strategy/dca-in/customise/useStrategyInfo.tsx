@@ -27,6 +27,7 @@ export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
 export function useStrategyInfo() {
   const strategyInfo = useStrategyInfoStore(state => state.strategyInfo);
 
+  console.log(strategyInfo)
   if (!strategyInfo) {
     throw new Error('Strategy info must be set before accessing it.');
   }
@@ -34,10 +35,10 @@ export function useStrategyInfo() {
   return strategyInfo;
 }
 
-export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo} & ChildrenProp) {
+export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo } & ChildrenProp) {
   const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
   const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
-  
+
   useEffect(() => {
     setStrategyInfo(strategyInfo);
   }, [setStrategyInfo, strategyInfo]);

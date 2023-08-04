@@ -3,10 +3,12 @@ import { RecurringDeposits } from '@components/helpContent/RecurringDeposits';
 import { contentData } from 'src/constants';
 import { Autostaking } from '../components/helpContent/Autostaking';
 import { StepConfig } from './StepConfig';
+import { StrategyTypes } from '@models/StrategyTypes';
 
 const steps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-in/assets',
+    href: '/create-strategy/assets',
+    strategyType: StrategyTypes.DCAIn ,
     title: contentData.dcaIn.assets.title,
     footerText: contentData.dcaIn.assets.footerText,
     helpContent: <RecurringDeposits />,

@@ -1,9 +1,11 @@
 import { Link, ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-out/assets',
+    href: '/create-strategy/assets',
+    strategyType: StrategyTypes.DCAOut,
     title: 'Choose Funding & Assets',
     footerText: 'How does taking profit into fiat work?',
     helpContent: (

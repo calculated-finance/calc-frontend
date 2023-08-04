@@ -62,7 +62,6 @@ export function InitialAndResultingDenoms({ denomsOut, denoms, strategyType }: {
     }
 
     const isInStrategy = getIsInStrategy(strategyType)
-    console.log(isInStrategy)
 
 
     return (
