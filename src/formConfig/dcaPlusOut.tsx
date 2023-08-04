@@ -1,10 +1,13 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { OutperformProbability } from '@components/helpContent/OutperformProbability';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaPlusOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/dca-plus-out/assets',
+    href: '/create-strategy/assets',
+    strategyType: StrategyTypes.DCAPlusOut,
+
     title: 'Choose Funding & Assets',
   },
   {

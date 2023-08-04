@@ -32,6 +32,7 @@ import { useRouter } from 'next/router';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import steps from '@formConfig/dcaIn';
 
 function Page() {
   const { actions, state } = useDcaInForm();

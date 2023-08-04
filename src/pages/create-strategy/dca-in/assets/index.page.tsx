@@ -52,8 +52,6 @@ function DcaIn() {
     );
   }
 
-  console.log(state)
-
   const initialValues = {
     ...state.step1,
     initialDenom: state.step1.initialDenom,

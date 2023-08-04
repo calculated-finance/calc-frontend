@@ -5,11 +5,12 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { CustomiseFormDcaWrapper } from '@components/Forms/CustomiseForm/CustomiseFormDca';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import {   StrategyInfoProvider } from './useStrategyInfo';
+import { StrategyInfoProvider } from './useStrategyInfo';
 
 
 function Page() {
   const { resetForm } = useFormStore();
+  console.log(resetForm)
 
 
   return (

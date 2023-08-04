@@ -255,8 +255,8 @@ export function BuyButtons({ pathname }: RouterType) {
                     );
                 }
                 return (
-                    <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
-                        <Button {...buttonStyles} data-testid={el}>
+                    <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} key={el} passHref>
+                        <Button {...buttonStyles} data-testid={el} key={el}>
                             {buttonLabels.buttonLabelsIn.buttonText[index]}
                         </Button>
                     </LinkWithQuery>
@@ -277,8 +277,8 @@ export function SellButtons({ pathname }: RouterType) {
                     );
                 }
                 return (
-                    <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
-                        <Button {...buttonStyles} data-testid={el}>
+                    <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} key={el} passHref>
+                        <Button {...buttonStyles} data-testid={el} key={el}>
                             {buttonLabels.buttonLabelsOut.buttonText[index]}
                         </Button>
                     </LinkWithQuery>
@@ -322,3 +322,5 @@ export function AssetPageStrategyButtonsRefactored() {
         </VStack>
     ) : null;
 }
+
+

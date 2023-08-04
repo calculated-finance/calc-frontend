@@ -5,7 +5,7 @@ import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms, orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
-import useSteps from '@hooks/useSteps';
+import useSteps, { useStepsRefactored } from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -28,6 +28,11 @@ import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
+import { dcaPlusInSteps } from '@formConfig/dcaPlusIn';
+import { weightedScaleInSteps } from '@formConfig/weightedScaleIn';
+import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
+import dcaOutSteps from '@formConfig/dcaOut';
+import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
@@ -96,10 +101,30 @@ function getValidationSchema(strategySelected: string) {
         return DcaPlusAssetsFormSchema
     }
     return WeightedScaleAssetsFormSchema
+}
 
 
+
+function getSteps(strategySelected: string) {
+    if (strategySelected === StrategyTypes.DCAIn) {
+        return steps
+    }
+    if (strategySelected === StrategyTypes.DCAPlusIn) {
+        return dcaPlusInSteps
+    }
+    if (strategySelected === StrategyTypes.WeightedScaleIn) {
+        return weightedScaleInSteps
+    }
+    if (strategySelected === StrategyTypes.DCAOut) {
+        return dcaOutSteps
+    }
+    if (strategySelected === StrategyTypes.DCAPlusOut) {
+        return dcaPlusOutSteps
+    }
+    return weightedScaleOutSteps
 
 }
+
 
 function Assets() {
     const { connected } = useWallet();
@@ -108,25 +133,22 @@ function Assets() {
     } = usePairs();
 
 
-    console.log(pairs)
-
-
-    const { nextStep } = useSteps(steps);
-
     const { data: balances } = useBalances();
 
 
-    const [strategySelected, setStrategySelected] = useState('DCA In');
+    const [strategySelected, setStrategySelected] = useState(StrategyTypes.DCAOut);
 
-    const currentStrategyForm = strategySelected === ('DCA In') ? useDcaInForm() : strategySelected === 'DCA+ In' ? useDCAPlusAssetsForm() : useWeightedScaleAssetsForm();
+    const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? useDcaInForm() : strategySelected === StrategyTypes.DCAPlusIn ? useDCAPlusAssetsForm() : useWeightedScaleAssetsForm();
 
     const { actions, state } = currentStrategyForm;
+
+    console.log(state)
+
     const validationSchema = getValidationSchema(strategySelected)
-
     const { validate } = useValidation(validationSchema, { balances });
-    console.log(currentStrategyForm)
-    console.log(state, actions)
 
+    const newSteps = getSteps(strategySelected)
+    const { nextStep } = useStepsRefactored(newSteps, strategySelected);
 
     const onSubmit = async (formData: DcaInFormDataStep1) => {
         await actions.updateAction(formData);
@@ -136,6 +158,7 @@ function Assets() {
     const currentStrategyCategory = useStrategyInfo();
     const initialCategorySelected =
         currentStrategyCategory?.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
+
     const [categorySelected, setCategorySelected] = useState(initialCategorySelected);
 
 
@@ -149,7 +172,7 @@ function Assets() {
     const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
         name: 'strategy',
         defaultValue: strategySelected,
-        onChange: (nextValue: BuySellButtons) => setStrategySelected(nextValue),
+        onChange: (nextValue: StrategyTypes) => setStrategySelected(nextValue),
     });
     const strategyGroup = getStrategyRootProps();
 
@@ -175,13 +198,13 @@ function Assets() {
         resultingDenom: state.step1.resultingDenom,
     };
 
-
+    console.log(newSteps)
     return (
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //  @ts-ignore
         <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
             {({ values }) => (
-                <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
+                <ModalWrapper reset={actions.resetAction} stepsConfig={newSteps}>
                     {featureFlags.assetPageStrategyButtonsEnabled ? (
                         <VStack spacing={4} pb={6}>
                             <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
@@ -231,6 +254,7 @@ function Assets() {
         </Formik>
     );
 }
+
 
 function Page() {
     return (
