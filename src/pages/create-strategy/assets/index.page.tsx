@@ -5,7 +5,7 @@ import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms, orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
-import useSteps, { useStepsRefactored } from '@hooks/useSteps';
+import { useStepsRefactored } from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -18,8 +18,6 @@ import { useWallet } from '@hooks/useWallet';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { featureFlags } from 'src/constants';
 import { useState } from 'react';
-import { StrategyInfoProvider, useStrategyInfo } from '../dca-in/customise/useStrategyInfo';
-import { BuySellButtons } from './BuySellButtons';
 import { CategoryRadioCard } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import Submit from '@components/Submit';
@@ -33,6 +31,8 @@ import { weightedScaleInSteps } from '@formConfig/weightedScaleIn';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import dcaOutSteps from '@formConfig/dcaOut';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
+import { BuySellButtons } from './BuySellButtons';
+import { StrategyInfo, useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
 
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
@@ -125,6 +125,86 @@ function getSteps(strategySelected: string) {
 
 }
 
+function getStrategySelected(strategySelected: string) {
+
+    if (strategySelected === StrategyTypes.DCAIn) {
+        return 'dcaIn'
+    }
+    if (strategySelected === StrategyTypes.DCAPlusIn) {
+        return 'dcaPlusIn'
+    }
+    if (strategySelected === StrategyTypes.WeightedScaleIn) {
+        return 'weightedScaleIn'
+    }
+    if (strategySelected === StrategyTypes.DCAOut) {
+        return 'dcaOut'
+    }
+    if (strategySelected === StrategyTypes.DCAPlusOut) {
+        return 'dcaPlusOut'
+    }
+    return 'weightedScaleOut'
+
+}
+
+function getStrategyInfo(strategySelected: string) {
+    const strategyInfo = getStrategySelected(strategySelected)
+
+    const allStrategyInfo = {
+        dcaIn: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.DCAIn,
+                transactionType: TransactionType.Buy,
+                formName: FormNames.DcaIn
+            }
+        },
+        dcaPlusIn: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.DCAPlusIn,
+                transactionType: TransactionType.Buy,
+                formName: FormNames.DcaPlusIn
+            }
+        },
+        weightedScaleIn: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.WeightedScaleIn,
+                transactionType: TransactionType.Buy,
+                formName: FormNames.WeightedScaleIn
+            }
+        },
+        dcaOut: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.DCAOut,
+                transactionType: TransactionType.Sell,
+                formName: FormNames.DcaOut
+            }
+        },
+        dcaPlusOut: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.DCAPlusOut,
+                transactionType: TransactionType.Sell,
+                formName: FormNames.DcaPlusOut
+            }
+        },
+        weightedScaleOut: {
+            strategyInfo:
+            {
+                strategyType: StrategyTypes.WeightedScaleOut,
+                transactionType: TransactionType.Sell,
+                formName: FormNames.WeightedScaleOut
+            }
+        },
+
+    }
+
+    return allStrategyInfo[strategyInfo].strategyInfo
+
+}
+
 
 function Assets() {
     const { connected } = useWallet();
@@ -132,13 +212,28 @@ function Assets() {
         data: { pairs },
     } = usePairs();
 
+    const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
+    const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
+
+
+
+
 
     const { data: balances } = useBalances();
 
+    const [strategySelected, setStrategySelected] = useState(StrategyTypes.DCAIn);
+    const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
 
-    const [strategySelected, setStrategySelected] = useState(StrategyTypes.DCAOut);
+    // we want to dynamically set the state here 
+    // setStrategyInfo(getStrategyInfo(strategySelected))
 
-    const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? useDcaInForm() : strategySelected === StrategyTypes.DCAPlusIn ? useDCAPlusAssetsForm() : useWeightedScaleAssetsForm();
+
+
+    const dcaInForm = useDcaInForm();
+    const dcaPlusForm = useDCAPlusAssetsForm();
+    const weightedScaleForm = useWeightedScaleAssetsForm()
+
+    const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
 
     const { actions, state } = currentStrategyForm;
 
@@ -155,16 +250,11 @@ function Assets() {
         await nextStep();
     };
 
-    const currentStrategyCategory = useStrategyInfo();
-    const initialCategorySelected =
-        currentStrategyCategory?.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
-
-    const [categorySelected, setCategorySelected] = useState(initialCategorySelected);
 
 
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'category',
-        defaultValue: initialCategorySelected,
+        defaultValue: categorySelected,
         onChange: (nextValue: BuySellButtons) => setCategorySelected(nextValue),
     });
     const categoryGroup = getRootProps();
@@ -172,7 +262,8 @@ function Assets() {
     const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
         name: 'strategy',
         defaultValue: strategySelected,
-        onChange: (nextValue: StrategyTypes) => setStrategySelected(nextValue),
+        onChange: (nextValue: StrategyTypes) => setStrategyInfo(getStrategyInfo(nextValue))
+        ,
     });
     const strategyGroup = getStrategyRootProps();
 
@@ -198,10 +289,10 @@ function Assets() {
         resultingDenom: state.step1.resultingDenom,
     };
 
-    console.log(newSteps)
     return (
+
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //  @ts-ignore
+        // @ts-ignore 
         <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
             {({ values }) => (
                 <ModalWrapper reset={actions.resetAction} stepsConfig={newSteps}>
@@ -252,22 +343,16 @@ function Assets() {
                 </ModalWrapper>
             )}
         </Formik>
+
     );
 }
 
 
 function Page() {
+
     return (
-        <StrategyInfoProvider
-            strategyInfo={{
-                strategyType: StrategyTypes.DCAIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.DcaIn,
-            }}
-        >
-            <Assets />
-        </StrategyInfoProvider>
-    );
+        <Assets />
+    )
 }
 
 Page.getLayout = getFlowLayout;
