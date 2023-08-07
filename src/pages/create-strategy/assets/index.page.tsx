@@ -32,7 +32,7 @@ import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import dcaOutSteps from '@formConfig/dcaOut';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { BuySellButtons } from './BuySellButtons';
-import { StrategyInfo, useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
+import { StrategyInfo, StrategyInfoProvider, useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
 
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
@@ -206,38 +206,23 @@ function getStrategyInfo(strategySelected: string) {
 }
 
 
-function Assets() {
+function Assets({ strategyInfo }: { strategyInfo: StrategyInfo }) {
     const { connected } = useWallet();
     const {
         data: { pairs },
     } = usePairs();
-
-    const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
-    const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
-
-
-
-
-
-    const { data: balances } = useBalances();
-
-    const [strategySelected, setStrategySelected] = useState(StrategyTypes.DCAIn);
+    const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
     const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
-
-    // we want to dynamically set the state here 
-    // setStrategyInfo(getStrategyInfo(strategySelected))
-
-
-
+    const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
+    const { data: balances } = useBalances();
     const dcaInForm = useDcaInForm();
     const dcaPlusForm = useDCAPlusAssetsForm();
     const weightedScaleForm = useWeightedScaleAssetsForm()
 
+
     const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
 
     const { actions, state } = currentStrategyForm;
-
-    console.log(state)
 
     const validationSchema = getValidationSchema(strategySelected)
     const { validate } = useValidation(validationSchema, { balances });
@@ -250,21 +235,21 @@ function Assets() {
         await nextStep();
     };
 
-
-
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'category',
         defaultValue: categorySelected,
         onChange: (nextValue: BuySellButtons) => setCategorySelected(nextValue),
     });
-    const categoryGroup = getRootProps();
-
     const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
         name: 'strategy',
         defaultValue: strategySelected,
-        onChange: (nextValue: StrategyTypes) => setStrategyInfo(getStrategyInfo(nextValue))
-        ,
+        onChange: (nextValue: StrategyTypes) => {
+            setStrategyInfo(getStrategyInfo(nextValue))
+            setStrategySelected(nextValue)
+        }
     });
+
+    const categoryGroup = getRootProps();
     const strategyGroup = getStrategyRootProps();
 
     const denomsOut = orderAlphabetically(
@@ -281,7 +266,6 @@ function Assets() {
             </ModalWrapper>
         );
     }
-
 
     const initialValues = {
         ...state.step1,
@@ -350,8 +334,17 @@ function Assets() {
 
 function Page() {
 
+
+    const strategyInfo = {
+        strategyType: StrategyTypes.DCAIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaIn
+    }
+
     return (
-        <Assets />
+        <StrategyInfoProvider strategyInfo={strategyInfo} >
+            <Assets strategyInfo={strategyInfo} />
+        </StrategyInfoProvider>
     )
 }
 

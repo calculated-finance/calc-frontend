@@ -27,7 +27,6 @@ export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
 export function useStrategyInfo() {
   const strategyInfo = useStrategyInfoStore(state => state.strategyInfo);
 
-  console.log(strategyInfo)
   if (!strategyInfo) {
     throw new Error('Strategy info must be set before accessing it.');
   }
