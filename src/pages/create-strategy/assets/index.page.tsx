@@ -218,7 +218,7 @@ function Assets() {
         data: { pairs },
     } = usePairs();
     const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
-    const [categorySelected, setCategorySelected] = useState(strategyInfo.transactionType);
+    const [categorySelected, setCategorySelected] = useState(strategyInfo.transactionType === "buy" ? BuySellButtons.Buy : BuySellButtons.Sell);
     const { data: balances } = useBalances();
     const dcaInForm = useDcaInForm();
     const dcaPlusForm = useDCAPlusAssetsForm();
