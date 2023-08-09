@@ -206,23 +206,35 @@ function getStrategyInfo(strategySelected: string) {
 }
 
 
-function Assets({ strategyInfo }: { strategyInfo: StrategyInfo }) {
+function Assets() {
+
+    const { strategyInfo, setStrategyInfo } = useStrategyInfoStore()
+
+    if (!strategyInfo) {
+        return null
+    }
     const { connected } = useWallet();
     const {
         data: { pairs },
     } = usePairs();
     const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
-    const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
-    const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
+    const [categorySelected, setCategorySelected] = useState(strategyInfo.transactionType);
     const { data: balances } = useBalances();
     const dcaInForm = useDcaInForm();
     const dcaPlusForm = useDCAPlusAssetsForm();
     const weightedScaleForm = useWeightedScaleAssetsForm()
 
 
+
     const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
 
     const { actions, state } = currentStrategyForm;
+
+
+    console.log(strategySelected)
+    console.log(state)
+
+
 
     const validationSchema = getValidationSchema(strategySelected)
     const { validate } = useValidation(validationSchema, { balances });
@@ -332,22 +344,22 @@ function Assets({ strategyInfo }: { strategyInfo: StrategyInfo }) {
 }
 
 
-function Page() {
+// function Page() {
 
 
-    const strategyInfo = {
-        strategyType: StrategyTypes.DCAIn,
-        transactionType: TransactionType.Buy,
-        formName: FormNames.DcaIn
-    }
+//     const strategyInfo = {
+//         strategyType: StrategyTypes.DCAIn,
+//         transactionType: TransactionType.Buy,
+//         formName: FormNames.DcaIn
+//     }
 
-    return (
-        <StrategyInfoProvider strategyInfo={strategyInfo} >
-            <Assets strategyInfo={strategyInfo} />
-        </StrategyInfoProvider>
-    )
-}
+//     return (
+//         <StrategyInfoProvider strategyInfo={strategyInfo} >
+//             <Assets strategyInfo={strategyInfo} />
+//         </StrategyInfoProvider>
+//     )
+// }
 
-Page.getLayout = getFlowLayout;
+Assets.getLayout = getFlowLayout;
 
-export default Page;
+export default Assets;

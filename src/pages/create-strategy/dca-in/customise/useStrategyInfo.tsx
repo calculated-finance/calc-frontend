@@ -20,7 +20,11 @@ type StrategyInfoStore = {
 
 
 export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
-  strategyInfo: null,
+  strategyInfo: {
+    strategyType: StrategyTypes.DCAIn,
+    transactionType: TransactionType.Buy,
+    formName: FormNames.DcaIn
+  },
   setStrategyInfo: (strategyInfo: StrategyInfo) => set({ strategyInfo }),
 }));
 
