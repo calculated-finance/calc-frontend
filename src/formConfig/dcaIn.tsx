@@ -1,14 +1,15 @@
 import { ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
 import { RecurringDeposits } from '@components/helpContent/RecurringDeposits';
-import { contentData } from 'src/constants';
+import { contentData, featureFlags } from 'src/constants';
 import { Autostaking } from '../components/helpContent/Autostaking';
 import { StepConfig } from './StepConfig';
 import { StrategyTypes } from '@models/StrategyTypes';
 
 const steps: StepConfig[] = [
   {
-    href: '/create-strategy/assets',
-    strategyType: StrategyTypes.DCAIn ,
+    href: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/dca-in/assets',
+
+    strategyType: StrategyTypes.DCAIn,
     title: contentData.dcaIn.assets.title,
     footerText: contentData.dcaIn.assets.footerText,
     helpContent: <RecurringDeposits />,

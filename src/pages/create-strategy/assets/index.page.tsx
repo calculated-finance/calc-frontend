@@ -343,23 +343,6 @@ function Assets() {
     );
 }
 
-
-// function Page() {
-
-
-//     const strategyInfo = {
-//         strategyType: StrategyTypes.DCAIn,
-//         transactionType: TransactionType.Buy,
-//         formName: FormNames.DcaIn
-//     }
-
-//     return (
-//         <StrategyInfoProvider strategyInfo={strategyInfo} >
-//             <Assets strategyInfo={strategyInfo} />
-//         </StrategyInfoProvider>
-//     )
-// }
-
 Assets.getLayout = getFlowLayout;
 
 export default Assets;

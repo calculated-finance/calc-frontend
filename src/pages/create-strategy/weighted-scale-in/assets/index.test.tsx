@@ -17,11 +17,12 @@ import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
+import { featureFlags } from 'src/constants';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  pathname: '/create-strategy/weighted-scale-in/assets',
+  pathname: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/weighted-scale-in/assets',
   query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),

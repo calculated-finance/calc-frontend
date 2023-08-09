@@ -3,6 +3,7 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { useEffect } from 'react';
+import { featureFlags } from 'src/constants';
 import { create } from 'zustand';
 
 export type StrategyInfo = {
@@ -17,14 +18,14 @@ type StrategyInfoStore = {
   setStrategyInfo: (strategyInfo: StrategyInfo) => void;
 };
 
-
+const startingStrategyInfo = {
+  strategyType: StrategyTypes.DCAIn,
+  transactionType: TransactionType.Buy,
+  formName: FormNames.DcaIn
+}
 
 export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
-  strategyInfo: {
-    strategyType: StrategyTypes.DCAIn,
-    transactionType: TransactionType.Buy,
-    formName: FormNames.DcaIn
-  },
+  strategyInfo: featureFlags.singleAssetsEnabled ? startingStrategyInfo : null,
   setStrategyInfo: (strategyInfo: StrategyInfo) => set({ strategyInfo }),
 }));
 

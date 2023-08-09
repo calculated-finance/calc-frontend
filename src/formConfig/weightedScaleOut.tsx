@@ -1,11 +1,12 @@
 import { Stack, Text } from '@chakra-ui/react';
 import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
 import { StrategyTypes } from '@models/StrategyTypes';
+import { featureFlags } from 'src/constants';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const weightedScaleOutSteps: StepConfig[] = [
   {
-    href: '/create-strategy/assets',
+    href: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/weighted-scale-out/assets',
     strategyType: StrategyTypes.WeightedScaleOut,
 
     title: 'Choose Funding & Assets',

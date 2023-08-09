@@ -18,11 +18,12 @@ import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
+import { featureFlags } from 'src/constants';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  pathname: '/create-strategy/dca-in/assets',
+  pathname: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/dca-in/assets',
   query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),
