@@ -88,7 +88,7 @@ export const featureFlags =
         reinvestVisualsEnabled: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
-        leapEnabled: false,
+        leapEnabled: true,
         XDEFIEnabled: false,
         dcaPlusEnabled: true,
         isKujiraV2Enabled: true,

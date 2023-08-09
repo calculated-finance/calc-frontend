@@ -138,7 +138,7 @@ function WalletModal() {
                     walletInstallLink="https://setup-station.terra.money/"
                   />
                 )} */}
-                {featureFlags.leapEnabled && (
+                {(featureFlags.leapEnabled || isAdminPage) && (
                   <WalletListItem
                     handleClick={handleLeapConnect}
                     name="Leap Wallet"
@@ -156,7 +156,7 @@ function WalletModal() {
                     walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
-                {(chain === Chains.Moonbeam || isAdminPage) && (
+                {chain === Chains.Moonbeam && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}
                     name="Metamask"
