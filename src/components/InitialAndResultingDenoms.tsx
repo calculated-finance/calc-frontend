@@ -22,7 +22,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 
 // we can use this for now but can get this through the state of buttons selected - we can discuss.
-function getIsInStrategy(strategyType: string) {
+function getIsInStrategy(strategyType: string | undefined) {
     if (strategyType === StrategyTypes.DCAIn) {
         return true;
     }
@@ -38,7 +38,7 @@ function getIsInStrategy(strategyType: string) {
 }
 
 
-export function InitialAndResultingDenoms({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string }) {
+export function InitialAndResultingDenoms({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string | undefined }) {
     const { data } = usePairs();
     const { pairs } = data || {};
     const [field, meta, helpers] = useField({ name: 'initialDenom' });

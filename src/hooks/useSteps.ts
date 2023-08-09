@@ -43,7 +43,7 @@ export default function useSteps(steps: StepConfig[]) {
     goToStep,
   };
 }
-export  function useStepsRefactored(steps: StepConfig[], strategyType: string) {
+export function useStepsRefactored(steps: StepConfig[], strategyType: string | undefined) {
   const router = useRouter();
   const currentStepIndex = steps.findIndex((step) => step.strategyType === strategyType);
   const currentStep = steps[currentStepIndex];
@@ -59,7 +59,6 @@ export  function useStepsRefactored(steps: StepConfig[], strategyType: string) {
 
   // has next step
   const hasNextStep = currentStepIndex < steps.length - 1;
-  console.log(hasNextStep)
 
   const previousStep = () => {
     if (hasPreviousStep) {

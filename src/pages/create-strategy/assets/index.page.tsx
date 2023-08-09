@@ -1,6 +1,6 @@
 import { Box, Center, HStack, Stack, UseRadioProps, VStack, useRadio, useRadioGroup } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
+import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms, orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
@@ -9,10 +9,8 @@ import { useStepsRefactored } from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import { ChildrenProp } from '@helpers/ChildrenProp';
@@ -24,15 +22,11 @@ import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
-import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
-import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
-import { dcaPlusInSteps } from '@formConfig/dcaPlusIn';
-import { weightedScaleInSteps } from '@formConfig/weightedScaleIn';
-import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
-import dcaOutSteps from '@formConfig/dcaOut';
-import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
+import { getValidationSchema } from '@helpers/assets-page/getValidationSchema';
+import { getSteps } from '@helpers/assets-page/getSteps';
+import { getStrategyInfo } from '@helpers/assets-page/getStrategyInfo';
+import { useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
 import { BuySellButtons } from './BuySellButtons';
-import { StrategyInfo, StrategyInfoProvider, useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
 
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
@@ -41,7 +35,7 @@ export const strategyButtonOptions = {
     out: [StrategyTypes.DCAOut, StrategyTypes.DCAPlusOut, StrategyTypes.WeightedScaleOut],
 };
 
-function getIsInStrategy(strategyType: string) {
+function getIsInStrategy(strategyType: string | undefined) {
     if (strategyType === StrategyTypes.DCAIn) {
         return true;
     }
@@ -58,7 +52,7 @@ function getIsInStrategy(strategyType: string) {
 
 
 
-function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string } & UseRadioProps & ChildrenProp) {
+function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string | undefined } & UseRadioProps & ChildrenProp) {
     const { getInputProps, getRadioProps } = useRadio(props);
     const input = getInputProps();
     const checkbox = getRadioProps();
@@ -92,149 +86,27 @@ function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string 
 }
 
 
-function getValidationSchema(strategySelected: string) {
-
-    if (strategySelected === (StrategyTypes.DCAIn || StrategyTypes.DCAOut)) {
-        return step1ValidationSchema
-    }
-    if (strategySelected === (StrategyTypes.DCAPlusIn || StrategyTypes.DCAPlusOut)) {
-        return DcaPlusAssetsFormSchema
-    }
-    return WeightedScaleAssetsFormSchema
-}
-
-
-
-function getSteps(strategySelected: string) {
-    if (strategySelected === StrategyTypes.DCAIn) {
-        return steps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusIn) {
-        return dcaPlusInSteps
-    }
-    if (strategySelected === StrategyTypes.WeightedScaleIn) {
-        return weightedScaleInSteps
-    }
-    if (strategySelected === StrategyTypes.DCAOut) {
-        return dcaOutSteps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusOut) {
-        return dcaPlusOutSteps
-    }
-    return weightedScaleOutSteps
-
-}
-
-function getStrategySelected(strategySelected: string) {
-
-    if (strategySelected === StrategyTypes.DCAIn) {
-        return 'dcaIn'
-    }
-    if (strategySelected === StrategyTypes.DCAPlusIn) {
-        return 'dcaPlusIn'
-    }
-    if (strategySelected === StrategyTypes.WeightedScaleIn) {
-        return 'weightedScaleIn'
-    }
-    if (strategySelected === StrategyTypes.DCAOut) {
-        return 'dcaOut'
-    }
-    if (strategySelected === StrategyTypes.DCAPlusOut) {
-        return 'dcaPlusOut'
-    }
-    return 'weightedScaleOut'
-
-}
-
-function getStrategyInfo(strategySelected: string) {
-    const strategyInfo = getStrategySelected(strategySelected)
-
-    const allStrategyInfo = {
-        dcaIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.DcaIn
-            }
-        },
-        dcaPlusIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAPlusIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.DcaPlusIn
-            }
-        },
-        weightedScaleIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.WeightedScaleIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.WeightedScaleIn
-            }
-        },
-        dcaOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.DcaOut
-            }
-        },
-        dcaPlusOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAPlusOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.DcaPlusOut
-            }
-        },
-        weightedScaleOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.WeightedScaleOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.WeightedScaleOut
-            }
-        },
-
-    }
-
-    return allStrategyInfo[strategyInfo].strategyInfo
-
-}
-
-
 function Assets() {
 
     const { strategyInfo, setStrategyInfo } = useStrategyInfoStore()
 
-    if (!strategyInfo) {
-        return null
-    }
-    const { connected } = useWallet();
     const {
         data: { pairs },
     } = usePairs();
-    const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
-    const [categorySelected, setCategorySelected] = useState(strategyInfo.transactionType === "buy" ? BuySellButtons.Buy : BuySellButtons.Sell);
+
+    const [strategySelected, setStrategySelected] = useState(strategyInfo?.strategyType);
+    const [categorySelected, setCategorySelected] = useState(strategyInfo?.transactionType === "buy" ? BuySellButtons.Buy : BuySellButtons.Sell);
+
+    const { connected } = useWallet();
     const { data: balances } = useBalances();
+
     const dcaInForm = useDcaInForm();
     const dcaPlusForm = useDCAPlusAssetsForm();
     const weightedScaleForm = useWeightedScaleAssetsForm()
 
-
-
+    // still want to check this below
     const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
-
     const { actions, state } = currentStrategyForm;
-
-
-    console.log(strategySelected)
-    console.log(state)
-
-
 
     const validationSchema = getValidationSchema(strategySelected)
     const { validate } = useValidation(validationSchema, { balances });
