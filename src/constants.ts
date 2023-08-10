@@ -99,6 +99,8 @@ export const featureFlags =
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
         adjustedMinimumSwapAmountEnabled: true,
+        singleAssetsEnabled: true,
+
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
