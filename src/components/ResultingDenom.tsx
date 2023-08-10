@@ -2,28 +2,10 @@ import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import { useChain } from '@hooks/useChain';
+import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
-import { TransactionType } from './TransactionType';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
-
-// we can use this for now but can get this through the state of buttons selected - we can discuss.
-function getIsInStrategy(strategyType: string) {
-  if (strategyType === StrategyTypes.DCAIn) {
-    return true;
-  }
-  if (strategyType === StrategyTypes.DCAPlusIn) {
-    return true
-  }
-
-  if (strategyType === StrategyTypes.WeightedScaleIn) {
-    return true
-  }
-
-  return false;
-}
 
 export function ResultingDenom({ denoms, strategyType }: { denoms: DenomInfo[]; strategyType: string }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
@@ -34,7 +16,6 @@ export function ResultingDenom({ denoms, strategyType }: { denoms: DenomInfo[]; 
   } = useFormikContext<DcaInFormDataStep1>();
 
   const isInStrategy = getIsInStrategy(strategyType)
-  console.log(isInStrategy)
 
   return (
 

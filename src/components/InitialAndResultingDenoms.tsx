@@ -18,24 +18,11 @@ import InitialDeposit from '@components/InitialDeposit';
 import { useChain } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getChainDexName } from '@helpers/chains';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { DcaInFormDataStep1 } from '@models/DcaInFormData';
+import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 
 // we can use this for now but can get this through the state of buttons selected - we can discuss.
-function getIsInStrategy(strategyType: string | undefined) {
-    if (strategyType === StrategyTypes.DCAIn) {
-        return true;
-    }
-    if (strategyType === StrategyTypes.DCAPlusIn) {
-        return true
-    }
 
-    if (strategyType === StrategyTypes.WeightedScaleIn) {
-        return true
-    }
-
-    return false;
-}
 
 
 export function InitialAndResultingDenoms({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string | undefined }) {

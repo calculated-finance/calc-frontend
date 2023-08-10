@@ -13,26 +13,18 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
-import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { useWallet } from '@hooks/useWallet';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import Spinner from '@components/Spinner';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { InitialDenom } from '@components/InitialDenom';
-import { isBuyStrategy } from '@helpers/strategy';
-import { useRouter } from 'next/router';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
-import steps from '@formConfig/dcaIn';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -40,7 +32,6 @@ function Page() {
     data: { pairs },
   } = usePairs();
 
-  console.log(pairs)
   const { nextStep } = useSteps(dcaOutSteps);
   const { connected } = useWallet();
 
@@ -62,7 +53,6 @@ function Page() {
       </ModalWrapper>
     );
   }
-  console.log(state)
 
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
@@ -86,15 +76,6 @@ function Page() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              {/* <DCAOutInitialDenom denoms={denoms} /> */}
-              {/* <InitialDenom denomsOut={denoms} /> */}
-              {/* <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              /> */}
-              {/* <ResultingDenom
-                strategyType={StrategyTypes.DCAOut}
-
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} /> */}
               <InitialAndResultingDenoms strategyType={StrategyTypes.DCAOut}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} denomsOut={denoms} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}

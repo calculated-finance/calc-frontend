@@ -1,9 +1,9 @@
 import { ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
 import { RecurringDeposits } from '@components/helpContent/RecurringDeposits';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { contentData, featureFlags } from 'src/constants';
 import { Autostaking } from '../components/helpContent/Autostaking';
 import { StepConfig } from './StepConfig';
-import { StrategyTypes } from '@models/StrategyTypes';
 
 const steps: StepConfig[] = [
   {

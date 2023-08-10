@@ -11,12 +11,12 @@ import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
+import { featureFlags } from 'src/constants';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
-import { featureFlags } from 'src/constants';
 
 const mockRouter = {
   isReady: true,

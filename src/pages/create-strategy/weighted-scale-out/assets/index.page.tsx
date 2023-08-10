@@ -13,8 +13,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
@@ -24,13 +22,10 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   const { connected } = useWallet();
@@ -76,14 +71,8 @@ function Page() {
       {({ values }) => (
         <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={actions.resetAction}>
           <AssetPageStrategyButtonsRefactored />
-
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              {/* <InitialDenom denomsOut={denoms} />
-              <ResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
-              /> */}
-
               <InitialAndResultingDenoms denomsOut={denoms}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
               />

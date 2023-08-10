@@ -14,8 +14,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
@@ -25,13 +23,10 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   const { connected } = useWallet();
@@ -41,7 +36,6 @@ function Page() {
   } = usePairs();
   const { nextStep } = useSteps(dcaPlusOutSteps);
 
-  console.log(pairs)
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances });
@@ -77,18 +71,9 @@ function Page() {
       {({ values }) => (
         <>
           <AssetPageStrategyButtonsRefactored />
-
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              {/* <InitialDenom denomsOut={denoms} />
-
-              <ResultingDenom
-                strategyType={StrategyTypes.DCAPlusOut}
-
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              /> */}
               <InitialAndResultingDenoms denomsOut={denoms} strategyType={StrategyTypes.DCAPlusOut}
-
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>

@@ -1,8 +1,8 @@
 import { Autostaking } from '@components/helpContent/Autostaking';
+import { StrategyTypes } from '@models/StrategyTypes';
 import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { contentData, featureFlags } from 'src/constants';
 import { StepConfig } from './StepConfig';
-import { StrategyTypes } from '@models/StrategyTypes';
 
 export const dcaPlusInSteps: StepConfig[] = [
   {

@@ -9,7 +9,7 @@ import theme from 'src/theme';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-
+import { featureFlags } from 'src/constants';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
@@ -18,7 +18,6 @@ import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { Chains } from '@hooks/useChain/Chains';
 import Page from './index.page';
-import { featureFlags } from 'src/constants';
 
 const mockRouter = {
   isReady: true,

@@ -8,8 +8,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
@@ -19,13 +17,10 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -70,16 +65,6 @@ function DcaIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              {/* <InitialDenom denomsOut={undefined} />
-              <ResultingDenom
-                strategyType={StrategyTypes.DCAPlusIn}
-
-                denoms={
-                  values.initialDenom
-                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
-                    : []
-                } /> */}
-
               <InitialAndResultingDenoms strategyType={StrategyTypes.DCAPlusIn}
                 denoms={
                   values.initialDenom

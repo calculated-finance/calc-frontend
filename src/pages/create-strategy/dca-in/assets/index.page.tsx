@@ -8,8 +8,6 @@ import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -18,13 +16,10 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -67,11 +62,6 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              {/* <InitialDenom denomsOut={undefined} />
-              <ResultingDenom
-                strategyType={StrategyTypes.DCAIn}
-
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} /> */}
               <InitialAndResultingDenoms strategyType={StrategyTypes.DCAIn} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>

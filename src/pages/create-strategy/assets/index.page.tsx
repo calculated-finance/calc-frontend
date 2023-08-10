@@ -22,6 +22,7 @@ import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
+import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { getValidationSchema } from '@helpers/assets-page/getValidationSchema';
 import { getSteps } from '@helpers/assets-page/getSteps';
 import { getStrategyInfo } from '@helpers/assets-page/getStrategyInfo';
@@ -34,23 +35,6 @@ export const strategyButtonOptions = {
     in: [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn],
     out: [StrategyTypes.DCAOut, StrategyTypes.DCAPlusOut, StrategyTypes.WeightedScaleOut],
 };
-
-function getIsInStrategy(strategyType: string | undefined) {
-    if (strategyType === StrategyTypes.DCAIn) {
-        return true;
-    }
-    if (strategyType === StrategyTypes.DCAPlusIn) {
-        return true
-    }
-
-    if (strategyType === StrategyTypes.WeightedScaleIn) {
-        return true
-    }
-
-    return false;
-}
-
-
 
 function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string | undefined } & UseRadioProps & ChildrenProp) {
     const { getInputProps, getRadioProps } = useRadio(props);
