@@ -37,317 +37,301 @@ import { StrategyInfo, StrategyInfoProvider, useStrategyInfoStore } from '../dca
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
 export const strategyButtonOptions = {
-    in: [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn],
-    out: [StrategyTypes.DCAOut, StrategyTypes.DCAPlusOut, StrategyTypes.WeightedScaleOut],
+  in: [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn],
+  out: [StrategyTypes.DCAOut, StrategyTypes.DCAPlusOut, StrategyTypes.WeightedScaleOut],
 };
 
 function getIsInStrategy(strategyType: string) {
-    if (strategyType === StrategyTypes.DCAIn) {
-        return true;
-    }
-    if (strategyType === StrategyTypes.DCAPlusIn) {
-        return true
-    }
+  if (strategyType === StrategyTypes.DCAIn) {
+    return true;
+  }
+  if (strategyType === StrategyTypes.DCAPlusIn) {
+    return true
+  }
 
-    if (strategyType === StrategyTypes.WeightedScaleIn) {
-        return true
-    }
+  if (strategyType === StrategyTypes.WeightedScaleIn) {
+    return true
+  }
 
-    return false;
+  return false;
 }
 
 
 
 function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string } & UseRadioProps & ChildrenProp) {
-    const { getInputProps, getRadioProps } = useRadio(props);
-    const input = getInputProps();
-    const checkbox = getRadioProps();
+  const { getInputProps, getRadioProps } = useRadio(props);
+  const input = getInputProps();
+  const checkbox = getRadioProps();
 
-    return (
-        <Box as="label">
-            <input {...input} />
-            <Box
-                {...checkbox}
-                cursor="pointer"
-                borderWidth={1}
-                borderRadius="lg"
-                textColor="slategrey"
-                borderColor="slategrey"
-                _checked={{
-                    color: 'brand.200',
-                    borderColor: 'brand.200',
-                }}
-                _hover={{ bgColor: 'transparent' }}
-                fontSize={{ base: '10px', sm: '12px' }}
-                width={{ base: '108px', sm: 32 }}
-            >
-                <Center>
-                    <HStack>
-                        <Box> {props.children}</Box>
-                    </HStack>
-                </Center>
-            </Box>
-        </Box>
-    );
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Box
+        {...checkbox}
+        cursor="pointer"
+        borderWidth={1}
+        borderRadius="lg"
+        textColor="slategrey"
+        borderColor="slategrey"
+        _checked={{
+          color: 'brand.200',
+          borderColor: 'brand.200',
+        }}
+        _hover={{ bgColor: 'transparent' }}
+        fontSize={{ base: '10px', sm: '12px' }}
+        width={{ base: '108px', sm: 32 }}
+      >
+        <Center>
+          <HStack>
+            <Box> {props.children}</Box>
+          </HStack>
+        </Center>
+      </Box>
+    </Box>
+  );
 }
 
 
 function getValidationSchema(strategySelected: string) {
 
-    if (strategySelected === (StrategyTypes.DCAIn || StrategyTypes.DCAOut)) {
-        return step1ValidationSchema
-    }
-    if (strategySelected === (StrategyTypes.DCAPlusIn || StrategyTypes.DCAPlusOut)) {
-        return DcaPlusAssetsFormSchema
-    }
-    return WeightedScaleAssetsFormSchema
+  if (strategySelected === (StrategyTypes.DCAIn || StrategyTypes.DCAOut)) {
+    return step1ValidationSchema
+  }
+  if (strategySelected === (StrategyTypes.DCAPlusIn || StrategyTypes.DCAPlusOut)) {
+    return DcaPlusAssetsFormSchema
+  }
+  return WeightedScaleAssetsFormSchema
 }
 
 
 
 function getSteps(strategySelected: string) {
-    if (strategySelected === StrategyTypes.DCAIn) {
-        return steps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusIn) {
-        return dcaPlusInSteps
-    }
-    if (strategySelected === StrategyTypes.WeightedScaleIn) {
-        return weightedScaleInSteps
-    }
-    if (strategySelected === StrategyTypes.DCAOut) {
-        return dcaOutSteps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusOut) {
-        return dcaPlusOutSteps
-    }
-    return weightedScaleOutSteps
+  if (strategySelected === StrategyTypes.DCAIn) {
+    return steps
+  }
+  if (strategySelected === StrategyTypes.DCAPlusIn) {
+    return dcaPlusInSteps
+  }
+  if (strategySelected === StrategyTypes.WeightedScaleIn) {
+    return weightedScaleInSteps
+  }
+  if (strategySelected === StrategyTypes.DCAOut) {
+    return dcaOutSteps
+  }
+  if (strategySelected === StrategyTypes.DCAPlusOut) {
+    return dcaPlusOutSteps
+  }
+  return weightedScaleOutSteps
 
 }
 
 function getStrategySelected(strategySelected: string) {
 
-    if (strategySelected === StrategyTypes.DCAIn) {
-        return 'dcaIn'
-    }
-    if (strategySelected === StrategyTypes.DCAPlusIn) {
-        return 'dcaPlusIn'
-    }
-    if (strategySelected === StrategyTypes.WeightedScaleIn) {
-        return 'weightedScaleIn'
-    }
-    if (strategySelected === StrategyTypes.DCAOut) {
-        return 'dcaOut'
-    }
-    if (strategySelected === StrategyTypes.DCAPlusOut) {
-        return 'dcaPlusOut'
-    }
-    return 'weightedScaleOut'
+  if (strategySelected === StrategyTypes.DCAIn) {
+    return 'dcaIn'
+  }
+  if (strategySelected === StrategyTypes.DCAPlusIn) {
+    return 'dcaPlusIn'
+  }
+  if (strategySelected === StrategyTypes.WeightedScaleIn) {
+    return 'weightedScaleIn'
+  }
+  if (strategySelected === StrategyTypes.DCAOut) {
+    return 'dcaOut'
+  }
+  if (strategySelected === StrategyTypes.DCAPlusOut) {
+    return 'dcaPlusOut'
+  }
+  return 'weightedScaleOut'
 
 }
 
 function getStrategyInfo(strategySelected: string) {
-    const strategyInfo = getStrategySelected(strategySelected)
+  const strategyInfo = getStrategySelected(strategySelected)
 
-    const allStrategyInfo = {
-        dcaIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.DcaIn
-            }
-        },
-        dcaPlusIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAPlusIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.DcaPlusIn
-            }
-        },
-        weightedScaleIn: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.WeightedScaleIn,
-                transactionType: TransactionType.Buy,
-                formName: FormNames.WeightedScaleIn
-            }
-        },
-        dcaOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.DcaOut
-            }
-        },
-        dcaPlusOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.DCAPlusOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.DcaPlusOut
-            }
-        },
-        weightedScaleOut: {
-            strategyInfo:
-            {
-                strategyType: StrategyTypes.WeightedScaleOut,
-                transactionType: TransactionType.Sell,
-                formName: FormNames.WeightedScaleOut
-            }
-        },
+  const allStrategyInfo = {
+    dcaIn: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.DCAIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaIn
+      }
+    },
+    dcaPlusIn: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.DCAPlusIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaPlusIn
+      }
+    },
+    weightedScaleIn: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.WeightedScaleIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.WeightedScaleIn
+      }
+    },
+    dcaOut: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.DCAOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaOut
+      }
+    },
+    dcaPlusOut: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut
+      }
+    },
+    weightedScaleOut: {
+      strategyInfo:
+      {
+        strategyType: StrategyTypes.WeightedScaleOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.WeightedScaleOut
+      }
+    },
 
-    }
+  }
 
-    return allStrategyInfo[strategyInfo].strategyInfo
+  return allStrategyInfo[strategyInfo].strategyInfo
 
 }
 
 
 function Assets({ strategyInfo }: { strategyInfo: StrategyInfo }) {
-    const { connected } = useWallet();
-    const {
-        data: { pairs },
-    } = usePairs();
-    const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
-    const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
-    const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
-    const { data: balances } = useBalances();
-    const dcaInForm = useDcaInForm();
-    const dcaPlusForm = useDCAPlusAssetsForm();
-    const weightedScaleForm = useWeightedScaleAssetsForm()
+  const { connected } = useWallet();
+  const {
+    data: { pairs },
+  } = usePairs();
+  const [strategySelected, setStrategySelected] = useState(strategyInfo.strategyType);
+  const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
+  const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
+  const { data: balances } = useBalances();
+  const dcaInForm = useDcaInForm();
+  const dcaPlusForm = useDCAPlusAssetsForm();
+  const weightedScaleForm = useWeightedScaleAssetsForm()
 
 
-    const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
+  const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
 
-    const { actions, state } = currentStrategyForm;
+  const { actions, state } = currentStrategyForm;
 
-    const validationSchema = getValidationSchema(strategySelected)
-    const { validate } = useValidation(validationSchema, { balances });
+  const validationSchema = getValidationSchema(strategySelected)
+  const { validate } = useValidation(validationSchema, { balances });
 
-    const newSteps = getSteps(strategySelected)
-    const { nextStep } = useStepsRefactored(newSteps, strategySelected);
+  const newSteps = getSteps(strategySelected)
+  const { nextStep } = useStepsRefactored(newSteps, strategySelected);
 
-    const onSubmit = async (formData: DcaInFormDataStep1) => {
-        await actions.updateAction(formData);
-        await nextStep();
-    };
+  const onSubmit = async (formData: DcaInFormDataStep1) => {
+    await actions.updateAction(formData);
+    await nextStep();
+  };
 
-    const { getRootProps, getRadioProps } = useRadioGroup({
-        name: 'category',
-        defaultValue: categorySelected,
-        onChange: (nextValue: BuySellButtons) => setCategorySelected(nextValue),
-    });
-    const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
-        name: 'strategy',
-        defaultValue: strategySelected,
-        onChange: (nextValue: StrategyTypes) => {
-            setStrategyInfo(getStrategyInfo(nextValue))
-            setStrategySelected(nextValue)
-        }
-    });
-
-    const categoryGroup = getRootProps();
-    const strategyGroup = getStrategyRootProps();
-
-    const denomsOut = orderAlphabetically(
-        Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
-    );
-    const isInStrategy = getIsInStrategy(strategySelected)
-
-    if (!pairs) {
-        return (
-            <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
-                <Center h={56}>
-                    <Spinner />
-                </Center>
-            </ModalWrapper>
-        );
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'category',
+    defaultValue: categorySelected,
+    onChange: (nextValue: BuySellButtons) => setCategorySelected(nextValue),
+  });
+  const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
+    name: 'strategy',
+    defaultValue: strategySelected,
+    onChange: (nextValue: StrategyTypes) => {
+      setStrategyInfo(getStrategyInfo(nextValue))
+      setStrategySelected(nextValue)
     }
+  });
 
-    const initialValues = {
-        ...state.step1,
-        initialDenom: state.step1.initialDenom,
-        resultingDenom: state.step1.resultingDenom,
-    };
+  const categoryGroup = getRootProps();
+  const strategyGroup = getStrategyRootProps();
 
+  const denomsOut = orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
+  );
+  const isInStrategy = getIsInStrategy(strategySelected)
+
+  if (!pairs) {
     return (
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore 
-        <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-            {({ values }) => (
-                <ModalWrapper reset={actions.resetAction} stepsConfig={newSteps}>
-                    {featureFlags.assetPageStrategyButtonsEnabled ? (
-                        <VStack spacing={4} pb={6}>
-                            <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
-                                {categoryButtonOptions.map((value) => {
-                                    const radio = getRadioProps({ value });
-                                    return (
-                                        <CategoryRadioCard key={value} {...radio} buttonClicked={categorySelected}>
-                                            {value}
-                                        </CategoryRadioCard>
-                                    );
-                                })}
-                            </HStack>
-                            {categorySelected.includes(BuySellButtons.Buy) ? (
-                                <HStack {...strategyGroup} spacing={{ base: 1, sm: 2 }}>
-                                    {strategyButtonOptions.in.map((value) => {
-                                        const radio = getStrategyRadioProps({ value });
-                                        return (
-                                            <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
-                                                {value}
-                                            </StrategyRadioCard>
-                                        );
-                                    })}
-                                </HStack>
-                            ) : (
-                                <HStack {...strategyGroup} spacing={{ base: 1, sm: 2 }}>
-                                    {strategyButtonOptions.out.map((value) => {
-                                        const radio = getStrategyRadioProps({ value });
-                                        return (
-                                            <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
-                                                {value}
-                                            </StrategyRadioCard>
-                                        );
-                                    })}
-                                </HStack>
-                            )}
-                        </VStack>
-                    ) : null}
-                    <Form autoComplete="off">
-                        <Stack direction="column" spacing={6}>
-                            <InitialAndResultingDenoms strategyType={strategySelected} denomsOut={isInStrategy ? undefined : denomsOut} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
-                            {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-
-                        </Stack>
-                    </Form>
-                </ModalWrapper>
-            )}
-        </Formik>
-
+      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+        <Center h={56}>
+          <Spinner />
+        </Center>
+      </ModalWrapper>
     );
+  }
+
+  const initialValues = {
+    ...state.step1,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom,
+  };
+
+  return (
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore 
+    <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
+      {({ values }) => (
+        <ModalWrapper reset={actions.resetAction} stepsConfig={newSteps}>
+          {featureFlags.assetPageStrategyButtonsEnabled ? (
+            <VStack spacing={4} pb={6}>
+              <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
+                {categoryButtonOptions.map((value) => {
+                  const radio = getRadioProps({ value });
+                  return (
+                    <CategoryRadioCard key={value} {...radio} buttonClicked={categorySelected}>
+                      {value}
+                    </CategoryRadioCard>
+                  );
+                })}
+              </HStack>
+              {categorySelected.includes(BuySellButtons.Buy) ? (
+                <HStack {...strategyGroup} spacing={{ base: 1, sm: 2 }}>
+                  {strategyButtonOptions.in.map((value) => {
+                    const radio = getStrategyRadioProps({ value });
+                    return (
+                      <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
+                        {value}
+                      </StrategyRadioCard>
+                    );
+                  })}
+                </HStack>
+              ) : (
+                <HStack {...strategyGroup} spacing={{ base: 1, sm: 2 }}>
+                  {strategyButtonOptions.out.map((value) => {
+                    const radio = getStrategyRadioProps({ value });
+                    return (
+                      <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
+                        {value}
+                      </StrategyRadioCard>
+                    );
+                  })}
+                </HStack>
+              )}
+            </VStack>
+          ) : null}
+          <Form autoComplete="off">
+            <Stack direction="column" spacing={6}>
+              <InitialAndResultingDenoms strategyType={strategySelected} denomsOut={isInStrategy ? undefined : denomsOut} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+
+            </Stack>
+          </Form>
+        </ModalWrapper>
+      )}
+    </Formik>
+
+  );
 }
 
 
-function Page() {
+Assets.getLayout = getFlowLayout;
 
-
-    const strategyInfo = {
-        strategyType: StrategyTypes.DCAIn,
-        transactionType: TransactionType.Buy,
-        formName: FormNames.DcaIn
-    }
-
-    return (
-        <StrategyInfoProvider strategyInfo={strategyInfo} >
-            <Assets strategyInfo={strategyInfo} />
-        </StrategyInfoProvider>
-    )
-}
-
-Page.getLayout = getFlowLayout;
-
-export default Page;
+export default Assets;
