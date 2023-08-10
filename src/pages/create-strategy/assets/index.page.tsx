@@ -1,4 +1,4 @@
-import { Box, Center, HStack, Stack, UseRadioProps, VStack, useRadio, useRadioGroup } from '@chakra-ui/react';
+import { Center, HStack, Stack, VStack, useRadioGroup } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
@@ -13,7 +13,6 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
-import { ChildrenProp } from '@helpers/ChildrenProp';
 import { featureFlags } from 'src/constants';
 import { useState } from 'react';
 import { CategoryRadioCard } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
@@ -26,8 +25,9 @@ import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { getValidationSchema } from '@helpers/assets-page/getValidationSchema';
 import { getSteps } from '@helpers/assets-page/getSteps';
 import { getStrategyInfo } from '@helpers/assets-page/getStrategyInfo';
+import { StrategyRadioCard } from '@components/AssetPageStrategyButtons/StrategyRadioCard';
 import { useStrategyInfoStore } from '../dca-in/customise/useStrategyInfo';
-import { BuySellButtons } from './BuySellButtons';
+import { BuySellButtons } from '../../../components/AssetPageStrategyButtons/BuySellButtons';
 
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
@@ -35,39 +35,6 @@ export const strategyButtonOptions = {
     in: [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn],
     out: [StrategyTypes.DCAOut, StrategyTypes.DCAPlusOut, StrategyTypes.WeightedScaleOut],
 };
-
-function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: string | undefined } & UseRadioProps & ChildrenProp) {
-    const { getInputProps, getRadioProps } = useRadio(props);
-    const input = getInputProps();
-    const checkbox = getRadioProps();
-
-    return (
-        <Box as="label">
-            <input {...input} />
-            <Box
-                {...checkbox}
-                cursor="pointer"
-                borderWidth={1}
-                borderRadius="lg"
-                textColor="slategrey"
-                borderColor="slategrey"
-                _checked={{
-                    color: 'brand.200',
-                    borderColor: 'brand.200',
-                }}
-                _hover={{ bgColor: 'transparent' }}
-                fontSize={{ base: '10px', sm: '12px' }}
-                width={{ base: '108px', sm: 32 }}
-            >
-                <Center>
-                    <HStack>
-                        <Box> {props.children}</Box>
-                    </HStack>
-                </Center>
-            </Box>
-        </Box>
-    );
-}
 
 
 function Assets() {
@@ -88,8 +55,13 @@ function Assets() {
     const dcaPlusForm = useDCAPlusAssetsForm();
     const weightedScaleForm = useWeightedScaleAssetsForm()
 
-    // still want to check this below
-    const currentStrategyForm = strategySelected === StrategyTypes.DCAIn ? dcaInForm : strategySelected === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm;
+    const currentStrategyForm = strategySelected
+        === (StrategyTypes.DCAIn)
+        ? dcaInForm
+        : strategySelected === StrategyTypes.DCAPlusIn
+            ? dcaPlusForm
+            : weightedScaleForm;
+
     const { actions, state } = currentStrategyForm;
 
     const validationSchema = getValidationSchema(strategySelected)
@@ -97,6 +69,9 @@ function Assets() {
 
     const newSteps = getSteps(strategySelected)
     const { nextStep } = useStepsRefactored(newSteps, strategySelected);
+
+    console.log(newSteps)
+    console.log(nextStep)
 
     const onSubmit = async (formData: DcaInFormDataStep1) => {
         await actions.updateAction(formData);
