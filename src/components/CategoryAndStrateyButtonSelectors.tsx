@@ -1,5 +1,6 @@
 import { HStack, VStack, useRadioGroup } from "@chakra-ui/react";
 import { StrategyTypes } from "@models/StrategyTypes";
+import { useField } from "formik";
 import { CategoryRadioCard } from "./AssetPageStrategyButtons/AssetsPageRefactored";
 import { StrategyRadioCard } from "./AssetPageStrategyButtons/StrategyRadioCard";
 import { BuySellButtons } from "./AssetPageStrategyButtons/BuySellButtons";
@@ -12,24 +13,37 @@ export const strategyButtonOptions = {
 };
 
 
-export function CategoryAndStrategyButtonSelectors({ setCategory, setStrategy, categorySelected, strategySelected }: { setCategory: (categorySelected: BuySellButtons) => void; setStrategy: (strategySelected: StrategyTypes) => void; categorySelected: BuySellButtons; strategySelected: StrategyTypes }) {
+export function CategoryAndStrategyButtonSelectors({ categorySelected }: { categorySelected: BuySellButtons; }) {
+
+    const [field, meta, helpers] = useField({ name: 'strategyType' })
+
 
 
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: 'category',
         defaultValue: categorySelected,
-        onChange: (nextValue: BuySellButtons) => setCategory(nextValue),
+        onChange: (nextValue: BuySellButtons) => {
+            console.log('cat', categorySelected)
+            helpers.setValue(nextValue)
+        },
     });
+
     const { getRootProps: getStrategyRootProps, getRadioProps: getStrategyRadioProps } = useRadioGroup({
         name: 'strategy',
-        defaultValue: strategySelected,
+        defaultValue: field.value,
         onChange: (nextValue: StrategyTypes) => {
-            setStrategy(nextValue)
+            console.log(nextValue, 'nextVal')
+            helpers.setValue(nextValue)
+
+
         }
     });
 
     const categoryGroup = getRootProps();
     const strategyGroup = getStrategyRootProps();
+
+    console.log('eee', field.value)
+
 
 
     return (
@@ -49,7 +63,7 @@ export function CategoryAndStrategyButtonSelectors({ setCategory, setStrategy, c
                     {strategyButtonOptions.in.map((value) => {
                         const radio = getStrategyRadioProps({ value });
                         return (
-                            <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
+                            <StrategyRadioCard key={value} {...radio} buttonClicked={field.value} >
                                 {value}
                             </StrategyRadioCard>
                         );
@@ -60,7 +74,9 @@ export function CategoryAndStrategyButtonSelectors({ setCategory, setStrategy, c
                     {strategyButtonOptions.out.map((value) => {
                         const radio = getStrategyRadioProps({ value });
                         return (
-                            <StrategyRadioCard key={value} {...radio} buttonClicked={strategySelected}>
+                            <StrategyRadioCard key={value} {...radio}
+                                onChange={helpers.setValue} buttonClicked={field.value}
+                            >
                                 {value}
                             </StrategyRadioCard>
                         );

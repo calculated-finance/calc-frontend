@@ -36,6 +36,7 @@ export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo:
   const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
   const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
 
+
   useEffect(() => {
     setStrategyInfo(strategyInfo);
   }, [setStrategyInfo, strategyInfo]);

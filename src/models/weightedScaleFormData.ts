@@ -32,6 +32,7 @@ export const weightedScaleSchemaFields = {
 };
 
 export const weightedScaleSchema = Yup.object({
+  strategyType: allSchema.strategyType,
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit,
@@ -66,6 +67,7 @@ export const weightedScaleSchema = Yup.object({
 });
 
 export const WeightedScaleAssetsFormSchema = weightedScaleSchema.pick([
+  'strategyType',
   'resultingDenom',
   'initialDenom',
   'initialDeposit',

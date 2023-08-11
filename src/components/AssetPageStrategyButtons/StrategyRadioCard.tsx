@@ -9,6 +9,8 @@ export function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: 
     const input = getInputProps();
     const checkbox = getRadioProps();
 
+
+
     return (
         <Box as="label">
             <input {...input} />
@@ -26,6 +28,7 @@ export function StrategyRadioCard({ buttonClicked, ...props }: { buttonClicked: 
                 _hover={{ bgColor: 'transparent' }}
                 fontSize={{ base: '10px', sm: '12px' }}
                 width={{ base: '108px', sm: 32 }}
+
             >
                 <Center>
                     <HStack>

@@ -1,8 +1,8 @@
-import { Center, Stack } from '@chakra-ui/react';
+import { Center, FormControl, Stack } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useField } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
@@ -19,25 +19,65 @@ import { BuySellButtons } from '@components/AssetPageStrategyButtons/BuySellButt
 import { getValidationSchema } from '@helpers/assets-page/getValidationSchema';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
 import { StepConfig } from '@formConfig/StepConfig';
+import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
+import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
+import { useStrategyInfo } from '../dca-in/customise/useStrategyInfo';
 
-export function Assets({ stepsConfig }: { stepsConfig: StepConfig[] }
+
+function useForms(currentStrategy: StrategyTypes) {
+
+
+  const dcaInForm = useDcaInForm();
+  const dcaPlusForm = useDCAPlusAssetsForm();
+  const weightedScaleForm = useWeightedScaleAssetsForm()
+
+
+  if (currentStrategy === StrategyTypes.DCAIn || StrategyTypes.DCAOut || StrategyTypes
+    .DCAPlusOut || StrategyTypes.WeightedScaleOut) {
+    console.log('dca in, dca out, dca plus out, ws out')
+    return dcaInForm
+  }
+  if (currentStrategy === StrategyTypes.DCAPlusIn) {
+    console.log('dca plus in')
+    return dcaPlusForm
+  }
+
+  console.log('ws in')
+  return weightedScaleForm
+}
+
+export function Assets({ stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }
 ) {
   const { connected } = useWallet();
 
-  // move to yup
-  const [strategySelected, setStrategySelected] = useState(StrategyTypes.DCAIn);
-
   const [categorySelected, setCategorySelected] = useState(BuySellButtons.Buy);
+
+  const xx = useStrategyInfo()
+  console.log(xx, 123)
+
 
   const { data: balances } = useBalances();
 
-  // const dcaInForm = useDcaInForm();
-  // const dcaPlusForm = useDCAPlusAssetsForm();
-  // const weightedScaleForm = useWeightedScaleAssetsForm()
+  // const [meta, helpers] = useField({ name: 'strategyType' })
+  // console.log(meta)
+  // const form = useForms(strategyType)
+  // console.log('form', form)
 
-  const { actions, state } = useDcaInForm();
+  // const { actions, state } = useDcaInForm()
+  // const { actions, state } = form
 
-  const validationSchema = getValidationSchema(strategySelected)
+  const dcaInForm = useDcaInForm();
+  const dcaPlusForm = useDCAPlusAssetsForm();
+  const weightedScaleForm = useWeightedScaleAssetsForm()
+
+  // const form = strategyType === StrategyTypes.DCAIn ? dcaInForm : strategyType === StrategyTypes.DCAPlusIn ? dcaPlusForm : weightedScaleForm
+
+  const { actions, state } = dcaInForm
+
+  console.log(state.step1.strategyType)
+
+  const validationSchema = getValidationSchema(state.step1.strategyType)
+
   const { validate } = useValidation(validationSchema, { balances });
 
   // these will be the steps passed down into this componenet
@@ -46,10 +86,6 @@ export function Assets({ stepsConfig }: { stepsConfig: StepConfig[] }
   const {
     data: { pairs },
   } = usePairs();
-
-  console.log(strategySelected)
-  console.log(categorySelected)
-
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
     await actions.updateAction(formData);
@@ -68,9 +104,12 @@ export function Assets({ stepsConfig }: { stepsConfig: StepConfig[] }
 
   const initialValues = {
     ...state.step1,
+    strategyType,
     initialDenom: state.step1.initialDenom,
     resultingDenom: state.step1.resultingDenom,
   };
+
+  console.log(initialValues)
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -80,12 +119,11 @@ export function Assets({ stepsConfig }: { stepsConfig: StepConfig[] }
         <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
           <Form autoComplete="off">
             {/* <AssetPageStrategyButtonsRefactored /> */}
-
-            <CategoryAndStrategyButtonSelectors setStrategy={setStrategySelected} categorySelected={categorySelected} strategySelected={strategySelected} setCategory={setCategorySelected} />
-
-
+            <FormControl>
+              <CategoryAndStrategyButtonSelectors categorySelected={categorySelected} setCategory={setCategorySelected} />
+            </FormControl>
             <Stack direction="column" spacing={6}>
-              <AssetsForm strategyType={strategySelected} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <AssetsForm strategyType={StrategyTypes.DCAIn} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

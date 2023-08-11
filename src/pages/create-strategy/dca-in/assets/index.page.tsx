@@ -83,7 +83,7 @@ function Page() {
       }}
     >
       {/* <DcaIn /> */}
-      <Assets stepsConfig={steps} />
+      <Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />
     </StrategyInfoProvider>
   );
 }

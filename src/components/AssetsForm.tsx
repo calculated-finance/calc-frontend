@@ -29,6 +29,9 @@ export function AssetsForm({ denomsOut, denoms, strategyType }: { denomsOut: Den
     const { data } = usePairs();
     const { pairs } = data || {};
     const [field, meta, helpers] = useField({ name: 'initialDenom' });
+    const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
+    const [strategyField, strategyMeta, strategyHelpers] = useField({ name: 'strategyType' })
+
     const { chain } = useChain();
 
     const denomsIn = orderAlphabetically(
@@ -36,7 +39,11 @@ export function AssetsForm({ denomsOut, denoms, strategyType }: { denomsOut: Den
             .map((denom) => getDenomInfo(denom))
             .filter(isDenomStable),
     );
-    const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
+
+
+    console.log('stratField', strategyField.value)
+
+
     const { chain: resultingChain } = useChain();
 
     const {
@@ -48,7 +55,7 @@ export function AssetsForm({ denomsOut, denoms, strategyType }: { denomsOut: Den
         return null;
     }
 
-    const isInStrategy = getIsInStrategy(strategyType)
+    const isInStrategy = getIsInStrategy(strategyField.value)
 
 
     return (

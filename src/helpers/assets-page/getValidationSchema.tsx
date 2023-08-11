@@ -3,7 +3,7 @@ import { StrategyTypes } from "@models/StrategyTypes"
 import { DcaPlusAssetsFormSchema } from "@models/dcaPlusFormData"
 import { WeightedScaleAssetsFormSchema } from "@models/weightedScaleFormData"
 
-export function getValidationSchema(strategySelected: string | undefined) {
+export function getValidationSchema(strategySelected: StrategyTypes) {
 
     if (strategySelected === (StrategyTypes.DCAIn || StrategyTypes.DCAOut)) {
         return step1ValidationSchema
