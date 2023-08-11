@@ -1,12 +1,12 @@
 import { Autostaking } from '@components/helpContent/Autostaking';
-import { contentData, featureFlags } from 'src/constants';
+import { contentData } from 'src/constants';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
 import { StepConfig } from './StepConfig';
 
 export const weightedScaleInSteps: StepConfig[] = [
   {
-    href: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/weighted-scale-in/assets',
+    href: '/create-strategy/weighted-scale-in/assets',
     strategyType: StrategyTypes.WeightedScaleIn,
 
     title: contentData.dcaIn.assets.title,

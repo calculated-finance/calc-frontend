@@ -6,7 +6,6 @@ import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
@@ -17,9 +16,11 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { Assets } from '../../assets/index.page';
+import steps from '@formConfig/dcaIn';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -62,7 +63,7 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialAndResultingDenoms strategyType={StrategyTypes.DCAIn} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <AssetsForm strategyType={StrategyTypes.DCAIn} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -81,7 +82,8 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      <DcaIn />
+      {/* <DcaIn /> */}
+      <Assets stepsConfig={steps} />
     </StrategyInfoProvider>
   );
 }

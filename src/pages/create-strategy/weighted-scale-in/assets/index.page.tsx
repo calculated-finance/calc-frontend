@@ -18,7 +18,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
@@ -64,7 +64,7 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialAndResultingDenoms denomsOut={undefined} strategyType={StrategyTypes.WeightedScaleIn}
+              <AssetsForm denomsOut={undefined} strategyType={StrategyTypes.WeightedScaleIn}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>

@@ -25,7 +25,7 @@ import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 
 
 
-export function InitialAndResultingDenoms({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string | undefined }) {
+export function AssetsForm({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string | undefined }) {
     const { data } = usePairs();
     const { pairs } = data || {};
     const [field, meta, helpers] = useField({ name: 'initialDenom' });

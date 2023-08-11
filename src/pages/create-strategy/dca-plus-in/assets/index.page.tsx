@@ -18,7 +18,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { InitialAndResultingDenoms } from '@components/InitialAndResultingDenoms';
+import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
@@ -65,7 +65,7 @@ function DcaIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialAndResultingDenoms strategyType={StrategyTypes.DCAPlusIn}
+              <AssetsForm strategyType={StrategyTypes.DCAPlusIn}
                 denoms={
                   values.initialDenom
                     ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
