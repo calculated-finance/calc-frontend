@@ -16,11 +16,11 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import steps from '@formConfig/dcaIn';
 import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 import { Assets } from '../../assets/index.page';
-import steps from '@formConfig/dcaIn';
 
 function DcaIn() {
   const { connected } = useWallet();
