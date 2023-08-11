@@ -11,7 +11,7 @@ import { useWallet } from './useWallet';
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};
 
-const useAssetsForm = () => {
+export const useAssetsForm = () => {
   const { formName } = useStrategyInfo();
   const { address } = useWallet();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();

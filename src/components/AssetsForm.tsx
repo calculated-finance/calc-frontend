@@ -1,109 +1,151 @@
 import {
-    Box,
-    FormControl,
-    FormErrorMessage,
-    FormHelperText,
-    FormLabel,
-    SimpleGrid,
-    Spacer,
-    Text,
-    Center,
+  Box,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  SimpleGrid,
+  Spacer,
+  Text,
+  Center,
 } from '@chakra-ui/react';
-import usePairs, { orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
-import { useField, useFormikContext } from 'formik';
+import usePairs, {
+  getResultingDenoms,
+  isSupportedDenomForDcaPlus,
+  orderAlphabetically,
+  uniqueBaseDenoms,
+  uniqueQuoteDenoms,
+} from '@hooks/usePairs';
+import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
 import { useChain } from '@hooks/useChain';
-import { DenomInfo } from '@utils/DenomInfo';
 import { getChainDexName } from '@helpers/chains';
-import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
+import { Pair } from 'src/interfaces/v2/generated/query';
+import { StrategyTypes } from '@models/StrategyTypes';
+import { DenomInfo } from '@utils/DenomInfo';
 
-// we can use this for now but can get this through the state of buttons selected - we can discuss.
+function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefined, pairs: Pair[]): DenomInfo[] {
+  if (!strategyType || !pairs) {
+    return [];
+  }
 
+  const isInStrategy = getIsInStrategy(strategyType);
 
-
-export function AssetsForm({ denomsOut, denoms, strategyType }: { denomsOut: DenomInfo[] | undefined; denoms: DenomInfo[]; strategyType: string | undefined }) {
-    const { data } = usePairs();
-    const { pairs } = data || {};
-    const [field, meta, helpers] = useField({ name: 'initialDenom' });
-    const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
-    const [strategyField, strategyMeta, strategyHelpers] = useField({ name: 'strategyType' })
-
-    const { chain } = useChain();
-
-    const denomsIn = orderAlphabetically(
-        Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
-            .map((denom) => getDenomInfo(denom))
-            .filter(isDenomStable),
+  if (isInStrategy) {
+    return orderAlphabetically(
+      Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+        .map((denom) => getDenomInfo(denom))
+        .filter(isDenomStable),
     );
+  }
 
+  if (strategyType === StrategyTypes.DCAPlusOut) {
+    return orderAlphabetically(
+      Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+        .map((denom) => getDenomInfo(denom))
+        .filter(isSupportedDenomForDcaPlus),
+    );
+  }
 
-    console.log('stratField', strategyField.value)
+  return orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+      .map((denom) => getDenomInfo(denom))
+      .filter(isDenomVolatile),
+  );
+}
 
+function getResultingDenomsFromStrategyType(
+  strategyType: StrategyTypes | undefined,
+  pairs: Pair[],
+  initialDenom: string,
+) {
+  if (!strategyType || !pairs || !initialDenom) {
+    return [];
+  }
+  const resultingDenoms = getResultingDenoms(pairs, getDenomInfo(initialDenom));
 
-    const { chain: resultingChain } = useChain();
+  if (strategyType === StrategyTypes.DCAPlusIn) {
+    return resultingDenoms.filter(isSupportedDenomForDcaPlus);
+  }
 
-    const {
-        values: { initialDenom },
-    } = useFormikContext<DcaInFormDataStep1>();
+  return resultingDenoms;
+}
 
+export function AssetsForm() {
+  const { data } = usePairs();
+  const { pairs } = data || {};
+  const [field, meta, helpers] = useField({ name: 'initialDenom' });
+  const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
+  const [strategyField] = useField({ name: 'strategyType' });
 
-    if (!pairs) {
-        return null;
-    }
+  const { chain } = useChain();
 
-    const isInStrategy = getIsInStrategy(strategyField.value)
+  const { chain: resultingChain } = useChain();
 
+  if (!pairs) {
+    return null;
+  }
 
-    return (
-        <>
-            <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-                <FormLabel>{!denomsOut ? 'How will you fund your first investment?' : 'What position do you want to take profit on?'}</FormLabel>
-                <FormHelperText>
-                    <Center>
-                        <Text textStyle="body-xs">{!denomsOut ? 'Choose stablecoin' : `CALC currently supports pairs trading on ${getChainDexName(chain)}.`} </Text>
-                        <Spacer />
-                        {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
-                    </Center>
-                </FormHelperText>
+  const isInStrategy = getIsInStrategy(strategyField.value);
 
-                <SimpleGrid columns={2} spacing={2}>
-                    <Box>
-                        <DenomSelect
-                            denoms={!denomsOut ? denomsIn : denomsOut}
-                            placeholder="Choose&nbsp;asset"
-                            value={field.value}
-                            onChange={helpers.setValue}
-                            showPromotion
-                            optionLabel={getChainDexName(chain)}
+  return (
+    <>
+      <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+        <FormLabel>
+          {!isInStrategy ? 'How will you fund your first investment?' : 'What position do you want to take profit on?'}
+        </FormLabel>
+        <FormHelperText>
+          <Center>
+            <Text textStyle="body-xs">
+              {!isInStrategy
+                ? 'Choose stablecoin'
+                : `CALC currently supports pairs trading on ${getChainDexName(chain)}.`}{' '}
+            </Text>
+            <Spacer />
+            {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
+          </Center>
+        </FormHelperText>
 
-                        />
-                        <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-                    </Box>
-                    <InitialDeposit />
-                </SimpleGrid>
-            </FormControl>
+        <SimpleGrid columns={2} spacing={2}>
+          <Box>
+            <DenomSelect
+              denoms={getInitialDenomsFromStrategyType(strategyField.value, pairs as Pair[])}
+              placeholder="Choose&nbsp;asset"
+              value={field.value}
+              onChange={helpers.setValue}
+              showPromotion
+              optionLabel={getChainDexName(chain)}
+            />
+            <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+          </Box>
+          <InitialDeposit />
+        </SimpleGrid>
+      </FormControl>
 
-            <FormControl isInvalid={Boolean(resultingMeta.touched && resultingMeta.error)} isDisabled={!initialDenom}>
-                <FormLabel hidden={!isInStrategy}>What asset do you want to invest in?</FormLabel>
-                <FormLabel hidden={isInStrategy}>How do you want to hold your profits?</FormLabel>
+      <FormControl isInvalid={Boolean(resultingMeta.touched && resultingMeta.error)} isDisabled={!field.value}>
+        <FormLabel hidden={!isInStrategy}>What asset do you want to invest in?</FormLabel>
+        <FormLabel hidden={isInStrategy}>How do you want to hold your profits?</FormLabel>
 
-                <FormHelperText>
-                    <Text textStyle="body-xs">{isInStrategy ? 'CALC will purchase this asset for you' : 'You will have the choice to move these funds into another strategy at the end.'}</Text>
-                </FormHelperText>
-                <DenomSelect
-                    denoms={denoms}
-                    placeholder="Choose asset"
-                    value={resultingField.value}
-                    onChange={resultingHelpers.setValue}
-                    optionLabel={`Swapped on ${getChainDexName(resultingChain)}`}
-                />
-                <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-            </FormControl>
-        </>
-    )
-
+        <FormHelperText>
+          <Text textStyle="body-xs">
+            {isInStrategy
+              ? 'CALC will purchase this asset for you'
+              : 'You will have the choice to move these funds into another strategy at the end.'}
+          </Text>
+        </FormHelperText>
+        <DenomSelect
+          denoms={getResultingDenomsFromStrategyType(strategyField.value, pairs as Pair[], field.value)}
+          placeholder="Choose asset"
+          value={resultingField.value}
+          onChange={resultingHelpers.setValue}
+          optionLabel={`Swapped on ${getChainDexName(resultingChain)}`}
+        />
+        <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+      </FormControl>
+    </>
+  );
 }

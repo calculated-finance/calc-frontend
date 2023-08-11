@@ -20,7 +20,7 @@ import steps from '@formConfig/dcaIn';
 import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-import { Assets } from '../../assets/index.page';
+import { Assets } from '../../assets/Assets';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -63,7 +63,11 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm strategyType={StrategyTypes.DCAIn} denomsOut={undefined} denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <AssetsForm
+                strategyType={StrategyTypes.DCAIn}
+                denomsOut={undefined}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

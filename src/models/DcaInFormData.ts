@@ -17,32 +17,6 @@ import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
 
-export const assetsFormSchema = {
-  strategyType: Yup.mixed<StrategyTypes>(),
-  resultingDenom: Yup.string().label('Resulting Denom').required(),
-  initialDenom: Yup.string().label('Initial Denom').required(),
-  initialDeposit: Yup.number()
-    .label('Initial Deposit')
-    .positive()
-    .required()
-    .nullable()
-    .test({
-      name: 'less-than-deposit',
-      message: ({ label }) => `${label} must be less than or equal to than your current balance`,
-      test(value, context) {
-        const { balances } = context?.options?.context || {};
-        if (!balances || !value || value <= 0) {
-          return true;
-        }
-        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
-        if (!amount) {
-          return false;
-        }
-        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
-      },
-    }),
-};
-
 export const assetsFormInitialValues = {
   strategyType: '',
   resultingDenom: '',
