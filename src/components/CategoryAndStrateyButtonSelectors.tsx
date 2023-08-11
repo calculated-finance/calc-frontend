@@ -12,7 +12,7 @@ export const strategyButtonOptions = {
 };
 
 
-export function CategoryAndStrategyButtonSelectors({ setCategory, setStrategy, categorySelected, strategySelected }: { setCategory: any; setStrategy: any; categorySelected: BuySellButtons; strategySelected: StrategyTypes }) {
+export function CategoryAndStrategyButtonSelectors({ setCategory, setStrategy, categorySelected, strategySelected }: { setCategory: (categorySelected: BuySellButtons) => void; setStrategy: (strategySelected: StrategyTypes) => void; categorySelected: BuySellButtons; strategySelected: StrategyTypes }) {
 
 
     const { getRootProps, getRadioProps } = useRadioGroup({
