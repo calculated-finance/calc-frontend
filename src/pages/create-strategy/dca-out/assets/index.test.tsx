@@ -12,7 +12,6 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
-import { featureFlags } from 'src/constants';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
@@ -21,7 +20,7 @@ import Page from './index.page';
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  pathname: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/dca-out/assets',
+  pathname: '/create-strategy/dca-out/assets',
   query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),

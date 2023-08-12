@@ -9,7 +9,6 @@ import theme from 'src/theme';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-import { featureFlags } from 'src/constants';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
@@ -22,7 +21,7 @@ import Page from './index.page';
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
-  pathname: featureFlags.singleAssetsEnabled ? '/create-strategy/assets' : '/create-strategy/dca-in/assets',
+  pathname: '/create-strategy/dca-in/assets',
   query: { id: '1', chain: 'Kujira' },
   events: {
     on: jest.fn(),

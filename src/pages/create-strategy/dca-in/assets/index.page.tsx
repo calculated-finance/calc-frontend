@@ -17,7 +17,9 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import steps from '@formConfig/dcaIn';
-import { AssetsForm } from '@components/AssetsForm';
+import { InitialDenom } from '@components/InitialDenom';
+import { ResultingDenom } from '@components/ResultingDenom';
+import { featureFlags } from 'src/constants';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
@@ -63,9 +65,12 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm
-                strategyType={StrategyTypes.DCAIn}
+
+              <InitialDenom
                 denomsOut={undefined}
+              />
+              <ResultingDenom
+                strategyType={StrategyTypes.DCAIn}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
@@ -86,8 +91,9 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      {/* <DcaIn /> */}
-      <Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />
+      {featureFlags.singleAssetsEnabled ?
+        <Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} /> :
+        <DcaIn />}
     </StrategyInfoProvider>
   );
 }

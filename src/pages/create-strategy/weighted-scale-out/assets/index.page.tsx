@@ -23,9 +23,12 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { InitialDenom } from '@components/InitialDenom';
+import { ResultingDenom } from '@components/ResultingDenom';
+import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../assets/Assets';
 
 function Page() {
   const { connected } = useWallet();
@@ -73,7 +76,8 @@ function Page() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm denomsOut={denoms}
+              <InitialDenom denomsOut={denoms} />
+              <ResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
@@ -94,7 +98,14 @@ function PageWrapper() {
         formName: FormNames.WeightedScaleOut,
       }}
     >
-      <Page />
+
+      {featureFlags.singleAssetsEnabled ?
+
+        <Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />
+        :
+        <Page />
+      }
+
     </StrategyInfoProvider>
   );
 }

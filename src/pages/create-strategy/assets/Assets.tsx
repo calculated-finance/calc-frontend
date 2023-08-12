@@ -1,6 +1,6 @@
 import { Center, FormControl, Stack } from '@chakra-ui/react';
 import { getFormState } from 'src/hooks/useDcaInForm';
-import usePairs, { getResultingDenoms } from '@hooks/usePairs';
+import usePairs from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';

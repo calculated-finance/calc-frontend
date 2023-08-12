@@ -24,9 +24,12 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { InitialDenom } from '@components/InitialDenom';
+import { ResultingDenom } from '@components/ResultingDenom';
+import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../assets/Assets';
 
 function Page() {
   const { connected } = useWallet();
@@ -73,7 +76,8 @@ function Page() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm denomsOut={denoms} strategyType={StrategyTypes.DCAPlusOut}
+              <InitialDenom denomsOut={denoms} />
+              <ResultingDenom strategyType={StrategyTypes.DCAPlusOut}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
@@ -96,7 +100,12 @@ function PageWrapper() {
       }}
     >
       <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-        <Page />
+        {featureFlags.singleAssetsEnabled ?
+          <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
+
+          :
+          <Page />
+        }
       </ModalWrapper>
     </StrategyInfoProvider>
   );

@@ -51,10 +51,16 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     );
   }
 
+  if (strategyType === StrategyTypes.DCAOut) {
+    return orderAlphabetically(
+      Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
+        .map((denom) => getDenomInfo(denom))
+        .filter(isDenomVolatile))
+  }
+
   return orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
-      .map((denom) => getDenomInfo(denom))
-      .filter(isDenomVolatile),
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
+
   );
 }
 

@@ -18,9 +18,12 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { InitialDenom } from '@components/InitialDenom';
+import { ResultingDenom } from '@components/ResultingDenom';
+import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../assets/Assets';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -64,7 +67,8 @@ function DcaIn() {
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm denomsOut={undefined} strategyType={StrategyTypes.WeightedScaleIn}
+              <InitialDenom denomsOut={undefined} />
+              <ResultingDenom strategyType={StrategyTypes.WeightedScaleIn}
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
@@ -84,7 +88,11 @@ function PageWrapper() {
         formName: FormNames.WeightedScaleIn,
       }}
     >
-      <DcaIn />
+      {featureFlags.singleAssetsEnabled ?
+        <Assets stepsConfig={weightedScaleInSteps} strategyType={StrategyTypes.WeightedScaleIn} />
+        :
+        <DcaIn />
+      }
     </StrategyInfoProvider>
   );
 }

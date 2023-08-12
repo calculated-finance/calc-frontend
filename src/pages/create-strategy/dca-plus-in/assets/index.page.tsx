@@ -18,9 +18,12 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetsForm } from '@components/AssetsForm';
 import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
+import { featureFlags } from 'src/constants';
+import { InitialDenom } from '@components/InitialDenom';
+import { ResultingDenom } from '@components/ResultingDenom';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../assets/Assets';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -65,13 +68,13 @@ function DcaIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <AssetsForm strategyType={StrategyTypes.DCAPlusIn}
+              <InitialDenom denomsOut={undefined} />
+              <ResultingDenom strategyType={StrategyTypes.DCAPlusIn}
                 denoms={
                   values.initialDenom
                     ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
                     : []
-                } denomsOut={undefined} />
-
+                } />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -89,7 +92,12 @@ function PageWrapper() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-      <DcaIn />
+
+      {featureFlags.singleAssetsEnabled ?
+        <Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />
+        :
+        <DcaIn />
+      }
     </StrategyInfoProvider>
   );
 }
