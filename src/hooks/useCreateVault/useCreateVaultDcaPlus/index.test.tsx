@@ -34,6 +34,7 @@ const mockCreateStrategy = jest.fn();
 const mockTrackCreateVault = jest.fn();
 
 const mockState: DcaPlusState = {
+  strategyType: undefined,
   initialDenom: 'mock-initial-denom',
   resultingDenom: 'mock-resulting-denom',
   initialDeposit: 10,
@@ -50,6 +51,7 @@ const mockState: DcaPlusState = {
 };
 
 const mockStateMinimal: DcaPlusState = {
+  strategyType: undefined,
   initialDenom: 'mock-initial-denom',
   resultingDenom: 'mock-resulting-denom',
   initialDeposit: 10,
