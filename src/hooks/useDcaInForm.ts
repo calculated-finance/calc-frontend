@@ -1,4 +1,6 @@
 import {
+  assetsFormInitialValues,
+  assetsFormSchema,
   dcaSchema,
   initialValues,
   postPurchaseValidationSchema,
@@ -19,20 +21,20 @@ export const useAssetsForm = () => {
   try {
     return {
       state: {
-        step1: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+        step1: assetsFormSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName, address),
+        updateAction: (currentFormName: FormNames) => updateAction(currentFormName, address),
         resetAction: resetAction(formName),
       },
     };
   } catch (e) {
     return {
       state: {
-        step1: step1ValidationSchema.cast(initialValues, { stripUnknown: true }),
+        step1: assetsFormSchema.cast(assetsFormInitialValues, { stripUnknown: true }),
       },
       actions: {
-        updateAction: updateAction(formName, address),
+        updateAction: (currentFormName: FormNames) => updateAction(currentFormName, address),
         resetAction: resetAction(formName),
       },
     };
