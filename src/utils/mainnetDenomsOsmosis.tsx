@@ -34,6 +34,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     stable: true,
   },
   [MainnetDenomsOsmosis.USDT]: {
+    coingeckoId: 'axelar-usdt',
     stable: true,
   },
   [MainnetDenomsOsmosis.ATOM]: {
