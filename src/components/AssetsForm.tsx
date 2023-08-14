@@ -102,12 +102,12 @@ export function AssetsForm() {
     <>
       <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
         <FormLabel>
-          {!isInStrategy ? 'How will you fund your first investment?' : 'What position do you want to take profit on?'}
+          {isInStrategy ? 'How will you fund your first investment?' : 'What position do you want to take profit on?'}
         </FormLabel>
         <FormHelperText>
           <Center>
             <Text textStyle="body-xs">
-              {!isInStrategy
+              {isInStrategy
                 ? 'Choose stablecoin'
                 : `CALC currently supports pairs trading on ${getChainDexName(chain)}.`}{' '}
             </Text>
