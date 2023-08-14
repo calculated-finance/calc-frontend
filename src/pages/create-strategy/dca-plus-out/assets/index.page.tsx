@@ -32,6 +32,7 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
 
 function Page() {
+  const { resetForm } = useFormStore();
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
@@ -72,7 +73,8 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <>
+        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
+
           <AssetPageStrategyButtonsRefactored />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
@@ -82,14 +84,13 @@ function Page() {
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
-        </>
+        </ModalWrapper>
       )}
     </Formik>
   );
 }
 
 function PageWrapper() {
-  const { resetForm } = useFormStore();
 
   return (
     <StrategyInfoProvider
@@ -99,14 +100,14 @@ function PageWrapper() {
         formName: FormNames.DcaPlusOut,
       }}
     >
-      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-        {featureFlags.singleAssetsEnabled ?
-          <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
+      {/* <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}> */}
+      {featureFlags.singleAssetsEnabled ?
+        <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
 
-          :
-          <Page />
-        }
-      </ModalWrapper>
+        :
+        <Page />
+      }
+      {/* </ModalWrapper> */}
     </StrategyInfoProvider>
   );
 }
