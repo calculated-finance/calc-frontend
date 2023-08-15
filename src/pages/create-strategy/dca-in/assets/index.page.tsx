@@ -22,7 +22,7 @@ import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-import { Assets } from '../../assets/Assets';
+import { Assets } from '../../all-assets';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -78,7 +78,7 @@ function DcaIn() {
   );
 }
 
-function Page() {
+function DcaInPage() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -94,6 +94,6 @@ function Page() {
   );
 }
 
-Page.getLayout = getFlowLayout;
+DcaInPage.getLayout = getFlowLayout;
 
-export default Page;
+export default DcaInPage;

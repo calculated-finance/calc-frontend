@@ -27,7 +27,7 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../assets/Assets';
+import { Assets } from '../../all-assets';
 
 function Page() {
   const { actions, state } = useDcaInForm();
@@ -91,7 +91,7 @@ function Page() {
   );
 }
 
-function PageWrapper() {
+function DcaOutPage() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -107,6 +107,6 @@ function PageWrapper() {
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+DcaOutPage.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default DcaOutPage;

@@ -23,7 +23,7 @@ import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../assets/Assets';
+import { Assets } from '../../all-assets';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -80,7 +80,7 @@ function DcaIn() {
   );
 }
 
-function PageWrapper() {
+function WeightedScaleInPage() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -98,6 +98,6 @@ function PageWrapper() {
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+WeightedScaleInPage.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default WeightedScaleInPage;

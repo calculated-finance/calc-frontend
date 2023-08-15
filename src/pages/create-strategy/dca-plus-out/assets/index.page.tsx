@@ -29,7 +29,7 @@ import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { useWallet } from '@hooks/useWallet';
 import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../assets/Assets';
+import { Assets } from '../../all-assets';
 
 function Page() {
   const { resetForm } = useFormStore();
@@ -90,7 +90,7 @@ function Page() {
   );
 }
 
-function PageWrapper() {
+function DcaPlusOutPage() {
 
   return (
     <StrategyInfoProvider
@@ -100,18 +100,16 @@ function PageWrapper() {
         formName: FormNames.DcaPlusOut,
       }}
     >
-      {/* <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}> */}
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
 
         :
         <Page />
       }
-      {/* </ModalWrapper> */}
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+DcaPlusOutPage.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default DcaPlusOutPage;
