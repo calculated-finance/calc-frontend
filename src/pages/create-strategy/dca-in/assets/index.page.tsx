@@ -22,7 +22,7 @@ import { ResultingDenom } from '@components/ResultingDenom';
 import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 function DcaIn() {
   const { connected } = useWallet();

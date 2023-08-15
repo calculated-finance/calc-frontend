@@ -4,7 +4,7 @@ import { useField } from 'formik';
 import { useState } from 'react';
 import { StrategyRadioCard } from './AssetPageStrategyButtons/StrategyRadioCard';
 import { BuySellButtons } from './AssetPageStrategyButtons/BuySellButtons';
-import { CategoryRadioCard } from './AssetPageStrategyButtons/index-old';
+import { CategoryRadioCard } from './AssetPageStrategyButtons';
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
 export const strategyButtonOptions = {

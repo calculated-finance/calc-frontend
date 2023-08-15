@@ -24,7 +24,7 @@ import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import '@testing-library/jest-dom';
 import { useState as useStateMock } from 'react';
-import { AssetPageStrategyButtonsRefactored, BuyButtons, SellButtons } from './index-refactored';
+import { AssetPageStrategyButtons, BuyButtons, SellButtons } from '.';
 
 jest.mock('next/router', () => ({
   useRouter() {
@@ -28,13 +28,13 @@ describe('AssetsTabsSelectors tests', () => {
   });
 
   it('renders strategy category radio selectors', () => {
-    render(<AssetPageStrategyButtonsRefactored />);
+    render(<AssetPageStrategyButtons />);
     expect(screen.getByRole('radiogroup')).toBeInTheDocument();
     expect(screen.getByText(/Buy strategies/)).toBeInTheDocument();
     expect(screen.getByText(/Sell strategies/)).toBeInTheDocument();
   });
   it('renders strategy type buttons', () => {
-    render(<AssetPageStrategyButtonsRefactored />);
+    render(<AssetPageStrategyButtons />);
     expect(screen.getByRole('group')).toBeInTheDocument();
   });
 
