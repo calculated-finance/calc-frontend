@@ -22,9 +22,9 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { featureFlags } from 'src/constants';
@@ -75,7 +75,7 @@ function Page() {
       {({ values }) => (
         <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
 
-          <AssetPageStrategyButtonsRefactored />
+          <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={denoms} />

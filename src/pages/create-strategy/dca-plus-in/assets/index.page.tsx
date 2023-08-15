@@ -16,9 +16,9 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { featureFlags } from 'src/constants';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
@@ -64,7 +64,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={dcaPlusInSteps}>
-          <AssetPageStrategyButtonsRefactored />
+          <AssetPageStrategyButtons />
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>

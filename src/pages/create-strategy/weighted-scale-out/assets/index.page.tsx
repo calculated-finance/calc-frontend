@@ -22,8 +22,8 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
 import { useWallet } from '@hooks/useWallet';
-import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { featureFlags } from 'src/constants';
@@ -73,7 +73,7 @@ function Page() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={actions.resetAction}>
-          <AssetPageStrategyButtonsRefactored />
+          <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <InitialDenom denomsOut={denoms} />

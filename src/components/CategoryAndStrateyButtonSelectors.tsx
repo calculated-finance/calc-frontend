@@ -1,10 +1,10 @@
 import { HStack, VStack, useRadioGroup } from '@chakra-ui/react';
 import { StrategyTypes } from '@models/StrategyTypes';
-import { useField, useFormikContext } from 'formik';
+import { useField } from 'formik';
 import { useState } from 'react';
-import { CategoryRadioCard } from './AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyRadioCard } from './AssetPageStrategyButtons/StrategyRadioCard';
 import { BuySellButtons } from './AssetPageStrategyButtons/BuySellButtons';
+import { CategoryRadioCard } from './AssetPageStrategyButtons/index-old';
 
 export const categoryButtonOptions = ['Buy strategies', 'Sell strategies'];
 export const strategyButtonOptions = {

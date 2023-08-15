@@ -31,7 +31,7 @@ import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
-import LinkWithQuery from '@components/LinkWithQuery';
+import LinkWithQuery from '../LinkWithQuery';
 
 const buttonStyles = {
     cursor: 'pointer',
@@ -72,7 +72,7 @@ type RouterType = {
     pathname: string;
 };
 
-function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+export function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -131,7 +131,7 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
         </Modal>
     );
 }
-function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+export function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
@@ -191,10 +191,7 @@ function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>
     );
 }
 
-export function CategoryRadioCard({
-    buttonClicked,
-    ...props
-}: { buttonClicked: string } & UseRadioProps & ChildrenProp) {
+export function CategoryRadioCard({ buttonClicked, ...props }: { buttonClicked: string } & UseRadioProps & ChildrenProp) {
     const { getInputProps, getRadioProps } = useRadio(props);
     const { isOpen: isBuyOpen, onOpen: onBuyOpen, onClose: onBuyClose } = useDisclosure();
     const { isOpen: isSellOpen, onOpen: onSellOpen, onClose: onSellClose } = useDisclosure();
@@ -255,8 +252,8 @@ export function BuyButtons({ pathname }: RouterType) {
                     );
                 }
                 return (
-                    <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} key={el} passHref>
-                        <Button {...buttonStyles} data-testid={el} key={el}>
+                    <LinkWithQuery href={buttonLabels.buttonLabelsIn.buttonLinks[index]} passHref>
+                        <Button {...buttonStyles} data-testid={el}>
                             {buttonLabels.buttonLabelsIn.buttonText[index]}
                         </Button>
                     </LinkWithQuery>
@@ -277,8 +274,8 @@ export function SellButtons({ pathname }: RouterType) {
                     );
                 }
                 return (
-                    <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} key={el} passHref>
-                        <Button {...buttonStyles} data-testid={el} key={el}>
+                    <LinkWithQuery href={buttonLabels.buttonLabelsOut.buttonLinks[index]} passHref>
+                        <Button {...buttonStyles} data-testid={el}>
                             {buttonLabels.buttonLabelsOut.buttonText[index]}
                         </Button>
                     </LinkWithQuery>
@@ -288,7 +285,7 @@ export function SellButtons({ pathname }: RouterType) {
     );
 }
 
-export function AssetPageStrategyButtonsRefactored() {
+export function AssetPageStrategyButtons() {
     const router = useRouter();
     const { pathname } = router;
     const buttonOptions = ['Buy strategies', 'Sell strategies'];
@@ -322,5 +319,3 @@ export function AssetPageStrategyButtonsRefactored() {
         </VStack>
     ) : null;
 }
-
-

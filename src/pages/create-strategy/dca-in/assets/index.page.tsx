@@ -20,9 +20,9 @@ import steps from '@formConfig/dcaIn';
 import { InitialDenom } from '@components/InitialDenom';
 import { ResultingDenom } from '@components/ResultingDenom';
 import { featureFlags } from 'src/constants';
-import { AssetPageStrategyButtonsRefactored } from '@components/AssetPageStrategyButtons/AssetsPageRefactored';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons/index-old';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -62,7 +62,7 @@ function DcaIn() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
-          <AssetPageStrategyButtonsRefactored />
+          <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
 
