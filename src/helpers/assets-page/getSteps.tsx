@@ -1,3 +1,4 @@
+import { StepConfig } from "@formConfig/StepConfig"
 import steps from "@formConfig/dcaIn"
 import dcaOutSteps from "@formConfig/dcaOut"
 import { dcaPlusInSteps } from "@formConfig/dcaPlusIn"
@@ -7,21 +8,15 @@ import weightedScaleOutSteps from "@formConfig/weightedScaleOut"
 import { StrategyTypes } from "@models/StrategyTypes"
 
 
-export function getSteps(strategySelected: string | undefined) {
-    if (strategySelected === StrategyTypes.DCAIn) {
-        return steps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusIn) {
-        return dcaPlusInSteps
-    }
-    if (strategySelected === StrategyTypes.WeightedScaleIn) {
-        return weightedScaleInSteps
-    }
-    if (strategySelected === StrategyTypes.DCAOut) {
-        return dcaOutSteps
-    }
-    if (strategySelected === StrategyTypes.DCAPlusOut) {
-        return dcaPlusOutSteps
-    }
-    return weightedScaleOutSteps
+export const stepsByStrategyType: Record<StrategyTypes, StepConfig[]> = {
+    [StrategyTypes.DCAIn]: steps,
+    [StrategyTypes.DCAOut]: dcaOutSteps,
+    [StrategyTypes.DCAPlusIn]: dcaPlusInSteps,
+    [StrategyTypes.DCAPlusOut]: dcaPlusOutSteps,
+    [StrategyTypes.WeightedScaleIn]: weightedScaleInSteps,
+    [StrategyTypes.WeightedScaleOut]: weightedScaleOutSteps
+};
+
+export function getSteps(strategySelected: StrategyTypes) {
+    return stepsByStrategyType[strategySelected]
 }

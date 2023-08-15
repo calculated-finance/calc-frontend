@@ -32,6 +32,7 @@ import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useS
 import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '../LinkWithQuery';
+import { BuySellButtons } from './BuySellButtons';
 
 const buttonStyles = {
     cursor: 'pointer',
@@ -49,11 +50,6 @@ const buttonStyles = {
     variant: 'outline',
     size: 'xs',
 };
-
-enum BuySellButtons {
-    Buy = 'Buy strategies',
-    Sell = 'Sell strategies',
-}
 
 const buttonLabels = {
     buttonLabelsIn: {
