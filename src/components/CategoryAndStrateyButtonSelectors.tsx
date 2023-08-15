@@ -15,7 +15,7 @@ export const strategyButtonOptions = {
 export function CategoryAndStrategyButtonSelectors() {
   const [field, meta, helpers] = useField({ name: 'strategyType' });
   const [, , initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
+  const [initialDepositField, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
   const [, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
 
   const buySellButtonValue = strategyButtonOptions.in.includes(field.value) ? BuySellButtons.Buy : BuySellButtons.Sell;
@@ -36,7 +36,7 @@ export function CategoryAndStrategyButtonSelectors() {
     onChange: (nextValue: StrategyTypes) => {
       // TODO: is there a better way to do this?
       initialDenomHelpers.setValue('');
-      initialDepositHelpers.setValue(null);
+      initialDepositHelpers.setValue(initialDepositField.value);
       resultingDenomHelpers.setValue('');
 
       initialDenomHelpers.setTouched(false);

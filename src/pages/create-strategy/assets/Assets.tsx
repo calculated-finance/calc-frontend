@@ -67,7 +67,11 @@ export function Assets({ stepsConfig, strategyType }: { stepsConfig: StepConfig[
   const initialValues = {
     ...state.step1,
     strategyType,
+    initialDenom: state.step1.initialDenom,
+    resultingDenom: state.step1.resultingDenom
   };
+
+  console.log(initialValues)
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -83,7 +83,6 @@ export const assetsFormSchema = Yup.object({
 });
 
 export const initialValues = {
-  strategyType: '',
   resultingDenom: '',
   initialDenom: '',
   initialDeposit: null,

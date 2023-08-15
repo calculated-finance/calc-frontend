@@ -1,14 +1,10 @@
 import { StrategyTypes } from "@models/StrategyTypes";
 
 export function getIsInStrategy(strategyType: string | undefined) {
-    if (strategyType === StrategyTypes.DCAIn) {
-        return true;
+    if (!strategyType) {
+        return null
     }
-    if (strategyType === StrategyTypes.DCAPlusIn) {
-        return true
-    }
-
-    if (strategyType === StrategyTypes.WeightedScaleIn) {
+    if ([StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn].includes(strategyType as StrategyTypes)) {
         return true
     }
 
