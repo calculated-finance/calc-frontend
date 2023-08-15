@@ -15,14 +15,14 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
+import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import steps from '@formConfig/dcaIn';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
 import { featureFlags } from 'src/constants';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -66,13 +66,9 @@ function DcaIn() {
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
 
-              <InitialDenom
-                denomsOut={undefined}
-              />
-              <ResultingDenom
-                strategyType={StrategyTypes.DCAIn}
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+              <DCAInInitialDenom />
+              <DCAInResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

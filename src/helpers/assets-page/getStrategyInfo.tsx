@@ -1,6 +1,7 @@
 import { StrategyTypes } from "@models/StrategyTypes"
 import { TransactionType } from "@components/TransactionType"
 import { FormNames } from "@hooks/useFormStore"
+import { useStrategyInfo } from "src/pages/create-strategy/dca-in/customise/useStrategyInfo"
 import { getStrategySelected } from "./getStrategySelected"
 
 

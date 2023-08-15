@@ -1,6 +1,5 @@
 import { ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
 import { RecurringDeposits } from '@components/helpContent/RecurringDeposits';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { contentData } from 'src/constants';
 import { Autostaking } from '../components/helpContent/Autostaking';
 import { StepConfig } from './StepConfig';
@@ -8,8 +7,6 @@ import { StepConfig } from './StepConfig';
 const steps: StepConfig[] = [
   {
     href: '/create-strategy/dca-in/assets',
-
-    strategyType: StrategyTypes.DCAIn,
     title: contentData.dcaIn.assets.title,
     footerText: contentData.dcaIn.assets.footerText,
     helpContent: <RecurringDeposits />,

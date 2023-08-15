@@ -28,10 +28,7 @@ function ThatsCalculatedThinkingText() {
 export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
-  console.log(useRouter())
-  console.log(query)
   const { strategyId, timeSaved } = query;
-  console.log(timeSaved)
   return (
     <ModalWrapper stepsConfig={stepConfig}>
       <AbsoluteCenter w="100%" h="100%" top="10%">

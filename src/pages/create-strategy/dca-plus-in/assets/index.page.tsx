@@ -20,8 +20,8 @@ import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import { featureFlags } from 'src/constants';
-import { InitialDenom } from '@components/InitialDenom';
-import { ResultingDenom } from '@components/ResultingDenom';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { Assets } from '../../assets/Assets';
 
@@ -68,13 +68,13 @@ function DcaIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-              <InitialDenom denomsOut={undefined} />
-              <ResultingDenom strategyType={StrategyTypes.DCAPlusIn}
-                denoms={
-                  values.initialDenom
-                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
-                    : []
-                } />
+
+              <DCAInInitialDenom />
+              <DCAInResultingDenom denoms={
+                values.initialDenom
+                  ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
+                  : []
+              } />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

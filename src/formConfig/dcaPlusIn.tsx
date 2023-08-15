@@ -1,5 +1,4 @@
 import { Autostaking } from '@components/helpContent/Autostaking';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { contentData } from 'src/constants';
 import { StepConfig } from './StepConfig';
@@ -7,8 +6,6 @@ import { StepConfig } from './StepConfig';
 export const dcaPlusInSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-plus-in/assets',
-    strategyType: StrategyTypes.DCAPlusIn,
-
     title: contentData.dcaIn.assets.title,
   },
   {

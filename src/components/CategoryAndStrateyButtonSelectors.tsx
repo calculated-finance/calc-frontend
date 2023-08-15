@@ -36,7 +36,7 @@ export function CategoryAndStrategyButtonSelectors() {
     onChange: (nextValue: StrategyTypes) => {
       // TODO: is there a better way to do this?
       initialDenomHelpers.setValue('');
-      //   initialDepositHelpers.setValue(null);
+      initialDepositHelpers.setValue(null);
       resultingDenomHelpers.setValue('');
 
       initialDenomHelpers.setTouched(false);
