@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useWallet } from '@hooks/useWallet';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -34,7 +34,6 @@ const mockCreateStrategy = jest.fn();
 const mockTrackCreateVault = jest.fn();
 
 const mockState: DcaPlusState = {
-  strategyType: undefined,
   initialDenom: 'mock-initial-denom',
   resultingDenom: 'mock-resulting-denom',
   initialDeposit: 10,
@@ -51,7 +50,6 @@ const mockState: DcaPlusState = {
 };
 
 const mockStateMinimal: DcaPlusState = {
-  strategyType: undefined,
   initialDenom: 'mock-initial-denom',
   resultingDenom: 'mock-resulting-denom',
   initialDeposit: 10,

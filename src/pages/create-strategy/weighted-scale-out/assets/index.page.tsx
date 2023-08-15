@@ -78,7 +78,7 @@ function Page() {
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
               <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} strategyType={StrategyTypes.WeightedScaleOut}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
