@@ -40,7 +40,7 @@ export function CategoryAndStrategyButtonSelectors() {
       resultingDenomHelpers.setValue('');
 
       initialDenomHelpers.setTouched(false);
-      initialDepositHelpers.setTouched(true);
+      initialDepositHelpers.setTouched(false);
       resultingDenomHelpers.setTouched(false);
 
       helpers.setValue(nextValue);
