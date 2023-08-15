@@ -13,7 +13,7 @@ export const strategyButtonOptions = {
 };
 
 export function CategoryAndStrategyButtonSelectors() {
-  const [field, meta, helpers] = useField({ name: 'strategyType' });
+  const [field, , helpers] = useField({ name: 'strategyType' });
   const [, , initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [initialDepositField, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
   const [, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
