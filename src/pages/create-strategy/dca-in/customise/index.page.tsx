@@ -10,9 +10,6 @@ import { StrategyInfoProvider } from './useStrategyInfo';
 
 function Page() {
   const { resetForm } = useFormStore();
-  console.log(resetForm)
-
-
   return (
     <StrategyInfoProvider strategyInfo={{
       strategyType: StrategyTypes.DCAIn,

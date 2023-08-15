@@ -115,7 +115,6 @@ export const initialValues = {
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 export const allSchema = {
-  strategyType: Yup.mixed<StrategyTypes>(),
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
@@ -421,7 +420,6 @@ export const allSchema = {
 };
 
 export const dcaSchema = Yup.object({
-  strategyType: allSchema.strategyType,
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit,
@@ -448,7 +446,6 @@ export const dcaSchema = Yup.object({
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
 export const step1ValidationSchema = Yup.object({
-  strategyType: allSchema.strategyType,
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit,

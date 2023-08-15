@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import { allSchema } from './DcaInFormData';
 
 export const dcaPlusSchema = Yup.object({
-  strategyType: allSchema.strategyType,
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit.test({
@@ -46,12 +45,7 @@ export const dcaPlusSchema = Yup.object({
   reinvestStrategy: allSchema.reinvestStrategy,
 });
 
-export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick([
-  'resultingDenom',
-  'initialDenom',
-  'initialDeposit',
-  'strategyType',
-]);
+export const DcaPlusAssetsFormSchema = dcaPlusSchema.pick(['resultingDenom', 'initialDenom', 'initialDeposit']);
 export const DcaPlusCustomiseFormSchema = dcaPlusSchema.pick([
   'advancedSettings',
   'strategyDuration',

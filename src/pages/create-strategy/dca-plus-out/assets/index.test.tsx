@@ -189,8 +189,6 @@ describe('DCA Out Assets page', () => {
         initialDenom: 'ukuji',
         initialDeposit: 10,
         resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-        strategyType: 'DCA+ Out'
-
       });
 
       expect(mockRouter.push).toHaveBeenCalledWith({
