@@ -241,7 +241,6 @@ describe('Assets page', () => {
         describe('when form is filled and submitted', () => {
             it('submits form successfully', async () => {
                 mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
                 await renderTarget(DcaInPage);
 
                 // wait for balances to load
@@ -488,7 +487,6 @@ describe('Assets page', () => {
         describe('when form is filled and submitted', () => {
             it('submits form successfully', async () => {
                 mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
                 await renderTarget(DcaPlusInPage);
 
                 // wait for balances to load
@@ -626,7 +624,6 @@ describe('Assets page', () => {
         describe('when form is filled and submitted', () => {
             it('submits form successfully', async () => {
                 mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
                 await renderTarget(DcaPlusOutPage);
 
                 // wait for balances to load
@@ -663,7 +660,7 @@ describe('Assets page', () => {
                 }
 
                 expect(mockRouter.push).toHaveBeenCalledWith({
-                    pathname: '/create-strategy/dca-out/customise',
+                    pathname: '/create-strategy/dca-plus-out/customise',
                     query: { chain: 'Kujira' },
                 });
             });
@@ -764,7 +761,6 @@ describe('Assets page', () => {
         describe('when form is filled and submitted', () => {
             it('submits form successfully', async () => {
                 mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-
                 await renderTarget(WeightedScaleInPage);
 
                 // wait for balances to load
@@ -961,11 +957,6 @@ describe('Assets page', () => {
             });
         });
     })
-
-
-
-
-
 
 });
 
