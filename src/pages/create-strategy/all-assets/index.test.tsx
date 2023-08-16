@@ -25,8 +25,6 @@ import DcaPlusOutPage from '../dca-plus-out/assets/index.page';
 import WeightedScaleOutPage from '../weighted-scale-out/assets/index.page';
 
 
-
-
 const mockRouter = {
     isReady: true,
     push: jest.fn(),
@@ -41,9 +39,7 @@ jest.mock('@hooks/useWallet');
 
 
 jest.mock('next/router', () => ({
-    useRouter() {
-        return mockRouter;
-    },
+    useRouter() { return mockRouter },
 }));
 
 const mockStateMachine = {
@@ -53,6 +49,7 @@ const mockStateMachine = {
         resetAction: jest.fn(),
     },
 };
+
 
 async function renderTarget(SelectedComponent: () => JSX.Element) {
     await act(() => {
