@@ -28,7 +28,7 @@ import WeightedScaleOutPage from '../../pages/create-strategy/weighted-scale-out
 const mockRouter = {
     isReady: true,
     push: jest.fn(),
-    pathname: '/create-strategy/dca-in/assets',
+    pathname: '/',
     query: { id: '1', chain: 'Kujira' },
     events: {
         on: jest.fn(),
@@ -49,7 +49,6 @@ const mockStateMachine = {
         resetAction: jest.fn(),
     },
 };
-
 
 async function renderTarget(SelectedComponent: () => JSX.Element) {
     await act(() => {

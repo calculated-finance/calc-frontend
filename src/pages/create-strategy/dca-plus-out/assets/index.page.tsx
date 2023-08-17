@@ -102,7 +102,6 @@ function DcaPlusOutPage() {
     >
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
-
         :
         <Page />
       }
