@@ -15,14 +15,14 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import steps from '@formConfig/dcaIn';
 import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
-import { Assets } from '../../all-assets';
+import { Assets } from '../../../../components/AssetsPageAndForm';
 
 function DcaIn() {
   const { connected } = useWallet();

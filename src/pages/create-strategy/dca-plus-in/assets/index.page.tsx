@@ -16,14 +16,14 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
-import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
+import { featureFlags } from 'src/constants';
+import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../all-assets';
 
 function DcaIn() {
   const { connected } = useWallet();

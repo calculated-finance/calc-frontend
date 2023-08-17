@@ -22,14 +22,14 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { useWallet } from '@hooks/useWallet';
 import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../all-assets';
+import { Assets } from '../../../../components/AssetsPageAndForm';
 
 function Page() {
   const { resetForm } = useFormStore();

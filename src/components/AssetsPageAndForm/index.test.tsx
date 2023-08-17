@@ -17,12 +17,12 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { featureFlags } from 'src/constants';
 import userEvent from '@testing-library/user-event';
-import DcaInPage from '../dca-in/assets/index.page';
-import DcaOutPage from '../dca-out/assets/index.page';
-import DcaPlusInPage from '../dca-plus-in/assets/index.page';
-import WeightedScaleInPage from '../weighted-scale-in/assets/index.page';
-import DcaPlusOutPage from '../dca-plus-out/assets/index.page';
-import WeightedScaleOutPage from '../weighted-scale-out/assets/index.page';
+import DcaInPage from '../../pages/create-strategy/dca-in/assets/index.page';
+import DcaOutPage from '../../pages/create-strategy/dca-out/assets/index.page';
+import DcaPlusInPage from '../../pages/create-strategy/dca-plus-in/assets/index.page';
+import WeightedScaleInPage from '../../pages/create-strategy/weighted-scale-in/assets/index.page';
+import DcaPlusOutPage from '../../pages/create-strategy/dca-plus-out/assets/index.page';
+import WeightedScaleOutPage from '../../pages/create-strategy/weighted-scale-out/assets/index.page';
 
 
 const mockRouter = {

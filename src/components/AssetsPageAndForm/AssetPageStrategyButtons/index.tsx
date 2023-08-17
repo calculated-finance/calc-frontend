@@ -31,7 +31,7 @@ import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
-import LinkWithQuery from '../LinkWithQuery';
+import LinkWithQuery from '../../LinkWithQuery';
 import { BuySellButtons } from './BuySellButtons';
 
 const buttonStyles = {

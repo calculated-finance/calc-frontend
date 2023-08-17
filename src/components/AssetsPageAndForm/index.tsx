@@ -10,7 +10,7 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetsForm } from '@components/AssetsForm';
+import { AssetsForm } from '@components/AssetsPageAndForm/AssetsForm';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
 import { StepConfig } from '@formConfig/StepConfig';
 import { FormNames } from '@hooks/useFormStore';
