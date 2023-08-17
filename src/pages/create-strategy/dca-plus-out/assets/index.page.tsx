@@ -31,7 +31,7 @@ import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { Assets } from '../../../../components/AssetsPageAndForm';
 
-function Page() {
+function DcaPlusOut() {
   const { resetForm } = useFormStore();
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
@@ -90,7 +90,7 @@ function Page() {
   );
 }
 
-function DcaPlusOutPage() {
+function Page() {
 
   return (
     <StrategyInfoProvider
@@ -103,12 +103,12 @@ function DcaPlusOutPage() {
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={dcaPlusOutSteps} strategyType={StrategyTypes.DCAPlusOut} />
         :
-        <Page />
+        <DcaPlusOut />
       }
     </StrategyInfoProvider>
   );
 }
 
-DcaPlusOutPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaPlusOutPage;
+export default Page;

@@ -30,7 +30,7 @@ import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function Page() {
+function WeightedScaleOut() {
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
@@ -89,7 +89,7 @@ function Page() {
   );
 }
 
-function WeightedScaleOutPage() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -103,13 +103,13 @@ function WeightedScaleOutPage() {
 
         <Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />
         :
-        <Page />
+        <WeightedScaleOut />
       }
 
     </StrategyInfoProvider>
   );
 }
 
-WeightedScaleOutPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default WeightedScaleOutPage;
+export default Page;

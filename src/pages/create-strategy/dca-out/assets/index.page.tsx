@@ -29,7 +29,7 @@ import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { Assets } from '../../../../components/AssetsPageAndForm';
 
-function Page() {
+function DcaOut() {
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
@@ -91,7 +91,7 @@ function Page() {
   );
 }
 
-function DcaOutPage() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -102,11 +102,11 @@ function DcaOutPage() {
     >
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={dcaOutSteps} strategyType={StrategyTypes.DCAOut} /> :
-        <Page />}
+        <DcaOut />}
     </StrategyInfoProvider>
   );
 }
 
-DcaOutPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaOutPage;
+export default Page;

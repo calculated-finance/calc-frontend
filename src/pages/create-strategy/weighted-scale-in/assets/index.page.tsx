@@ -25,7 +25,7 @@ import { featureFlags } from 'src/constants';
 import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function DcaIn() {
+function WeightedScaleIn() {
   const { connected } = useWallet();
   const { actions, state } = useWeightedScaleAssetsForm();
   const {
@@ -80,7 +80,7 @@ function DcaIn() {
   );
 }
 
-function WeightedScaleInPage() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -92,12 +92,12 @@ function WeightedScaleInPage() {
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={weightedScaleInSteps} strategyType={StrategyTypes.WeightedScaleIn} />
         :
-        <DcaIn />
+        <WeightedScaleIn />
       }
     </StrategyInfoProvider>
   );
 }
 
-WeightedScaleInPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default WeightedScaleInPage;
+export default Page;

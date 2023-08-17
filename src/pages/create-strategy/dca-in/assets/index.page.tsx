@@ -78,7 +78,7 @@ function DcaIn() {
   );
 }
 
-function DcaInPage() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -94,6 +94,6 @@ function DcaInPage() {
   );
 }
 
-DcaInPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaInPage;
+export default Page;

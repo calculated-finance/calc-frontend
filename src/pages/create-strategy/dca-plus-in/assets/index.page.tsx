@@ -25,7 +25,7 @@ import { featureFlags } from 'src/constants';
 import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function DcaIn() {
+function DcaPlusIn() {
   const { connected } = useWallet();
   const { actions, state } = useDCAPlusAssetsForm();
   const {
@@ -83,7 +83,7 @@ function DcaIn() {
     </Formik>
   );
 }
-function DcaPlusInPage() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -96,12 +96,12 @@ function DcaPlusInPage() {
       {featureFlags.singleAssetsEnabled ?
         <Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />
         :
-        <DcaIn />
+        <DcaPlusIn />
       }
     </StrategyInfoProvider>
   );
 }
 
-DcaPlusInPage.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default DcaPlusInPage;
+export default Page;

@@ -10,7 +10,6 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetsForm } from '@components/AssetsPageAndForm/AssetsForm/index.tsx';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
 import { StepConfig } from '@formConfig/StepConfig';
 import { FormNames } from '@hooks/useFormStore';
@@ -18,6 +17,7 @@ import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
 import { useRouter } from 'next/router';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
+import { AssetsForm } from './AssetsForm';
 
 const strategyTypesToFormTypes = {
   [StrategyTypes.DCAIn]: FormNames.DcaIn,
