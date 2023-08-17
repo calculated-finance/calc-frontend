@@ -10,6 +10,7 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
+import * as constants from 'src/constants';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
@@ -27,6 +28,7 @@ const mockRouter = {
   },
 };
 
+jest.mock('src/constants');
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -61,6 +63,12 @@ describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    constants.featureFlags = {
+      singleAssetsEnabled: false,
+    };
     useFormStore.setState({
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,
