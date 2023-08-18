@@ -11,13 +11,13 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
-import { StepConfig } from '@formConfig/StepConfig';
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
 import { useRouter } from 'next/router';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
 import { AssetsForm } from './AssetsForm';
+import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 const strategyTypesToFormTypes = {
   [StrategyTypes.DCAIn]: FormNames.DcaIn,
@@ -31,9 +31,12 @@ const strategyTypesToFormTypes = {
 
 const CUSTOMISE_PAGE_INDEX = 1;
 
-export function Assets({ stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }) {
-  const { connected } = useWallet();
+// { stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }
 
+export function Assets() {
+  const { connected } = useWallet();
+  const { strategyType } = useStrategyInfo()
+  const stepsConfig = getSteps(strategyType)
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(assetsFormSchema, { balances });

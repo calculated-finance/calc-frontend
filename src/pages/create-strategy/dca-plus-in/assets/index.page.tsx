@@ -94,7 +94,7 @@ function Page() {
     >
 
       {featureFlags.singleAssetsEnabled ?
-        <Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />
+        <Assets />
         :
         <DcaPlusIn />
       }

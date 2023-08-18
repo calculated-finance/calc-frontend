@@ -90,7 +90,7 @@ function Page() {
       }}
     >
       {featureFlags.singleAssetsEnabled ?
-        <Assets stepsConfig={weightedScaleInSteps} strategyType={StrategyTypes.WeightedScaleIn} />
+        <Assets />
         :
         <WeightedScaleIn />
       }

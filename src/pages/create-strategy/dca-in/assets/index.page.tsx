@@ -88,7 +88,7 @@ function Page() {
       }}
     >
       {featureFlags.singleAssetsEnabled ?
-        <Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} /> :
+        <Assets /> :
         <DcaIn />}
     </StrategyInfoProvider>
   );

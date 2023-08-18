@@ -101,7 +101,7 @@ function Page() {
       }}
     >
       {featureFlags.singleAssetsEnabled ?
-        <Assets stepsConfig={dcaOutSteps} strategyType={StrategyTypes.DCAOut} /> :
+        <Assets /> :
         <DcaOut />}
     </StrategyInfoProvider>
   );

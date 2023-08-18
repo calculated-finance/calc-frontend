@@ -101,7 +101,7 @@ function Page() {
 
       {featureFlags.singleAssetsEnabled ?
 
-        <Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />
+        <Assets />
         :
         <WeightedScaleOut />
       }

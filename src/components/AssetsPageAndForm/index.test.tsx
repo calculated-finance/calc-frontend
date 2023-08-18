@@ -17,11 +17,8 @@ import userEvent from '@testing-library/user-event';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
-import steps from '@formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { dcaPlusInSteps } from '@formConfig/dcaPlusIn';
-import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { Assets } from '.';
 
 
@@ -127,9 +124,6 @@ describe('Assets page', () => {
         mockFiatPrice();
     });
 
-    // Issue with rendering the heading correctly. 
-
-
     describe('on page load', () => {
 
         describe('renders first question correctly', () => {
@@ -137,7 +131,7 @@ describe('Assets page', () => {
                 it('DCA In', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-                    await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />)
+                    await renderTarget(<Assets />)
 
                     expect(
                         screen.getByText('How will you fund your first investment?')
@@ -146,7 +140,7 @@ describe('Assets page', () => {
                 it('DCA+ In', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-                    await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                    await renderTargetDcaPlusIn(<Assets />)
 
                     expect(
                         screen.getByText('How will you fund your first investment?')
@@ -158,33 +152,24 @@ describe('Assets page', () => {
                 it('Weighted Scale Out', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-                    await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                    await renderTargetWeightedScaleOut(<Assets />)
 
                     expect(
                         screen.getByText('What position do you want to take profit on?')
                     ).toBeInTheDocument()
                 });
-
-
             })
-
-
-
         });
 
 
         describe('DCA+ In Tests', () => {
-
-
-
-
 
             describe('when initial denom is selected', () => {
                 describe('and there are available funds', () => {
                     it('should show available funds', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                        await renderTarget(<Assets />);
 
                         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
                         selectEvent.select(select, ['DEMO']);
@@ -199,7 +184,7 @@ describe('Assets page', () => {
                     it('should show an amount of none', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                        await renderTarget(<Assets />);
 
                         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
                         await selectEvent.select(select, ['USK']);
@@ -214,7 +199,7 @@ describe('Assets page', () => {
                     it('should show an error', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                        await renderTarget(<Assets />);
 
                         const initalDenomSelect = await waitFor(() =>
                             screen.getByLabelText(/How will you fund your first investment?/),
@@ -252,7 +237,7 @@ describe('Assets page', () => {
             describe('when form is filled and submitted', () => {
                 it('submits form successfully', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
-                    await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                    await renderTarget(<Assets />);
 
                     // wait for balances to load
                     // eslint-disable-next-line no-promise-executor-return
@@ -292,13 +277,13 @@ describe('Assets page', () => {
                 it('shows connect wallet when not connected', async () => {
                     mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), false);
 
-                    await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                    await renderTarget(<Assets />);
                     expect(screen.getByText(/Connect to a wallet/)).toBeInTheDocument();
                 });
 
                 it('does not show connect wallet when connected', async () => {
                     mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), true);
-                    await renderTarget(<Assets stepsConfig={steps} strategyType={StrategyTypes.DCAIn} />);
+                    await renderTarget(<Assets />);
 
                     expect(screen.getByText(/Next/)).toBeInTheDocument();
                 });
@@ -314,7 +299,7 @@ describe('Assets page', () => {
                     it('should show available funds', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                        await renderTargetDcaPlusIn(<Assets />)
 
                         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
                         selectEvent.select(select, ['DEMO']);
@@ -328,7 +313,7 @@ describe('Assets page', () => {
                     it('should show an amount of none', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                        await renderTargetDcaPlusIn(<Assets />)
 
                         const select = await waitFor(() => screen.getByLabelText(/How will you fund your first investment?/));
                         await selectEvent.select(select, ['USK']);
@@ -343,7 +328,7 @@ describe('Assets page', () => {
                     it('should show an error', async () => {
                         mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                        await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                        await renderTargetDcaPlusIn(<Assets />)
 
                         const initalDenomSelect = await waitFor(() =>
                             screen.getByLabelText(/How will you fund your first investment?/),
@@ -382,7 +367,7 @@ describe('Assets page', () => {
                 it('submits form successfully', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-                    await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                    await renderTargetDcaPlusIn(<Assets />)
 
                     // wait for balances to load
                     // eslint-disable-next-line no-promise-executor-return
@@ -421,13 +406,13 @@ describe('Assets page', () => {
                 it('shows connect wallet when not connected', async () => {
                     mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), false);
 
-                    await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                    await renderTargetDcaPlusIn(<Assets />)
                     expect(screen.getByText(/Connect to a wallet/)).toBeInTheDocument();
                 });
 
                 it('does not show connect wallet when connected', async () => {
                     mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), true);
-                    await renderTargetDcaPlusIn(<Assets stepsConfig={dcaPlusInSteps} strategyType={StrategyTypes.DCAPlusIn} />)
+                    await renderTargetDcaPlusIn(<Assets />)
 
                     expect(screen.getByText(/Next/)).toBeInTheDocument();
                 });
@@ -437,7 +422,7 @@ describe('Assets page', () => {
 
 
 
-    describe.only('Weighted Scale Out Tests', () => {
+    describe('Weighted Scale Out Tests', () => {
 
 
 
@@ -447,7 +432,7 @@ describe('Assets page', () => {
                 it('should show available funds', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                    await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                    await renderTargetWeightedScaleOut(<Assets />)
 
                     const select = await waitFor(() => screen.getByLabelText(/What position do you want to take profit on?/));
                     selectEvent.select(select, ['KUJI']);
@@ -462,7 +447,7 @@ describe('Assets page', () => {
                 it('should show an amount of none', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                    await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                    await renderTargetWeightedScaleOut(<Assets />)
 
                     const select = await waitFor(() => screen.getByLabelText(/What position do you want to take profit on?/));
                     await selectEvent.select(select, ['NBTC']);
@@ -477,7 +462,7 @@ describe('Assets page', () => {
                 it('should show an error', async () => {
                     mockUseWallet(mockGetPairs(), jest.fn(), mockGetBalance());
 
-                    await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                    await renderTargetWeightedScaleOut(<Assets />)
                     const initalDenomSelect = await waitFor(() =>
                         screen.getByLabelText(/What position do you want to take profit on?/),
                     );
@@ -515,7 +500,7 @@ describe('Assets page', () => {
             it('submits form successfully', async () => {
                 mockUseWallet(mockGetPairs(), jest.fn(), jest.fn());
 
-                await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                await renderTargetWeightedScaleOut(<Assets />)
 
                 // wait for balances to load
                 // eslint-disable-next-line no-promise-executor-return
@@ -553,13 +538,13 @@ describe('Assets page', () => {
             it('shows connect wallet when not connected', async () => {
                 mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), false);
 
-                await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                await renderTargetWeightedScaleOut(<Assets />)
                 expect(screen.getByText(/Connect to a wallet/)).toBeInTheDocument();
             });
 
             it('does not show connect wallet when connected', async () => {
                 mockUseWallet(jest.fn(), jest.fn(), jest.fn(), jest.fn(), true);
-                await renderTargetWeightedScaleOut(<Assets stepsConfig={weightedScaleOutSteps} strategyType={StrategyTypes.WeightedScaleOut} />)
+                await renderTargetWeightedScaleOut(<Assets />)
 
                 expect(screen.getByText(/Next/)).toBeInTheDocument();
             });
