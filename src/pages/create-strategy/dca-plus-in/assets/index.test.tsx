@@ -98,6 +98,8 @@ describe('DCA In Assets page', () => {
     });
   });
 
+
+
   describe('when initial denom is selected', () => {
     describe('and there are available funds', () => {
       it('should show available funds', async () => {
