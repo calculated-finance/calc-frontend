@@ -28,6 +28,8 @@ import {
   ViewListIcon,
   KnowledgeIcon,
   CrownIcon,
+  PieChartIcon,
+  Add2Icon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -48,7 +50,7 @@ interface LinkItem {
   exclude?: Chains[];
 }
 
-const LinkItems: Array<LinkItem> = [
+const LinkItems: Array<LinkItem> = !featureFlags.controlDeskEnabled ? [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   {
@@ -64,19 +66,29 @@ const LinkItems: Array<LinkItem> = [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
-];
+] : [
+  { name: 'Create strategy', icon: Add2Icon, href: Pages.ControlDeskCreateStrategy },
+  { name: 'Dashboard', icon: PieChartIcon, href: Pages.ControlDeskDashboard },
+  { name: 'My strategies', icon: ToolkitIcon, href: Pages.ControlDeskStrategies },
+]
 
 const getLinkItems = (isAdmin: boolean) => [
   ...LinkItems,
   ...(isAdmin
     ? [
-        { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-        { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-      ]
+      { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+      { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+    ]
     : []),
-  ...(featureFlags.learningHubEnabled
+  ...(featureFlags.learningHubEnabled && !featureFlags.controlDeskEnabled
     ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
     : []),
+
+  // // add isControlDeskUser &&
+  // ...(featureFlags.controlDeskEnabled ? [
+  //   { name: 'Dashboard', icon: PieChartIcon, href: Pages.ControlDeskDashboard },
+  //   { name: 'My strategies', icon: ToolkitIcon, href: Pages.ControlDeskStrategies },
+  //   { name: 'Create strategy', icon: ToolkitIcon, href: Pages.ControlDeskCreateStrategy }] : [])
 ];
 
 const SIDEBAR_WIDTH = 64;
@@ -146,7 +158,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={sidebarLogoUrls[chain]}
+      bgImage={!featureFlags.controlDeskEnabled ? sidebarLogoUrls[chain] : 'none'}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"

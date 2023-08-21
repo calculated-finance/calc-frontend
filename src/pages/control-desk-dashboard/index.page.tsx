@@ -1,5 +1,5 @@
 import { Grid, GridItem, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
-import { getControlDeskSidebarLayout } from "@components/Layout/ControlDeskSideBar";
+import { getSidebarLayout } from "@components/Layout";
 
 
 export function ControlDeskDashboard() {
@@ -33,6 +33,6 @@ export function ControlDeskDashboard() {
 }
 
 
-ControlDeskDashboard.getLayout = getControlDeskSidebarLayout;
+ControlDeskDashboard.getLayout = getSidebarLayout;
 
 export default ControlDeskDashboard;

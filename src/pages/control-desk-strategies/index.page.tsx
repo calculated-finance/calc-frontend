@@ -1,5 +1,5 @@
 import { Grid, GridItem, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
-import { getControlDeskSidebarLayout } from "@components/Layout/ControlDeskSideBar";
+import { getSidebarLayout } from "@components/Layout";
 
 
 export function ControlDeskMyStrategies() {
@@ -32,6 +32,6 @@ export function ControlDeskMyStrategies() {
 }
 
 
-ControlDeskMyStrategies.getLayout = getControlDeskSidebarLayout;
+ControlDeskMyStrategies.getLayout = getSidebarLayout;
 
 export default ControlDeskMyStrategies;

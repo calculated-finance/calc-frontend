@@ -1,5 +1,5 @@
 import { Button, Flex, Grid, GridItem, Heading, Icon, Link, Spacer, Stack, Text, VStack } from "@chakra-ui/react";
-import { getControlDeskSidebarLayout } from "@components/Layout/ControlDeskSideBar";
+import { getSidebarLayout } from "@components/Layout";
 import { Code3Icon } from '@fusion-icons/react/interface';
 
 
@@ -101,6 +101,6 @@ export function ControlDesk() {
 }
 
 
-ControlDesk.getLayout = getControlDeskSidebarLayout;
+ControlDesk.getLayout = getSidebarLayout;
 
 export default ControlDesk;
