@@ -18,7 +18,7 @@ import {
   IconProps,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { HomeIcon, Add1Icon, ToolkitIcon, PieChartIcon } from '@fusion-icons/react/interface';
+import { Add1Icon, ToolkitIcon, PieChartIcon } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
 import { SidebarControls } from '@components/Layout/SidebarControls';
@@ -120,12 +120,6 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   );
 }
 
-const sidebarLogoUrls = {
-  [Chains.Osmosis]: '/images/osmoMascot.svg',
-  [Chains.Kujira]: '/images/kujiMascot.svg',
-  [Chains.Moonbeam]: '/images/moonbeam-large.png',
-};
-
 function SidebarContent({ onClose, ...rest }: SidebarProps) {
   const router = useRouter();
   const { chain } = useChain();
@@ -138,7 +132,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={sidebarLogoUrls[chain]}
+      bgImage='/images/treasure-chest.svg'
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"

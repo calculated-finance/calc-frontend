@@ -7,13 +7,14 @@ export function ControlDeskDashboard() {
   return (
     <Stack>
       <Stack pb={6}>
-        <Heading size="lg">Dashboard</Heading>
+        <Heading size="lg">Control Desk Dashboard</Heading>
         <Spacer />
         <Text textStyle="md">
-          Built for treasuries to pay salaries, grants, and swap tokens the calculated way.
+          Easily track, and keep up with your performance.
         </Text>
         <Text textStyle="body">
-          Choose an option that suits you and your treasury.        </Text>
+          In order to be calculated, one must be organised. So we organise your stats in one simple place.
+        </Text>
       </Stack>
       <Heading size="md">Tools</Heading>
       <Grid gap={8} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch" pb={6}>

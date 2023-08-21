@@ -1,6 +1,5 @@
-import { Button, Flex, Grid, GridItem, Heading, Icon, Spacer, Stack, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, Heading, Icon, Link, Spacer, Stack, Text, VStack } from "@chakra-ui/react";
 import { getControlDeskSidebarLayout } from "@components/Layout/ControlDeskSideBar";
-import Link from "next/link";
 import { Code3Icon } from '@fusion-icons/react/interface';
 
 
@@ -8,19 +7,19 @@ import { Code3Icon } from '@fusion-icons/react/interface';
 
 export function OnceOffPayment() {
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" px={8} py={4} alignItems="center">
       <VStack spacing={4}>
         <Icon as={Code3Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />
 
         <Heading size="md">Once off payment</Heading>
         <Text textStyle="body" textAlign='center'>
-          Deposit an asset, use it to DCA into the asset you want to make the payment in and once the grant target amount is reached, get the remaining assets returned back to your treasury.        </Text>
-        <Link href={'xyz'} isExternal>
+          Deposit an asset, use it to DCA into the asset you want to make the payment in and once the grant target amount is reached, get the remaining assets returned back to your treasury.</Text>
+        <Link href='https://www.youtube.com/' isExternal>
           <Button w={44} color="brand.200" textColor='abyss.200'>
             Get started
           </Button>
         </Link>
-        <Link href={'xyz'} isExternal>
+        <Link href='https://www.youtube.com/' isExternal textColor='whiteAlpha.800' _hover={{ textColor: 'blue.200' }}>
           Learn more
         </Link>
       </VStack>
@@ -29,19 +28,19 @@ export function OnceOffPayment() {
 }
 export function PayrollAutomation() {
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" px={8} py={4} alignItems="center">
       <VStack spacing={4}>
         <Icon as={Code3Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />
 
         <Heading size="md">Payroll Automation</Heading>
         <Text textStyle="body" textAlign='center'>
-          Consistently DCA out of treasury assets to prevent price impact and make regular payments in stables to one or more parties on a regular basis.       </Text>
-        <Link href={'xyz'} isExternal>
+          Consistently DCA out of treasury assets to prevent price impact and make regular payments in stables to one or more parties on a regular basis.</Text>
+        <Link href='https://www.youtube.com/' isExternal>
           <Button w={44} color="brand.200" textColor='abyss.200'>
             Get started
           </Button>
         </Link>
-        <Link href={'xyz'} isExternal>
+        <Link href='https://www.youtube.com/' isExternal textColor='whiteAlpha.800' _hover={{ textColor: 'blue.200' }}>
           Learn more
         </Link>
       </VStack>
@@ -50,19 +49,19 @@ export function PayrollAutomation() {
 }
 export function TreasuryExchange() {
   return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
+    <Flex layerStyle="panel" px={8} py={4} alignItems="center">
       <VStack spacing={4}>
         <Icon as={Code3Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />
 
         <Heading size="md">Treasury exchange</Heading>
         <Text textStyle="body" textAlign='center'>
-          Can’t agree on a fair OTC price? Swap tokens over time with another treasury and turn a single transactional event into a long lasting relationship.       </Text>
-        <Link href={'xyz'} isExternal>
+          Can’t agree on a fair OTC price? Swap tokens over time with another treasury and turn a single transactional event into a long lasting relationship.</Text>
+        <Link href='https://www.youtube.com/' isExternal>
           <Button w={44} color="brand.200" textColor='abyss.200'>
             Get started
           </Button>
         </Link>
-        <Link href={'xyz'} isExternal>
+        <Link href='https://www.youtube.com/' isExternal textColor='whiteAlpha.800' _hover={{ textColor: 'blue.200' }}>
           Learn more
         </Link>
       </VStack>
