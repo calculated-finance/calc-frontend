@@ -1,4 +1,4 @@
-p     import { getFlowLayout } from '@components/Layout';
+import { getFlowLayout } from '@components/Layout';
 import { useRouter } from 'next/router';
 import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { Form, Formik, FormikHelpers } from 'formik';
