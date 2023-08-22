@@ -29,7 +29,6 @@ import {
   KnowledgeIcon,
   CrownIcon,
   PieChartIcon,
-  Add2Icon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -40,17 +39,18 @@ import { useAdmin } from '@hooks/useAdmin';
 import { featureFlags } from 'src/constants';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
+import { ControlDeskPages } from './ControlDeskPages';
 
 interface LinkItem {
   name: string;
   child?: JSX.Element;
   icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
-  href: Pages;
+  href: Pages | ControlDeskPages;
   exclude?: Chains[];
 }
 
-const LinkItems: Array<LinkItem> = !featureFlags.controlDeskEnabled ? [
+export const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
   {
@@ -66,10 +66,6 @@ const LinkItems: Array<LinkItem> = !featureFlags.controlDeskEnabled ? [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
-] : [
-  { name: 'Create strategy', icon: Add2Icon, href: Pages.ControlDeskCreateStrategy },
-  { name: 'Dashboard', icon: PieChartIcon, href: Pages.ControlDeskDashboard },
-  { name: 'My strategies', icon: ToolkitIcon, href: Pages.ControlDeskStrategies },
 ]
 
 const getLinkItems = (isAdmin: boolean) => [
@@ -80,15 +76,15 @@ const getLinkItems = (isAdmin: boolean) => [
       { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
     ]
     : []),
-  ...(featureFlags.learningHubEnabled && !featureFlags.controlDeskEnabled
+  ...(featureFlags.learningHubEnabled
     ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
     : []),
 
-  // // add isControlDeskUser &&
-  // ...(featureFlags.controlDeskEnabled ? [
-  //   { name: 'Dashboard', icon: PieChartIcon, href: Pages.ControlDeskDashboard },
-  //   { name: 'My strategies', icon: ToolkitIcon, href: Pages.ControlDeskStrategies },
-  //   { name: 'Create strategy', icon: ToolkitIcon, href: Pages.ControlDeskCreateStrategy }] : [])
+  // add isControlDeskUser &&
+  ...(featureFlags.controlDeskEnabled ? [
+    { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
+    { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
+    { name: 'Create strategy', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskCreateStrategy }] : [])
 ];
 
 const SIDEBAR_WIDTH = 64;
@@ -263,7 +259,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     </Flex>
   );
 }
-export default function Sidebar({ children }: { children: ReactNode }) {
+export default function Sidebar({ children, linkItems }: { children: ReactNode; linkItems: LinkItem[] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

@@ -13,7 +13,8 @@ export function ControlDeskMyStrategies() {
           Built for treasuries to pay salaries, grants, and swap tokens the calculated way.
         </Text>
         <Text textStyle="body">
-          Choose an option that suits you and your treasury.        </Text>
+          Choose an option that suits you and your treasury.
+        </Text>
       </Stack>
       <Heading size="md">Tools</Heading>
       <Grid gap={8} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch" pb={6}>

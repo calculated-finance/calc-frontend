@@ -11,7 +11,4 @@ export enum Pages {
   StatsAndTotals = '/stats-and-totals',
   AllStrategies = '/admin/strategies',
   ProStrategies = '/pro-strategies',
-  ControlDeskStrategies = '/control-desk-strategies',
-  ControlDeskCreateStrategy = '/control-desk-create-strategy',
-  ControlDeskDashboard = '/control-desk-dashboard',
 }
