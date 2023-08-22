@@ -35,6 +35,7 @@ import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
@@ -51,6 +52,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
+  const initialDeposit = convertDenomFromCoin(strategy.rawData.deposited_amount)
 
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
@@ -113,7 +115,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
-                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
                       </CollapseWithRender>
                     </Stack>
                   )}
