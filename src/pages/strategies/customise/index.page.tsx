@@ -35,10 +35,10 @@ import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategy
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
+import SwapAmount, { SwapAmountEdit } from '@components/SwapAmount';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
-import { useStrategies } from '@hooks/useStrategies';
 
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
@@ -65,8 +65,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     chain,
   };
 
-  const strat = useStrategies()
-  console.log(strat)
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
     const validatedValues = getCustomiseSchema(strategy).cast(values, { stripUnknown: true });
@@ -84,6 +82,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
       },
     );
   };
+
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -115,6 +114,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
+                        {/* <SwapAmount step1State={initialValues} /> */}
                       </CollapseWithRender>
                     </Stack>
                   )}

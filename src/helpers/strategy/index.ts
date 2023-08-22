@@ -63,7 +63,6 @@ export function getStrategyInitialDenomId(strategy: Strategy): string {
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
   return getDenomInfo(strategy.rawData.balance.denom);
 }
-
 export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
   return getDenomInfo(strategy.rawData.received_amount.denom);
 }
