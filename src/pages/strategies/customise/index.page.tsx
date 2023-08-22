@@ -6,7 +6,7 @@ import useSteps from '@hooks/useSteps';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
-import { initialValues as globalInitialValues } from '@models/DcaInFormData';
+import { DcaInFormDataStep1, initialValues as globalInitialValues } from '@models/DcaInFormData';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
@@ -28,6 +28,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
+import SwapAmount, { SwapAmountEdit } from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
@@ -35,7 +36,6 @@ import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategy
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
-import SwapAmount, { SwapAmountEdit } from '@components/SwapAmount';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
@@ -64,7 +64,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     currentPrice: price,
     chain,
   };
-
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
     const validatedValues = getCustomiseSchema(strategy).cast(values, { stripUnknown: true });
@@ -114,7 +113,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
-                        {/* <SwapAmount step1State={initialValues} /> */}
+                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} />
                       </CollapseWithRender>
                     </Stack>
                   )}
@@ -184,6 +183,8 @@ function Page() {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),
     ...getCustomiseSchema(strategy).cast(existingValues, { stripUnknown: true }),
   } as CustomiseSchema;
+
+
 
   return <CustomiseForm strategy={strategy} initialValues={castValues} />;
 }

@@ -12,8 +12,16 @@ export const customiseSchemaDca = Yup.object({
   slippageTolerance: allSchema.slippageTolerance,
   priceThresholdEnabled: allSchema.priceThresholdEnabled,
   priceThresholdValue: allSchema.priceThresholdValue,
-  swapAmount: allSchema.swapAmount,
-  balance: allSchema.balance,
+  swapAmount: Yup.number()
+    .label('Swap Amount')
+    .required()
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    }),
   initialDenom: allSchema.initialDenom,
   resultingDenom: allSchema.resultingDenom
 });
