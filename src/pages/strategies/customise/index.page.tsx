@@ -6,7 +6,7 @@ import useSteps from '@hooks/useSteps';
 import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
-import { DcaInFormDataStep1, initialValues as globalInitialValues } from '@models/DcaInFormData';
+import { initialValues as globalInitialValues } from '@models/DcaInFormData';
 import { useChain } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
@@ -28,7 +28,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
-import SwapAmount, { SwapAmountEdit } from '@components/SwapAmount';
+import { SwapAmountEdit } from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
@@ -53,6 +53,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const initialDeposit = convertDenomFromCoin(strategy.rawData.deposited_amount)
+
 
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
@@ -115,7 +116,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
-                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
+                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} />
                       </CollapseWithRender>
                     </Stack>
                   )}

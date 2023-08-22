@@ -22,8 +22,6 @@ export const customiseSchemaDca = Yup.object({
       }
       return value;
     }),
-  initialDenom: allSchema.initialDenom,
-  resultingDenom: allSchema.resultingDenom
 });
 
 export type CustomiseSchemaDca = Yup.InferType<typeof customiseSchemaDca>;

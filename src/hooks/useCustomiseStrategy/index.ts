@@ -41,7 +41,7 @@ export function useCustomiseStrategy() {
 
       const msgs: EncodeObject[] = [];
 
-      console.log('variabls', variables);
+      console.log('variables', variables);
 
       const updateVaultMsg = getUpdateVaultMessage(variables);
 

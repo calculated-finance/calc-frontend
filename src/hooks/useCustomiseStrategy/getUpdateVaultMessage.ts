@@ -14,7 +14,7 @@ export function getUpdateVaultMessage(variables: ConfigureVariables) {
       ...buildSlippageTolerance(variables.values.slippageTolerance, variables.initialValues.slippageTolerance),
       ...buildTimeInterval(variables),
       ...buildSwapAdjustmentStrategy(variables),
-      // ...buildSwapAmount(variables),
+      ...buildSwapAmount(variables),
     },
   } as ExecuteMsg;
   return updateVaultMsg;

@@ -12,6 +12,9 @@ import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useS
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
+
+// add three props into this and add edit version inside here.
+// add boolean 'edit' as a prop to know if it is edit or not. 
 export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
@@ -82,7 +85,6 @@ export function SwapAmountEdit({ initialDenom, resultingDenom, initialDeposit }:
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-  const [initialDepositField, initialDepositMeta, initialDepositHelpers] = useField({ name: 'initialDeposit' })
   const { transactionType } = useStrategyInfo();
 
   const isSell = transactionType === TransactionType.Sell;
@@ -111,11 +113,12 @@ export function SwapAmountEdit({ initialDenom, resultingDenom, initialDeposit }:
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1} whiteSpace='nowrap'>
-              Initial deposit:
+              Balance:
             </Text>
-            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
-              {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
-            </Button>
+            {/* Add balance here. */}
+            {/* <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
+              {.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
+            </Button> */}
           </Flex>
         </Flex>{' '}
       </FormHelperText>

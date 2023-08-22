@@ -188,7 +188,6 @@ export const allSchema = {
         return context.createError({ message: `Swap amount should be greater than ${minimumSwapAmount}` });
       },
     }),
-  balance: Yup.number(),
   slippageTolerance: Yup.number()
     .label('Slippage Tolerance')
     .lessThan(100)

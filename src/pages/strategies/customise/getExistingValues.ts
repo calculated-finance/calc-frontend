@@ -1,11 +1,10 @@
 import { Strategy } from '@models/Strategy';
 import {
   getBasePrice,
+  getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
-  getStrategyBalance,
   getStrategyExecutionIntervalData,
-  getSwapAmount,
 } from '@helpers/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
@@ -15,11 +14,8 @@ export function getExistingValues(strategy: Strategy, chain: Chains) {
   const priceThreshold = getPriceCeilingFloor(strategy, chain);
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
-  const initialDenom = strategy.rawData.deposited_amount.denom;
-  const resultingDenom = strategy.rawData.received_amount.denom;
   const slippageTolerance = getSlippageTolerance(strategy);
-  const swapAmount = getSwapAmount(strategy);
-  const balance = getStrategyBalance(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
   return {
     advancedSettings: true,
     executionInterval: timeInterval,
@@ -32,8 +28,5 @@ export function getExistingValues(strategy: Strategy, chain: Chains) {
     swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
     applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
     swapAmount,
-    balance,
-    initialDenom,
-    resultingDenom,
   };
 }
