@@ -12,7 +12,7 @@ import { ConfigureVariables } from './ConfigureVariables';
 
 jest.mock('@helpers/strategy/isWeightedScale');
 jest.mock('@helpers/strategy/isDcaPlus');
-jest.mock('@hooks/useCreateVault/buildCreateVaultParams');
+// jest.mock('@hooks/useCreateVault/buildCreateVaultParams');
 
 describe('buildSwapAmount', () => {
   it('should return empty object if isWeightedScale true', () => {
@@ -23,7 +23,7 @@ describe('buildSwapAmount', () => {
       initialValues: {} as CustomiseSchema,
       context: {
         currentPrice: 100,
-        initialDenom: {},
+        initialDenom: { ...defaultDenom, id: 'ukuji' },
         swapAmount: '',
         resultingDenom: {},
         transactionType: 'someType',
@@ -42,7 +42,7 @@ describe('buildSwapAmount', () => {
       initialValues: {} as CustomiseSchema,
       context: {
         currentPrice: 100,
-        initialDenom: {},
+        initialDenom: { ...defaultDenom, id: 'ukuji' },
         swapAmount: '',
         resultingDenom: {},
         transactionType: 'someType',
@@ -68,7 +68,7 @@ describe('buildSwapAmount', () => {
       initialValues: commonValues,
       context: {
         currentPrice: 100,
-        initialDenom: {},
+        initialDenom: { ...defaultDenom, id: 'ukuji' },
         swapAmount: '',
         resultingDenom: {},
         transactionType: 'someType',
@@ -88,8 +88,6 @@ describe('buildSwapAmount', () => {
     const initialDenom: DenomInfo = {
       ...defaultDenom,
       id: 'ukuji',
-      deconversion: (amount) => amount * 1000000,
-      significantFigures: 6,
     };
 
     const result = buildSwapAmount({
