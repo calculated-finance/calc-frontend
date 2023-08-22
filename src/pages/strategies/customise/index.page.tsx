@@ -38,6 +38,7 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
+import { useStrategies } from '@hooks/useStrategies';
 
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
@@ -63,6 +64,9 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     currentPrice: price,
     chain,
   };
+
+  const strat = useStrategies()
+  console.log(strat)
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
     const validatedValues = getCustomiseSchema(strategy).cast(values, { stripUnknown: true });
