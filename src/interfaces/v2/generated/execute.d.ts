@@ -35,6 +35,7 @@ export type ExecuteMsg =
         minimum_receive_amount?: Uint128 | null;
         slippage_tolerance?: Decimal | null;
         swap_adjustment_strategy?: SwapAdjustmentStrategyParams | null;
+        swap_amount?: Uint128 | null;
         time_interval?: TimeInterval | null;
         vault_id: Uint128;
       };
@@ -87,6 +88,11 @@ export type ExecuteMsg =
         delegator_address: Addr;
         denom: string;
         validator_address: Addr;
+      };
+    }
+  | {
+      migrate_limit_order: {
+        vault_id: Uint128;
       };
     };
 /**

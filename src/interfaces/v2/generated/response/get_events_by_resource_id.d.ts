@@ -56,6 +56,11 @@ export type EventData =
         funds: Coin[];
         msg: SubMsgFor_Empty;
       };
+    }
+  | {
+      dca_vault_updated: {
+        updates: Update[];
+      };
     };
 /**
  * A thin wrapper around u128 that is using strings for JSON encoding/decoding, such that the full u128 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
@@ -420,4 +425,9 @@ export interface IbcTimeoutBlock {
    */
   revision: number;
   [k: string]: unknown;
+}
+export interface Update {
+  field: string;
+  new_value: string;
+  old_value: string;
 }

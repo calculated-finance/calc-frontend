@@ -72,7 +72,6 @@ export type PerformanceAssessmentStrategy = {
   };
 };
 export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
-
 export type SwapAdjustmentStrategy =
   | {
       risk_weighted_average: {
