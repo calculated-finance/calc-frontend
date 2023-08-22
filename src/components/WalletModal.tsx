@@ -26,6 +26,7 @@ import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAnalytics } from '@hooks/useAnalytics';
+import { useLeapSnap } from '@hooks/useLeapSnap';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -63,6 +64,11 @@ function WalletModal() {
     connect: state.connect,
   }));
 
+  const { isInstalled: isLeapSnapInstalled, connect: connectLeapSnap } = useLeapSnap((state) => ({
+    isInstalled: state.isInstalled,
+    connect: state.connect,
+  }));
+
   const { chain } = useChain();
 
   const { isOpen, onToggle } = useDisclosure();
@@ -89,6 +95,12 @@ function WalletModal() {
   const handleLeapConnect = () => {
     connectLeap(chain);
     trackConnectedWallet(WalletTypes.LEAP);
+    handleClose();
+  };
+
+  const handleLeapSnapConnect = () => {
+    connectLeapSnap(chain);
+    trackConnectedWallet(WalletTypes.LEAP_SNAP);
     handleClose();
   };
 
@@ -154,6 +166,15 @@ function WalletModal() {
                     icon="/images/xdefi.png"
                     isInstalled={isXDEFIInstalled}
                     walletInstallLink="https://www.xdefi.io/"
+                  />
+                )}
+                {isAdminPage && (
+                  <WalletListItem
+                    handleClick={handleLeapSnapConnect}
+                    name="Leap Snap"
+                    icon="/images/metamask.png"
+                    isInstalled={isLeapSnapInstalled}
+                    walletInstallLink="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk/related"
                   />
                 )}
                 {chain === Chains.Moonbeam && (
