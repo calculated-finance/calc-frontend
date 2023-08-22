@@ -29,6 +29,7 @@ import {
   KnowledgeIcon,
   CrownIcon,
   PieChartIcon,
+  Add2Icon,
 } from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
@@ -84,7 +85,7 @@ const getLinkItems = (isAdmin: boolean) => [
   ...(featureFlags.controlDeskEnabled ? [
     { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
     { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
-    { name: 'Create strategy', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskCreateStrategy }] : [])
+    { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy }] : [])
 ];
 
 const SIDEBAR_WIDTH = 64;
