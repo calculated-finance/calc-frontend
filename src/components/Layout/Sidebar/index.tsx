@@ -155,7 +155,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={!featureFlags.controlDeskEnabled ? sidebarLogoUrls[chain] : 'none'}
+      bgImage={sidebarLogoUrls[chain]}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"
