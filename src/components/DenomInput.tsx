@@ -18,7 +18,6 @@ export function DenomInput({
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);
   };
-
   return (
     <InputGroup>
       <InputLeftElement>

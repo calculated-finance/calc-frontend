@@ -30,7 +30,6 @@ export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initi
     executionIntervalDisplay[executionInterval as ExecutionIntervals][
     executions * executionIntervalIncrement > 1 ? 1 : 0
     ];
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>
@@ -50,7 +49,12 @@ export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initi
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+      {isEdit ?
+        <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} value={undefined} />
+        :
+        <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+
+      }
       {featureFlags.adjustedMinimumSwapAmountEnabled && (
         <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       )}
