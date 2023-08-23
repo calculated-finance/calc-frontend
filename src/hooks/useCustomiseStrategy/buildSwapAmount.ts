@@ -15,11 +15,13 @@ export function buildSwapAmount({ values, initialValues, context, strategy }: Co
   const castedValues = values as CustomiseSchemaDca;
   const castedInvitialValues = initialValues as CustomiseSchemaDca;
 
+  // console.log(castedInvitialValues.swapAmount, castedValues.swapAmount, context.swapAmount);
+
   const isSwapAmountDirty = castedValues.swapAmount !== castedInvitialValues.swapAmount;
 
   if (isSwapAmountDirty) {
     return {
-      swap_adjustment_strategy: castedValues.swapAmount && castedValues.swapAmount,
+      swap_amount: castedValues.swapAmount && castedValues.swapAmount,
     };
   }
   return {};

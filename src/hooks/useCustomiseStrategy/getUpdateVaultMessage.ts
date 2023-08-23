@@ -17,6 +17,5 @@ export function getUpdateVaultMessage(variables: ConfigureVariables) {
       ...buildSwapAmount(variables),
     },
   } as ExecuteMsg;
-  console.log(updateVaultMsg);
   return updateVaultMsg;
 }

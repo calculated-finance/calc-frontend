@@ -17,7 +17,7 @@ import {
   getStrategyResultingDenom,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { Stack, FormControl, FormErrorMessage, Divider, Spacer } from '@chakra-ui/react';
+import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
 import ExecutionInterval from '@components/ExecutionInterval';
 import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
