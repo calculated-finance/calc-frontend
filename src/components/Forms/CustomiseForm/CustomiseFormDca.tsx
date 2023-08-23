@@ -24,7 +24,6 @@ export function CustomiseFormDca({
   step1: DcaInFormDataStep1;
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
-
   const initialDenom = useDenom(step1.initialDenom);
   const resultingDenom = useDenom(step1.resultingDenom);
   return (

@@ -53,8 +53,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const balance = convertDenomFromCoin(strategy.rawData.balance)
-
-
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
   const { price } = usePrice(resultingDenom, initialDenom, transactionType);

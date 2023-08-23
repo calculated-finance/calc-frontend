@@ -49,12 +49,7 @@ export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initi
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      {isEdit ?
-        <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} value={undefined} />
-        :
-        <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
-
-      }
+      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
       {featureFlags.adjustedMinimumSwapAmountEnabled && (
         <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       )}
