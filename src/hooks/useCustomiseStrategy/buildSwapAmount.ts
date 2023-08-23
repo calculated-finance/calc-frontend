@@ -21,7 +21,7 @@ export function buildSwapAmount({ values, initialValues, context, strategy }: Co
 
   if (isSwapAmountDirty) {
     return {
-      swap_amount: castedValues.swapAmount && castedValues.swapAmount,
+      swap_amount: castedValues.swapAmount && Number(castedValues.swapAmount),
     };
   }
   return {};
