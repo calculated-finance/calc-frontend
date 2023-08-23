@@ -1,10 +1,8 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
@@ -13,9 +11,7 @@ import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
 
-// add three props into this and add edit version inside here.
-// add boolean 'edit' as a prop to know if it is edit or not. 
-export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
+export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initialDeposit }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number, isEdit: boolean }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
@@ -23,15 +19,11 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
 
   const isSell = transactionType === TransactionType.Sell;
 
-  const initialDenom = useDenom(step1State.initialDenom);
-  const resultingDenom = useDenom(step1State.resultingDenom);
-  const { initialDeposit } = step1State;
-
   const handleClick = () => {
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(step1State.initialDeposit, field.value);
+  const executions = totalExecutions(initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
   const displayCustomExecutionInterval =
@@ -50,75 +42,11 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
-              Max:
+              {isEdit ? 'Balance:' : 'Max:'}
             </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
               {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
             </Button>
-          </Flex>
-        </Flex>{' '}
-      </FormHelperText>
-      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
-      {featureFlags.adjustedMinimumSwapAmountEnabled && (
-        <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
-      )}
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
-        <FormHelperText color="brand.200" fontSize="xs">
-          A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
-        </FormHelperText>
-      ) : (
-        Boolean(field.value) &&
-        !meta.error && (
-          <FormHelperText color="brand.200" fontSize="xs">
-            A total of {executions} swaps will take place over {executions * executionIntervalIncrement}{' '}
-            {displayCustomExecutionInterval}.
-          </FormHelperText>
-        )
-      )}
-    </FormControl>
-  );
-}
-
-
-export function SwapAmountEdit({ initialDenom, resultingDenom, initialDeposit }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number }) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
-  const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
-  const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-  const { transactionType } = useStrategyInfo();
-
-  const isSell = transactionType === TransactionType.Sell;
-
-  const handleClick = () => {
-    helpers.setValue(initialDeposit);
-  };
-  const executions = totalExecutions(initialDeposit, field.value);
-  const displayExecutionInterval =
-    executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
-  const displayCustomExecutionInterval =
-    executionIntervalDisplay[executionInterval as ExecutionIntervals][
-    executions * executionIntervalIncrement > 1 ? 1 : 0
-    ];
-
-
-
-  return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>
-        How much {initialDenom.name} each {isSell ? 'swap' : 'purchase'}?
-      </FormLabel>
-      <FormHelperText>
-        <Flex alignItems="flex-start">
-          <Text>The amount you want swapped each purchase for {resultingDenom.name}.</Text>
-          <Spacer />
-          <Flex flexDirection="row">
-            <Text ml={4} mr={1} whiteSpace='nowrap'>
-              Balance:
-            </Text>
-            {/* Add balance here. */}
-            {/* <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
-              {.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
-            </Button> */}
           </Flex>
         </Flex>{' '}
       </FormHelperText>

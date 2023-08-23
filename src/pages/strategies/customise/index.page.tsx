@@ -17,7 +17,7 @@ import {
   getStrategyResultingDenom,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
+import { Stack, FormControl, FormErrorMessage, Divider, Spacer } from '@chakra-ui/react';
 import ExecutionInterval from '@components/ExecutionInterval';
 import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
@@ -28,7 +28,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
-import { SwapAmountEdit } from '@components/SwapAmount';
+import SwapAmount from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
@@ -52,7 +52,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const initialDeposit = convertDenomFromCoin(strategy.rawData.deposited_amount)
+  const balance = convertDenomFromCoin(strategy.rawData.balance)
 
 
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
@@ -116,8 +116,8 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
                         />
-                        <SwapAmountEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} />
                       </CollapseWithRender>
+                      <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} />
                     </Stack>
                   )}
                   {isWeightedScale(strategy) && (
