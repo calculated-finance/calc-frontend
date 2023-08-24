@@ -1,5 +1,6 @@
 import {
   getBasePrice,
+  getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
   getStrategyExecutionIntervalData,
@@ -15,6 +16,7 @@ jest.mock('@helpers/strategy', () => ({
   getPriceCeilingFloor: jest.fn(),
   getSlippageTolerance: jest.fn(),
   getStrategyExecutionIntervalData: jest.fn(),
+  getConvertedSwapAmount: jest.fn(),
 }));
 
 jest.mock('@helpers/strategy/isWeightedScale', () => ({
@@ -30,6 +32,7 @@ describe('getExistingValues', () => {
     (getSlippageTolerance as jest.Mock).mockReturnValue(0.01);
     (getStrategyExecutionIntervalData as jest.Mock).mockReturnValue({ timeIncrement: 5, timeInterval: 'hours' });
     (getWeightedScaleConfig as jest.Mock).mockReturnValue({ increase_only: true, multiplier: 2 });
+    (getConvertedSwapAmount as jest.Mock).mockReturnValue({ denom: 'ukuji', amount: '1000000' });
 
     const result = getExistingValues(mockStrategy as Strategy, Chains.Kujira);
 
@@ -44,6 +47,10 @@ describe('getExistingValues', () => {
       basePriceValue: 100,
       swapMultiplier: 2,
       applyMultiplier: YesNoValues.No,
+      swapAmount: {
+        denom: 'ukuji',
+        amount: '1000000',
+      },
     });
   });
 

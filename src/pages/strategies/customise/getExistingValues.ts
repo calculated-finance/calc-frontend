@@ -16,6 +16,7 @@ export function getExistingValues(strategy: Strategy, chain: Chains) {
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
   const slippageTolerance = getSlippageTolerance(strategy);
   const swapAmount = getConvertedSwapAmount(strategy);
+
   return {
     advancedSettings: true,
     executionInterval: timeInterval,
