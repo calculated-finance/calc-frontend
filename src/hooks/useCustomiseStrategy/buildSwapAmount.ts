@@ -14,6 +14,10 @@ export function buildSwapAmount({ values, initialValues, context, strategy }: Co
 
   const isSwapAmountDirty = castedValues.swapAmount !== castedInvitialValues.swapAmount;
 
+  console.log(isSwapAmountDirty);
+  console.log(getSwapAmount(context.initialDenom, castedValues.swapAmount));
+  console.log(context.initialDenom);
+
   if (isSwapAmountDirty) {
     return {
       swap_amount: getSwapAmount(context.initialDenom, castedValues.swapAmount),
