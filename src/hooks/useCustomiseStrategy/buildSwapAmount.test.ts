@@ -1,5 +1,4 @@
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
-import { buildWeightedScaleAdjustmentStrategy } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { Strategy } from '@models/Strategy';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -9,68 +8,77 @@ import { ConfigureVariables } from './ConfigureVariables';
 jest.mock('@helpers/strategy/isWeightedScale');
 jest.mock('@helpers/strategy/isDcaPlus');
 jest.mock('@hooks/useCreateVault/buildCreateVaultParams');
+jest.mock('./buildSwapAmount');
 
 describe('buildSwapAmount', () => {
   // Test case 1
-  it('should return an empty object if the strategy is not a weighted scale', () => {
+  it('should return an empty object if the strategy is weighted scale', () => {
     (isWeightedScale as jest.Mock).mockReturnValue(true);
 
     const result = buildSwapAmount({
       values: {} as CustomiseSchema,
       initialValues: {} as CustomiseSchema,
-      context: { currentPrice: 100 } as ConfigureVariables['context'],
+      context: {} as ConfigureVariables['context'],
       strategy: {} as Strategy,
     });
 
-    expect(result).toEqual({});
+    expect(result).toEqual(undefined);
   });
-  // Test case 1
-  it('should return an empty object if the strategy is not dcaPlus', () => {
+  // Test case 2
+  it('should return an empty object if the strategy is dcaPlus', () => {
     (isDcaPlus as jest.Mock).mockReturnValue(true);
 
     const result = buildSwapAmount({
       values: {} as CustomiseSchema,
       initialValues: {} as CustomiseSchema,
-      context: { currentPrice: 100 } as ConfigureVariables['context'],
+      context: {} as ConfigureVariables['context'],
       strategy: {} as Strategy,
     });
 
-    expect(result).toEqual({});
-  });
-
-  // Test case 2
-  it('should throw an error if current price is undefined', () => {
-    (isWeightedScale as jest.Mock).mockReturnValue(false);
-
-    expect(() => {
-      buildSwapAmount({
-        values: {} as CustomiseSchema,
-        initialValues: {} as CustomiseSchema,
-        context: { currentPrice: undefined } as ConfigureVariables['context'],
-        strategy: {} as Strategy,
-      });
-    }).toThrow('Unable to get current price. Please try again.');
+    expect(result).toEqual(undefined);
   });
 
   // Test case 3
-  it('should return swap_amount if isSwapAmountDirty is true', () => {
-    (isWeightedScale as jest.Mock).mockReturnValue(true);
-    (buildWeightedScaleAdjustmentStrategy as jest.Mock).mockReturnValue({});
+  it('should return empty object if swap_amount isSwapAmountDirty is false', () => {
+    (isWeightedScale as jest.Mock).mockReturnValue(false);
+    (isDcaPlus as jest.Mock).mockReturnValue(false);
+    (buildSwapAmount as jest.Mock).mockReturnValue({});
+
+    const commonValues = {
+      swapAmount: '2000000',
+    } as unknown as CustomiseSchema;
 
     const result = buildSwapAmount({
-      values: { applyMultiplier: true } as unknown as CustomiseSchema,
-      initialValues: { applyMultiplier: false } as unknown as CustomiseSchema,
+      values: commonValues,
+      initialValues: commonValues,
       context: {
         currentPrice: 100,
         initialDenom: {},
-        swapAmount: 10,
+        swapAmount: '2000000',
         resultingDenom: {},
         transactionType: 'someType',
       } as unknown as ConfigureVariables['context'],
       strategy: {} as Strategy,
     });
 
-    expect(result).toEqual({ swap_adjustment_strategy: {} });
+    expect(result).toEqual({});
+  });
+  // Test case 3
+  it('should return new if swap_amount isSwapAmountDirty is true', () => {
+    (isWeightedScale as jest.Mock).mockReturnValue(false);
+    (isDcaPlus as jest.Mock).mockReturnValue(false);
+
+    const result = buildSwapAmount({
+      values: { swapAmount: '1000000' } as unknown as CustomiseSchema,
+      initialValues: { swapAmount: '2000000' } as unknown as CustomiseSchema,
+      context: {
+        initialDenom: {},
+        swapAmount: '1000000',
+      } as unknown as ConfigureVariables['context'],
+      strategy: {} as Strategy,
+    });
+
+    expect(result).toEqual({ swap_amount: '2000000' });
   });
 
   // Test case 4
