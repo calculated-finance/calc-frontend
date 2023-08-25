@@ -1,4 +1,4 @@
-import { ReactNode, SVGProps } from 'react';
+import { ReactNode } from 'react';
 import {
   Box,
   CloseButton,
@@ -14,79 +14,15 @@ import {
   Stack,
   Spacer,
   IconButton,
-  ComponentWithAs,
-  IconProps,
-  Badge,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import {
-  HomeIcon,
-  Add1Icon,
-  ToolkitIcon,
-  BoxedImportIcon,
-  Graph2Icon,
-  ViewListIcon,
-  KnowledgeIcon,
-  CrownIcon,
-  PieChartIcon,
-  Add2Icon,
-} from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
 import { SidebarControls } from '@components/Layout/SidebarControls';
-import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { useAdmin } from '@hooks/useAdmin';
+import { useChain } from '@hooks/useChain';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { Pages } from './Pages';
-import { ControlDeskPages } from './ControlDeskPages';
-
-interface LinkItem {
-  name: string;
-  child?: JSX.Element;
-  icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
-  active?: boolean;
-  href: Pages | ControlDeskPages;
-  exclude?: Chains[];
-}
-
-export const LinkItems: Array<LinkItem> = [
-  { name: 'Home', icon: HomeIcon, href: Pages.Home },
-  { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
-  {
-    name: 'Pro strategies',
-    icon: CrownIcon,
-    href: Pages.ProStrategies,
-    child: (
-      <Badge colorScheme="brand" marginLeft={2}>
-        New
-      </Badge>
-    ),
-  },
-  { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
-  { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
-  { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
-  { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
-  { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
-  { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-  { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }
-
-]
-
-// const getLinkItems = (isAdmin: boolean) => [
-//   ...LinkItems,
-//   ...(isAdmin
-//     ? [
-//       { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-//       { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-//     ]
-//     : []),
-//   ...(featureFlags.learningHubEnabled
-//     ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
-//     : []),
-// ];
+import { LinkItem } from './LinkItems';
 
 const SIDEBAR_WIDTH = 64;
 
@@ -146,9 +82,7 @@ const sidebarLogoUrls = {
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
-  const { isAdmin } = useAdmin();
 
-  console.log(linkItems, 123)
   return (
     <Flex
       bg={useColorModeValue('white', 'abyss.200')}
@@ -174,7 +108,6 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
-        {/* {getLinkItems(isAdmin) */}
         {linkItems.filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
@@ -205,10 +138,6 @@ interface MobileProps extends FlexProps {
 function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
-  const { isAdmin } = useAdmin();
-
-  console.log('eee', linkItems)
-
   return (
     <Flex
       px={8}
@@ -231,7 +160,6 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
         <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
-        {/* {getLinkItems(isAdmin) */}
         {linkItems
           .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (

@@ -16,6 +16,7 @@ import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { useAdmin } from '@hooks/useAdmin';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
@@ -23,9 +24,10 @@ import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
-import Sidebar, { LinkItems } from './Sidebar';
+import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
+import { AdminLinkItems, ControlDeskLinkItems, LinkItems } from './Sidebar/LinkItems';
 
 const HEADER_HEIGHT = '64px';
 
@@ -150,8 +152,9 @@ export function getFlowLayout(page: ReactElement) {
 
 function SidebarLayout({ children }: { children: ReactElement }) {
   const { isPageLoading } = usePageLoad();
-
+  const { isAdmin } = useAdmin();
   const { connected } = useWallet();
+  const { pathname } = useRouter()
 
   //  create date one year from now
   const oneYearFromNow = new Date();
@@ -175,7 +178,9 @@ function SidebarLayout({ children }: { children: ReactElement }) {
     setAcceptedAgreementState('true');
   };
 
-  const linkItems = LinkItems
+  const isControlDesk = pathname.includes('control-desk')
+
+  const linkItems = !isAdmin && !isControlDesk ? LinkItems : isControlDesk ? ControlDeskLinkItems : AdminLinkItems
 
   return (
     <Sidebar linkItems={linkItems}>
