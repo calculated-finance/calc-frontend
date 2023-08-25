@@ -37,7 +37,6 @@ import { SidebarControls } from '@components/Layout/SidebarControls';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAdmin } from '@hooks/useAdmin';
-import { featureFlags } from 'src/constants';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { Pages } from './Pages';
 import { ControlDeskPages } from './ControlDeskPages';
@@ -70,20 +69,24 @@ export const LinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
   { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
   { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
+  { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+  { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }
+
 ]
 
-const getLinkItems = (isAdmin: boolean) => [
-  ...LinkItems,
-  ...(isAdmin
-    ? [
-      { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-      { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-    ]
-    : []),
-  ...(featureFlags.learningHubEnabled
-    ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
-    : []),
-];
+// const getLinkItems = (isAdmin: boolean) => [
+//   ...LinkItems,
+//   ...(isAdmin
+//     ? [
+//       { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+//       { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+//     ]
+//     : []),
+//   ...(featureFlags.learningHubEnabled
+//     ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
+//     : []),
+// ];
 
 const SIDEBAR_WIDTH = 64;
 
@@ -140,11 +143,12 @@ const sidebarLogoUrls = {
   [Chains.Moonbeam]: '/images/moonbeam-large.png',
 };
 
-function SidebarContent({ onClose, ...rest }: SidebarProps) {
+function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
   const { isAdmin } = useAdmin();
 
+  console.log(linkItems, 123)
   return (
     <Flex
       bg={useColorModeValue('white', 'abyss.200')}
@@ -170,8 +174,8 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
-        {getLinkItems(isAdmin)
-          .filter((link) => !link.exclude?.includes(chain))
+        {/* {getLinkItems(isAdmin) */}
+        {linkItems.filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}
@@ -198,10 +202,12 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-function MobileNav({ onOpen, ...rest }: MobileProps) {
+function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
   const { isAdmin } = useAdmin();
+
+  console.log('eee', linkItems)
 
   return (
     <Flex
@@ -225,7 +231,8 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
-        {getLinkItems(isAdmin)
+        {/* {getLinkItems(isAdmin) */}
+        {linkItems
           .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <LinkWithQuery href={link.href} key={link.name}>
@@ -257,12 +264,12 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     </Flex>
   );
 }
-export default function Sidebar({ children }: { children: ReactNode; }) {
+export default function Sidebar({ children, linkItems }: { children: ReactNode; linkItems: LinkItem[] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'navy')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <SidebarContent linkItems={linkItems} onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -273,11 +280,11 @@ export default function Sidebar({ children }: { children: ReactNode; }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent linkItems={linkItems} onClose={onClose} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
+      <MobileNav linkItems={linkItems} display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: SIDEBAR_WIDTH }}>{children}</Box>
     </Box>
   );
