@@ -12,7 +12,6 @@ import { ConfigureVariables } from './ConfigureVariables';
 
 jest.mock('@helpers/strategy/isWeightedScale');
 jest.mock('@helpers/strategy/isDcaPlus');
-// jest.mock('@hooks/useCreateVault/buildCreateVaultParams');
 
 describe('buildSwapAmount', () => {
   it('should return empty object if isWeightedScale true', () => {
@@ -56,7 +55,6 @@ describe('buildSwapAmount', () => {
   it('should return empty object if isSwapAmountDirty is false', () => {
     (isWeightedScale as jest.Mock).mockReturnValue(false);
     (isDcaPlus as jest.Mock).mockReturnValue(false);
-    // (buildSwapAmount as jest.Mock).mockReturnValue({});
     getSwapAmount as jest.Mock;
 
     const commonValues = {
