@@ -67,6 +67,9 @@ export const LinkItems: Array<LinkItem> = [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
+  { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
+  { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
+  { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
 ]
 
 const getLinkItems = (isAdmin: boolean) => [
@@ -80,12 +83,6 @@ const getLinkItems = (isAdmin: boolean) => [
   ...(featureFlags.learningHubEnabled
     ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
     : []),
-
-  // add isControlDeskUser &&
-  ...(featureFlags.controlDeskEnabled ? [
-    { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
-    { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
-    { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy }] : [])
 ];
 
 const SIDEBAR_WIDTH = 64;
@@ -260,7 +257,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     </Flex>
   );
 }
-export default function Sidebar({ children, linkItems }: { children: ReactNode; linkItems: LinkItem[] }) {
+export default function Sidebar({ children }: { children: ReactNode; }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

@@ -23,7 +23,7 @@ import { isStepOne } from '@helpers/isStepOne';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
-import Sidebar, { LinkItems } from './Sidebar';
+import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
 
@@ -176,7 +176,7 @@ function SidebarLayout({ children }: { children: ReactElement }) {
   };
 
   return (
-    <Sidebar linkItems={LinkItems}>
+    <Sidebar>
       <AppHeaderForSidebar />
       <Box position="relative" h="full" w="full">
         {isPageLoading && (
