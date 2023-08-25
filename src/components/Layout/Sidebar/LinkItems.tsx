@@ -1,6 +1,6 @@
 import { Badge, ComponentWithAs, IconProps } from "@chakra-ui/react";
-import { Chains } from "@chain-registry/types";
 import { Add1Icon, Add2Icon, BoxedImportIcon, CrownIcon, Graph2Icon, HomeIcon, KnowledgeIcon, PieChartIcon, ToolkitIcon, ViewListIcon } from "@fusion-icons/react/interface";
+import { Chains } from "@hooks/useChain/Chains";
 import { SVGProps } from "react";
 import { Pages } from "./Pages";
 import { ControlDeskPages } from "./ControlDeskPages";

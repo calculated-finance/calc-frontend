@@ -18,10 +18,10 @@ import {
 import { useRouter } from 'next/router';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { SidebarControls } from '@components/Layout/SidebarControls';
 import { Chains } from '@hooks/useChain/Chains';
-import { useChain } from '@hooks/useChain';
+import { SidebarControls } from '@components/Layout/SidebarControls';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useChain } from '@hooks/useChain';
 import { LinkItem } from './LinkItems';
 
 const SIDEBAR_WIDTH = 64;
