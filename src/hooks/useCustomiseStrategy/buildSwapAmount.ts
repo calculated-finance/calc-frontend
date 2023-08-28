@@ -8,14 +8,9 @@ export function buildSwapAmount({ values, initialValues, context, strategy }: Co
   if (isDcaPlus(strategy) || isWeightedScale(strategy)) {
     return {};
   }
-
   const castedValues = values as CustomiseSchemaDca;
   const castedInvitialValues = initialValues as CustomiseSchemaDca;
-
   const isSwapAmountDirty = castedValues.swapAmount !== castedInvitialValues.swapAmount;
-
-  console.log('ee', context.initialDenom, castedValues.swapAmount);
-  console.log(getSwapAmount(context.initialDenom, castedValues.swapAmount));
 
   if (isSwapAmountDirty) {
     return {

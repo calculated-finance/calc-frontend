@@ -10,8 +10,6 @@ export default function InitialDeposit() {
 
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
 
-  console.log(field.value)
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput onChange={helpers.setValue} textAlign="right" placeholder="Enter amount" {...field} />
