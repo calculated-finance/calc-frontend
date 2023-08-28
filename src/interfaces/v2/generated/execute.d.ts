@@ -131,7 +131,7 @@ export type Binary = string;
  * let c = Uint128::from(70u32); assert_eq!(c.u128(), 70); ```
  */
 export type Uint128 = string;
-export type PerformanceAssessmentStrategyParams = "compare_to_standard_dca";
+export type PerformanceAssessmentStrategyParams = 'compare_to_standard_dca';
 export type SwapAdjustmentStrategyParams =
   | {
       risk_weighted_average: {
@@ -146,8 +146,8 @@ export type SwapAdjustmentStrategyParams =
         multiplier: Decimal;
       };
     };
-export type BaseDenom = "bitcoin";
-export type PositionType = "enter" | "exit";
+export type BaseDenom = 'bitcoin';
+export type PositionType = 'enter' | 'exit';
 /**
  * A thin wrapper around u64 that is using strings for JSON encoding/decoding, such that the full u64 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
  *
@@ -162,15 +162,15 @@ export type PositionType = "enter" | "exit";
 export type Uint64 = string;
 export type TimeInterval =
   | (
-      | "every_block"
-      | "every_minute"
-      | "half_hourly"
-      | "hourly"
-      | "half_daily"
-      | "daily"
-      | "weekly"
-      | "fortnightly"
-      | "monthly"
+      | 'every_block'
+      | 'every_minute'
+      | 'half_hourly'
+      | 'hourly'
+      | 'half_daily'
+      | 'daily'
+      | 'weekly'
+      | 'fortnightly'
+      | 'monthly'
     )
   | {
       custom: {

@@ -28,12 +28,15 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
+import SwapAmount from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
 import usePrice from '@hooks/usePrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
+import { featureFlags } from 'src/constants';
+import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
@@ -50,7 +53,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-
+  const balance = convertDenomFromCoin(strategy.rawData.balance)
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
   const { price } = usePrice(resultingDenom, initialDenom, transactionType);
@@ -80,6 +83,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
       },
     );
   };
+
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -112,6 +116,8 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           initialDenom={initialDenom}
                         />
                       </CollapseWithRender>
+                      {featureFlags.editSwapAmountEnabled &&
+                        <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} />}
                     </Stack>
                   )}
                   {isWeightedScale(strategy) && (
@@ -180,6 +186,8 @@ function Page() {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),
     ...getCustomiseSchema(strategy).cast(existingValues, { stripUnknown: true }),
   } as CustomiseSchema;
+
+
 
   return <CustomiseForm strategy={strategy} initialValues={castValues} />;
 }

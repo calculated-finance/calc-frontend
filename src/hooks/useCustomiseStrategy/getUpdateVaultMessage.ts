@@ -4,6 +4,7 @@ import { buildTimeInterval } from './buildTimeInterval';
 import { buildSlippageTolerance } from './buildSlippageTolerance';
 import { buildSwapAdjustmentStrategy } from './buildSwapAdjustmentStrategy';
 import { buildPriceThreshold } from './buildPriceThreshold';
+import { buildSwapAmount } from './buildSwapAmount';
 
 export function getUpdateVaultMessage(variables: ConfigureVariables) {
   const updateVaultMsg = {
@@ -13,6 +14,7 @@ export function getUpdateVaultMessage(variables: ConfigureVariables) {
       ...buildSlippageTolerance(variables.values.slippageTolerance, variables.initialValues.slippageTolerance),
       ...buildTimeInterval(variables),
       ...buildSwapAdjustmentStrategy(variables),
+      ...buildSwapAmount(variables),
     },
   } as ExecuteMsg;
   return updateVaultMsg;

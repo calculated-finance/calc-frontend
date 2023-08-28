@@ -1,17 +1,17 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
-import { DcaInFormDataStep1 } from '@models/DcaInFormData';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { useDenom } from '@hooks/useDenom/useDenom';
+import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
-export default function SwapAmount({ step1State }: { step1State: DcaInFormDataStep1 }) {
+
+export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initialDeposit }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number, isEdit: boolean }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
@@ -19,22 +19,17 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
 
   const isSell = transactionType === TransactionType.Sell;
 
-  const initialDenom = useDenom(step1State.initialDenom);
-  const resultingDenom = useDenom(step1State.resultingDenom);
-  const { initialDeposit } = step1State;
-
   const handleClick = () => {
     helpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(step1State.initialDeposit, field.value);
+  const executions = totalExecutions(initialDeposit, field.value);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
   const displayCustomExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][
-      executions * executionIntervalIncrement > 1 ? 1 : 0
+    executions * executionIntervalIncrement > 1 ? 1 : 0
     ];
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>
@@ -46,7 +41,7 @@ export default function SwapAmount({ step1State }: { step1State: DcaInFormDataSt
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
-              Max:
+              {isEdit ? 'Balance:' : 'Max:'}
             </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
               {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}

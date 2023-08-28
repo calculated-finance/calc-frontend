@@ -12,6 +12,16 @@ export const customiseSchemaDca = Yup.object({
   slippageTolerance: allSchema.slippageTolerance,
   priceThresholdEnabled: allSchema.priceThresholdEnabled,
   priceThresholdValue: allSchema.priceThresholdValue,
+  swapAmount: Yup.number()
+    .label('Swap Amount')
+    .required()
+    .nullable()
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    }),
 });
 
 export type CustomiseSchemaDca = Yup.InferType<typeof customiseSchemaDca>;

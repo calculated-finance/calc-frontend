@@ -24,7 +24,6 @@ export function CustomiseFormDca({
   step1: DcaInFormDataStep1;
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
-
   const initialDenom = useDenom(step1.initialDenom);
   const resultingDenom = useDenom(step1.resultingDenom);
   return (
@@ -32,9 +31,9 @@ export function CustomiseFormDca({
       <Stack direction="column" spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
         <AdvancedSettingsSwitch />
-        <TriggerForm  initialDenom={initialDenom} resultingDenom={resultingDenom} />
+        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
-        <SwapAmount step1State={step1} />
+        <SwapAmount isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
@@ -53,7 +52,7 @@ export function CustomiseFormDcaWrapper({
 }: {
   steps: StepConfig[];
 }) {
-  const { strategyType} = useStrategyInfo();
+  const { strategyType } = useStrategyInfo();
   const { state, actions } = useStep2Form();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);

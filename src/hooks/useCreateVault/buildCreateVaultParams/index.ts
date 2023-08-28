@@ -120,7 +120,7 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
   return startTimeSeconds;
 }
 
-function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
+export function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
   const { deconversion } = initialDenom;
 
   return BigInt(deconversion(swapAmount)).toString();

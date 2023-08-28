@@ -1,6 +1,7 @@
 import { Strategy } from '@models/Strategy';
 import {
   getBasePrice,
+  getConvertedSwapAmount,
   getPriceCeilingFloor,
   getSlippageTolerance,
   getStrategyExecutionIntervalData,
@@ -11,12 +12,10 @@ import { Chains } from '@hooks/useChain/Chains';
 
 export function getExistingValues(strategy: Strategy, chain: Chains) {
   const priceThreshold = getPriceCeilingFloor(strategy, chain);
-
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
-
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
-
   const slippageTolerance = getSlippageTolerance(strategy);
+  const swapAmount = getConvertedSwapAmount(strategy);
 
   return {
     advancedSettings: true,
@@ -29,5 +28,6 @@ export function getExistingValues(strategy: Strategy, chain: Chains) {
     basePriceValue: getBasePrice(strategy, chain),
     swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
     applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
+    swapAmount,
   };
 }

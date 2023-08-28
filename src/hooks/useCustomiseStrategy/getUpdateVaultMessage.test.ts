@@ -8,8 +8,10 @@ import { buildSlippageTolerance } from './buildSlippageTolerance';
 import { buildSwapAdjustmentStrategy } from './buildSwapAdjustmentStrategy';
 import { buildTimeInterval } from './buildTimeInterval';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
+import { buildSwapAmount } from './buildSwapAmount';
 
 jest.mock('./buildTimeInterval');
+jest.mock('./buildSwapAmount');
 jest.mock('./buildSlippageTolerance');
 jest.mock('./buildSwapAdjustmentStrategy');
 jest.mock('./buildPriceThreshold');
@@ -52,11 +54,13 @@ describe('getUpdateVaultMessage', () => {
     const mockSlippageTolerance = { slippageTolerance: 'mock' };
     const mockSwapAdjustmentStrategy = { swapAdjustmentStrategy: 'mock' };
     const mockPriceThreshold = { priceThreshold: 'mock' };
+    const mockSwapAmount = { swapAmount: 'mock' };
 
     (buildTimeInterval as jest.Mock).mockReturnValue(mockTimeInterval);
     (buildSlippageTolerance as jest.Mock).mockReturnValue(mockSlippageTolerance);
     (buildSwapAdjustmentStrategy as jest.Mock).mockReturnValue(mockSwapAdjustmentStrategy);
     (buildPriceThreshold as jest.Mock).mockReturnValue(mockPriceThreshold);
+    (buildSwapAmount as jest.Mock).mockReturnValue(mockSwapAmount);
 
     const variables = {
       strategy: { ...dcaInStrategyViewModal, id: 'test-id' },

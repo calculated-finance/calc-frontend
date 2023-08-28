@@ -42,7 +42,6 @@ export function useCustomiseStrategy() {
       const msgs: EncodeObject[] = [];
 
       const updateVaultMsg = getUpdateVaultMessage(variables);
-
       msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
 
       return client.signAndBroadcast(address, msgs, 'auto');
