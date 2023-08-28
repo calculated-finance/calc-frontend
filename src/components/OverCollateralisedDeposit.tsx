@@ -28,15 +28,24 @@ export function OverCollateralisedDeposit() {
 
   console.log(initialDeposit)
   console.log('overCollateralised Deposit amount:', initialDeposit * value)
+
+
+  const setMinMultiplier = () => {
+    setValue(1.20)
+  }
+  const setMaxMultiplier = () => {
+    setValue(2.50)
+  }
+
   return (
     // Boolean(meta.touched && meta.error)
     <FormControl isInvalid={Boolean(1 * 2 === 2)}>
       <FormLabel>Over-collateralised deposit amount.</FormLabel>
       <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
       <Flex textStyle="body-xs">
-        <Button as={Link} variant='unstyled' textColor='blue.200'  >120%</Button>
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >120%</Button>
         <Spacer />
-        <Button as={Link} variant='unstyled' textColor='blue.200'>250%</Button>
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>250%</Button>
       </Flex>
       <Slider value={value} onChange={setValue} min={1.20} max={2.50} step={0.01}>
         <SliderTrack bg="white">
