@@ -1,4 +1,4 @@
-import { ReactNode, SVGProps } from 'react';
+import { ReactNode } from 'react';
 import {
   Box,
   CloseButton,
@@ -14,70 +14,15 @@ import {
   Stack,
   Spacer,
   IconButton,
-  ComponentWithAs,
-  IconProps,
-  Badge,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import {
-  HomeIcon,
-  Add1Icon,
-  ToolkitIcon,
-  BoxedImportIcon,
-  Graph2Icon,
-  ViewListIcon,
-  KnowledgeIcon,
-  CrownIcon,
-} from '@fusion-icons/react/interface';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { SidebarControls } from '@components/Layout/SidebarControls';
-import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { useAdmin } from '@hooks/useAdmin';
-import { featureFlags } from 'src/constants';
+import { SidebarControls } from '@components/Layout/SidebarControls';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { Pages } from './Pages';
-
-interface LinkItem {
-  name: string;
-  child?: JSX.Element;
-  icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
-  active?: boolean;
-  href: Pages;
-  exclude?: Chains[];
-}
-
-const LinkItems: Array<LinkItem> = [
-  { name: 'Home', icon: HomeIcon, href: Pages.Home },
-  { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
-  {
-    name: 'Pro strategies',
-    icon: CrownIcon,
-    href: Pages.ProStrategies,
-    child: (
-      <Badge colorScheme="brand" marginLeft={2}>
-        New
-      </Badge>
-    ),
-  },
-  { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
-  { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings },
-];
-
-const getLinkItems = (isAdmin: boolean) => [
-  ...LinkItems,
-  ...(isAdmin
-    ? [
-        { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-        { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-      ]
-    : []),
-  ...(featureFlags.learningHubEnabled
-    ? [{ name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }]
-    : []),
-];
+import { useChain } from '@hooks/useChain';
+import { LinkItem } from './LinkItems';
 
 const SIDEBAR_WIDTH = 64;
 
@@ -134,10 +79,9 @@ const sidebarLogoUrls = {
   [Chains.Moonbeam]: '/images/moonbeam-large.png',
 };
 
-function SidebarContent({ onClose, ...rest }: SidebarProps) {
+function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
-  const { isAdmin } = useAdmin();
 
   return (
     <Flex
@@ -164,8 +108,7 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
-        {getLinkItems(isAdmin)
-          .filter((link) => !link.exclude?.includes(chain))
+        {linkItems.filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}
@@ -192,11 +135,9 @@ function SidebarContent({ onClose, ...rest }: SidebarProps) {
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
-function MobileNav({ onOpen, ...rest }: MobileProps) {
+function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
-  const { isAdmin } = useAdmin();
-
   return (
     <Flex
       px={8}
@@ -219,7 +160,7 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
         <SidebarControls />
       </Flex>
       <Flex w="full" justifyContent="space-between">
-        {getLinkItems(isAdmin)
+        {linkItems
           .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <LinkWithQuery href={link.href} key={link.name}>
@@ -251,12 +192,12 @@ function MobileNav({ onOpen, ...rest }: MobileProps) {
     </Flex>
   );
 }
-export default function Sidebar({ children }: { children: ReactNode }) {
+export default function Sidebar({ children, linkItems }: { children: ReactNode; linkItems: LinkItem[] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'navy')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <SidebarContent linkItems={linkItems} onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
@@ -267,11 +208,11 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent linkItems={linkItems} onClose={onClose} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
-      <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
+      <MobileNav linkItems={linkItems} display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: SIDEBAR_WIDTH }}>{children}</Box>
     </Box>
   );

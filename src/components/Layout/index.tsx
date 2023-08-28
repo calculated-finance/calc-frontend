@@ -16,6 +16,8 @@ import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
+import { Graph2Icon, ViewListIcon } from '@fusion-icons/react/interface';
+import { useAdmin } from '@hooks/useAdmin';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
@@ -26,6 +28,8 @@ import { featureFlags } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
+import { ControlDeskLinkItems, LinkItem, LinkItems } from './Sidebar/LinkItems';
+import { Pages } from './Sidebar/Pages';
 
 const HEADER_HEIGHT = '64px';
 
@@ -148,9 +152,8 @@ export function getFlowLayout(page: ReactElement) {
   return <FlowLayout>{page}</FlowLayout>;
 }
 
-function SidebarLayout({ children }: { children: ReactElement }) {
+function SidebarLayout({ children, linkItems }: { children: ReactElement; linkItems: LinkItem[] }) {
   const { isPageLoading } = usePageLoad();
-
   const { connected } = useWallet();
 
   //  create date one year from now
@@ -175,8 +178,16 @@ function SidebarLayout({ children }: { children: ReactElement }) {
     setAcceptedAgreementState('true');
   };
 
+  const { isAdmin } = useAdmin()
+
+  const AdminLinkItems: Array<LinkItem> = [
+    ...linkItems,
+    { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
+    { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
+  ]
+
   return (
-    <Sidebar>
+    <Sidebar linkItems={isAdmin ? AdminLinkItems : linkItems}>
       <AppHeaderForSidebar />
       <Box position="relative" h="full" w="full">
         {isPageLoading && (
@@ -203,5 +214,8 @@ function SidebarLayout({ children }: { children: ReactElement }) {
 }
 
 export function getSidebarLayout(page: ReactElement) {
-  return <SidebarLayout>{page}</SidebarLayout>;
+  return <SidebarLayout linkItems={LinkItems}>{page}</SidebarLayout>;
+}
+export function getControlDeskLayout(page: ReactElement) {
+  return <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>;
 }

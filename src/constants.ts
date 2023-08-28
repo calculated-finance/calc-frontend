@@ -82,6 +82,7 @@ export const featureFlags =
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
         adjustedMinimumSwapAmountEnabled: true,
+        controlDeskEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -99,6 +100,7 @@ export const featureFlags =
         getFundsModalEnabled: true,
         assetPageStrategyButtonsEnabled: true,
         adjustedMinimumSwapAmountEnabled: true,
+        controlDeskEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
