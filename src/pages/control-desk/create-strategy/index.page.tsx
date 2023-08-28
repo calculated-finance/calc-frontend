@@ -1,5 +1,5 @@
 import { Button, Flex, Heading, Icon, Link, Spacer, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { getSidebarLayout } from "@components/Layout";
+import { getControlDeskLayout } from "@components/Layout";
 import { Code3Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from "react";
 
@@ -110,6 +110,6 @@ export function ControlDesk() {
 }
 
 
-ControlDesk.getLayout = getSidebarLayout;
+ControlDesk.getLayout = getControlDeskLayout;
 
 export default ControlDesk;

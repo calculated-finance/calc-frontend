@@ -1,5 +1,14 @@
 import { Badge, ComponentWithAs, IconProps } from "@chakra-ui/react";
-import { Add1Icon, Add2Icon, BoxedImportIcon, CrownIcon, Graph2Icon, HomeIcon, KnowledgeIcon, PieChartIcon, ToolkitIcon, ViewListIcon } from "@fusion-icons/react/interface";
+import {
+  Add1Icon,
+  Add2Icon,
+  BoxedImportIcon,
+  CrownIcon,
+  HomeIcon,
+  KnowledgeIcon,
+  PieChartIcon,
+  ToolkitIcon,
+} from "@fusion-icons/react/interface";
 import { Chains } from "@hooks/useChain/Chains";
 import { SVGProps } from "react";
 import { Pages } from "./Pages";
@@ -33,11 +42,7 @@ export const LinkItems: Array<LinkItem> = [
   { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }
 ]
 
-export const AdminLinkItems: Array<LinkItem> = [
-  ...LinkItems,
-  { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
-  { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-]
+
 
 export const ControlDeskLinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
