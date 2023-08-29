@@ -10,7 +10,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import usePairs, { orderAlphabetically, uniqueBaseDenoms, uniqueQuoteDenoms } from '@hooks/usePairs';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
+import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { DenomSelect } from '@components/DenomSelect';
 
@@ -26,7 +26,7 @@ export default function InputAsset() {
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
       .map((denom) => getDenomInfo(denom))
-      .filter(isDenomStable),
+      .filter(isDenomVolatile),
   );
 
   return (

@@ -18,7 +18,7 @@ function OneOffAvailableFundsButton({
   data,
   inputPrice,
 }: {
-  inputPrice: number,
+  inputPrice: number | undefined,
   denom: DenomInfo;
   isLoading: boolean;
   data: Coin | undefined;
@@ -34,19 +34,22 @@ function OneOffAvailableFundsButton({
 
   const { connected } = useWallet();
   const [, , helpers] = useField('targetAmount');
+  const [, , { setValue }] = useField({ name: 'collateralisedMultiplier' });
   const { setVisible } = useWalletModal();
 
   const createStrategyFee = inputPrice ? Number(createStrategyFeeInTokens(inputPrice)) : 0;
   const balance = Number(data?.amount);
+  const displayAmount = resultingPrice && (denom.conversion(Math.max(balance - createStrategyFee, 0)) / resultingPrice)
 
-  const displayAmount = resultingPrice && (denom.conversion(Math.max(balance - createStrategyFee, 0)) / resultingPrice).toFixed(2);
+  const maxDisplayAmount = displayAmount && (displayAmount).toFixed(2)
 
 
   const handleConnect = () => {
     setVisible(true);
   };
   const handleClick = () => {
-    helpers.setValue(displayAmount);
+    helpers.setValue(maxDisplayAmount);
+    setValue(1)
   };
 
   function handleOpen(onOpener: () => void) {
@@ -56,7 +59,7 @@ function OneOffAvailableFundsButton({
     };
   }
 
-  if (displayAmount) {
+  if (maxDisplayAmount) {
     return (
       <Button
         size="xs"
@@ -64,10 +67,10 @@ function OneOffAvailableFundsButton({
         colorScheme="blue"
         variant="link"
         cursor="pointer"
-        isDisabled={!displayAmount}
+        isDisabled={!maxDisplayAmount}
         onClick={handleClick}
       >
-        {displayAmount}
+        {maxDisplayAmount}
       </Button>
     );
   }
@@ -95,7 +98,7 @@ function OneOffAvailableFundsButton({
   );
 }
 
-export function OneOffAvailableFunds({ inputPrice, denom }: { denom: DenomInfo; inputPrice: number }) {
+export function OneOffAvailableFunds({ inputPrice, denom }: { denom: DenomInfo; inputPrice: number | undefined }) {
   const { data, isLoading } = useBalance(denom);
   const createStrategyFee = inputPrice ? Number(createStrategyFeeInTokens(inputPrice)) : 0;
   const balance = Number(data?.amount);
@@ -107,9 +110,9 @@ export function OneOffAvailableFunds({ inputPrice, denom }: { denom: DenomInfo; 
         isDisabled={balance === 0}
         label={`This is the estimated balance available to you after fees have been deducted ( ${String.fromCharCode(
           8275,
-        )} ${displayFee} ${denom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
+        )} ${displayFee} ${denom.name}). This excludes gas fees, so please make sure you have remaining funds.\nWe have also calculated your absolute maximum target amount by ((Input asset balance/Current price of output asset)*1.20).`}
       >
-        <Text mr={1}>Max*: </Text>
+        <Text whiteSpace='nowrap' mr={1}>Max target*: </Text>
       </Tooltip>
       <OneOffAvailableFundsButton isLoading={isLoading} data={data} denom={denom} inputPrice={inputPrice} />
     </Center>

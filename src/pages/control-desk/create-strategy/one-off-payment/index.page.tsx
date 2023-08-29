@@ -18,17 +18,18 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import dcaOutSteps from '@formConfig/dcaOut';
 import { OverCollateralisedDeposit } from '../../OverCollateralisedDeposit';
 import InputAsset from '../../InputAsset';
 import OutputAsset from '../../OutputAsset';
 
-function DcaIn() {
+function OneOffPayment() {
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
   } = usePairs();
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(dcaOutSteps);
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(step1ValidationSchema, { balances });
@@ -80,12 +81,12 @@ function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAIn,
-        transactionType: TransactionType.Buy,
-        formName: FormNames.DcaIn,
+        strategyType: StrategyTypes.DCAOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaOut,
       }}
     >
-      <DcaIn />
+      <OneOffPayment />
     </StrategyInfoProvider>
   );
 }

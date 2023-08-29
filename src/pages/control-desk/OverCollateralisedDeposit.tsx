@@ -18,10 +18,11 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
+import useFiatPrice from "@hooks/useFiatPrice";
 import getDenomInfo from "@utils/getDenomInfo";
+import { MAX_OVER_COLATERALISED, MIN_OVER_COLATERALISED } from "src/constants";
 import { useField } from "formik";
 import { OneOffAvailableFunds } from "./OneOffAvailableFunds";
-import useFiatPrice from "@hooks/useFiatPrice";
 
 
 
@@ -42,28 +43,30 @@ export function OverCollateralisedDeposit() {
   const { price } = useFiatPrice(initialDenom)
 
   const setMinMultiplier = () => {
-    setValue(1.20)
+    setValue(MIN_OVER_COLATERALISED)
   }
   const setMaxMultiplier = () => {
-    setValue(2.50)
+    setValue(MAX_OVER_COLATERALISED)
   }
 
-  const totalOverCollateralisedAmount = price && (Number(targetAmount / price) * value).toFixed(2)
+  const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * value).toFixed(2)
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Over-collateralised deposit amount.</FormLabel>
-      <HStack spacing={4}>
+      <HStack spacing={6}>
         <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
+        <Spacer />
         {initialDenomValue && <OneOffAvailableFunds inputPrice={price} denom={getDenomInfo(initialDenomValue)} />}
       </HStack>
 
       <Flex textStyle="body-xs">
-        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >120%</Button>
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >{`${convertDecimalToPercent(MIN_OVER_COLATERALISED)}%`}</Button>
         <Spacer />
-        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>250%</Button>
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>{`${convertDecimalToPercent(MAX_OVER_COLATERALISED)}%`}</Button>
       </Flex>
       <VStack spacing={0} >
-        <Slider value={value} defaultValue={1.20} onChange={setValue} min={1.20} max={2.50} step={0.01}>
+        <Slider value={value} defaultValue={MIN_OVER_COLATERALISED} onChange={setValue} min={MIN_OVER_COLATERALISED} max={MAX_OVER_COLATERALISED} step={0.01}>
           <SliderTrack bg="white">
             <Box position="relative" right={10} />
             <SliderFilledTrack bg="blue.200" />
@@ -76,18 +79,18 @@ export function OverCollateralisedDeposit() {
         <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         <HStack>
           <FormHelperText>
-            <Text textStyle="body-xs">((Target amount/Current price)*120%) {initialDenom.name}</Text>
+            <Text textStyle="body-xs">((Target amount/Current price)*{MIN_OVER_COLATERALISED}%) {initialDenom.name}</Text>
           </FormHelperText>
           <Spacer />
           {targetAmount && value &&
             <>
               <Text>
-                {totalOverCollateralisedAmount}
+                ~{totalOverCollateralisedAmount}
               </Text>
               <Image src={initialDenom.icon} boxSize={4} />
             </>}
           <FormHelperText textAlign='right'>
-            <Text textStyle="body-xs">((Target amount/Current price)*250%) {initialDenom.name}</Text>
+            <Text textStyle="body-xs">((Target amount/Current price)*{MAX_OVER_COLATERALISED}%) {initialDenom.name}</Text>
           </FormHelperText>
         </HStack>
         <FormHelperText >
