@@ -1,12 +1,10 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -15,20 +13,22 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import dcaOutSteps from '@formConfig/dcaOut';
-import { OverCollateralisedDeposit } from '../../OverCollateralisedDeposit';
-import InputAsset from '../../InputAsset';
-import OutputAsset from '../../OutputAsset';
-import { ControlDeskStrategyTypes } from '../../ControlDeskStrategyTypes';
-import { ControlDeskFormNames, ControlDeskStrategyInfoProvider } from '../../useControlDeskStrategyInfo';
+import { OverCollateralisedDeposit } from '../../../OverCollateralisedDeposit';
+import InputAsset from '../../../InputAsset';
+import OutputAsset from '../../../OutputAsset';
+import { ControlDeskStrategyTypes } from '../../../ControlDeskStrategyTypes';
+import { ControlDeskStrategyInfoProvider } from '../../../useControlDeskStrategyInfo';
+import { ControlDeskFormNames } from '../../../useControlDeskFormStore';
+import useControlDeskForm from '../../../useOnceOffForm';
+import onceOffSteps from '../../../onceOffForm';
 
 function OnceOffPayment() {
   const { connected } = useWallet();
-  const { actions, state } = useDcaInForm();
+  const { actions, state } = useControlDeskForm();
   const {
     data: { pairs },
   } = usePairs();
-  const { nextStep } = useSteps(dcaOutSteps);
+  const { nextStep } = useSteps(onceOffSteps);
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(step1ValidationSchema, { balances });
@@ -40,7 +40,7 @@ function OnceOffPayment() {
 
   if (!pairs) {
     return (
-      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+      <ModalWrapper stepsConfig={onceOffSteps} reset={actions.resetAction}>
         <Center h={56}>
           <Spinner />
         </Center>
@@ -59,7 +59,7 @@ function OnceOffPayment() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
+        <ModalWrapper reset={actions.resetAction} stepsConfig={onceOffSteps}>
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <InputAsset />

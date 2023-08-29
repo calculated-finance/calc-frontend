@@ -3,12 +3,8 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 import { ControlDeskStrategyTypes } from './ControlDeskStrategyTypes';
+import { ControlDeskFormNames } from './useControlDeskFormStore';
 
-export enum ControlDeskFormNames {
-  OnceOffPayment = 'onceOffPayment',
-  PayrollAutomation = 'payrollAutomation',
-  TreasuryExchange = 'treasuryExchange'
-}
 export type ControlDeskStrategyInfo = {
   strategyType: ControlDeskStrategyTypes;
   transactionType: TransactionType;
@@ -26,7 +22,7 @@ export const useControlDeskStrategyInfoStore = create<ControlDeskStrategyInfoSto
   setStrategyInfo: (strategyInfo: ControlDeskStrategyInfo) => set({ strategyInfo }),
 }));
 
-export function useStrategyInfo() {
+export function useControlDeskStrategyInfo() {
   const strategyInfo = useControlDeskStrategyInfoStore(state => state.strategyInfo);
 
   if (!strategyInfo) {
