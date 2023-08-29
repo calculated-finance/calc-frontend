@@ -18,11 +18,10 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react";
-import { AvailableFunds } from "@components/AvailableFunds";
-import usePrice from "@hooks/usePrice";
 import getDenomInfo from "@utils/getDenomInfo";
 import { useField } from "formik";
-import { TransactionType } from "../../components/TransactionType";
+import { OneOffAvailableFunds } from "./OneOffAvailableFunds";
+import useFiatPrice from "@hooks/useFiatPrice";
 
 
 
@@ -34,17 +33,13 @@ function convertDecimalToPercent(decimal: number) {
 
 export function OverCollateralisedDeposit() {
 
-  // const { transactionType} = useStrategyInfo();
   const [{ value }, meta, { setValue }] = useField({ name: 'collateralisedMultiplier' });
-  const [{ value: initialDeposit }] = useField({ name: 'initialDeposit' });
   const [{ value: targetAmount }] = useField({ name: 'targetAmount' });
   const [{ value: initialDenomValue }] = useField({ name: 'initialDenom' });
-  const [{ value: resultingDenomValue }] = useField({ name: 'resultingDenom' });
   const [{ value: applyMultiplier }] = useField({ name: 'applyCollateralisedMultiplier' });
 
   const initialDenom = getDenomInfo(initialDenomValue)
-  const resultingDenom = getDenomInfo(resultingDenomValue)
-  const { price } = usePrice(initialDenom, resultingDenom, TransactionType.Sell, true)
+  const { price } = useFiatPrice(initialDenom)
 
   const setMinMultiplier = () => {
     setValue(1.20)
@@ -59,7 +54,7 @@ export function OverCollateralisedDeposit() {
       <FormLabel>Over-collateralised deposit amount.</FormLabel>
       <HStack spacing={4}>
         <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
-        {initialDenomValue && <AvailableFunds denom={getDenomInfo(initialDenomValue)} />}
+        {initialDenomValue && <OneOffAvailableFunds inputPrice={price} denom={getDenomInfo(initialDenomValue)} />}
       </HStack>
 
       <Flex textStyle="body-xs">
@@ -101,7 +96,6 @@ export function OverCollateralisedDeposit() {
           </Text>
         </FormHelperText>
       </VStack>
-
     </FormControl >
 
   )

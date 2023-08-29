@@ -40,7 +40,7 @@ interface GetFundsButtonProps {
   onOpen: () => void;
 }
 
-function GetFundsDetails({ onSquidOpen, onOnRampOpen }: GetFundsDetailsProps) {
+export function GetFundsDetails({ onSquidOpen, onOnRampOpen }: GetFundsDetailsProps) {
   return (
     <Stack
       direction={{ base: 'column', sm: 'row' }}
@@ -100,7 +100,7 @@ function GetFundsDetails({ onSquidOpen, onOnRampOpen }: GetFundsDetailsProps) {
   );
 }
 
-function GetFundsModal({
+export function GetFundsModal({
   onSquidOpen,
   onOnRampOpen,
   isOpen,
@@ -122,7 +122,7 @@ function GetFundsModal({
   );
 }
 
-function GetFundsButton({ onOpen }: GetFundsButtonProps) {
+export function GetFundsButton({ onOpen }: GetFundsButtonProps) {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
