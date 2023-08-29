@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Code,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -17,6 +16,7 @@ import {
   Spacer,
   Text,
   Tooltip,
+  VStack,
 } from "@chakra-ui/react";
 import { AvailableFunds } from "@components/AvailableFunds";
 import usePrice from "@hooks/usePrice";
@@ -37,6 +37,7 @@ export function OverCollateralisedDeposit() {
   // const { transactionType} = useStrategyInfo();
   const [{ value }, meta, { setValue }] = useField({ name: 'collateralisedMultiplier' });
   const [{ value: initialDeposit }] = useField({ name: 'initialDeposit' });
+  const [{ value: targetAmount }] = useField({ name: 'targetAmount' });
   const [{ value: initialDenomValue }] = useField({ name: 'initialDenom' });
   const [{ value: resultingDenomValue }] = useField({ name: 'resultingDenom' });
   const [{ value: applyMultiplier }] = useField({ name: 'applyCollateralisedMultiplier' });
@@ -52,56 +53,55 @@ export function OverCollateralisedDeposit() {
     setValue(2.50)
   }
 
-  const totalOverCollateralisedAmount = (value * initialDeposit).toFixed(2)
+  const totalOverCollateralisedAmount = price && (Number(targetAmount / price) * value).toFixed(2)
   return (
-    // Boolean(meta.touched && meta.error)
-    <FormControl isInvalid={Boolean(1 * 2 === 2)}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Over-collateralised deposit amount.</FormLabel>
       <HStack spacing={4}>
         <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
         {initialDenomValue && <AvailableFunds denom={getDenomInfo(initialDenomValue)} />}
-
       </HStack>
+
       <Flex textStyle="body-xs">
         <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >120%</Button>
         <Spacer />
         <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>250%</Button>
       </Flex>
-      <Slider value={value} defaultValue={1.20} onChange={setValue} min={1.20} max={2.50} step={0.01}>
-        <SliderTrack bg="white">
-          <Box position="relative" right={10} />
-          <SliderFilledTrack bg="blue.200" />
-        </SliderTrack>
-        <Tooltip bg="abyss.200" color="white" placement="top" label={`${convertDecimalToPercent(value)}%`}>
-          <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
-        </Tooltip>
-      </Slider>
+      <VStack spacing={0} >
+        <Slider value={value} defaultValue={1.20} onChange={setValue} min={1.20} max={2.50} step={0.01}>
+          <SliderTrack bg="white">
+            <Box position="relative" right={10} />
+            <SliderFilledTrack bg="blue.200" />
+          </SliderTrack>
+          <Tooltip bg="abyss.200" color="white" placement="top" label={`${convertDecimalToPercent(value)}%`}>
+            <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
+          </Tooltip>
+        </Slider>
 
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-      <Flex justify="center">
-        <Code bg="abyss.200" color="white" borderRadius="md" px={2} py={1}>
-          <HStack>
-            {initialDeposit && value ?
-              <>
-                <Text >
-                  {initialDeposit}
-                </Text>
-                <Image src={initialDenom.icon} boxSize={4} />
-                <Text>
-                  &times; {value} = {totalOverCollateralisedAmount}
-                </Text>
-                <Image src={initialDenom.icon} boxSize={4} />
-              </>
-              :
-              <HStack p={2} textAlign='center' fontSize='xs'>
-                <Text>((Target amount/Current price) &times; %)</Text>
-                <Text>=</Text>
-                <Text>Over-collateralised deposit</Text>
-              </HStack>
-            }
-          </HStack>
-        </Code>
-      </Flex>
+        <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+        <HStack>
+          <FormHelperText>
+            <Text textStyle="body-xs">((Target amount/Current price)*120%) {initialDenom.name}</Text>
+          </FormHelperText>
+          <Spacer />
+          {targetAmount && value &&
+            <>
+              <Text>
+                {totalOverCollateralisedAmount}
+              </Text>
+              <Image src={initialDenom.icon} boxSize={4} />
+            </>}
+          <FormHelperText textAlign='right'>
+            <Text textStyle="body-xs">((Target amount/Current price)*250%) {initialDenom.name}</Text>
+          </FormHelperText>
+        </HStack>
+        <FormHelperText >
+          <Text color='brand.200' fontSize='xs'>
+            Once the target amount is reached, the remaining funds will be returned to your wallet.
+          </Text>
+        </FormHelperText>
+      </VStack>
+
     </FormControl >
 
   )
