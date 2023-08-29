@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 
 
 const ControlDeskUrls = {
-  OnceOffPayment: 'https://www.youtube.com/',
+  OnceOffPayment: '/control-desk/create-strategy/once-off-payment',
   PayrollAutomation: 'https://www.youtube.com/',
   TreasuryExchange: 'https://www.youtube.com/',
 }
@@ -31,7 +31,7 @@ export function ControlDeskPanels({ name, icon, href, learnMoreHref, description
           <Heading size="md">{name}</Heading>
           <Text textStyle="body" textAlign='center'>
             {description}</Text>
-          <Link href={href} isExternal>
+          <Link href={href}>
             <Button w={44} color="brand.200" textColor='abyss.200'>
               Get started
             </Button>

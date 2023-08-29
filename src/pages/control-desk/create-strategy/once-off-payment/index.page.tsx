@@ -9,21 +9,20 @@ import useSteps from '@hooks/useSteps';
 import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { OverCollateralisedDeposit } from '../../OverCollateralisedDeposit';
 import InputAsset from '../../InputAsset';
 import OutputAsset from '../../OutputAsset';
+import { ControlDeskStrategyTypes } from '../../ControlDeskStrategyTypes';
+import { ControlDeskFormNames, ControlDeskStrategyInfoProvider } from '../../useControlDeskStrategyInfo';
 
-function OneOffPayment() {
+function OnceOffPayment() {
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
@@ -79,15 +78,15 @@ function OneOffPayment() {
 
 function Page() {
   return (
-    <StrategyInfoProvider
+    <ControlDeskStrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAOut,
+        strategyType: ControlDeskStrategyTypes.OnceOffPayment,
         transactionType: TransactionType.Sell,
-        formName: FormNames.DcaOut,
+        formName: ControlDeskFormNames.OnceOffPayment,
       }}
     >
-      <OneOffPayment />
-    </StrategyInfoProvider>
+      <OnceOffPayment />
+    </ControlDeskStrategyInfoProvider>
   );
 }
 

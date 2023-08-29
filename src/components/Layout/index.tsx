@@ -119,6 +119,8 @@ function FlowLayout({ children }: { children: ReactElement }) {
   const router = useRouter();
   const { pathname } = router;
 
+  const isControlDesk = pathname.includes('control-desk')
+
   return (
     <>
       <AppHeader />
@@ -137,7 +139,9 @@ function FlowLayout({ children }: { children: ReactElement }) {
           children
         ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
-            <AssetPageStrategyButtons />
+            {!isControlDesk &&
+              <AssetPageStrategyButtons />
+            }
             <ConnectWallet h={80} />
           </ModalWrapper>
         ) : (
