@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-hooks';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useWallet } from '@hooks/useWallet';
 import useFiatPrice from '@hooks/useFiatPrice';

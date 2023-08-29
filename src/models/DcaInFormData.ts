@@ -1,4 +1,4 @@
-import getDenomInfo from '@utils/getDenomInfo';
+import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
@@ -16,6 +16,71 @@ import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyTypes } from './StrategyTypes';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
+
+export type AssetsFormValues = Yup.InferType<typeof assetsFormSchema>;
+
+export const assetsFormInitialValues = {
+  strategyType: '',
+  resultingDenom: '',
+  initialDenom: '',
+  initialDeposit: null,
+};
+
+export const assetsFormSchema = Yup.object({
+  strategyType: Yup.mixed<StrategyTypes>().required(),
+  resultingDenom: Yup.string().label('Resulting Denom').required(),
+  initialDenom: Yup.string().label('Initial Denom').required(),
+  initialDeposit: Yup.number()
+    .label('Initial Deposit')
+    .positive()
+    .required()
+    .nullable()
+    .test({
+      name: 'less-than-deposit',
+      message: ({ label }) => `${label} must be less than or equal to than your current balance`,
+      test(value, context) {
+        const { balances } = context?.options?.context || {};
+        if (!balances || !value || value <= 0) {
+          return true;
+        }
+        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
+        if (!amount) {
+          return false;
+        }
+        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
+      },
+    })
+    .test({
+      name: 'greater-than-minimum-deposit',
+      test(value, context) {
+        if (isNil(value)) {
+          return true;
+        }
+        const { initialDenom = null, strategyType = null } = { ...context.parent, ...context.options.context };
+        if (!initialDenom) {
+          return true;
+        }
+
+        if (strategyType !== StrategyTypes.DCAPlusIn && strategyType !== StrategyTypes.DCAPlusOut) {
+          return true;
+        }
+        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+
+        const dcaPlusMinimumDeposit =
+          minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT * MIN_DCA_PLUS_STRATEGY_DURATION;
+
+        if (value > dcaPlusMinimumDeposit) {
+          return true;
+        }
+
+        return context.createError({
+          message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${getDenomName(
+            getDenomInfo(initialDenom),
+          )}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
+        });
+      },
+    }),
+});
 
 export const initialValues = {
   resultingDenom: '',

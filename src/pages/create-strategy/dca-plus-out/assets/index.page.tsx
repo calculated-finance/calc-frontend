@@ -14,8 +14,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
@@ -24,12 +22,17 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
+import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
+import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { useWallet } from '@hooks/useWallet';
+import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../../../components/AssetsPageAndForm';
 
-function Page() {
+function DcaPlusOut() {
+  const { resetForm } = useFormStore();
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
@@ -70,26 +73,24 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <>
-          <AssetPageStrategyButtons />
+        <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
 
+          <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
               <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
-        </>
+        </ModalWrapper>
       )}
     </Formik>
   );
 }
 
-function PageWrapper() {
-  const { resetForm } = useFormStore();
+function Page() {
 
   return (
     <StrategyInfoProvider
@@ -99,13 +100,15 @@ function PageWrapper() {
         formName: FormNames.DcaPlusOut,
       }}
     >
-      <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-        <Page />
-      </ModalWrapper>
+      {featureFlags.singleAssetsEnabled ?
+        <Assets />
+        :
+        <DcaPlusOut />
+      }
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default Page;

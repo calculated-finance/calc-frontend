@@ -6,6 +6,7 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
+import * as constants from 'src/constants'
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
@@ -27,6 +28,7 @@ const mockRouter = {
   },
 };
 
+jest.mock('src/constants')
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -66,6 +68,11 @@ describe('DCA Out Assets page', () => {
     jest.clearAllMocks();
     mockFiatPrice();
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    constants.featureFlags = {
+      singleAssetsEnabled: false,
+    };
     useFormStore.setState({
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,

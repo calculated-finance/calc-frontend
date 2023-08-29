@@ -6,10 +6,7 @@ import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
 import useBalances from '@hooks/useBalances';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -18,9 +15,14 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import steps from '@formConfig/dcaIn';
+import { featureFlags } from 'src/constants';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { Assets } from '../../../../components/AssetsPageAndForm';
 
 function DcaIn() {
   const { connected } = useWallet();
@@ -63,10 +65,10 @@ function DcaIn() {
           <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
+
               <DCAInInitialDenom />
-              <DCAInResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+              <DCAInResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -85,7 +87,9 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      <DcaIn />
+      {featureFlags.singleAssetsEnabled ?
+        <Assets /> :
+        <DcaIn />}
     </StrategyInfoProvider>
   );
 }

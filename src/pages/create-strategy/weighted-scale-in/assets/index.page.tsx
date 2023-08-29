@@ -8,8 +8,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { useWeightedScaleAssetsForm } from '@hooks/useWeightedScaleForm';
@@ -19,11 +17,15 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
+import { featureFlags } from 'src/constants';
+import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function DcaIn() {
+function WeightedScaleIn() {
   const { connected } = useWallet();
   const { actions, state } = useWeightedScaleAssetsForm();
   const {
@@ -67,8 +69,8 @@ function DcaIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -78,7 +80,7 @@ function DcaIn() {
   );
 }
 
-function PageWrapper() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -87,11 +89,15 @@ function PageWrapper() {
         formName: FormNames.WeightedScaleIn,
       }}
     >
-      <DcaIn />
+      {featureFlags.singleAssetsEnabled ?
+        <Assets />
+        :
+        <WeightedScaleIn />
+      }
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default Page;

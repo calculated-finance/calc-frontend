@@ -8,8 +8,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import { dcaPlusInSteps } from 'src/formConfig/dcaPlusIn';
 import { DcaPlusAssetsFormSchema } from '@models/dcaPlusFormData';
 import { useDCAPlusAssetsForm } from '@hooks/useDcaPlusForm';
@@ -19,11 +17,15 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
+import DCAInInitialDenom from '@components/DCAInInitialDenom';
+import DCAInResultingDenom from '@components/DCAInResultingDenom';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
+import { featureFlags } from 'src/constants';
+import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function DcaIn() {
+function DcaPlusIn() {
   const { connected } = useWallet();
   const { actions, state } = useDCAPlusAssetsForm();
   const {
@@ -66,14 +68,13 @@ function DcaIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
+
               <DCAInInitialDenom />
-              <DCAInResultingDenom
-                denoms={
-                  values.initialDenom
-                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
-                    : []
-                }
-              />
+              <DCAInResultingDenom denoms={
+                values.initialDenom
+                  ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
+                  : []
+              } />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -82,7 +83,7 @@ function DcaIn() {
     </Formik>
   );
 }
-function PageWrapper() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -91,11 +92,16 @@ function PageWrapper() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-      <DcaIn />
+
+      {featureFlags.singleAssetsEnabled ?
+        <Assets />
+        :
+        <DcaPlusIn />
+      }
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default Page;

@@ -13,8 +13,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { WeightedScaleAssetsFormSchema } from '@models/weightedScaleFormData';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { FormNames } from '@hooks/useFormStore';
@@ -24,11 +22,15 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
 import { useWallet } from '@hooks/useWallet';
+import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
+import { featureFlags } from 'src/constants';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
+import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
+import { Assets } from '@components/AssetsPageAndForm';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
-function Page() {
+function WeightedScaleOut() {
   const { connected } = useWallet();
   const { actions, state } = useDcaInForm();
   const {
@@ -64,6 +66,7 @@ function Page() {
     resultingDenom: state.step1.resultingDenom,
   };
 
+
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -71,7 +74,6 @@ function Page() {
       {({ values }) => (
         <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={actions.resetAction}>
           <AssetPageStrategyButtons />
-
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
@@ -87,7 +89,7 @@ function Page() {
   );
 }
 
-function PageWrapper() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -96,11 +98,18 @@ function PageWrapper() {
         formName: FormNames.WeightedScaleOut,
       }}
     >
-      <Page />
+
+      {featureFlags.singleAssetsEnabled ?
+
+        <Assets />
+        :
+        <WeightedScaleOut />
+      }
+
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default Page;

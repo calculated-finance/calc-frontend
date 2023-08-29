@@ -13,8 +13,6 @@ import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
-import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
-import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import dcaOutSteps from '@formConfig/dcaOut';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
@@ -23,15 +21,20 @@ import { StrategyTypes } from '@models/StrategyTypes';
 import { useWallet } from '@hooks/useWallet';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import Spinner from '@components/Spinner';
-import { AssetPageStrategyButtons } from '@components/AssetPageStrategyButtons';
+import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
+import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
+import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
+import { featureFlags } from 'src/constants';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Assets } from '../../../../components/AssetsPageAndForm';
 
-function Page() {
+function DcaOut() {
   const { actions, state } = useDcaInForm();
   const {
     data: { pairs },
   } = usePairs();
+
   const { nextStep } = useSteps(dcaOutSteps);
   const { connected } = useWallet();
 
@@ -53,6 +56,7 @@ function Page() {
       </ModalWrapper>
     );
   }
+
   const denoms = orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
       .map((denom) => getDenomInfo(denom))
@@ -77,8 +81,7 @@ function Page() {
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
               <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>
@@ -88,7 +91,7 @@ function Page() {
   );
 }
 
-function PageWrapper() {
+function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -97,11 +100,13 @@ function PageWrapper() {
         formName: FormNames.DcaOut,
       }}
     >
-      <Page />
+      {featureFlags.singleAssetsEnabled ?
+        <Assets /> :
+        <DcaOut />}
     </StrategyInfoProvider>
   );
 }
 
-PageWrapper.getLayout = getFlowLayout;
+Page.getLayout = getFlowLayout;
 
-export default PageWrapper;
+export default Page;

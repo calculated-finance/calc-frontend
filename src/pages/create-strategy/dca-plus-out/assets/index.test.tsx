@@ -6,6 +6,7 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
+import * as constants from 'src/constants'
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
@@ -13,6 +14,7 @@ import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { useKujira } from '@hooks/useKujira';
+import { featureFlags } from 'src/constants';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
@@ -27,6 +29,7 @@ const mockRouter = {
   },
 };
 
+jest.mock('src/constants')
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -65,6 +68,12 @@ describe('DCA Out Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockFiatPrice();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    constants.featureFlags = {
+      singleAssetsEnabled: false,
+    };
 
     useFormStore.setState({
       forms: mockStateMachine.state,
@@ -185,12 +194,25 @@ describe('DCA Out Assets page', () => {
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
 
-      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        initialDenom: 'ukuji',
-        initialDeposit: 10,
-        resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-      });
-
+      // expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+      //   initialDenom: 'ukuji',
+      //   initialDeposit: 10,
+      //   resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+      // });
+      if (featureFlags.singleAssetsEnabled) {
+        expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+          initialDenom: 'ukuji',
+          initialDeposit: 10,
+          resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+          strategyType: 'DCA+ Out'
+        });
+      } else {
+        expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+          initialDenom: 'ukuji',
+          initialDeposit: 10,
+          resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
+        });
+      }
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-out/customise',
         query: { chain: 'Kujira' },

@@ -14,6 +14,12 @@ export default function useSteps(steps: StepConfig[]) {
     }
   };
 
+  const nextStepForSteps = (currentSteps: StepConfig[], newQuery?: ParsedUrlQueryInput) => {
+    if (currentStepIndex < steps.length - 1) {
+      routerPush(router, steps[currentStepIndex + 1].href, newQuery);
+    }
+  };
+
   // has previous step
   const hasPreviousStep = currentStepIndex > 0 && !currentStep.noBackButton;
 
@@ -37,6 +43,7 @@ export default function useSteps(steps: StepConfig[]) {
     currentStep,
     currentStepIndex,
     nextStep,
+    nextStepForSteps,
     hasPreviousStep,
     hasNextStep,
     previousStep,

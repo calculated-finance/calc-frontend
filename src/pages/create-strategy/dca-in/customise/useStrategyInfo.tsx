@@ -17,8 +17,6 @@ type StrategyInfoStore = {
   setStrategyInfo: (strategyInfo: StrategyInfo) => void;
 };
 
-
-
 export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
   strategyInfo: null,
   setStrategyInfo: (strategyInfo: StrategyInfo) => set({ strategyInfo }),
@@ -34,10 +32,11 @@ export function useStrategyInfo() {
   return strategyInfo;
 }
 
-export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo} & ChildrenProp) {
+export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo } & ChildrenProp) {
   const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
   const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
-  
+
+
   useEffect(() => {
     setStrategyInfo(strategyInfo);
   }, [setStrategyInfo, strategyInfo]);

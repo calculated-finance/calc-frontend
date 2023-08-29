@@ -9,10 +9,11 @@ import theme from 'src/theme';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-
 import { KujiraQueryClient } from 'kujira.js';
+import * as constants from 'src/constants'
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
+import { featureFlags } from 'src/constants';
 import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
@@ -27,6 +28,8 @@ const mockRouter = {
     on: jest.fn(),
   },
 };
+
+jest.mock('src/constants');
 
 jest.mock('@hooks/useWallet');
 
@@ -59,6 +62,11 @@ async function renderTarget() {
 describe('DCA In Assets page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    constants.featureFlags = {
+      singleAssetsEnabled: false,
+    };
     useFormStore.setState({
       forms: mockStateMachine.state,
       updateForm: () => mockStateMachine.actions.updateAction,
@@ -89,6 +97,8 @@ describe('DCA In Assets page', () => {
       ).toBeInTheDocument();
     });
   });
+
+
 
   describe('when initial denom is selected', () => {
     describe('and there are available funds', () => {
@@ -183,11 +193,25 @@ describe('DCA In Assets page', () => {
       // submit
       await waitFor(() => userEvent.click(screen.getByText(/Next/)));
 
-      expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
-        initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
-        initialDeposit: 50,
-        resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
-      });
+      // expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+      //   initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+      //   initialDeposit: 50,
+      //   resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+      // });
+      if (featureFlags.singleAssetsEnabled) {
+        expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+          initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+          initialDeposit: 50,
+          resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+          strategyType: 'DCA+ In'
+        });
+      } else {
+        expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({
+          initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
+          initialDeposit: 50,
+          resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
+        });
+      }
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-plus-in/customise',

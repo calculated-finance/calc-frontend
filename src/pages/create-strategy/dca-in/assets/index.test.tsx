@@ -6,10 +6,10 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
+import * as constants from 'src/constants';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { useKujira } from '@hooks/useKujira';
@@ -29,6 +29,7 @@ const mockRouter = {
   },
 };
 
+jest.mock('src/constants');
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -60,6 +61,12 @@ async function renderTarget() {
 describe('DCA In Assets page', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    constants.featureFlags = {
+      singleAssetsEnabled: false,
+    };
 
     useFormStore.setState({
       forms: mockStateMachine.state,
