@@ -12,16 +12,15 @@ import {
 } from 'src/constants';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
-import YesNoValues from './YesNoValues';
-import { StrategyTypes } from './StrategyTypes';
-import { PostPurchaseOptions } from './PostPurchaseOptions';
+import YesNoValues from '../../models/YesNoValues';
+import { StrategyTypes } from '../../models/StrategyTypes';
+import { PostPurchaseOptions } from '../../models/PostPurchaseOptions';
 
 export const initialCtrlValues = {
   resultingDenom: '',
   initialDenom: '',
   initialDeposit: null,
   advancedSettings: false,
-  startImmediately: YesNoValues.Yes,
   triggerType: TriggerTypes.Date,
   startDate: null,
   purchaseTime: '',
@@ -34,16 +33,11 @@ export const initialCtrlValues = {
   priceThresholdValue: null,
   sendToWallet: YesNoValues.Yes,
   recipientAccount: '',
-  autoStakeValidator: '',
-  autoCompoundStakingRewards: true,
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
-  yieldOption: null,
-  reinvestStrategy: '',
-  basePriceIsCurrentPrice: YesNoValues.Yes,
-  basePriceValue: null,
   swapMultiplier: 1,
   applyMultiplier: YesNoValues.Yes,
+  targetAmount: null,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -70,6 +64,7 @@ export const allCtrlSchema = {
         return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
       },
     }),
+  targetAmount: Yup.number().label('Target Amount').positive().required().nullable(),
   advancedSettings: Yup.boolean(),
   startDate: Yup.mixed()
     .label('Start Date')
@@ -331,13 +326,14 @@ export const ctrlSchema = Yup.object({
   postPurchaseOption: allCtrlSchema.postPurchaseOption,
   collateralisedMultiplier: allCtrlSchema.collateralisedMultiplier,
   applyCollateralisedMultiplier: allCtrlSchema.applyCollateralisedMultiplier,
+  targetAmount: allCtrlSchema.targetAmount,
 });
-export type DcaInFormDataAll = Yup.InferType<typeof ctrlSchema>;
+export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
 export const step1ValidationSchema = Yup.object({
   resultingDenom: allCtrlSchema.resultingDenom,
   initialDenom: allCtrlSchema.initialDenom,
-  initialDeposit: allCtrlSchema.initialDeposit,
+  targetAmount: allCtrlSchema.targetAmount,
 });
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 

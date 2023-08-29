@@ -18,10 +18,11 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
+import { AvailableFunds } from "@components/AvailableFunds";
 import usePrice from "@hooks/usePrice";
 import getDenomInfo from "@utils/getDenomInfo";
 import { useField } from "formik";
-import { TransactionType } from "./TransactionType";
+import { TransactionType } from "../../components/TransactionType";
 
 
 
@@ -56,7 +57,27 @@ export function OverCollateralisedDeposit() {
     // Boolean(meta.touched && meta.error)
     <FormControl isInvalid={Boolean(1 * 2 === 2)}>
       <FormLabel>Over-collateralised deposit amount.</FormLabel>
-      <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
+      <HStack spacing={4}>
+        <FormHelperText fontSize="xs">To counter price volatility, we recommend you deposit at least 120%.</FormHelperText>
+        {initialDenomValue && <AvailableFunds denom={getDenomInfo(initialDenomValue)} />}
+
+      </HStack>
+      <Flex textStyle="body-xs">
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >120%</Button>
+        <Spacer />
+        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>250%</Button>
+      </Flex>
+      <Slider value={value} defaultValue={1.20} onChange={setValue} min={1.20} max={2.50} step={0.01}>
+        <SliderTrack bg="white">
+          <Box position="relative" right={10} />
+          <SliderFilledTrack bg="blue.200" />
+        </SliderTrack>
+        <Tooltip bg="abyss.200" color="white" placement="top" label={`${convertDecimalToPercent(value)}%`}>
+          <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
+        </Tooltip>
+      </Slider>
+
+      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
       <Flex justify="center">
         <Code bg="abyss.200" color="white" borderRadius="md" px={2} py={1}>
           <HStack>
@@ -81,23 +102,7 @@ export function OverCollateralisedDeposit() {
           </HStack>
         </Code>
       </Flex>
-
-      <Flex textStyle="body-xs">
-        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMinMultiplier}  >120%</Button>
-        <Spacer />
-        <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>250%</Button>
-      </Flex>
-      <Slider value={value} defaultValue={1.20} onChange={setValue} min={1.20} max={2.50} step={0.01}>
-        <SliderTrack bg="white">
-          <Box position="relative" right={10} />
-          <SliderFilledTrack bg="blue.200" />
-        </SliderTrack>
-        <Tooltip bg="abyss.200" color="white" placement="top" label={`${convertDecimalToPercent(value)}%`}>
-          <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
-        </Tooltip>
-      </Slider>
-
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl >
+
   )
 }
