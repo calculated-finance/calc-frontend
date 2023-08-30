@@ -222,6 +222,22 @@ export const allCtrlSchema = {
         return value <= startPrice;
       },
     }),
+  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .required()
+    .when('advancedSettings', {
+      is: false,
+      then: (schema) => schema.transform(() => YesNoValues.Yes),
+    }),
+  calcCalculateSwaps: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .required()
+    .when(['advancedSettings', 'calcCalculateSwapsEnabled'], {
+      is: (advancedSettings: boolean, calcCalculatedSwapsEnabled: YesNoValues) =>
+        advancedSettings === true && calcCalculatedSwapsEnabled === YesNoValues.Yes,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => null),
+    }),
   postPurchaseOption: Yup.mixed<PostPurchaseOptions>(),
   sendToWallet: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
@@ -327,6 +343,8 @@ export const ctrlSchema = Yup.object({
   collateralisedMultiplier: allCtrlSchema.collateralisedMultiplier,
   applyCollateralisedMultiplier: allCtrlSchema.applyCollateralisedMultiplier,
   targetAmount: allCtrlSchema.targetAmount,
+  calcCalculatedSwaps: allCtrlSchema.calcCalculateSwaps,
+  calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculateSwapsEnabled,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -357,5 +375,7 @@ export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'priceThresholdValue',
   'collateralisedMultiplier',
   'applyCollateralisedMultiplier',
+  'calcCalculatedSwaps',
+  'calcCalculatedSwapsEnabled',
 ]);
 export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;

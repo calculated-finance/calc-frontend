@@ -1,13 +1,12 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
+import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack, Text } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
-import RadioCard from './RadioCard';
-import Radio from './Radio';
-import { DenomPriceInput } from './DenomPriceInput';
-import { CollapseWithRender } from './CollapseWithRender';
+import Radio from '@components/Radio';
+import RadioCard from '@components/RadioCard';
+import { CollapseWithRender } from '@components/CollapseWithRender';
+import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -20,11 +19,12 @@ export const yesNoData: { value: YesNoValues; label: string }[] = [
   },
 ];
 
-function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
-  const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
+function CalcCalculateSwapsToggle({ forceOpen = false }: { forceOpen?: boolean }) {
+  const [field, , helpers] = useField({ name: 'calcCalculateSwapsEnabled' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
+    defaultValue: YesNoValues.Yes,
     value: field.value,
     onChange: helpers.setValue,
   });
@@ -58,39 +58,36 @@ type PriceThresholdProps = {
   forceOpen?: boolean;
 };
 
-export default function PriceThreshold({
+export default function CalcCalculateSwaps({
   initialDenom,
   resultingDenom,
   forceOpen,
 }: PriceThresholdProps) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
-  const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'calcCalculateSwaps' });
+  const [calcCalculateSwapsField] = useField({ name: 'calcCalculateSwapsEnabled' });
 
-  const { transactionType } = useStrategyInfo();
+  const { transactionType } = useControlDeskStrategyInfo();
 
+  const title = 'Let CALC calculate the optimal swap amount and frequency?';
 
-  const title = transactionType === 'buy' ? 'Set buy price ceiling?' : 'Set sell price floor?';
-
-  const description =
-    transactionType === 'buy'
-      ? "CALC won't buy if the asset price exceeds this set value."
-      : "CALC won't sell if the asset price drops below this set value.";
+  const description = 'This will be optimised to reduce price impact.'
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel>{title}</FormLabel>
       <FormHelperText>{description}</FormHelperText>
       <Stack spacing={3}>
-        <PriceThresholdToggle forceOpen={forceOpen} />
-        <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
-          <DenomPriceInput
+        <CalcCalculateSwapsToggle forceOpen={forceOpen} />
+        <CollapseWithRender isOpen={calcCalculateSwapsField.value === YesNoValues.No}>
+          {/* <DenomPriceInput
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}
             {...field}
-          />
+          /> */}
+          <Text>Add feature</Text>
         </CollapseWithRender>
       </Stack>
     </FormControl>

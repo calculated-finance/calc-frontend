@@ -1,13 +1,13 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
-import RadioCard from './RadioCard';
-import Radio from './Radio';
-import { DenomPriceInput } from './DenomPriceInput';
-import { CollapseWithRender } from './CollapseWithRender';
+import Radio from '@components/Radio';
+import RadioCard from '@components/RadioCard';
+import { CollapseWithRender } from '@components/CollapseWithRender';
+import { DenomPriceInput } from '@components/DenomPriceInput';
+import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -58,7 +58,7 @@ type PriceThresholdProps = {
   forceOpen?: boolean;
 };
 
-export default function PriceThreshold({
+export default function PriceThresholdOnceOff({
   initialDenom,
   resultingDenom,
   forceOpen,
@@ -66,8 +66,7 @@ export default function PriceThreshold({
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
 
-  const { transactionType } = useStrategyInfo();
-
+  const { transactionType } = useControlDeskStrategyInfo();
 
   const title = transactionType === 'buy' ? 'Set buy price ceiling?' : 'Set sell price floor?';
 

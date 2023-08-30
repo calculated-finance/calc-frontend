@@ -1,9 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import { Form, Formik, useFormikContext } from 'formik';
 import Submit from '@components/Submit';
-import ExecutionInterval from '@components/ExecutionInterval';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import PriceThreshold from '@components/PriceThreshold';
 import SlippageTolerance from '@components/SlippageTolerance';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { useDenom } from '@hooks/useDenom/useDenom';
@@ -14,7 +12,10 @@ import { StepConfig } from '@formConfig/StepConfig';
 import { ControlDeskFormDataStep1, ControlDeskFormDataStep2, step2ValidationSchemaControlDesk } from 'src/pages/control-desk/ControlDeskForms';
 import { useControlDeskStrategyInfo } from 'src/pages/control-desk/useControlDeskStrategyInfo';
 import { useStep2FormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
-import { OnceOffTriggerForm } from 'src/pages/control-desk/Components/OnceOffTriggerForm';
+import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
+import { TriggerFormOnceOff } from 'src/pages/control-desk/Components/TriggerFormOnceOff';
+import PriceThresholdOnceOff from 'src/pages/control-desk/Components/PriceThresholdOnceOff';
+import CalcCalculateSwaps from 'src/pages/control-desk/Components/CalcCalculateSwaps';
 
 export function CustomiseFormOnceOff({
   step1,
@@ -24,16 +25,18 @@ export function CustomiseFormOnceOff({
   const { values } = useFormikContext<ControlDeskFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
   const resultingDenom = useDenom(step1.resultingDenom);
+
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={4}>
-        {/* <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} /> */}
+        <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={step1.targetAmount} />
         <AdvancedSettingsSwitch />
-        <OnceOffTriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
-        <ExecutionInterval />
-        {/* <SwapAmount isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} /> */}
+        <TriggerFormOnceOff />
+        <CalcCalculateSwaps initialDenom={initialDenom}
+          resultingDenom={resultingDenom} />
+
         <CollapseWithRender isOpen={values.advancedSettings}>
-          <PriceThreshold
+          <PriceThresholdOnceOff
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
           />
