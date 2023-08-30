@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 import { CollapseWithRender } from '@components/CollapseWithRender';
-import PurchaseTime from '@components/PurchaseTime';
-import { CtrlFormDataAll } from '../ControlDeskForms';
-import StartDateOnceOff from './StartDateOnceOff';
+import { CtrlFormDataAll } from './ControlDeskForms';
+import EndDate from './EndDateOnceOff';
+import EndTime from './EndTimeOnceOff';
 
 export function TriggerFormOnceOff() {
   const { values } = useFormikContext<CtrlFormDataAll>();
@@ -11,9 +11,9 @@ export function TriggerFormOnceOff() {
 
   return (
     <Box>
-      <StartDateOnceOff />
+      <EndDate />
       <CollapseWithRender isOpen={advancedSettings}>
-        <PurchaseTime
+        <EndTime
           title=''
           subtitle={undefined}
         />

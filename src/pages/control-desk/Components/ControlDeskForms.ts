@@ -12,9 +12,9 @@ import {
 } from 'src/constants';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
-import YesNoValues from '../../models/YesNoValues';
-import { StrategyTypes } from '../../models/StrategyTypes';
-import { PostPurchaseOptions } from '../../models/PostPurchaseOptions';
+import YesNoValues from '../../../models/YesNoValues';
+import { StrategyTypes } from '../../../models/StrategyTypes';
+import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
 
 export const initialCtrlValues = {
   resultingDenom: '',
@@ -25,8 +25,6 @@ export const initialCtrlValues = {
   startDate: null,
   purchaseTime: '',
   startPrice: null,
-  executionInterval: 'daily',
-  executionIntervalIncrement: 1,
   swapAmount: null,
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
@@ -35,9 +33,11 @@ export const initialCtrlValues = {
   recipientAccount: '',
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOptions.SendToWallet,
-  swapMultiplier: 1,
-  applyMultiplier: YesNoValues.Yes,
   targetAmount: null,
+  endDate: null,
+  endTime: '',
+  calcCalculateSwaps: YesNoValues.Yes,
+  calcCalculateSwapEnabled: YesNoValues.Yes,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -66,19 +66,14 @@ export const allCtrlSchema = {
     }),
   targetAmount: Yup.number().label('Target Amount').positive().required().nullable(),
   advancedSettings: Yup.boolean(),
-  startDate: Yup.mixed()
-    .label('Start Date')
+  endDate: Yup.mixed()
+    .label('End Date')
     .nullable()
-    .when(['startImmediately', 'triggerType', 'advancedSettings'], ((
-      startImmediately,
-      triggerType,
-      advancedSettings,
-      schema,
-    ) => {
-      if (triggerType === TriggerTypes.Date && startImmediately === YesNoValues.No) {
+    .when(['triggerType', 'advancedSettings'], ((triggerType, advancedSettings, schema) => {
+      if (triggerType === TriggerTypes.Date) {
         const minDate = advancedSettings ? new Date(new Date().setDate(new Date().getDate() - 1)) : new Date();
         return Yup.date()
-          .label('Start Date')
+          .label('End Date')
           .nullable()
           .min(minDate, ({ label }) => `${label} must be in the future.`)
           .required();
@@ -96,15 +91,15 @@ export const allCtrlSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-  purchaseTime: Yup.string()
-    .label('Purchase Time')
+  endTime: Yup.string()
+    .label('End Time')
     .matches(timeFormat, {
       excludeEmptyString: true,
       message: ({ label }) => `${label} must be in the format HH:MM (24 hour time)`,
     })
-    .when(['advancedSettings', 'startImmediately', 'triggerType'], {
-      is: (advancedSettings: boolean, startImmediately: YesNoValues, triggerType: TriggerTypes) =>
-        triggerType === TriggerTypes.Date && advancedSettings === true && startImmediately === YesNoValues.No,
+    .when(['advancedSettings', 'triggerType'], {
+      is: (advancedSettings: boolean, triggerType: TriggerTypes) =>
+        triggerType === TriggerTypes.Date && advancedSettings === true,
       then: Yup.string().required(),
       otherwise: (schema) => schema.transform(() => ''),
     })
@@ -115,50 +110,11 @@ export const allCtrlSchema = {
         if (!value?.match(timeFormat)) {
           return true;
         }
-        const { startDate = new Date() } = { ...context.parent };
-        if (!value || !startDate) {
+        const { endDate = new Date() } = { ...context.parent };
+        if (!value || !endDate) {
           return false;
         }
-        return new Date() <= combineDateAndTime(startDate, value);
-      },
-    }),
-  swapAmount: Yup.number()
-    .label('Swap Amount')
-    .required()
-    .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') {
-        return null;
-      }
-      return value;
-    })
-    .test({
-      name: 'less-than-deposit',
-      message: 'Swap amount must be less than initial deposit',
-      test(value, context) {
-        const { initialDeposit = 0 } = { ...context.parent, ...context.options.context };
-        if (!value) {
-          return true;
-        }
-        return value <= initialDeposit;
-      },
-    })
-    .test({
-      name: 'greater-than-minimum-swap',
-      test(value, context) {
-        if (isNil(value)) {
-          return true;
-        }
-        const { initialDenom = null } = { ...context.parent, ...context.options.context };
-        if (!initialDenom) {
-          return true;
-        }
-        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
-
-        if (value > minimumSwapAmount) {
-          return true;
-        }
-        return context.createError({ message: `Swap amount should be greater than ${minimumSwapAmount}` });
+        return new Date() <= combineDateAndTime(endDate, value);
       },
     }),
   slippageTolerance: Yup.number()
@@ -224,14 +180,12 @@ export const allCtrlSchema = {
     }),
   calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
-    .required()
     .when('advancedSettings', {
       is: false,
       then: (schema) => schema.transform(() => YesNoValues.Yes),
     }),
   calcCalculateSwaps: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
-    .required()
     .when(['advancedSettings', 'calcCalculateSwapsEnabled'], {
       is: (advancedSettings: boolean, calcCalculatedSwapsEnabled: YesNoValues) =>
         advancedSettings === true && calcCalculatedSwapsEnabled === YesNoValues.Yes,
@@ -330,10 +284,7 @@ export const ctrlSchema = Yup.object({
   initialDenom: allCtrlSchema.initialDenom,
   initialDeposit: allCtrlSchema.initialDeposit,
   advancedSettings: allCtrlSchema.advancedSettings,
-  startDate: allCtrlSchema.startDate,
   startPrice: allCtrlSchema.startPrice,
-  purchaseTime: allCtrlSchema.purchaseTime,
-  swapAmount: allCtrlSchema.swapAmount,
   slippageTolerance: allCtrlSchema.slippageTolerance,
   priceThresholdEnabled: allCtrlSchema.priceThresholdEnabled,
   priceThresholdValue: allCtrlSchema.priceThresholdValue,
@@ -345,6 +296,8 @@ export const ctrlSchema = Yup.object({
   targetAmount: allCtrlSchema.targetAmount,
   calcCalculatedSwaps: allCtrlSchema.calcCalculateSwaps,
   calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculateSwapsEnabled,
+  endDate: allCtrlSchema.endDate,
+  endTime: allCtrlSchema.endTime,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -366,16 +319,13 @@ export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseV
 
 export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'advancedSettings',
-  'startDate',
-  'startPrice',
-  'purchaseTime',
-  'swapAmount',
   'slippageTolerance',
   'priceThresholdEnabled',
   'priceThresholdValue',
   'collateralisedMultiplier',
-  'applyCollateralisedMultiplier',
   'calcCalculatedSwaps',
   'calcCalculatedSwapsEnabled',
+  'endDate',
+  'endTime',
 ]);
 export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;

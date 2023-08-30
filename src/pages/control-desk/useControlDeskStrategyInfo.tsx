@@ -2,8 +2,8 @@ import { TransactionType } from '@components/TransactionType';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useEffect } from 'react';
 import { create } from 'zustand';
-import { ControlDeskStrategyTypes } from './ControlDeskStrategyTypes';
 import { ControlDeskFormNames } from './useControlDeskFormStore';
+import { ControlDeskStrategyTypes } from './Components/ControlDeskStrategyTypes';
 
 export type ControlDeskStrategyInfo = {
   strategyType: ControlDeskStrategyTypes;

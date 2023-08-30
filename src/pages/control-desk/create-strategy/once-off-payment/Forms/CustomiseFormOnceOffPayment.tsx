@@ -9,7 +9,7 @@ import { InvalidData } from '@components/InvalidData';
 import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
-import { ControlDeskFormDataStep1, ControlDeskFormDataStep2, step2ValidationSchemaControlDesk } from 'src/pages/control-desk/ControlDeskForms';
+import { ControlDeskFormDataStep1, ControlDeskFormDataStep2, step2ValidationSchemaControlDesk } from 'src/pages/control-desk/Components/ControlDeskForms';
 import { useControlDeskStrategyInfo } from 'src/pages/control-desk/useControlDeskStrategyInfo';
 import { useStep2FormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
 import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
@@ -63,6 +63,9 @@ export function CustomiseFormOnceOffWrapper({
     await nextStep();
   };
 
+  console.log(steps)
+
+
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
@@ -73,6 +76,9 @@ export function CustomiseFormOnceOffWrapper({
   }
 
   const initialValues = state.step2;
+  console.log(state)
+
+
 
   return (
     <Formik

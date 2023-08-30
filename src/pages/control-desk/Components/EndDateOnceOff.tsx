@@ -16,8 +16,8 @@ const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep
 
 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function StartDateOnceOff() {
-  const [field, meta, helpers] = useField({ name: 'startDate' });
+export default function EndDate() {
+  const [field, meta, helpers] = useField({ name: 'endDate' });
   const [advancedSettingsField] = useField({ name: 'advancedSettings' });
 
   const date = field.value ? new Date(field.value) : undefined;
