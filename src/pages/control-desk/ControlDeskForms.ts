@@ -330,23 +330,23 @@ export const ctrlSchema = Yup.object({
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
-export const step1ValidationSchema = Yup.object({
+export const step1ValidationSchemaControlDesk = Yup.object({
   resultingDenom: allCtrlSchema.resultingDenom,
   initialDenom: allCtrlSchema.initialDenom,
   targetAmount: allCtrlSchema.targetAmount,
 });
-export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
+export type ControlDeskFormDataStep1 = Yup.InferType<typeof step1ValidationSchemaControlDesk>;
 
-export const postPurchaseValidationSchema = ctrlSchema.pick([
+export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'postPurchaseOption',
   'sendToWallet',
   'recipientAccount',
   'collateralisedMultiplier',
   'applyCollateralisedMultiplier',
 ]);
-export type DcaInFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchema>;
+export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;
 
-export const step2ValidationSchema = ctrlSchema.pick([
+export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'advancedSettings',
   'startDate',
   'startPrice',
@@ -358,4 +358,4 @@ export const step2ValidationSchema = ctrlSchema.pick([
   'collateralisedMultiplier',
   'applyCollateralisedMultiplier',
 ]);
-export type DcaInFormDataStep2 = Yup.InferType<typeof step2ValidationSchema>;
+export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;

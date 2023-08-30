@@ -1,6 +1,5 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -12,6 +11,7 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
+import { ControlDeskFormDataStep1, step1ValidationSchemaControlDesk } from 'src/pages/control-desk/ControlDeskForms';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { OverCollateralisedDeposit } from '../../../OverCollateralisedDeposit';
 import InputAsset from '../../../InputAsset';
@@ -31,9 +31,10 @@ function OnceOffPayment() {
   const { nextStep } = useSteps(onceOffSteps);
   const { data: balances } = useBalances();
 
-  const { validate } = useValidation(step1ValidationSchema, { balances });
 
-  const onSubmit = async (formData: DcaInFormDataStep1) => {
+  const { validate } = useValidation(step1ValidationSchemaControlDesk, { balances });
+
+  const onSubmit = async (formData: ControlDeskFormDataStep1) => {
     await actions.updateAction(formData);
     await nextStep();
   };

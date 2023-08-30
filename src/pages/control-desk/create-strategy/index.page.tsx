@@ -5,7 +5,7 @@ import { ReactElement } from "react";
 
 
 const ControlDeskUrls = {
-  OnceOffPayment: '/control-desk/create-strategy/once-off-payment',
+  OnceOffPayment: '/control-desk/create-strategy/once-off-payment/assets',
   PayrollAutomation: 'https://www.youtube.com/',
   TreasuryExchange: 'https://www.youtube.com/',
 }

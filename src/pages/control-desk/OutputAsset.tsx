@@ -1,11 +1,11 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, SimpleGrid, Spacer, Text } from '@chakra-ui/react';
-import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import { useChain } from '@hooks/useChain';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from '@components/DenomSelect';
 import TargetAmount from './TargetAmount';
+import { ControlDeskFormDataStep1 } from './ControlDeskForms';
 
 export default function OutputAsset({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
@@ -13,7 +13,7 @@ export default function OutputAsset({ denoms }: { denoms: DenomInfo[] }) {
 
   const {
     values: { initialDenom },
-  } = useFormikContext<DcaInFormDataStep1>();
+  } = useFormikContext<ControlDeskFormDataStep1>();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>

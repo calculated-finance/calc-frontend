@@ -1,15 +1,10 @@
-import {
-  dcaSchema,
-  initialValues,
-  postPurchaseValidationSchema,
-  step1ValidationSchema,
-  step2ValidationSchema,
-} from '@models/DcaInFormData';
+import { initialValues } from '@models/DcaInFormData';
 import { useWallet } from '@hooks/useWallet';
 import { ControlDeskFormNames, useControlDeskFormStore } from './useControlDeskFormStore';
 import { useControlDeskStrategyInfo } from './useControlDeskStrategyInfo';
+import { ctrlSchema, postPurchaseValidationSchemaControlDesk, step1ValidationSchemaControlDesk, step2ValidationSchemaControlDesk } from './ControlDeskForms';
 
-export const getFormState = (state: any, formName: ControlDeskFormNames) => state[formName] || {};
+export const getFormStateControlDesk = (state: any, formName: ControlDeskFormNames) => state[formName] || {};
 
 const useControlDeskForm = () => {
 
@@ -20,7 +15,7 @@ const useControlDeskForm = () => {
   try {
     return {
       state: {
-        step1: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+        step1: step1ValidationSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true }),
       },
       actions: {
         updateAction: updateAction(formName, address),
@@ -30,7 +25,7 @@ const useControlDeskForm = () => {
   } catch (e) {
     return {
       state: {
-        step1: step1ValidationSchema.cast(initialValues, { stripUnknown: true }),
+        step1: step1ValidationSchemaControlDesk.cast(initialValues, { stripUnknown: true }),
       },
       actions: {
         updateAction: updateAction(formName, address),
@@ -40,16 +35,16 @@ const useControlDeskForm = () => {
   }
 };
 
-export const useStep2Form = () => {
+export const useStep2FormControlDesk = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useControlDeskFormStore();
   const { address } = useWallet();
   const { formName } = useControlDeskStrategyInfo()
 
   try {
-    const step1 = step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
+    const step1 = step1ValidationSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true });
     const step2 = {
-      ...step2ValidationSchema.cast(initialValues, { stripUnknown: true }),
-      ...step2ValidationSchema.cast(getFormState(state, formName), { stripUnknown: true }),
+      ...step2ValidationSchemaControlDesk.cast(initialValues, { stripUnknown: true }),
+      ...step2ValidationSchemaControlDesk.cast(getFormStateControlDesk(state, formName), { stripUnknown: true }),
     };
 
     return {
@@ -72,17 +67,17 @@ export const useStep2Form = () => {
   }
 };
 
-export const useDcaInFormPostPurchase = () => {
+export const useControlDeskFormPostPurchase = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useControlDeskFormStore();
   const { address } = useWallet();
   const { formName } = useControlDeskStrategyInfo()
 
   try {
     return {
-      context: step1ValidationSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      context: step1ValidationSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true }),
       state: {
-        ...postPurchaseValidationSchema.cast(initialValues, { stripUnknown: true }),
-        ...postPurchaseValidationSchema.cast(getFormState(state, formName), { stripUnknown: true }),
+        ...postPurchaseValidationSchemaControlDesk.cast(initialValues, { stripUnknown: true }),
+        ...postPurchaseValidationSchemaControlDesk.cast(getFormStateControlDesk(state, formName), { stripUnknown: true }),
       },
       actions: {
         updateAction: updateAction(formName, address),
@@ -99,15 +94,15 @@ export const useDcaInFormPostPurchase = () => {
   }
 };
 
-export const useConfirmForm = () => {
+export const useConfirmFormControlDesk = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useControlDeskFormStore();
   const { formName } = useControlDeskStrategyInfo();
   const { address } = useWallet();
   try {
-    dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
+    ctrlSchema.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true });
 
     return {
-      state: dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
+      state: ctrlSchema.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true }),
       actions: {
         updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),

@@ -20,7 +20,7 @@ export function TriggerForm({
 }) {
   const { values } = useFormikContext<DcaInFormDataAll>();
   const { startImmediately, triggerType, advancedSettings } = values;
-  const { transactionType} = useStrategyInfo();
+  const { transactionType } = useStrategyInfo();
 
   return (
     <Box>

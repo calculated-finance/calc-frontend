@@ -38,7 +38,7 @@ const onceOffSteps: StepConfig[] = [
     ),
   },
   {
-    href: '/control-desk/create-strategy/once-off-payment/conform-purchase',
+    href: '/control-desk/create-strategy/once-off-payment/confirm-purchase',
     title: 'Confirm & Sign',
   },
 
