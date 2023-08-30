@@ -5,7 +5,6 @@ import usePageLoad from '@hooks/usePageLoad';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import { InvalidData } from '@components/InvalidData';
-import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { TransactionType } from '@components/TransactionType';
 import { useControlDeskFormPostPurchase } from 'src/pages/control-desk/useOnceOffForm';
@@ -14,6 +13,7 @@ import { ControlDeskFormDataPostPurchase, postPurchaseValidationSchemaControlDes
 import { ControlDeskStrategyInfoProvider } from 'src/pages/control-desk/useControlDeskStrategyInfo';
 import { ControlDeskFormNames } from 'src/pages/control-desk/useControlDeskFormStore';
 import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/ControlDeskStrategyTypes';
+import { PostPurchaseFormOnceOff } from 'src/pages/control-desk/Components/PostPurchaseFormOnceOff';
 
 function Page() {
   const { actions, state, context } = useControlDeskFormPostPurchase();
@@ -33,6 +33,7 @@ function Page() {
     goToStep(0);
   };
 
+
   const resultingDenom = useDenom(context?.resultingDenom);
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -47,7 +48,7 @@ function Page() {
           />
           <NewStrategyModalBody stepsConfig={onceOffSteps} isLoading={isPageLoading && !isSubmitting}>
             {state && context ? (
-              <PostPurchaseForm resultingDenom={resultingDenom} />
+              <PostPurchaseFormOnceOff resultingDenom={resultingDenom} />
             ) : (
               <InvalidData onRestart={handleRestart} />
             )}

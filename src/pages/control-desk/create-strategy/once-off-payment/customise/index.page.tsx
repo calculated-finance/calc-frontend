@@ -2,10 +2,10 @@ import { getFlowLayout } from '@components/Layout';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import onceOffSteps from 'src/pages/control-desk/onceOffForm';
+import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/ControlDeskStrategyTypes';
 import { ControlDeskFormNames, useControlDeskFormStore } from 'src/pages/control-desk/useControlDeskFormStore';
 import { ControlDeskStrategyInfoProvider } from 'src/pages/control-desk/useControlDeskStrategyInfo';
 import { CustomiseFormOnceOffWrapper } from '../Forms/CustomiseFormOnceOffPayment';
-import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/ControlDeskStrategyTypes';
 
 function Page() {
   const { resetForm } = useControlDeskFormStore();

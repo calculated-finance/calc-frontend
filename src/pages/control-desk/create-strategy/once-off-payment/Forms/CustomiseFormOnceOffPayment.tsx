@@ -63,9 +63,6 @@ export function CustomiseFormOnceOffWrapper({
     await nextStep();
   };
 
-  console.log(steps)
-
-
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
@@ -76,8 +73,6 @@ export function CustomiseFormOnceOffWrapper({
   }
 
   const initialValues = state.step2;
-  console.log(state)
-
 
 
   return (
