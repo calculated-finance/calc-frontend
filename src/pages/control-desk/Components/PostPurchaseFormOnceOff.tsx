@@ -17,8 +17,6 @@ function PostPurchaseOptionRadio() {
   const { chain } = useChain();
   const { address } = useWallet();
 
-  console.log(field)
-
   const sendToWalletData: { value: PostPurchaseOnceOffOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
       value: PostPurchaseOnceOffOptions.StreamPayment,

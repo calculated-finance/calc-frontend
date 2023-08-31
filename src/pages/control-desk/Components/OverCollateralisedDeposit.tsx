@@ -85,10 +85,12 @@ export function OverCollateralisedDeposit() {
           </FormHelperText>
           <Flex gap={2} align='center' justifySelf='center'>
             {targetAmount && value &&
-              <Text>
-                ~{totalOverCollateralisedAmount}
-              </Text>
-            }<DenomIcon denomInfo={initialDenom} />
+              <>
+                <Text>
+                  ~{totalOverCollateralisedAmount}
+                </Text>
+                <DenomIcon denomInfo={initialDenom} />
+              </>}
           </Flex>
           <FormHelperText textAlign='right'>
             <Text textStyle="body-xs">{maxOverCollateralisedAmount} {initialDenom.name}</Text>

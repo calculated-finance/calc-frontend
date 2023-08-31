@@ -190,14 +190,7 @@ export const allCtrlSchema = {
       otherwise: (schema) => schema.transform(() => null),
     }),
   postPurchaseOption: Yup.mixed<PostPurchaseOnceOffOptions>(),
-  sendToWallet: Yup.mixed<YesNoValues>()
-    .oneOf(Object.values(YesNoValues))
-    .required()
-    .when('postPurchaseOption', {
-      is: PostPurchaseOnceOffOptions.SinglePayment,
-      then: (schema) => schema,
-      otherwise: (schema) => schema.transform(() => YesNoValues.No),
-    }),
+  sendToWallet: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
   recipientAccount: Yup.string()
     .label('Recipient Account')
     .nullable()
@@ -267,7 +260,7 @@ export const allCtrlSchema = {
       },
     }),
   collateralisedMultiplier: Yup.number().required(),
-  totalCollateralisedAmount: Yup.number().required(),
+  totalCollateralisedAmount: Yup.number().nullable().required(),
 };
 
 export const ctrlSchema = Yup.object({
