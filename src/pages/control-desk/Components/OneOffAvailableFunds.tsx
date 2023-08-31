@@ -1,4 +1,4 @@
-import { Text, Button, Center, Tooltip, useDisclosure, HStack } from '@chakra-ui/react';
+import { Text, Button, Center, Tooltip, useDisclosure } from '@chakra-ui/react';
 import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
@@ -11,7 +11,6 @@ import { useWalletModal } from '@hooks/useWalletModal';
 import { Coin } from '@cosmjs/proto-signing';
 import { GetFundsButton, GetFundsModal } from '@components/AvailableFunds';
 import getDenomInfo from '@utils/getDenomInfo';
-import DenomIcon from '@components/DenomIcon';
 
 function OneOffAvailableFundsButton({
   denom,
@@ -34,7 +33,6 @@ function OneOffAvailableFundsButton({
   const { price: resultingPrice } = useFiatPrice(outputAsset);
 
   const { connected } = useWallet();
-  const [, , { setValue }] = useField({ name: 'collateralisedMultiplier' });
   const { setVisible } = useWalletModal();
 
   const createStrategyFee = inputPrice ? Number(createStrategyFeeInTokens(inputPrice)) : 0;
@@ -60,7 +58,7 @@ function OneOffAvailableFundsButton({
       <Button
         size="xs"
         isLoading={isLoading}
-        textColor="blue.200"
+        textColor='whiteAlpha.900'
         variant='unstyled'
         cursor='default'
       >

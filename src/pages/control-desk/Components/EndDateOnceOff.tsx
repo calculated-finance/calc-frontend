@@ -9,16 +9,19 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { SingleDatepicker } from 'chakra-dayzed-datepicker';
+import { DenomInfo } from '@utils/DenomInfo';
 import { useField } from 'formik';
 import { FiCalendar } from 'react-icons/fi';
+import { useStep2FormControlDesk } from '../useOnceOffForm';
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function EndDate() {
+export default function EndDate({ resultingDenom }: { resultingDenom: DenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'endDate' });
   const [advancedSettingsField] = useField({ name: 'advancedSettings' });
+  const { state } = useStep2FormControlDesk();
 
   const date = field.value ? new Date(field.value) : undefined;
 
@@ -26,7 +29,7 @@ export default function EndDate() {
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
-      <FormLabel>What date do you want the target amount by?</FormLabel>
+      <FormLabel>What date do you want the {state?.step1.targetAmount}&nbsp;{resultingDenom.name} by?</FormLabel>
       <FormHelperText>This will be the day the strategy aims to finish swapping.</FormHelperText>
       <InputGroup>
         <InputLeftElement

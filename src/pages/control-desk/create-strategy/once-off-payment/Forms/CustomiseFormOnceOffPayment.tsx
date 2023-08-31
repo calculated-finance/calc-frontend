@@ -31,7 +31,7 @@ export function CustomiseFormOnceOff({
       <Stack direction="column" spacing={4}>
         <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={step1.targetAmount} />
         <AdvancedSettingsSwitch />
-        <TriggerFormOnceOff />
+        <TriggerFormOnceOff resultingDenom={resultingDenom} />
         <CalcCalculateSwaps initialDenom={initialDenom}
           resultingDenom={resultingDenom} />
 
