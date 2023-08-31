@@ -34,6 +34,8 @@ export const initialCtrlValues = {
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOnceOffOptions.SinglePayment,
   targetAmount: null,
+  collateralisedMultiplier: 1,
+  totalCollateralisedAmount: null,
   endDate: null,
   endTime: '',
   calcCalculateSwaps: YesNoValues.Yes,
@@ -265,15 +267,7 @@ export const allCtrlSchema = {
       },
     }),
   collateralisedMultiplier: Yup.number().required(),
-  applyCollateralisedMultiplier: Yup.mixed<YesNoValues>()
-    .oneOf(Object.values(YesNoValues))
-    .required()
-    .when('advancedSettings', {
-      is: false,
-      then: (schema) => schema.transform(() => YesNoValues.Yes),
-    }),
-  // streamPayment: Yup.boolean(),
-  // singlePayment: Yup.boolean(),
+  totalCollateralisedAmount: Yup.number().required(),
 };
 
 export const ctrlSchema = Yup.object({
@@ -289,14 +283,12 @@ export const ctrlSchema = Yup.object({
   recipientAccount: allCtrlSchema.recipientAccount,
   postPurchaseOption: allCtrlSchema.postPurchaseOption,
   collateralisedMultiplier: allCtrlSchema.collateralisedMultiplier,
-  applyCollateralisedMultiplier: allCtrlSchema.applyCollateralisedMultiplier,
+  totalCollateralisedAmount: allCtrlSchema.totalCollateralisedAmount,
   targetAmount: allCtrlSchema.targetAmount,
   calcCalculatedSwaps: allCtrlSchema.calcCalculateSwaps,
   calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculateSwapsEnabled,
   endDate: allCtrlSchema.endDate,
   endTime: allCtrlSchema.endTime,
-  // streamPayment: allCtrlSchema.streamPayment,
-  // singlePayment: allCtrlSchema.singlePayment,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -304,6 +296,8 @@ export const step1ValidationSchemaControlDesk = Yup.object({
   resultingDenom: allCtrlSchema.resultingDenom,
   initialDenom: allCtrlSchema.initialDenom,
   targetAmount: allCtrlSchema.targetAmount,
+  collateralisedMultiplier: allCtrlSchema.collateralisedMultiplier,
+  totalCollateralisedAmount: allCtrlSchema.totalCollateralisedAmount,
 });
 export type ControlDeskFormDataStep1 = Yup.InferType<typeof step1ValidationSchemaControlDesk>;
 
@@ -323,7 +317,5 @@ export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'postPurchaseOption',
   'sendToWallet',
   'recipientAccount',
-  // 'streamPayment',
-  // 'singlePayment',
 ]);
 export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;

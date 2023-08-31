@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useField } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
@@ -33,6 +33,7 @@ function OnceOffPayment() {
 
 
   const { validate } = useValidation(step1ValidationSchemaControlDesk, { balances });
+
 
   const onSubmit = async (formData: ControlDeskFormDataStep1) => {
     await actions.updateAction(formData);
