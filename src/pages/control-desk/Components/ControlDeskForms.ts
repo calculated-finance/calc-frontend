@@ -311,4 +311,7 @@ export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'sendToWallet',
   'recipientAccount',
 ]);
+
+export const confirmFormSchemaControlDesk = ctrlSchema;
+
 export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;

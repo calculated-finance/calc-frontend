@@ -1,7 +1,13 @@
 import { useWallet } from '@hooks/useWallet';
 import { ControlDeskFormNames, useControlDeskFormStore } from './useControlDeskFormStore';
 import { useControlDeskStrategyInfo } from './useControlDeskStrategyInfo';
-import { ctrlSchema, initialCtrlValues, postPurchaseValidationSchemaControlDesk, step1ValidationSchemaControlDesk, step2ValidationSchemaControlDesk } from './Components/ControlDeskForms';
+import {
+  confirmFormSchemaControlDesk,
+  initialCtrlValues,
+  postPurchaseValidationSchemaControlDesk,
+  step1ValidationSchemaControlDesk,
+  step2ValidationSchemaControlDesk,
+} from './Components/ControlDeskForms';
 
 export const getFormStateControlDesk = (state: any, formName: ControlDeskFormNames) => state[formName] || {};
 
@@ -97,11 +103,12 @@ export const useConfirmFormControlDesk = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useControlDeskFormStore();
   const { formName } = useControlDeskStrategyInfo();
   const { address } = useWallet();
+
   try {
-    ctrlSchema.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true });
+    confirmFormSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true });
 
     return {
-      state: ctrlSchema.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true }),
+      state: confirmFormSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true }),
       actions: {
         updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),
