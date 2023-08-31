@@ -74,7 +74,6 @@ export function CustomiseFormOnceOffWrapper({
 
   const initialValues = state.step2;
 
-
   return (
     <Formik
       initialValues={initialValues}

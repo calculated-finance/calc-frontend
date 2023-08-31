@@ -17,9 +17,8 @@ import { PostPurchaseFormOnceOff } from 'src/pages/control-desk/Components/PostP
 
 function Page() {
   const { actions, state, context } = useControlDeskFormPostPurchase();
-  const steps = onceOffSteps;
 
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep, goToStep } = useSteps(onceOffSteps);
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(postPurchaseValidationSchemaControlDesk);
 
@@ -33,6 +32,7 @@ function Page() {
     goToStep(0);
   };
 
+  console.log(state)
 
   const resultingDenom = useDenom(context?.resultingDenom);
   return (

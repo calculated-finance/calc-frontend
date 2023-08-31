@@ -14,7 +14,7 @@ import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from '../../../models/YesNoValues';
 import { StrategyTypes } from '../../../models/StrategyTypes';
-import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
+import { PostPurchaseOnceOffOptions } from '../create-strategy/PostPurchaseOnceOffOptions';
 
 export const initialCtrlValues = {
   resultingDenom: '',
@@ -29,10 +29,10 @@ export const initialCtrlValues = {
   slippageTolerance: 2,
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
-  sendToWallet: YesNoValues.Yes,
+  sendToWallet: YesNoValues.No,
   recipientAccount: '',
   strategyDuration: 60,
-  postPurchaseOption: PostPurchaseOptions.SendToWallet,
+  postPurchaseOption: PostPurchaseOnceOffOptions.SinglePayment,
   targetAmount: null,
   endDate: null,
   endTime: '',
@@ -69,17 +69,13 @@ export const allCtrlSchema = {
   endDate: Yup.mixed()
     .label('End Date')
     .nullable()
-    .when(['triggerType', 'advancedSettings'], ((triggerType, advancedSettings, schema) => {
-      if (triggerType === TriggerTypes.Date) {
-        const minDate = advancedSettings ? new Date(new Date().setDate(new Date().getDate() - 1)) : new Date();
-        return Yup.date()
-          .label('End Date')
-          .nullable()
-          .min(minDate, ({ label }) => `${label} must be in the future.`)
-          .required();
-      }
-
-      return schema.transform(() => null);
+    .when((() => {
+      const minDate = new Date(new Date().setDate(new Date().getDate() - 1));
+      return Yup.date()
+        .label('End Date')
+        .nullable()
+        .min(minDate, ({ label }) => `${label} must be in the future.`)
+        .required();
     }) as ConditionBuilder<MixedSchema>),
   startPrice: Yup.number()
     .label('Start Price')
@@ -97,9 +93,8 @@ export const allCtrlSchema = {
       excludeEmptyString: true,
       message: ({ label }) => `${label} must be in the format HH:MM (24 hour time)`,
     })
-    .when(['advancedSettings', 'triggerType'], {
-      is: (advancedSettings: boolean, triggerType: TriggerTypes) =>
-        triggerType === TriggerTypes.Date && advancedSettings === true,
+    .when(['advancedSettings'], {
+      is: (advancedSettings: boolean) => advancedSettings === true,
       then: Yup.string().required(),
       otherwise: (schema) => schema.transform(() => ''),
     })
@@ -192,14 +187,14 @@ export const allCtrlSchema = {
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.transform(() => null),
     }),
-  postPurchaseOption: Yup.mixed<PostPurchaseOptions>(),
+  postPurchaseOption: Yup.mixed<PostPurchaseOnceOffOptions>(),
   sendToWallet: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
     .required()
     .when('postPurchaseOption', {
-      is: PostPurchaseOptions.SendToWallet,
+      is: PostPurchaseOnceOffOptions.SinglePayment,
       then: (schema) => schema,
-      otherwise: (schema) => schema.transform(() => YesNoValues.Yes),
+      otherwise: (schema) => schema.transform(() => YesNoValues.No),
     }),
   recipientAccount: Yup.string()
     .label('Recipient Account')
@@ -277,6 +272,8 @@ export const allCtrlSchema = {
       is: false,
       then: (schema) => schema.transform(() => YesNoValues.Yes),
     }),
+  // streamPayment: Yup.boolean(),
+  // singlePayment: Yup.boolean(),
 };
 
 export const ctrlSchema = Yup.object({
@@ -298,6 +295,8 @@ export const ctrlSchema = Yup.object({
   calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculateSwapsEnabled,
   endDate: allCtrlSchema.endDate,
   endTime: allCtrlSchema.endTime,
+  // streamPayment: allCtrlSchema.streamPayment,
+  // singlePayment: allCtrlSchema.singlePayment,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -308,24 +307,23 @@ export const step1ValidationSchemaControlDesk = Yup.object({
 });
 export type ControlDeskFormDataStep1 = Yup.InferType<typeof step1ValidationSchemaControlDesk>;
 
-export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
-  'postPurchaseOption',
-  'sendToWallet',
-  'recipientAccount',
-  'collateralisedMultiplier',
-  'applyCollateralisedMultiplier',
-]);
-export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;
-
 export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'advancedSettings',
   'slippageTolerance',
   'priceThresholdEnabled',
   'priceThresholdValue',
-  'collateralisedMultiplier',
   'calcCalculatedSwaps',
   'calcCalculatedSwapsEnabled',
   'endDate',
   'endTime',
 ]);
 export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;
+
+export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
+  'postPurchaseOption',
+  'sendToWallet',
+  'recipientAccount',
+  // 'streamPayment',
+  // 'singlePayment',
+]);
+export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;

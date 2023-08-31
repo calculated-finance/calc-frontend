@@ -17,6 +17,8 @@ function PostPurchaseOptionRadio() {
   const { chain } = useChain();
   const { address } = useWallet();
 
+  console.log(field)
+
   const sendToWalletData: { value: PostPurchaseOnceOffOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
       value: PostPurchaseOnceOffOptions.StreamPayment,
@@ -43,7 +45,7 @@ function PostPurchaseOptionRadio() {
     <FormControl>
       <FormLabel>Stream payment or send once?</FormLabel>
       <FormHelperText>CALC can send after each swap, or once the target amount is reached.</FormHelperText>
-      <Radio {...getRootProps} w="full" borderRadius="md">
+      <Radio {...getRootProps} w="full" borderRadius="md" >
         {sendToWalletData.map((option) => {
           const radio = getRadioProps({ value: option.value });
           return (
@@ -78,30 +80,18 @@ export function PostPurchaseFormOnceOff({
 }) {
 
   const [{ value: sendToWalletValue }] = useField('sendToWallet');
-  const [{ value: postPurchaseOption }] = useField('postPurchaseOption');
 
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={6}>
         <PostPurchaseOptionRadio />
         <Box>
-          <CollapseWithRender in={postPurchaseOption === PostPurchaseOnceOffOptions.SinglePayment}>
-            <Stack>
-              <DcaInSendToWallet resultingDenom={resultingDenom} />
-              <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
-                <RecipientAccount />
-              </CollapseWithRender>
-            </Stack>
-          </CollapseWithRender>
-          <CollapseWithRender in={postPurchaseOption === PostPurchaseOnceOffOptions.StreamPayment}>
-            <Stack>
-              <DcaInSendToWallet resultingDenom={resultingDenom} />
-              <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
-                <RecipientAccount />
-              </CollapseWithRender>
-            </Stack>
-          </CollapseWithRender>
-
+          <Stack>
+            <DcaInSendToWallet resultingDenom={resultingDenom} />
+            <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
+              <RecipientAccount />
+            </CollapseWithRender>
+          </Stack>
         </Box>
         {submitButton || <Submit>Next</Submit>}
       </Stack>
