@@ -26,7 +26,7 @@ export const initialCtrlValues = {
   purchaseTime: '',
   startPrice: null,
   swapAmount: null,
-  slippageTolerance: 2,
+  slippageTolerance: 0.5,
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
   sendToWallet: YesNoValues.No,
