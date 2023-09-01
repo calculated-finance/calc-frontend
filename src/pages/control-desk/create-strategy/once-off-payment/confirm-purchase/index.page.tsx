@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
@@ -11,33 +11,40 @@ import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/Cont
 import { ControlDeskFormNames, useControlDeskFormStore } from 'src/pages/control-desk/useControlDeskFormStore';
 import onceOffSteps from 'src/pages/control-desk/onceOffForm';
 import { useConfirmFormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
+import { SigningState } from '@components/NewStrategyModal';
+import DcaDiagram from '@components/DcaDiagram';
+import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
+import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
+import { FormikHelpers } from 'formik';
 import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();
   const { nextStep, goToStep } = useSteps(onceOffSteps);
 
+  console.log(state)
+
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
 
-  // const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-  //   mutate(
-  //     { state, reinvestStrategyData },
-  //     {
-  //       onSuccess: async (strategyId) => {
-  //         await nextStep({
-  //           strategyId,
-  //           timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
-  //         });
-  //         actions.resetAction();
-  //       },
-  //       onSettled: () => {
-  //         setSubmitting(false);
-  //       },
+  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => { }
+  // mutate(
+  //   { state},
+  //   {
+  //     onSuccess: async (strategyId) => {
+  //       await nextStep({
+  //         strategyId,
+  //         timeSaved: state && getTimeSaved(state.initialDeposit, 2),
+  //       });
+  //       actions.resetAction();
   //     },
-  //   );
+  //     onSettled: () => {
+  //       setSubmitting(false);
+  //   },
+  // },
+  // );
 
   const handleRestart = () => {
     actions.resetAction();
@@ -51,30 +58,29 @@ function Page() {
   }
 
   return (
-    // <SigningState isSigning={isLoading}>
-    //   <Stack spacing={4}>
-    //     <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
-    //     <Divider />
-    //     <SummaryYourDeposit state={state} />
-    //     <SummaryTheSwap state={state} transactionType={transactionType} />
-    //     <SummaryWhileSwapping
-    //       initialDenom={initialDenom}
-    //       resultingDenom={resultingDenom}
-    //       priceThresholdValue={state.priceThresholdValue}
-    //       slippageTolerance={state.slippageTolerance}
-    //     />
-    //     <SummaryAfterEachSwap state={state} />
-    //     <Fees
-    //       swapFee={SWAP_FEE}
-    //       initialDenom={initialDenom}
-    //       resultingDenom={resultingDenom}
-    //       autoStakeValidator={state.autoStakeValidator}
-    //       swapAmount={state.swapAmount}
-    //     />
-    //     <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
-    //   </Stack>
-    // </SigningState>
-    <Flex>Hi</Flex>
+    <SigningState isSigning={isLoading}>
+      <Stack spacing={4}>
+        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+        <Divider />
+        {/* <SummaryYourDeposit state={state} />
+        <SummaryTheSwap state={state} transactionType={transactionType} /> */}
+        <SummaryWhileSwapping
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          priceThresholdValue={state.priceThresholdValue}
+          slippageTolerance={state.slippageTolerance}
+        />
+        {/* <SummaryAfterEachSwap state={state} /> */}
+        {/* <Fees
+          swapFee={SWAP_FEE}
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          autoStakeValidator={state.autoStakeValidator}
+          swapAmount={state.swapAmount}
+        /> */}
+        <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+      </Stack>
+    </SigningState>
   );
 }
 function PageWrapper() {
