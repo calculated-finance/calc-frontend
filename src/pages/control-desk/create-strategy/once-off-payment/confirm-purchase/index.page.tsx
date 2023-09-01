@@ -15,7 +15,14 @@ import { SigningState } from '@components/NewStrategyModal';
 import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import { FormikHelpers } from 'formik';
+import { SummaryYourDepositControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryYourDepositControlDesk';
+import { SummaryTheSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryTheSwapControlDesk';
 import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
+import { SummaryAfterEachSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryAfterEachSwapControlDesk';
+import Fees from '@components/Fees';
+import { SWAP_FEE } from 'src/constants';
+import { SummaryWhileSwappingControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryWhileSwappingControlDesk';
+import FeesControlDesk from 'src/pages/control-desk/Components/FeesControlDesk';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();
@@ -57,22 +64,24 @@ function Page() {
       <Stack spacing={4}>
         <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={state.targetAmount} />
         <Divider />
-        {/* <SummaryYourDeposit state={state} /> */}
-        {/* <SummaryTheSwap state={state} transactionType={transactionType} /> */}
-        {/* <SummaryWhileSwapping
+        <SummaryYourDepositControlDesk state={state} />
+        <SummaryTheSwapControlDesk state={state} transactionType={transactionType} />
+        {/* <InvalidData /> */}
+        <SummaryWhileSwappingControlDesk
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={state.priceThresholdValue}
           slippageTolerance={state.slippageTolerance}
-        /> */}
-        {/* <SummaryAfterEachSwap state={state} />  */}
-        {/* <Fees
+        />
+        <SummaryAfterEachSwapControlDesk state={state} />
+        <FeesControlDesk
           swapFee={SWAP_FEE}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
-          autoStakeValidator={state.autoStakeValidator}
-          swapAmount={state.swapAmount}
-        /> */}
+          autoStakeValidator={undefined}
+          swapAmount={23}
+        // swapAmount={state.swapAmount}
+        />
         <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
       </Stack>
     </SigningState>

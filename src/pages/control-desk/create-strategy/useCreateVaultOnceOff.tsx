@@ -1,9 +1,9 @@
 import { useWallet } from '@hooks/useWallet';
-import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useMutation } from '@tanstack/react-query';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
@@ -25,9 +25,9 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
     Error,
     {
       state: CtrlFormDataAll | undefined;
-      reinvestStrategyData: Strategy | undefined;
     }
   >(({ state }) => {
+
     if (!state) {
       throw new Error('No state');
     }
@@ -76,6 +76,11 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
     //     return result;
     //   })
     //   .catch(handleError(createVaultContext));
-    return 'create strategy here'
+    return client
+      .createStrategy(address, 3, fee, createVaultContext)
+      .then((result) => {
+        track();
+        return result;
+      })
   });
 };

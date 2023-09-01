@@ -24,7 +24,7 @@ import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
-function FeeBreakdown({
+export function FeeBreakdown({
   initialDenomName,
   swapAmount,
   price,
