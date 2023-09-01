@@ -17,6 +17,8 @@ import { PostPurchaseFormOnceOff } from 'src/pages/control-desk/Components/PostP
 
 function Page() {
   const { actions, state, context } = useControlDeskFormPostPurchase();
+  
+  console.log('post state', state)
 
   const { nextStep, goToStep } = useSteps(onceOffSteps);
   const { isPageLoading } = usePageLoad();

@@ -259,7 +259,6 @@ export const allCtrlSchema = {
 export const ctrlSchema = Yup.object({
   resultingDenom: allCtrlSchema.resultingDenom,
   initialDenom: allCtrlSchema.initialDenom,
-  initialDeposit: allCtrlSchema.initialDeposit,
   advancedSettings: allCtrlSchema.advancedSettings,
   startPrice: allCtrlSchema.startPrice,
   slippageTolerance: allCtrlSchema.slippageTolerance,
@@ -305,6 +304,6 @@ export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'recipientAccount',
 ]);
 
-export const confirmFormSchemaControlDesk = ctrlSchema;
-
 export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;
+
+export const confirmFormSchemaControlDesk = ctrlSchema;

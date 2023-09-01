@@ -104,6 +104,8 @@ export const useConfirmFormControlDesk = () => {
   const { formName } = useControlDeskStrategyInfo();
   const { address } = useWallet();
 
+  console.log(state)
+
   try {
     confirmFormSchemaControlDesk.validateSync(getFormStateControlDesk(state, formName), { stripUnknown: true });
 
@@ -116,6 +118,7 @@ export const useConfirmFormControlDesk = () => {
     };
   } catch (e) {
     return {
+      bleep: 'bloop',
       actions: {
         updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),

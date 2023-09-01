@@ -12,7 +12,7 @@ import { ControlDeskFormNames, useControlDeskFormStore } from 'src/pages/control
 import onceOffSteps from 'src/pages/control-desk/onceOffForm';
 import { useConfirmFormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
 import { SigningState } from '@components/NewStrategyModal';
-import DcaDiagram from '@components/DcaDiagram';
+import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { FormikHelpers } from 'formik';
@@ -22,7 +22,9 @@ function Page() {
   const { state, actions } = useConfirmFormControlDesk();
   const { nextStep, goToStep } = useSteps(onceOffSteps);
 
-  console.log(state)
+
+
+  console.log('confirm state', state)
 
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
@@ -60,17 +62,17 @@ function Page() {
   return (
     <SigningState isSigning={isLoading}>
       <Stack spacing={4}>
-        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+        <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={state.targetAmount} />
         <Divider />
-        {/* <SummaryYourDeposit state={state} />
-        <SummaryTheSwap state={state} transactionType={transactionType} /> */}
-        <SummaryWhileSwapping
+        {/* <SummaryYourDeposit state={state} /> */}
+        {/* <SummaryTheSwap state={state} transactionType={transactionType} /> */}
+        {/* <SummaryWhileSwapping
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={state.priceThresholdValue}
           slippageTolerance={state.slippageTolerance}
-        />
-        {/* <SummaryAfterEachSwap state={state} /> */}
+        /> */}
+        {/* <SummaryAfterEachSwap state={state} />  */}
         {/* <Fees
           swapFee={SWAP_FEE}
           initialDenom={initialDenom}
