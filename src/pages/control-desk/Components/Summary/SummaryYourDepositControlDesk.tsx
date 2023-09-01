@@ -6,7 +6,8 @@ import { CtrlFormDataAll } from '../ControlDeskForms';
 import { useControlDeskStrategyInfo } from '../../useControlDeskStrategyInfo';
 
 export function SummaryYourDepositControlDesk({ state }: { state: CtrlFormDataAll; }) {
-  const { initialDenom: initialDenomId, targetAmount } = state;
+  const { initialDenom: initialDenomId, targetAmount, totalCollateralisedAmount } = state;
+
 
   const initialDenom = useDenom(initialDenomId);
 
@@ -19,7 +20,7 @@ export function SummaryYourDepositControlDesk({ state }: { state: CtrlFormDataAl
         I deposit{' '}
         <BadgeButton url="assets">
           <Text>
-            XXXXXXX {initialDenom.name}
+            {totalCollateralisedAmount} {initialDenom.name}
           </Text>
           <DenomIcon denomInfo={initialDenom} />{' '}
         </BadgeButton>{' '}

@@ -1,6 +1,5 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack, Text } from '@chakra-ui/react';
 import { useField } from 'formik';
-
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
 import Radio from '@components/Radio';
@@ -28,6 +27,7 @@ function CalcCalculateSwapsToggle({ forceOpen = false }: { forceOpen?: boolean }
     value: field.value,
     onChange: helpers.setValue,
   });
+
 
   return (
     <FormControl>

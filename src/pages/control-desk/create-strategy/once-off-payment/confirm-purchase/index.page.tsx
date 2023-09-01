@@ -17,12 +17,11 @@ import { AgreementForm, SummaryAgreementForm } from '@components/Summary/Summary
 import { FormikHelpers } from 'formik';
 import { SummaryYourDepositControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryYourDepositControlDesk';
 import { SummaryTheSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryTheSwapControlDesk';
-import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
 import { SummaryAfterEachSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryAfterEachSwapControlDesk';
-import Fees from '@components/Fees';
 import { SWAP_FEE } from 'src/constants';
 import { SummaryWhileSwappingControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryWhileSwappingControlDesk';
 import FeesControlDesk from 'src/pages/control-desk/Components/FeesControlDesk';
+import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();

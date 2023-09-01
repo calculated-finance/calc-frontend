@@ -175,7 +175,10 @@ export const allCtrlSchema = {
         return value <= startPrice;
       },
     }),
-  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)),
+  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>()
+    .oneOf(Object.values(YesNoValues))
+    .default(YesNoValues.Yes)
+    .required(),
   calcCalculateSwaps: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)),
   // .when(['calcCalculateSwapsEnabled'], {
   //   is: (calcCalculatedSwapsEnabled: YesNoValues) => calcCalculatedSwapsEnabled === YesNoValues.Yes,
