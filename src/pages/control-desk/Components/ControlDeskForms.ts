@@ -175,20 +175,13 @@ export const allCtrlSchema = {
         return value <= startPrice;
       },
     }),
-  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>()
-    .oneOf(Object.values(YesNoValues))
-    .when('advancedSettings', {
-      is: false,
-      then: (schema) => schema.transform(() => YesNoValues.Yes),
-    }),
-  calcCalculateSwaps: Yup.mixed<YesNoValues>()
-    .oneOf(Object.values(YesNoValues))
-    .when(['advancedSettings', 'calcCalculateSwapsEnabled'], {
-      is: (advancedSettings: boolean, calcCalculatedSwapsEnabled: YesNoValues) =>
-        advancedSettings === true && calcCalculatedSwapsEnabled === YesNoValues.Yes,
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => null),
-    }),
+  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)),
+  calcCalculateSwaps: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)),
+  // .when(['calcCalculateSwapsEnabled'], {
+  //   is: (calcCalculatedSwapsEnabled: YesNoValues) => calcCalculatedSwapsEnabled === YesNoValues.Yes,
+  //   then: (schema) => schema.required(),
+  //   otherwise: (schema) => schema.transform(() => null),
+  // }),
   postPurchaseOption: Yup.mixed<PostPurchaseOnceOffOptions>(),
   sendToWallet: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
   recipientAccount: Yup.string()
