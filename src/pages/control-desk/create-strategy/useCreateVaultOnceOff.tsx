@@ -1,19 +1,15 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
-import { isNil } from 'lodash';
 import { Strategy } from '@models/Strategy';
-import { DcaInFormDataAll } from '@models/DcaInFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
-import { featureFlags } from 'src/constants';
-import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import { BuildCreateVaultContext } from '@hooks/useCreateVault/buildCreateVaultParams';
-import { handleError } from '@hooks/useCreateVault/handleError';
 import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
 import { useTrackCreateVaultOnceOff } from './once-off-payment/useTrackCreateVauleOnceOff';
+import { CtrlFormDataAll } from '../Components/ControlDeskForms';
+import { BuildCreateVaultControlDeskContext } from '../buildCreateVaultParamsControlDesk';
 
 export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useControlDeskStrategyInfo();
@@ -28,17 +24,17 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
     Strategy['id'] | undefined,
     Error,
     {
-      state: DcaInFormDataAll | undefined;
+      state: CtrlFormDataAll | undefined;
       reinvestStrategyData: Strategy | undefined;
     }
-  >(({ state, reinvestStrategyData }) => {
+  >(({ state }) => {
     if (!state) {
       throw new Error('No state');
     }
 
-    if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
-      throw new Error('Invalid reinvest strategy.');
-    }
+    // if (!isNil(state.reinvestStrategy) && !reinvestStrategyData) {
+    //   throw new Error('Invalid reinvest strategy.');
+    // }
 
     if (!client) {
       throw Error('Invalid client');
@@ -52,38 +48,34 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
       throw new Error('No sender address');
     }
 
-    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(state.swapAmount, price);
-    }
+    // if (featureFlags.adjustedMinimumSwapAmountEnabled) {
+    //   checkSwapAmountValue(state.swapAmount, price);
+    // }
 
-    const createVaultContext: BuildCreateVaultContext = {
+    const createVaultContext: BuildCreateVaultControlDeskContext = {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
-      timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
-      timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
+      // timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
       startPrice: state.startPrice || undefined,
-      swapAmount: state.swapAmount,
-      priceThreshold: state.priceThresholdValue || undefined,
-      transactionType,
+      targetAmount: state.targetAmount,
+      // priceThreshold: state.priceThresholdValue || undefined,
+      // transactionType,
       slippageTolerance: state.slippageTolerance,
       destinationConfig: {
-        autoStakeValidator: state.autoStakeValidator || undefined,
-        autoCompoundStakingRewards: state.autoCompoundStakingRewards,
         recipientAccount: state.recipientAccount || undefined,
-        yieldOption: state.yieldOption || undefined,
-        reinvestStrategyId: state.reinvestStrategy || undefined,
         senderAddress: address,
       },
     };
 
     const fee = createStrategyFeeInTokens(price);
 
-    return client
-      .createStrategy(address, state.initialDeposit, fee, createVaultContext)
-      .then((result) => {
-        track();
-        return result;
-      })
-      .catch(handleError(createVaultContext));
+    // return client
+    //   .createStrategy(address, state.initialDeposit, fee, createVaultContext)
+    //   .then((result) => {
+    //     track();
+    //     return result;
+    //   })
+    //   .catch(handleError(createVaultContext));
+    return 'create strategy here'
   });
 };

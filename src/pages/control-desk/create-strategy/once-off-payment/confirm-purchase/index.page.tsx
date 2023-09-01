@@ -14,7 +14,6 @@ import { useConfirmFormControlDesk } from 'src/pages/control-desk/useOnceOffForm
 import { SigningState } from '@components/NewStrategyModal';
 import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { FormikHelpers } from 'formik';
 import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
 
@@ -22,32 +21,26 @@ function Page() {
   const { state, actions } = useConfirmFormControlDesk();
   const { nextStep, goToStep } = useSteps(onceOffSteps);
 
-
-
-  console.log('confirm state', state)
-
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
 
-  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => { }
-  // mutate(
-  //   { state},
-  //   {
-  //     onSuccess: async (strategyId) => {
-  //       await nextStep({
-  //         strategyId,
-  //         timeSaved: state && getTimeSaved(state.initialDeposit, 2),
-  //       });
-  //       actions.resetAction();
-  //     },
-  //     onSettled: () => {
-  //       setSubmitting(false);
-  //   },
-  // },
-  // );
-
+  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
+    mutate(
+      { state },
+      {
+        onSuccess: async (strategyId) => {
+          await nextStep({
+            strategyId,
+          });
+          actions.resetAction();
+        },
+        onSettled: () => {
+          setSubmitting(false);
+        },
+      },
+    );
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
