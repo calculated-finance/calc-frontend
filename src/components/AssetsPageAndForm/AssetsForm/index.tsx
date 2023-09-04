@@ -55,12 +55,12 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
-        .filter(isDenomVolatile))
+        .filter(isDenomVolatile),
+    );
   }
 
   return orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
-
   );
 }
 

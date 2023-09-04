@@ -28,15 +28,14 @@ const strategyTypesToFormTypes = {
   [StrategyTypes.WeightedScaleOut]: FormNames.WeightedScaleOut,
 };
 
-
 const CUSTOMISE_PAGE_INDEX = 1;
 
 // { stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }
 
 export function Assets() {
   const { connected } = useWallet();
-  const { strategyType } = useStrategyInfo()
-  const stepsConfig = getSteps(strategyType)
+  const { strategyType } = useStrategyInfo();
+  const stepsConfig = getSteps(strategyType);
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(assetsFormSchema, { balances });
@@ -71,7 +70,7 @@ export function Assets() {
     ...state.step1,
     strategyType,
     initialDenom: state.step1.initialDenom,
-    resultingDenom: state.step1.resultingDenom
+    resultingDenom: state.step1.resultingDenom,
   };
 
   return (
