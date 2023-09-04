@@ -1,11 +1,12 @@
-import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack, Text } from '@chakra-ui/react';
+import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
 import { useField } from 'formik';
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { CollapseWithRender } from '@components/CollapseWithRender';
-import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
+import ExecutionInterval from '@components/ExecutionInterval';
+import SwapAmountControlDesk from './SwapAmountControlDesk';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -27,7 +28,6 @@ function CalcCalculateSwapsToggle({ forceOpen = false }: { forceOpen?: boolean }
     value: field.value,
     onChange: helpers.setValue,
   });
-
 
   return (
     <FormControl>
@@ -63,10 +63,9 @@ export default function CalcCalculateSwaps({
   resultingDenom,
   forceOpen,
 }: PriceThresholdProps) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'calcCalculateSwaps' });
-  const [calcCalculateSwapsField] = useField({ name: 'calcCalculateSwapsEnabled' });
-
-  const { transactionType } = useControlDeskStrategyInfo();
+  const [, meta,] = useField({ name: 'calcCalculateSwaps' });
+  const [{ value: totalCollateralisedDeposit }, ,] = useField({ name: 'totalCollateralisedAmount' })
+  const [{ value: calcCalculateSwapsEnabled }, ,] = useField({ name: 'calcCalculateSwapsEnabled' });
 
   const title = 'Let CALC calculate the optimal swap amount and frequency?';
 
@@ -78,16 +77,11 @@ export default function CalcCalculateSwaps({
       <FormHelperText>{description}</FormHelperText>
       <Stack spacing={3}>
         <CalcCalculateSwapsToggle forceOpen={forceOpen} />
-        <CollapseWithRender isOpen={calcCalculateSwapsField.value === YesNoValues.No}>
-          {/* <DenomPriceInput
-            initialDenom={initialDenom}
-            resultingDenom={resultingDenom}
-            transactionType={transactionType}
-            error={meta.touched && meta.error}
-            onChange={helpers.setValue}
-            {...field}
-          /> */}
-          <Text>Add feature</Text>
+        <CollapseWithRender isOpen={calcCalculateSwapsEnabled === YesNoValues.No}>
+          <Stack spacing={3}>
+            <ExecutionInterval />
+            <SwapAmountControlDesk isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={totalCollateralisedDeposit} />
+          </Stack>
         </CollapseWithRender>
       </Stack>
     </FormControl>

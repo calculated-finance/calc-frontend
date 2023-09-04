@@ -25,6 +25,8 @@ export const initialCtrlValues = {
   startDate: null,
   purchaseTime: '',
   startPrice: null,
+  executionInterval: 'daily',
+  executionIntervalIncrement: 1,
   swapAmount: null,
   slippageTolerance: 0.5,
   priceThresholdEnabled: YesNoValues.No,
@@ -39,7 +41,7 @@ export const initialCtrlValues = {
   endDate: null,
   endTime: '',
   calcCalculateSwaps: YesNoValues.Yes,
-  calcCalculateSwapEnabled: YesNoValues.Yes,
+  calcCalculatedSwapsEnabled: YesNoValues.Yes,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -114,6 +116,63 @@ export const allCtrlSchema = {
         return new Date() <= combineDateAndTime(endDate, value);
       },
     }),
+  swapAmount: Yup.number()
+    .label('Swap Amount')
+    .nullable()
+    .when(['calcCalculatedSwapsEnabled'], {
+      is: (calcCalculatedSwapsEnabled: YesNoValues) => calcCalculatedSwapsEnabled === YesNoValues.No,
+      then: Yup.number().required(),
+    })
+    .transform((value, originalValue) => {
+      if (originalValue === '') {
+        return null;
+      }
+      return value;
+    })
+    .test({
+      name: 'less-than-deposit',
+      message: 'Swap amount must be less than initial deposit',
+      test(value, context) {
+        const { totalCollateralisedAmount = 0 } = { ...context.parent, ...context.options.context };
+        if (!value) {
+          return true;
+        }
+        return value <= totalCollateralisedAmount;
+      },
+    })
+    .test({
+      name: 'greater-than-minimum-swap',
+      test(value, context) {
+        if (isNil(value)) {
+          return true;
+        }
+        const { initialDenom = null } = { ...context.parent, ...context.options.context };
+        if (!initialDenom) {
+          return true;
+        }
+        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+
+        if (value > minimumSwapAmount) {
+          return true;
+        }
+        return context.createError({ message: `Swap amount should be greater than ${minimumSwapAmount}` });
+      },
+    }),
+  executionInterval: Yup.mixed().when('calcCalculatedSwapsEnabled', {
+    is: YesNoValues.No,
+    then: (schema) => schema.required(),
+    otherwise: (schema) => schema.transform(() => initialCtrlValues.executionInterval),
+  }),
+  executionIntervalIncrement: Yup.number()
+    .label('Increment')
+    .positive()
+    .integer()
+    .nullable()
+    .when('calcCalculatedSwapsEnabled', {
+      is: YesNoValues.No,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => initialCtrlValues.executionIntervalIncrement),
+    }),
   slippageTolerance: Yup.number()
     .label('Slippage Tolerance')
     .lessThan(100)
@@ -175,12 +234,12 @@ export const allCtrlSchema = {
         return value <= startPrice;
       },
     }),
-  calcCalculateSwapsEnabled: Yup.mixed<YesNoValues>()
+  calcCalculatedSwapsEnabled: Yup.mixed<YesNoValues>()
     .oneOf(Object.values(YesNoValues))
     .default(YesNoValues.Yes)
     .required(),
   calcCalculateSwaps: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)),
-  // .when(['calcCalculateSwapsEnabled'], {
+  // .when(['calcCalculatedSwapsEnabled'], {
   //   is: (calcCalculatedSwapsEnabled: YesNoValues) => calcCalculatedSwapsEnabled === YesNoValues.Yes,
   //   then: (schema) => schema.required(),
   //   otherwise: (schema) => schema.transform(() => null),
@@ -274,9 +333,12 @@ export const ctrlSchema = Yup.object({
   totalCollateralisedAmount: allCtrlSchema.totalCollateralisedAmount,
   targetAmount: allCtrlSchema.targetAmount,
   calcCalculatedSwaps: allCtrlSchema.calcCalculateSwaps,
-  calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculateSwapsEnabled,
+  calcCalculatedSwapsEnabled: allCtrlSchema.calcCalculatedSwapsEnabled,
   endDate: allCtrlSchema.endDate,
   endTime: allCtrlSchema.endTime,
+  swapAmount: allCtrlSchema.swapAmount,
+  executionInterval: allCtrlSchema.executionInterval,
+  executionIntervalIncrement: allCtrlSchema.executionIntervalIncrement,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -296,8 +358,12 @@ export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'priceThresholdValue',
   'calcCalculatedSwaps',
   'calcCalculatedSwapsEnabled',
+  'totalCollateralisedAmount',
   'endDate',
   'endTime',
+  'swapAmount',
+  'executionInterval',
+  'executionIntervalIncrement',
 ]);
 export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;
 
