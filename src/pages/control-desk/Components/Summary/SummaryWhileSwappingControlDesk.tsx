@@ -1,9 +1,9 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
-import { initialValues } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useControlDeskStrategyInfo } from '../../useControlDeskStrategyInfo';
+import { initialCtrlValues } from '../ControlDeskForms';
 
 export function SummaryWhileSwappingControlDesk({
   initialDenom,
@@ -24,7 +24,7 @@ export function SummaryWhileSwappingControlDesk({
   const showSlippage =
     slippageTolerance !== undefined &&
     slippageTolerance !== null &&
-    slippageTolerance !== initialValues.slippageTolerance;
+    slippageTolerance !== initialCtrlValues.slippageTolerance;
 
   const showWhileSwapping = showSlippage || priceThresholdValue;
 
