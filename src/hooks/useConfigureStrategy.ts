@@ -22,13 +22,14 @@ type ConfigureVariables = {
 };
 
 export function useConfigureStrategy() {
-  const { address, signingClient: client } = useWallet();
+  const { address, getSigningClient } = useWallet();
 
   const { chain, chainConfig } = useChain();
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
-    ({ values, strategy }) => {
+    async ({ values, strategy }) => {
+      const client = await getSigningClient();
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }

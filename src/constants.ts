@@ -64,6 +64,11 @@ export const ETH_TIME_HELPERS_CONTRACT_ADDRESS = '0x296303bA819CAed9C1151d24bAc9
 export const ETH_TRIGGER_MANAGER_CONTRACT_ADDRESS = '0x0451ABE786ADDce2C62393127C55F3EC640A33B1';
 export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3f6147cC';
 
+export const COSMOS_KIT_KUJIRA_MAINNET = 'kujira';
+export const COSMOS_KIT_KUJIRA_TESTNET = 'kujiratestnet';
+export const COSMOS_KIT_OSMOSIS_MAINNET = 'osmosis';
+export const COSMOS_KIT_OSMOSIS_TESTNET = 'osmosistestnet';
+
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
@@ -85,6 +90,7 @@ export const featureFlags =
         controlDeskEnabled: false,
         editSwapAmountEnabled: false,
         singleAssetsEnabled: false,
+        cosmoskitEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -105,6 +111,7 @@ export const featureFlags =
         controlDeskEnabled: true,
         editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
+        cosmoskitEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

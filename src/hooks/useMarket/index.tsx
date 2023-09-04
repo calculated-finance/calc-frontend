@@ -30,11 +30,12 @@ export interface Market {
 }
 
 export function useMarket(resultingDenom: DenomInfo | undefined) {
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
 
   return useQuery<Market>(
-    ['mars-market', client, resultingDenom?.id],
+    ['mars-market', getCosmWasmClient, resultingDenom?.id],
     async () => {
+      const client = getCosmWasmClient();
       if (!client) {
         throw new Error('No client');
       }
@@ -54,7 +55,7 @@ export function useMarket(resultingDenom: DenomInfo | undefined) {
       }
     },
     {
-      enabled: !!client && !!resultingDenom,
+      enabled: !!getCosmWasmClient && !!resultingDenom,
       meta: {
         errorMessage: 'Error fetching Mars data',
       },

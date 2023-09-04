@@ -14,12 +14,13 @@ import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { useMetamask } from '@hooks/useMetamask';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { ChainWrapper } from './ChainWrapper';
 import { InitWrapper } from './InitWrapper';
 import { LoadingState } from './LoadingState';
+import '@interchain-ui/react/styles';
+import { ChainProvider } from './ChainProvider';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -70,18 +71,20 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             </Center>
           }
         >
-          <InitWrapper>
-            <CalcWalletModalProvider>
-              <QueryClientProvider client={queryClient}>
-                <AssetListWrapper>
-                  <ChainWrapper>
-                    <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-                  </ChainWrapper>
-                </AssetListWrapper>
-              </QueryClientProvider>
-            </CalcWalletModalProvider>
-            <ToastContainer />
-          </InitWrapper>
+          <ChainWrapper>
+            <ChainProvider>
+              <InitWrapper>
+                <CalcWalletModalProvider>
+                  <QueryClientProvider client={queryClient}>
+                    <AssetListWrapper>
+                      <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                    </AssetListWrapper>
+                  </QueryClientProvider>
+                </CalcWalletModalProvider>
+                <ToastContainer />
+              </InitWrapper>
+            </ChainProvider>
+          </ChainWrapper>
         </Sentry.ErrorBoundary>
       </ChakraProvider>
     </>

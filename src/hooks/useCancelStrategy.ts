@@ -38,12 +38,13 @@ function getCancelVaultExecuteMsg(
 }
 
 const useCancelStrategy = () => {
-  const { address, signingClient: client } = useWallet();
+  const { address, getSigningClient } = useWallet();
   const msgs: EncodeObject[] = [];
   const { chain } = useChain();
 
   return useMutation<DeliverTxResponse, Error, Strategy>(
-    (strategy: Strategy) => {
+    async (strategy: Strategy) => {
+      const client = await getSigningClient();
       if (client == null) {
         throw new Error('no client');
       }

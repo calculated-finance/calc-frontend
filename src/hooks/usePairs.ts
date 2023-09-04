@@ -10,6 +10,7 @@ import { PairsResponse } from 'src/interfaces/generated-osmosis/response/get_pai
 import { PairsResponse as PairsResponseV3 } from 'src/interfaces/v2/generated/response/get_pairs';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { Pair } from 'src/interfaces/v2/generated/query';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
@@ -94,12 +95,16 @@ export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: Den
 const GET_PAIRS_LIMIT = 400;
 
 export function usePairsOsmosis() {
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
   const { chain } = useChain();
   const config = useConfig();
 
-  function fetchPairsRecursively(startAfter = null, allPairs = [] as V2Pair[]): Promise<V2Pair[]> {
-    return client!
+  function fetchPairsRecursively(
+    client: CosmWasmClient,
+    startAfter = null,
+    allPairs = [] as V2Pair[],
+  ): Promise<V2Pair[]> {
+    return client
       .queryContractSmart(config!.exchange_contract_address, {
         internal_query: {
           msg: Buffer.from(
@@ -116,16 +121,27 @@ export function usePairsOsmosis() {
         allPairs.push(...result);
         if (result.length === GET_PAIRS_LIMIT) {
           const newStartAfter = result[result.length - 1];
-          return fetchPairsRecursively(newStartAfter, allPairs);
+          return fetchPairsRecursively(client, newStartAfter, allPairs);
         }
         return allPairs;
       });
   }
 
-  const queryResult = useQuery<V2Pair[]>(['pairs-osmosis', client], () => fetchPairsRecursively(), {
-    enabled: !!client && chain === Chains.Osmosis && !!config && !!config.exchange_contract_address,
-    staleTime: 1000 * 60 * 5,
-  });
+  const queryResult = useQuery<V2Pair[]>(
+    ['pairs-osmosis', getCosmWasmClient],
+    async () => {
+      const client = await getCosmWasmClient();
+      if (!client) {
+        throw new Error('No client');
+      }
+
+      return fetchPairsRecursively(client);
+    },
+    {
+      enabled: !!getCosmWasmClient && chain === Chains.Osmosis && !!config && !!config.exchange_contract_address,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
 
   return {
     ...queryResult,
@@ -155,19 +171,24 @@ function usePairsMoonbeam() {
 }
 
 function usePairsKujira() {
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
   const { chain } = useChain();
 
   const queryResult = useQuery<PairsResponse>(
-    ['pairs-kujira', client],
+    ['pairs-kujira', getCosmWasmClient],
     async () => {
-      const result = await client!.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
+      const client = await getCosmWasmClient();
+      if (!client) {
+        throw new Error('No client');
+      }
+
+      const result = await client.queryContractSmart(getChainContractAddress(Chains.Kujira!), {
         get_pairs: {},
       });
       return result;
     },
     {
-      enabled: !!client && chain === Chains.Kujira,
+      enabled: !!getCosmWasmClient && chain === Chains.Kujira,
     },
   );
 
@@ -187,11 +208,15 @@ function usePairsKujira() {
 }
 
 function usePairsCosmos(config: Config | undefined) {
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
   const { chain } = useChain();
 
-  function fetchPairsRecursively(startAfter = null, allPairs = [] as V3Pair[]): Promise<V3Pair[]> {
-    return client!
+  async function fetchPairsRecursively(
+    client: CosmWasmClient,
+    startAfter = null,
+    allPairs = [] as V3Pair[],
+  ): Promise<V3Pair[]> {
+    return client
       .queryContractSmart(getChainContractAddress(chain), {
         get_pairs: {
           limit: GET_PAIRS_LIMIT,
@@ -203,16 +228,27 @@ function usePairsCosmos(config: Config | undefined) {
 
         if (result.pairs.length === GET_PAIRS_LIMIT) {
           const newStartAfter = result.pairs[result.pairs.length - 1];
-          return fetchPairsRecursively(newStartAfter, allPairs);
+          return fetchPairsRecursively(client, newStartAfter, allPairs);
         }
         return allPairs;
       });
   }
 
-  const queryResult = useQuery<V3Pair[]>(['pairs-cosmos', client], () => fetchPairsRecursively(), {
-    enabled: !!client && !!config && !!config?.exchange_contract_address && !!chain,
-    staleTime: 1000 * 60 * 5,
-  });
+  const queryResult = useQuery<V3Pair[]>(
+    ['pairs-cosmos', getCosmWasmClient],
+    async () => {
+      const client = await getCosmWasmClient();
+      if (!client) {
+        throw new Error('No client');
+      }
+
+      return fetchPairsRecursively(client);
+    },
+    {
+      enabled: !!getCosmWasmClient && !!config && !!config?.exchange_contract_address && !!chain,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
 
   return {
     ...queryResult,

@@ -15,7 +15,7 @@ import { ConfigureVariables } from './ConfigureVariables';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 
 export function useCustomiseStrategy() {
-  const { address, signingClient: client } = useWallet();
+  const { address, getSigningClient } = useWallet();
 
   const { track } = useAnalytics();
 
@@ -23,7 +23,9 @@ export function useCustomiseStrategy() {
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
-    (variables) => {
+    async (variables) => {
+      const client = await getSigningClient();
+
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }

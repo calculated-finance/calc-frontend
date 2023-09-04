@@ -40,24 +40,18 @@ function fetchVaultsRecursively(
 
 export default function useAdminStrategies(customChain?: Chains) {
   const { chain: defaultChain } = useChain();
-  const { client: defaultClient } = useCosmWasmClient();
+  const { getCosmWasmClient } = useCosmWasmClient();
   const chain = customChain || defaultChain;
 
-  const [storedClient, setStoredClient] = useState<CosmWasmClient | null>(null);
-
-  const client = !customChain ? defaultClient : storedClient;
-
-  useEffect(() => {
-    if (customChain) {
-      CosmWasmClient.connect(getChainEndpoint(customChain))
-        .then(setStoredClient)
-        .catch((error) => Sentry.captureException(error, { tags: { page: 'useAdminStrategies' } }));
-    }
-  }, [customChain]);
-
   return useQuery<Strategy[]>(
-    [QUERY_KEY, client, chain],
+    [QUERY_KEY, chain, getCosmWasmClient, customChain],
     async () => {
+      const defaultClient = await getCosmWasmClient();
+
+      const storedClient = customChain ? await CosmWasmClient.connect(getChainEndpoint(customChain)) : null;
+
+      const client = !customChain ? defaultClient : storedClient;
+
       if (!client) throw new Error('No client');
       if (!chain) throw new Error('No chain');
       const result = await fetchVaultsRecursively(client, chain);
@@ -65,7 +59,7 @@ export default function useAdminStrategies(customChain?: Chains) {
       return result.map((vault) => transformToStrategyCosmos(vault));
     },
     {
-      enabled: !!client && !!chain,
+      enabled: !!getCosmWasmClient && !!chain,
       meta: {
         errorMessage: 'Error fetching all strategies',
       },

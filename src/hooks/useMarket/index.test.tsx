@@ -1,6 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react-hooks';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { defaultDenom } from '@utils/defaultDenom';
 import { getTestQueryClient } from '@helpers/test/testQueryClient';
@@ -20,7 +21,7 @@ describe('useMarket hook', () => {
     };
     const mockResultingDenom = { ...defaultDenom, id: 'mockDenomId' };
 
-    useCosmWasmClient.setState({ client: mockClient as unknown as CosmWasmClient });
+    useCosmWasmClientStore.setState({ client: mockClient as unknown as CosmWasmClient });
 
     const wrapper = ({ children }: ChildrenProp) => (
       <QueryClientProvider client={getTestQueryClient()}>{children}</QueryClientProvider>
@@ -44,7 +45,7 @@ describe('useMarket hook', () => {
     };
     const mockResultingDenom = { ...defaultDenom, id: 'mockDenomId' };
 
-    useCosmWasmClient.setState({ client: mockClient as unknown as CosmWasmClient });
+    useCosmWasmClientStore.setState({ client: mockClient as unknown as CosmWasmClient });
 
     const wrapper = ({ children }: ChildrenProp) => (
       <QueryClientProvider client={getTestQueryClient()}>{children}</QueryClientProvider>

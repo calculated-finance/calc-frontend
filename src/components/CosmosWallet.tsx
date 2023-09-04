@@ -119,15 +119,27 @@ function CosmosWallet() {
                 )}
 
                 <Divider />
-                <Button
-                  size="xs"
-                  w="max-content"
-                  variant="link"
-                  onClick={handleDisconnect}
-                  leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
-                >
-                  Disconnect from {walletType}
-                </Button>
+                {featureFlags.cosmoskitEnabled ? (
+                  <Button
+                    size="xs"
+                    w="max-content"
+                    variant="link"
+                    onClick={() => setVisible(true)}
+                    leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
+                  >
+                    Manage {walletType} connection
+                  </Button>
+                ) : (
+                  <Button
+                    size="xs"
+                    w="max-content"
+                    variant="link"
+                    onClick={handleDisconnect}
+                    leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
+                  >
+                    Disconnect from {walletType}
+                  </Button>
+                )}
               </Stack>
             </PopoverContent>
           </Popover>

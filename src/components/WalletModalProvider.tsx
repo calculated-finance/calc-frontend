@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { CalcWalletModalContext } from 'src/hooks/useWalletModal';
 import WalletModal from './WalletModal';
+import { featureFlags } from 'src/constants';
 
 export interface WalletModalProviderProps {
   children: ReactNode;
@@ -20,7 +21,7 @@ export function CalcWalletModalProvider({ children, ...props }: WalletModalProvi
       }}
     >
       {children}
-      <WalletModal {...props} />
+      {!featureFlags.cosmoskitEnabled && <WalletModal {...props} />}
     </CalcWalletModalContext.Provider>
   );
 }

@@ -69,17 +69,24 @@ function calculatePrice(result: BookResponse, initialDenom: DenomInfo, transacti
 }
 
 function usePriceKujira(
-  client: CosmWasmClient | null,
   resultingDenom: DenomInfo | undefined,
   initialDenom: DenomInfo | undefined,
   pair: V2Pair | null | undefined,
   transactionType: TransactionType,
   enabled = true,
 ) {
+  const { getCosmWasmClient } = useCosmWasmClient();
   const { data, ...helpers } = useQuery<number>(
-    ['price', pair, client],
+    ['price', pair, getCosmWasmClient],
     async () => {
-      const result = await client!.queryContractSmart(getPairAddress(initialDenom!.id, resultingDenom!.id)!, {
+      if (!getCosmWasmClient) {
+        throw new Error('getCosmWasmClient undefined');
+      }
+      const client = await getCosmWasmClient();
+      if (!client) {
+        throw new Error('No client');
+      }
+      const result = await client.queryContractSmart(getPairAddress(initialDenom!.id, resultingDenom!.id)!, {
         book: {
           limit: 1,
         },
@@ -87,7 +94,7 @@ function usePriceKujira(
       return result && calculatePrice(result, initialDenom!, transactionType);
     },
     {
-      enabled,
+      enabled: enabled && !!getCosmWasmClient,
       meta: {
         errorMessage: 'Error fetching price',
       },
@@ -161,19 +168,17 @@ export default function usePrice(
   enabled = true,
 ) {
   const { chain } = useChain();
-  const client = useCosmWasmClient((state) => state.client);
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const kujiraPrice = usePriceKujira(
-    client,
     resultingDenom,
     initialDenom,
     pair as V2Pair,
     transactionType,
-    !!client && !!pair && chain === Chains.Kujira && enabled,
+    !!pair && chain === Chains.Kujira && enabled,
   );
 
   const osmosisPrice = usePriceOsmosis(

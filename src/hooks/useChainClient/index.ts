@@ -7,6 +7,7 @@ import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { KujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
+import { useState, useEffect } from 'react';
 import { fetchBalanceEvm } from './fetchBalanceEvm';
 
 function fetchBalancesKujira(kujiraQueryClient: KujiraQueryClient, address: string, supportedDenoms: string[]) {
@@ -66,7 +67,18 @@ function getClient(
 
 export function useChainClient(chain: Chains) {
   const evmProvider = useMetamask((state) => state.provider);
-  const cosmClient = useCosmWasmClient((state) => state.client);
+
+  const { getCosmWasmClient } = useCosmWasmClient();
+
+  const [cosmClient, setCosmClient] = useState<CosmWasmClient | null>(null);
+
+  useEffect(() => {
+    if (!getCosmWasmClient) return;
+
+    if (cosmClient) return;
+
+    getCosmWasmClient().then(setCosmClient);
+  }, [getCosmWasmClient]);
 
   const kujiraQuery = useKujira((state) => state.query);
   const osmosisQuery = useOsmosis((state) => state.query);

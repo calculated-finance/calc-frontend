@@ -1,6 +1,7 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useWallet } from '@hooks/useWallet';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 
 export function mockUseWallet(
   mockQuery?: jest.Mock,
@@ -9,7 +10,7 @@ export function mockUseWallet(
   mockSignAndBroadcast?: jest.Mock,
   connected = true,
 ) {
-  useCosmWasmClient.setState({
+  useCosmWasmClientStore.setState({
     client: {
       queryContractSmart: mockQuery,
       getBalance: mockGetBalance,

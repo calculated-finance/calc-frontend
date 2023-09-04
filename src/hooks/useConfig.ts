@@ -7,11 +7,12 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 export function useConfig(): Config | undefined {
   const { chain } = useChain();
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
 
   const { data } = useQuery<ConfigResponse>(
-    ['config', chain, client],
+    ['config', chain, getCosmWasmClient],
     async () => {
+      const client = await getCosmWasmClient();
       if (!client) {
         throw new Error('No client');
       }
@@ -22,7 +23,7 @@ export function useConfig(): Config | undefined {
       return result;
     },
     {
-      enabled: !!client && !!chain,
+      enabled: !!getCosmWasmClient && !!chain,
       meta: {
         errorMessage: 'Error fetching config',
       },

@@ -1,4 +1,4 @@
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { useFormStore } from '@hooks/useFormStore';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -73,7 +73,7 @@ export const useChain = () => {
   const updateStores = useCallback(
     (newChain: Chains) => {
       useFormStore.setState({ forms: {} });
-      useCosmWasmClient.setState({ client: null });
+      useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
     },
     [setStoredChain],
@@ -83,7 +83,7 @@ export const useChain = () => {
     (newChain: Chains) => {
       if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
-      useCosmWasmClient.setState({ client: null });
+      useCosmWasmClientStore.setState({ client: null });
       updateStores(newChain);
       updateQueryParam(newChain);
     },
