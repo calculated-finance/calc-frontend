@@ -79,7 +79,7 @@ function Page() {
           resultingDenom={resultingDenom}
           autoStakeValidator={undefined}
           swapAmount={23}
-        // swapAmount={state.swapAmount}
+        // swapAmount={state.swapAmount} need to update this.
         />
         <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
       </Stack>
