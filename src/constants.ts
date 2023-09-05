@@ -111,7 +111,7 @@ export const featureFlags =
         controlDeskEnabled: true,
         editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
-        cosmoskitEnabled: true,
+        cosmoskitEnabled: false,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

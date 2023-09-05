@@ -65,9 +65,10 @@ function DcaIn() {
           <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <DCAInResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
 
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
@@ -87,9 +88,7 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      {featureFlags.singleAssetsEnabled ?
-        <Assets /> :
-        <DcaIn />}
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaIn />}
     </StrategyInfoProvider>
   );
 }

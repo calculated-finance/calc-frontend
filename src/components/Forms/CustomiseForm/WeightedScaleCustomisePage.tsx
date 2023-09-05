@@ -1,10 +1,8 @@
 import { Box, Collapse, Stack } from '@chakra-ui/react';
 import useSteps from '@hooks/useSteps';
 import { Form, Formik } from 'formik';
-import { FormNames } from 'src/hooks/useFormStore';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import { StrategyTypes } from '@models/StrategyTypes';
 import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
@@ -16,7 +14,6 @@ import BaseSwapAmount from '@components/BaseSwapAmount';
 import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
 import BasePrice from '@components/BasePrice';
-import { TransactionType } from '@components/TransactionType';
 import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
@@ -24,13 +21,7 @@ import PriceThreshold from '@components/PriceThreshold';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
-export function WeightedScaleCustomisePage({
-  steps,
-  formSchema,
-}: {
-  steps: StepConfig[];
-  formSchema: AnySchema;
-}) {
+export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepConfig[]; formSchema: AnySchema }) {
   const { actions, state } = useWeightedScaleStep2Form();
 
   const { strategyType } = useStrategyInfo();
@@ -78,29 +69,17 @@ export function WeightedScaleCustomisePage({
             />
             <AdvancedSettingsSwitch />
             <Collapse in={values.advancedSettings}>
-              <TriggerForm
-                initialDenom={initialDenomInfo}
-                resultingDenom={resultingDenomInfo}
-              />
+              <TriggerForm initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
             </Collapse>
             <ExecutionInterval />
             <BaseSwapAmount initialDenom={initialDenomInfo} initialDeposit={state.step1.initialDeposit} />
-            <SwapMultiplier
-              initialDenom={initialDenomInfo}
-              resultingDenom={resultingDenomInfo}
-            />
+            <SwapMultiplier initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
             <Collapse in={values.advancedSettings}>
               <Box m="px">
                 <Stack spacing={4}>
-                  <ApplyMultiplier  />
-                  <BasePrice
-                    initialDenom={initialDenomInfo}
-                    resultingDenom={resultingDenomInfo}
-                  />
-                  <PriceThreshold
-                    initialDenom={initialDenomInfo}
-                    resultingDenom={resultingDenomInfo}
-                  />
+                  <ApplyMultiplier />
+                  <BasePrice initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
+                  <PriceThreshold initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
                   <SlippageTolerance />
                 </Stack>
               </Box>

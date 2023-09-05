@@ -1,8 +1,6 @@
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
-import * as Sentry from '@sentry/react';
 import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChain } from './useChain';
@@ -46,7 +44,7 @@ export default function useAdminStrategies(customChain?: Chains) {
   return useQuery<Strategy[]>(
     [QUERY_KEY, chain, getCosmWasmClient, customChain],
     async () => {
-      const defaultClient = await getCosmWasmClient();
+      const defaultClient = getCosmWasmClient && (await getCosmWasmClient());
 
       const storedClient = customChain ? await CosmWasmClient.connect(getChainEndpoint(customChain)) : null;
 

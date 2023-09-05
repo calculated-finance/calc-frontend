@@ -1,7 +1,7 @@
 import { featureFlags } from 'src/constants';
+import { useMemo } from 'react';
 import { useCosmosKit } from './useCosmosKit';
 import { useCosmWasmClientStore } from './useCosmWasmClientStore';
-import { useMemo } from 'react';
 
 export function useCosmWasmClient() {
   const storedClient = useCosmWasmClientStore((state) => state.client);

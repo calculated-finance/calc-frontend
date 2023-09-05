@@ -18,11 +18,7 @@ import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
-export function CustomiseFormDca({
-  step1,
-}: {
-  step1: DcaInFormDataStep1;
-}) {
+export function CustomiseFormDca({ step1 }: { step1: DcaInFormDataStep1 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
   const resultingDenom = useDenom(step1.resultingDenom);
@@ -33,12 +29,14 @@ export function CustomiseFormDca({
         <AdvancedSettingsSwitch />
         <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
-        <SwapAmount isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <SwapAmount
+          isEdit={false}
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          initialDeposit={step1.initialDeposit}
+        />
         <CollapseWithRender isOpen={values.advancedSettings}>
-          <PriceThreshold
-            initialDenom={initialDenom}
-            resultingDenom={resultingDenom}
-          />
+          <PriceThreshold initialDenom={initialDenom} resultingDenom={resultingDenom} />
           <SlippageTolerance />
         </CollapseWithRender>
         <Submit>Next</Submit>
@@ -47,11 +45,7 @@ export function CustomiseFormDca({
   );
 }
 
-export function CustomiseFormDcaWrapper({
-  steps,
-}: {
-  steps: StepConfig[];
-}) {
+export function CustomiseFormDcaWrapper({ steps }: { steps: StepConfig[] }) {
   const { strategyType } = useStrategyInfo();
   const { state, actions } = useStep2Form();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });

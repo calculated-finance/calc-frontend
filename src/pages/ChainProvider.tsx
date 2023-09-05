@@ -12,7 +12,6 @@ import {
   COSMOS_KIT_KUJIRA_TESTNET,
   COSMOS_KIT_OSMOSIS_MAINNET,
   COSMOS_KIT_OSMOSIS_TESTNET,
-  featureFlags,
 } from 'src/constants';
 
 export const signerOptions: SignerOptions = {

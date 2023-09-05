@@ -35,7 +35,7 @@ export function useMarket(resultingDenom: DenomInfo | undefined) {
   return useQuery<Market>(
     ['mars-market', getCosmWasmClient, resultingDenom?.id],
     async () => {
-      const client = getCosmWasmClient();
+      const client = getCosmWasmClient && (await getCosmWasmClient());
       if (!client) {
         throw new Error('No client');
       }

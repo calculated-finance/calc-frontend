@@ -12,11 +12,16 @@ export function useConfig(): Config | undefined {
   const { data } = useQuery<ConfigResponse>(
     ['config', chain, getCosmWasmClient],
     async () => {
-      const client = await getCosmWasmClient();
+      const client = getCosmWasmClient && (await getCosmWasmClient());
       if (!client) {
         throw new Error('No client');
       }
-      const result = await client.queryContractSmart(getChainContractAddress(chain!), {
+
+      if (!chain) {
+        throw new Error('No chain');
+      }
+
+      const result = await client.queryContractSmart(getChainContractAddress(chain), {
         get_config: {},
       } as QueryMsg);
 

@@ -1,4 +1,4 @@
-import { Button, Flex, Grid, GridItem, Heading, Link, Stack, Text, Image, Spacer } from '@chakra-ui/react';
+import { Flex, Grid, GridItem, Heading, Stack, Text, Spacer } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import ProStrategyNotificationCard from '@components/ProStrategyNotificationCard';
 

@@ -24,7 +24,7 @@ export function useCustomiseStrategy() {
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     async (variables) => {
-      const client = await getSigningClient();
+      const client = getSigningClient && (await getSigningClient());
 
       if (isNil(address)) {
         throw new Error('address is null or empty');

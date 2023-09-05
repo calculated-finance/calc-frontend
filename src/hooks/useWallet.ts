@@ -1,5 +1,4 @@
 import { featureFlags } from 'src/constants';
-import { useMemo } from 'react';
 import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
@@ -52,7 +51,7 @@ export function useWallet() {
       return {
         address: cosmosKit.address,
         connected: cosmosKit.isWalletConnected,
-        getSigningClient: cosmosKit.getCosmWasmClient,
+        getSigningClient: cosmosKit.getSigningCosmWasmClient,
         disconnect: cosmosKit.disconnect,
         walletType: cosmosKit.wallet?.prettyName,
         isConnecting: cosmosKit.isWalletConnecting,
@@ -106,7 +105,7 @@ export function useWallet() {
   return {
     address: undefined,
     connected: false,
-    getSigningClient: () => () => Promise.resolve(null),
+    getSigningClient: () => Promise.resolve(null),
     disconnect: undefined,
     walletType: undefined,
     isConnecting:

@@ -29,7 +29,7 @@ export function useConfigureStrategy() {
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     async ({ values, strategy }) => {
-      const client = await getSigningClient();
+      const client = getSigningClient && (await getSigningClient());
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }

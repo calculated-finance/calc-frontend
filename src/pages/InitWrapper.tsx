@@ -3,17 +3,14 @@ import * as amplitude from '@amplitude/analytics-browser';
 import { useKujira } from '@hooks/useKujira';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { COSMOS_KIT_KUJIRA_MAINNET, COSMOS_KIT_KUJIRA_TESTNET, HOTJAR_SITE_ID, featureFlags } from 'src/constants';
+import { HOTJAR_SITE_ID, featureFlags } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
 import { hotjar } from 'react-hotjar';
-import { GasPrice } from '@cosmjs/stargate';
-import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 
 function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {

@@ -44,7 +44,7 @@ const useCancelStrategy = () => {
 
   return useMutation<DeliverTxResponse, Error, Strategy>(
     async (strategy: Strategy) => {
-      const client = await getSigningClient();
+      const client = getSigningClient && (await getSigningClient());
       if (client == null) {
         throw new Error('no client');
       }

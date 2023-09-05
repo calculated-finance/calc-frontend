@@ -130,7 +130,7 @@ export function usePairsOsmosis() {
   const queryResult = useQuery<V2Pair[]>(
     ['pairs-osmosis', getCosmWasmClient],
     async () => {
-      const client = await getCosmWasmClient();
+      const client = getCosmWasmClient && (await getCosmWasmClient());
       if (!client) {
         throw new Error('No client');
       }
@@ -177,6 +177,9 @@ function usePairsKujira() {
   const queryResult = useQuery<PairsResponse>(
     ['pairs-kujira', getCosmWasmClient],
     async () => {
+      if (!getCosmWasmClient) {
+        throw new Error('No getCosmWasmClient');
+      }
       const client = await getCosmWasmClient();
       if (!client) {
         throw new Error('No client');
@@ -237,7 +240,8 @@ function usePairsCosmos(config: Config | undefined) {
   const queryResult = useQuery<V3Pair[]>(
     ['pairs-cosmos', getCosmWasmClient],
     async () => {
-      const client = await getCosmWasmClient();
+      const client = getCosmWasmClient && (await getCosmWasmClient());
+
       if (!client) {
         throw new Error('No client');
       }

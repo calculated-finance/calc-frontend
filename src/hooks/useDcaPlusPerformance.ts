@@ -18,7 +18,8 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
   return useQuery<DcaPlusPerformanceResponse>(
     ['strategy-dca-plus-performance', id, getCosmWasmClient, address],
     async () => {
-      const client = await getCosmWasmClient();
+      const client = getCosmWasmClient && (await getCosmWasmClient());
+
       if (!client) {
         throw new Error('No client');
       }
