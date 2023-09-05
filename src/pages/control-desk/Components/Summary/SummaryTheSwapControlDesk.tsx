@@ -39,8 +39,8 @@ export function SummaryTheSwapControlDesk({ state, transactionType }: { state: C
         {calcCalculatedSwapsEnabled === YesNoValues.Yes ? <BadgeButton url="customise"><Text>10 minutes</Text></BadgeButton> :
           'Custom Interval Increment details'
         }{' '}
-        until {targetAmount} <BadgeButton url="assets">
-          <Text>{resultingDenomInfo.name}</Text>
+        until <BadgeButton url="assets">
+          <Text>{targetAmount} {resultingDenomInfo.name}</Text>
           <DenomIcon denomInfo={resultingDenomInfo} />
         </BadgeButton>{' '} is reached.
       </Text>
