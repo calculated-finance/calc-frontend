@@ -42,6 +42,7 @@ export const initialCtrlValues = {
   endTime: '',
   calcCalculateSwaps: YesNoValues.Yes,
   calcCalculatedSwapsEnabled: YesNoValues.Yes,
+  totalRecipients: 1,
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
@@ -316,6 +317,7 @@ export const allCtrlSchema = {
     }),
   collateralisedMultiplier: Yup.number().required(),
   totalCollateralisedAmount: Yup.number().nullable().required(),
+  totalRecipients: Yup.number(),
 };
 
 export const ctrlSchema = Yup.object({
@@ -339,6 +341,7 @@ export const ctrlSchema = Yup.object({
   swapAmount: allCtrlSchema.swapAmount,
   executionInterval: allCtrlSchema.executionInterval,
   executionIntervalIncrement: allCtrlSchema.executionIntervalIncrement,
+  totalRecipients: allCtrlSchema.totalRecipients,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -364,6 +367,7 @@ export const step2ValidationSchemaControlDesk = ctrlSchema.pick([
   'swapAmount',
   'executionInterval',
   'executionIntervalIncrement',
+  'totalRecipients',
 ]);
 export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchemaControlDesk>;
 

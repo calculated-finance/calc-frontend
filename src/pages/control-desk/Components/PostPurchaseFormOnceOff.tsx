@@ -1,7 +1,6 @@
 import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, Text, useRadioGroup } from '@chakra-ui/react';
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
-import RecipientAccount from '@components/RecipientAccount';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { useChain } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
@@ -11,7 +10,7 @@ import YesNoValues from '@models/YesNoValues';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { PostPurchaseOnceOffOptions } from '../create-strategy/PostPurchaseOnceOffOptions';
-import { AddRecipientButton } from './AddRecipientButton';
+import { RecipientAccountControlDesk } from './AddRecipientButton';
 
 function PostPurchaseOptionRadio() {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -97,8 +96,7 @@ export function PostPurchaseFormOnceOff({
             <Stack>
               <DcaInSendToWallet resultingDenom={resultingDenom} />
               <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
-                <RecipientAccount />
-                <AddRecipientButton />
+                <RecipientAccountControlDesk />
               </CollapseWithRender>
             </Stack>
           </Box>
