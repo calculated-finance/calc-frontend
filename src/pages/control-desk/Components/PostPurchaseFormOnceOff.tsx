@@ -11,6 +11,7 @@ import YesNoValues from '@models/YesNoValues';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { PostPurchaseOnceOffOptions } from '../create-strategy/PostPurchaseOnceOffOptions';
+import { AddRecipientButton } from './AddRecipientButton';
 
 function PostPurchaseOptionRadio() {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -97,6 +98,7 @@ export function PostPurchaseFormOnceOff({
               <DcaInSendToWallet resultingDenom={resultingDenom} />
               <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
                 <RecipientAccount />
+                <AddRecipientButton />
               </CollapseWithRender>
             </Stack>
           </Box>
