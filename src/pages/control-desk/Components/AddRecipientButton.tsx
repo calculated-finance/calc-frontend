@@ -1,4 +1,15 @@
-import { Button, FormControl, FormErrorMessage, FormHelperText, FormLabel, Icon, Input, InputGroup } from "@chakra-ui/react";
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Icon,
+  Input,
+  InputGroup,
+  Spacer,
+} from "@chakra-ui/react";
+import { Remove2Icon } from "@fusion-icons/react/interface";
 import { useChain } from "@hooks/useChain";
 import { Chains } from "@hooks/useChain/Chains";
 import { useField } from "formik";
@@ -13,7 +24,12 @@ export function RecipientAccountControlDesk() {
 
 
   const [recipients, setRecipients] = useState([<InputGroup>
-    <Input fontSize="sm" placeholder="Input Wallet" {...field} />
+    <Input fontSize="sm" placeholder="Input Wallet" {...field} w='full' />
+    <Spacer />
+
+    <Button alignSelf='center' ml={2} variant='ghost'>
+      <Icon as={Remove2Icon} stroke="brand.200" width={4} height={4} alignSelf='center' />
+    </Button>
   </InputGroup>]);
 
   const handleClick = () => {
