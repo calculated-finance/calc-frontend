@@ -24,6 +24,8 @@ import DenomIcon from "@components/DenomIcon";
 import { MAX_OVER_COLATERALISED, MIN_OVER_COLATERALISED, RECOMMENDED_OVER_COLATERALISED } from "src/constants";
 import { useField } from "formik";
 import { OneOffAvailableFunds } from "./OneOffAvailableFunds";
+import { useEffect } from "react";
+import { initialCtrlValues } from "./ControlDeskForms";
 
 
 
@@ -41,6 +43,15 @@ export function OverCollateralisedDeposit() {
   const [, , { setValue: setTotalCollateralisedValue }] = useField({ name: 'totalCollateralisedAmount' });
   const initialDenom = getDenomInfo(initialDenomValue)
   const { price } = useFiatPrice(initialDenom)
+  const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * value).toFixed(2)
+  const minOverCollateralisedAmount = price && (Number(targetAmount) / price * MIN_OVER_COLATERALISED).toFixed(2)
+  const maxOverCollateralisedAmount = price && (Number(targetAmount) / price * MAX_OVER_COLATERALISED).toFixed(2)
+
+
+  useEffect(() => {
+    setValue(initialCtrlValues.collateralisedMultiplier)
+    setTotalCollateralisedValue(totalOverCollateralisedAmount)
+  }, [value, totalOverCollateralisedAmount])
 
   const setMinMultiplier = () => {
     setValue(MIN_OVER_COLATERALISED)
@@ -50,9 +61,6 @@ export function OverCollateralisedDeposit() {
   }
 
 
-  const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * value).toFixed(2)
-  const minOverCollateralisedAmount = price && (Number(targetAmount) / price * MIN_OVER_COLATERALISED).toFixed(2)
-  const maxOverCollateralisedAmount = price && (Number(targetAmount) / price * MAX_OVER_COLATERALISED).toFixed(2)
 
   const setTotalCollateralise = () => {
     setTotalCollateralisedValue(totalOverCollateralisedAmount)
