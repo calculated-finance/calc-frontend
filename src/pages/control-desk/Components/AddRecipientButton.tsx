@@ -1,4 +1,3 @@
-import { PlusSquareIcon } from "@chakra-ui/icons";
 import { Button, Icon } from "@chakra-ui/react";
 import { FiPlusCircle } from "react-icons/fi";
 

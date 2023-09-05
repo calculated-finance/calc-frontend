@@ -1,7 +1,6 @@
 import { Text, Button, Center, Tooltip, useDisclosure } from '@chakra-ui/react';
 import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
@@ -10,7 +9,6 @@ import { useWallet } from '@hooks/useWallet';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { Coin } from '@cosmjs/proto-signing';
 import { GetFundsButton, GetFundsModal } from '@components/AvailableFunds';
-import getDenomInfo from '@utils/getDenomInfo';
 
 function OneOffAvailableFundsButton({
   denom,
@@ -27,17 +25,12 @@ function OneOffAvailableFundsButton({
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
 
-
-  const [field, ,] = useField({ name: 'resultingDenom' })
-  const outputAsset = getDenomInfo(field.value)
-  const { price: resultingPrice } = useFiatPrice(outputAsset);
-
   const { connected } = useWallet();
   const { setVisible } = useWalletModal();
 
   const createStrategyFee = inputPrice ? Number(createStrategyFeeInTokens(inputPrice)) : 0;
   const balance = Number(data?.amount);
-  const displayAmount = resultingPrice && (denom.conversion(Math.max(balance - createStrategyFee, 0)) / resultingPrice)
+  const displayAmount = (denom.conversion(Math.max(balance - createStrategyFee, 0)))
 
   const maxDisplayAmount = displayAmount && (displayAmount).toFixed(2)
 

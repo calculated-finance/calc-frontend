@@ -48,9 +48,12 @@ export function OverCollateralisedDeposit() {
   const setMaxMultiplier = () => {
     setValue(MAX_OVER_COLATERALISED)
   }
+
+
   const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * value).toFixed(2)
   const minOverCollateralisedAmount = price && (Number(targetAmount) / price * MIN_OVER_COLATERALISED).toFixed(2)
   const maxOverCollateralisedAmount = price && (Number(targetAmount) / price * MAX_OVER_COLATERALISED).toFixed(2)
+
   const setTotalCollateralise = () => {
     setTotalCollateralisedValue(totalOverCollateralisedAmount)
   }
