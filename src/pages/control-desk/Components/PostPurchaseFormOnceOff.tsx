@@ -1,4 +1,4 @@
-import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, useRadioGroup } from '@chakra-ui/react';
+import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, Text, useRadioGroup } from '@chakra-ui/react';
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import RecipientAccount from '@components/RecipientAccount';
@@ -61,6 +61,14 @@ function PostPurchaseOptionRadio() {
           );
         })}
       </Radio>
+      <FormHelperText fontFamily='body'>
+        {field.value === PostPurchaseOnceOffOptions.StreamPayment ?
+          <Text fontFamily='body'>Send every swap until target amount is reached.</Text>
+          :
+          <Text fontFamily='body'>Send total amount once target amount is reached.</Text>
+        }
+
+      </FormHelperText>
     </FormControl>
   );
 }
@@ -81,18 +89,20 @@ export function PostPurchaseFormOnceOff({
 
   return (
     <Form autoComplete="off">
-      <Stack direction="column" spacing={6}>
-        <PostPurchaseOptionRadio />
-        <Box>
-          <Stack>
-            <DcaInSendToWallet resultingDenom={resultingDenom} />
-            <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
-              <RecipientAccount />
-            </CollapseWithRender>
-          </Stack>
-        </Box>
-        {submitButton || <Submit>Next</Submit>}
-      </Stack>
+      <FormControl>
+        <Stack direction="column" spacing={6}>
+          <PostPurchaseOptionRadio />
+          <Box>
+            <Stack>
+              <DcaInSendToWallet resultingDenom={resultingDenom} />
+              <CollapseWithRender in={sendToWalletValue === YesNoValues.No}>
+                <RecipientAccount />
+              </CollapseWithRender>
+            </Stack>
+          </Box>
+          {submitButton || <Submit>Next</Submit>}
+        </Stack>
+      </FormControl>
     </Form>
   );
 }
