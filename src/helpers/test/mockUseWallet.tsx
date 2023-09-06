@@ -20,9 +20,9 @@ export function mockUseWallet(
   (useWallet as jest.Mock).mockImplementation(() => ({
     address: 'kujiratestwallet',
     connected,
-    signingClient: {
+    getSigningClient: jest.fn().mockResolvedValue({
       execute: mockExecute,
       signAndBroadcast: mockSignAndBroadcast,
-    },
+    }),
   }));
 }
