@@ -36,7 +36,7 @@ export function CustomiseFormOnceOff({
         <AdvancedSettingsSwitch />
         <TriggerFormOnceOff resultingDenom={resultingDenom} />
         <CalcCalculateSwaps initialDenom={initialDenom}
-          resultingDenom={resultingDenom} />
+          resultingDenom={resultingDenom} transactionType={transactionType} />
 
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold

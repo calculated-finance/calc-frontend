@@ -114,10 +114,11 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
+                          transactionType={transactionType}
                         />
                       </CollapseWithRender>
                       {featureFlags.editSwapAmountEnabled &&
-                        <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} />}
+                        <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} transactionType={transactionType} />}
                     </Stack>
                   )}
                   {isWeightedScale(strategy) && (

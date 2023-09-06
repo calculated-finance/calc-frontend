@@ -6,16 +6,14 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
 
-export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initialDeposit }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number, isEdit: boolean }) {
+export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initialDeposit, transactionType }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number, isEdit: boolean, transactionType: TransactionType }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-  const { transactionType } = useStrategyInfo();
 
   const isSell = transactionType === TransactionType.Sell;
 

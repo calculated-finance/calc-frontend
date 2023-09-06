@@ -5,6 +5,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import { CollapseWithRender } from '@components/CollapseWithRender';
+import { TransactionType } from '@components/TransactionType';
 import ExecutionInterval from '@components/ExecutionInterval';
 import SwapAmountControlDesk from './SwapAmountControlDesk';
 
@@ -56,12 +57,14 @@ type PriceThresholdProps = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   forceOpen?: boolean;
+  transactionType: TransactionType
 };
 
 export default function CalcCalculateSwaps({
   initialDenom,
   resultingDenom,
   forceOpen,
+  transactionType
 }: PriceThresholdProps) {
   const [, meta,] = useField({ name: 'calcCalculateSwaps' });
   const [{ value: totalCollateralisedDeposit }, ,] = useField({ name: 'totalCollateralisedAmount' })
@@ -80,7 +83,7 @@ export default function CalcCalculateSwaps({
         <CollapseWithRender isOpen={calcCalculateSwapsEnabled === YesNoValues.No}>
           <Stack spacing={3}>
             <ExecutionInterval />
-            <SwapAmountControlDesk isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={totalCollateralisedDeposit} />
+            <SwapAmountControlDesk isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={totalCollateralisedDeposit} transactionType={transactionType} />
           </Stack>
         </CollapseWithRender>
       </Stack>
