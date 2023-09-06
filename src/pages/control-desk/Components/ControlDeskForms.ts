@@ -32,7 +32,7 @@ export const initialCtrlValues = {
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
   sendToWallet: YesNoValues.No,
-  recipientAccount: '',
+  recipientArray: [],
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOnceOffOptions.SinglePayment,
   targetAmount: null,
@@ -46,6 +46,47 @@ export const initialCtrlValues = {
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+
+export const recipientSchema = Yup.object().shape({
+  recipientAccount: Yup.string()
+    .label('Recipient Account')
+    .nullable()
+    .when('sendToWallet', {
+      is: YesNoValues.No,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => ''),
+    })
+    .test({
+      name: 'correct-length',
+      message: ({ label }) => `${label} is not a valid address`,
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
+        return value?.length === getChainAddressLength(chain);
+      },
+    })
+
+    .test({
+      name: 'starts-with-chain-prefix',
+      message: ({ label }) => `${label} has an invalid prefix`,
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
+        return value?.startsWith(getChainAddressPrefix(chain));
+      },
+    }),
+});
+
 export const allCtrlSchema = {
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
@@ -247,43 +288,6 @@ export const allCtrlSchema = {
   // }),
   postPurchaseOption: Yup.mixed<PostPurchaseOnceOffOptions>(),
   sendToWallet: Yup.mixed<YesNoValues>().oneOf(Object.values(YesNoValues)).required(),
-  recipientAccount: Yup.string()
-    .label('Recipient Account')
-    .nullable()
-    .when('sendToWallet', {
-      is: YesNoValues.No,
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => ''),
-    })
-    .test({
-      name: 'correct-length',
-      message: ({ label }) => `${label} is not a valid address`,
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return value?.length === getChainAddressLength(chain);
-      },
-    })
-
-    .test({
-      name: 'starts-with-chain-prefix',
-      message: ({ label }) => `${label} has an invalid prefix`,
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return value?.startsWith(getChainAddressPrefix(chain));
-      },
-    }),
   strategyDuration: Yup.number()
     .label('Strategy Duration')
     .min(MIN_DCA_PLUS_STRATEGY_DURATION)
@@ -318,6 +322,7 @@ export const allCtrlSchema = {
   collateralisedMultiplier: Yup.number().required(),
   totalCollateralisedAmount: Yup.number().nullable().required(),
   totalRecipients: Yup.number(),
+  recipientsArray: Yup.array().of(recipientSchema),
 };
 
 export const ctrlSchema = Yup.object({
@@ -329,7 +334,6 @@ export const ctrlSchema = Yup.object({
   priceThresholdEnabled: allCtrlSchema.priceThresholdEnabled,
   priceThresholdValue: allCtrlSchema.priceThresholdValue,
   sendToWallet: allCtrlSchema.sendToWallet,
-  recipientAccount: allCtrlSchema.recipientAccount,
   postPurchaseOption: allCtrlSchema.postPurchaseOption,
   collateralisedMultiplier: allCtrlSchema.collateralisedMultiplier,
   totalCollateralisedAmount: allCtrlSchema.totalCollateralisedAmount,
@@ -342,6 +346,7 @@ export const ctrlSchema = Yup.object({
   executionInterval: allCtrlSchema.executionInterval,
   executionIntervalIncrement: allCtrlSchema.executionIntervalIncrement,
   totalRecipients: allCtrlSchema.totalRecipients,
+  recipientsArray: allCtrlSchema.recipientsArray,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -374,7 +379,7 @@ export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchem
 export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'postPurchaseOption',
   'sendToWallet',
-  'recipientAccount',
+  'recipientsArray',
 ]);
 
 export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;
