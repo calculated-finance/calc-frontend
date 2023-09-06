@@ -2,9 +2,7 @@ import { Box, Collapse, FormControl, FormHelperText, FormLabel, Stack, Text, use
 import { Form, useField } from 'formik';
 import Submit from '@components/Submit';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
-import { useChain } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import Radio from '@components/Radio';
@@ -14,8 +12,6 @@ import { RecipientAccountControlDesk } from './AddRecipientButton';
 
 function PostPurchaseOptionRadio() {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
-  const { chain } = useChain();
-  const { address } = useWallet();
 
   const sendToWalletData: { value: PostPurchaseOnceOffOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
