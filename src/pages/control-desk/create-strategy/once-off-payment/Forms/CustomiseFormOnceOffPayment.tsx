@@ -14,13 +14,16 @@ import { useControlDeskStrategyInfo } from 'src/pages/control-desk/useControlDes
 import { useStep2FormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
 import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
 import { TriggerFormOnceOff } from 'src/pages/control-desk/Components/TriggerFormOnceOff';
-import PriceThresholdOnceOff from 'src/pages/control-desk/Components/PriceThresholdOnceOff';
 import CalcCalculateSwaps from 'src/pages/control-desk/Components/CalcCalculateSwaps';
+import PriceThreshold from '@components/PriceThreshold';
+import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormOnceOff({
   step1,
+  transactionType
 }: {
   step1: ControlDeskFormDataStep1;
+  transactionType: TransactionType
 }) {
   const { values } = useFormikContext<ControlDeskFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
@@ -36,9 +39,10 @@ export function CustomiseFormOnceOff({
           resultingDenom={resultingDenom} />
 
         <CollapseWithRender isOpen={values.advancedSettings}>
-          <PriceThresholdOnceOff
+          <PriceThreshold
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
+            transactionType={transactionType}
           />
           <SlippageTolerance />
         </CollapseWithRender>
@@ -53,7 +57,7 @@ export function CustomiseFormOnceOffWrapper({
 }: {
   steps: StepConfig[];
 }) {
-  const { strategyType } = useControlDeskStrategyInfo();
+  const { strategyType, transactionType } = useControlDeskStrategyInfo();
   const { state, actions } = useStep2FormControlDesk();
   const { validate } = useValidation(step2ValidationSchemaControlDesk, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);
@@ -82,7 +86,7 @@ export function CustomiseFormOnceOffWrapper({
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      <CustomiseFormOnceOff step1={state.step1} />
+      <CustomiseFormOnceOff step1={state.step1} transactionType={transactionType} />
     </Formik>
   );
 }

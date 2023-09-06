@@ -17,11 +17,14 @@ import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormDca({
   step1,
+  transactionType
 }: {
   step1: DcaInFormDataStep1;
+  transactionType: TransactionType
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
@@ -38,6 +41,7 @@ export function CustomiseFormDca({
           <PriceThreshold
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
+            transactionType={transactionType}
           />
           <SlippageTolerance />
         </CollapseWithRender>
@@ -52,7 +56,7 @@ export function CustomiseFormDcaWrapper({
 }: {
   steps: StepConfig[];
 }) {
-  const { strategyType } = useStrategyInfo();
+  const { strategyType, transactionType } = useStrategyInfo();
   const { state, actions } = useStep2Form();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);
@@ -81,7 +85,7 @@ export function CustomiseFormDcaWrapper({
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      <CustomiseFormDca step1={state.step1} />
+      <CustomiseFormDca step1={state.step1} transactionType={transactionType} />
     </Formik>
   );
 }

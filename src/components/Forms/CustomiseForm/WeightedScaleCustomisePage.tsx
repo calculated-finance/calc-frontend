@@ -33,7 +33,7 @@ export function WeightedScaleCustomisePage({
 }) {
   const { actions, state } = useWeightedScaleStep2Form();
 
-  const { strategyType } = useStrategyInfo();
+  const { strategyType, transactionType } = useStrategyInfo();
 
   const { validate } = useValidation(formSchema, {
     ...state?.step1,
@@ -92,7 +92,7 @@ export function WeightedScaleCustomisePage({
             <Collapse in={values.advancedSettings}>
               <Box m="px">
                 <Stack spacing={4}>
-                  <ApplyMultiplier  />
+                  <ApplyMultiplier />
                   <BasePrice
                     initialDenom={initialDenomInfo}
                     resultingDenom={resultingDenomInfo}
@@ -100,6 +100,7 @@ export function WeightedScaleCustomisePage({
                   <PriceThreshold
                     initialDenom={initialDenomInfo}
                     resultingDenom={resultingDenomInfo}
+                    transactionType={transactionType}
                   />
                   <SlippageTolerance />
                 </Stack>

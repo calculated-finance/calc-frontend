@@ -136,6 +136,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                             forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                             resultingDenom={resultingDenom}
                             initialDenom={initialDenom}
+                            transactionType={transactionType}
                           />
                         </Stack>
                       </CollapseWithRender>
