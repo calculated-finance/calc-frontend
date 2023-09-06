@@ -69,6 +69,7 @@ function PageInternal({
         swapFee={SWAP_FEE_WS}
         swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
         excludeDepositFee
+        transactionType={transactionType}
       />
       <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
     </Stack>

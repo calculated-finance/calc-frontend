@@ -20,8 +20,8 @@ import { SummaryTheSwapControlDesk } from 'src/pages/control-desk/Components/Sum
 import { SummaryAfterEachSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryAfterEachSwapControlDesk';
 import { SWAP_FEE } from 'src/constants';
 import { SummaryWhileSwappingControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryWhileSwappingControlDesk';
-import FeesControlDesk from 'src/pages/control-desk/Components/FeesControlDesk';
 import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
+import Fees from '@components/Fees';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();
@@ -73,12 +73,13 @@ function Page() {
           slippageTolerance={state.slippageTolerance}
         />
         <SummaryAfterEachSwapControlDesk state={state} />
-        <FeesControlDesk
+        <Fees
           swapFee={SWAP_FEE}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           autoStakeValidator={undefined}
           swapAmount={23}
+          transactionType={transactionType}
         // swapAmount={state.swapAmount} need to update this.
         />
         <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
