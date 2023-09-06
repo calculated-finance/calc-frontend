@@ -22,8 +22,6 @@ export function RecipientAccountControlDesk() {
   const [field, meta] = useField({ name: 'recipientsArray' });
   const [additionalRecipientField] = useField({ name: 'recipientSchema' });
 
-  console.log(additionalRecipientField)
-
   const { chain } = useChain();
 
   const [inputCount, setInputCount] = useState(1);
