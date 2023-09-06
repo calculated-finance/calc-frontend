@@ -43,7 +43,7 @@ export function RecipientAccountControlDesk() {
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
       <InputGroup mb={2} >
-        <Input fontSize="sm" placeholder="Input Wallet" w='full' />
+        <Input fontSize="sm" placeholder="Input Wallet" w='full' {...field} />
       </InputGroup>
       {[...Array(inputCount)].map((_, index) =>
         // Need to find a way to input different '...field's for Yup.
