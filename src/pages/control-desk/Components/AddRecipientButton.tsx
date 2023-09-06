@@ -31,7 +31,7 @@ export function RecipientAccountControlDesk() {
   };
 
   const removeInput = () => {
-    if (inputCount > 1) {
+    if (inputCount > 0) {
       setInputCount(inputCount - 1);
     }
     totalRecipientsSetValue(inputCount)
@@ -42,6 +42,31 @@ export function RecipientAccountControlDesk() {
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
+      <InputGroup mb={2} >
+        <Input fontSize="sm" placeholder="Input Wallet" w='full' />
+      </InputGroup>
+      {[...Array(inputCount)].map((_, index) =>
+        // Need to find a way to input different '...field's for Yup.
+        <InputGroup mb={2} >
+          <HStack spacing={2} w='full'>
+            <Button
+              size="xs"
+              variant='ghost'
+              width={4}
+              bgColor='abyss.100'
+              h={5}
+              borderRadius={6}
+              onClick={removeInput}
+              alignSelf='center'
+            >
+              <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
+            </Button>
+            <Input fontSize="sm" placeholder="Input Wallet" w='full' />
+          </HStack>
+        </InputGroup>
+      )}
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
+      <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
       <HStack pb={2}>
         <Button
           size="xs"
@@ -57,28 +82,7 @@ export function RecipientAccountControlDesk() {
           Add recipient
         </Button>
         <Spacer />
-
-        <Button
-          size="xs"
-          variant='ghost'
-          width={4}
-          bgColor='abyss.100'
-          h={5}
-          borderRadius={6}
-          onClick={removeInput}
-        >
-          <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
-        </Button>
       </HStack>
-      {[...Array(inputCount)].map((_, index) =>
-        // Need to find a way to input different '...field's for Yup.
-        <InputGroup mb={2} >
-          <Input fontSize="sm" placeholder="Input Wallet" w='full' />
-        </InputGroup>
-      )}
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-      <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
-
     </FormControl>
   );
 }
