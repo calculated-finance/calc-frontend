@@ -70,13 +70,12 @@ export function RecipientAccountControlDesk() {
           <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
         </Button>
       </HStack>
-      {[...Array(inputCount)].map((_, index) => (
-
+      {[...Array(inputCount)].map((_, index) =>
+        // Need to find a way to input different '...field's for Yup.
         <InputGroup mb={2} >
-          <Input fontSize="sm" placeholder="Input Wallet" {...field} w='full' />
+          <Input fontSize="sm" placeholder="Input Wallet" w='full' />
         </InputGroup>
-
-      ))}
+      )}
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
 
