@@ -13,7 +13,6 @@ import { Remove2Icon } from "@fusion-icons/react/interface";
 import { useChain } from "@hooks/useChain";
 import { Chains } from "@hooks/useChain/Chains";
 import { useField } from "formik";
-import { useState } from "react";
 import { FiPlusCircle } from "react-icons/fi";
 
 
@@ -22,25 +21,20 @@ export function RecipientAccountControlDesk() {
   const [{ value: totalRecipientsValue }, , { setValue: totalRecipientsSetValue }] = useField({ name: 'totalRecipients' });
   const { chain } = useChain();
 
-
-  const [recipients, setRecipients] = useState([<InputGroup>
+  const recipients = [<InputGroup>
     <Input fontSize="sm" placeholder="Input Wallet" {...field} w='full' />
     <Spacer />
 
     <Button alignSelf='center' ml={2} variant='ghost'>
       <Icon as={Remove2Icon} stroke="brand.200" width={4} height={4} alignSelf='center' />
     </Button>
-  </InputGroup>]);
+  </InputGroup>]
+
 
   const handleClick = () => {
-    const newRecipient = (
-      <InputGroup key={recipients.length} pt={2}>
-        <Input fontSize="sm" placeholder="Input Wallet" {...field} />
-      </InputGroup>
-    );
 
-    setRecipients([...recipients, newRecipient]);
-    totalRecipientsSetValue(recipients.length + 1)
+    console.log('clicked')
+
   }
 
   console.log(totalRecipientsValue)

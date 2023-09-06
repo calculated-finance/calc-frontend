@@ -5,14 +5,10 @@ import { CtrlFormDataAll } from './ControlDeskForms';
 
 export default function TargetAmount() {
   const {
-    values: { targetAmount },
-  } = useFormikContext<CtrlFormDataAll>();
-  const {
     values: { resultingDenom },
   } = useFormikContext<CtrlFormDataAll>();
 
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'targetAmount' });
-  const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'targetAmount' });
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!resultingDenom}>
