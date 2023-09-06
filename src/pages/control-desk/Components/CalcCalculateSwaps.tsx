@@ -7,7 +7,7 @@ import RadioCard from '@components/RadioCard';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { TransactionType } from '@components/TransactionType';
 import ExecutionInterval from '@components/ExecutionInterval';
-import SwapAmountControlDesk from './SwapAmountControlDesk';
+import SwapAmount from '@components/SwapAmount';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -83,7 +83,7 @@ export default function CalcCalculateSwaps({
         <CollapseWithRender isOpen={calcCalculateSwapsEnabled === YesNoValues.No}>
           <Stack spacing={3}>
             <ExecutionInterval />
-            <SwapAmountControlDesk isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={totalCollateralisedDeposit} transactionType={transactionType} />
+            <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={totalCollateralisedDeposit} transactionType={transactionType} />
           </Stack>
         </CollapseWithRender>
       </Stack>

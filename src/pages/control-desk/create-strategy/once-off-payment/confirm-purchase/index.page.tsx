@@ -16,12 +16,12 @@ import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import { FormikHelpers } from 'formik';
 import { SummaryYourDepositControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryYourDepositControlDesk';
+import Fees from '@components/Fees';
 import { SummaryTheSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryTheSwapControlDesk';
 import { SummaryAfterEachSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryAfterEachSwapControlDesk';
 import { SWAP_FEE } from 'src/constants';
 import { SummaryWhileSwappingControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryWhileSwappingControlDesk';
 import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
-import Fees from '@components/Fees';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();
