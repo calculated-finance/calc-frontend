@@ -24,7 +24,7 @@ export function RecipientAccountControlDesk() {
 
   const { chain } = useChain();
 
-  const [inputCount, setInputCount] = useState(1);
+  const [inputCount, setInputCount] = useState(0);
 
   const addInput = () => {
     setInputCount(inputCount + 1);
