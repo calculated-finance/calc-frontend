@@ -1,5 +1,4 @@
 import { useWallet } from '@hooks/useWallet';
-import getDenomInfo from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -9,7 +8,6 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useControlDeskStrategyInfo } from '../useControlDeskStrategyInfo';
 import { useTrackCreateVaultOnceOff } from './once-off-payment/useTrackCreateVauleOnceOff';
 import { CtrlFormDataAll } from '../Components/ControlDeskForms';
-import { BuildCreateVaultControlDeskContext } from '../buildCreateVaultParamsControlDesk';
 
 export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useControlDeskStrategyInfo();
@@ -52,20 +50,20 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
     //   checkSwapAmountValue(state.swapAmount, price);
     // }
 
-    const createVaultContext: BuildCreateVaultControlDeskContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
-      // timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
-      startPrice: state.startPrice || undefined,
-      targetAmount: state.targetAmount,
-      // priceThreshold: state.priceThresholdValue || undefined,
-      // transactionType,
-      slippageTolerance: state.slippageTolerance,
-      destinationConfig: {
-        recipientAccount: state.recipientAccount || undefined,
-        senderAddress: address,
-      },
-    };
+    // const createVaultContext: BuildCreateVaultControlDeskContext = {
+    //   initialDenom: getDenomInfo(state.initialDenom),
+    //   resultingDenom: getDenomInfo(state.resultingDenom),
+    //   // timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
+    //   startPrice: state.startPrice || undefined,
+    //   targetAmount: state.targetAmount,
+    //   // priceThreshold: state.priceThresholdValue || undefined,
+    //   // transactionType,
+    //   slippageTolerance: state.slippageTolerance,
+    //   destinationConfig: {
+    //     recipientAccount: state.recipientAccount || undefined,
+    //     senderAddress: address,
+    //   },
+    // };
 
     const fee = createStrategyFeeInTokens(price);
 
@@ -82,5 +80,6 @@ export const useCreateVaultOnceOff = (initialDenom: DenomInfo | undefined) => {
         track();
         return result;
       })
+
   });
 };

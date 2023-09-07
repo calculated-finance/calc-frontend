@@ -36,7 +36,7 @@ export function CustomiseFormDca({
         <AdvancedSettingsSwitch />
         <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
-        <SwapAmount isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <SwapAmount transactionType={transactionType} isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
