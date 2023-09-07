@@ -19,8 +19,6 @@ type ControlDeskStrategyProps = {
   learnMoreHref: string;
 };
 
-
-
 export function ControlDeskPanels({ name, icon, href, learnMoreHref, description, enabled }: ControlDeskStrategyProps) {
   return (
     <Stack direction={['row', null, null, 'column']} width={['full', null, null, '2xl']}>
