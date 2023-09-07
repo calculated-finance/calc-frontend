@@ -12,7 +12,14 @@ export function useConfig(): Config | undefined {
   const { data } = useQuery<ConfigResponse>(
     ['config', chain, getCosmWasmClient],
     async () => {
-      const client = getCosmWasmClient && (await getCosmWasmClient());
+      if (!getCosmWasmClient) {
+        throw new Error('No getCosmWasmClient');
+      }
+
+      const client = await getCosmWasmClient();
+
+      console.log('client', client);
+
       if (!client) {
         throw new Error('No client');
       }

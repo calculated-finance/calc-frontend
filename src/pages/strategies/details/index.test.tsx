@@ -440,7 +440,7 @@ describe('Detail page', () => {
           );
 
           await renderTarget();
-          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 DEMO'));
+          await waitFor(() => expect(screen.getByTestId('strategy-net-cost').textContent).toBe('1 KUJI'));
         });
       });
     });

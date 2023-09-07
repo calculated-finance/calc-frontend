@@ -6,7 +6,10 @@ import { useCosmWasmClientStore } from './useCosmWasmClientStore';
 export function useCosmWasmClient() {
   const storedClient = useCosmWasmClientStore((state) => state.client);
 
-  const memoedStoredClientPromise = useMemo(() => () => Promise.resolve(storedClient), [storedClient]);
+  const memoedStoredClientPromise = useMemo(
+    () => (storedClient ? () => Promise.resolve(storedClient) : null),
+    [storedClient],
+  );
 
   const { getCosmWasmClient } = useCosmosKit() || {};
 
