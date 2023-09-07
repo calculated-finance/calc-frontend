@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
-import { Form, Formik, useField } from 'formik';
+import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
 import useBalances from '@hooks/useBalances';
@@ -15,8 +15,10 @@ import { ControlDeskFormDataStep1, step1ValidationSchemaControlDesk } from 'src/
 import InputAsset from 'src/pages/control-desk/Components/InputAsset';
 import OutputAsset from 'src/pages/control-desk/Components/OutputAsset';
 import { OverCollateralisedDeposit } from 'src/pages/control-desk/Components/OverCollateralisedDeposit';
+import usePageLoad from '@hooks/usePageLoad';
 import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/ControlDeskStrategyTypes';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import NewStrategyModal, { NewStrategyModalBody, NewStrategyModalHeader } from '@components/NewStrategyModal';
 import { ControlDeskStrategyInfoProvider } from '../../../useControlDeskStrategyInfo';
 import { ControlDeskFormNames } from '../../../useControlDeskFormStore';
 import useControlDeskForm from '../../../useOnceOffForm';
@@ -25,6 +27,8 @@ import onceOffSteps from '../../../onceOffForm';
 function OnceOffPayment() {
   const { connected } = useWallet();
   const { actions, state } = useControlDeskForm();
+  const { isPageLoading } = usePageLoad();
+
   const {
     data: { pairs },
   } = usePairs();
@@ -60,20 +64,26 @@ function OnceOffPayment() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={onceOffSteps}>
-          <Form autoComplete="off">
-            <Stack direction="column" spacing={6}>
-              <InputAsset />
-              <OutputAsset
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              <OverCollateralisedDeposit />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
-      )}
+      {({ values, isSubmitting }) => (
+        <NewStrategyModal>
+          <NewStrategyModalHeader
+            stepsConfig={onceOffSteps}
+            resetForm={actions.resetAction}
+            cancelUrl="/control-desk/create-strategy"
+          />
+          <NewStrategyModalBody stepsConfig={onceOffSteps} isLoading={isPageLoading && !isSubmitting}>
+            <Form autoComplete="off">
+              <Stack direction="column" spacing={6}>
+                <InputAsset />
+                <OutputAsset
+                  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                />
+                <OverCollateralisedDeposit />
+                {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              </Stack>
+            </Form>
+          </NewStrategyModalBody>
+        </NewStrategyModal>)}
     </Formik>
   );
 }

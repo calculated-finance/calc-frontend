@@ -1,7 +1,6 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, HStack, SimpleGrid, Spacer, Text } from '@chakra-ui/react';
 import { useField, useFormikContext } from 'formik';
 import { useChain } from '@hooks/useChain';
-import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from '@components/DenomSelect';
 import TargetAmount from './TargetAmount';
@@ -33,7 +32,7 @@ export default function OutputAsset({ denoms }: { denoms: DenomInfo[] }) {
           placeholder="Choose asset"
           value={field.value}
           onChange={helpers.setValue}
-          optionLabel={`Swapped on ${getChainDexName(chain)}`}
+        // optionLabel={`Swapped on ${getChainDexName(chain)}`}
         />
         <TargetAmount />
       </SimpleGrid>
