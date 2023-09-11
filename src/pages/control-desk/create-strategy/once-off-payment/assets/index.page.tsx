@@ -60,7 +60,6 @@ function OnceOffPayment() {
     resultingDenom: state.step1.resultingDenom,
   };
 
-  console.log(state)
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore

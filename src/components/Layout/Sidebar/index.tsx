@@ -79,9 +79,16 @@ const sidebarLogoUrls = {
   [Chains.Moonbeam]: '/images/moonbeam-large.png',
 };
 
+const controlDEskSidebarLogoUrls = {
+  globe: '/images/control-desk-globe.svg',
+
+};
+
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
+
+  const bgImage = router.pathname.includes('control-desk') ? controlDEskSidebarLogoUrls.globe : sidebarLogoUrls[chain]
 
   return (
     <Flex
@@ -90,7 +97,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={sidebarLogoUrls[chain]}
+      bgImage={bgImage}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"
