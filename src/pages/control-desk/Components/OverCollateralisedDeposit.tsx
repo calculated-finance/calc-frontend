@@ -20,12 +20,11 @@ import {
 } from "@chakra-ui/react";
 import useFiatPrice from "@hooks/useFiatPrice";
 import getDenomInfo from "@utils/getDenomInfo";
-import { useEffect } from "react";
 import DenomIcon from "@components/DenomIcon";
 import { MAX_OVER_COLATERALISED, MIN_OVER_COLATERALISED, RECOMMENDED_OVER_COLATERALISED } from "src/constants";
 import { useField } from "formik";
+import { useEffect } from "react";
 import { OneOffAvailableFunds } from "./OneOffAvailableFunds";
-import { initialCtrlValues } from "./ControlDeskForms";
 
 
 
@@ -39,26 +38,26 @@ export function OverCollateralisedDeposit() {
 
   const [{ value: initialDenomValue }] = useField({ name: 'initialDenom' });
   const [{ value: targetAmount }] = useField({ name: 'targetAmount' });
-  const [{ value }, meta, { setValue }] = useField({ name: 'collateralisedMultiplier' });
+  const [{ value: multiplierValue }, meta, { setValue }] = useField({ name: 'collateralisedMultiplier' });
   const [, , { setValue: setTotalCollateralisedValue }] = useField({ name: 'totalCollateralisedAmount' });
   const initialDenom = getDenomInfo(initialDenomValue)
   const { price } = useFiatPrice(initialDenom)
-  const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * value).toFixed(2)
+
+  const totalOverCollateralisedAmount = price && (Number(targetAmount) / price * multiplierValue).toFixed(2)
   const minOverCollateralisedAmount = price && (Number(targetAmount) / price * MIN_OVER_COLATERALISED).toFixed(2)
   const maxOverCollateralisedAmount = price && (Number(targetAmount) / price * MAX_OVER_COLATERALISED).toFixed(2)
 
+  useEffect(() => {
+    if (targetAmount && multiplierValue && price) {
+      setTotalCollateralisedValue(totalOverCollateralisedAmount);
+    }
+  }, [targetAmount, price, multiplierValue]);
 
   const setMinMultiplier = () => {
     setValue(MIN_OVER_COLATERALISED)
   }
   const setMaxMultiplier = () => {
     setValue(MAX_OVER_COLATERALISED)
-  }
-
-
-
-  const setTotalCollateralise = () => {
-    setTotalCollateralisedValue(totalOverCollateralisedAmount)
   }
 
   return (
@@ -75,12 +74,12 @@ export function OverCollateralisedDeposit() {
         <Button as={Link} variant='unstyled' textColor='blue.200' onClick={setMaxMultiplier}>{`${convertDecimalToPercent(MAX_OVER_COLATERALISED)}%`}</Button>
       </Flex>
       <VStack spacing={0} >
-        <Slider value={value} defaultValue={RECOMMENDED_OVER_COLATERALISED} onChange={setValue} min={MIN_OVER_COLATERALISED} max={MAX_OVER_COLATERALISED} step={0.01} onChangeEnd={setTotalCollateralise}>
+        <Slider value={multiplierValue} defaultValue={RECOMMENDED_OVER_COLATERALISED} onChange={setValue} min={MIN_OVER_COLATERALISED} max={MAX_OVER_COLATERALISED} step={0.01} >
           <SliderTrack bg="white">
             <Box position="relative" right={10} />
             <SliderFilledTrack bg="blue.200" />
           </SliderTrack>
-          <Tooltip bg="abyss.200" color="white" placement="top" label={value ? `${convertDecimalToPercent(value)}%` : `${convertDecimalToPercent(RECOMMENDED_OVER_COLATERALISED)}%`} >
+          <Tooltip bg="abyss.200" color="white" placement="top" label={multiplierValue ? `${convertDecimalToPercent(multiplierValue)}%` : `${convertDecimalToPercent(RECOMMENDED_OVER_COLATERALISED)}%`} >
             <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
           </Tooltip>
         </Slider>
@@ -90,7 +89,7 @@ export function OverCollateralisedDeposit() {
             <Text textStyle="body-xs">{minOverCollateralisedAmount} {initialDenom.name}</Text>
           </FormHelperText>
           <Flex gap={2} align='center' justifySelf='center'>
-            {targetAmount && value &&
+            {targetAmount && multiplierValue &&
               <>
                 <Text>
                   ~{totalOverCollateralisedAmount}

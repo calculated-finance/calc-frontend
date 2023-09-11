@@ -11,7 +11,7 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
-import { ControlDeskFormDataStep1, step1ValidationSchemaControlDesk } from 'src/pages/control-desk/Components/ControlDeskForms';
+import { ControlDeskFormDataStep1, allCtrlSchema, initialCtrlValues, step1ValidationSchemaControlDesk } from 'src/pages/control-desk/Components/ControlDeskForms';
 import InputAsset from 'src/pages/control-desk/Components/InputAsset';
 import OutputAsset from 'src/pages/control-desk/Components/OutputAsset';
 import { OverCollateralisedDeposit } from 'src/pages/control-desk/Components/OverCollateralisedDeposit';
@@ -60,6 +60,7 @@ function OnceOffPayment() {
     resultingDenom: state.step1.resultingDenom,
   };
 
+  console.log(state)
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -70,6 +71,7 @@ function OnceOffPayment() {
             stepsConfig={onceOffSteps}
             resetForm={actions.resetAction}
             cancelUrl="/control-desk/create-strategy"
+            data-testid="strategy-modal-header"
           />
           <NewStrategyModalBody stepsConfig={onceOffSteps} isLoading={isPageLoading && !isSubmitting}>
             <Form autoComplete="off">

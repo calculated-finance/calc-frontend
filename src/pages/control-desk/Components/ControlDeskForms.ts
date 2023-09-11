@@ -36,7 +36,7 @@ export const initialCtrlValues = {
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOnceOffOptions.SinglePayment,
   targetAmount: null,
-  collateralisedMultiplier: 1,
+  collateralisedMultiplier: 1.2,
   totalCollateralisedAmount: null,
   endDate: null,
   endTime: '',
