@@ -30,23 +30,23 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
+  // const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
 
-  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
-    mutate(
-      { state },
-      {
-        onSuccess: async (strategyId) => {
-          await nextStep({
-            strategyId,
-          });
-          actions.resetAction();
-        },
-        onSettled: () => {
-          setSubmitting(false);
-        },
-      },
-    );
+  // const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
+  //   mutate(
+  //     { state },
+  //     {
+  //       onSuccess: async (strategyId) => {
+  //         await nextStep({
+  //           strategyId,
+  //         });
+  //         actions.resetAction();
+  //       },
+  //       onSettled: () => {
+  //         setSubmitting(false);
+  //       },
+  //     },
+  //   );
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
@@ -59,7 +59,8 @@ function Page() {
   }
 
   return (
-    <SigningState isSigning={isLoading}>
+    <SigningState isSigning={Boolean(true)}>
+      {/* <SigningState isSigning={isLoading}> */}
       <Stack spacing={4}>
         <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={state.targetAmount} />
         <Divider />
@@ -82,7 +83,7 @@ function Page() {
           transactionType={transactionType}
         // swapAmount={state.swapAmount} need to update this.
         />
-        <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
+        {/* <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} /> */}
       </Stack>
     </SigningState>
   );

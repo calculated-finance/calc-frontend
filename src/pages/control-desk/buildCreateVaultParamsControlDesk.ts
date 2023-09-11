@@ -10,17 +10,22 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { ExecuteMsg } from 'kujira.js/lib/cjs/fin';
 import { Config } from 'kujira.js/lib/cjs/usk';
+import { isNil } from 'lodash';
 
-export type DestinationConfigControlDesk = {
+export type DestinationDetailsControlDesk = {
   recipientAccount: string | undefined;
   senderAddress: string;
+};
+
+export type DestinationConfigControlDesk = {
+  recipientArray: DestinationDetailsControlDesk;
 };
 
 export type BuildCreateVaultControlDeskContext = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   timeInterval: {
-    increment: number;
+    increment: number | null | undefined;
     interval: ExecutionIntervals;
   };
   targetAmount: number;
@@ -30,7 +35,7 @@ export type BuildCreateVaultControlDeskContext = {
   transactionType: TransactionType;
   slippageTolerance: number;
   // swapAdjustment?: SwapAdjustment;
-  destinationConfig: DestinationConfigControlDesk;
+  destinationConfig: DestinationConfigControlDesk[];
 };
 
 export function buildCreateVaultMsg(
@@ -51,21 +56,22 @@ export function buildCreateVaultMsg(
   const msg = {
     create_vault: {
       label: '',
-      time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
+      time_interval:
+        !isNil(timeInterval.increment) && getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
       swap_amount: swapAmount,
       minimum_receive_amount: priceThreshold
         ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType)
         : undefined,
       slippage_tolerance: getSlippageWithoutTrailingZeros(slippageTolerance),
-      destinations: buildCallbackDestinations(
-        chainConfig,
-        destinationConfig.recipientAccount,
-        destinationConfig.senderAddress,
-        undefined,
-        '',
-        undefined,
-      ),
+      // destinations: buildCallbackDestinations(
+      //   chainConfig,
+      //   destinationConfig,
+      //   destinationConfig.senderAddress,
+      //   undefined,
+      //   '',
+      //   undefined,
+      // ),
       target_receive_amount: startPrice
         ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType)
         : undefined,
