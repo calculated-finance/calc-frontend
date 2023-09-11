@@ -1,13 +1,13 @@
 import { Button, Flex, Heading, Icon, Link, Spacer, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { getControlDeskLayout } from "@components/Layout";
+import { getControlDeskSidebarLayout } from "@components/Layout";
 import { Code3Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from "react";
 
 
 const ControlDeskUrls = {
   OnceOffPayment: '/control-desk/create-strategy/once-off-payment/assets',
-  PayrollAutomation: 'https://www.youtube.com/',
-  TreasuryExchange: 'https://www.youtube.com/',
+  PayrollAutomation: 'https://app.calculated.fi/',
+  TreasuryExchange: 'https://app.calculated.fi/',
 }
 
 type ControlDeskStrategyProps = {
@@ -108,6 +108,6 @@ export function ControlDesk() {
 }
 
 
-ControlDesk.getLayout = getControlDeskLayout;
+ControlDesk.getLayout = getControlDeskSidebarLayout;
 
 export default ControlDesk;

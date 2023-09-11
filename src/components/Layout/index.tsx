@@ -220,6 +220,7 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
 export function getSidebarLayout(page: ReactElement) {
   return <SidebarLayout linkItems={LinkItems}>{page}</SidebarLayout>;
 }
-export function getControlDeskLayout(page: ReactElement) {
-  return <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>;
+
+export function getControlDeskSidebarLayout(page: ReactElement) {
+  return featureFlags.controlDeskEnabled && <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>
 }
