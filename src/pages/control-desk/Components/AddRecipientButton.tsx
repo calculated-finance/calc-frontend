@@ -21,6 +21,7 @@ export function RecipientAccountControlDesk() {
   const [{ value: totalRecipientsValue }, , { setValue: totalRecipientsSetValue }] = useField({ name: 'totalRecipients' });
   const [field, meta] = useField({ name: 'recipientsArray' });
   const [additionalRecipientField] = useField({ name: 'recipientSchema' });
+  // const [additionalRecipientField] = useFieldArray({ name: 'recipientSchema' });      ?????
 
   const { chain } = useChain();
 
@@ -42,8 +43,9 @@ export function RecipientAccountControlDesk() {
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
-      <InputGroup mb={2} >
+      <InputGroup mb={2} gap={2} >
         <Input fontSize="sm" placeholder="Input Wallet" w='full' {...field} />
+        <Input fontSize="sm" placeholder="%" textAlign='right' w='40%' />
       </InputGroup>
       {[...Array(inputCount)].map((_, index) =>
         // Need to find a way to input different '...field's for Yup.
@@ -61,7 +63,9 @@ export function RecipientAccountControlDesk() {
             >
               <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
             </Button>
-            <Input fontSize="sm" placeholder="Input Wallet" w='full' {...additionalRecipientField} />
+            <Input fontSize="sm" placeholder="Input Wallet" w='full' />
+            <Input fontSize="sm" placeholder="%" textAlign='right' w='45%' />
+
           </HStack>
         </InputGroup>
       )}
