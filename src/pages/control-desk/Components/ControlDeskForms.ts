@@ -47,46 +47,6 @@ export const initialCtrlValues = {
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 
-export const recipientSchema = Yup.object().shape({
-  recipientAccount: Yup.string()
-    .label('Recipient Account')
-    .nullable()
-    .when('sendToWallet', {
-      is: YesNoValues.No,
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.transform(() => ''),
-    })
-    .test({
-      name: 'correct-length',
-      message: ({ label }) => `${label} is not a valid address`,
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return value?.length === getChainAddressLength(chain);
-      },
-    })
-
-    .test({
-      name: 'starts-with-chain-prefix',
-      message: ({ label }) => `${label} has an invalid prefix`,
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return value?.startsWith(getChainAddressPrefix(chain));
-      },
-    }),
-});
-
 export const allCtrlSchema = {
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
@@ -322,7 +282,43 @@ export const allCtrlSchema = {
   collateralisedMultiplier: Yup.number().required(),
   totalCollateralisedAmount: Yup.number().nullable().required(),
   totalRecipients: Yup.number(),
-  recipientsArray: Yup.array().of(recipientSchema),
+  recipientAccount: Yup.string()
+    .label('Recipient Account')
+    .nullable()
+    .when('sendToWallet', {
+      is: YesNoValues.No,
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.transform(() => ''),
+    })
+    .test({
+      name: 'correct-length',
+      message: ({ label }) => `${label} is not a valid address`,
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
+        return value?.length === getChainAddressLength(chain);
+      },
+    })
+
+    .test({
+      name: 'starts-with-chain-prefix',
+      message: ({ label }) => `${label} has an invalid prefix`,
+      test(value, context) {
+        if (!value) {
+          return true;
+        }
+        const { chain } = context.options.context || {};
+        if (!chain) {
+          return true;
+        }
+        return value?.startsWith(getChainAddressPrefix(chain));
+      },
+    }),
 };
 
 export const ctrlSchema = Yup.object({
