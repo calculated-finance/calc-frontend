@@ -59,7 +59,7 @@ function Page() {
   }
 
   return (
-    <SigningState isSigning={Boolean(true)}>
+    <SigningState isSigning={Boolean(false)}>
       {/* <SigningState isSigning={isLoading}> */}
       <Stack spacing={4}>
         <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={state.targetAmount} />

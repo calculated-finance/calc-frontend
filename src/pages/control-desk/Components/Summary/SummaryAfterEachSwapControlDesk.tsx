@@ -7,7 +7,7 @@ import { CtrlFormDataAll } from '../ControlDeskForms';
 export function SummaryAfterEachSwapControlDesk({ state }: { state: CtrlFormDataAll }) {
   const {
     resultingDenom,
-    recipientAccount,
+    recipientArray,
   } = state;
 
   const resultingDenomInfo = getDenomInfo(resultingDenom);
@@ -16,7 +16,7 @@ export function SummaryAfterEachSwapControlDesk({ state }: { state: CtrlFormData
     <Box>
       <Text textStyle="body-xs">After each swap</Text>
       <Text lineHeight={8}>
-        {!recipientAccount && (
+        {!recipientArray && (
           <>
             After each swap, CALC will send{' '}
             <BadgeButton url="assets">
@@ -30,11 +30,12 @@ export function SummaryAfterEachSwapControlDesk({ state }: { state: CtrlFormData
           </>
         )}
 
-        {recipientAccount && (
+        {recipientArray && (
           <>
             After each swap, CALC will send the funds to{' '}
             <BadgeButton url="post-purchase">
-              <Text>{recipientAccount}</Text>
+              {/* json.stringify to get a raw dump */}
+              <Text>RecipientArray</Text>
             </BadgeButton>
           </>
         )}

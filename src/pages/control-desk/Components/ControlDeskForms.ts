@@ -32,7 +32,7 @@ export const initialCtrlValues = {
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: null,
   sendToWallet: YesNoValues.No,
-  recipientArray: undefined,
+  recipientArray: [{ recipientAccount: '', amount: 0 }],
   strategyDuration: 60,
   postPurchaseOption: PostPurchaseOnceOffOptions.SinglePayment,
   targetAmount: null,

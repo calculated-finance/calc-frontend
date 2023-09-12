@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   FormErrorMessage,
@@ -13,52 +14,15 @@ import {
 } from "@chakra-ui/react";
 import { useChain } from "@hooks/useChain";
 import { Chains } from "@hooks/useChain/Chains";
-import { useField } from "formik";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Field, FieldArray, useField } from "formik";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 
-
-export type RecipientArrayFormValues = {
-  recipientArray: {
-    recipientAddress: string,
-    amount: number
-  }[]
-}
-
-
 export function RecipientAccountControlDesk() {
+  const [field, meta, helpers] = useField({ name: 'recipientArray' })
 
-  const { register, formState: { errors }, control } = useForm<RecipientArrayFormValues>({
-    defaultValues: {
-      recipientArray:
-        [{
-          recipientAddress: '', amount: 0
-        }]
-    }
-  });
+  const { chain } = useChain()
 
-  const [recipientArrayField, recipientArrayMeta, recipientArrayHelpers] = useField({ name: 'recipientArray' });
-
-  const { fields, remove, append } = useFieldArray({
-    name: 'recipientArray',
-    control,
-  })
-
-
-
-  const { chain } = useChain();
-
-  const handleAppend = () => {
-    append({
-      recipientAddress: '',
-      amount: 0
-    });
-  }
-
-  console.log(recipientArrayField, 'need')
-  console.log(fields)
-
-
+  console.log(field)
 
   return (
     // <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -69,51 +33,61 @@ export function RecipientAccountControlDesk() {
         <FormHelperText textAlign='left'>Recipient:</FormHelperText>
         <FormHelperText textAlign='right' >Amount:</FormHelperText>
       </SimpleGrid>
-      {fields.map((arrayField, index) =>
-        <InputGroup mb={2} key={arrayField.id}>
-          <HStack spacing={2} w='full'>
-            {index === 0 ? undefined :
-              <Button
 
+      <FieldArray
+        name="recipientArray"
+        render={arrayHelpers => (
+          <Box>
+
+            {/* How does validation work on a 'per field' level. */}
+            {field?.value?.map((friend, index) =>
+              // It is better to pass in blank values into default value and the new rows. 
+
+              <InputGroup mb={2} key={index}>
+                <HStack spacing={2} w='full'>
+                  {index === 0 ? undefined :
+                    <Button
+                      size="xs"
+                      variant='ghost'
+                      width={4}
+                      bgColor='abyss.100'
+                      h={5}
+                      borderRadius={6}
+                      onClick={() => arrayHelpers.remove(index)}
+                      alignSelf='center'
+                    >
+                      <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
+                    </Button>
+                  }
+                  <Input as={Field} fontSize="sm" placeholder="Address" w='full' name={`recipientArray.${index}.recipientAccount`} />
+                  <Input as={Field} fontSize="sm" textAlign='right' maxW={28} type='number' defaultValue={0} name={`recipientArray.${index}.amount`} />
+                </HStack>
+              </InputGroup>
+            )}
+            <FormErrorMessage>{meta.error}</FormErrorMessage>
+            <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
+
+            <HStack pb={2}>
+              <Button
                 size="xs"
                 variant='ghost'
-                width={4}
+                leftIcon={<Icon as={FiPlusCircle} stroke="brand.200" width={3} height={3} />}
+                width={28}
                 bgColor='abyss.100'
+                fontSize='2xs'
                 h={5}
                 borderRadius={6}
-                onClick={() => remove(index)}
-                alignSelf='center'
+                onClick={() => arrayHelpers.push({})}
               >
-                <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
+                Add recipient
               </Button>
-            }
+              <Spacer />
+            </HStack>
+          </Box>)}
 
-            <Input fontSize="sm" placeholder="Address" w='full' {...register(`recipientArray.${index}.recipientAddress`)} />
-            <Input fontSize="sm" textAlign='right' maxW={28} type='number'  {...register(`recipientArray.${index}.amount`, { valueAsNumber: true })} />
-          </HStack>
-        </InputGroup>
-      )}
+      />
 
-      <FormErrorMessage>{errors.recipientArray?.root?.message}</FormErrorMessage>
-      {/* <FormErrorMessage>{meta.error}</FormErrorMessage> */}
-      <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
 
-      <HStack pb={2}>
-        <Button
-          size="xs"
-          variant='ghost'
-          leftIcon={<Icon as={FiPlusCircle} stroke="brand.200" width={3} height={3} />}
-          width={28}
-          bgColor='abyss.100'
-          fontSize='2xs'
-          h={5}
-          borderRadius={6}
-          onClick={handleAppend}
-        >
-          Add recipient
-        </Button>
-        <Spacer />
-      </HStack>
     </FormControl>
   );
 }
