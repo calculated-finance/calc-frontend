@@ -14,7 +14,6 @@ import {
 import { useChain } from "@hooks/useChain";
 import { Chains } from "@hooks/useChain/Chains";
 import { useField } from "formik";
-import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 
@@ -39,11 +38,13 @@ export function RecipientAccountControlDesk() {
   );
   const { fields, remove, append } = useFieldArray({
     name: 'recipientArray',
-    control
+    control,
+    // rules:{
+    //   validate: 
+    // }
+
   })
   const { chain } = useChain();
-
-  const [inputCount, setInputCount] = useState(0);
 
   const handleAppend = () => {
     append({
@@ -90,6 +91,7 @@ export function RecipientAccountControlDesk() {
 
           </HStack>
         </InputGroup>
+
       )}
 
       <FormErrorMessage>{meta.error}</FormErrorMessage>
