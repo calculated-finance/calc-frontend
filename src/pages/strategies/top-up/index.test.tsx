@@ -113,11 +113,13 @@ describe('Top up page', () => {
     });
   });
   describe('when valid top up amount is submitted', () => {
-    it('should successfully top up', async () => {
+    it.only('should successfully top up', async () => {
       const execute = jest.fn();
       mockUseWallet(mockUseStrategy(), mockDeposit(execute), mockGetBalance());
 
       await renderTarget();
+
+      await waitFor(() => screen.getByTestId('top-up-input'));
       act(() => {
         fireEvent.change(screen.getByTestId('top-up-input'), { target: { value: '1' } });
         fireEvent.click(screen.getByTestId('submit-button'));

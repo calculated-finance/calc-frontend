@@ -9,6 +9,8 @@ export function useCalcClient(chain: Chains) {
   const evmProvider = useMetamask((state) => state.provider);
   const { getCosmWasmClient } = useCosmWasmClient();
 
+  if (getCosmWasmClient) console.log('hey its getCosmWasmClient', getCosmWasmClient());
+
   const [cosmClient, setCosmClient] = useState<CosmWasmClient | null>(null);
 
   useEffect(() => {

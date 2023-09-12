@@ -12,6 +12,8 @@ export default function useStrategy(id: Strategy['id'] | null | undefined) {
   const { chain } = useChain();
   const client = useCalcClient(chain);
 
+  console.log('hey its calc client', client);
+
   return useQuery<Strategy>(
     [STRATEGY_KEY, id, client, address],
     async () => {
