@@ -342,7 +342,7 @@ export const ctrlSchema = Yup.object({
   executionInterval: allCtrlSchema.executionInterval,
   executionIntervalIncrement: allCtrlSchema.executionIntervalIncrement,
   totalRecipients: allCtrlSchema.totalRecipients,
-  recipientsArray: allCtrlSchema.recipientsArray,
+  recipientAccount: allCtrlSchema.recipientAccount,
 });
 export type CtrlFormDataAll = Yup.InferType<typeof ctrlSchema>;
 
@@ -375,7 +375,7 @@ export type ControlDeskFormDataStep2 = Yup.InferType<typeof step2ValidationSchem
 export const postPurchaseValidationSchemaControlDesk = ctrlSchema.pick([
   'postPurchaseOption',
   'sendToWallet',
-  'recipientsArray',
+  'recipientAccount',
 ]);
 
 export type ControlDeskFormDataPostPurchase = Yup.InferType<typeof postPurchaseValidationSchemaControlDesk>;
