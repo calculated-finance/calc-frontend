@@ -25,7 +25,7 @@ export const useKujira = create<IUseKujira>()(
           }),
         )
           .then((client) => {
-            const queryClient = kujiraQueryClient({ client });
+            const queryClient = kujiraQueryClient({ client: client as any });
             set({ query: queryClient });
           })
           .catch((err) => console.error(err));

@@ -221,9 +221,13 @@ export function getRedBankAddress() {
 }
 
 export function getMarsParamsAddress() {
+<<<<<<< HEAD
   return isMainnet()
     ? 'osmo1nlmdxt9ctql2jr47qd4fpgzg84cjswxyw6q99u4y4u4q6c2f5ksq7ysent'
     : 'osmo1h334tvddn82m4apm08rm9k6kt32ws7vy0c4n30ngrvu6h6yxh8eq9l9jfh';
+=======
+  return isMainnet() ? '' : 'osmo1h334tvddn82m4apm08rm9k6kt32ws7vy0c4n30ngrvu6h6yxh8eq9l9jfh';
+>>>>>>> 0569bd4e (pull deposit_enabled from the new Mars params contrac)
 }
 
 export function getMarsUrl() {
