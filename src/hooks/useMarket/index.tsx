@@ -1,5 +1,5 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { getMarsAddress } from '@helpers/chains';
+import { getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 
@@ -44,11 +44,16 @@ export function useMarket(resultingDenom: DenomInfo | undefined) {
       }
 
       try {
-        const result = await client.queryContractSmart(getMarsAddress(), {
-          market: { denom: resultingDenom.id },
-        });
+        const [marketResult, paramsResult] = await Promise.all([
+          client.queryContractSmart(getRedBankAddress(), {
+            market: { denom: resultingDenom.id },
+          }),
+          client.queryContractSmart(getMarsParamsAddress(), {
+            asset_params: { denom: resultingDenom.id },
+          }),
+        ]);
 
-        return result;
+        return { ...marketResult, ...paramsResult.red_bank };
       } catch (error) {
         return {};
       }

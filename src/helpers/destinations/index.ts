@@ -1,4 +1,4 @@
-import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
 import { Chains } from '@hooks/useChain/Chains';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -35,7 +35,7 @@ export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
   const { destinations } = strategy.rawData;
   const [destination] = destinations;
 
-  if (destination.address === getMarsAddress()) {
+  if (destination.address === getRedBankAddress()) {
     return PostPurchaseOptions.GenerateYield;
   }
 

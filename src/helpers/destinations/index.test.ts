@@ -1,5 +1,5 @@
 import { Chains } from '@hooks/useChain/Chains';
-import { getChainContractAddress, getMarsAddress } from '@helpers/chains';
+import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { dcaInStrategyViewModal as mockStrategy } from 'src/fixtures/strategy';
 import { Strategy } from '@models/Strategy';
@@ -18,7 +18,7 @@ describe('destination helpers', () => {
           ...mockStrategy.rawData,
           destinations: [
             {
-              address: getMarsAddress(),
+              address: getRedBankAddress(),
               allocation: '1.0',
               msg: null,
             },

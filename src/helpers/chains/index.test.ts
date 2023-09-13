@@ -1,7 +1,7 @@
 import * as isMainnet from '@utils/isMainnet';
 import { Chains } from '@hooks/useChain/Chains';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { getChainContractAddress, getMarsAddress } from '.';
+import { getChainContractAddress, getRedBankAddress } from '.';
 
 jest.mock('@utils/isMainnet');
 
@@ -34,13 +34,13 @@ describe('getMarsAddress', () => {
   it('returns the correct address for mainnet', () => {
     jest.spyOn(isMainnet, 'isMainnet').mockReturnValue(true);
 
-    const address = getMarsAddress();
+    const address = getRedBankAddress();
     expect(address).toEqual('osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg');
   });
 
   it('returns the correct address for non-mainnet', () => {
     jest.spyOn(isMainnet, 'isMainnet').mockReturnValue(false);
-    const address = getMarsAddress();
+    const address = getRedBankAddress();
     expect(address).toEqual('osmo1dl4rylasnd7mtfzlkdqn2gr0ss4gvyykpvr6d7t5ylzf6z535n9s5jjt8u');
   });
 });

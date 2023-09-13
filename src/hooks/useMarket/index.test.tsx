@@ -5,7 +5,7 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { defaultDenom } from '@utils/defaultDenom';
 import { getTestQueryClient } from '@helpers/test/testQueryClient';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { getMarsAddress } from '@helpers/chains';
+import { getRedBankAddress } from '@helpers/chains';
 import { useMarket } from '.'; // Adjust the import path to where your useMarket hook is
 
 jest.mock('@helpers/chains', () => ({
@@ -33,7 +33,7 @@ describe('useMarket hook', () => {
 
     expect(result.current.data).toEqual('market');
 
-    expect(mockClient.queryContractSmart).toHaveBeenCalledWith(getMarsAddress(), {
+    expect(mockClient.queryContractSmart).toHaveBeenCalledWith(getRedBankAddress(), {
       market: { denom: 'mockDenomId' },
     });
   });
@@ -57,7 +57,7 @@ describe('useMarket hook', () => {
 
     expect(result.current.data).toEqual({});
 
-    expect(mockClient.queryContractSmart).toHaveBeenCalledWith(getMarsAddress(), {
+    expect(mockClient.queryContractSmart).toHaveBeenCalledWith(getRedBankAddress(), {
       market: { denom: 'mockDenomId' },
     });
   });

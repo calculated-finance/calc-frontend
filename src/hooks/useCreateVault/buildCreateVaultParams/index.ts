@@ -12,7 +12,7 @@ import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DenomInfo } from '@utils/DenomInfo';
-import { ChainConfig, getMarsAddress } from '@helpers/chains';
+import { ChainConfig, getRedBankAddress } from '@helpers/chains';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 
 export function getSlippageWithoutTrailingZeros(slippage: number) {
@@ -71,7 +71,7 @@ export function buildCallbackDestinations(
         },
       };
       destinations.push({
-        address: getMarsAddress(),
+        address: getRedBankAddress(),
         allocation: '1.0',
         msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
       });
