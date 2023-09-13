@@ -11,22 +11,45 @@ import {
   InputGroup,
   SimpleGrid,
   Spacer,
+  VStack,
 } from "@chakra-ui/react";
 import { useChain } from "@hooks/useChain";
 import { Chains } from "@hooks/useChain/Chains";
-import { Field, FieldArray, useField } from "formik";
+import { ErrorMessage, Field, FieldArray, useField } from "formik";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 
+
+const validateRecipientAccount = (value) => {
+  if (!value) {
+    return 'Recipient account is required';
+  }
+  // Add more validation logic as needed
+  return undefined; // Return undefined for valid input
+};
+
+const validateAmount = (value) => {
+  if (!value) {
+    return 'Amount is required';
+  }
+  // Add more validation logic as needed
+  return undefined; // Return undefined for valid input
+};
+
+
 export function RecipientAccountControlDesk() {
-  const [field, meta, helpers] = useField({ name: 'recipientArray' })
+  const [field, meta,] = useField({ name: 'recipientArray' })
 
   const { chain } = useChain()
 
-  console.log(field)
+
+
+  console.log(meta)
+
+
 
   return (
-    // <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-    <FormControl isInvalid={Boolean(false)}>
+    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+      {/* <FormControl isInvalid={Boolean(false)}> */}
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
       <SimpleGrid columns={2}>
@@ -41,30 +64,54 @@ export function RecipientAccountControlDesk() {
 
             {/* How does validation work on a 'per field' level. */}
             {field?.value?.map((friend, index) =>
-              // It is better to pass in blank values into default value and the new rows. 
 
-              <InputGroup mb={2} key={index}>
-                <HStack spacing={2} w='full'>
-                  {index === 0 ? undefined :
-                    <Button
-                      size="xs"
-                      variant='ghost'
-                      width={4}
-                      bgColor='abyss.100'
-                      h={5}
-                      borderRadius={6}
-                      onClick={() => arrayHelpers.remove(index)}
-                      alignSelf='center'
-                    >
-                      <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
-                    </Button>
-                  }
-                  <Input as={Field} fontSize="sm" placeholder="Address" w='full' name={`recipientArray.${index}.recipientAccount`} />
-                  <Input as={Field} fontSize="sm" textAlign='right' maxW={28} type='number' defaultValue={0} name={`recipientArray.${index}.amount`} />
-                </HStack>
-              </InputGroup>
-            )}
-            <FormErrorMessage>{meta.error}</FormErrorMessage>
+
+              <VStack spacing={0} key={index}>
+
+                <InputGroup mb={2} key={index}>
+                  <HStack spacing={2} w='full'>
+                    {index === 0 ? undefined :
+                      <Button
+                        size="xs"
+                        variant='ghost'
+                        width={4}
+                        bgColor='abyss.100'
+                        h={5}
+                        borderRadius={6}
+                        onClick={() => arrayHelpers.remove(index)}
+                        alignSelf='center'
+                      >
+                        <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
+                      </Button>
+                    }
+                    <Input as={Field} fontSize="sm" placeholder="Address" w='full' name={`recipientArray.${index}.recipientAccount`} validate={validateRecipientAccount} />
+
+                    <Input as={Field} fontSize="sm" textAlign='right' placeholder="0" maxW={28} name={`recipientArray.${index}.amount`} validate={validateAmount} />
+                  </HStack>
+                </InputGroup>
+
+                <SimpleGrid columns={2} pb={2}>
+                  <FormErrorMessage textAlign='left'>
+                    <ErrorMessage
+                      name={`recipientArray.${index}.recipientAccount`}
+                      className="recipientAccount-field-error"
+                      component='div'
+                    />
+                  </FormErrorMessage>
+                  <Spacer />
+                  <FormErrorMessage textAlign='right'>
+                    <ErrorMessage
+                      name={`recipientArray.${index}.amount`}
+                      className="amount-field-error"
+                      component='div'
+                    />
+
+                  </FormErrorMessage>
+                </SimpleGrid>
+              </VStack>
+            )
+
+            }
             <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
 
             <HStack pb={2}>

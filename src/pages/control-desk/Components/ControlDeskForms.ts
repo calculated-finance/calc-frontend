@@ -284,43 +284,48 @@ export const allCtrlSchema = {
 
   recipientArray: Yup.array().of(
     Yup.object().shape({
-      recipientAccount: Yup.string(),
-      // .label('Recipient Account')
-      // .nullable()
-      // .when('sendToWallet', {
-      //   is: YesNoValues.No,
-      //   then: (schema) => schema.required(),
-      //   otherwise: (schema) => schema.transform(() => ''),
-      // })
-      // .test({
-      //   name: 'correct-length',
-      //   message: ({ label }) => `${label} is not a valid address`,
-      //   test(value, context) {
-      //     if (!value) {
-      //       return true;
-      //     }
-      //     const { chain } = context.options.context || {};
-      //     if (!chain) {
-      //       return true;
-      //     }
-      //     return value?.length === getChainAddressLength(chain);
-      //   },
-      // })
-      // .test({
-      //   name: 'starts-with-chain-prefix',
-      //   message: ({ label }) => `${label} has an invalid prefix`,
-      //   test(value, context) {
-      //     if (!value) {
-      //       return true;
-      //     }
-      //     const { chain } = context.options.context || {};
-      //     if (!chain) {
-      //       return true;
-      //     }
-      //     return value?.startsWith(getChainAddressPrefix(chain));
-      //   },
-      // }),
-      amount: Yup.number().label('Amount').positive('Amount must be positive').required(),
+      amount: Yup.number()
+        .label('Amount')
+        .when('sendToWallet', {
+          is: YesNoValues.No,
+          then: (schema) => schema.required('Please add amount').positive('Amount must be positive'),
+          otherwise: (schema) => schema.transform(() => 0),
+        }),
+      recipientAccount: Yup.string()
+        .label('Recipient Account')
+        .when('sendToWallet', {
+          is: YesNoValues.No,
+          then: (schema) => schema.required('Please add recipients'),
+          otherwise: (schema) => schema.transform(() => ''),
+        })
+        .test({
+          name: 'correct-length',
+          message: ({ label }) => `${label} is not a valid address`,
+          test(value, context) {
+            if (!value) {
+              return true;
+            }
+            const { chain } = context.options.context || {};
+            if (!chain) {
+              return true;
+            }
+            return value?.length === getChainAddressLength(chain);
+          },
+        })
+        .test({
+          name: 'starts-with-chain-prefix',
+          message: ({ label }) => `${label} has an invalid prefix`,
+          test(value, context) {
+            if (!value) {
+              return true;
+            }
+            const { chain } = context.options.context || {};
+            if (!chain) {
+              return true;
+            }
+            return value?.startsWith(getChainAddressPrefix(chain));
+          },
+        }),
     }),
   ),
 };
