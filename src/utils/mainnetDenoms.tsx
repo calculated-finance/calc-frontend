@@ -266,4 +266,18 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
     stable: false,
     pricePrecision: 3,
   },
+  [MainnetDenoms.ARCH]: {
+    name: 'ARCH',
+    icon: '/images/denoms/archway.svg',
+    stakeable: false,
+    coingeckoId: 'archway',
+    conversion: (value: number) => value / 10 ** 18,
+    deconversion: (value: number) => Math.round(value * 10 ** 18),
+    significantFigures: 18,
+    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
+    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
+    enabledInDcaPlus: false,
+    stable: false,
+    pricePrecision: 4,
+  },
 };
