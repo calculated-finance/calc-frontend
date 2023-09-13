@@ -25,7 +25,7 @@ export default function usePrice(
   const { data: price, ...helpers } = useQuery<number>(
     ['price', pair, client],
     async () => {
-      const result = await client!.queryContractSmart(config!.exchange_contract_address, {
+      const twapToNow = await client!.queryContractSmart(config!.exchange_contract_address, {
         get_twap_to_now: {
           swap_denom: initialDenom!.id,
           target_denom: resultingDenom!.id,
@@ -36,9 +36,10 @@ export default function usePrice(
       const resultingInfo = getDenomInfo(resultingDenom!.id);
       const initialInfo = getDenomInfo(initialDenom!.id);
 
-      const price = Number(result) * 10 ** (resultingInfo.significantFigures - initialInfo.significantFigures);
+      const adjustedPrice =
+        Number(twapToNow) * 10 ** (resultingInfo.significantFigures - initialInfo.significantFigures);
 
-      return transactionType === TransactionType.Sell ? safeInvert(price) : price;
+      return transactionType === TransactionType.Sell ? safeInvert(Number(adjustedPrice)) : adjustedPrice;
     },
     {
       enabled: !!client && !!pair && !!config && enabled,
