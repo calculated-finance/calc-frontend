@@ -108,9 +108,7 @@ jobs:
           folder: out
           bucket: ${{ inputs.BUCKET_DOMAIN_NAME }}
           bucket-region: ${{ secrets.AWS_REGION }}
-          # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-          # invalidation: /
           delete-removed: true
-          no-cache: true
+          cache: 'max-age=31536000'
           private: false
           filesToInclude: '.*/*,*/*,**'
