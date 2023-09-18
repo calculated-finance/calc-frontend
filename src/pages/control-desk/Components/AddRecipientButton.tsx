@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { Field, FieldArray, useFormikContext } from 'formik';
+import { Field, FieldArray, useField, useFormikContext } from 'formik';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { CtrlFormDataAll } from './ControlDeskForms';
 
@@ -22,9 +22,8 @@ export function RecipientAccountControlDesk() {
   const { values } = useFormikContext<CtrlFormDataAll>();
 
   // add this to its own component and dynamically create fields with taccess to useField.
-  // const [field, meta, helpers] = useField({ name: 'recipientArray' })
-
-  console.log('hi'); // testing
+  const [field, meta, helpers] = useField({ name: 'recipientArray[1]' });
+  console.log(field, 333);
 
   const { chain } = useChain();
 
@@ -37,11 +36,11 @@ export function RecipientAccountControlDesk() {
         <FormHelperText textAlign="left">Recipient:</FormHelperText>
         <FormHelperText textAlign="right">Amount:</FormHelperText>
       </SimpleGrid>
+
       <FieldArray
         name="recipientArray"
         render={(arrayHelpers) => (
           <Box>
-            {/* How does validation work on a 'per field' level. */}
             {values.recipientArray?.map((friend, index) => (
               <VStack>
                 {/* <InputGroup key={index} py={1}> */}
@@ -61,7 +60,6 @@ export function RecipientAccountControlDesk() {
                         <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
                       </Button>
                     )}
-                    {/* <FormControl isInvalid={touchedRecip && Boolean(!`errors.recipientArray`)}> */}
                     <Input
                       as={Field}
                       fontSize="sm"
@@ -71,8 +69,6 @@ export function RecipientAccountControlDesk() {
                       component="input"
                       label="Recipient Account"
                     />
-                    {/* </FormControl> */}
-                    {/* <FormControl isInvalid={touchedRecip && Boolean(!`errors.recipientArray`)}> */}
 
                     <Input
                       as={Field}
@@ -84,7 +80,6 @@ export function RecipientAccountControlDesk() {
                       label="Amount"
                       type="number"
                     />
-                    {/* </FormControl> */}
                   </HStack>
                 </InputGroup>
               </VStack>

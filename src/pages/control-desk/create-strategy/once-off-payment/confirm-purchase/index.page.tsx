@@ -30,6 +30,8 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
+  console.log(state);
+
   // const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
 
   // const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
@@ -81,7 +83,7 @@ function Page() {
           autoStakeValidator={undefined}
           swapAmount={23}
           transactionType={transactionType}
-        // swapAmount={state.swapAmount} need to update this.
+          // swapAmount={state.swapAmount} need to update this.
         />
         {/* <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} /> */}
       </Stack>
