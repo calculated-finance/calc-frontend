@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -10,25 +11,21 @@ import {
   InputGroup,
   SimpleGrid,
   Spacer,
-  VStack,
 } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { Field, FieldArray, useField, useFormikContext } from 'formik';
+import { Field, FieldArray, useFormikContext } from 'formik';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { CtrlFormDataAll } from './ControlDeskForms';
 
 export function RecipientAccountControlDesk() {
-  const { values } = useFormikContext<CtrlFormDataAll>();
+  const { values, isSubmitting, isValid, submitCount, dirty } = useFormikContext<CtrlFormDataAll>();
 
-  // add this to its own component and dynamically create fields with taccess to useField.
-  const [field, meta, helpers] = useField({ name: 'recipientArray[1]' });
+  console.log(isValid);
 
   const { chain } = useChain();
-
   return (
-    // <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-    <FormControl isInvalid={Boolean(false)}>
+    <>
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
       <SimpleGrid columns={2}>
@@ -41,47 +38,65 @@ export function RecipientAccountControlDesk() {
         render={(arrayHelpers) => (
           <Box>
             {values.recipientArray?.map((friend, index) => (
-              <VStack>
-                {/* <InputGroup key={index} py={1}> */}
-                <InputGroup py={1}>
-                  <HStack spacing={2} w="full">
-                    {index === 0 ? undefined : (
-                      <Button
-                        size="xs"
-                        variant="ghost"
-                        width={4}
-                        bgColor="abyss.100"
-                        h={5}
-                        borderRadius={6}
-                        onClick={() => arrayHelpers.remove(index)}
-                        alignSelf="center"
-                      >
-                        <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
-                      </Button>
-                    )}
-                    <Input
-                      as={Field}
-                      fontSize="sm"
-                      placeholder="Address"
-                      w="full"
-                      name={`recipientArray.${index}.recipientAccount`}
-                      component="input"
-                      label="Recipient Account"
-                    />
+              <Field name={`recipient-address-field-${index}`}>
+                {(props: any) => {
+                  const {
+                    form,
+                    form: { touchedForm, errorsForm },
+                    meta,
+                  } = props;
 
-                    <Input
-                      as={Field}
-                      fontSize="sm"
-                      textAlign="right"
-                      placeholder="0"
-                      maxW={28}
-                      name={`recipientArray.${index}.amount`}
-                      label="Amount"
-                      type="number"
-                    />
-                  </HStack>
-                </InputGroup>
-              </VStack>
+                  return (
+                    <FormControl isInvalid={Boolean(!isValid)}>
+                      <Flex>
+                        <InputGroup py={1}>
+                          <HStack spacing={2} w="full">
+                            {index === 0 ? undefined : (
+                              <Button
+                                size="xs"
+                                variant="ghost"
+                                width={4}
+                                bgColor="abyss.100"
+                                h={5}
+                                borderRadius={6}
+                                onClick={() => arrayHelpers.remove(index)}
+                                alignSelf="center"
+                              >
+                                <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
+                              </Button>
+                            )}
+                            <Input
+                              as={Field}
+                              fontSize="sm"
+                              placeholder="Address"
+                              w="full"
+                              name={`recipientArray.${index}.recipientAccount`}
+                              type="string"
+                              label="Recipient Address"
+                            />
+
+                            <Input
+                              as={Field}
+                              fontSize="sm"
+                              textAlign="right"
+                              placeholder="0"
+                              maxW={28}
+                              name={`recipientArray.${index}.amount`}
+                              type="number"
+                            />
+                          </HStack>
+                        </InputGroup>
+
+                        {/* <FormErrorMessage className="error">
+                          {values.recipientArray[index].recipientAccount === ''
+                            ? 'Please enter a valid address'
+                            : 'Please'}
+                        </FormErrorMessage> */}
+                      </Flex>
+                    </FormControl>
+                  );
+                }}
+              </Field>
             ))}
             <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
 
@@ -104,6 +119,6 @@ export function RecipientAccountControlDesk() {
           </Box>
         )}
       />
-    </FormControl>
+    </>
   );
 }

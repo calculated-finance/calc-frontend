@@ -5,10 +5,7 @@ import BadgeButton from '@components/BadgeButton';
 import { CtrlFormDataAll } from '../ControlDeskForms';
 
 export function SummaryAfterEachSwapControlDesk({ state }: { state: CtrlFormDataAll }) {
-  const {
-    resultingDenom,
-    recipientArray,
-  } = state;
+  const { resultingDenom, recipientArray } = state;
 
   const resultingDenomInfo = getDenomInfo(resultingDenom);
 
@@ -35,7 +32,7 @@ export function SummaryAfterEachSwapControlDesk({ state }: { state: CtrlFormData
             After each swap, CALC will send the funds to{' '}
             <BadgeButton url="post-purchase">
               {/* json.stringify to get a raw dump */}
-              <Text>RecipientArray</Text>
+              <Text>testwallet1234567890</Text>
             </BadgeButton>
           </>
         )}
