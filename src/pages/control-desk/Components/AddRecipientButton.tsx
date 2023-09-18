@@ -40,6 +40,7 @@ export function RecipientAccountControlDesk() {
   const { chain } = useChain();
 
   console.log(meta);
+  console.log('hi');
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
