@@ -1,42 +1,44 @@
 import { Stack } from '@chakra-ui/react';
 import { Form, Formik, useFormikContext } from 'formik';
 import Submit from '@components/Submit';
-import ExecutionInterval from '@components/ExecutionInterval';
-import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import PriceThreshold from '@components/PriceThreshold';
-import { DcaInFormDataStep1, DcaInFormDataStep2, step2ValidationSchema } from '@models/DcaInFormData';
 import SlippageTolerance from '@components/SlippageTolerance';
-import SwapAmount from '@components/SwapAmount';
-import { TriggerForm } from '@components/TriggerForm';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { InvalidData } from '@components/InvalidData';
-import { useStep2Form } from '@hooks/useDcaInForm';
 import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { ControlDeskFormDataStep1, ControlDeskFormDataStep2, step2ValidationSchemaControlDesk } from 'src/pages/control-desk/Components/ControlDeskForms';
+import { useControlDeskStrategyInfo } from 'src/pages/control-desk/useControlDeskStrategyInfo';
+import { useStep2FormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
+import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
+import { TriggerFormOnceOff } from 'src/pages/control-desk/Components/TriggerFormOnceOff';
+import CalcCalculateSwaps from 'src/pages/control-desk/Components/CalcCalculateSwaps';
+import PriceThreshold from '@components/PriceThreshold';
 import { TransactionType } from '@components/TransactionType';
 
-export function CustomiseFormDca({
+export function CustomiseFormOnceOff({
   step1,
   transactionType
 }: {
-  step1: DcaInFormDataStep1;
+  step1: ControlDeskFormDataStep1;
   transactionType: TransactionType
 }) {
-  const { values } = useFormikContext<DcaInFormDataStep2>();
+  const { values } = useFormikContext<ControlDeskFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
   const resultingDenom = useDenom(step1.resultingDenom);
+
+
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={4}>
-        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <OnceOffDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} targetAmount={step1.targetAmount} />
         <AdvancedSettingsSwitch />
-        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
-        <ExecutionInterval />
-        <SwapAmount transactionType={transactionType} isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <TriggerFormOnceOff resultingDenom={resultingDenom} />
+        <CalcCalculateSwaps initialDenom={initialDenom}
+          resultingDenom={resultingDenom} transactionType={transactionType} />
+
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
@@ -51,17 +53,17 @@ export function CustomiseFormDca({
   );
 }
 
-export function CustomiseFormDcaWrapper({
+export function CustomiseFormOnceOffWrapper({
   steps,
 }: {
   steps: StepConfig[];
 }) {
-  const { strategyType, transactionType } = useStrategyInfo();
-  const { state, actions } = useStep2Form();
-  const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
+  const { strategyType, transactionType } = useControlDeskStrategyInfo();
+  const { state, actions } = useStep2FormControlDesk();
+  const { validate } = useValidation(step2ValidationSchemaControlDesk, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);
 
-  const onSubmit = async (data: DcaInFormDataStep2) => {
+  const onSubmit = async (data: ControlDeskFormDataStep2) => {
     await actions.updateAction(data);
     await nextStep();
   };
@@ -85,7 +87,7 @@ export function CustomiseFormDcaWrapper({
       // @ts-ignore
       onSubmit={onSubmit}
     >
-      <CustomiseFormDca step1={state.step1} transactionType={transactionType} />
+      <CustomiseFormOnceOff step1={state.step1} transactionType={transactionType} />
     </Formik>
   );
 }

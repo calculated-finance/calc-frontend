@@ -79,9 +79,15 @@ const sidebarLogoUrls = {
   [Chains.Moonbeam]: '/images/moonbeam-large.png',
 };
 
+const controlDeskSidebarLogoUrls = {
+  globe: '/images/control-desk-globe.svg',
+};
+
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chain } = useChain();
+
+  const bgImage = router.pathname.includes('control-desk') ? controlDeskSidebarLogoUrls.globe : sidebarLogoUrls[chain];
 
   return (
     <Flex
@@ -90,7 +96,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={sidebarLogoUrls[chain]}
+      bgImage={bgImage}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"
@@ -108,7 +114,8 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
-        {linkItems.filter((link) => !link.exclude?.includes(chain))
+        {linkItems
+          .filter((link) => !link.exclude?.includes(chain))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}

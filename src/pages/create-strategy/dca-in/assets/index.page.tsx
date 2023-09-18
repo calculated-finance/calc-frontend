@@ -70,11 +70,12 @@ function DcaIn() {
               <DCAInResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
 
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
-      )}
-    </Formik>
+            </Stack >
+          </Form >
+        </ModalWrapper >
+      )
+      }
+    </Formik >
   );
 }
 

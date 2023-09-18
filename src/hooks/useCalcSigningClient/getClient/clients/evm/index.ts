@@ -5,6 +5,7 @@ import { getDenomContract } from 'src/interfaces/evm/getDenomContract';
 import { Strategy } from '@models/Strategy';
 import getVaultContract from 'src/interfaces/evm/getVaultContract';
 import { BuildCreateVaultContext } from '@hooks/useCreateVault/buildCreateVaultParams';
+import { BuildCreateVaultControlDeskContext } from 'src/pages/control-desk/buildCreateVaultParamsControlDesk';
 
 async function executeTopUpEVM(signer: ethers.JsonRpcSigner, strategy: Strategy, topUpAmount: number) {
   const { deconversion, id: initialDenomId } = getStrategyInitialDenom(strategy);
@@ -33,7 +34,7 @@ export function getEVMSigningClient(evmSigner: JsonRpcSigner) {
       address: string,
       initialDeposit: number,
       fee: string | undefined,
-      variables: BuildCreateVaultContext,
+      variables: BuildCreateVaultContext | BuildCreateVaultControlDeskContext,
     ) => Promise.resolve(undefined),
   };
 }

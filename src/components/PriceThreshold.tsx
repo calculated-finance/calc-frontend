@@ -3,12 +3,11 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
-import { TransactionType } from './TransactionType';
 import { DenomPriceInput } from './DenomPriceInput';
 import { CollapseWithRender } from './CollapseWithRender';
+import { TransactionType } from './TransactionType';
 
 export const yesNoData: { value: YesNoValues; label: string }[] = [
   {
@@ -57,18 +56,17 @@ type PriceThresholdProps = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   forceOpen?: boolean;
+  transactionType: TransactionType
 };
 
 export default function PriceThreshold({
   initialDenom,
   resultingDenom,
   forceOpen,
+  transactionType,
 }: PriceThresholdProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
   const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
-
- const { transactionType} = useStrategyInfo();
-
 
   const title = transactionType === 'buy' ? 'Set buy price ceiling?' : 'Set sell price floor?';
 

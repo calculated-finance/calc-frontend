@@ -1,13 +1,13 @@
 import { Button, Flex, Heading, Icon, Link, Spacer, Stack, Text, VStack, Wrap } from "@chakra-ui/react";
-import { getControlDeskLayout } from "@components/Layout";
+import { getControlDeskSidebarLayout } from "@components/Layout";
 import { Code3Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from "react";
 
 
 const ControlDeskUrls = {
-  OnceOffPayment: 'https://www.youtube.com/',
-  PayrollAutomation: 'https://www.youtube.com/',
-  TreasuryExchange: 'https://www.youtube.com/',
+  OnceOffPayment: '/control-desk/create-strategy/once-off-payment/assets',
+  PayrollAutomation: 'https://app.calculated.fi/',
+  TreasuryExchange: 'https://app.calculated.fi/',
 }
 
 type ControlDeskStrategyProps = {
@@ -19,8 +19,6 @@ type ControlDeskStrategyProps = {
   learnMoreHref: string;
 };
 
-
-
 export function ControlDeskPanels({ name, icon, href, learnMoreHref, description, enabled }: ControlDeskStrategyProps) {
   return (
     <Stack direction={['row', null, null, 'column']} width={['full', null, null, '2xl']}>
@@ -31,7 +29,7 @@ export function ControlDeskPanels({ name, icon, href, learnMoreHref, description
           <Heading size="md">{name}</Heading>
           <Text textStyle="body" textAlign='center'>
             {description}</Text>
-          <Link href={href} isExternal>
+          <Link href={href}>
             <Button w={44} color="brand.200" textColor='abyss.200'>
               Get started
             </Button>
@@ -110,6 +108,6 @@ export function ControlDesk() {
 }
 
 
-ControlDesk.getLayout = getControlDeskLayout;
+ControlDesk.getLayout = getControlDeskSidebarLayout;
 
 export default ControlDesk;
