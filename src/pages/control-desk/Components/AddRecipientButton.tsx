@@ -29,8 +29,8 @@ export function RecipientAccountControlDesk() {
   const { chain } = useChain();
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      {/* <FormControl isInvalid={Boolean(false)}> */}
+    // <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+    <FormControl isInvalid={Boolean(false)}>
       <FormLabel>Choose Account</FormLabel>
       <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
       <SimpleGrid columns={2}>
