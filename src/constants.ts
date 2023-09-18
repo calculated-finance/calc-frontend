@@ -47,9 +47,9 @@ export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
 export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
-export const MIN_OVER_COLATERALISED = 0.8;
-export const MAX_OVER_COLATERALISED = 2.5;
-export const RECOMMENDED_OVER_COLATERALISED = 1.2;
+export const MIN_OVER_COLLATERALISED = 0.8;
+export const MAX_OVER_COLLATERALISED = 2.5;
+export const RECOMMENDED_OVER_COLLATERALISED = 1.2;
 
 export const SECONDS_IN_A_HOUR = 3600;
 export const SECONDS_IN_A_DAY = 86400;
@@ -89,7 +89,6 @@ export const featureFlags =
         controlDeskEnabled: false,
         editSwapAmountEnabled: false,
         singleAssetsEnabled: false,
-        controlDeslEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -110,7 +109,6 @@ export const featureFlags =
         controlDeskEnabled: true,
         editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
-        controlDeslEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;

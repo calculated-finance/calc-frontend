@@ -23,7 +23,6 @@ export function RecipientAccountControlDesk() {
 
   // add this to its own component and dynamically create fields with taccess to useField.
   const [field, meta, helpers] = useField({ name: 'recipientArray[1]' });
-  console.log(field, 333);
 
   const { chain } = useChain();
 
