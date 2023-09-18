@@ -86,7 +86,7 @@ export function OverCollateralisedDeposit() {
           value={multiplierValue}
           defaultValue={RECOMMENDED_OVER_COLLATERALISED}
           onChange={setValue}
-          min={MIN_OVER_COLATERALISED}
+          min={MIN_OVER_COLLATERALISED}
           max={MAX_OVER_COLLATERALISED}
           step={0.01}
         >
