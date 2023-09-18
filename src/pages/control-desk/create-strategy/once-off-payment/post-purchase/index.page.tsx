@@ -9,7 +9,10 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import { TransactionType } from '@components/TransactionType';
 import { useControlDeskFormPostPurchase } from 'src/pages/control-desk/useOnceOffForm';
 import onceOffSteps from 'src/pages/control-desk/onceOffForm';
-import { ControlDeskFormDataPostPurchase, postPurchaseValidationSchemaControlDesk } from 'src/pages/control-desk/Components/ControlDeskForms';
+import {
+  ControlDeskFormDataPostPurchase,
+  postPurchaseValidationSchemaControlDesk,
+} from 'src/pages/control-desk/Components/ControlDeskForms';
 import { ControlDeskStrategyInfoProvider } from 'src/pages/control-desk/useControlDeskStrategyInfo';
 import { ControlDeskFormNames } from 'src/pages/control-desk/useControlDeskFormStore';
 import { ControlDeskStrategyTypes } from 'src/pages/control-desk/Components/ControlDeskStrategyTypes';
@@ -31,8 +34,6 @@ function Page() {
     actions.resetAction();
     goToStep(0);
   };
-
-  console.log(state, context)
 
   const resultingDenom = useDenom(context?.resultingDenom);
   return (
@@ -61,11 +62,13 @@ function Page() {
 
 function PageWrapper() {
   return (
-    <ControlDeskStrategyInfoProvider strategyInfo={{
-      strategyType: ControlDeskStrategyTypes.OnceOffPayment,
-      transactionType: TransactionType.Sell,
-      formName: ControlDeskFormNames.OnceOffPayment,
-    }}>
+    <ControlDeskStrategyInfoProvider
+      strategyInfo={{
+        strategyType: ControlDeskStrategyTypes.OnceOffPayment,
+        transactionType: TransactionType.Sell,
+        formName: ControlDeskFormNames.OnceOffPayment,
+      }}
+    >
       <Page />
     </ControlDeskStrategyInfoProvider>
   );
