@@ -10,7 +10,6 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
-import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from '../../../models/YesNoValues';
 import { StrategyTypes } from '../../../models/StrategyTypes';
@@ -48,37 +47,7 @@ export const initialCtrlValues = {
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 
 const recipientArraySchema = Yup.object({
-  recipientAccount: Yup.string()
-    .label('Recipient Account')
-    .test({
-      name: 'correct-length',
-      message: ({ label }) => `${label} is not a valid address`,
-      test(values, context) {
-        if (!values) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return values?.length === getChainAddressLength(chain);
-      },
-    })
-    .test({
-      name: 'starts-with-chain-prefix',
-      message: ({ label }) => `${label} has an invalid prefix`,
-      test(value, context) {
-        if (!value) {
-          return true;
-        }
-        const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
-        return value?.startsWith(getChainAddressPrefix(chain));
-      },
-    }),
-
+  recipientAccount: Yup.string().label('Recipient Account').required('Please add recipient'),
   amount: Yup.number()
     .label('Amount')
     .when('sendToWallet', {
@@ -87,6 +56,47 @@ const recipientArraySchema = Yup.object({
       otherwise: (schema) => schema.transform(() => 0),
     }),
 });
+
+// const recipientArraySchema = Yup.object({
+//   recipientAccount: Yup.string()
+//     .label('Recipient Account')
+//     .test({
+//       name: 'correct-length',
+//       message: ({ label }) => `${label} is not a valid address`,
+//       test(values, context) {
+//         if (!values) {
+//           return true;
+//         }
+//         const { chain } = context.options.context || {};
+//         if (!chain) {
+//           return true;
+//         }
+//         return values?.length === getChainAddressLength(chain);
+//       },
+//     })
+//     .test({
+//       name: 'starts-with-chain-prefix',
+//       message: ({ label }) => `${label} has an invalid prefix`,
+//       test(value, context) {
+//         if (!value) {
+//           return true;
+//         }
+//         const { chain } = context.options.context || {};
+//         if (!chain) {
+//           return true;
+//         }
+//         return value?.startsWith(getChainAddressPrefix(chain));
+//       },
+//     }),
+
+//   amount: Yup.number()
+//     .label('Amount')
+//     .when('sendToWallet', {
+//       is: YesNoValues.No,
+//       then: (schema) => schema.required('Please add amount').positive('Amount must be positive'),
+//       otherwise: (schema) => schema.transform(() => 0),
+//     }),
+// }).required('Please add recipient');
 
 export const allCtrlSchema = {
   resultingDenom: Yup.string().label('Resulting Denom').required(),
@@ -323,7 +333,7 @@ export const allCtrlSchema = {
   collateralisedMultiplier: Yup.number().required(),
   totalCollateralisedAmount: Yup.number().nullable().required(),
 
-  recipientArray: Yup.array().of(recipientArraySchema).min(1).required(),
+  recipientArray: Yup.array().of(recipientArraySchema).min(1).required('Must be at least one recipient'),
 };
 
 export const ctrlSchema = Yup.object({

@@ -1,4 +1,4 @@
-import { Divider, Stack } from '@chakra-ui/react';
+import { Button, Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import useSteps from '@hooks/useSteps';
 import { TransactionType } from '@components/TransactionType';
@@ -13,15 +13,12 @@ import onceOffSteps from 'src/pages/control-desk/onceOffForm';
 import { useConfirmFormControlDesk } from 'src/pages/control-desk/useOnceOffForm';
 import { SigningState } from '@components/NewStrategyModal';
 import OnceOffDiagram from 'src/pages/control-desk/Components/OnceOffDiagram';
-import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { FormikHelpers } from 'formik';
 import { SummaryYourDepositControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryYourDepositControlDesk';
 import Fees from '@components/Fees';
 import { SummaryTheSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryTheSwapControlDesk';
 import { SummaryAfterEachSwapControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryAfterEachSwapControlDesk';
 import { SWAP_FEE } from 'src/constants';
 import { SummaryWhileSwappingControlDesk } from 'src/pages/control-desk/Components/Summary/SummaryWhileSwappingControlDesk';
-import { useCreateVaultOnceOff } from '../../useCreateVaultOnceOff';
 
 function Page() {
   const { state, actions } = useConfirmFormControlDesk();
@@ -85,7 +82,12 @@ function Page() {
           transactionType={transactionType}
           // swapAmount={state.swapAmount} need to update this.
         />
+
         {/* <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} /> */}
+        {/* FAKE BUTTON MUST REMOVE  */}
+        <Button type="submit" data-testid="submit-button" w="full">
+          Confirm
+        </Button>
       </Stack>
     </SigningState>
   );
