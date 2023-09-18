@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   HStack,
@@ -15,32 +14,19 @@ import {
 } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { ErrorMessage, Field, FieldArray, useField } from 'formik';
+import { Field, FieldArray, useFormikContext } from 'formik';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
-
-const validateRecipientAccount = (value) => {
-  if (!value) {
-    return 'Recipient account is required';
-  }
-  // Add more validation logic as needed
-  return undefined; // Return undefined for valid input
-};
-
-const validateAmount = (value) => {
-  if (!value) {
-    return 'Amount is required';
-  }
-  // Add more validation logic as needed
-  return undefined; // Return undefined for valid input
-};
+import { CtrlFormDataAll } from './ControlDeskForms';
 
 export function RecipientAccountControlDesk() {
   const { values } = useFormikContext<CtrlFormDataAll>();
 
-  const { chain } = useChain();
+  // add this to its own component and dynamically create fields with taccess to useField.
+  // const [field, meta, helpers] = useField({ name: 'recipientArray' })
 
-  console.log(meta);
-  console.log('hi');
+  console.log('hi'); // testing
+
+  const { chain } = useChain();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -56,9 +42,10 @@ export function RecipientAccountControlDesk() {
         render={(arrayHelpers) => (
           <Box>
             {/* How does validation work on a 'per field' level. */}
-            {field?.value?.map((friend, index) => (
-              <VStack spacing={0} key={index}>
-                <InputGroup mb={2} key={index}>
+            {values.recipientArray?.map((friend, index) => (
+              <VStack>
+                {/* <InputGroup key={index} py={1}> */}
+                <InputGroup py={1}>
                   <HStack spacing={2} w="full">
                     {index === 0 ? undefined : (
                       <Button
@@ -74,14 +61,18 @@ export function RecipientAccountControlDesk() {
                         <Icon as={FiMinusCircle} stroke="brand.200" width={3} height={3} />
                       </Button>
                     )}
+                    {/* <FormControl isInvalid={touchedRecip && Boolean(!`errors.recipientArray`)}> */}
                     <Input
                       as={Field}
                       fontSize="sm"
                       placeholder="Address"
                       w="full"
                       name={`recipientArray.${index}.recipientAccount`}
-                      validate={validateRecipientAccount}
+                      component="input"
+                      label="Recipient Account"
                     />
+                    {/* </FormControl> */}
+                    {/* <FormControl isInvalid={touchedRecip && Boolean(!`errors.recipientArray`)}> */}
 
                     <Input
                       as={Field}
@@ -90,28 +81,12 @@ export function RecipientAccountControlDesk() {
                       placeholder="0"
                       maxW={28}
                       name={`recipientArray.${index}.amount`}
-                      validate={validateAmount}
+                      label="Amount"
+                      type="number"
                     />
+                    {/* </FormControl> */}
                   </HStack>
                 </InputGroup>
-
-                <SimpleGrid columns={2} pb={2}>
-                  <FormErrorMessage textAlign="left">
-                    <ErrorMessage
-                      name={`recipientArray.${index}.recipientAccount`}
-                      className="recipientAccount-field-error"
-                      component="div"
-                    />
-                  </FormErrorMessage>
-                  <Spacer />
-                  <FormErrorMessage textAlign="right">
-                    <ErrorMessage
-                      name={`recipientArray.${index}.amount`}
-                      className="amount-field-error"
-                      component="div"
-                    />
-                  </FormErrorMessage>
-                </SimpleGrid>
               </VStack>
             ))}
             <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
