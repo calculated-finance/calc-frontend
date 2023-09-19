@@ -21,8 +21,6 @@ import { CtrlFormDataAll } from './ControlDeskForms';
 export function RecipientAccountControlDesk() {
   const { values, isSubmitting, isValid, submitCount, dirty } = useFormikContext<CtrlFormDataAll>();
 
-  console.log(isValid);
-
   const { chain } = useChain();
   return (
     <>
