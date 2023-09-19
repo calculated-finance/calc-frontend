@@ -1,7 +1,6 @@
 import { TestnetDenoms } from '@models/Denom';
 import { DenomInfo } from './DenomInfo';
 
-
 export const testnetDenoms: Record<TestnetDenoms, Partial<DenomInfo>> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
@@ -29,7 +28,7 @@ export const testnetDenoms: Record<TestnetDenoms, Partial<DenomInfo>> = {
   },
   [TestnetDenoms.AXL]: {
     name: 'axlUSDC',
-    icon: '/images/denoms/axl.svg',
+    icon: '/images/denoms/usdc.svg',
     stakeable: false,
     stable: true,
     coingeckoId: 'usd-coin',
