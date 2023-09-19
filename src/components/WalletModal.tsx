@@ -133,27 +133,18 @@ function WalletModal() {
           <>
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
             <ModalBody>
-              <Stack spacing={6}>
+              <Stack spacing={3}>
                 <WalletListItem
                   handleClick={handleKeplrConnect}
-                  name="Keplr Wallet"
+                  name="Keplr"
                   icon="/images/keplr.png"
                   isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
-                {/* {featureFlags.stationEnabled && (
-                  <WalletListItem
-                    handleClick={handleStationConnect}
-                    name="Terra Station"
-                    icon="/images/station.svg"
-                    isInstalled={isStationInstalled}
-                    walletInstallLink="https://setup-station.terra.money/"
-                  />
-                )} */}
                 {(featureFlags.leapEnabled || isAdminPage) && (
                   <WalletListItem
                     handleClick={handleLeapConnect}
-                    name="Leap Wallet"
+                    name="Leap"
                     icon="/images/leap.svg"
                     isInstalled={isLeapInstalled}
                     walletInstallLink="https://www.leapwallet.io/download"
@@ -162,21 +153,21 @@ function WalletModal() {
                 {(featureFlags.XDEFIEnabled || isAdminPage) && (
                   <WalletListItem
                     handleClick={handleXDEFIConnect}
-                    name="XDEFI Wallet"
+                    name="XDEFI"
                     icon="/images/xdefi.png"
                     isInstalled={isXDEFIInstalled}
                     walletInstallLink="https://www.xdefi.io/"
                   />
                 )}
-                {isAdminPage && (
+                {
                   <WalletListItem
                     handleClick={handleLeapSnapConnect}
-                    name="Leap Snap"
+                    name="Metamask"
                     icon="/images/metamask.png"
                     isInstalled={isLeapSnapInstalled}
-                    walletInstallLink="https://chrome.google.com/webstore/detail/metamask-flask-developmen/ljfoeinjpaedjfecbmggjgodbgkmjkjk/related"
+                    walletInstallLink="https://snaps.metamask.io/snap/npm/leapwallet/metamask-cosmos-snap/"
                   />
-                )}
+                }
                 {chain === Chains.Moonbeam && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}

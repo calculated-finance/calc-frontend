@@ -3041,13 +3041,15 @@
     axios "^0.27.2"
     long "^4.0.0"
 
-"@leapwallet/cosmos-snap-provider@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@leapwallet/cosmos-snap-provider/-/cosmos-snap-provider-0.0.3.tgz#daf45b8c89dda7dc7365e58c19c827c2e8a0ef16"
-  integrity sha512-niwdeTsrzCVbKtLL8fgpGsBWGXjcbxOg7fR0RC9oEUFB251q2MFQySDrl71Rn1k/4Ubh6mny+1uKJAObTl7bTg==
+"@leapwallet/cosmos-snap-provider@^0.1.22":
+  version "0.1.22"
+  resolved "https://registry.yarnpkg.com/@leapwallet/cosmos-snap-provider/-/cosmos-snap-provider-0.1.22.tgz#684bf04c23721268803ae9fea7a88c6d3bbbea27"
+  integrity sha512-4shW8JU6bRMwY1HGey7dQeFnL7yL1bU9V8wJ1Y6LcFv2XDxQx3pNpaXsmUNAcf3G/EViZkdrFm++KmmDmLAyIA==
   dependencies:
     "@cosmjs/amino" "^0.31.0"
     "@cosmjs/proto-signing" "^0.31.0"
+    bignumber.js "^9.1.2"
+    long "^5.2.3"
 
 "@lukeed/ms@^2.0.1":
   version "2.0.1"
@@ -5758,6 +5760,11 @@ big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.npmjs.org/big.js/-/big.js-5.2.2.tgz"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
+
+bignumber.js@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.2.tgz#b7c4242259c008903b13707983b5f4bbd31eda0c"
+  integrity sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug==
 
 binary-extensions@^2.0.0:
   version "2.2.0"
@@ -11637,6 +11644,11 @@ long@^5.2.0, long@^5.2.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/long/-/long-5.2.1.tgz"
   integrity sha512-GKSNGeNAtw8IryjjkhZxuKB3JzlcLTwjtiQCHKvqQet81I93kXslhDQruGI/QsddO83mcDToBVy7GqGS/zYf/A==
+
+long@^5.2.3:
+  version "5.2.3"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
+  integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"

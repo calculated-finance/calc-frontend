@@ -77,7 +77,7 @@ export const featureFlags =
         extraTimeOptions: true,
         squidIntegrationEnabled: true,
         stationEnabled: false,
-        leapEnabled: false,
+        leapEnabled: true,
         XDEFIEnabled: true,
         dcaPlusEnabled: true,
         reinvestVisualsEnabled: true,

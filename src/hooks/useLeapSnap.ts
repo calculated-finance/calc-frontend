@@ -3,8 +3,8 @@ import { AccountData } from '@cosmjs/proto-signing';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { getChainEndpoint, getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
-import { connectSnap, cosmjsOfflineSigner, getSnap } from '@leapwallet/cosmos-snap-provider';
+import { getChainEndpoint, getChainId, getGasPrice } from '@helpers/chains';
+import { getSnap, CosmjsOfflineSigner, connectSnap } from '@leapwallet/cosmos-snap-provider';
 import { Chains } from './useChain/Chains';
 
 interface KeplrWindow extends Window {
@@ -14,22 +14,11 @@ interface KeplrWindow extends Window {
 
 declare const window: KeplrWindow;
 
-function waitForLeap(timeout = 1000) {
-  return new Promise((resolve) => {
-    const check = async () => {
-      const snapInstalled = await getSnap();
-      console.log('snapInstalled', snapInstalled);
-      if (snapInstalled) {
-        console.log('returning true');
-        resolve(true);
-      }
-      connectSnap();
-      setTimeout(check, timeout);
-    };
-
-    check();
-  });
+async function hasLeapSnaps() {
+  const snapInstalled = await getSnap();
+  return snapInstalled && snapInstalled.id === 'npm:@leapwallet/metamask-cosmos-snap';
 }
+
 type IWallet = {
   connect: (chain: Chains) => void;
   disconnect: () => void;
@@ -50,25 +39,27 @@ export const useLeapSnap = create<IWallet>()(
       isConnecting: false,
       autoconnect: false,
       disconnect: async () => {
-        await get().controller?.disconnect();
+        get().controller?.disconnect();
         set({ account: null });
         set({ autoconnect: false });
       },
       connect: async (chain: Chains) => {
         set({ isConnecting: true });
+
         if (get().account) {
           get().disconnect();
         }
+
+        connectSnap();
+
         const chainId = getChainId(chain);
-        const chainInfo = getChainInfo(chain);
+
         try {
-          const offlineSigner = new cosmjsOfflineSigner(chainId);
+          const offlineSigner = new CosmjsOfflineSigner(chainId);
           const accounts = await offlineSigner.getAccounts();
           const client = await SigningCosmWasmClient.connectWithSigner(getChainEndpoint(chain), offlineSigner, {
             gasPrice: getGasPrice(chain),
           });
-          console.log('client', client);
-          console.log('accounts', accounts);
 
           set({
             controller: client,
@@ -76,7 +67,6 @@ export const useLeapSnap = create<IWallet>()(
             autoconnect: true,
           });
         } catch (e) {
-          console.error(e);
           set({ autoconnect: false });
         } finally {
           set({ isConnecting: false });
@@ -84,9 +74,7 @@ export const useLeapSnap = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          await waitForLeap();
-          console.log('snap installed wooooo');
-          set({ isInstalled: true });
+          set({ isInstalled: await hasLeapSnaps() });
         }
         if (get().autoconnect) {
           get().connect(chain);
