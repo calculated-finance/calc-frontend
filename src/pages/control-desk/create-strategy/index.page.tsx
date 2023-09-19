@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Icon, Link, SimpleGrid, Spacer, Stack, Text, VStack } from '@chakra-ui/react';
 import { getControlDeskSidebarLayout } from '@components/Layout';
-import { Code3Icon } from '@fusion-icons/react/interface';
+import { Code1Icon, Code2Icon, Code3Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
 
 const ControlDeskUrls = {
@@ -58,7 +58,7 @@ export function ControlDesk() {
         name: 'Payroll Automation',
         description:
           'Consistently DCA out of treasury assets to prevent price impact and make regular payments in stables to one or more parties on a regular basis.',
-        icon: <Icon as={Code3Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />,
+        icon: <Icon as={Code2Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />,
         enabled: true,
         href: ControlDeskUrls.OnceOffPayment,
         learnMoreHref: '',
@@ -67,7 +67,7 @@ export function ControlDesk() {
         name: 'Treasury exchange',
         description:
           "Can't agree on a fair OTC price? Swap tokens over time with another treasury and turn a single transactional event into a long lasting relationship.",
-        icon: <Icon as={Code3Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />,
+        icon: <Icon as={Code1Icon} stroke="whiteAlpha.900" strokeWidth={5} w={6} h={6} />,
         enabled: true,
         href: ControlDeskUrls.OnceOffPayment,
         learnMoreHref: '',
