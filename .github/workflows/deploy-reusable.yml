@@ -88,6 +88,14 @@ jobs:
       - name: Export App
         run: yarn export
 
+      - name: inject sentry test ids
+        if: ${{ inputs.ENVIRONMENT == 'production' }}
+        run: yarn sentry sourcemaps inject out
+
+      - name: upload sourcemaps to sentry
+        if: ${{ inputs.ENVIRONMENT == 'production' }}
+        run: yarn sentry sourcemaps inject out
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
