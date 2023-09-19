@@ -87,7 +87,7 @@ export const featureFlags =
         assetPageStrategyButtonsEnabled: true,
         adjustedMinimumSwapAmountEnabled: true,
         controlDeskEnabled: false,
-        editSwapAmountEnabled: false,
+        editSwapAmountEnabled: true,
         singleAssetsEnabled: false,
       }
     : {

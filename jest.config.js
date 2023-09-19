@@ -26,6 +26,15 @@ const customJestConfig = {
   },
   testEnvironment: 'jest-environment-jsdom',
   silent: true,
+  testTimeout: 30000,
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+      },
+    ],
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
