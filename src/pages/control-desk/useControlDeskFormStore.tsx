@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 export enum ControlDeskFormNames {
   OnceOffPayment = 'onceOffPayment',
   PayrollAutomation = 'payrollAutomation',
-  TreasuryExchange = 'treasuryExchange'
+  TreasuryExchange = 'treasuryExchange',
 }
 
 type IFormStore = {

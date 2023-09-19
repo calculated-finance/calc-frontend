@@ -27,8 +27,6 @@ function Page() {
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = getDenomInfo(state?.resultingDenom);
 
-  console.log(state);
-
   // const { mutate, isError, error, isLoading } = useCreateVaultOnceOff(initialDenom);
 
   // const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>

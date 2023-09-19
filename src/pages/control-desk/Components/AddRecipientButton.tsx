@@ -14,23 +14,45 @@ import {
 } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
-import { Field, FieldArray, useFormikContext } from 'formik';
+import { Field, FieldArray, useField, useFormikContext } from 'formik';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { CtrlFormDataAll } from './ControlDeskForms';
 
 export function RecipientAccountControlDesk() {
   const { values, isSubmitting, isValid, submitCount, dirty } = useFormikContext<CtrlFormDataAll>();
+  const [{ value: targetAmountValue }] = useField({ name: 'targetAmount' });
+  const [, , { setValue }] = useField({ name: 'recipientArray.[0].amount' });
 
-  console.log(isValid);
+  const handleClick = () => {
+    const targetAmountAsNumber = Number(targetAmountValue);
+    setValue(targetAmountAsNumber);
+  };
 
   const { chain } = useChain();
   return (
     <>
-      <FormLabel>Choose Account</FormLabel>
-      <FormHelperText>This wallet address will be the one the funds are sent to.</FormHelperText>
+      <SimpleGrid columns={2}>
+        <FormLabel textAlign="left">Choose Account</FormLabel>
+        <FormHelperText textAlign="right">
+          {' '}
+          Balance:{' '}
+          <Button
+            size="xs"
+            colorScheme="blue"
+            variant="link"
+            cursor="pointer"
+            isDisabled={!targetAmountValue}
+            onClick={handleClick}
+            letterSpacing={0.5}
+          >
+            {targetAmountValue}
+          </Button>
+        </FormHelperText>
+      </SimpleGrid>
+
       <SimpleGrid columns={2}>
         <FormHelperText textAlign="left">Recipient:</FormHelperText>
-        <FormHelperText textAlign="right">Amount:</FormHelperText>
+        <FormHelperText textAlign="right">Amount: </FormHelperText>
       </SimpleGrid>
 
       <FieldArray
@@ -80,6 +102,7 @@ export function RecipientAccountControlDesk() {
                               fontSize="sm"
                               textAlign="right"
                               placeholder="0"
+                              defaultValue={0}
                               maxW={28}
                               name={`recipientArray.${index}.amount`}
                               type="number"
@@ -98,7 +121,17 @@ export function RecipientAccountControlDesk() {
                 }}
               </Field>
             ))}
-            <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
+            <SimpleGrid columns={2}>
+              <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
+              <FormHelperText textAlign="right" letterSpacing={0.5}>
+                {Number(
+                  arrayHelpers.form.values.recipientArray?.reduce(
+                    (acc: number, curr: { amount: number }) => acc + curr.amount,
+                    0,
+                  ),
+                ).toFixed(6)}
+              </FormHelperText>
+            </SimpleGrid>
 
             <HStack pb={2}>
               <Button
@@ -110,7 +143,7 @@ export function RecipientAccountControlDesk() {
                 fontSize="2xs"
                 h={5}
                 borderRadius={6}
-                onClick={() => arrayHelpers.push({})}
+                onClick={() => arrayHelpers.push({ recipientAccount: '', amount: 0 })}
               >
                 Add recipient
               </Button>
