@@ -88,7 +88,6 @@ export function RecipientAccountControlDesk() {
                               </Button>
                             )}
                             <Input
-                              key={`recipient-address-${index}`}
                               as={Field}
                               fontSize="sm"
                               placeholder="Address"
@@ -99,7 +98,6 @@ export function RecipientAccountControlDesk() {
                             />
 
                             <Input
-                              key={`recipient-amount-${index}`}
                               as={Field}
                               fontSize="sm"
                               textAlign="right"
