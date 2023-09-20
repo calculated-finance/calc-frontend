@@ -89,7 +89,6 @@ export const featureFlags =
         controlDeskEnabled: false,
         editSwapAmountEnabled: true,
         singleAssetsEnabled: false,
-        searchDenomInputEnabled: false,
       }
     : {
         extraTimeOptions: true,
@@ -110,7 +109,6 @@ export const featureFlags =
         controlDeskEnabled: true,
         editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
-        searchDenomInputEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
