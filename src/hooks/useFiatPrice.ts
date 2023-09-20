@@ -6,8 +6,6 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import { useChain } from './useChain';
 
-export async function getServerSideProps() {}
-
 export type FiatPriceResponse = {
   [key: string]: {
     [key: string]: number;
