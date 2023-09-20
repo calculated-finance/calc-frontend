@@ -5,6 +5,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
 import { useDenom } from '@hooks/useDenom/useDenom';
+import { featureFlags } from 'src/constants';
 
 function CoinBalance({ balance }: { balance: Coin }) {
   const { name, conversion } = getDenomInfo(balance.denom);
@@ -86,13 +87,21 @@ export function SpendableBalances() {
           <Divider />
         </GridItem>
       </Grid>
-      <Stack overflow="auto" maxH={220}>
+      {featureFlags.scrollableWalletBalancesEnabled ? (
+        <Stack overflow="auto" maxH={220}>
+          <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
+            {data?.map((balance: Coin) => (
+              <CoinBalance balance={balance} key={balance.denom} />
+            ))}
+          </Grid>
+        </Stack>
+      ) : (
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
           {data?.map((balance: Coin) => (
             <CoinBalance balance={balance} key={balance.denom} />
           ))}
         </Grid>
-      </Stack>
+      )}
     </>
   );
 }
