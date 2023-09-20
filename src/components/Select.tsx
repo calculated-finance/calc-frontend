@@ -5,8 +5,7 @@ import { ReactNode } from 'react';
 
 export type OptionType = {
   value: string;
-  // label: ReactNode | string;
-  label: [ReactNode, string];
+  label: ReactNode | string;
 };
 
 export type SelectProps = {
@@ -26,7 +25,6 @@ export default function Select({
   menuPortalTarget,
   isSearchable = true,
 }: SelectProps) {
-  console.log(options);
   const selectProps = useChakraSelectProps({
     menuPortalTarget,
     useBasicStyles: true,
@@ -36,7 +34,55 @@ export default function Select({
     options,
     placeholder,
     isSearchable,
-    value: options?.find((option: OptionType) => value === option.value) || null,
+    value: options?.find((option: OptionType) => value === option.value || null),
+    chakraStyles: {
+      control: (provided) => ({
+        ...provided,
+        isReadOnly: true,
+        caretColor: 'transparent',
+      }),
+    },
+    components: customComponents,
+  });
+
+  return <ChakraSelect {...selectProps} />;
+}
+
+export type OptionTypeDenomSelect = {
+  value: [string, string];
+  label: ReactNode;
+};
+export type SelectPropsDenomSelect = {
+  options: OptionTypeDenomSelect[];
+  customComponents?: Partial<SelectComponent>;
+  onChange: (value?: string) => void;
+  menuPortalTarget?: HTMLElement;
+  isSearchable?: boolean;
+} & Omit<ChakraSelectProps, 'onChange'>;
+
+export function SelectDenomWithSearch({
+  options,
+  placeholder,
+  onChange,
+  value,
+  customComponents,
+  menuPortalTarget,
+  isSearchable = true,
+}: SelectPropsDenomSelect) {
+  const selectProps = useChakraSelectProps({
+    menuPortalTarget,
+    useBasicStyles: true,
+    onChange: (option) => {
+      const [id] = option?.value || [];
+      onChange(id);
+    },
+    options,
+    placeholder,
+    isSearchable,
+    value: options?.find((option: OptionTypeDenomSelect) => {
+      const [id] = option?.value || [];
+      return value === id || null;
+    }),
     chakraStyles: {
       control: (provided) => ({
         ...provided,

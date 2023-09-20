@@ -2,11 +2,17 @@ import { Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { OptionProps, chakraComponents } from 'chakra-react-select';
 import { DenomInfo } from '@utils/DenomInfo';
-import Select, { OptionType, SelectProps } from './Select';
+import Select, { OptionType, OptionTypeDenomSelect, SelectDenomWithSearch, SelectProps } from './Select';
+import { featureFlags } from 'src/constants';
 
 function DenomSelectLabel({ denom }: { denom: DenomInfo }) {
   const { name } = denom;
-  return <DenomIcon denomInfo={denom} />;
+  return (
+    <HStack flexGrow={1}>
+      <DenomIcon denomInfo={denom} />
+      <Text>{name}</Text>
+    </HStack>
+  );
 }
 
 function DenomOption({
@@ -47,14 +53,25 @@ export function DenomSelect({
     Option: getDenomOptionComponent(optionLabel),
   });
 
-  const pairsOptions: OptionType[] = denoms.map((denom) => ({
+  if (featureFlags.searchDenomInputEnabled) {
+    const pairsOptions: OptionTypeDenomSelect[] = denoms.map((denom) => ({
+      value: [denom.id, denom.name],
+      label: <DenomSelectLabel denom={denom} />,
+    }));
+    return (
+      <SelectDenomWithSearch
+        isSearchable
+        options={pairsOptions}
+        customComponents={customComponents()}
+        {...selectProps}
+      />
+    );
+  }
+
+  const pairsOptions = denoms.map((denom) => ({
     value: denom.id,
-    label: [
-      <HStack spacing={4}>
-        <DenomSelectLabel denom={denom} />
-      </HStack>,
-      denom.name,
-    ],
+    label: <DenomSelectLabel denom={denom} />,
   }));
-  return <Select isSearchable={true} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
+
+  return <Select isSearchable={false} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
 }
