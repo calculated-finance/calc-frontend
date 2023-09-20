@@ -53,25 +53,12 @@ export function DenomSelect({
     Option: getDenomOptionComponent(optionLabel),
   });
 
-  if (featureFlags.searchDenomInputEnabled) {
-    const pairsOptions: OptionTypeDenomSelect[] = denoms.map((denom) => ({
-      value: [denom.id, denom.name],
-      label: <DenomSelectLabel denom={denom} />,
-    }));
-    return (
-      <SelectDenomWithSearch
-        isSearchable
-        options={pairsOptions}
-        customComponents={customComponents()}
-        {...selectProps}
-      />
-    );
-  }
-
-  const pairsOptions = denoms.map((denom) => ({
-    value: denom.id,
+  const pairsOptions: OptionTypeDenomSelect[] = denoms.map((denom) => ({
+    value: [denom.id, denom.name],
     label: <DenomSelectLabel denom={denom} />,
   }));
 
-  return <Select isSearchable={false} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
+  return (
+    <SelectDenomWithSearch isSearchable options={pairsOptions} customComponents={customComponents()} {...selectProps} />
+  );
 }
