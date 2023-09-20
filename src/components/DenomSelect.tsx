@@ -2,16 +2,11 @@ import { Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { OptionProps, chakraComponents } from 'chakra-react-select';
 import { DenomInfo } from '@utils/DenomInfo';
-import Select, { SelectProps } from './Select';
+import Select, { OptionType, SelectProps } from './Select';
 
 function DenomSelectLabel({ denom }: { denom: DenomInfo }) {
   const { name } = denom;
-  return (
-    <HStack flexGrow={1}>
-      <DenomIcon denomInfo={denom} />
-      <Text>{name}</Text>
-    </HStack>
-  );
+  return <DenomIcon denomInfo={denom} />;
 }
 
 function DenomOption({
@@ -51,9 +46,15 @@ export function DenomSelect({
   const customComponents = () => ({
     Option: getDenomOptionComponent(optionLabel),
   });
-  const pairsOptions = denoms.map((denom) => ({
+
+  const pairsOptions: OptionType[] = denoms.map((denom) => ({
     value: denom.id,
-    label: <DenomSelectLabel denom={denom} />,
+    label: [
+      <HStack spacing={4}>
+        <DenomSelectLabel denom={denom} />
+      </HStack>,
+      denom.name,
+    ],
   }));
-  return <Select isSearchable={false} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
+  return <Select isSearchable={true} options={pairsOptions} customComponents={customComponents()} {...selectProps} />;
 }

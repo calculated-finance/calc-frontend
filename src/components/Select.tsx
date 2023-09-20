@@ -1,10 +1,12 @@
 import { Select as ChakraSelect, SelectComponent, useChakraSelectProps } from 'chakra-react-select';
 import { SelectProps as ChakraSelectProps } from '@chakra-ui/react';
+
 import { ReactNode } from 'react';
 
 export type OptionType = {
   value: string;
-  label: ReactNode | string;
+  // label: ReactNode | string;
+  label: [ReactNode, string];
 };
 
 export type SelectProps = {
@@ -24,6 +26,7 @@ export default function Select({
   menuPortalTarget,
   isSearchable = true,
 }: SelectProps) {
+  console.log(options);
   const selectProps = useChakraSelectProps({
     menuPortalTarget,
     useBasicStyles: true,
