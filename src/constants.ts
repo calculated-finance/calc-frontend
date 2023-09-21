@@ -74,7 +74,6 @@ export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
-        squidIntegrationEnabled: true,
         stationEnabled: false,
         XDEFIEnabled: true,
         dcaPlusEnabled: true,
@@ -93,7 +92,6 @@ export const featureFlags =
       }
     : {
         reinvestVisualsEnabled: true,
-        squidIntegrationEnabled: true,
         stationEnabled: false,
         XDEFIEnabled: false,
         dcaPlusEnabled: true,
