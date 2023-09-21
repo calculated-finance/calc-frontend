@@ -9,7 +9,6 @@ import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
-import { featureFlags } from 'src/constants';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -200,7 +199,6 @@ export default function TopPanel() {
       };
     }
 
-    if (featureFlags.learningHubEnabled) {
       if (!activeStrategies.length || !connected) {
         return {
           background: '/images/backgrounds/twist-thin-blue.svg',
@@ -208,7 +206,6 @@ export default function TopPanel() {
           Content: LearnNewUsers,
         };
       }
-    }
 
     if (!activeStrategies.length) {
       if (!completedStrategies.length) {

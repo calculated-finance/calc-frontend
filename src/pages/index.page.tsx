@@ -31,7 +31,6 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useStrategies } from '@hooks/useStrategies';
-import { featureFlags } from 'src/constants';
 import { BarChartIcon } from '@fusion-icons/react/interface';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
@@ -216,16 +215,6 @@ function TotalInvestment() {
   );
 }
 
-function WorkflowPanel() {
-  return (
-    <VStack p={8} spacing={4}>
-      <Heading size="sm">Effortlessly invest in your favorite crypto assets from your savings.</Heading>
-      <Heading size="xs">Recurring payments means no stress. Set & forget.</Heading>
-      <Image src="/images/workflow.svg" alt="workflow-image" />
-    </VStack>
-  );
-}
-
 function OnboardingPanel() {
   return (
     <VStack
@@ -312,7 +301,7 @@ function HomeGrid() {
       )}
       {(!activeStrategies.length || !connected) && (
         <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-          {featureFlags.learningHubEnabled ? <OnboardingPanel /> : <WorkflowPanel />}
+          <OnboardingPanel />
         </GridItem>
       )}
       <GridItem colSpan={{ base: 6, xl: 3 }}>{chain !== Chains.Moonbeam && <TotalInvestment />}</GridItem>
