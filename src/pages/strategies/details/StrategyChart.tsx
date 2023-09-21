@@ -15,6 +15,7 @@ import { Strategy } from '@models/Strategy';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
+import { COIN_DECIMAL_LIMIT, COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS } from 'src/constants';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
@@ -36,6 +37,25 @@ function CustomLabel(props: VictoryTooltipProps) {
       />
     </g>
   );
+}
+
+function roundedDisplay(amount: number | undefined) {
+  if (!amount) {
+    return '0';
+  }
+
+  const showLessThanAmount = amount < 10 ** -COIN_DECIMAL_LIMIT;
+  const showMoreThanAmount = amount > 10 ** -COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS;
+
+  if (showLessThanAmount) {
+    return `<${10 ** -COIN_DECIMAL_LIMIT}`;
+  }
+
+  if (showMoreThanAmount) {
+    return amount.toFixed(2);
+  }
+
+  return amount.toFixed(6);
 }
 
 export function StrategyChart({ strategy }: { strategy: Strategy }) {
@@ -82,11 +102,11 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
         : `${priceOfDenomName} ➡️ ${priceInDenomName}`
     }\nSwapped: ${
       isBuyStrategy(strategy)
-        ? `${Number(swap?.event.denomAmountSent).toFixed(2)} ${priceInDenomName}`
-        : `${Number(swap?.event.denomAmountSent).toFixed(2)} ${priceOfDenomName}`
-    }  ➡️  ${Number(swap?.event.swapAmount.toFixed(2))} ${
-      swap?.event.swapDenom
-    }\nAccumulated: ${swap?.event.accumulation.toFixed(2)} ${swap?.event.swapDenom}\nDate: ${swap?.date
+        ? `${roundedDisplay(swap?.event.denomAmountSent)} ${priceInDenomName}`
+        : `${roundedDisplay(swap?.event.denomAmountSent)} ${priceOfDenomName}`
+    }  ➡️  ${roundedDisplay(swap?.event.swapAmount)} ${swap?.event.swapDenom}\nAccumulated: ${roundedDisplay(
+      swap?.event.accumulation,
+    )} ${swap?.event.swapDenom}\nDate: ${swap?.date
       .toLocaleDateString('en-AU', {
         day: '2-digit',
         month: 'short',
