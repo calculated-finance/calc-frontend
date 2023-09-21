@@ -119,7 +119,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
   const router = useRouter();
   const { pathname } = router;
 
-  const isControlDesk = pathname.includes('control-desk')
+  const isControlDesk = pathname.includes('control-desk');
 
   return (
     <>
@@ -135,13 +135,11 @@ function FlowLayout({ children }: { children: ReactElement }) {
         <Box fontSize="sm" pl={8} pt={`calc(${HEADER_HEIGHT} + 24px)`} fontWeight="bold">
           <FlowBreadcrumbs />
         </Box>
-        {isStepOne(pathname) && featureFlags.unconnectedFirstStepEnabled ? (
+        {isStepOne(pathname) ? (
           children
         ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
-            {!isControlDesk &&
-              <AssetPageStrategyButtons />
-            }
+            {!isControlDesk && <AssetPageStrategyButtons />}
             <ConnectWallet h={80} />
           </ModalWrapper>
         ) : (
@@ -182,13 +180,13 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
     setAcceptedAgreementState('true');
   };
 
-  const { isAdmin } = useAdmin()
+  const { isAdmin } = useAdmin();
 
   const AdminLinkItems: Array<LinkItem> = [
     ...linkItems,
     { name: 'Stats & totals', icon: Graph2Icon, href: Pages.StatsAndTotals },
     { name: 'All strategies', icon: ViewListIcon, href: Pages.AllStrategies },
-  ]
+  ];
 
   return (
     <Sidebar linkItems={isAdmin ? AdminLinkItems : linkItems}>
@@ -222,5 +220,5 @@ export function getSidebarLayout(page: ReactElement) {
 }
 
 export function getControlDeskSidebarLayout(page: ReactElement) {
-  return featureFlags.controlDeskEnabled && <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>
+  return featureFlags.controlDeskEnabled && <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>;
 }
