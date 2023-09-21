@@ -75,10 +75,7 @@ export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
         stationEnabled: false,
-        XDEFIEnabled: true,
-        dcaPlusEnabled: true,
-        reinvestVisualsEnabled: true,
-        isKujiraV2Enabled: true,
+        leapEnabled: false,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
         learningHubEnabled: true,
@@ -92,9 +89,7 @@ export const featureFlags =
       }
     : {
         stationEnabled: false,
-        XDEFIEnabled: false,
-        dcaPlusEnabled: true,
-        isKujiraV2Enabled: true,
+        leapEnabled: true,
         customTimeIntervalEnabled: true,
         amplitudeEnabled: false,
         learningHubEnabled: true,
