@@ -8,7 +8,6 @@ import { DcaInFormDataAll } from '@models/DcaInFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
-import { featureFlags } from 'src/constants';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
@@ -52,9 +51,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       throw new Error('No sender address');
     }
 
-    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(state.swapAmount, price);
-    }
+    checkSwapAmountValue(state.swapAmount, price);
 
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),

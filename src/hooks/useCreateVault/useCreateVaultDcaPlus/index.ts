@@ -8,7 +8,6 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { featureFlags } from 'src/constants';
 import { DenomInfo } from '@utils/DenomInfo';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
@@ -56,9 +55,8 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
 
-    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(swapAmount, price);
-    }
+    checkSwapAmountValue(swapAmount, price);
+
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
