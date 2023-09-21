@@ -78,7 +78,6 @@ export const featureFlags =
         leapEnabled: false,
         amplitudeEnabled: true,
         controlDeskEnabled: false,
-        editSwapAmountEnabled: true,
         singleAssetsEnabled: false,
       }
     : {
@@ -86,7 +85,6 @@ export const featureFlags =
         leapEnabled: true,
         amplitudeEnabled: false,
         controlDeskEnabled: true,
-        editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
       };
 

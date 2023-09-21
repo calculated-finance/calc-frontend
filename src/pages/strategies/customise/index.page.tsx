@@ -35,7 +35,6 @@ import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
-import { featureFlags } from 'src/constants';
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
@@ -117,7 +116,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           transactionType={transactionType}
                         />
                       </CollapseWithRender>
-                      {featureFlags.editSwapAmountEnabled &&
                         <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} transactionType={transactionType} />}
                     </Stack>
                   )}
