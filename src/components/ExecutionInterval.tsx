@@ -33,11 +33,7 @@ function ExecutionIntervalLegacy() {
   });
   return (
     <FormControl>
-      {featureFlags.extraTimeOptions ? (
-        <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      ) : (
-        <FormLabel>How often would you like CALC to swap for you?</FormLabel>
-      )}
+      <FormLabel>I would like CALC to swap for me every:</FormLabel>
       <Radio {...getRootProps}>
         {executionIntervalData.map((option) => {
           const radio = getRadioProps({ value: option.value });
