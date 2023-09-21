@@ -29,7 +29,6 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useRouter } from 'next/router';
 import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { featureFlags } from 'src/constants';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '../../LinkWithQuery';
 import { BuySellButtons } from './BuySellButtons';
@@ -301,7 +300,7 @@ export function AssetPageStrategyButtons() {
     onChange: (nextValue: BuySellButtons) => setButtonClicked(nextValue),
   });
   const categoryGroup = getRootProps();
-  return featureFlags.assetPageStrategyButtonsEnabled ? (
+  return (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>
         {buttonOptions.map((value) => {
@@ -319,5 +318,5 @@ export function AssetPageStrategyButtons() {
         <SellButtons pathname={pathname} />
       )}
     </VStack>
-  ) : null;
+  );
 }
