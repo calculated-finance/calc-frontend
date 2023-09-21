@@ -91,7 +91,6 @@ export const featureFlags =
         singleAssetsEnabled: false,
       }
     : {
-        reinvestVisualsEnabled: true,
         stationEnabled: false,
         XDEFIEnabled: false,
         dcaPlusEnabled: true,

@@ -21,7 +21,6 @@ import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
-import { featureFlags } from 'src/constants';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 
@@ -179,7 +178,7 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
         </>
       )}
 
-      {linkedToStrategy && featureFlags.reinvestVisualsEnabled && (
+      {linkedToStrategy && (
         <>
           <GridItem colSpan={2}>
             <Divider />

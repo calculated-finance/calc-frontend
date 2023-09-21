@@ -16,7 +16,6 @@ import {
 } from '@chakra-ui/react';
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
-import { featureFlags } from 'src/constants';
 import { useKeplr } from '@hooks/useKeplr';
 import { WalletTypes, useWallet } from '@hooks/useWallet';
 import { useChain } from '@hooks/useChain';
