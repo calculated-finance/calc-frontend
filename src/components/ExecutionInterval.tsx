@@ -15,7 +15,6 @@ import { executionIntervalData } from '@helpers/executionIntervalData';
 import { useChain } from '@hooks/useChain';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
-import { featureFlags } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import { IconType } from 'react-icons/lib';
 import { ReactElement } from 'react';
@@ -107,7 +106,7 @@ export default function ExecutionInterval() {
   const { chain } = useChain();
   const { address } = useWallet();
 
-  if (isV2Enabled(chain, address) && featureFlags.customTimeIntervalEnabled) {
+  if (isV2Enabled(chain, address)) {
     return <ExecutionIntervalCustom />;
   }
   return <ExecutionIntervalLegacy />;

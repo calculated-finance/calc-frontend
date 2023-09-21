@@ -76,7 +76,6 @@ export const featureFlags =
     ? {
         stationEnabled: false,
         leapEnabled: false,
-        customTimeIntervalEnabled: true,
         amplitudeEnabled: true,
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
@@ -90,7 +89,6 @@ export const featureFlags =
     : {
         stationEnabled: false,
         leapEnabled: true,
-        customTimeIntervalEnabled: true,
         amplitudeEnabled: false,
         learningHubEnabled: true,
         unconnectedFirstStepEnabled: true,
