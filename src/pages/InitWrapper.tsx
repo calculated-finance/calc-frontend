@@ -11,6 +11,7 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { HOTJAR_SITE_ID, featureFlags } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
 import { hotjar } from 'react-hotjar';
+import { useMetamaskSnap } from '@hooks/useMetamaskSnap';
 
 function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {
@@ -30,6 +31,7 @@ export function InitWrapper({ children }: ChildrenProp) {
   const initLeap = useLeap((state) => state.init);
   const initXDEFI = useXDEFI((state) => state.init);
   const initMetamask = useMetamask((state) => state.init);
+  const initLeapSnap = useMetamaskSnap((state) => state.init);
 
   const initCosmWasmClient = useCosmWasmClient((state) => state.init);
 
@@ -61,6 +63,12 @@ export function InitWrapper({ children }: ChildrenProp) {
       initLeap(chain);
     }
   }, [initLeap, chain]);
+
+  useEffect(() => {
+    if (chain) {
+      initLeapSnap(chain);
+    }
+  }, [initLeapSnap, chain]);
 
   useEffect(() => {
     if (chain) {

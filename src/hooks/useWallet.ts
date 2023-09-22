@@ -2,11 +2,13 @@ import { useKeplr } from './useKeplr';
 import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
 import { useMetamask } from './useMetamask';
+import { useMetamaskSnap } from './useMetamaskSnap';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
   STATION = 'Station',
   LEAP = 'Leap',
+  METAMASK_SNAP = 'Metamask Snap',
   XDEFI = 'XDEFI',
   METAMASK = 'Metamask',
 }
@@ -20,6 +22,13 @@ export function useWallet() {
   }));
 
   const leapWallet = useLeap((state) => ({
+    account: state.account,
+    controller: state.controller,
+    isConnecting: state.isConnecting,
+    disconnect: state.disconnect,
+  }));
+
+  const leapSnapWallet = useMetamaskSnap((state) => ({
     account: state.account,
     controller: state.controller,
     isConnecting: state.isConnecting,
@@ -77,6 +86,17 @@ export function useWallet() {
     };
   }
 
+  if (leapSnapWallet.account) {
+    return {
+      address: leapSnapWallet.account?.address,
+      connected: true,
+      signingClient: leapSnapWallet.controller,
+      disconnect: leapSnapWallet.disconnect,
+      walletType: WalletTypes.METAMASK_SNAP,
+      isConnecting: false,
+    };
+  }
+
   if (XDEFIWallet.account) {
     return {
       address: XDEFIWallet.account?.address,
@@ -105,9 +125,11 @@ export function useWallet() {
   //   };
   // }
   return {
-    isConnecting: keplrWallet.isConnecting
-    || leapWallet?.isConnecting
-    || XDEFIWallet?.isConnecting
-    || metamaskWallet?.isConnecting,
+    isConnecting:
+      keplrWallet.isConnecting ||
+      leapWallet?.isConnecting ||
+      XDEFIWallet?.isConnecting ||
+      metamaskWallet?.isConnecting ||
+      leapSnapWallet?.isConnecting,
   };
 }

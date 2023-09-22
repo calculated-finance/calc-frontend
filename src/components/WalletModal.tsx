@@ -26,6 +26,7 @@ import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
 import { Chains } from '@hooks/useChain/Chains';
 import { useAnalytics } from '@hooks/useAnalytics';
+import { useMetamaskSnap } from '@hooks/useMetamaskSnap';
 import { WalletListItem } from './WalletListItem';
 import Spinner from './Spinner';
 
@@ -63,6 +64,11 @@ function WalletModal() {
     connect: state.connect,
   }));
 
+  const { isInstalled: isLeapSnapInstalled, connect: connectLeapSnap } = useMetamaskSnap((state) => ({
+    isInstalled: state.isInstalled,
+    connect: state.connect,
+  }));
+
   const { chain } = useChain();
 
   const { isOpen, onToggle } = useDisclosure();
@@ -75,11 +81,6 @@ function WalletModal() {
     setVisible(false);
   }, [setVisible]);
 
-  // const handleStationConnect = () => {
-  //   connectStation?.();
-  //   handleClose();
-  // };
-
   const handleKeplrConnect = () => {
     connectKeplr(chain);
     trackConnectedWallet(WalletTypes.KEPLR);
@@ -89,6 +90,12 @@ function WalletModal() {
   const handleLeapConnect = () => {
     connectLeap(chain);
     trackConnectedWallet(WalletTypes.LEAP);
+    handleClose();
+  };
+
+  const handleLeapSnapConnect = () => {
+    connectLeapSnap(chain);
+    trackConnectedWallet(WalletTypes.METAMASK_SNAP);
     handleClose();
   };
 
@@ -121,41 +128,36 @@ function WalletModal() {
           <>
             <ModalHeader textAlign="center">Connect wallet</ModalHeader>
             <ModalBody>
-              <Stack spacing={6}>
+              <Stack spacing={3}>
                 <WalletListItem
                   handleClick={handleKeplrConnect}
-                  name="Keplr Wallet"
+                  name="Keplr"
                   icon="/images/keplr.png"
                   isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
-                {/* {featureFlags.stationEnabled && (
-                  <WalletListItem
-                    handleClick={handleStationConnect}
-                    name="Terra Station"
-                    icon="/images/station.svg"
-                    isInstalled={isStationInstalled}
-                    walletInstallLink="https://setup-station.terra.money/"
-                  />
-                )} */}
-                {(featureFlags.leapEnabled || isAdminPage) && (
-                  <WalletListItem
-                    handleClick={handleLeapConnect}
-                    name="Leap Wallet"
-                    icon="/images/leap.svg"
-                    isInstalled={isLeapInstalled}
-                    walletInstallLink="https://www.leapwallet.io/download"
-                  />
-                )}
-                {(featureFlags.XDEFIEnabled || isAdminPage) && (
-                  <WalletListItem
-                    handleClick={handleXDEFIConnect}
-                    name="XDEFI Wallet"
-                    icon="/images/xdefi.png"
-                    isInstalled={isXDEFIInstalled}
-                    walletInstallLink="https://www.xdefi.io/"
-                  />
-                )}
+                <WalletListItem
+                  handleClick={handleLeapConnect}
+                  name="Leap"
+                  icon="/images/leap.svg"
+                  isInstalled={isLeapInstalled}
+                  walletInstallLink="https://www.leapwallet.io/download"
+                />
+                <WalletListItem
+                  handleClick={handleXDEFIConnect}
+                  name="XDEFI"
+                  icon="/images/xdefi.png"
+                  isInstalled={isXDEFIInstalled}
+                  walletInstallLink="https://www.xdefi.io/"
+                />
+                <WalletListItem
+                  handleClick={handleLeapSnapConnect}
+                  name="Metamask (Leap Snap)"
+                  icon="/images/metamask.png"
+                  isInstalled={isLeapSnapInstalled}
+                  walletInstallLink="https://metamask.io/download/"
+                  walletInstallCallback={isMetamaskInstalled ? () => connectLeapSnap(chain) : undefined}
+                />
                 {chain === Chains.Moonbeam && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}

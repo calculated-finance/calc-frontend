@@ -32,6 +32,7 @@
     "@fontsource/karla": "^4.5.9",
     "@fusion-icons/react": "^0.0.0",
     "@keplr-wallet/types": "^0.11.16",
+    "@leapwallet/cosmos-snap-provider": "^0.1.22",
     "@openzeppelin/contracts": "^4.9.1",
     "@sentry/react": "^7.51.0",
     "@tanstack/react-query": "^4.2.3",
