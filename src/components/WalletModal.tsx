@@ -136,34 +136,28 @@ function WalletModal() {
                   isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
-                {
-                  <WalletListItem
-                    handleClick={handleLeapConnect}
-                    name="Leap"
-                    icon="/images/leap.svg"
-                    isInstalled={isLeapInstalled}
-                    walletInstallLink="https://www.leapwallet.io/download"
-                  />
-                }
-                {
-                  <WalletListItem
-                    handleClick={handleXDEFIConnect}
-                    name="XDEFI"
-                    icon="/images/xdefi.png"
-                    isInstalled={isXDEFIInstalled}
-                    walletInstallLink="https://www.xdefi.io/"
-                  />
-                }
-                {
-                  <WalletListItem
-                    handleClick={handleLeapSnapConnect}
-                    name="Metamask (Leap Snap)"
-                    icon="/images/metamask.png"
-                    isInstalled={isLeapSnapInstalled}
-                    walletInstallLink="https://metamask.io/download/"
-                    walletInstallCallback={isMetamaskInstalled ? () => connectLeapSnap(chain) : undefined}
-                  />
-                }
+                <WalletListItem
+                  handleClick={handleLeapConnect}
+                  name="Leap"
+                  icon="/images/leap.svg"
+                  isInstalled={isLeapInstalled}
+                  walletInstallLink="https://www.leapwallet.io/download"
+                />
+                <WalletListItem
+                  handleClick={handleXDEFIConnect}
+                  name="XDEFI"
+                  icon="/images/xdefi.png"
+                  isInstalled={isXDEFIInstalled}
+                  walletInstallLink="https://www.xdefi.io/"
+                />
+                <WalletListItem
+                  handleClick={handleLeapSnapConnect}
+                  name="Metamask (Leap Snap)"
+                  icon="/images/metamask.png"
+                  isInstalled={isLeapSnapInstalled}
+                  walletInstallLink="https://metamask.io/download/"
+                  walletInstallCallback={isMetamaskInstalled ? () => connectLeapSnap(chain) : undefined}
+                />
                 {chain === Chains.Moonbeam && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}

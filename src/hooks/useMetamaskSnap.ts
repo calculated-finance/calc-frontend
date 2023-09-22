@@ -4,9 +4,10 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getChainId, getGasPrice } from '@helpers/chains';
-import { getSnap, CosmjsOfflineSigner, connectSnap, getSnaps, Snap } from '@leapwallet/cosmos-snap-provider';
-import { Chains } from './useChain/Chains';
+import { CosmjsOfflineSigner, connectSnap, getSnaps, Snap } from '@leapwallet/cosmos-snap-provider';
 import { find, values } from 'rambda';
+
+import { Chains } from './useChain/Chains';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
