@@ -4,8 +4,9 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getChainId, getGasPrice } from '@helpers/chains';
-import { getSnap, CosmjsOfflineSigner, connectSnap } from '@leapwallet/cosmos-snap-provider';
+import { getSnap, CosmjsOfflineSigner, connectSnap, getSnaps, Snap } from '@leapwallet/cosmos-snap-provider';
 import { Chains } from './useChain/Chains';
+import { find, values } from 'rambda';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
@@ -15,9 +16,13 @@ interface KeplrWindow extends Window {
 declare const window: KeplrWindow;
 const leapSnapId = 'npm:@leapwallet/metamask-cosmos-snap';
 
-async function hasLeapSnaps() {
-  const installedSnap = await getSnap();
-  return installedSnap && installedSnap.id === leapSnapId;
+async function hasLeapSnap() {
+  try {
+    const installedSnaps = await getSnaps();
+    return !!find((snap: Snap) => snap.id === leapSnapId, values(installedSnaps));
+  } catch (error) {
+    return false;
+  }
 }
 
 type IWallet = {
@@ -83,7 +88,7 @@ export const useMetamaskSnap = create<IWallet>()(
       },
       init: async (chain: Chains) => {
         if (!get().isInstalled) {
-          set({ isInstalled: await hasLeapSnaps() });
+          set({ isInstalled: await hasLeapSnap() });
         }
         if (get().autoconnect) {
           get().connect(chain);

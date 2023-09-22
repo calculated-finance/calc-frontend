@@ -3,8 +3,7 @@
 const withImages = require('next-images');
 
 const nextConfig = {
-  swcMinify: false,
-  compress: false,
+  swcMinify: true,
   pageExtensions: ['page.tsx'],
   reactStrictMode: false,
   trailingSlash: true,

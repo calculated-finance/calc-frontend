@@ -136,7 +136,7 @@ function WalletModal() {
                   isInstalled={isKeplrInstalled}
                   walletInstallLink="https://www.keplr.app/download"
                 />
-                {isAdminPage && (
+                {
                   <WalletListItem
                     handleClick={handleLeapConnect}
                     name="Leap"
@@ -144,7 +144,7 @@ function WalletModal() {
                     isInstalled={isLeapInstalled}
                     walletInstallLink="https://www.leapwallet.io/download"
                   />
-                )}
+                }
                 {
                   <WalletListItem
                     handleClick={handleXDEFIConnect}
