@@ -6,13 +6,21 @@ export interface WalletListItemProps {
   name: string;
   isInstalled: boolean;
   walletInstallLink: string;
+  walletInstallCallback?: () => void;
 }
 
-export function WalletListItem({ handleClick, icon, name, isInstalled, walletInstallLink }: WalletListItemProps) {
+export function WalletListItem({
+  handleClick,
+  icon,
+  name,
+  isInstalled,
+  walletInstallLink,
+  walletInstallCallback,
+}: WalletListItemProps) {
   return (
     <Center
       as={isInstalled ? undefined : 'a'}
-      onClick={isInstalled ? handleClick : undefined}
+      onClick={isInstalled ? handleClick : walletInstallCallback}
       w="full"
       bg="deepHorizon"
       p={2}
@@ -22,7 +30,7 @@ export function WalletListItem({ handleClick, icon, name, isInstalled, walletIns
       borderWidth={1}
       _hover={{ bg: 'abyss.200' }}
       cursor="pointer"
-      href={walletInstallLink}
+      href={walletInstallCallback ? undefined : walletInstallLink}
       target={isInstalled ? undefined : '_blank'}
       rel={isInstalled ? undefined : 'noopener noreferrer'}
     >

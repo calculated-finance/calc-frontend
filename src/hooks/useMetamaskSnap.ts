@@ -13,10 +13,11 @@ interface KeplrWindow extends Window {
 }
 
 declare const window: KeplrWindow;
+const leapSnapId = 'npm:@leapwallet/metamask-cosmos-snap';
 
 async function hasLeapSnaps() {
-  const snapInstalled = await getSnap();
-  return snapInstalled && snapInstalled.id === 'npm:@leapwallet/metamask-cosmos-snap';
+  const installedSnap = await getSnap();
+  return installedSnap && installedSnap.id === leapSnapId;
 }
 
 type IWallet = {
@@ -30,7 +31,7 @@ type IWallet = {
   controller: SigningCosmWasmClient | null;
 };
 
-export const useLeapSnap = create<IWallet>()(
+export const useMetamaskSnap = create<IWallet>()(
   persist(
     (set, get) => ({
       isInstalled: false,
@@ -50,11 +51,18 @@ export const useLeapSnap = create<IWallet>()(
           get().disconnect();
         }
 
-        connectSnap();
-
         const chainId = getChainId(chain);
 
         try {
+          if (!get().isInstalled) {
+            await connectSnap(leapSnapId);
+          }
+
+          set({
+            isInstalled: true,
+            autoconnect: true,
+          });
+
           const offlineSigner = new CosmjsOfflineSigner(chainId);
           const accounts = await offlineSigner.getAccounts();
           const client = await SigningCosmWasmClient.connectWithSigner(getChainEndpoint(chain), offlineSigner, {
@@ -62,6 +70,7 @@ export const useLeapSnap = create<IWallet>()(
           });
 
           set({
+            isInstalled: true,
             controller: client,
             account: accounts[0],
             autoconnect: true,
