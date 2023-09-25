@@ -25,11 +25,11 @@ import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInf
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import TopPanel from '@components/TopPanel';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
+import SimpleDca from '@components/SimpleDca';
 import { useStrategies } from '@hooks/useStrategies';
 import { featureFlags } from 'src/constants';
 import { BarChartIcon } from '@fusion-icons/react/interface';
@@ -295,7 +295,10 @@ function HomeGrid() {
 
   return (
     <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
-      <TopPanel />
+      {/* <TopPanel /> */}
+      <GridItem colSpan={4}>
+        <SimpleDca />
+      </GridItem>
       {Boolean(activeStrategies.length) && (
         <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
           <InvestmentThesis strategies={strategies} isLoading={isLoading} />

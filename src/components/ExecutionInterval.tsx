@@ -24,7 +24,7 @@ import RadioCard from './RadioCard';
 import NumberInput from './NumberInput';
 import Select from './Select';
 
-function ExecutionIntervalLegacy() {
+export function ExecutionIntervalLegacy() {
   const [field, , helpers] = useField({ name: 'executionInterval' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({

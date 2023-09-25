@@ -53,7 +53,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const balance = convertDenomFromCoin(strategy.rawData.balance)
+  const balance = convertDenomFromCoin(strategy.rawData.balance);
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
   const { price } = usePrice(resultingDenom, initialDenom, transactionType);
@@ -83,7 +83,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
       },
     );
   };
-
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -117,8 +116,15 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           transactionType={transactionType}
                         />
                       </CollapseWithRender>
-                      {featureFlags.editSwapAmountEnabled &&
-                        <SwapAmount isEdit initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={balance} transactionType={transactionType} />}
+                      {featureFlags.editSwapAmountEnabled && (
+                        <SwapAmount
+                          isEdit
+                          initialDenom={initialDenom}
+                          resultingDenom={resultingDenom}
+                          initialDeposit={balance}
+                          transactionType={transactionType}
+                        />
+                      )}
                     </Stack>
                   )}
                   {isWeightedScale(strategy) && (
@@ -188,8 +194,6 @@ function Page() {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),
     ...getCustomiseSchema(strategy).cast(existingValues, { stripUnknown: true }),
   } as CustomiseSchema;
-
-
 
   return <CustomiseForm strategy={strategy} initialValues={castValues} />;
 }
