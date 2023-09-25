@@ -29,20 +29,17 @@ export function ExecutionIntervalLegacy() {
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
+    defaultValue: 'daily',
     onChange: helpers.setValue,
   });
   return (
     <FormControl>
-      {featureFlags.extraTimeOptions ? (
-        <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      ) : (
-        <FormLabel>How often would you like CALC to swap for you?</FormLabel>
-      )}
-      <Radio {...getRootProps}>
+      <FormLabel>How often would you like CALC to swap for you?</FormLabel>
+      <Radio w="100%" {...getRootProps}>
         {executionIntervalData.map((option) => {
           const radio = getRadioProps({ value: option.value });
           return (
-            <RadioCard key={option.label} {...radio}>
+            <RadioCard textAlign="center" w="full" key={option.label} {...radio}>
               {option.label}
             </RadioCard>
           );
@@ -51,6 +48,7 @@ export function ExecutionIntervalLegacy() {
     </FormControl>
   );
 }
+
 function TimePeriodOption({ label, icon }: { label: string; icon: ReactElement<IconType> }) {
   return (
     <HStack flexGrow={1}>

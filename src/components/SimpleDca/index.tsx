@@ -16,13 +16,13 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import steps from '@formConfig/dcaIn';
-import DCAInInitialDenom from '@components/DCAInInitialDenom';
-import DCAInResultingDenom from '@components/DCAInResultingDenom';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import NewStrategyModal, { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import { ExecutionIntervalLegacy } from '@components/ExecutionInterval';
 import { SwapAmountLegacy } from '@components/SwapAmount';
+import DCAInInitialDenomSimplified from '@components/DCAinInitialDenomSimplified';
+import DCAInResultingDenomSimplified from '@components/DCAInResultingDenomSimplified';
 import { SimpleDcaModalHeader } from './SimpleDcaModalHeader';
 
 function DcaIn() {
@@ -68,8 +68,8 @@ function DcaIn() {
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
             <Form autoComplete="off">
               <Stack direction="column" spacing={6}>
-                <DCAInInitialDenom />
-                <DCAInResultingDenom
+                <DCAInInitialDenomSimplified />
+                <DCAInResultingDenomSimplified
                   denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
                 />
                 <ExecutionIntervalLegacy />
