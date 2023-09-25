@@ -5,5 +5,5 @@ export function isV2Enabled(chain: Chains, address: string | undefined) {
   if (chain === Chains.Osmosis) {
     return true;
   }
-  return true || isAddressAdmin(address);
+  return isAddressAdmin(address);
 }
