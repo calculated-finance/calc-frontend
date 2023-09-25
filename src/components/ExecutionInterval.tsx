@@ -15,7 +15,6 @@ import { executionIntervalData } from '@helpers/executionIntervalData';
 import { useChain } from '@hooks/useChain';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { isV2Enabled } from '@helpers/version/isV2Enabled';
-import { featureFlags } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import { IconType } from 'react-icons/lib';
 import { ReactElement } from 'react';
@@ -33,11 +32,7 @@ function ExecutionIntervalLegacy() {
   });
   return (
     <FormControl>
-      {featureFlags.extraTimeOptions ? (
-        <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      ) : (
-        <FormLabel>How often would you like CALC to swap for you?</FormLabel>
-      )}
+      <FormLabel>I would like CALC to swap for me every:</FormLabel>
       <Radio {...getRootProps}>
         {executionIntervalData.map((option) => {
           const radio = getRadioProps({ value: option.value });
@@ -111,7 +106,7 @@ export default function ExecutionInterval() {
   const { chain } = useChain();
   const { address } = useWallet();
 
-  if (isV2Enabled(chain, address) && featureFlags.customTimeIntervalEnabled) {
+  if (isV2Enabled(chain, address)) {
     return <ExecutionIntervalCustom />;
   }
   return <ExecutionIntervalLegacy />;

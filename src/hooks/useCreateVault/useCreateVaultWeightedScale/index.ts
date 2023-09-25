@@ -4,7 +4,6 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
-import { featureFlags } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -54,9 +53,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
       throw new Error('Invalid reinvest strategy.');
     }
 
-    if (featureFlags.adjustedMinimumSwapAmountEnabled) {
-      checkSwapAmountValue(state.swapAmount, price);
-    }
+    checkSwapAmountValue(state.swapAmount, price);
 
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),

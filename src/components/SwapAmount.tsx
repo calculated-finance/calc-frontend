@@ -5,12 +5,23 @@ import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { MINIMUM_SWAP_VALUE_IN_USD, featureFlags } from 'src/constants';
+import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
-
-export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initialDeposit, transactionType }: { initialDenom: DenomInfo, resultingDenom: DenomInfo, initialDeposit: number, isEdit: boolean, transactionType: TransactionType }) {
+export default function SwapAmount({
+  isEdit,
+  initialDenom,
+  resultingDenom,
+  initialDeposit,
+  transactionType,
+}: {
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  initialDeposit: number;
+  isEdit: boolean;
+  transactionType: TransactionType;
+}) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
@@ -26,7 +37,7 @@ export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initi
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
   const displayCustomExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][
-    executions * executionIntervalIncrement > 1 ? 1 : 0
+      executions * executionIntervalIncrement > 1 ? 1 : 0
     ];
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -48,9 +59,7 @@ export default function SwapAmount({ isEdit, initialDenom, resultingDenom, initi
         </Flex>{' '}
       </FormHelperText>
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
-      {featureFlags.adjustedMinimumSwapAmountEnabled && (
-        <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
-      )}
+      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

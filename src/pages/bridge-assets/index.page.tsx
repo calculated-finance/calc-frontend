@@ -2,7 +2,6 @@ import { Button, Flex, Heading, Stack, Text, Image, SimpleGrid, useDisclosure } 
 import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
-import { featureFlags } from 'src/constants';
 import OnRampModal from '@components/OnRampModalContent';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
@@ -78,18 +77,16 @@ function BridgeAssetsCards() {
             cta="Mint USK now"
           />
         )}
-        {featureFlags.squidIntegrationEnabled && (
-          <BridgeAssetsCard
-            name="Squid Cross Chain Bridge"
-            description="Bridge almost any asset to Cosmos from almost any chain with Squid and Axelar."
-            image="/images/squidAssets.png"
-            onClick={onSquidOpen}
-            cta="Bridge assets now"
-          />
-        )}
+        <BridgeAssetsCard
+          name="Squid Cross Chain Bridge"
+          description="Bridge almost any asset to Cosmos from almost any chain with Squid and Axelar."
+          image="/images/squidAssets.png"
+          onClick={onSquidOpen}
+          cta="Bridge assets now"
+        />
       </SimpleGrid>
       <OnRampModal isOpen={isOpen} onClose={onClose} />
-      {featureFlags.squidIntegrationEnabled && <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />}
+      <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
     </Stack>
   );
 }

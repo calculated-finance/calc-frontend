@@ -26,7 +26,6 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
-import { featureFlags } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { Coin } from '@cosmjs/proto-signing';
@@ -126,7 +125,6 @@ export function GetFundsButton({ onOpen }: GetFundsButtonProps) {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
-      {featureFlags.getFundsModalEnabled && (
         <Button
           size="xs"
           data-testid="get-funds-button"
@@ -137,7 +135,6 @@ export function GetFundsButton({ onOpen }: GetFundsButtonProps) {
         >
           Get funds
         </Button>
-      )}
     </HStack>
   );
 }

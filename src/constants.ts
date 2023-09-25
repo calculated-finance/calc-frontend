@@ -74,41 +74,17 @@ export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
-        extraTimeOptions: true,
-        squidIntegrationEnabled: true,
         stationEnabled: false,
-        XDEFIEnabled: true,
-        dcaPlusEnabled: true,
-        reinvestVisualsEnabled: true,
-        isKujiraV2Enabled: true,
-        customTimeIntervalEnabled: true,
+        leapEnabled: false,
         amplitudeEnabled: true,
-        learningHubEnabled: true,
-        unconnectedFirstStepEnabled: true,
-        getFundsModalEnabled: true,
-        assetPageStrategyButtonsEnabled: true,
-        adjustedMinimumSwapAmountEnabled: true,
         controlDeskEnabled: false,
-        editSwapAmountEnabled: true,
         singleAssetsEnabled: false,
       }
     : {
-        extraTimeOptions: true,
-        reinvestVisualsEnabled: true,
-        squidIntegrationEnabled: true,
         stationEnabled: false,
-        XDEFIEnabled: false,
-        dcaPlusEnabled: true,
-        isKujiraV2Enabled: true,
-        customTimeIntervalEnabled: true,
+        leapEnabled: true,
         amplitudeEnabled: false,
-        learningHubEnabled: true,
-        unconnectedFirstStepEnabled: true,
-        getFundsModalEnabled: true,
-        assetPageStrategyButtonsEnabled: true,
-        adjustedMinimumSwapAmountEnabled: true,
         controlDeskEnabled: true,
-        editSwapAmountEnabled: true,
         singleAssetsEnabled: true,
       };
 
