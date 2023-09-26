@@ -7,5 +7,9 @@ export function StepOneConnectWallet() {
     setVisible(true);
   };
 
-  return <Button onClick={handleConnect}>Connect to a wallet</Button>;
+  return (
+    <Button w="full" onClick={handleConnect}>
+      Connect to a wallet
+    </Button>
+  );
 }

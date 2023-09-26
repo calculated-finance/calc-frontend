@@ -1,6 +1,5 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -12,26 +11,25 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
-import { useWallet } from '@hooks/useWallet';
-import Submit from '@components/Submit';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import steps from '@formConfig/dcaIn';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import NewStrategyModal, { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import { ExecutionIntervalLegacy } from '@components/ExecutionInterval';
 import { SwapAmountLegacy } from '@components/SwapAmount';
+import useDcaInFormSimplified from '@hooks/useDcaInSimplifiedForm';
 import DCAInInitialDenomSimplified from '@components/DCAinInitialDenomSimplified';
+import simpleDcaInSteps from '@formConfig/simpleDcaIn';
 import DCAInResultingDenomSimplified from '@components/DCAInResultingDenomSimplified';
 import { SimpleDcaModalHeader } from './SimpleDcaModalHeader';
+import { ConfirmSimpleDca } from './ConfirimSimpleDca';
 
 function DcaIn() {
-  const { connected } = useWallet();
-  const { actions, state } = useDcaInForm();
+  const { actions, state } = useDcaInFormSimplified();
   const {
     data: { pairs },
   } = usePairs();
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(simpleDcaInSteps);
   const { data: balances } = useBalances();
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(step1ValidationSchema, { balances });
@@ -52,10 +50,10 @@ function DcaIn() {
   }
 
   const initialValues = {
-    ...state.step1,
-    initialDenom: state.step1.initialDenom,
-    resultingDenom: state.step1.resultingDenom,
-    initialDeposit: state.step1.initialDeposit,
+    ...state,
+    initialDenom: state.initialDenom,
+    resultingDenom: state.resultingDenom,
+    initialDeposit: state.initialDeposit,
   };
 
   return (
@@ -74,13 +72,10 @@ function DcaIn() {
                 />
                 <ExecutionIntervalLegacy />
                 <SwapAmountLegacy
-                  isEdit={Boolean(false)}
                   initialDenomString={initialValues.initialDenom}
                   resultingDenomString={initialValues.resultingDenom}
-                  initialDeposit={12}
-                  transactionType={TransactionType.Buy}
                 />
-                {connected ? <Submit>Confirm</Submit> : <StepOneConnectWallet />}
+                <ConfirmSimpleDca />
               </Stack>
             </Form>
           </NewStrategyModalBody>

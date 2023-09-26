@@ -82,21 +82,15 @@ export default function SwapAmount({
 }
 
 export function SwapAmountLegacy({
-  isEdit,
   initialDenomString,
   resultingDenomString,
-  initialDeposit,
-  transactionType,
 }: {
   initialDenomString: string | undefined;
   resultingDenomString: string | undefined;
-  initialDeposit: number;
-  isEdit: boolean;
-  transactionType: TransactionType;
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
-
-  const isSell = transactionType === TransactionType.Sell;
+  const [{ value: initialDeposit }, depositMeta] = useField({ name: 'initialDeposit' });
+  const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
   const initialDenom = useDenom(initialDenomString);
   const resultingDenom = useDenom(resultingDenomString);
@@ -106,44 +100,38 @@ export function SwapAmountLegacy({
   };
 
   const executions = totalExecutions(initialDeposit, field.value);
+  const displayExecutionInterval =
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
-      <FormLabel>
-        How much {initialDenom.name} each {isSell ? 'swap' : 'purchase'}?
-      </FormLabel>
+      <FormLabel>How much {initialDenom.name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
           <Text>The amount you want swapped each purchase for {resultingDenom.name}.</Text>
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
-              {isEdit ? 'Balance:' : 'Max:'}
+              Max:
             </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
-              {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
+              {initialDeposit && !depositMeta.error && depositMeta.touched
+                ? initialDeposit?.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'
+                : '-'}
             </Button>
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} isDisabled={!initialDeposit} />
       {featureFlags.adjustedMinimumSwapAmountEnabled && (
         <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       )}
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {/* {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
+      {initialDeposit && !depositMeta.error && depositMeta.touched && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
-      ) : (
-        Boolean(field.value) &&
-        !meta.error && (
-          <FormHelperText color="brand.200" fontSize="xs">
-            A total of {executions} swaps will take place over {executions * executionIntervalIncrement}{' '}
-            {displayCustomExecutionInterval}.
-          </FormHelperText>
-        )
-      )} */}
+      )}
     </FormControl>
   );
 }
