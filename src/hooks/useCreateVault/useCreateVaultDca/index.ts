@@ -60,7 +60,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       initialDenom: getDenomInfo(state.initialDenom),
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
-      timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
+      timeTrigger: state.startDate && { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,
       swapAmount: state.swapAmount,
       priceThreshold: state.priceThresholdValue || undefined,
@@ -68,7 +68,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       slippageTolerance: state.slippageTolerance,
       destinationConfig: {
         autoStakeValidator: state.autoStakeValidator || undefined,
-        autoCompoundStakingRewards: state.autoCompoundStakingRewards,
+        autoCompoundStakingRewards: state.autoCompoundStakingRewards || false,
         recipientAccount: state.recipientAccount || undefined,
         yieldOption: state.yieldOption || undefined,
         reinvestStrategyId: state.reinvestStrategy || undefined,

@@ -133,8 +133,6 @@ export const useConfirmForm = () => {
   const { formName } = useStrategyInfo();
   const { address } = useWallet();
   try {
-    dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true });
-
     return {
       state: dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
       actions: {
