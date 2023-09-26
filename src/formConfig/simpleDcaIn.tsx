@@ -8,9 +8,6 @@ const simpleDcaInSteps: StepConfig[] = [
     title: contentData.dcaIn.assets.title,
     footerText: contentData.dcaIn.assets.footerText,
     helpContent: <RecurringDeposits />,
-    noBackButton: true,
-    noJump: true,
-    successPage: true,
   },
 ];
 

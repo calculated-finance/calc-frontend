@@ -50,6 +50,8 @@ function Page() {
       },
     );
 
+  console.log(state);
+
   const handleRestart = () => {
     actions.resetAction();
     goToStep(0);
