@@ -9,6 +9,7 @@ export const useConfirmFormSimple = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { formName } = useStrategyInfo();
   const { address } = useWallet();
+
   try {
     return {
       state: dcaSchema.validateSync(getFormState(state, formName), { stripUnknown: true }),
@@ -20,7 +21,6 @@ export const useConfirmFormSimple = () => {
   } catch (e) {
     return {
       // state: dcaSchema.cast(initialValues, { stripUnknown: true }),
-
       actions: {
         updateAction: updateAction(formName, address),
         resetAction: resetAction(formName),

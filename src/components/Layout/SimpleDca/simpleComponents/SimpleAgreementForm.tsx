@@ -7,6 +7,8 @@ import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { Form, Formik, FormikHelpers, useField } from 'formik';
+import { SimplifiedDcaInFormData } from '@models/DcaInFormData';
+import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import useStrategy from '@hooks/useStrategy';
 import { useConfirmFormSimple } from '../useDcaInFormSimple';
@@ -15,11 +17,10 @@ export type AgreementForm = {
   acceptedAgreement: boolean;
 };
 
-export default function SimpleAgreementForm() {
-  const { actions, state } = useConfirmFormSimple();
+export default function SimpleAgreementForm({ formikValues }: { formikValues: any }) {
+  // const [newState, setState] = useState(formikValues); // create state variable and set initial value to formikValues
 
-  const [{ value: swapAmount }] = useField({ name: 'swapAmount' });
-  const [{ value: initialDeposit }] = useField({ name: 'initialDeposit' });
+  const { actions, state } = useConfirmFormSimple();
   const [{ value: initialDenom }] = useField({ name: 'initialDenom' });
 
   const initialDenomInfo = useDenom(initialDenom);
@@ -50,6 +51,10 @@ export default function SimpleAgreementForm() {
       },
     );
 
+  const onSubmit = async (formData: SimplifiedDcaInFormData) => {
+    await actions.updateAction(formData);
+  };
+
   return (
     <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={handleSubmit}>
       <Form>
@@ -71,12 +76,20 @@ export default function SimpleAgreementForm() {
                 </Button>
               </Text>
             </AgreementCheckbox>
-            <FormControl isInvalid={isError}>
-              <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
-                Confirm
-              </Submit>
-              <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
-            </FormControl>
+            {connected ? (
+              <FormControl isInvalid={isError}>
+                <Submit
+                  w="full"
+                  type="submit"
+                  rightIcon={<Icon as={CheckedIcon} stroke="navy" onClick={() => onSubmit(formikValues)} />}
+                >
+                  Confirm
+                </Submit>
+                <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+              </FormControl>
+            ) : (
+              <StepOneConnectWallet />
+            )}
             <TermsModal showCheckbox={false} isOpen={isOpen} onClose={onClose} />
           </Stack>
         </SigningState>

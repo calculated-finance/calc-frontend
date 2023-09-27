@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -32,6 +32,12 @@ function DcaIn() {
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
 
+  const initialValuesSimple = {
+    initialDenom: initialValues.initialDenom,
+    resultingDenom: initialValues.resultingDenom,
+    initialDeposit: initialValues.initialDeposit,
+  };
+
   if (!pairs) {
     return (
       <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
@@ -41,12 +47,6 @@ function DcaIn() {
       </ModalWrapper>
     );
   }
-
-  const initialValuesSimple = {
-    initialDenom: initialValues.initialDenom,
-    resultingDenom: initialValues.resultingDenom,
-    initialDeposit: initialValues.initialDeposit,
-  };
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -66,7 +66,7 @@ function DcaIn() {
                 initialDenomString={initialValues.initialDenom}
                 resultingDenomString={initialValues.resultingDenom}
               />
-              <SimpleAgreementForm />
+              <SimpleAgreementForm formikValues={values} />
             </Stack>
           </NewStrategyModalBody>
         </NewStrategyModal>
