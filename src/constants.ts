@@ -9,7 +9,7 @@ export const STAKING_ROUTER_CONTRACT_ADDRESS =
 export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://kujira-testnet-rpc.polkachu.com/';
 
 export const OSMOSIS_RPC_ENDPOINT_MAINNET =
-  process.env.NEXT_PUBLIC_OSMOSIS_RPC_ENDPOINT_MAINNET || 'https://osmosis-rpc.polkachu.com/';
+  process.env.NEXT_PUBLIC_OSMOSIS_RPC_ENDPOINT_MAINNET || 'https://rpc.osmosis.zone/';
 export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoon-4';
 export const FEE_TAKER_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
