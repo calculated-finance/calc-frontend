@@ -324,7 +324,7 @@ function HomeGridSimpleDca() {
 
   return (
     <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
-      <GridItem colSpan={[10, 10, 10, 10, 4, 4]} rowSpan={3} minWidth={451}>
+      <GridItem colSpan={[10, 10, 10, 10, 4, 3]} rowSpan={3} minWidth={451}>
         <SimpleDca />
       </GridItem>
 
@@ -342,11 +342,6 @@ function HomeGridSimpleDca() {
         ''
       )}
 
-      {/* {(!activeStrategies.length || !connected) && (
-        <GridItem colSpan={6} rowSpan={1}>
-          <OnboardingPanel />
-        </GridItem>
-      )} */}
       <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
         {chain !== Chains.Moonbeam && <TotalInvestment />}
       </GridItem>
@@ -357,6 +352,11 @@ function HomeGridSimpleDca() {
         </GridItem>
       ) : (
         ''
+      )}
+      {!connected && (
+        <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
+          <WarningPanel />{' '}
+        </GridItem>
       )}
     </Grid>
   );
