@@ -1,6 +1,6 @@
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { useWallet } from '@hooks/useWallet';
-import { dcaSchema, initialValues } from '@models/DcaInFormData';
+import { dcaSchema } from '@models/DcaInFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};

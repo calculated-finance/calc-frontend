@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
-import { initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
+import { SimplifiedDcaInFormData, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
@@ -23,7 +23,7 @@ import { useConfirmFormSimple } from './useDcaInFormSimple';
 import SimpleAgreementForm from './simpleComponents/SimpleAgreementForm';
 
 function DcaIn() {
-  const { actions } = useConfirmFormSimple();
+  const { actions, state } = useConfirmFormSimple();
   const {
     data: { pairs },
   } = usePairs();
@@ -36,6 +36,9 @@ function DcaIn() {
     initialDenom: initialValues.initialDenom,
     resultingDenom: initialValues.resultingDenom,
     initialDeposit: initialValues.initialDeposit,
+  };
+  const onSubmit = async (formData: SimplifiedDcaInFormData) => {
+    await actions.updateAction(formData);
   };
 
   if (!pairs) {
@@ -51,7 +54,7 @@ function DcaIn() {
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
-    <Formik initialValues={initialValuesSimple} validate={validate}>
+    <Formik initialValues={initialValuesSimple} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <NewStrategyModal>
           <SimpleDcaModalHeader />

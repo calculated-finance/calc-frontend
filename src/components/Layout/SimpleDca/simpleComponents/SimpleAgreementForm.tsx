@@ -6,8 +6,7 @@ import { TermsModal } from '@components/TermsModal';
 import { CheckedIcon } from '@fusion-icons/react/interface';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import { Form, Formik, FormikHelpers, useField } from 'formik';
-import { SimplifiedDcaInFormData } from '@models/DcaInFormData';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import useStrategy from '@hooks/useStrategy';
@@ -18,15 +17,15 @@ export type AgreementForm = {
 };
 
 export default function SimpleAgreementForm({ formikValues }: { formikValues: any }) {
-  // const [newState, setState] = useState(formikValues); // create state variable and set initial value to formikValues
-
   const { actions, state } = useConfirmFormSimple();
-  const [{ value: initialDenom }] = useField({ name: 'initialDenom' });
+  const { connected } = useWallet();
 
-  const initialDenomInfo = useDenom(initialDenom);
+  // const state = formikValues as DcaInFormDataAll;
+
+  const initialDenomInfo = useDenom(formikValues.initialDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(initialDenomInfo);
-  const { connected } = useWallet();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
@@ -38,7 +37,9 @@ export default function SimpleAgreementForm({ formikValues }: { formikValues: an
     return {};
   };
 
-  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
+  console.log('state', state);
+
+  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => {
     mutate(
       { state, reinvestStrategyData },
       {
@@ -50,9 +51,6 @@ export default function SimpleAgreementForm({ formikValues }: { formikValues: an
         },
       },
     );
-
-  const onSubmit = async (formData: SimplifiedDcaInFormData) => {
-    await actions.updateAction(formData);
   };
 
   return (
@@ -78,11 +76,7 @@ export default function SimpleAgreementForm({ formikValues }: { formikValues: an
             </AgreementCheckbox>
             {connected ? (
               <FormControl isInvalid={isError}>
-                <Submit
-                  w="full"
-                  type="submit"
-                  rightIcon={<Icon as={CheckedIcon} stroke="navy" onClick={() => onSubmit(formikValues)} />}
-                >
+                <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
                   Confirm
                 </Submit>
                 <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
