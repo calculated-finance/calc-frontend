@@ -9,6 +9,7 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
 import useStrategy from '@hooks/useStrategy';
 import { useConfirmFormSimple } from '../useDcaInFormSimple';
 
@@ -17,10 +18,10 @@ export type AgreementForm = {
 };
 
 export default function SimpleAgreementForm({ formikValues }: { formikValues: any }) {
-  const { actions, state } = useConfirmFormSimple();
+  const { actions } = useConfirmFormSimple(); // normal usage here is to also pull 'state' from here, but it's not working
   const { connected } = useWallet();
 
-  // const state = formikValues as DcaInFormDataAll;
+  const state = formikValues as DcaInFormDataAll; // using state here instead (but sketchy and not really working) although it gives us a different error.
 
   const initialDenomInfo = useDenom(formikValues.initialDenom);
 
@@ -37,7 +38,7 @@ export default function SimpleAgreementForm({ formikValues }: { formikValues: an
     return {};
   };
 
-  console.log('state', state);
+  console.log('state', state); // need this state to be accepted and work in mutate below
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => {
     mutate(

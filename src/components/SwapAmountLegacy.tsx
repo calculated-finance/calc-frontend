@@ -26,9 +26,11 @@ export default function SwapAmountLegacy({
     helpers.setValue(initialDeposit);
   };
 
-  // const executions = totalExecutions(initialDeposit, field.value);
-  // const displayExecutionInterval =
-  //   executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+  const executions = initialDeposit && field.value ? totalExecutions(initialDeposit, field.value) : 0;
+  const displayExecutionInterval =
+    executionInterval &&
+    executions > 0 &&
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}>
@@ -52,11 +54,11 @@ export default function SwapAmountLegacy({
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} isDisabled={!initialDeposit} />
       <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {/* {initialDeposit && !depositMeta.error && depositMeta.touched && field.value > 0 && (
+      {initialDeposit && !depositMeta.error && depositMeta.touched && field.value > 0 && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
-      )} */}
+      )}
     </FormControl>
   );
 }

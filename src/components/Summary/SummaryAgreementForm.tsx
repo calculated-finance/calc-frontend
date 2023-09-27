@@ -25,7 +25,6 @@ export function SummaryAgreementForm({
     if (!values.acceptedAgreement) {
       return { acceptedAgreement: 'You must accept the terms and conditions before continuing.' };
     }
-
     return {};
   };
 

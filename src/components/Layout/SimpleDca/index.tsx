@@ -23,7 +23,7 @@ import { useConfirmFormSimple } from './useDcaInFormSimple';
 import SimpleAgreementForm from './simpleComponents/SimpleAgreementForm';
 
 function DcaIn() {
-  const { actions, state } = useConfirmFormSimple();
+  const { actions } = useConfirmFormSimple();
   const {
     data: { pairs },
   } = usePairs();
