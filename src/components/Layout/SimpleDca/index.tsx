@@ -1,4 +1,4 @@
-import { Center, Stack } from '@chakra-ui/react';
+import { Box, Center, Heading, Image, Stack, Text } from '@chakra-ui/react';
 import { SimplifiedDcaInFormData, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Formik } from 'formik';
@@ -13,8 +13,9 @@ import Spinner from '@components/Spinner';
 import steps from '@formConfig/dcaIn';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import SwapAmountLegacy from '@components/SwapAmountLegacy';
-import NewStrategyModal, { NewStrategyModalBody } from '@components/NewStrategyModal';
+import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
+import * as Sentry from '@sentry/react';
 import DCAInInitialDenomSimplified from '@components/DCAinInitialDenomSimplified';
 import DCAInResultingDenomSimplified from '@components/DCAInResultingDenomSimplified';
 import ExecutionIntervalLegacy from '@components/ExecutionIntervalLegacy';
@@ -56,23 +57,33 @@ function DcaIn() {
     //  @ts-ignore
     <Formik initialValues={initialValuesSimple} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <NewStrategyModal>
-          <SimpleDcaModalHeader />
-          <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
-            <Stack direction="column" spacing={6}>
-              <DCAInInitialDenomSimplified />
-              <DCAInResultingDenomSimplified
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-              />
-              <ExecutionIntervalLegacy />
-              <SwapAmountLegacy
-                initialDenomString={initialValues.initialDenom}
-                resultingDenomString={initialValues.resultingDenom}
-              />
-              <SimpleAgreementForm formikValues={values} />
-            </Stack>
-          </NewStrategyModalBody>
-        </NewStrategyModal>
+        <Sentry.ErrorBoundary
+          fallback={
+            <Center m={8} p={8} flexDirection="column" gap={6}>
+              <Heading size="lg">Something went wrong</Heading>
+              <Image w={28} h={28} src="/images/notConnected.png" />
+              <Text>Please try again in a new session</Text>
+            </Center>
+          }
+        >
+          <Box maxWidth={451} minWidth={451}>
+            <SimpleDcaModalHeader />
+            <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
+              <Stack direction="column" spacing={6}>
+                <DCAInInitialDenomSimplified />
+                <DCAInResultingDenomSimplified
+                  denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                />
+                <ExecutionIntervalLegacy />
+                <SwapAmountLegacy
+                  initialDenomString={initialValues.initialDenom}
+                  resultingDenomString={initialValues.resultingDenom}
+                />
+                <SimpleAgreementForm formikValues={values} />
+              </Stack>
+            </NewStrategyModalBody>
+          </Box>
+        </Sentry.ErrorBoundary>
       )}
     </Formik>
   );
