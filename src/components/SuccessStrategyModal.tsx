@@ -25,12 +25,12 @@ function ThatsCalculatedThinkingText() {
   );
 }
 
-export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
+export const SuccessStrategyModalBody = ({ stepConfig }: { stepConfig: StepConfig[] }) => {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
   const { strategyId, timeSaved } = query;
   return (
-    <ModalWrapper stepsConfig={stepConfig}>
+    <>
       <AbsoluteCenter w="100%" h="100%" top="10%">
         <Lottie animationData={Confetti} loop={1} />
       </AbsoluteCenter>
@@ -57,6 +57,14 @@ export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] 
           </LinkWithQuery>
         )}
       </Stack>
+    </>
+  );
+};
+
+export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
+  return (
+    <ModalWrapper stepsConfig={stepConfig}>
+      <SuccessStrategyModalBody stepConfig={stepConfig} />
     </ModalWrapper>
   );
 }

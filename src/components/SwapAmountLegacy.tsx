@@ -1,8 +1,6 @@
 import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer, Text, Button } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import { formatFiat } from '@helpers/format/formatFiat';
-import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import totalExecutions from '@utils/totalExecutions';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
