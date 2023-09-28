@@ -36,7 +36,7 @@ export default function DCAInInitialDenomSimplified() {
       <FormLabel>Using:</FormLabel>
       <FormHelperText>
         <Center>
-          <Text textStyle="body-xs">Choose stablecoin</Text>
+          <Text textStyle="body-xs">Choose your asset</Text>
           <Spacer />
           {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
         </Center>

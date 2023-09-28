@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import { useChain } from '@hooks/useChain';
@@ -17,9 +17,6 @@ export default function DCAInResultingDenomSimplified({ denoms }: { denoms: Deno
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <FormLabel>I want to DCA into:</FormLabel>
-      <FormHelperText>
-        <Text textStyle="body-xs">CALC will purchase this asset for you</Text>
-      </FormHelperText>
       <DenomSelect
         denoms={denoms}
         placeholder="Choose asset"

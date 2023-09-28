@@ -66,7 +66,7 @@ function DcaIn() {
             </Center>
           }
         >
-          <Box maxWidth={451} mx={{ base: 'auto', xl: 0 }}>
+          <Box maxWidth={451} mx="auto">
             <SimpleDcaModalHeader />
             <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading}>
               <Stack direction="column" spacing={6}>

@@ -29,12 +29,12 @@ import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import SimpleDca from '@components/Layout/SimpleDca';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
-import { BarChartIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
+import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import { featureFlags } from 'src/constants';
 import TopPanel from '@components/TopPanel';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
-import { useAnalytics } from '@hooks/useAnalytics';
 
 function InfoPanel() {
   return (
@@ -118,6 +118,73 @@ function InvestmentThesis({ strategies, isLoading }: { strategies: Strategy[] | 
     </Flex>
   );
 }
+function InvestmentThesisWithActiveStrategies({
+  strategies,
+  isLoading,
+}: {
+  strategies: Strategy[] | undefined;
+  isLoading: boolean;
+}) {
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+  const acculumatingAssets = Array.from(
+    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
+
+  const profitTakingAssets = Array.from(
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => getStrategyInitialDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
+  return (
+    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Stack spacing={8}>
+          <HStack spacing={2}>
+            <Icon as={CrownIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+            <Heading size="md">My investment thesis:</Heading>
+          </HStack>
+
+          <Flex direction="row" gap={8}>
+            <Stack direction="column">
+              <Heading size="xs" textColor="gray.200">
+                My active CALC strategies:
+              </Heading>
+              <Heading size="2xl"> {activeStrategies.length}</Heading>
+            </Stack>
+
+            <Stack spacing={6}>
+              <Wrap spacingX={6} spacingY={2} align="center">
+                <Text>Asset(s) accumulating:</Text>
+                <HStack>
+                  {acculumatingAssets.length ? (
+                    acculumatingAssets.map((asset) => (
+                      <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />
+                    ))
+                  ) : (
+                    <Text>-</Text>
+                  )}
+                </HStack>
+              </Wrap>
+
+              <Wrap spacingX={6} spacingY={2} align="center">
+                <Text>Asset(s) taking profit on:</Text>
+                <HStack>
+                  {profitTakingAssets.length ? (
+                    profitTakingAssets.map((asset) => (
+                      <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />
+                    ))
+                  ) : (
+                    <Text>-</Text>
+                  )}
+                </HStack>
+              </Wrap>
+            </Stack>
+          </Flex>
+        </Stack>
+      )}
+    </Flex>
+  );
+}
 
 function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
   const { connected } = useWallet();
@@ -196,7 +263,10 @@ function TotalInvestment() {
 
   return (
     <Stack layerStyle="panel" p={8} h="full" spacing={6}>
-      <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
+      <HStack spacing={2}>
+        <Icon as={DropIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+        <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
+      </HStack>
       <Flex gap={12} direction={['column', null, 'row']}>
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
@@ -324,37 +394,25 @@ function HomeGridSimpleDca() {
 
   return (
     <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
-      <GridItem colSpan={[10, 10, 10, 10, 4, 3]} rowSpan={3} minWidth={451}>
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3} minWidth={451}>
         <SimpleDca />
       </GridItem>
 
       {Boolean(activeStrategies.length) && (
-        <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
-          <InvestmentThesis strategies={strategies} isLoading={isLoading} />
+        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+          <InvestmentThesisWithActiveStrategies strategies={strategies} isLoading={isLoading} />
         </GridItem>
       )}
 
-      {connected && activeStrategies.length ? (
-        <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
-          <ActiveStrategies strategies={strategies} isLoading={isLoading} />
-        </GridItem>
-      ) : (
-        ''
-      )}
-
-      <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
         {chain !== Chains.Moonbeam && <TotalInvestment />}
       </GridItem>
 
-      {!connected || !activeStrategies.length ? (
-        <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
-          <LearnAboutCalcPanel />
-        </GridItem>
-      ) : (
-        ''
-      )}
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+        <LearnAboutCalcPanel />
+      </GridItem>
       {!connected && (
-        <GridItem colSpan={[10, 10, 10, 10, 6, 6]} rowSpan={1}>
+        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
           <WarningPanel />{' '}
         </GridItem>
       )}

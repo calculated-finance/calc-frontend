@@ -1,5 +1,4 @@
-import { Button, FormControl, FormErrorMessage, Icon, Stack, Text, useDisclosure } from '@chakra-ui/react';
-import { AgreementCheckbox } from '@components/AgreementCheckbox';
+import { FormControl, FormErrorMessage, Icon, Stack, useDisclosure } from '@chakra-ui/react';
 import { SigningState } from '@components/NewStrategyModal';
 import Submit from '@components/Submit';
 import { TermsModal } from '@components/TermsModal';
@@ -59,22 +58,23 @@ export default function SimpleAgreementForm({ formikValues }: { formikValues: an
       <Form>
         <SigningState isSigning={isLoading}>
           <Stack spacing={4}>
-            <AgreementCheckbox>
-              <Text textStyle="body-xs">
-                I have read and agree to be bound by the{' '}
-                <Button
-                  textDecoration="underline"
-                  fontWeight="normal"
-                  size="xs"
-                  display="inline-flex"
-                  colorScheme="blue"
-                  variant="unstyled"
-                  onClick={onOpen}
-                >
-                  CALC Terms & Conditions.
-                </Button>
-              </Text>
-            </AgreementCheckbox>
+            {/*  FAB WANTED THIS REMOVED -> Now we should be able to just remove the whole second formik for agreement form */}
+            {/* <AgreementCheckbox>
+          <Text textStyle="body-xs">
+            I have read and agree to be bound by the{' '}
+            <Button
+              textDecoration="underline"
+              fontWeight="normal"
+              size="xs"
+              display="inline-flex"
+              colorScheme="blue"
+              variant="unstyled"
+              onClick={onOpen}
+            >
+              CALC Terms & Conditions.
+            </Button>
+          </Text>
+        </AgreementCheckbox> */}
             {connected ? (
               <FormControl isInvalid={isError}>
                 <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>

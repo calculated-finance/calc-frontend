@@ -6,6 +6,7 @@ import RadioCard from './RadioCard';
 
 export default function ExecutionIntervalLegacy() {
   const [field, , helpers] = useField({ name: 'executionInterval' });
+  const [{ value: resultingDenom }] = useField({ name: 'resultingDenom' });
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -14,12 +15,12 @@ export default function ExecutionIntervalLegacy() {
   });
   return (
     <FormControl>
-      <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      <Radio w="100%" {...getRootProps}>
+      <FormLabel>Every:</FormLabel>
+      <Radio {...getRootProps}>
         {executionIntervalData.map((option) => {
           const radio = getRadioProps({ value: option.value });
           return (
-            <RadioCard textAlign="center" w="full" key={option.label} {...radio}>
+            <RadioCard textAlign="center" key={option.label} {...radio} isDisabled={!resultingDenom}>
               {option.label}
             </RadioCard>
           );

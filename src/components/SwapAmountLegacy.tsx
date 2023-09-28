@@ -52,7 +52,7 @@ export default function SwapAmountLegacy({
         </Flex>{' '}
       </FormHelperText>
       <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} isDisabled={!initialDeposit} />
-      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      {/* <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText> */}
       <FormErrorMessage>{meta.error}</FormErrorMessage>
       {initialDeposit && !depositMeta.error && depositMeta.touched && field.value > 0 && (
         <FormHelperText color="brand.200" fontSize="xs">
