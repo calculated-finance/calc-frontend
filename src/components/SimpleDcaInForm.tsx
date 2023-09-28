@@ -44,16 +44,16 @@ import { useChain } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
-import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import useSteps from '@hooks/useSteps';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import totalExecutions from '@utils/totalExecutions';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
-import { DenomInput } from './DenomInput';
+import { getTimeSaved } from '@helpers/getTimeSaved';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
-import { getTimeSaved } from '@helpers/getTimeSaved';
+import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
+import { DenomInput } from './DenomInput';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
