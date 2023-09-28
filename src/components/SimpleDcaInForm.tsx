@@ -49,6 +49,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
+import useSteps from '@hooks/useSteps';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -143,6 +144,7 @@ function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
 }
 
 function SimpleDcaInForm() {
+  const { nextStep } = useSteps(steps);
   const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
   const {
     data: { pairs },
@@ -156,8 +158,9 @@ function SimpleDcaInForm() {
     mutate(
       { state: values },
       {
-        onSuccess: async (_) => {
+        onSuccess: async (__) => {
           setIsSuccess(true);
+          nextStep();
         },
         onSettled: () => {
           setSubmitting(false);
@@ -190,17 +193,7 @@ function SimpleDcaInForm() {
               <SimpleDcaModalHeader isSuccess={isSuccess} />
               <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (
-                  <SuccessStrategyModalBody
-                    stepConfig={[
-                      {
-                        href: '/',
-                        title: 'Strategy Set Successfully!',
-                        noBackButton: true,
-                        noJump: true,
-                        successPage: true,
-                      },
-                    ]}
-                  />
+                  <SuccessStrategyModalBody />
                 ) : (
                   <Stack direction="column" spacing={6} visibility={isLoading ? 'hidden' : 'visible'}>
                     <SimpleDCAInInitialDenom />

@@ -25,7 +25,7 @@ function ThatsCalculatedThinkingText() {
   );
 }
 
-export const SuccessStrategyModalBody = ({ stepConfig }: { stepConfig: StepConfig[] }) => {
+export function SuccessStrategyModalBody() {
   const { isPageLoading } = usePageLoad();
   const { query } = useRouter();
   const { strategyId, timeSaved } = query;
@@ -59,12 +59,12 @@ export const SuccessStrategyModalBody = ({ stepConfig }: { stepConfig: StepConfi
       </Stack>
     </>
   );
-};
+}
 
 export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
   return (
     <ModalWrapper stepsConfig={stepConfig}>
-      <SuccessStrategyModalBody stepConfig={stepConfig} />
+      <SuccessStrategyModalBody />
     </ModalWrapper>
   );
 }

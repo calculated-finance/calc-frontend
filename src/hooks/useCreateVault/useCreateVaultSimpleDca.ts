@@ -7,10 +7,10 @@ import { SimplifiedDcaInFormData, initialValues } from '@models/DcaInFormData';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import useFiatPrices from '@hooks/useFiatPrices';
 import { useTrackCreateVault } from './useTrackCreateVault';
 import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
-import useFiatPrices from '@hooks/useFiatPrices';
 
 export const useCreateVaultSimpleDcaIn = () => {
   const { transactionType } = useStrategyInfo();
@@ -37,7 +37,7 @@ export const useCreateVaultSimpleDcaIn = () => {
     }
 
     const initialDenom = getDenomInfo(state.initialDenom);
-    const price = initialDenom?.coingeckoId && prices?.[initialDenom?.coingeckoId]?.['usd'];
+    const price = initialDenom?.coingeckoId && prices?.[initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
       throw Error('Invalid price');

@@ -33,8 +33,9 @@ import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import { featureFlags } from 'src/constants';
 import TopPanel from '@components/TopPanel';
-import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
+
+import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
   return (
