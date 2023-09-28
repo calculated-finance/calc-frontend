@@ -29,7 +29,7 @@ import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
-import steps from '@formConfig/simpleDcaIn';
+import simpleDcaInSteps from '@formConfig/simpleDcaIn';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
@@ -205,7 +205,7 @@ function SimpleDcaInSwapAmount({
 }
 
 function SimpleDcaInForm() {
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
   const {
     data: { pairs },
@@ -255,7 +255,7 @@ function SimpleDcaInForm() {
           <Flex layerStyle="panel" p={8} alignItems="center" h="full">
             <Box maxWidth={451} mx="auto">
               <SimpleDcaModalHeader isSuccess={isSuccess} />
-              <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
+              <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (
                   <SuccessStrategyModalBody />
                 ) : (

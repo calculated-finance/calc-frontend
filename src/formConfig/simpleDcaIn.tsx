@@ -1,7 +1,7 @@
 import { StepConfig } from '@formConfig/StepConfig';
 import { contentData } from 'src/constants';
 
-const steps: StepConfig[] = [
+const simpleDcaInSteps: StepConfig[] = [
   {
     href: '/',
     title: contentData.dcaIn.assets.title,
@@ -14,4 +14,4 @@ const steps: StepConfig[] = [
   },
 ];
 
-export default steps;
+export default simpleDcaInSteps;

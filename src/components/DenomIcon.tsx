@@ -21,17 +21,16 @@ function DenomIcon({
       ) : (
         <Box
           fontSize="xs"
-          color="white"
-          bg="orange.200"
           textTransform="capitalize"
           borderRadius="full"
+          bg="black"
           width={size}
           height={size}
           textAlign="center"
-          lineHeight={size}
+          lineHeight={1.3}
           cursor="default"
         >
-          {name.charAt(0)}
+          {name.charAt(0) || '?'}
         </Box>
       )}
     </Tooltip>

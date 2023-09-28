@@ -4,7 +4,7 @@ import { useDcaInFormPostPurchase } from 'src/hooks/useDcaInForm';
 import { Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
+import dcaInSteps from 'src/formConfig/dcaIn';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
@@ -16,7 +16,7 @@ import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep, goToStep } = useSteps(dcaInSteps);
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
 
   const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
@@ -46,12 +46,14 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaIn,
-    }}>
-      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaIn,
+      }}
+    >
+      <ModalWrapper stepsConfig={dcaInSteps} reset={resetForm(FormNames.DcaIn)}>
         <Page />
       </ModalWrapper>
     </StrategyInfoProvider>
