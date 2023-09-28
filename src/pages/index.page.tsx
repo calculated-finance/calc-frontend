@@ -34,7 +34,6 @@ import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/
 import { featureFlags } from 'src/constants';
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
-
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {

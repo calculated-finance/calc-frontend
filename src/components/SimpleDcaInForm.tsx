@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Flex,
   FormControl,
@@ -8,12 +9,10 @@ import {
   FormLabel,
   Heading,
   Image,
-  Radio,
   SimpleGrid,
   Spacer,
   Stack,
   Text,
-  useRadioGroup,
 } from '@chakra-ui/react';
 import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, {
@@ -32,7 +31,6 @@ import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import steps from '@formConfig/simpleDcaIn';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import SwapAmountLegacy from '@components/SwapAmountLegacy';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import * as Sentry from '@sentry/react';
@@ -40,8 +38,6 @@ import { AgreementForm, SummaryAgreementForm } from '@components/Summary/Summary
 import { useCreateVaultSimpleDcaIn } from '@hooks/useCreateVault/useCreateVaultSimpleDca';
 import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
-import RadioCard from '@components/RadioCard';
-import { executionIntervalData } from '@helpers/executionIntervalData';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName } from '@helpers/chains';
 import { useChain } from '@hooks/useChain';
@@ -50,6 +46,14 @@ import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import useSteps from '@hooks/useSteps';
+import { useDenom } from '@hooks/useDenom/useDenom';
+import totalExecutions from '@utils/totalExecutions';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
+import { DenomInput } from './DenomInput';
+import { formatFiat } from '@helpers/format/formatFiat';
+import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
+import { getTimeSaved } from '@helpers/getTimeSaved';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -143,6 +147,61 @@ function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   );
 }
 
+function SimpleDcaInSwapAmount({
+  initialDenomString,
+  resultingDenomString,
+}: {
+  initialDenomString: string | undefined;
+  resultingDenomString: string | undefined;
+}) {
+  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
+  const [{ value: initialDeposit }, depositMeta] = useField({ name: 'initialDeposit' });
+  const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
+
+  const initialDenom = useDenom(initialDenomString);
+  const resultingDenom = useDenom(resultingDenomString);
+
+  const handleClick = () => {
+    helpers.setValue(initialDeposit);
+  };
+
+  const executions = initialDeposit && field.value ? totalExecutions(initialDeposit, field.value) : 0;
+  const displayExecutionInterval =
+    executionInterval &&
+    executions > 0 &&
+    executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+
+  return (
+    <FormControl isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}>
+      <FormLabel>How much {initialDenom.name} each purchase?</FormLabel>
+      <FormHelperText>
+        <Flex alignItems="flex-start">
+          <Text>The amount you want swapped each purchase for {resultingDenom.name}.</Text>
+          <Spacer />
+          <Flex flexDirection="row">
+            <Text ml={4} mr={1}>
+              Max:
+            </Text>
+            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
+              {initialDeposit && !depositMeta.error && depositMeta.touched
+                ? initialDeposit?.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'
+                : '-'}
+            </Button>
+          </Flex>
+        </Flex>{' '}
+      </FormHelperText>
+      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} isDisabled={!initialDeposit} />
+      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      <FormErrorMessage>{meta.error}</FormErrorMessage>
+      {initialDeposit && !depositMeta.error && depositMeta.touched && field.value > 0 && (
+        <FormHelperText color="brand.200" fontSize="xs">
+          A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
+        </FormHelperText>
+      )}
+    </FormControl>
+  );
+}
+
 function SimpleDcaInForm() {
   const { nextStep } = useSteps(steps);
   const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
@@ -154,13 +213,16 @@ function SimpleDcaInForm() {
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleAgreement = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, values: any) =>
+  const handleAgreement = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
-      { state: values },
+      { state },
       {
-        onSuccess: async (__) => {
+        onSuccess: async (strategyId) => {
+          nextStep({
+            strategyId,
+            timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          });
           setIsSuccess(true);
-          nextStep();
         },
         onSettled: () => {
           setSubmitting(false);
@@ -201,7 +263,7 @@ function SimpleDcaInForm() {
                       denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
                     />
                     <ExecutionIntervalLegacy />
-                    <SwapAmountLegacy
+                    <SimpleDcaInSwapAmount
                       initialDenomString={values.initialDenom}
                       resultingDenomString={values.resultingDenom}
                     />
