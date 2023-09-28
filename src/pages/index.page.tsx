@@ -28,13 +28,13 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import SimpleDcaInForm from '@components/SimpleDcaInForm';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import { featureFlags } from 'src/constants';
 import TopPanel from '@components/TopPanel';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import SimpleDcaIn from '@components/SimpleDcaInForm';
 
 function InfoPanel() {
   return (
@@ -395,7 +395,7 @@ function HomeGridSimpleDca() {
   return (
     <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3} minWidth={451}>
-        <SimpleDcaInForm />
+        <SimpleDcaIn />
       </GridItem>
 
       {Boolean(activeStrategies.length) && (

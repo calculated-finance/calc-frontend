@@ -37,7 +37,7 @@ import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import * as Sentry from '@sentry/react';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { useCreateVaultSimpleDca } from '@hooks/useCreateVault/useCreateVaultSimpleDca';
+import { useCreateVaultSimpleDcaIn } from '@hooks/useCreateVault/useCreateVaultSimpleDca';
 import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import RadioCard from '@components/RadioCard';
@@ -48,6 +48,7 @@ import { useChain } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
+import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -73,7 +74,7 @@ function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   );
 }
 
-function DCAInInitialDenomSimplified() {
+function SimpleDCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
@@ -115,7 +116,7 @@ function DCAInInitialDenomSimplified() {
   );
 }
 
-function DCAInResultingDenomSimplified({ denoms }: { denoms: DenomInfo[] }) {
+function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chain } = useChain();
 
@@ -141,33 +142,8 @@ function DCAInResultingDenomSimplified({ denoms }: { denoms: DenomInfo[] }) {
   );
 }
 
-function ExecutionIntervalLegacy() {
-  const [field, , helpers] = useField({ name: 'executionInterval' });
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    ...field,
-    defaultValue: 'daily',
-    onChange: helpers.setValue,
-  });
-  return (
-    <FormControl>
-      <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      <Radio w="100%" {...getRootProps}>
-        {executionIntervalData.map((option) => {
-          const radio = getRadioProps({ value: option.value });
-          return (
-            <RadioCard textAlign="center" w="full" key={option.label} {...radio}>
-              {option.label}
-            </RadioCard>
-          );
-        })}
-      </Radio>
-    </FormControl>
-  );
-}
-
 function SimpleDcaInForm() {
-  const { mutate, isError, error, isLoading } = useCreateVaultSimpleDca();
+  const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
   const {
     data: { pairs },
   } = usePairs();
@@ -178,7 +154,7 @@ function SimpleDcaInForm() {
 
   const handleAgreement = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, values: any) =>
     mutate(
-      { state: values, reinvestStrategyData: undefined },
+      { state: values },
       {
         onSuccess: async (_) => {
           setIsSuccess(true);
@@ -198,6 +174,62 @@ function SimpleDcaInForm() {
   }
 
   return (
+    <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
+      {({ values }) => (
+        <Sentry.ErrorBoundary
+          fallback={
+            <Center m={8} p={8} flexDirection="column" gap={6}>
+              <Heading size="lg">Something went wrong</Heading>
+              <Image w={28} h={28} src="/images/notConnected.png" />
+              <Text>Please try again in a new session</Text>
+            </Center>
+          }
+        >
+          <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+            <Box maxWidth={451} mx="auto">
+              <SimpleDcaModalHeader isSuccess={isSuccess} />
+              <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
+                {isSuccess ? (
+                  <SuccessStrategyModalBody
+                    stepConfig={[
+                      {
+                        href: '/',
+                        title: 'Strategy Set Successfully!',
+                        noBackButton: true,
+                        noJump: true,
+                        successPage: true,
+                      },
+                    ]}
+                  />
+                ) : (
+                  <Stack direction="column" spacing={6} visibility={isLoading ? 'hidden' : 'visible'}>
+                    <SimpleDCAInInitialDenom />
+                    <SimpleDCAInResultingDenom
+                      denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                    />
+                    <ExecutionIntervalLegacy />
+                    <SwapAmountLegacy
+                      initialDenomString={values.initialDenom}
+                      resultingDenomString={values.resultingDenom}
+                    />
+                    <SummaryAgreementForm
+                      isError={isError}
+                      error={error}
+                      onSubmit={(agreementData, setSubmitting) => handleAgreement(agreementData, setSubmitting, values)}
+                    />
+                  </Stack>
+                )}
+              </NewStrategyModalBody>
+            </Box>
+          </Flex>
+        </Sentry.ErrorBoundary>
+      )}
+    </Formik>
+  );
+}
+
+export default function SimpleDcaIn() {
+  return (
     <StrategyInfoProvider
       strategyInfo={{
         strategyType: StrategyTypes.SimpleDCAIn,
@@ -205,61 +237,7 @@ function SimpleDcaInForm() {
         formName: FormNames.SimpleDcaIn,
       }}
     >
-      <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-        {({ values }) => (
-          <Sentry.ErrorBoundary
-            fallback={
-              <Center m={8} p={8} flexDirection="column" gap={6}>
-                <Heading size="lg">Something went wrong</Heading>
-                <Image w={28} h={28} src="/images/notConnected.png" />
-                <Text>Please try again in a new session</Text>
-              </Center>
-            }
-          >
-            <Flex layerStyle="panel" p={8} alignItems="center" h="full">
-              <Box maxWidth={451} mx="auto">
-                <SimpleDcaModalHeader isSuccess={isSuccess} />
-                <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading} isSigning={isLoading}>
-                  {isSuccess ? (
-                    <SuccessStrategyModalBody
-                      stepConfig={[
-                        {
-                          href: '/',
-                          title: 'Strategy Set Successfully!',
-                          noBackButton: true,
-                          noJump: true,
-                          successPage: true,
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <Stack direction="column" spacing={6} visibility={isLoading ? 'hidden' : 'visible'}>
-                      <DCAInInitialDenomSimplified />
-                      <DCAInResultingDenomSimplified
-                        denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
-                      />
-                      <ExecutionIntervalLegacy />
-                      <SwapAmountLegacy
-                        initialDenomString={values.initialDenom}
-                        resultingDenomString={values.resultingDenom}
-                      />
-                      <SummaryAgreementForm
-                        isError={isError}
-                        error={error}
-                        onSubmit={(agreementData, setSubmitting) =>
-                          handleAgreement(agreementData, setSubmitting, values)
-                        }
-                      />
-                    </Stack>
-                  )}
-                </NewStrategyModalBody>
-              </Box>
-            </Flex>
-          </Sentry.ErrorBoundary>
-        )}
-      </Formik>
+      <SimpleDcaInForm />
     </StrategyInfoProvider>
   );
 }
-
-export default SimpleDcaInForm;

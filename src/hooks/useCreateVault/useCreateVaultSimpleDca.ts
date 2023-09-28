@@ -12,7 +12,7 @@ import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
 import useFiatPrices from '@hooks/useFiatPrices';
 
-export const useCreateVaultSimpleDca = () => {
+export const useCreateVaultSimpleDcaIn = () => {
   const { transactionType } = useStrategyInfo();
   const client = useCalcSigningClient();
   const { address } = useWallet();
@@ -26,9 +26,8 @@ export const useCreateVaultSimpleDca = () => {
     Error,
     {
       state: SimplifiedDcaInFormData | undefined;
-      reinvestStrategyData: Strategy | undefined;
     }
-  >(({ state, reinvestStrategyData }) => {
+  >(({ state }) => {
     if (!state) {
       throw new Error('No state');
     }
