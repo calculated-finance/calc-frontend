@@ -161,10 +161,6 @@ function SimpleDcaInSwapAmount({
   const initialDenom = useDenom(initialDenomString);
   const resultingDenom = useDenom(resultingDenomString);
 
-  const handleClick = () => {
-    helpers.setValue(initialDeposit);
-  };
-
   const executions = initialDeposit && field.value ? totalExecutions(initialDeposit, field.value) : 0;
   const displayExecutionInterval =
     executionInterval &&
@@ -182,7 +178,13 @@ function SimpleDcaInSwapAmount({
             <Text ml={4} mr={1}>
               Max:
             </Text>
-            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
+            <Button
+              size="xs"
+              colorScheme="blue"
+              variant="link"
+              cursor="pointer"
+              onClick={() => helpers.setValue(initialDeposit)}
+            >
               {initialDeposit && !depositMeta.error && depositMeta.touched
                 ? initialDeposit?.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'
                 : '-'}
@@ -213,7 +215,7 @@ function SimpleDcaInForm() {
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleAgreement = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
+  const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
       { state },
       {
@@ -270,7 +272,7 @@ function SimpleDcaInForm() {
                     <SummaryAgreementForm
                       isError={isError}
                       error={error}
-                      onSubmit={(agreementData, setSubmitting) => handleAgreement(agreementData, setSubmitting, values)}
+                      onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
                     />
                   </Stack>
                 )}

@@ -13,6 +13,7 @@ export default function ExecutionIntervalLegacy() {
     defaultValue: 'daily',
     onChange: helpers.setValue,
   });
+
   return (
     <FormControl>
       <FormLabel>Every:</FormLabel>
