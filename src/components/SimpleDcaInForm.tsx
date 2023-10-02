@@ -14,7 +14,12 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
+import {
+  DcaInFormDataAll,
+  DcaInFormDataStep1,
+  initialValues,
+  simplifiedDcaInValidationSchema,
+} from 'src/models/DcaInFormData';
 import usePairs, {
   getResultingDenoms,
   orderAlphabetically,
@@ -215,7 +220,7 @@ function SimpleDcaInForm() {
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
+  const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: DcaInFormDataAll) =>
     mutate(
       { state },
       {
