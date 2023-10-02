@@ -316,15 +316,12 @@ export function LearnAboutCalcPanel() {
 
   return (
     <Box layerStyle="panel" p={8} backgroundImage="/images/backgrounds/twist-thin-blue.svg" backgroundSize="cover">
-      <VStack alignItems="left">
+      <VStack alignItems="left" spacing={8}>
         <HStack>
           <Icon as={KnowledgeIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
-          <Text color="grey.200" textStyle="body">
-            CALC learning hub
-          </Text>
+          <Heading size="md">New to CALC?</Heading>
         </HStack>
         <Stack spacing={1}>
-          <Heading size="md">New to CALC?</Heading>
           <Text fontSize="sm">
             Find out why people are raving about their experiences leveraging CALC to make smarter swaps.
           </Text>
