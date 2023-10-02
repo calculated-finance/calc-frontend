@@ -31,10 +31,10 @@ import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
-import { featureFlags } from 'src/constants';
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import { useAdmin } from '@hooks/useAdmin';
 
 function InfoPanel() {
   return (
@@ -418,6 +418,7 @@ function HomeGridSimpleDca() {
 }
 
 function Home() {
+  const { isAdmin } = useAdmin();
   return (
     <>
       <Box pb={8}>
@@ -428,7 +429,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      {featureFlags.simpleDcaEnabled ? <HomeGridSimpleDca /> : <HomeGrid />}
+      {isAdmin ? <HomeGridSimpleDca /> : <HomeGrid />}
     </>
   );
 }

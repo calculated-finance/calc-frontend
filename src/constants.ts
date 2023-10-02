@@ -79,7 +79,6 @@ export const featureFlags =
         amplitudeEnabled: true,
         controlDeskEnabled: false,
         singleAssetsEnabled: false,
-        simpleDcaEnabled: false,
       }
     : {
         stationEnabled: false,
@@ -87,7 +86,6 @@ export const featureFlags =
         amplitudeEnabled: false,
         controlDeskEnabled: true,
         singleAssetsEnabled: true,
-        simpleDcaEnabled: true,
       };
 
 export const DEFAULT_PAGE_SIZE = 1000;
