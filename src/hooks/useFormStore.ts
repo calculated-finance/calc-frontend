@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export enum FormNames {
+  SimpleDcaIn = 'simpleDcaIn',
   DcaIn = 'dcaIn',
   DcaOut = 'dcaOut',
   DcaPlusIn = 'dcaPlusIn',

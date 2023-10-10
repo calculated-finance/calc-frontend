@@ -3,7 +3,7 @@ import { getFlowLayout } from '@components/Layout';
 import { useConfirmForm } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import useSteps from '@hooks/useSteps';
-import steps from 'src/formConfig/dcaIn';
+import dcaInSteps from 'src/formConfig/dcaIn';
 import { TransactionType } from '@components/TransactionType';
 import { InvalidData } from '@components/InvalidData';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
@@ -28,7 +28,7 @@ function Page() {
   const { state, actions } = useConfirmForm();
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
-  const { nextStep, goToStep } = useSteps(steps);
+  const { nextStep, goToStep } = useSteps(dcaInSteps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca(initialDenom);
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
@@ -99,7 +99,7 @@ function PageWrapper() {
         formName: FormNames.DcaIn,
       }}
     >
-      <ModalWrapper stepsConfig={steps} reset={resetForm(FormNames.DcaIn)}>
+      <ModalWrapper stepsConfig={dcaInSteps} reset={resetForm(FormNames.DcaIn)}>
         <Page />
       </ModalWrapper>
     </StrategyInfoProvider>

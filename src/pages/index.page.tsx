@@ -14,7 +14,6 @@ import {
   Wrap,
   VStack,
   Icon,
-  Spacer,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
@@ -25,13 +24,16 @@ import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInf
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import TopPanel from '@components/TopPanel';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAdmin } from '@hooks/useAdmin';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
-import { BarChartIcon } from '@fusion-icons/react/interface';
+import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
+import TopPanel from '@components/TopPanel';
+import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -116,6 +118,73 @@ function InvestmentThesis({ strategies, isLoading }: { strategies: Strategy[] | 
     </Flex>
   );
 }
+function InvestmentThesisWithActiveStrategies({
+  strategies,
+  isLoading,
+}: {
+  strategies: Strategy[] | undefined;
+  isLoading: boolean;
+}) {
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+  const acculumatingAssets = Array.from(
+    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
+
+  const profitTakingAssets = Array.from(
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => getStrategyInitialDenom(strategy).id)),
+  ).map((id) => getDenomInfo(id));
+  return (
+    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Stack spacing={8}>
+          <HStack spacing={2}>
+            <Icon as={CrownIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+            <Heading size="md">My investment thesis:</Heading>
+          </HStack>
+
+          <Flex direction="row" gap={8}>
+            <Stack direction="column">
+              <Heading size="xs" textColor="gray.200">
+                My active CALC strategies:
+              </Heading>
+              <Heading size="2xl"> {activeStrategies.length}</Heading>
+            </Stack>
+
+            <Stack spacing={6}>
+              <Wrap spacingX={6} spacingY={2} align="center">
+                <Text>Asset(s) accumulating:</Text>
+                <HStack>
+                  {acculumatingAssets.length ? (
+                    acculumatingAssets.map((asset) => (
+                      <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />
+                    ))
+                  ) : (
+                    <Text>-</Text>
+                  )}
+                </HStack>
+              </Wrap>
+
+              <Wrap spacingX={6} spacingY={2} align="center">
+                <Text>Asset(s) taking profit on:</Text>
+                <HStack>
+                  {profitTakingAssets.length ? (
+                    profitTakingAssets.map((asset) => (
+                      <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />
+                    ))
+                  ) : (
+                    <Text>-</Text>
+                  )}
+                </HStack>
+              </Wrap>
+            </Stack>
+          </Flex>
+        </Stack>
+      )}
+    </Flex>
+  );
+}
 
 function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
   const { connected } = useWallet();
@@ -194,7 +263,10 @@ function TotalInvestment() {
 
   return (
     <Stack layerStyle="panel" p={8} h="full" spacing={6}>
-      <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
+      <HStack spacing={2}>
+        <Icon as={DropIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+        <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
+      </HStack>
       <Flex gap={12} direction={['column', null, 'row']}>
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
@@ -240,38 +312,39 @@ function OnboardingPanel() {
 }
 
 export function LearnAboutCalcPanel() {
-  return (
-    <VStack
-      layerStyle="panel"
-      p={8}
-      alignItems="left"
-      borderColor="green.400"
-      borderWidth={2}
-      backgroundImage="/images/backgrounds/twist-thin.svg"
-    >
-      <Image src="images/learn.svg" alt="learn-icon" boxSize={8} />
+  const { track } = useAnalytics();
 
-      <Flex>
-        <Stack spacing={4}>
-          <HStack>
-            <Heading data-testid="active-strategy-count" size="lg">
-              New to CALC?
-            </Heading>
-            <Spacer />
-          </HStack>
-          <Heading data-testid="active-strategy-count" fontSize="md">
-            Get to know more about our extensive suite of DeFi products.
-          </Heading>
-          <Stack direction={{ base: 'column', sm: 'row' }}>
-            <LinkWithQuery href="/learn-about-calc">
-              <Button w={44} variant="outline" color="green.400">
-                Learn how CALC works
-              </Button>
-            </LinkWithQuery>
-          </Stack>
-        </Stack>{' '}
-      </Flex>
-    </VStack>
+  return (
+    <Box layerStyle="panel" p={8} backgroundImage="/images/backgrounds/twist-thin-blue.svg" backgroundSize="cover">
+      <VStack alignItems="left" spacing={8}>
+        <HStack>
+          <Icon as={KnowledgeIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
+          <Heading size="md">New to CALC?</Heading>
+        </HStack>
+        <Stack spacing={1}>
+          <Text fontSize="sm">
+            Find out why people are raving about their experiences leveraging CALC to make smarter swaps.
+          </Text>
+          <Text fontSize="sm" textStyle="body">
+            DCA | DCA+ | Weighted Scale
+          </Text>
+        </Stack>
+        <Stack direction={{ base: 'column', sm: 'row' }}>
+          <LinkWithQuery passHref href="/learn-about-calc">
+            <Button
+              px={12}
+              maxWidth={402}
+              size="sm"
+              bgColor="blue.200"
+              _hover={{ bgColor: 'blue.300' }}
+              onClick={() => track('Learning hub button clicked')}
+            >
+              Learn how CALC works
+            </Button>
+          </LinkWithQuery>
+        </Stack>
+      </VStack>
+    </Box>
   );
 }
 
@@ -309,7 +382,43 @@ function HomeGrid() {
   );
 }
 
+function HomeGridSimpleDca() {
+  const { connected } = useWallet();
+  const { chain } = useChain();
+  const { data: strategies, isLoading } = useStrategies();
+
+  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
+
+  return (
+    <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3} minWidth={451}>
+        <SimpleDcaIn />
+      </GridItem>
+
+      {Boolean(activeStrategies.length) && (
+        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+          <InvestmentThesisWithActiveStrategies strategies={strategies} isLoading={isLoading} />
+        </GridItem>
+      )}
+
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+        {chain !== Chains.Moonbeam && <TotalInvestment />}
+      </GridItem>
+
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+        <LearnAboutCalcPanel />
+      </GridItem>
+      {!connected && (
+        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+          <WarningPanel />{' '}
+        </GridItem>
+      )}
+    </Grid>
+  );
+}
+
 function Home() {
+  const { isAdmin } = useAdmin();
   return (
     <>
       <Box pb={8}>
@@ -320,7 +429,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <HomeGrid />
+      {isAdmin ? <HomeGridSimpleDca /> : <HomeGrid />}
     </>
   );
 }

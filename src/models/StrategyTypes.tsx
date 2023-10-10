@@ -1,4 +1,5 @@
 export enum StrategyTypes {
+  SimpleDCAIn = 'Simple DCA In',
   DCAIn = 'DCA In',
   DCAOut = 'DCA Out',
   DCAPlusIn = 'DCA+ In',

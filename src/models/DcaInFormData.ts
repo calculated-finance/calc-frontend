@@ -477,3 +477,14 @@ export const step2ValidationSchema = dcaSchema.pick([
   'priceThresholdValue',
 ]);
 export type DcaInFormDataStep2 = Yup.InferType<typeof step2ValidationSchema>;
+
+export const simplifiedDcaInValidationSchema = dcaSchema.pick([
+  'initialDenom',
+  'resultingDenom',
+  'swapAmount',
+  'initialDeposit',
+  'executionInterval',
+  'executionIntervalIncrement',
+  'sendToWallet',
+]);
+export type SimplifiedDcaInFormData = Yup.InferType<typeof simplifiedDcaInValidationSchema>;

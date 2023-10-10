@@ -17,7 +17,7 @@ import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
-import steps from '@formConfig/dcaIn';
+import dcaInSteps from '@formConfig/dcaIn';
 import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
@@ -30,7 +30,7 @@ function DcaIn() {
   const {
     data: { pairs },
   } = usePairs();
-  const { nextStep } = useSteps(steps);
+  const { nextStep } = useSteps(dcaInSteps);
   const { data: balances } = useBalances();
 
   const { validate } = useValidation(step1ValidationSchema, { balances });
@@ -42,7 +42,7 @@ function DcaIn() {
 
   if (!pairs) {
     return (
-      <ModalWrapper stepsConfig={steps} reset={actions.resetAction}>
+      <ModalWrapper stepsConfig={dcaInSteps} reset={actions.resetAction}>
         <Center h={56}>
           <Spinner />
         </Center>
@@ -61,21 +61,21 @@ function DcaIn() {
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={steps}>
+        <ModalWrapper reset={actions.resetAction} stepsConfig={dcaInSteps}>
           <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+              <DCAInResultingDenom
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
 
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack >
-          </Form >
-        </ModalWrapper >
-      )
-      }
-    </Formik >
+            </Stack>
+          </Form>
+        </ModalWrapper>
+      )}
+    </Formik>
   );
 }
 
@@ -88,9 +88,7 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      {featureFlags.singleAssetsEnabled ?
-        <Assets /> :
-        <DcaIn />}
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaIn />}
     </StrategyInfoProvider>
   );
 }

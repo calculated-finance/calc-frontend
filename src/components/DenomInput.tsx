@@ -18,13 +18,16 @@ export function DenomInput({
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);
   };
+  const validDenom = denom.id !== '';
   return (
     <InputGroup>
-      <InputLeftElement>
-        <DenomIcon denomInfo={denom} />
-      </InputLeftElement>
+      {validDenom && (
+        <InputLeftElement>
+          <DenomIcon denomInfo={denom} />
+        </InputLeftElement>
+      )}
       <NumericFormat
-        pl={10}
+        pl={validDenom ? 10 : undefined}
         placeholder="Enter amount"
         customInput={Input}
         allowNegative={false}

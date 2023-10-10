@@ -4,7 +4,7 @@ import { contentData } from 'src/constants';
 import { Autostaking } from '../components/helpContent/Autostaking';
 import { StepConfig } from './StepConfig';
 
-const steps: StepConfig[] = [
+const dcaInSteps: StepConfig[] = [
   {
     href: '/create-strategy/dca-in/assets',
     title: contentData.dcaIn.assets.title,
@@ -84,4 +84,4 @@ const steps: StepConfig[] = [
   },
 ];
 
-export default steps;
+export default dcaInSteps;
