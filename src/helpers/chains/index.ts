@@ -214,10 +214,16 @@ export function getOsmosisWebUrl() {
   return 'https://testnet.osmosis.zone';
 }
 
-export function getMarsAddress() {
+export function getRedBankAddress() {
   return isMainnet()
     ? 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg'
     : 'osmo1dl4rylasnd7mtfzlkdqn2gr0ss4gvyykpvr6d7t5ylzf6z535n9s5jjt8u';
+}
+
+export function getMarsParamsAddress() {
+  return isMainnet()
+    ? 'osmo1nlmdxt9ctql2jr47qd4fpgzg84cjswxyw6q99u4y4u4q6c2f5ksq7ysent'
+    : 'osmo1h334tvddn82m4apm08rm9k6kt32ws7vy0c4n30ngrvu6h6yxh8eq9l9jfh';
 }
 
 export function getMarsUrl() {

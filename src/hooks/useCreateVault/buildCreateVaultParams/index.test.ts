@@ -3,7 +3,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { defaultDenom } from '@utils/defaultDenom';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { TestnetDenoms } from '@models/Denom';
-import { getMarsAddress } from '@helpers/chains';
+import { getRedBankAddress } from '@helpers/chains';
 import { Destination, ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { mockChainConfig } from 'src/fixtures/mockChainConfig';
@@ -111,7 +111,7 @@ describe('build params', () => {
     it('returns a mars destination when yieldOption is "mars"', () => {
       const senderAddress = dcaInStrategyViewModal.owner;
       const yieldOption = 'mars';
-      const marsAddress = getMarsAddress();
+      const marsAddress = getRedBankAddress();
 
       const result = buildCallbackDestinations(mockChainConfig, null, null, yieldOption, senderAddress, undefined);
       const expectedDestination: Destination = {
