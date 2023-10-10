@@ -390,8 +390,8 @@ function HomeGridSimpleDca() {
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
   return (
-    <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
-      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3} minWidth={451}>
+    <Grid gap={4}  templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch" >
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3}>
         <SimpleDcaIn />
       </GridItem>
 
