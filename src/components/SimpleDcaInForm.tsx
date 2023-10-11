@@ -13,6 +13,7 @@ import {
   Spacer,
   Stack,
   Text,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, {
@@ -71,6 +72,7 @@ function SimpleDCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
+  const [isMobile] = useMediaQuery('(max-width: 506px)');
 
   if (!pairs) {
     return null;
@@ -96,7 +98,7 @@ function SimpleDCAInInitialDenom() {
         <Box>
           <DenomSelect
             denoms={denoms}
-            placeholder="Choose&nbsp;asset"
+            placeholder={isMobile ? 'Asset' : 'Choose asset'}
             value={field.value}
             onChange={helpers.setValue}
             showPromotion

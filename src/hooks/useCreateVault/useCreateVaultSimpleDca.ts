@@ -11,6 +11,7 @@ import useFiatPrices from '@hooks/useFiatPrices';
 import { useTrackCreateVault } from './useTrackCreateVault';
 import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
+import { SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE } from 'src/constants';
 
 export const useCreateVaultSimpleDcaIn = () => {
   const { transactionType } = useStrategyInfo();
@@ -58,7 +59,7 @@ export const useCreateVaultSimpleDcaIn = () => {
       swapAmount: state.swapAmount,
       priceThreshold: undefined,
       transactionType,
-      slippageTolerance: initialValues.slippageTolerance,
+      slippageTolerance: SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE,
       destinationConfig: {
         autoStakeValidator: undefined,
         autoCompoundStakingRewards: undefined,
