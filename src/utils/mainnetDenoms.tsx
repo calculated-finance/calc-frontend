@@ -283,7 +283,7 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.USDC]: {
     name: 'USDC',
     icon: '/images/denoms/usdc.svg',
-    coingeckoId: 'usd-coin ',
+    coingeckoId: 'usd-coin',
     stakeable: false,
     stable: true,
     enabled: true,
