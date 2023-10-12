@@ -15,7 +15,7 @@ export default function ExecutionIntervalLegacy() {
   });
 
   return (
-    <FormControl>
+    <FormControl isDisabled={!resultingDenom}>
       <FormLabel>Every:</FormLabel>
       <Radio {...getRootProps}>
         {executionIntervalData.map((option) => {

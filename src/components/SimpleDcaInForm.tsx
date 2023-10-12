@@ -158,7 +158,10 @@ function SimpleDcaInSwapAmount({
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}>
+    <FormControl
+      isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}
+      isDisabled={!executionInterval || !initialDeposit}
+    >
       <FormLabel>How much {initialDenom.name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
@@ -242,13 +245,7 @@ function SimpleDcaInForm() {
             </Center>
           }
         >
-          <Flex
-            layerStyle="panel"
-            p={{ base: 0, sm: 4 }}
-            alignItems="flex-start"
-            justifyContent="center"
-            h="fit-content"
-          >
+          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="flex-start" justifyContent="center" h="full">
             <Box maxWidth={451} mx="auto">
               <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (
