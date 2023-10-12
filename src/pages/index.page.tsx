@@ -28,7 +28,6 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useAdmin } from '@hooks/useAdmin';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
@@ -423,7 +422,6 @@ function HomeGridSimpleDca() {
 }
 
 function Home() {
-  const { isAdmin } = useAdmin();
   return (
     <>
       <Box pb={8}>
@@ -434,7 +432,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      {isAdmin ? <HomeGridSimpleDca /> : <HomeGrid />}
+      <HomeGridSimpleDca />
     </>
   );
 }
