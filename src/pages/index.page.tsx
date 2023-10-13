@@ -34,6 +34,7 @@ import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import { useAdmin } from '@hooks/useAdmin';
 
 function InfoPanel() {
   return (
@@ -422,6 +423,7 @@ function HomeGridSimpleDca() {
 }
 
 function Home() {
+  const { isAdmin } = useAdmin();
   return (
     <>
       <Box pb={8}>
@@ -432,7 +434,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      <HomeGridSimpleDca />
+      {isAdmin ? <HomeGridSimpleDca /> : <HomeGrid />}
     </>
   );
 }
