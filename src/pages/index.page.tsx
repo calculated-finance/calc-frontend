@@ -28,13 +28,13 @@ import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { useAdmin } from '@hooks/useAdmin';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
-import { useAdmin } from '@hooks/useAdmin';
 
 function InfoPanel() {
   return (
