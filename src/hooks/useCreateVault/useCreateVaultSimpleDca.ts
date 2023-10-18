@@ -3,9 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
-import { SimplifiedDcaInFormData, initialValues } from '@models/DcaInFormData';
+import { SimplifiedDcaInFormData } from '@models/DcaInFormData';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
+import { SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE } from 'src/constants';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import useFiatPrices from '@hooks/useFiatPrices';
 import { useTrackCreateVault } from './useTrackCreateVault';
@@ -58,7 +59,7 @@ export const useCreateVaultSimpleDcaIn = () => {
       swapAmount: state.swapAmount,
       priceThreshold: undefined,
       transactionType,
-      slippageTolerance: initialValues.slippageTolerance,
+      slippageTolerance: SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE,
       destinationConfig: {
         autoStakeValidator: undefined,
         autoCompoundStakingRewards: undefined,

@@ -13,6 +13,7 @@ import {
   Spacer,
   Stack,
   Text,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
 import usePairs, {
@@ -61,21 +62,9 @@ type SimpleDcaModalHeaderProps = {
 
 function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   return (
-    <Flex
-      bg="darkGrey"
-      h={20}
-      px={6}
-      alignItems="center"
-      borderRadius="2xl"
-      mb={2}
-      boxShadow="deepHorizon"
-      data-testid="strategy-modal-header"
-    >
-      <Heading size="sm">
-        {isSuccess ? 'Strategy successfully created!' : 'Setup a simple dollar cost averaging (DCA) strategy'}
-      </Heading>
-      <Spacer />
-    </Flex>
+    <Heading size="sm">
+      {isSuccess ? 'Strategy successfully created!' : 'Setup a simple dollar cost averaging (DCA) strategy'}
+    </Heading>
   );
 }
 
@@ -83,6 +72,7 @@ function SimpleDCAInInitialDenom() {
   const { data } = usePairs();
   const { pairs } = data || {};
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
+  const [isMobile] = useMediaQuery('(max-width: 506px)');
 
   if (!pairs) {
     return null;
@@ -108,7 +98,7 @@ function SimpleDCAInInitialDenom() {
         <Box>
           <DenomSelect
             denoms={denoms}
-            placeholder="Choose&nbsp;asset"
+            placeholder={isMobile ? 'Asset' : 'Choose asset'}
             value={field.value}
             onChange={helpers.setValue}
             showPromotion
@@ -168,7 +158,10 @@ function SimpleDcaInSwapAmount({
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}>
+    <FormControl
+      isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}
+      isDisabled={!executionInterval || !initialDeposit}
+    >
       <FormLabel>How much {initialDenom.name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
@@ -252,14 +245,15 @@ function SimpleDcaInForm() {
             </Center>
           }
         >
-          <Flex layerStyle="panel" p={8} alignItems="center" h="full">
+          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="flex-start" justifyContent="center" h="full">
             <Box maxWidth={451} mx="auto">
-              <SimpleDcaModalHeader isSuccess={isSuccess} />
               <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (
                   <SuccessStrategyModalBody />
                 ) : (
-                  <Stack direction="column" spacing={6} visibility={isLoading ? 'hidden' : 'visible'}>
+                  <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+                    <SimpleDcaModalHeader isSuccess={isSuccess} />
+
                     <SimpleDCAInInitialDenom />
                     <SimpleDCAInResultingDenom
                       denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}

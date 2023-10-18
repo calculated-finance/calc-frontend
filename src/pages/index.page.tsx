@@ -52,9 +52,9 @@ function InfoPanel() {
 
 function WarningPanel() {
   return (
-    <Stack direction="row" layerStyle="panel" px={8} py={4} spacing={4}>
+    <Stack direction="row" layerStyle="panel" px={8} py={8} spacing={4} h="full">
       <Image src="/images/warning.svg" />
-      <Flex alignItems="center">
+      <Flex alignItems="center" p={4}>
         <Text textStyle="body">
           <Text as="span" fontWeight="bold" color="white">
             Be Aware:
@@ -390,8 +390,8 @@ function HomeGridSimpleDca() {
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
   return (
-    <Grid gap={6} mb={6} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
-      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3} minWidth={451}>
+    <Grid gap={4} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
+      <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3}>
         <SimpleDcaIn />
       </GridItem>
 
@@ -409,6 +409,11 @@ function HomeGridSimpleDca() {
         <LearnAboutCalcPanel />
       </GridItem>
       {!connected && (
+        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
+          <WarningPanel />{' '}
+        </GridItem>
+      )}
+      {!activeStrategies.length && (
         <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
           <WarningPanel />{' '}
         </GridItem>

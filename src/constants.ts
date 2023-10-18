@@ -44,6 +44,8 @@ export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
 
 export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 
+export const SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE = 0.75;
+
 export const MIN_DCA_PLUS_STRATEGY_DURATION = 30;
 export const MAX_DCA_PLUS_STRATEGY_DURATION = 365;
 
