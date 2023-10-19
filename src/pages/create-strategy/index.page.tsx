@@ -133,7 +133,7 @@ function Strategies() {
   const showFearAndGreedProfit = index > 59;
 
   function accumulationStratgies(): StrategyCardProps[] {
-    const strategies = [
+    return [
       {
         name: 'Standard DCA In',
         description: 'Customise your own dollar-cost average buying strategy.',
@@ -151,10 +151,7 @@ function Strategies() {
         icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
         learnMoreHref: LearningHubLinks.DcaPlus,
       },
-    ] as StrategyCardProps[];
-
-    if (isV2Enabled(chain, address)) {
-      strategies.push({
+      {
         name: 'Weighted Scale In',
         description: 'Buy more when the price is low, and less when the price is high.',
         advanced: true,
@@ -162,13 +159,12 @@ function Strategies() {
         icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
         href: StrategyUrls.WeightedScaleIn,
         learnMoreHref: LearningHubLinks.WeightedScale,
-      });
-    }
-    return strategies;
+      },
+    ] as StrategyCardProps[];
   }
 
   function takeProfitStrategies(): StrategyCardProps[] {
-    const strategies = [
+    return [
       {
         name: 'Standard DCA Out',
         description: 'Dollar-cost average out of an asset with ease.',
@@ -186,10 +182,7 @@ function Strategies() {
         enabled: true,
         learnMoreHref: LearningHubLinks.DcaPlus,
       },
-    ] as StrategyCardProps[];
-
-    if (isV2Enabled(chain, address)) {
-      strategies.push({
+      {
         name: 'Weighted Scale Out',
         description: 'Sell more when the price is high, and less when the price is low.',
         advanced: true,
@@ -197,10 +190,8 @@ function Strategies() {
         href: StrategyUrls.WeightedScaleOut,
         icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
         learnMoreHref: LearningHubLinks.WeightedScale,
-      });
-    }
-
-    return strategies;
+      },
+    ] as StrategyCardProps[];
   }
 
   return (
