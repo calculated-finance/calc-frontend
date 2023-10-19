@@ -356,40 +356,6 @@ function HomeGrid() {
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
 
   return (
-    <Grid gap={6} mb={6} templateColumns="repeat(6, 1fr)" templateRows="1fr" alignItems="stretch">
-      <TopPanel />
-      {Boolean(activeStrategies.length) && (
-        <GridItem colSpan={{ base: 6, lg: 2 }} h="full">
-          <InvestmentThesis strategies={strategies} isLoading={isLoading} />
-        </GridItem>
-      )}
-
-      <GridItem colSpan={{ base: 6 }}>{activeStrategies.length ? <WarningPanel /> : <InfoPanel />}</GridItem>
-      {connected && activeStrategies.length ? (
-        <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-          <ActiveStrategies strategies={strategies} isLoading={isLoading} />
-        </GridItem>
-      ) : (
-        ''
-      )}
-      {(!activeStrategies.length || !connected) && (
-        <GridItem colSpan={{ base: 6, lg: 6, xl: 3 }}>
-          <OnboardingPanel />
-        </GridItem>
-      )}
-      <GridItem colSpan={{ base: 6, xl: 3 }}>{chain !== Chains.Moonbeam && <TotalInvestment />}</GridItem>
-    </Grid>
-  );
-}
-
-function HomeGridSimpleDca() {
-  const { connected } = useWallet();
-  const { chain } = useChain();
-  const { data: strategies, isLoading } = useStrategies();
-
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
-
-  return (
     <Grid gap={4} templateColumns="repeat(10, 1fr)" templateRows="repeat(3, 1fr)" alignItems="stretch">
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3}>
         <SimpleDcaIn />
@@ -408,12 +374,7 @@ function HomeGridSimpleDca() {
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
         <LearnAboutCalcPanel />
       </GridItem>
-      {!connected && (
-        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
-          <WarningPanel />{' '}
-        </GridItem>
-      )}
-      {!activeStrategies.length && (
+      {(!connected || activeStrategies.length === 0) && (
         <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
           <WarningPanel />{' '}
         </GridItem>
@@ -423,7 +384,6 @@ function HomeGridSimpleDca() {
 }
 
 function Home() {
-  const { isAdmin } = useAdmin();
   return (
     <>
       <Box pb={8}>
@@ -434,7 +394,7 @@ function Home() {
           Stop being glued to a computer screen 24/7, define your strategy up front, and leave the rest to CALC.
         </Text>
       </Box>
-      {isAdmin ? <HomeGridSimpleDca /> : <HomeGrid />}
+      <HomeGrid />
     </>
   );
 }
