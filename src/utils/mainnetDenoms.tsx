@@ -306,7 +306,7 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.WINK]: {
     name: 'WINK',
     icon: '/images/denoms/wink.png',
-    coingeckoId: 'wink',
+    coingeckoId: 'winkhub',
     stakeable: false,
     stable: false,
     enabled: true,
