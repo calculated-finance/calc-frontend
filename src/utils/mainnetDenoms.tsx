@@ -329,7 +329,7 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
   },
   [MainnetDenoms.yeildETH]: {
     name: 'yeildETH',
-    icon: '/images/denoms/yeildeth.svg',
+    icon: '/images/denoms/yieldeth.svg',
     coingeckoId: 'yieldeth-sommelier',
     stakeable: false,
     stable: false,
