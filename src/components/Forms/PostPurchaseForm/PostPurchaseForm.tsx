@@ -7,7 +7,6 @@ import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { useChain } from '@hooks/useChain';
 import { Chains } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
@@ -40,7 +39,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.Reinvest,
       label: 'Reinvest',
       supported: true,
-      enabled: isV2Enabled(chain, address),
+      enabled: true,
     },
     {
       value: PostPurchaseOptions.GenerateYield,

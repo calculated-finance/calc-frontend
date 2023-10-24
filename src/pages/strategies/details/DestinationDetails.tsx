@@ -27,7 +27,6 @@ import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrat
 import { isStrategyCancelled, getStrategyResultingDenom } from '@helpers/strategy';
 import useStrategy from '@hooks/useStrategy';
 import useValidator from '@hooks/useValidator';
-import { isV2Enabled } from '@helpers/version/isV2Enabled';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
@@ -38,7 +37,7 @@ export function ConfigureButton({ strategy }: { strategy: Strategy }) {
   const { chain } = useChain();
   const { address } = useWallet();
   return (
-    <GridItem visibility={isStrategyCancelled(strategy) || !isV2Enabled(chain, address) ? 'hidden' : 'visible'}>
+    <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
       <Flex justify="end">
         <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
@@ -189,7 +188,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
     );
   }
 
-  return isV2Enabled(chain, address) ? (
+  return (
     <>
       <GridItem colSpan={1}>
         <Heading size="xs">Post-swap action</Heading>
@@ -199,5 +198,5 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
       </GridItem>
       <ConfigureButton strategy={strategy} />
     </>
-  ) : null;
+  );
 }

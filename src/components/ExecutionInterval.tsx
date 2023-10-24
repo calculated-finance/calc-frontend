@@ -4,48 +4,18 @@ import {
   Text,
   SimpleGrid,
   Spacer,
-  useRadioGroup,
   Flex,
   Stack,
   HStack,
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { executionIntervalData } from '@helpers/executionIntervalData';
-import { useChain } from '@hooks/useChain';
 import { FiCalendar, FiClock } from 'react-icons/fi';
-import { isV2Enabled } from '@helpers/version/isV2Enabled';
-import { useWallet } from '@hooks/useWallet';
 import { IconType } from 'react-icons/lib';
 import { ReactElement } from 'react';
-import Radio from './Radio';
-import RadioCard from './RadioCard';
 import NumberInput from './NumberInput';
 import Select from './Select';
 
-function ExecutionIntervalLegacy() {
-  const [field, , helpers] = useField({ name: 'executionInterval' });
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    ...field,
-    onChange: helpers.setValue,
-  });
-  return (
-    <FormControl>
-      <FormLabel>I would like CALC to swap for me every:</FormLabel>
-      <Radio {...getRootProps}>
-        {executionIntervalData.map((option) => {
-          const radio = getRadioProps({ value: option.value });
-          return (
-            <RadioCard key={option.label} {...radio}>
-              {option.label}
-            </RadioCard>
-          );
-        })}
-      </Radio>
-    </FormControl>
-  );
-}
 function TimePeriodOption({ label, icon }: { label: string; icon: ReactElement<IconType> }) {
   return (
     <HStack flexGrow={1}>
@@ -54,6 +24,7 @@ function TimePeriodOption({ label, icon }: { label: string; icon: ReactElement<I
     </HStack>
   );
 }
+
 const timePeriodOptions = [
   { value: 'minute', label: <TimePeriodOption label="Minute(s)" icon={<FiClock />} /> },
   { value: 'hourly', label: <TimePeriodOption label="Hour(s)" icon={<FiClock />} /> },
@@ -61,7 +32,7 @@ const timePeriodOptions = [
   { value: 'weekly', label: <TimePeriodOption label="Week(s)" icon={<FiCalendar />} /> },
 ];
 
-function ExecutionIntervalCustom() {
+export default function ExecutionInterval() {
   const [{ onChange, ...incrementField }, incrementMeta, incrementHelpers] = useField({
     name: 'executionIntervalIncrement',
   });
@@ -100,14 +71,4 @@ function ExecutionIntervalCustom() {
       </Stack>
     </FormControl>
   );
-}
-
-export default function ExecutionInterval() {
-  const { chain } = useChain();
-  const { address } = useWallet();
-
-  if (isV2Enabled(chain, address)) {
-    return <ExecutionIntervalCustom />;
-  }
-  return <ExecutionIntervalLegacy />;
 }
