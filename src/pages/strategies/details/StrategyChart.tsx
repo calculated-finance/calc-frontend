@@ -112,7 +112,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
         month: 'short',
         year: '2-digit',
       })
-      .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
+      .replace(',', '')}\n\nBlock Height: ${swap?.blockHeight}\n1 ${priceOfDenomName} = ${Number(
+      swap?.currentPrice,
+    ).toFixed(2)}USD`,
   }));
 
   return (
