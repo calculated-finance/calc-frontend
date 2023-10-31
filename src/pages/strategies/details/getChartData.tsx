@@ -47,7 +47,9 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
 
       const amount = conversion(Number(received.amount) - Number(fee.amount));
       totalAmount += Number(amount);
+
       return {
+        blockHeight: event.block_height,
         time: new Date(Number(event.timestamp) / 1000000),
         accumulation: totalAmount,
         swapAmount: amount,
@@ -56,6 +58,7 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
         denomAmountSent: sentAmount,
       };
     }
+
     throw new Error();
   });
 }
@@ -97,6 +100,7 @@ export function getChartDataSwaps(
     }
     return {
       date,
+      blockHeight: event.blockHeight,
       marketValue: Number((event.accumulation * currentPriceInTime).toFixed(2)),
       currentPrice: currentDisplayPriceInTime,
       event,
