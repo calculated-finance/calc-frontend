@@ -349,12 +349,6 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
     stakeable: false,
     stable: false,
     enabled: true,
-    conversion: (value: number) => value / 10 ** 18,
-    deconversion: (value: number) => Math.round(value * 10 ** 18),
-    significantFigures: 18,
-    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
-    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
-    enabledInDcaPlus: false,
-    pricePrecision: 4,
+    significantFigures: 6,
   },
 };
