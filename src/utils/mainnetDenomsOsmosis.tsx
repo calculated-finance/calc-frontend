@@ -60,4 +60,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   [MainnetDenomsOsmosis.MATIC]: {
     coingeckoId: 'matic-network',
   },
+  [MainnetDenomsOsmosis.TIA]: {
+    coingeckoId: 'celestia',
+  },
 };
