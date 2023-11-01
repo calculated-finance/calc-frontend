@@ -1,7 +1,6 @@
 const components = {
   Button: {
     // baseStyle: ({ theme }) => {
-    //   console.log(theme.components);
     //   return {
     //     borderRadius: 'lg',
     //     fontSize: 'sm',

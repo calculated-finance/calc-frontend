@@ -35,8 +35,6 @@ function Page() {
     goToStep(0);
   };
 
-  console.log(state)
-
   const resultingDenom = useDenom(context?.resultingDenom);
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
