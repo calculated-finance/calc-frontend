@@ -25,6 +25,7 @@ import { SpendableBalances } from './SpendableBalances';
 import OnRampModal from './OnRampModalContent';
 import SquidModal from './SquidModal';
 import { truncate } from '../helpers/truncate';
+import { featureFlags } from 'src/constants';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
@@ -69,7 +70,7 @@ function CosmosWallet() {
     <Box>
       <HStack spacing="3">
         {address != null ? (
-          <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+          <Popover placement="bottom-start" closeOnBlur={true} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
                 {truncate(address)}
@@ -113,15 +114,27 @@ function CosmosWallet() {
                 </Button>
                 <SquidModal isOpen={isSquidOpen} onClose={onSquidClose} />
                 <Divider />
-                <Button
-                  size="xs"
-                  w="max-content"
-                  variant="link"
-                  onClick={handleDisconnect}
-                  leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
-                >
-                  Disconnect from {walletType}
-                </Button>
+                {featureFlags.cosmoskitEnabled ? (
+                  <Button
+                    size="xs"
+                    w="max-content"
+                    variant="link"
+                    onClick={() => disconnect()}
+                    leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
+                  >
+                    Disconnect from {walletType}
+                  </Button>
+                ) : (
+                  <Button
+                    size="xs"
+                    w="max-content"
+                    variant="link"
+                    onClick={handleDisconnect}
+                    leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
+                  >
+                    Disconnect from {walletType}
+                  </Button>
+                )}
               </Stack>
             </PopoverContent>
           </Popover>

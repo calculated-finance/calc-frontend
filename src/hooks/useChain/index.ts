@@ -7,6 +7,7 @@ import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
 import { Chains } from './Chains';
+import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 
 type ChainState = {
   chain: Chains;
@@ -73,7 +74,7 @@ export const useChain = () => {
   const updateStores = useCallback(
     (newChain: Chains) => {
       useFormStore.setState({ forms: {} });
-      useCosmWasmClient.setState({ client: null });
+      useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
     },
     [setStoredChain],
@@ -83,7 +84,7 @@ export const useChain = () => {
     (newChain: Chains) => {
       if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
-      useCosmWasmClient.setState({ client: null });
+      useCosmWasmClientStore.setState({ client: null });
       updateStores(newChain);
       updateQueryParam(newChain);
     },

@@ -21,10 +21,10 @@ import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormDca({
   step1,
-  transactionType
+  transactionType,
 }: {
   step1: DcaInFormDataStep1;
-  transactionType: TransactionType
+  transactionType: TransactionType;
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
   const initialDenom = useDenom(step1.initialDenom);
@@ -36,7 +36,13 @@ export function CustomiseFormDca({
         <AdvancedSettingsSwitch />
         <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
-        <SwapAmount transactionType={transactionType} isEdit={false} initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <SwapAmount
+          transactionType={transactionType}
+          isEdit={false}
+          initialDenom={initialDenom}
+          resultingDenom={resultingDenom}
+          initialDeposit={step1.initialDeposit}
+        />
         <CollapseWithRender isOpen={values.advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
@@ -51,11 +57,7 @@ export function CustomiseFormDca({
   );
 }
 
-export function CustomiseFormDcaWrapper({
-  steps,
-}: {
-  steps: StepConfig[];
-}) {
+export function CustomiseFormDcaWrapper({ steps }: { steps: StepConfig[] }) {
   const { strategyType, transactionType } = useStrategyInfo();
   const { state, actions } = useStep2Form();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });

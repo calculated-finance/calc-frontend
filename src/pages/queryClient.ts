@@ -6,6 +6,11 @@ const ignoredErrors = ['Load failed', 'Failed to fetch'];
 
 // disable retries on testnet
 export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
   queryCache: new QueryCache({
     onError: (error, query) => {
       const label = query.queryKey[0] as string;
@@ -18,7 +23,7 @@ export const queryClient = new QueryClient({
       toast({
         title: 'Something went wrong',
         position: 'top-right',
-        description: errorMessage || `There was a problem while loading (Reason: ${error})`,
+        description: `There was a problem while loading (Reason: ${error}) (Query: ${errorMessage}))`,
         status: 'error',
         variant: 'subtle',
         duration: 9000,

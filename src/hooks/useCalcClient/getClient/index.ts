@@ -16,17 +16,7 @@ export default function getClient(
     return getEVMClient(evmProvider);
   }
 
-  if (chain === Chains.Kujira) {
-    if (!cosmClient) return null;
+  if (!cosmClient) return null;
 
-    return getCosmosClient(getChainContractAddress(chain), cosmClient);
-  }
-
-  if (chain === Chains.Osmosis) {
-    if (!cosmClient) return null;
-
-    return getCosmosClient(getChainContractAddress(chain), cosmClient);
-  }
-
-  throw new Error('Unsupported chain');
+  return getCosmosClient(getChainContractAddress(chain), cosmClient);
 }

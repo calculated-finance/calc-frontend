@@ -111,7 +111,7 @@ function WalletModal() {
   };
 
   return (
-    <Modal isOpen={visible || isConnecting} onClose={handleClose} size="sm">
+    <Modal isOpen={visible || Boolean(isConnecting)} onClose={handleClose} size="sm">
       <ModalOverlay />
       <ModalContent>
         {isConnecting ? (

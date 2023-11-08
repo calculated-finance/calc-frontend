@@ -12,11 +12,17 @@ export type DcaPlusPerformanceResponse = DcaPlusPerformanceResponseGenerated;
 export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address } = useWallet();
   const { chain } = useChain();
-  const client = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
 
   return useQuery<DcaPlusPerformanceResponse>(
-    ['strategy-dca-plus-performance', id, client, address],
+    ['strategy-dca-plus-performance', id, getCosmWasmClient, address],
     async () => {
+      if (!getCosmWasmClient) {
+        throw new Error('No get client');
+      }
+
+      const client = await getCosmWasmClient();
+
       if (!client) {
         throw new Error('No client');
       }
@@ -33,7 +39,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
       return result;
     },
     {
-      enabled: !!client && !!id && !!address && !!enabled && !!chain,
+      enabled: !!getCosmWasmClient && !!id && !!address && !!enabled && !!chain,
       meta: {
         errorMessage: 'Error fetching strategy performance',
       },

@@ -78,19 +78,17 @@ export function Assets() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
-          <Form autoComplete="off">
-            <FormControl>
-              <CategoryAndStrategyButtonSelectors />
-            </FormControl>
-            <Stack direction="column" spacing={6}>
-              <AssetsForm />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
-      )}
+      <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
+        <Form autoComplete="off">
+          <FormControl>
+            <CategoryAndStrategyButtonSelectors />
+          </FormControl>
+          <Stack direction="column" spacing={6}>
+            <AssetsForm />
+            {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+          </Stack>
+        </Form>
+      </ModalWrapper>
     </Formik>
   );
 }

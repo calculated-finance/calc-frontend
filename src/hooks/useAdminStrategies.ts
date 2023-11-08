@@ -1,8 +1,6 @@
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
-import * as Sentry from '@sentry/react';
 import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChain } from './useChain';
@@ -40,24 +38,18 @@ function fetchVaultsRecursively(
 
 export default function useAdminStrategies(customChain?: Chains) {
   const { chain: defaultChain } = useChain();
-  const { client: defaultClient } = useCosmWasmClient();
+  const { getCosmWasmClient } = useCosmWasmClient();
   const chain = customChain || defaultChain;
 
-  const [storedClient, setStoredClient] = useState<CosmWasmClient | null>(null);
-
-  const client = !customChain ? defaultClient : storedClient;
-
-  useEffect(() => {
-    if (customChain) {
-      CosmWasmClient.connect(getChainEndpoint(customChain))
-        .then(setStoredClient)
-        .catch((error) => Sentry.captureException(error, { tags: { page: 'useAdminStrategies' } }));
-    }
-  }, [customChain]);
-
   return useQuery<Strategy[]>(
-    [QUERY_KEY, client, chain],
+    [QUERY_KEY, chain, getCosmWasmClient, customChain],
     async () => {
+      const defaultClient = getCosmWasmClient && (await getCosmWasmClient());
+
+      const storedClient = customChain ? await CosmWasmClient.connect(getChainEndpoint(customChain)) : null;
+
+      const client = !customChain ? defaultClient : storedClient;
+
       if (!client) throw new Error('No client');
       if (!chain) throw new Error('No chain');
       const result = await fetchVaultsRecursively(client, chain);
@@ -65,7 +57,7 @@ export default function useAdminStrategies(customChain?: Chains) {
       return result.map((vault) => transformToStrategyCosmos(vault));
     },
     {
-      enabled: !!client && !!chain,
+      enabled: !!getCosmWasmClient && !!chain,
       meta: {
         errorMessage: 'Error fetching all strategies',
       },

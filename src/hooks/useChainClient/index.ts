@@ -8,11 +8,11 @@ import { useOsmosis } from '@hooks/useOsmosis';
 import { KujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
 import { fetchBalanceEvm } from './fetchBalanceEvm';
+import { useQuery } from '@tanstack/react-query';
 
-function fetchBalancesKujira(kujiraQueryClient: KujiraQueryClient, address: string, supportedDenoms: string[]) {
-  return kujiraQueryClient.bank
-    .allBalances(address)
-    .then((balances: Coin[]) => balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom)));
+async function fetchBalancesKujira(kujiraQueryClient: KujiraQueryClient, address: string, supportedDenoms: string[]) {
+  const balances = await kujiraQueryClient.bank.allBalances(address);
+  return balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
 }
 
 function fetchBalancesOsmosis(osmosisQueryClient: any) {
@@ -30,6 +30,8 @@ function getClient(
   kujiraQueryClient: KujiraQueryClient | null,
   osmosisQueryClient: any | null,
 ) {
+  if (!chain) return null;
+
   if (chain === Chains.Moonbeam) {
     if (!evmProvider) return null;
 
@@ -61,17 +63,24 @@ function getClient(
     };
   }
 
-  throw new Error('Unsupported chain');
+  throw new Error(`Unsupported chain ${chain}`);
 }
 
 export function useChainClient(chain: Chains) {
   const evmProvider = useMetamask((state) => state.provider);
-  const cosmClient = useCosmWasmClient((state) => state.client);
+  const { getCosmWasmClient } = useCosmWasmClient();
 
   const kujiraQuery = useKujira((state) => state.query);
   const osmosisQuery = useOsmosis((state) => state.query);
 
-  if (!chain) return null;
+  const queryResult = useQuery<CosmWasmClient | null>(
+    ['cosmWasmClient', getCosmWasmClient],
+    async () => (chain && getCosmWasmClient && (await getCosmWasmClient())) ?? null,
+    {
+      enabled: !!getCosmWasmClient && !!chain,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
 
-  return getClient(chain, cosmClient, evmProvider, kujiraQuery, osmosisQuery);
+  return getClient(chain, queryResult.data ?? null, evmProvider, kujiraQuery, osmosisQuery);
 }

@@ -3,7 +3,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 import { useKujira } from '@hooks/useKujira';
 import { useKeplr } from '@hooks/useKeplr';
 import { useChain } from '@hooks/useChain';
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
@@ -23,8 +23,6 @@ function initAmplitude() {
 
 export function InitWrapper({ children }: ChildrenProp) {
   const { chain } = useChain();
-
-  // const initStation = useStation((state) => state.init);
   const initKujira = useKujira((state) => state.init);
   const initOsmosis = useOsmosis((state) => state.init);
   const initKeplr = useKeplr((state) => state.init);
@@ -32,8 +30,7 @@ export function InitWrapper({ children }: ChildrenProp) {
   const initXDEFI = useXDEFI((state) => state.init);
   const initMetamask = useMetamask((state) => state.init);
   const initLeapSnap = useMetamaskSnap((state) => state.init);
-
-  const initCosmWasmClient = useCosmWasmClient((state) => state.init);
+  const initCosmWasmClient = useCosmWasmClientStore((state) => state.init);
 
   useEffect(() => {
     if (HOTJAR_SITE_ID) {
@@ -45,13 +42,6 @@ export function InitWrapper({ children }: ChildrenProp) {
     initAmplitude();
   }, []);
 
-  // useEffect(() => {
-  //   if (featureFlags.stationEnabled) {
-  //     if (chain) {
-  //       initStation();
-  //     }
-  //   }
-  // }, [initStation, chain]);
   useEffect(() => {
     if (chain) {
       initKeplr(chain);

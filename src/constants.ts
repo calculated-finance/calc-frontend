@@ -65,6 +65,11 @@ export const SECONDS_IN_A_MINUTE = 60;
 export const COIN_DECIMAL_LIMIT = 6;
 export const COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS = 1;
 
+export const COSMOS_KIT_KUJIRA_MAINNET = 'kujira';
+export const COSMOS_KIT_KUJIRA_TESTNET = 'kujiratestnet';
+export const COSMOS_KIT_OSMOSIS_MAINNET = 'osmosis';
+export const COSMOS_KIT_OSMOSIS_TESTNET = 'osmosistestnet';
+
 export const ETH_DCA_FACTORY_CONTRACT_ADDRESS = '0x8c7877a15DEad1732e33d4756899CD13bC61d0BD';
 
 export const ETH_DCA_EVENT_MANAGER_ADDRESS = '0xFEbc484b5381a9606fBD12a737978442D34CD0A5';
@@ -76,6 +81,7 @@ export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3
 export const featureFlags =
   CHAIN_ID === 'kaiyo-1'
     ? {
+        cosmoskitEnabled: false,
         stationEnabled: false,
         leapEnabled: false,
         amplitudeEnabled: true,
@@ -83,6 +89,7 @@ export const featureFlags =
         singleAssetsEnabled: false,
       }
     : {
+        cosmoskitEnabled: true,
         stationEnabled: false,
         leapEnabled: true,
         amplitudeEnabled: false,

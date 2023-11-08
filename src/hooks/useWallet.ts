@@ -3,6 +3,8 @@ import { useLeap } from './useLeap';
 import { useXDEFI } from './useXDEFI';
 import { useMetamask } from './useMetamask';
 import { useMetamaskSnap } from './useMetamaskSnap';
+import { useCosmosKit } from './useCosmosKit';
+import { featureFlags } from 'src/constants';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
@@ -42,7 +44,7 @@ export function useWallet() {
     disconnect: state.disconnect,
   }));
 
-  const metamaskWallet = useMetamask((state) => ({
+  const metamaskWallet = useMetamask((state: any) => ({
     account: state.account,
     isConnecting: state.isConnecting,
     disconnect: state.disconnect,
@@ -54,11 +56,30 @@ export function useWallet() {
   //   signAndBroadcast: state.signAndBroadcast,
   //   isConnecting: state.isConnecting,
   // }));
+
+  const cosmosKit = useCosmosKit();
+
+  if (featureFlags.cosmoskitEnabled) {
+    if (!cosmosKit) {
+      return {};
+    }
+    if (cosmosKit.isWalletConnected) {
+      return {
+        address: cosmosKit.address,
+        connected: cosmosKit.isWalletConnected,
+        getSigningClient: cosmosKit.getSigningCosmWasmClient,
+        disconnect: cosmosKit.disconnect,
+        walletType: cosmosKit.wallet?.prettyName,
+        isConnecting: cosmosKit.isWalletConnecting,
+      };
+    }
+  }
+
   if (metamaskWallet.account) {
     return {
       address: metamaskWallet.account?.address,
       connected: true,
-      signingClient: null,
+      getSigningClient: null,
       disconnect: metamaskWallet.disconnect,
       walletType: WalletTypes.METAMASK,
       isConnecting: false,
@@ -69,7 +90,7 @@ export function useWallet() {
     return {
       address: keplrWallet.account?.address,
       connected: true,
-      signingClient: keplrWallet.controller,
+      getSigningClient: () => Promise.resolve(keplrWallet.controller),
       disconnect: keplrWallet.disconnect,
       walletType: WalletTypes.KEPLR,
       isConnecting: false,
@@ -79,7 +100,7 @@ export function useWallet() {
     return {
       address: leapWallet.account?.address,
       connected: true,
-      signingClient: leapWallet.controller,
+      getSigningClient: () => Promise.resolve(leapWallet.controller),
       disconnect: leapWallet.disconnect,
       walletType: WalletTypes.LEAP,
       isConnecting: false,
@@ -90,7 +111,7 @@ export function useWallet() {
     return {
       address: leapSnapWallet.account?.address,
       connected: true,
-      signingClient: leapSnapWallet.controller,
+      getSigningClient: () => Promise.resolve(leapSnapWallet.controller),
       disconnect: leapSnapWallet.disconnect,
       walletType: WalletTypes.METAMASK_SNAP,
       isConnecting: false,
@@ -101,7 +122,7 @@ export function useWallet() {
     return {
       address: XDEFIWallet.account?.address,
       connected: true,
-      signingClient: XDEFIWallet.controller,
+      getSigningClient: () => Promise.resolve(XDEFIWallet.controller),
       disconnect: XDEFIWallet.disconnect,
       walletType: WalletTypes.XDEFI,
       isConnecting: false,
@@ -125,11 +146,12 @@ export function useWallet() {
   //   };
   // }
   return {
+    address: undefined,
+    connected: false,
+    getSigningClient: () => Promise.resolve(null),
+    disconnect: undefined,
+    walletType: undefined,
     isConnecting:
-      keplrWallet.isConnecting ||
-      leapWallet?.isConnecting ||
-      XDEFIWallet?.isConnecting ||
-      metamaskWallet?.isConnecting ||
-      leapSnapWallet?.isConnecting,
+      keplrWallet.isConnecting || leapWallet?.isConnecting || XDEFIWallet?.isConnecting || metamaskWallet?.isConnecting,
   };
 }
