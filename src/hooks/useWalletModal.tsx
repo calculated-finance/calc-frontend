@@ -4,7 +4,6 @@ import { featureFlags } from 'src/constants';
 
 export interface CalcWalletModalContextState {
   visible: boolean;
-  disconnect?: () => void;
   setVisible: (open: boolean) => void;
 }
 
@@ -33,7 +32,6 @@ export function useWalletModal(): CalcWalletModalContextState {
     if (cosmoskit) {
       return {
         setVisible: cosmoskit.openView,
-        disconnect: cosmoskit.disconnect,
         visible: false,
       };
     }

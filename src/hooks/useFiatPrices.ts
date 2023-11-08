@@ -46,6 +46,8 @@ const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
     },
   );
 
+  console.log('prices', data);
+
   return {
     prices: data,
     ...other,

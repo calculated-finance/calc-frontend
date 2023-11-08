@@ -55,6 +55,7 @@ function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
 export const useChain = () => {
   const router = useRouter();
   const { chain, wasFiltered } = useMemo(() => getChainNameFromRouterQuery(router.query), [router.query]);
+  const clientStore = useCosmWasmClientStore();
   const storedChain = useChainStore((state) => state.chain);
   const setStoredChain = useChainStore((state) => state.setChain);
 
@@ -76,6 +77,7 @@ export const useChain = () => {
       useFormStore.setState({ forms: {} });
       useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
+      clientStore.updateClient(newChain);
     },
     [setStoredChain],
   );

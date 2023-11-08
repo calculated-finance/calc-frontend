@@ -19,6 +19,7 @@ export function useConfig(): Config | undefined {
       if (!client) {
         throw new Error('No client');
       }
+
       const result = await client.queryContractSmart(getChainContractAddress(chain!), {
         get_config: {},
       } as QueryMsg);

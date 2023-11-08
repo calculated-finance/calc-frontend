@@ -13,6 +13,7 @@ import {
   COSMOS_KIT_OSMOSIS_MAINNET,
   COSMOS_KIT_OSMOSIS_TESTNET,
 } from 'src/constants';
+import { filter } from 'rambda';
 
 export const signerOptions: SignerOptions = {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -40,9 +41,8 @@ export function ChainProvider({ children }: ChildrenProp) {
     <CosmosKitChainProvider
       chains={chains}
       assetLists={assets}
-      wallets={[...keplrWallets, ...xdefiWallets, ...leapWallets]}
+      wallets={filter((wallet) => wallet.isModeExtension, [...leapWallets, ...keplrWallets, ...xdefiWallets])}
       signerOptions={signerOptions}
-      // walletConnectOptions={{}}
       modalTheme={{ defaultTheme: 'dark' }}
     >
       {children}
