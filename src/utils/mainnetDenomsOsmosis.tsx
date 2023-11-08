@@ -51,6 +51,10 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     coingeckoId: 'wrapped-bitcoin',
     minimumSwapAmount: 0.05 / 1000,
   },
+  [MainnetDenomsOsmosis.LINK]: {
+    minimumSwapAmount: 1e16,
+    coingeckoId: 'chainlink',
+  },
   [MainnetDenomsOsmosis.PSTAKE]: {
     coingeckoId: 'pstake-finance',
   },
