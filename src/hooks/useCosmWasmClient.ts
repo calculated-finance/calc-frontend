@@ -13,7 +13,7 @@ export function useCosmWasmClient() {
     [storedClient, chain],
   );
 
-  const { getCosmWasmClient } = useCosmosKit() || {};
+  const { getCosmWasmClient } = useCosmosKit(chain.chainConfig?.name) || {};
 
   if (featureFlags.cosmoskitEnabled) {
     return {

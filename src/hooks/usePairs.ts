@@ -14,6 +14,7 @@ import { useChain } from './useChain';
 import { Chains } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useConfig } from './useConfig';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -108,9 +109,11 @@ function usePairsCosmos(config: Config | undefined) {
   const { getCosmWasmClient } = useCosmWasmClient();
   const { chain } = useChain();
 
-  async function fetchPairsRecursively(startAfter = null, allPairs = [] as V3Pair[]): Promise<V3Pair[]> {
-    const client = getCosmWasmClient && (await getCosmWasmClient());
-
+  async function fetchPairsRecursively(
+    client: CosmWasmClient,
+    startAfter = null,
+    allPairs = [] as V3Pair[],
+  ): Promise<V3Pair[]> {
     const result = await client!.queryContractSmart(getChainContractAddress(chain), {
       get_pairs: {
         limit: GET_PAIRS_LIMIT,
@@ -122,15 +125,25 @@ function usePairsCosmos(config: Config | undefined) {
 
     if (result.pairs.length === GET_PAIRS_LIMIT) {
       const newStartAfter = result.pairs[result.pairs.length - 1];
-      return fetchPairsRecursively(newStartAfter, allPairs);
+      return fetchPairsRecursively(client, newStartAfter, allPairs);
     }
 
     return allPairs;
   }
 
   const queryResult = useQuery<V3Pair[]>(
-    ['pairs-cosmos', getCosmWasmClient],
-    async () => await fetchPairsRecursively(),
+    ['pairs-cosmos', chain],
+    async () => {
+      const client = getCosmWasmClient && (await getCosmWasmClient());
+
+      if (!client) {
+        return new Promise(() => {});
+      }
+
+      const pairs = await fetchPairsRecursively(client);
+
+      return pairs;
+    },
     {
       enabled: !!getCosmWasmClient && !!config && !!config?.exchange_contract_address && !!chain,
       staleTime: 1000 * 60 * 5,

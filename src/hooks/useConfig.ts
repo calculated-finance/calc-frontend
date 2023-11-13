@@ -10,7 +10,7 @@ export function useConfig(): Config | undefined {
   const { getCosmWasmClient } = useCosmWasmClient();
 
   const { data } = useQuery<ConfigResponse>(
-    ['config', chain, getCosmWasmClient],
+    ['config', getCosmWasmClient],
     async () => {
       if (!getCosmWasmClient) return undefined;
 
@@ -27,7 +27,7 @@ export function useConfig(): Config | undefined {
       return result;
     },
     {
-      enabled: !!getCosmWasmClient && !!chain,
+      enabled: !!getCosmWasmClient,
       meta: {
         errorMessage: 'Error fetching config',
       },

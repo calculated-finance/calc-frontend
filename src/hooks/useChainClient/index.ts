@@ -25,7 +25,7 @@ function fetchBalancesOsmosis(osmosisQueryClient: any) {
 
 function getClient(
   chain: Chains,
-  cosmClient: CosmWasmClient | null,
+  cosmWasmClient: CosmWasmClient | null,
   evmProvider: BrowserProvider | null,
   kujiraQueryClient: KujiraQueryClient | null,
   osmosisQueryClient: any | null,
@@ -44,10 +44,10 @@ function getClient(
 
   if (chain === Chains.Kujira) {
     if (!kujiraQueryClient) return null;
-    if (!cosmClient) return null;
+    if (!cosmWasmClient) return null;
 
     return {
-      fetchTokenBalance: (tokenId: string, address: string) => cosmClient.getBalance(address, tokenId),
+      fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient.getBalance(address, tokenId),
       fetchBalances: (address: string, supportedDenoms: string[]) =>
         fetchBalancesKujira(kujiraQueryClient, address, supportedDenoms),
     };
@@ -55,10 +55,10 @@ function getClient(
 
   if (chain === Chains.Osmosis) {
     if (!osmosisQueryClient) return null;
-    if (!cosmClient) return null;
+    if (!cosmWasmClient) return null;
 
     return {
-      fetchTokenBalance: (tokenId: string, address: string) => cosmClient.getBalance(address, tokenId),
+      fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient.getBalance(address, tokenId),
       fetchBalances: fetchBalancesOsmosis(osmosisQueryClient),
     };
   }
@@ -74,7 +74,7 @@ export function useChainClient(chain: Chains) {
   const osmosisQuery = useOsmosis((state) => state.query);
 
   const queryResult = useQuery<CosmWasmClient | null>(
-    ['cosmWasmClient', getCosmWasmClient],
+    ['cosmWasmClient', getCosmWasmClient, chain],
     async () => (chain && getCosmWasmClient && (await getCosmWasmClient())) ?? null,
     {
       enabled: !!getCosmWasmClient && !!chain,

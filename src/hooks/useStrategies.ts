@@ -1,7 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
-import { useChain } from './useChain';
 import { Strategy } from '../models/Strategy';
 import { useCalcClient } from './useCalcClient';
 
@@ -11,22 +10,19 @@ export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_K
 
 export function useStrategies() {
   const { address } = useWallet();
-  const { chain } = useChain();
-  const client = useCalcClient(chain);
+  const client = useCalcClient();
 
   return useQuery<Strategy[]>(
     [QUERY_KEY, address, client],
     async () => {
-      if (!client) {
-        throw new Error('No client');
-      }
       if (!address) {
         throw new Error('No address');
       }
-      return client.fetchStrategies(address);
+
+      return client!.fetchStrategies(address);
     },
     {
-      enabled: !!address && !!client && !!chain,
+      enabled: !!address && !!client,
       meta: {
         errorMessage: 'Error fetching strategies',
       },

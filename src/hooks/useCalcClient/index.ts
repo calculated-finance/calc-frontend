@@ -4,24 +4,40 @@ import { useMetamask } from '@hooks/useMetamask';
 import getClient from './getClient';
 import { useEffect, useState } from 'react';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { useChain } from '@hooks/useChain';
+import { useQuery } from '@tanstack/react-query';
 
-export function useCalcClient(chain: Chains) {
+export function useCalcClient() {
   const evmProvider = useMetamask((state) => state.provider);
   const { getCosmWasmClient } = useCosmWasmClient();
+  const chain = useChain();
 
-  if (!getCosmWasmClient) {
-    throw new Error('getCosmWasmClient undefined');
+  // const [client, setCosmClient] = useState<CosmWasmClient | null>(null);
+
+  const query = useQuery<CosmWasmClient | null>(
+    ['cosmWasmClient', chain],
+    async () => {
+      if (!getCosmWasmClient) return null;
+
+      return await getCosmWasmClient();
+    },
+    {
+      enabled: !!getCosmWasmClient,
+      retry: false,
+    },
+  );
+
+  if (!chain || !chain.chainConfig) return null;
+
+  if (!query.data) {
+    return null;
   }
 
-  const [client, setCosmClient] = useState<CosmWasmClient | null>(null);
+  // useEffect(() => {
+  //   if (!getCosmWasmClient) return;
 
-  useEffect(() => {
-    if (!getCosmWasmClient) return;
+  //   getCosmWasmClient().then(setCosmClient);
+  // }, [getCosmWasmClient]);
 
-    getCosmWasmClient().then(setCosmClient);
-  }, [getCosmWasmClient]);
-
-  if (!chain) return null;
-
-  return getClient(chain, client, evmProvider);
+  return getClient(chain.chainConfig.name, query.data, evmProvider);
 }

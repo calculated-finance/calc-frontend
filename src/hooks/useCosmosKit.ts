@@ -5,7 +5,6 @@ import {
   COSMOS_KIT_KUJIRA_TESTNET,
   COSMOS_KIT_OSMOSIS_MAINNET,
   COSMOS_KIT_OSMOSIS_TESTNET,
-  featureFlags,
 } from 'src/constants';
 import { Chains } from './useChain/Chains';
 
@@ -28,11 +27,5 @@ function getChainId(chain: Chains) {
 export function useCosmosKit(injectedChain: Chains | null = null) {
   const chainId = getChainId(injectedChain ?? Chains.Kujira);
 
-  const cosmoskit = useChainCosmosKit(chainId || '');
-
-  if (!chainId || !featureFlags.cosmoskitEnabled) {
-    return null;
-  }
-
-  return cosmoskit;
+  return useChainCosmosKit(chainId || '');
 }

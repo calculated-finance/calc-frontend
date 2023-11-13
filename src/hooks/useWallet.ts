@@ -5,6 +5,7 @@ import { useMetamask } from './useMetamask';
 import { useMetamaskSnap } from './useMetamaskSnap';
 import { useCosmosKit } from './useCosmosKit';
 import { featureFlags } from 'src/constants';
+import { useChain } from './useChain';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
@@ -57,7 +58,8 @@ export function useWallet() {
   //   isConnecting: state.isConnecting,
   // }));
 
-  const cosmosKit = useCosmosKit();
+  const chain = useChain();
+  const cosmosKit = useCosmosKit(chain.chainConfig?.name);
 
   if (featureFlags.cosmoskitEnabled) {
     if (!cosmosKit) {
