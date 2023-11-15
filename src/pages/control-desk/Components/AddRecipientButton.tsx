@@ -13,7 +13,7 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { Field, FieldArray, useField, useFormikContext } from 'formik';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { CtrlFormDataAll } from './ControlDeskForms';

@@ -1,5 +1,5 @@
 import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { Destination, LockableDuration } from 'src/interfaces/generated-osmosis/execute';
@@ -31,7 +31,7 @@ export function getStrategyValidatorAddress(strategy: Strategy) {
   return undefined;
 }
 
-export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
+export function getStrategyPostSwapType(strategy: Strategy, chain: ChainId) {
   const { destinations } = strategy.rawData;
   const [destination] = destinations;
 
@@ -49,7 +49,11 @@ export function getStrategyPostSwapType(strategy: Strategy, chain: Chains) {
   return PostPurchaseOptions.SendToWallet;
 }
 
-export function getStrategyPostSwapSendToAnotherWallet(strategy: Strategy, chain: Chains, address: string | undefined) {
+export function getStrategyPostSwapSendToAnotherWallet(
+  strategy: Strategy,
+  chain: ChainId,
+  address: string | undefined,
+) {
   const { destinations } = strategy.rawData;
   if (getStrategyPostSwapType(strategy, chain) === PostPurchaseOptions.SendToWallet) {
     const [destination] = destinations;

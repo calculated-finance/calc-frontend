@@ -1,6 +1,6 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import getCosmosClient, { GET_EVENTS_LIMIT } from '.';
+import getCalcClient, { GET_EVENTS_LIMIT } from '.';
 import { transformToStrategyCosmos } from './transformToStrategy';
 
 jest.mock('./transformToStrategy');
@@ -24,7 +24,7 @@ describe('CosmosClient', () => {
       (mockClient.queryContractSmart as jest.Mock).mockResolvedValue(expectedResponse);
       (transformToStrategyCosmos as jest.Mock).mockReturnValue('strategy');
 
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
       const result = await cosmosClient.fetchStrategy(vaultId);
 
       expect(mockClient.queryContractSmart).toHaveBeenCalledWith(address, {
@@ -42,7 +42,7 @@ describe('CosmosClient', () => {
       const vaultId = 'vault1';
       (mockClient.queryContractSmart as jest.Mock).mockRejectedValue(new Error('Error fetching data'));
 
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
 
       await expect(cosmosClient.fetchStrategy(vaultId)).rejects.toThrow('Error fetching data');
     });
@@ -69,7 +69,7 @@ describe('CosmosClient', () => {
         events: [],
       });
 
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
 
       const result = await cosmosClient.fetchStrategyEvents(vaultId);
 
@@ -88,7 +88,7 @@ describe('CosmosClient', () => {
       (mockClient.queryContractSmart as jest.Mock).mockResolvedValueOnce({
         events: [],
       });
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
 
       const result = await cosmosClient.fetchStrategyEvents(vaultId);
 
@@ -101,7 +101,7 @@ describe('CosmosClient', () => {
     it('should handle errors', async () => {
       (mockClient.queryContractSmart as jest.Mock).mockRejectedValueOnce(new Error('Error'));
 
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
 
       try {
         await cosmosClient.fetchStrategyEvents(vaultId);
@@ -115,7 +115,7 @@ describe('CosmosClient', () => {
   describe('getCosmosClient', () => {
     it('should return an object with fetchStrategy function', () => {
       const address = 'address1';
-      const cosmosClient = getCosmosClient(address, mockClient);
+      const cosmosClient = getCalcClient(address, mockClient);
 
       expect(cosmosClient).toHaveProperty('fetchStrategy');
       expect(typeof cosmosClient.fetchStrategy).toBe('function');

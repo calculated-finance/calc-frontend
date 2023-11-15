@@ -20,11 +20,11 @@ export const signerOptions: SignerOptions = {
   // @ts-ignore
   signingCosmwasm: (chain: Chain) => {
     const denom = {
-      [COSMOS_KIT_KUJIRA_MAINNET]: 'ukuji',
-      [COSMOS_KIT_KUJIRA_TESTNET]: 'ukuji',
-      [COSMOS_KIT_OSMOSIS_MAINNET]: 'uosmo',
-      [COSMOS_KIT_OSMOSIS_TESTNET]: 'uosmo',
-    }[chain.chain_name as string];
+      'kaiyo-1': 'ukuji',
+      'harpoon-4': 'ukuji',
+      'osmosis-1': 'uosmo',
+      'osmo-test-5': 'uosmo',
+    }[chain.chain_id as string];
 
     if (denom) {
       return {
@@ -43,6 +43,16 @@ export function ChainProvider({ children }: ChildrenProp) {
       assetLists={assets}
       wallets={filter((wallet) => wallet.isModeExtension, [...leapWallets, ...keplrWallets, ...xdefiWallets])}
       signerOptions={signerOptions}
+      endpointOptions={{
+        endpoints: {
+          'harpoon-4': {
+            rpc: ['https://kujira-testnet-rpc.polkachu.com/'],
+          },
+          kujiratestnet: {
+            rpc: ['https://kujira-testnet-rpc.polkachu.com/'],
+          },
+        },
+      }}
       modalTheme={{ defaultTheme: 'dark' }}
     >
       {children}

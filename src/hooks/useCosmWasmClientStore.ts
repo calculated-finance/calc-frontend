@@ -2,17 +2,17 @@ import { create } from 'zustand';
 import * as Sentry from '@sentry/react';
 import { getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 
 export type IUseCosmWasmClient = {
   client: CosmWasmClient | null;
-  init: (chain: Chains) => void;
-  updateClient: (chain: Chains) => void;
+  init: (chain: ChainId) => void;
+  updateClient: (chain: ChainId) => void;
 };
 
 export const useCosmWasmClientStore = create<IUseCosmWasmClient>()((set) => ({
   client: null as CosmWasmClient | null,
-  init: async (chain: Chains) => {
+  init: async (chain: ChainId) => {
     set({ client: null });
     try {
       const client = await CosmWasmClient.connect(getChainEndpoint(chain));
@@ -21,7 +21,7 @@ export const useCosmWasmClientStore = create<IUseCosmWasmClient>()((set) => ({
       Sentry.captureException(e, { tags: { page: 'useCosmWasmClient' } });
     }
   },
-  updateClient: async (chain: Chains) => {
+  updateClient: async (chain: ChainId) => {
     set({ client: null });
     try {
       const client = await CosmWasmClient.connect(getChainEndpoint(chain));

@@ -23,7 +23,7 @@ import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
 import { useMetamask } from '@hooks/useMetamask';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useMetamaskSnap } from '@hooks/useMetamaskSnap';
 import { WalletListItem } from './WalletListItem';
@@ -157,7 +157,7 @@ function WalletModal() {
                   walletInstallLink="https://metamask.io/download/"
                   walletInstallCallback={isMetamaskInstalled ? () => connectLeapSnap(chain) : undefined}
                 />
-                {chain === Chains.Moonbeam && (
+                {/* {chain === Chains.Moonbeam && (
                   <WalletListItem
                     handleClick={handleMetamaskConnect}
                     name="Metamask"
@@ -165,7 +165,7 @@ function WalletModal() {
                     isInstalled={isMetamaskInstalled}
                     walletInstallLink="https://metamask.io/download/"
                   />
-                )}
+                )} */}
 
                 <Stack>
                   <Button

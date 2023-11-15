@@ -2,8 +2,8 @@
 import { useWallet } from '@hooks/useWallet';
 import * as Sentry from '@sentry/react';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
@@ -15,19 +15,34 @@ import { ConfigureVariables } from './ConfigureVariables';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 
 export function useCustomiseStrategy() {
-  const { address, signingClient: client } = useWallet();
-
+  const { address, getSigningClient } = useWallet();
   const { track } = useAnalytics();
-
   const { chain } = useChain();
-
   const queryClient = useQueryClient();
+
+  const { data: signingClient } = useQuery<SigningCosmWasmClient>(
+    ['signingCosmWasmClient', chain],
+    async () => {
+      const client = await getSigningClient();
+
+      if (!client) {
+        throw new Error('No signing client');
+      }
+
+      return client;
+    },
+    {
+      enabled: !!chain && !!getSigningClient,
+    },
+  );
+
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     (variables) => {
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
-      if (!client) {
+
+      if (!signingClient) {
         throw new Error('client is null or empty');
       }
 
@@ -44,10 +59,10 @@ export function useCustomiseStrategy() {
       const updateVaultMsg = getUpdateVaultMessage(variables);
       msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
 
-      return client.signAndBroadcast(address, msgs, 'auto');
+      return signingClient.signAndBroadcast(address, msgs, 'auto');
     },
     {
-      onSuccess: (data, variables) => {
+      onSuccess: (_, variables) => {
         track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables) });
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, variables.strategy.id] });
       },

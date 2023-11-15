@@ -3,7 +3,7 @@ import { dcaInStrategyViewModal, dcaPlusStrategyViewModal } from 'src/fixtures/s
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TransactionType } from '@components/TransactionType';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { buildTimeInterval } from '.';
 
 jest.mock('@hooks/useCreateVault/buildCreateVaultParams', () => ({
@@ -16,7 +16,7 @@ const defaultContext = {
   transactionType: TransactionType.Buy,
   swapAmount: 1,
   currentPrice: undefined,
-  chain: Chains.Kujira,
+  chain: 'kaiyo-1' as ChainId,
 };
 
 describe('buildTimeInterval', () => {
@@ -34,7 +34,7 @@ describe('buildTimeInterval', () => {
         transactionType: TransactionType.Buy,
         swapAmount: 1,
         currentPrice: undefined,
-        chain: Chains.Kujira,
+        chain: 'kaiyo-1' as ChainId,
       },
       strategy: dcaPlusStrategyViewModal,
     });

@@ -7,8 +7,8 @@ import { CONTRACT_ADDRESS } from 'src/constants';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
-import { Chains } from '@hooks/useChain/Chains';
-import { useKujira } from '@hooks/useKujira';
+import { ChainId } from '@hooks/useChain/Chains';
+// import { useKujira } from '@hooks/useKujira';
 import { KujiraQueryClient } from 'kujira.js';
 import { useConfig } from '@hooks/useConfig';
 import { mockConfig } from 'src/fixtures/mockConfig';
@@ -78,7 +78,7 @@ async function renderTarget() {
 describe('Top up page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    useKujira.setState({ query: {} as KujiraQueryClient });
+    // useKujira.setState({ query: {} as KujiraQueryClient });
 
     (useConfig as jest.Mock).mockReturnValue(mockConfig);
   });
@@ -126,7 +126,7 @@ describe('Top up page', () => {
       await waitFor(() =>
         expect(mockRouter.push).toHaveBeenCalledWith({
           pathname: '/strategies/top-up/success',
-          query: { strategyId: '1', timeSaved: 10, chain: Chains.Kujira },
+          query: { strategyId: '1', timeSaved: 10, chain: 'kaiyo-1' },
         }),
       );
     });

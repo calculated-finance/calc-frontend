@@ -1,43 +1,28 @@
-import { Chains } from '@hooks/useChain/Chains';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useMetamask } from '@hooks/useMetamask';
-import getClient from './getClient';
-import { useEffect, useState } from 'react';
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useChain } from '@hooks/useChain';
 import { useQuery } from '@tanstack/react-query';
+import getClient, { CalcClient } from './getClient';
+import { ChainId } from '@hooks/useChain/Chains';
+import { getChainConfig } from '@helpers/chains';
 
-export function useCalcClient() {
-  const evmProvider = useMetamask((state) => state.provider);
-  const { getCosmWasmClient } = useCosmWasmClient();
-  const chain = useChain();
+export function useCalcClient(injectedChain?: ChainId) {
+  const { chainConfig } = injectedChain ? { chainConfig: getChainConfig(injectedChain) } : useChain();
+  const { cosmWasmClient } = useCosmWasmClient(injectedChain);
 
-  // const [client, setCosmClient] = useState<CosmWasmClient | null>(null);
-
-  const query = useQuery<CosmWasmClient | null>(
-    ['cosmWasmClient', chain],
-    async () => {
-      if (!getCosmWasmClient) return null;
-
-      return await getCosmWasmClient();
+  const { data: client, ...other } = useQuery<CalcClient | null>(
+    ['calcClient', cosmWasmClient, chainConfig],
+    () => {
+      console.log('useCalcClient', injectedChain, cosmWasmClient, chainConfig, client);
+      return getClient(chainConfig!.name, cosmWasmClient!);
     },
     {
-      enabled: !!getCosmWasmClient,
+      enabled: !!cosmWasmClient && !!chainConfig,
       retry: false,
+      meta: {
+        errorMessage: 'Error fetching calc client',
+      },
     },
   );
 
-  if (!chain || !chain.chainConfig) return null;
-
-  if (!query.data) {
-    return null;
-  }
-
-  // useEffect(() => {
-  //   if (!getCosmWasmClient) return;
-
-  //   getCosmWasmClient().then(setCosmClient);
-  // }, [getCosmWasmClient]);
-
-  return getClient(chain.chainConfig.name, query.data, evmProvider);
+  return { client, ...other };
 }

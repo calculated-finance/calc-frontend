@@ -12,7 +12,7 @@ import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useMetamask } from '@hooks/useMetamask';
 import { ToastContainer } from './toast';
@@ -45,7 +45,7 @@ function AssetListLoader({ children }: ChildrenProp) {
   const { chain } = useChain();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return chain !== Chains.Osmosis || assetList ? <>{children}</> : <LoadingState />;
+  return ['osmosis-1', 'osmo-test-5'].includes(chain) || assetList ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

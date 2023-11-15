@@ -8,7 +8,7 @@ import {
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
 import YesNoValues from '@models/YesNoValues';
 import { Strategy } from '@models/Strategy';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { getExistingValues } from './getExistingValues';
 
 jest.mock('@helpers/strategy', () => ({
@@ -34,7 +34,7 @@ describe('getExistingValues', () => {
     (getWeightedScaleConfig as jest.Mock).mockReturnValue({ increase_only: true, multiplier: 2 });
     (getConvertedSwapAmount as jest.Mock).mockReturnValue({ denom: 'ukuji', amount: '1000000' });
 
-    const result = getExistingValues(mockStrategy as Strategy, Chains.Kujira);
+    const result = getExistingValues(mockStrategy as Strategy, 'kaiyo-1');
 
     expect(result).toEqual({
       advancedSettings: true,
@@ -63,7 +63,7 @@ describe('getExistingValues', () => {
     (getStrategyExecutionIntervalData as jest.Mock).mockReturnValue({ timeIncrement: 0, timeInterval: 'hours' });
     (getWeightedScaleConfig as jest.Mock).mockReturnValue({ increase_only: true, multiplier: 2 });
 
-    const result = getExistingValues(mockStrategy as Strategy, Chains.Kujira);
+    const result = getExistingValues(mockStrategy as Strategy, 'kaiyo-1');
 
     expect(result.executionIntervalIncrement).toBe(1);
   });
@@ -77,7 +77,7 @@ describe('getExistingValues', () => {
     (getStrategyExecutionIntervalData as jest.Mock).mockReturnValue({ timeIncrement: 5, timeInterval: 'hours' });
     (getWeightedScaleConfig as jest.Mock).mockReturnValue({ increase_only: true, multiplier: 2 });
 
-    const result = getExistingValues(mockStrategy as Strategy, Chains.Kujira);
+    const result = getExistingValues(mockStrategy as Strategy, 'kaiyo-1');
 
     expect(result.priceThresholdEnabled).toBe(YesNoValues.No);
   });

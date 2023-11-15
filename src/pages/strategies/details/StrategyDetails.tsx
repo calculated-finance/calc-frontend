@@ -44,7 +44,7 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import usePairs from '@hooks/usePairs';
 import { TransactionType } from '@components/TransactionType';
@@ -121,7 +121,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                   isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
                 )}
                 <Text>
-                  {chain === Chains.Osmosis ? 'Osmosis swap' : 'Kujira'} fee: {getPrettyFee(100, dexFee)}%
+                  {['osmosis-1', 'osmo-test-5'].includes(chain) ? 'Osmosis swap' : 'Kujira'} fee:{' '}
+                  {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>

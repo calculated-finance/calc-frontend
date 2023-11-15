@@ -30,7 +30,7 @@ import useValidator from '@hooks/useValidator';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {
@@ -119,7 +119,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy }) {
   );
 }
 
-export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: Chains }) {
+export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: ChainId }) {
   const { destinations } = strategy.rawData;
 
   const { address } = useWallet();

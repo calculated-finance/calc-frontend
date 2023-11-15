@@ -1,4 +1,3 @@
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useFormStore } from '@hooks/useFormStore';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
@@ -6,19 +5,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
-import { Chains } from './Chains';
 import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
+import { ChainId } from './Chains';
+import { CHAINS } from 'src/constants';
 
 type ChainState = {
-  chain: Chains;
-  setChain: (chain: Chains) => void;
+  chain: ChainId;
+  setChain: (chain: ChainId) => void;
 };
 
 export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
-      chain: Chains.Kujira,
-      setChain: (chain: Chains) => set({ chain }),
+      chain: 'kaiyo-1',
+      setChain: (chain: ChainId) => set({ chain }),
     }),
     {
       name: 'chain',
@@ -27,23 +27,16 @@ export const useChainStore = create<ChainState>()(
 );
 
 function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
-  // get chain from query
   const { chain } = query;
 
-  // if chain is not defined, return undefined
   if (!chain) {
     return {};
   }
 
-  // if chain is defined, check if it is a valid chain
-  if (Object.values(Chains).includes(chain as Chains)) {
-    return { chain: chain as Chains };
+  if (CHAINS.includes(chain as ChainId)) {
+    return { chain: chain as ChainId };
   }
-  // check if chain starts with a valid chain
-  const filteredChainName = Object.values(Chains).find((c) =>
-    // check if c starts with chain
-    (chain as string).startsWith(c as string),
-  );
+  const filteredChainName = CHAINS.find((c) => (chain as string).startsWith(c as string));
 
   if (filteredChainName) {
     return { chain: filteredChainName, wasFiltered: true };
@@ -63,7 +56,7 @@ export const useChain = () => {
   const [data, setData] = useState<ChainState>({} as ChainState);
 
   const updateQueryParam = useCallback(
-    (newChain: Chains) => {
+    (newChain: ChainId) => {
       router.replace({
         pathname: router.pathname,
         query: { ...router.query, chain: newChain },
@@ -73,7 +66,7 @@ export const useChain = () => {
   );
 
   const updateStores = useCallback(
-    (newChain: Chains) => {
+    (newChain: ChainId) => {
       useFormStore.setState({ forms: {} });
       useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
@@ -83,7 +76,7 @@ export const useChain = () => {
   );
 
   const setChain = useCallback(
-    (newChain: Chains) => {
+    (newChain: ChainId) => {
       if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
       useCosmWasmClientStore.setState({ client: null });
@@ -102,7 +95,7 @@ export const useChain = () => {
         if (wasFiltered) {
           updateQueryParam(chain);
         }
-        setData({ chain: chain as Chains, setChain });
+        setData({ chain: chain as ChainId, setChain });
       } else if (storedChain) {
         updateQueryParam(storedChain);
         setData({ chain: storedChain, setChain });
@@ -111,7 +104,7 @@ export const useChain = () => {
     }
   }, [router.isReady, setChain, chain, updateQueryParam, storedChain, updateStores, wasFiltered]);
 
-  const chainConfig = useMemo(() => getChainConfig(data.chain), [data.chain]);
+  const chainConfig = useMemo(() => getChainConfig(data.chain)!, [data.chain]);
 
   return { ...(data as ChainState), chainConfig, isLoading };
 };

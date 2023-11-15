@@ -8,6 +8,8 @@ import {
   Event as GeneratedEvent,
 } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
 import { transformToStrategyCosmos } from './transformToStrategy';
+import { ChainId } from '@hooks/useChain/Chains';
+import { getChainContractAddress } from '@helpers/chains';
 
 async function fetchStrategy(
   client: CosmWasmClient,
@@ -53,7 +55,7 @@ async function fetchStrategyEvents(client: CosmWasmClient, contractAddress: stri
   return fetchEventsRecursively();
 }
 
-async function fetchStrategies(client: CosmWasmClient, contractAddress: string, userAddress: string) {
+async function fetchStrategiesByAddress(client: CosmWasmClient, contractAddress: string, userAddress: string) {
   const result = (await client.queryContractSmart(contractAddress, {
     get_vaults_by_address: {
       address: userAddress,
@@ -65,10 +67,40 @@ async function fetchStrategies(client: CosmWasmClient, contractAddress: string, 
   return transformedStrategies as Strategy[];
 }
 
-export default function getCosmosClient(contractAddress: string, cosmClient: CosmWasmClient) {
+const GET_VAULTS_LIMIT = 300;
+
+const fetchAllStrategies = async (client: CosmWasmClient, chainId: ChainId) => {
+  const fetchVaultsRecursively = async (
+    client: CosmWasmClient,
+    chain: ChainId,
+    startAfter = null,
+    allVaults = [] as Vault[],
+  ): Promise<Vault[]> => {
+    const result = await client.queryContractSmart(getChainContractAddress(chain), {
+      get_vaults: {
+        limit: GET_VAULTS_LIMIT,
+        start_after: startAfter,
+      },
+    });
+
+    allVaults.push(...result.vaults);
+
+    if (result.vaults.length === GET_VAULTS_LIMIT) {
+      const newStartAfter = result.vaults[result.vaults.length - 1].id;
+      return fetchVaultsRecursively(client, chain, newStartAfter, allVaults);
+    }
+
+    return allVaults;
+  };
+
+  return fetchVaultsRecursively(client, chainId);
+};
+
+export default function getCalcClient(contractAddress: string, cosmClient: CosmWasmClient, chainId: ChainId) {
   return {
     fetchStrategy: (id: string) => fetchStrategy(cosmClient, contractAddress, id),
     fetchStrategyEvents: (id: string) => fetchStrategyEvents(cosmClient, contractAddress, id),
-    fetchStrategies: (userAddress: string) => fetchStrategies(cosmClient, contractAddress, userAddress),
+    fetchStrategies: (userAddress: string) => fetchStrategiesByAddress(cosmClient, contractAddress, userAddress),
+    fetchAllStrategies: () => fetchAllStrategies(cosmClient, chainId),
   };
 }

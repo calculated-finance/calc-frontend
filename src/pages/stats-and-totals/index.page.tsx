@@ -1,7 +1,6 @@
 import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
-import useContractBalances, { useFeeTakerBalances } from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -19,11 +18,14 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
+import useBalances from '@hooks/useBalances';
+import { useChain } from '@hooks/useChain';
+import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -106,7 +108,7 @@ export function totalFromCoins(
   coins: Coin[] | undefined,
   fiatPrices: any,
   supportedDenoms: DenomInfo[],
-  injectedChain?: Chains,
+  injectedChain?: ChainId,
 ) {
   return (
     coins
@@ -290,8 +292,9 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 
 function Page() {
   const supportedDenoms = useSupportedDenoms();
-  const { balances: contractBalances } = useContractBalances();
-  const { balances: feeTakerBalances } = useFeeTakerBalances();
+  const { chain } = useChain();
+  const { data: contractBalances } = useBalances(getChainContractAddress(chain));
+  const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
   const { data: allStrategies } = useAdminStrategies();
@@ -369,14 +372,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(contractBalances, fiatPrices)} />
+            <BalanceList balances={orderCoinList(contractBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(feeTakerBalances, fiatPrices)} />
+            <BalanceList balances={orderCoinList(feeTakerBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>

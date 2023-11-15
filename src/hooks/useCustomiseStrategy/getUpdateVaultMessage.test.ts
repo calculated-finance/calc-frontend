@@ -1,4 +1,4 @@
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TransactionType } from '@components/TransactionType';
 import YesNoValues from '@models/YesNoValues';
@@ -38,7 +38,7 @@ describe('getUpdateVaultMessage', () => {
         resultingDenom: { ...defaultDenom, id: 'test-denom' },
         transactionType: TransactionType.Buy,
         currentPrice: 1.5,
-        chain: Chains.Kujira,
+        chain: 'kaiyo-1' as ChainId,
       },
     };
 
@@ -82,7 +82,7 @@ describe('getUpdateVaultMessage', () => {
         resultingDenom: { ...defaultDenom, id: 'test-denom' },
         transactionType: TransactionType.Buy,
         currentPrice: 1.5,
-        chain: Chains.Kujira,
+        chain: 'kaiyo-1' as ChainId,
       },
     };
 

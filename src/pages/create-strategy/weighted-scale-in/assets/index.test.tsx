@@ -10,10 +10,10 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { KujiraQueryClient } from 'kujira.js';
-import * as constants from 'src/constants'
+import * as constants from 'src/constants';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
@@ -28,7 +28,7 @@ const mockRouter = {
   },
 };
 
-jest.mock('src/constants')
+jest.mock('src/constants');
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -77,13 +77,13 @@ describe('Assets page', () => {
       query: jest.fn(),
     });
 
-    useKujira.setState({
-      query: {
-        bank: {
-          allBalances: mockBalances(),
-        },
-      } as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: {
+    //     bank: {
+    //       allBalances: mockBalances(),
+    //     },
+    //   } as unknown as KujiraQueryClient,
+    // });
     mockFiatPrice();
   });
   describe('on page load', () => {

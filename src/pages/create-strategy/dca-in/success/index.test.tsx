@@ -4,14 +4,14 @@ import '@testing-library/jest-dom';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/create-strategy/dca-in/success',
-  query: { strategyId: '1', timeSaved: 100, chain: Chains.Kujira },
+  query: { strategyId: '1', timeSaved: 100, chain: 'kaiyo-1' },
   events: {
     on: jest.fn(),
   },
@@ -61,7 +61,10 @@ describe('DCA In success page', () => {
     await renderTarget();
 
     await waitFor(() =>
-      expect(screen.getByText(/View strategy details/)).toHaveAttribute('href', '/strategies/details?id=1&chain=Kujira'),
+      expect(screen.getByText(/View strategy details/)).toHaveAttribute(
+        'href',
+        '/strategies/details?id=1&chain=Kujira',
+      ),
     );
   });
 });

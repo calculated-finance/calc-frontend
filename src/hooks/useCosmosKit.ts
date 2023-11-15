@@ -1,31 +1,24 @@
 import { useChain as useChainCosmosKit } from '@cosmos-kit/react';
-import { isMainnet } from '@utils/isMainnet';
 import {
   COSMOS_KIT_KUJIRA_MAINNET,
   COSMOS_KIT_KUJIRA_TESTNET,
   COSMOS_KIT_OSMOSIS_MAINNET,
   COSMOS_KIT_OSMOSIS_TESTNET,
 } from 'src/constants';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 
-function getChainId(chain: Chains) {
-  return (
-    isMainnet()
-      ? {
-          [Chains.Kujira]: COSMOS_KIT_KUJIRA_MAINNET,
-          [Chains.Osmosis]: COSMOS_KIT_OSMOSIS_MAINNET,
-          [Chains.Moonbeam]: null,
-        }
-      : {
-          [Chains.Kujira]: COSMOS_KIT_KUJIRA_TESTNET,
-          [Chains.Osmosis]: COSMOS_KIT_OSMOSIS_TESTNET,
-          [Chains.Moonbeam]: null,
-        }
-  )[chain];
+function getChainName(chain: ChainId) {
+  return {
+    'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
+    'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
+    'kaiyo-1': COSMOS_KIT_KUJIRA_MAINNET,
+    'harpoon-4': COSMOS_KIT_KUJIRA_TESTNET,
+  }[chain]!;
 }
 
-export function useCosmosKit(injectedChain: Chains | null = null) {
-  const chainId = getChainId(injectedChain ?? Chains.Kujira);
+export const useCosmosKit = (chainId?: ChainId) => {
+  if (!chainId) return null;
+  console.log('HHHH', chainId, getChainName(chainId));
 
-  return useChainCosmosKit(chainId || '');
-}
+  return useChainCosmosKit(getChainName(chainId));
+};

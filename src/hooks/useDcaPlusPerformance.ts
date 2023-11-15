@@ -1,5 +1,4 @@
 import { useWallet } from '@hooks/useWallet';
-import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/v2/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
@@ -12,34 +11,18 @@ export type DcaPlusPerformanceResponse = DcaPlusPerformanceResponseGenerated;
 export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address } = useWallet();
   const { chain } = useChain();
-  const { getCosmWasmClient } = useCosmWasmClient();
+  const { cosmWasmClient } = useCosmWasmClient();
 
   return useQuery<DcaPlusPerformanceResponse>(
-    ['strategy-dca-plus-performance', id, getCosmWasmClient, address],
-    async () => {
-      if (!getCosmWasmClient) {
-        throw new Error('No get client');
-      }
-
-      const client = await getCosmWasmClient();
-
-      if (!client) {
-        throw new Error('No client');
-      }
-      if (!chain) {
-        throw new Error('No chain');
-      }
-      const msg = {
+    ['strategy-dca-plus-performance', id, cosmWasmClient, address],
+    () =>
+      cosmWasmClient!.queryContractSmart(getChainContractAddress(chain), {
         get_vault_performance: {
           vault_id: id,
         },
-      } as QueryMsg;
-
-      const result = await client.queryContractSmart(getChainContractAddress(chain), msg);
-      return result;
-    },
+      }),
     {
-      enabled: !!getCosmWasmClient && !!id && !!address && !!enabled && !!chain,
+      enabled: !!cosmWasmClient && !!id && !!address && !!enabled && !!chain,
       meta: {
         errorMessage: 'Error fetching strategy performance',
       },

@@ -84,7 +84,7 @@ export function NewStrategyModalBody({
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
       <Box position="relative">
         {isLoading ? (
-          <Center h={56}>
+          <Center maxW={451} w={451} h={560} maxH={560}>
             <Spinner />
           </Center>
         ) : (
@@ -147,7 +147,7 @@ export function NewStrategyModalHeader({
   const { connected } = useWallet();
 
   const handleCancel = async () => {
-    await routerPush(router, cancelUrl);
+    routerPush(router, cancelUrl);
     if (resetForm) {
       resetForm();
     }

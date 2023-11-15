@@ -10,22 +10,12 @@ export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_K
 
 export function useStrategies() {
   const { address } = useWallet();
-  const client = useCalcClient();
+  const { client } = useCalcClient();
 
-  return useQuery<Strategy[]>(
-    [QUERY_KEY, address, client],
-    async () => {
-      if (!address) {
-        throw new Error('No address');
-      }
-
-      return client!.fetchStrategies(address);
+  return useQuery<Strategy[]>([QUERY_KEY, address, client], () => client!.fetchStrategies(address!), {
+    enabled: !!address && !!client,
+    meta: {
+      errorMessage: `Error fetching strategies for ${address}`,
     },
-    {
-      enabled: !!address && !!client,
-      meta: {
-        errorMessage: 'Error fetching strategies',
-      },
-    },
-  );
+  });
 }

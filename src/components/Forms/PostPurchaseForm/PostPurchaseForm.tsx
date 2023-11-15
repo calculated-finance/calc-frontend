@@ -5,7 +5,7 @@ import RecipientAccount from '@components/RecipientAccount';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -45,7 +45,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
       supported: true,
-      enabled: chain === Chains.Osmosis,
+      enabled: ['osmosis-1', 'osmo-test-5'].includes(chain),
     },
   ].filter((option) => option.enabled);
 

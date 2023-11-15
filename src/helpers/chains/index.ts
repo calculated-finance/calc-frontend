@@ -1,20 +1,13 @@
 import { GasPrice } from '@cosmjs/stargate';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { ChainInfo } from '@keplr-wallet/types';
 import { isMainnet } from '@utils/isMainnet';
 import { CHAIN_INFO } from 'kujira.js';
-import {
-  CHAIN_ID,
-  CONTRACT_ADDRESS,
-  FEE_TAKER_ADDRESS,
-  OSMOSIS_RPC_ENDPOINT_MAINNET,
-  RPC_ENDPOINT,
-} from 'src/constants';
 
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',
   chainName: 'Osmosis Mainnet',
-  rpc: OSMOSIS_RPC_ENDPOINT_MAINNET,
+  rpc: 'https://rpc.osmosis.zone',
   rest: 'https://lcd.osmosis.zone',
   bip44: {
     coinType: 118,
@@ -103,108 +96,104 @@ const osmoTestnetConfig = {
   coinType: 118,
 } as ChainInfo;
 
-export function getGasPrice(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return GasPrice.fromString('0.015uosmo');
-  }
-  return GasPrice.fromString('0.015ukuji');
+export function getGasPrice(chain: ChainId) {
+  return GasPrice.fromString(
+    {
+      'osmosis-1': '0.015uosmo',
+      'osmo-test-5': '0.015uosmo',
+      'kaiyo-1': '0.015ukuji',
+      'harpoon-4': '0.015ukuji',
+    }[chain],
+  );
 }
 
-export function getChainInfo(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    if (isMainnet()) {
-      return osmoMainnetConfig;
-    }
-    return osmoTestnetConfig;
-  }
-  return CHAIN_INFO[CHAIN_ID];
+export function getChainInfo(chain: ChainId) {
+  return {
+    'osmosis-1': osmoMainnetConfig,
+    'osmo-test-5': osmoTestnetConfig,
+    'kaiyo-1': CHAIN_INFO['kaiyo-1'],
+    'harpoon-4': { ...CHAIN_INFO['harpoon-4'], rpc: 'https://kujira-testnet-rpc.polkachu.com/' },
+  }[chain] as ChainInfo;
 }
 
-export function getFeeCurrencies(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return getChainInfo(chain).feeCurrencies.filter((x) => x.coinMinimalDenom === 'uosmo');
-  }
-  return getChainInfo(chain).feeCurrencies.filter((x) => x.coinMinimalDenom === 'ukuji');
+export function getFeeCurrencies(chain: ChainId) {
+  return getChainInfo(chain).feeCurrencies.filter(
+    (x) =>
+      x.coinMinimalDenom ===
+      {
+        'osmosis-1': 'uosmo',
+        'osmo-test-5': 'uosmo',
+        'kaiyo-1': 'ukuji',
+        'harpoon-4': 'ukuji',
+      }[chain],
+  );
 }
 
-export function getChainEndpoint(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return getChainInfo(chain).rpc;
-  }
-  return RPC_ENDPOINT;
+export function getChainEndpoint(chain: ChainId): string {
+  console.log('getChainEndpoint', chain, getChainInfo(chain));
+  return getChainInfo(chain).rpc;
 }
 
-export function getChainContractAddress(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    if (isMainnet()) {
-      return 'osmo1zacxlu90sl6j2zf90uctpddhfmux84ryrw794ywnlcwx2zeh5a4q67qtc9';
-    }
-    return 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f';
-  }
-
-  return CONTRACT_ADDRESS;
+export function getChainContractAddress(chain: ChainId) {
+  return {
+    'osmosis-1': 'osmo1zacxlu90sl6j2zf90uctpddhfmux84ryrw794ywnlcwx2zeh5a4q67qtc9',
+    'osmo-test-5': 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f',
+    'kaiyo-1': 'kujira1e6fjnq7q20sh9cca76wdkfg69esha5zn53jjewrtjgm4nktk824stzyysu',
+    'harpoon-4': 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7',
+  }[chain]!;
 }
 
-export function getAutocompoundStakingRewardsAddress(chain: Chains): string {
-  return chain === Chains.Osmosis
-    ? 'osmo1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx626kj2'
-    : 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj';
+export function getAutocompoundStakingRewardsAddress(chain: ChainId): string {
+  return {
+    'osmosis-1': 'osmo1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx626kj2',
+    'osmo-test-5': 'osmo1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx626kj2',
+    'kaiyo-1': 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj',
+    'harpoon-4': 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj',
+  }[chain];
 }
 
-export function getChainFeeTakerAddress(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    if (isMainnet()) {
-      return 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest';
-    }
-    return 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54';
-  }
-
-  return FEE_TAKER_ADDRESS;
+export function getChainFeeTakerAddress(chain: ChainId) {
+  return {
+    'osmosis-1': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
+    'osmo-test-5': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
+    'kaiyo-1': 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54',
+    'harpoon-4': 'osmo16q6jpx7ns0ugwghqay73uxd5aq30du3uemhp54',
+  }[chain];
 }
 
-export function getChainStakingRouterContractAddress(chain: Chains) {
+export function getChainStakingRouterContractAddress(chain: ChainId) {
   return getChainContractAddress(chain);
 }
 
-export function getChainId(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return getChainInfo(chain).chainId;
-  }
-  return CHAIN_ID;
+export function getChainId(chain: ChainId) {
+  return chain;
 }
 
-export function getChainDexName(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return 'Osmosis';
-  }
-
-  if (chain === Chains.Moonbeam) {
-    return 'Moonbeam';
-  }
-  return 'FIN';
+export function getChainDexName(chain: ChainId) {
+  return {
+    'osmosis-1': 'Osmosis',
+    'osmo-test-5': 'Osmosis',
+    'kaiyo-1': 'FIN',
+    'harpoon-4': 'FIN',
+  }[chain];
 }
 
-export function getChainAddressPrefix(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return 'osmo';
-  }
-  return 'kujira';
-}
-export function getChainFromAddress(address: string) {
-  if (address.startsWith(getChainAddressPrefix(Chains.Osmosis))) {
-    return Chains.Osmosis;
-  }
-  if (address.startsWith(getChainAddressPrefix(Chains.Kujira))) {
-    return Chains.Kujira;
-  }
-  return undefined;
+export function getChainAddressPrefix(chain: ChainId) {
+  return {
+    'osmosis-1': 'osmo',
+    'osmo-test-5': 'osmo',
+    'kaiyo-1': 'kujira',
+    'harpoon-4': 'kujira',
+  }[chain];
 }
 
-export function getChainAddressLength(chain: Chains) {
-  if (chain === Chains.Osmosis) {
-    return 43;
-  }
-  return 45;
+export function getChainAddressLength(chain: ChainId) {
+  return {
+    'osmosis-1': 43,
+    'osmo-test-5': 43,
+    'kaiyo-1': 45,
+    'harpoon-4': 45,
+  }[chain];
 }
 
 export function getOsmosisWebUrl() {
@@ -236,14 +225,14 @@ export enum ChainType {
 }
 
 export type ChainConfig = {
-  name: Chains;
+  name: ChainId;
   chainType: ChainType;
   contractAddress: string;
   feeTakerAddress: string;
   autoCompoundStakingRewardsAddress: string;
 };
 
-export function getChainConfig(chain: Chains) {
+export function getChainConfig(chain: ChainId) {
   if (!chain) {
     return undefined;
   }

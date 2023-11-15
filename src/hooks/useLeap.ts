@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getChainId, getChainInfo, getFeeCurrencies, getGasPrice } from '@helpers/chains';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;
@@ -32,12 +32,12 @@ function waitForLeap(timeout = 1000) {
   });
 }
 type IWallet = {
-  connect: (chain: Chains) => void;
+  connect: (chain: ChainId) => void;
   disconnect: () => void;
   isInstalled: boolean;
   account: AccountData | null;
   autoconnect: boolean;
-  init: (chain: Chains) => void;
+  init: (chain: ChainId) => void;
   isConnecting: boolean;
   controller: SigningCosmWasmClient | null;
 };
@@ -55,7 +55,7 @@ export const useLeap = create<IWallet>()(
         set({ account: null });
         set({ autoconnect: false });
       },
-      connect: async (chain: Chains) => {
+      connect: async (chain: ChainId) => {
         set({ isConnecting: true });
         if (get().account) {
           get().disconnect();
@@ -89,7 +89,7 @@ export const useLeap = create<IWallet>()(
           set({ isConnecting: false });
         }
       },
-      init: async (chain: Chains) => {
+      init: async (chain: ChainId) => {
         if (!get().isInstalled) {
           await waitForLeap();
           set({ isInstalled: true });

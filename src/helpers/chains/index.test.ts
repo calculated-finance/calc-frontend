@@ -1,5 +1,5 @@
 import * as isMainnet from '@utils/isMainnet';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { CONTRACT_ADDRESS } from 'src/constants';
 import { getChainContractAddress, getRedBankAddress } from '.';
 
@@ -9,19 +9,19 @@ describe('getChainContractAddress', () => {
   it('returns the correct address for Osmosis mainnet', () => {
     jest.spyOn(isMainnet, 'isMainnet').mockReturnValue(true);
 
-    const address = getChainContractAddress(Chains.Osmosis);
+    const address = getChainContractAddress('osmosis-1');
     expect(address).toEqual('osmo1zacxlu90sl6j2zf90uctpddhfmux84ryrw794ywnlcwx2zeh5a4q67qtc9');
   });
 
   it('returns the correct address for Osmosis non-mainnet', () => {
     jest.spyOn(isMainnet, 'isMainnet').mockReturnValue(false);
 
-    const address = getChainContractAddress(Chains.Osmosis);
+    const address = getChainContractAddress('osmosis-1');
     expect(address).toEqual('osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f');
   });
 
   it('returns the correct address for other chains', () => {
-    const address = getChainContractAddress(Chains.Kujira as Chains); // Replace 'other-chain' with the desired chain
+    const address = getChainContractAddress('kaiyo-1');
     expect(address).toEqual(CONTRACT_ADDRESS);
   });
 

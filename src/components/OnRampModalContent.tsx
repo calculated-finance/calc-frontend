@@ -3,13 +3,13 @@ import { KADO_API_KEY } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 
 function OnRampModalContent() {
   const { connected, address } = useWallet();
   const { chain } = useChain();
 
-  const network = chain === Chains.Kujira ? 'kujira' : 'osmosis';
+  const network = ['kaiyo-1', 'harpoon-4'].includes(chain) ? 'kujira' : 'osmosis';
 
   return (
     <ModalContent mx={6}>

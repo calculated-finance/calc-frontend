@@ -6,14 +6,14 @@ import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockGetPairs } from '@helpers/test/mockGetPairs';
 import { ThemeProvider } from '@chakra-ui/react';
 import theme from 'src/theme';
-import * as constants from 'src/constants'
+import * as constants from 'src/constants';
 import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { featureFlags } from 'src/constants';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
@@ -29,7 +29,7 @@ const mockRouter = {
   },
 };
 
-jest.mock('src/constants')
+jest.mock('src/constants');
 jest.mock('@hooks/useWallet');
 
 jest.mock('next/router', () => ({
@@ -85,9 +85,9 @@ describe('DCA Out Assets page', () => {
       query: jest.fn(),
     });
 
-    useKujira.setState({
-      query: mockKujiraQuery as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: mockKujiraQuery as unknown as KujiraQueryClient,
+    // });
   });
   describe('on page load', () => {
     it('renders the heading', async () => {
@@ -204,7 +204,7 @@ describe('DCA Out Assets page', () => {
           initialDenom: 'ukuji',
           initialDeposit: 10,
           resultingDenom: 'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demo',
-          strategyType: 'DCA+ Out'
+          strategyType: 'DCA+ Out',
         });
       } else {
         expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({

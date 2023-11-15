@@ -12,7 +12,7 @@ import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { encode } from '@helpers/encode';
 import { useFormStore } from '@hooks/useFormStore';
 import { CONTRACT_ADDRESS, SECONDS_IN_A_DAY } from 'src/constants';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
@@ -176,7 +176,7 @@ describe('DCA Plus In confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 300,
-          chain: Chains.Kujira,
+          chain: 'kaiyo-1',
         },
       });
     });

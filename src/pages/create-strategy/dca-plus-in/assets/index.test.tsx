@@ -10,11 +10,11 @@ import selectEvent from 'react-select-event';
 import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { KujiraQueryClient } from 'kujira.js';
-import * as constants from 'src/constants'
+import * as constants from 'src/constants';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { featureFlags } from 'src/constants';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
@@ -77,13 +77,13 @@ describe('DCA In Assets page', () => {
       query: jest.fn(),
     });
 
-    useKujira.setState({
-      query: {
-        bank: {
-          allBalances: mockBalances(),
-        },
-      } as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: {
+    //     bank: {
+    //       allBalances: mockBalances(),
+    //     },
+    //   } as unknown as KujiraQueryClient,
+    // });
     mockFiatPrice();
   });
   describe('on page load', () => {
@@ -97,8 +97,6 @@ describe('DCA In Assets page', () => {
       ).toBeInTheDocument();
     });
   });
-
-
 
   describe('when initial denom is selected', () => {
     describe('and there are available funds', () => {
@@ -203,7 +201,7 @@ describe('DCA In Assets page', () => {
           initialDenom: 'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uusk',
           initialDeposit: 50,
           resultingDenom: 'ibc/784AEA7C1DC3C62F9A04EB8DC3A3D1DCB7B03BA8CB2476C5825FA0C155D3018E',
-          strategyType: 'DCA+ In'
+          strategyType: 'DCA+ In',
         });
       } else {
         expect(mockStateMachine.actions.updateAction).toHaveBeenCalledWith({

@@ -1,63 +1,63 @@
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
-import { getChainContractAddress, getChainEndpoint } from '@helpers/chains';
+import { getChainContractAddress } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
+import { isMainnet } from '@utils/isMainnet';
+import { useCalcClient } from './useCalcClient';
 
-const QUERY_KEY = 'get_vaults';
+const QUERY_KEY = 'get_all_vaults';
 
-const GET_VAULTS_LIMIT = 300;
+// async function fetchVaultsRecursively(
+//   client: CosmWasmClient,
+//   chain: ChainId,
+//   startAfter = null,
+//   allVaults = [] as Vault[],
+// ): Promise<Vault[]> {
+//   const result = await client.queryContractSmart(getChainContractAddress(chain), {
+//     get_vaults: {
+//       limit: GET_VAULTS_LIMIT,
+//       start_after: startAfter,
+//     },
+//   });
 
-function fetchVaultsRecursively(
-  client: CosmWasmClient,
-  chain: Chains,
-  startAfter = null,
-  allVaults = [] as Vault[],
-): Promise<Vault[]> {
-  return client
-    .queryContractSmart(getChainContractAddress(chain), {
-      get_vaults: {
-        limit: GET_VAULTS_LIMIT,
-        start_after: startAfter,
-      },
-    })
-    .then((result) => {
-      allVaults.push(...result.vaults);
+//   allVaults.push(...result.vaults);
 
-      if (result.vaults.length === GET_VAULTS_LIMIT) {
-        const newStartAfter = result.vaults[result.vaults.length - 1].id;
-        return fetchVaultsRecursively(client, chain, newStartAfter, allVaults);
-      }
-      return allVaults;
-    });
-}
+//   if (result.vaults.length === GET_VAULTS_LIMIT) {
+//     const newStartAfter = result.vaults[result.vaults.length - 1].id;
+//     return fetchVaultsRecursively(client, chain, newStartAfter, allVaults);
+//   }
 
-export default function useAdminStrategies(customChain?: Chains) {
-  const { chain: defaultChain } = useChain();
-  const { getCosmWasmClient } = useCosmWasmClient();
-  const chain = customChain || defaultChain;
+//   return allVaults;
+// }
+
+export default function useAdminStrategies() {
+  const chains = (isMainnet() ? ['kaiyo-1', 'osmosis-1'] : ['harpoon-4', 'osmo-test-5']) as ChainId[];
+
+  const clients = chains.map((chain) => {
+    const { client } = useCalcClient(chain);
+    console.log('CALCCLIENT', client);
+    return client;
+  });
+
+  console.log('CHAINS', chains);
+  console.log('CLIENTS', clients);
 
   return useQuery<Strategy[]>(
-    [QUERY_KEY, chain, getCosmWasmClient, customChain],
+    [QUERY_KEY, chains],
     async () => {
-      const defaultClient = getCosmWasmClient && (await getCosmWasmClient());
-
-      const storedClient = customChain ? await CosmWasmClient.connect(getChainEndpoint(customChain)) : null;
-
-      const client = !customChain ? defaultClient : storedClient;
-
-      if (!client) throw new Error('No client');
-      if (!chain) throw new Error('No chain');
-      const result = await fetchVaultsRecursively(client, chain);
-
+      const result = (await Promise.all(clients.map(async (client) => client?.fetchAllStrategies()))).flat();
       return result.map((vault) => transformToStrategyCosmos(vault));
     },
     {
-      enabled: !!getCosmWasmClient && !!chain,
+      enabled: !!chains && !!clients,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       meta: {
         errorMessage: 'Error fetching all strategies',
       },

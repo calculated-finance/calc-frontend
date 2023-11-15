@@ -21,12 +21,16 @@ function Page() {
   const { isAdmin } = useAdmin();
   const { connected } = useWallet();
 
-  const scheduledStrategies = data?.filter(isStrategyScheduled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const scheduledStrategies =
+    data?.filter(isStrategyScheduled).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
-  const activeStrategies = data?.filter(isStrategyActive).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
-  const completedStrategies = data?.filter(isStrategyCompleted).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies =
+    data?.filter(isStrategyActive).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies =
+    data?.filter(isStrategyCompleted).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
-  const cancelledStrategies = data?.filter(isStrategyCancelled).sort((a, b) => Number(b.id) - Number(a.id)) ?? [];
+  const cancelledStrategies =
+    data?.filter(isStrategyCancelled).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
   if (!connected) {
     return <ConnectWallet layerStyle="panel" />;

@@ -1,7 +1,7 @@
-import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
+import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import * as Sentry from '@sentry/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { encode } from '@helpers/encode';
@@ -38,9 +38,24 @@ function getCancelVaultExecuteMsg(
 }
 
 const useCancelStrategy = () => {
-  const { address, signingClient: client } = useWallet();
-  const msgs: EncodeObject[] = [];
+  const { address, getSigningClient } = useWallet();
   const { chain } = useChain();
+
+  const { data: client } = useQuery<SigningCosmWasmClient>(
+    ['signingCosmWasmClient', chain],
+    async () => {
+      const signingClient = getSigningClient && (await getSigningClient());
+
+      if (!signingClient) {
+        throw new Error('No signing client');
+      }
+
+      return signingClient;
+    },
+    {
+      enabled: !!chain && !!getSigningClient,
+    },
+  );
 
   return useMutation<DeliverTxResponse, Error, Strategy>(
     (strategy: Strategy) => {
@@ -60,9 +75,11 @@ const useCancelStrategy = () => {
         throw new Error('You are not the owner of this strategy');
       }
 
-      msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
-
-      return client.signAndBroadcast(address, msgs, 'auto');
+      return client.signAndBroadcast(
+        address,
+        [getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain))],
+        'auto',
+      );
     },
     {
       onError: (error, strategy) => {

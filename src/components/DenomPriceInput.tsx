@@ -15,7 +15,7 @@ import usePrice from '@hooks/usePrice';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getPairAddress } from 'src/fixtures/addresses';
@@ -81,7 +81,7 @@ export function DenomPriceInput({
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      {chain === Chains.Kujira && (
+      {['kaiyo-1', 'harpoon-4'].includes(chain) && (
         <FormHelperText>
           <Link
             isExternal
@@ -93,7 +93,7 @@ export function DenomPriceInput({
           </Link>
         </FormHelperText>
       )}
-      {chain === Chains.Osmosis && (
+      {['osmosis-1', 'osmo-test-5'].includes(chain) && (
         <FormHelperText>
           <Link isExternal href={`${getOsmosisWebUrl()}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">

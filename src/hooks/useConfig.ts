@@ -1,4 +1,3 @@
-import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
@@ -7,38 +6,30 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 
 export function useConfig(): Config | undefined {
   const { chain } = useChain();
-  const { getCosmWasmClient } = useCosmWasmClient();
+  const { cosmWasmClient } = useCosmWasmClient();
 
-  const { data } = useQuery<ConfigResponse>(
-    ['config', getCosmWasmClient],
-    async () => {
-      if (!getCosmWasmClient) return undefined;
-
-      const client = await getCosmWasmClient();
-
-      if (!client) {
-        throw new Error('No client');
-      }
-
-      const result = await client.queryContractSmart(getChainContractAddress(chain!), {
+  const { data: response } = useQuery<ConfigResponse>(
+    ['config', chain],
+    () =>
+      cosmWasmClient!.queryContractSmart(getChainContractAddress(chain!), {
         get_config: {},
-      } as QueryMsg);
-
-      return result;
-    },
+      }),
     {
-      enabled: !!getCosmWasmClient,
+      enabled: !!cosmWasmClient && !!chain,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchInterval: false,
+      retry: false,
       meta: {
         errorMessage: 'Error fetching config',
       },
     },
   );
 
-  if (!data) {
+  if (!response) {
     return undefined;
   }
 
-  const { config } = data;
-
-  return config;
+  return response.config;
 }

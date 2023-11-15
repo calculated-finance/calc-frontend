@@ -31,8 +31,6 @@ const strategyTypesToFormTypes = {
 
 const CUSTOMISE_PAGE_INDEX = 1;
 
-// { stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }
-
 export function Assets() {
   const { connected } = useWallet();
   const { strategyType } = useStrategyInfo();
@@ -50,11 +48,11 @@ export function Assets() {
 
   const onSubmit = async (formData: AssetsFormValues) => {
     const formName = strategyTypesToFormTypes[formData.strategyType];
-    await actions.updateAction(formName)(formData);
+    actions.updateAction(formName)(formData);
 
     const currentSteps = getSteps(formData.strategyType);
 
-    await routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
+    routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
   };
 
   if (!pairs) {
@@ -76,7 +74,7 @@ export function Assets() {
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //  @ts-ignore
+    // @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
         <Form autoComplete="off">

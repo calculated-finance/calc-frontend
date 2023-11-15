@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useRouter } from 'next/router';
 import { useChain, useChainStore } from '.';
-import { Chains } from './Chains';
+import { ChainId } from './Chains';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -19,7 +19,7 @@ describe('useChain hook', () => {
   it('should show loading when router is not ready', () => {
     (useRouter as jest.Mock).mockReturnValue({
       isReady: false,
-      query: { chain: Chains.Kujira },
+      query: { chain: 'kaiyo-1' },
       replace: jest.fn(),
       pathname: '/',
     });
@@ -32,7 +32,7 @@ describe('useChain hook', () => {
   it('should use valid chain from router query', async () => {
     (useRouter as jest.Mock).mockReturnValue({
       isReady: true,
-      query: { chain: Chains.Osmosis },
+      query: { chain: 'osmosis-1' },
       replace: jest.fn(),
       pathname: '/',
     });
@@ -41,7 +41,7 @@ describe('useChain hook', () => {
 
     // await();
 
-    expect(result.current.chain).toBe(Chains.Osmosis);
+    expect(result.current.chain).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
   });
 
@@ -57,21 +57,21 @@ describe('useChain hook', () => {
 
     // await();
 
-    expect(result.current.chain).toBe(Chains.Kujira);
+    expect(result.current.chain).toBe('kaiyo-1');
     expect(result.current.isLoading).toBe(false);
   });
 
   it('should use valid part of invalid chain from router query', async () => {
     (useRouter as jest.Mock).mockReturnValue({
       isReady: true,
-      query: { chain: `${Chains.Osmosis}invalid` },
+      query: { chain: `${'osmosis-1'}invalid` },
       replace: jest.fn(),
       pathname: '/',
     });
 
     const { result } = renderHook(() => useChain());
 
-    expect(result.current.chain).toBe(Chains.Osmosis);
+    expect(result.current.chain).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
 
     // except replace to have been called
@@ -91,35 +91,35 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    useChainStore.setState({ chain: Chains.Osmosis });
+    useChainStore.setState({ chain: 'osmosis-1' });
 
     const { result } = renderHook(() => useChain());
 
-    expect(result.current.chain).toBe(Chains.Osmosis);
+    expect(result.current.chain).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
   });
 
   it('should update stored chain if its different to query chain', async () => {
     (useRouter as jest.Mock).mockReturnValue({
       isReady: true,
-      query: { chain: Chains.Osmosis },
+      query: { chain: 'osmosis-1' },
       replace: jest.fn(),
       pathname: '/',
     });
 
-    useChainStore.setState({ chain: Chains.Kujira });
+    useChainStore.setState({ chain: 'kaiyo-1' });
 
     const { result } = renderHook(() => useChain());
 
-    expect(result.current.chain).toBe(Chains.Osmosis);
+    expect(result.current.chain).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
-    expect(useChainStore.getState().chain).toBe(Chains.Osmosis);
+    expect(useChainStore.getState().chain).toBe('osmosis-1');
   });
 
   it('should do all the updates if setChain is called', () => {
     (useRouter as jest.Mock).mockReturnValue({
       isReady: true,
-      query: { chain: Chains.Osmosis },
+      query: { chain: 'osmosis-1' },
       replace: jest.fn(),
       pathname: '/',
     });
@@ -127,7 +127,7 @@ describe('useChain hook', () => {
     const { result, waitFor } = renderHook(() => useChain());
 
     act(() => {
-      result.current.setChain(Chains.Kujira);
+      result.current.setChain('kaiyo-1');
     });
 
     expect(useRouter().replace).toHaveBeenCalledWith({
@@ -137,6 +137,6 @@ describe('useChain hook', () => {
       },
     });
 
-    waitFor(() => expect(useChainStore.getState().chain).toBe(Chains.Kujira));
+    waitFor(() => expect(useChainStore.getState().chain).toBe('kaiyo-1'));
   });
 });

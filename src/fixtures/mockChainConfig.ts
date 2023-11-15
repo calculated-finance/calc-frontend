@@ -1,8 +1,7 @@
 import { ChainType } from '@helpers/chains';
-import { Chains } from '@hooks/useChain/Chains';
 
 export const mockChainConfig = {
-  name: Chains.Kujira,
+  name: 'kaiyo-1',
   chainType: ChainType.Cosmos,
   contractAddress: 'contractAddress',
   feeTakerAddress: 'feeTakerAddress',

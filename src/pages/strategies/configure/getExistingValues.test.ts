@@ -4,7 +4,7 @@ import {
   getStrategyValidatorAddress,
   getStrategyReinvestStrategyId,
 } from '@helpers/destinations';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { Strategy } from '@models/Strategy';
@@ -21,7 +21,7 @@ describe('getExistingValues', () => {
       destinations: [{ address: 'mockAddress', allocation: '1.0' }],
     },
   };
-  const mockChain: Chains = Chains.Osmosis;
+  const mockChain: ChainId = 'osmosis-1';
   const mockAddress = 'mockAddress';
 
   it('returns correct values for SendToWallet postPurchaseOption', () => {

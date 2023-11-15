@@ -35,7 +35,7 @@ import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlu
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';

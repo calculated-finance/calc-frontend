@@ -4,7 +4,7 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { queryClient } from '@helpers/test/testQueryClient';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { useStrategies } from '@hooks/useStrategies';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { Strategy, StrategyStatus } from '@models/Strategy';
@@ -21,7 +21,7 @@ const mockRouter = {
   isReady: true,
   push: jest.fn(),
   pathname: '/',
-  query: { chain: Chains.Kujira },
+  query: { chain: 'kaiyo-1' },
   events: {
     on: jest.fn(),
   },

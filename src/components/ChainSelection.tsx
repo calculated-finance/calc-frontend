@@ -16,13 +16,15 @@ import {
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { useRouter } from 'next/router';
 
-export function ChainCards({ onChainSelect }: { onChainSelect: (chain: Chains) => void }) {
+export function ChainCards({ onChainSelect }: { onChainSelect: (chain: ChainId) => void }) {
   const chains = [
-    { id: Chains.Kujira, name: 'Kujira', imageSrc: '/images/denoms/kuji.svg' },
-    { id: Chains.Osmosis, name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg' },
+    { id: 'kaiyo-1', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg' },
+    { id: 'osmosis-1', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg' },
+    { id: 'harpoon-4', name: 'Kujira Testnet', imageSrc: '/images/denoms/kuji.svg' },
+    { id: 'osmo-test-5', name: 'Osmosis testnet', imageSrc: '/images/denoms/osmo.svg' },
   ];
 
   return (
@@ -39,7 +41,7 @@ export function ChainCards({ onChainSelect }: { onChainSelect: (chain: Chains) =
             bg="abyss.200"
             borderRadius="md"
             cursor="pointer"
-            onClick={() => onChainSelect(chain.id)}
+            onClick={() => onChainSelect(chain.id as ChainId)}
             _hover={{
               borderWidth: 1,
               borderColor: 'blue.200',
@@ -70,9 +72,10 @@ const chainSelectionAllowedUrls = [
 ];
 
 const imageMap = {
-  [Chains.Osmosis]: '/images/denoms/osmo.svg',
-  [Chains.Kujira]: '/images/denoms/kuji.svg',
-  [Chains.Moonbeam]: '/images/moonbeam.png',
+  'osmosis-1': '/images/denoms/osmo.svg',
+  'osmo-test-5': '/images/denoms/osmo.svg',
+  'kaiyo-1': '/images/denoms/kuji.svg',
+  'harpoon-4': '/images/moonbeam.png',
 };
 
 export function ChainSelection() {
@@ -100,9 +103,9 @@ export function ChainSelection() {
       <MenuList fontSize="sm">
         <MenuItemOption
           _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === Chains.Kujira}
+          isChecked={chain === 'kaiyo-1'}
           onClick={() => {
-            setChain(Chains.Kujira);
+            setChain('kaiyo-1');
             onClose();
           }}
         >
@@ -113,9 +116,9 @@ export function ChainSelection() {
         </MenuItemOption>
         <MenuItemOption
           _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === Chains.Osmosis}
+          isChecked={chain === 'osmosis-1'}
           onClick={() => {
-            setChain(Chains.Osmosis);
+            setChain('osmosis-1');
             onClose();
           }}
         >
@@ -124,7 +127,7 @@ export function ChainSelection() {
             <Text>Osmosis</Text>
           </HStack>
         </MenuItemOption>
-        {chain === Chains.Moonbeam && (
+        {/* {chain === Chains.Moonbeam && (
           <MenuItemOption
             _checked={{ bg: 'blue.500', color: 'navy' }}
             isChecked={chain === Chains.Moonbeam}
@@ -138,7 +141,7 @@ export function ChainSelection() {
               <Text>Moonbeam</Text>
             </HStack>
           </MenuItemOption>
-        )}
+        )} */}
       </MenuList>
     </Menu>
   );

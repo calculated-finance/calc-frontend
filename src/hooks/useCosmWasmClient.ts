@@ -1,27 +1,48 @@
-import { featureFlags } from 'src/constants';
-import { useMemo } from 'react';
-import { useCosmosKit } from './useCosmosKit';
-import { useCosmWasmClientStore } from './useCosmWasmClientStore';
+import { useQuery } from '@tanstack/react-query';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { ChainId } from './useChain/Chains';
 import { useChain } from './useChain';
+import { useCosmosKit } from './useCosmosKit';
 
-export function useCosmWasmClient() {
-  const chain = useChain();
-  const storedClient = useCosmWasmClientStore((state) => state.client);
+export function useCosmWasmClient(injectedChain?: ChainId) {
+  const { chain } = injectedChain ? { chain: injectedChain } : useChain();
+  const chainContext = useCosmosKit(chain);
 
-  const memoedStoredClientPromise = useMemo(
-    () => (storedClient ? () => Promise.resolve(storedClient) : null),
-    [storedClient, chain],
+  const { data: cosmWasmClient } = useQuery<CosmWasmClient | null>(
+    ['cosmWasmClient', chain],
+    async () => {
+      console.log('cosmWasmClient', chain, chainContext);
+
+      const client = await chainContext!.getCosmWasmClient();
+
+      const originalFn = client.queryContractSmart;
+
+      client.queryContractSmart = async function (address: any, query: any) {
+        try {
+          const result = await originalFn.apply(this, [address, query]);
+          console.log('QUERY', address, query, chainContext?.chain.chain_name, client);
+          console.log('RESULT', result);
+          return result;
+        } catch (error) {
+          console.log('QUERY', address, query, chainContext, client);
+          console.log('ERROR', error);
+          throw error;
+        }
+      };
+
+      return client;
+    },
+    {
+      enabled: !!chainContext,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchInterval: false,
+      retry: false,
+    },
   );
 
-  const { getCosmWasmClient } = useCosmosKit(chain.chainConfig?.name) || {};
-
-  if (featureFlags.cosmoskitEnabled) {
-    return {
-      getCosmWasmClient,
-    };
-  }
-
   return {
-    getCosmWasmClient: memoedStoredClientPromise,
+    cosmWasmClient,
   };
 }

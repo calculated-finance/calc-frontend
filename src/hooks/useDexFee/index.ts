@@ -1,6 +1,6 @@
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { FIN_TAKER_FEE } from 'src/constants';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';
@@ -15,9 +15,9 @@ export default function useDexFee(
 ) {
   const { chain } = useChain();
   const { data: pairsData } = usePairs();
-  const { data: pools } = useOsmosisPools(chain === Chains.Osmosis);
+  const { data: pools } = useOsmosisPools(['osmosis-1', 'osmo-test-5'].includes(chain));
 
-  if (chain === Chains.Kujira) {
+  if (['kaiyo-1', 'harpoon-4'].includes(chain)) {
     return { dexFee: FIN_TAKER_FEE };
   }
 

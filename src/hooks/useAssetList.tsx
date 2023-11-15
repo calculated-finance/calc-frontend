@@ -6,7 +6,7 @@ import testnetAssetList from 'src/assetLists/osmo-test-5.assetlist.json';
 import mainnetAssetList from 'src/assetLists/osmosis-1.assetlist.json';
 import { useQuery } from '@tanstack/react-query';
 import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);
@@ -22,17 +22,19 @@ export function useAssetList() {
 
   return useQuery<AssetList>(
     ['assetList'],
-    () =>
-      fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`)
-        .then((res) => res.json())
-        .catch((err) => {
-          Sentry.captureException(err, { tags: { page: 'useAssetList' } });
-          return backup;
-        }),
+    async () => {
+      try {
+        const assetList = await fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`);
+        return await assetList.json();
+      } catch (error) {
+        Sentry.captureException(error, { tags: { page: 'useAssetList' } });
+        return backup;
+      }
+    },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
-      enabled: chain === Chains.Osmosis,
+      enabled: chain === 'osmosis-1',
       meta: {
         errorMessage: 'Error fetching asset list',
       },

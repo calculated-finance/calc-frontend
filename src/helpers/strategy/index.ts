@@ -19,7 +19,7 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
@@ -325,8 +325,8 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
   return Number(directedPrice.toFixed(6));
 }
 
-export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: Chains) {
-  if (chain === Chains.Osmosis) {
+export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
+  if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
   }
 
@@ -341,7 +341,7 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
+export function getPriceCeilingFloor(strategy: Strategy, chain: ChainId) {
   if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
@@ -349,7 +349,7 @@ export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
   return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
 }
 
-export function getBasePrice(strategy: Strategy, chain: Chains) {
+export function getBasePrice(strategy: Strategy, chain: ChainId) {
   const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
   if (!base_receive_amount) {
     return undefined;

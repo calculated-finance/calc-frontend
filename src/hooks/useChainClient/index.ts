@@ -1,86 +1,80 @@
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useMetamask } from '@hooks/useMetamask';
-import { BrowserProvider } from 'ethers';
-import { useKujira } from '@hooks/useKujira';
-import { useOsmosis } from '@hooks/useOsmosis';
-import { KujiraQueryClient } from 'kujira.js';
+import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
-import { fetchBalanceEvm } from './fetchBalanceEvm';
+import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
+import { getChainEndpoint } from '@helpers/chains';
+import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
+import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 
-async function fetchBalancesKujira(kujiraQueryClient: KujiraQueryClient, address: string, supportedDenoms: string[]) {
-  const balances = await kujiraQueryClient.bank.allBalances(address);
-  return balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
-}
+export type ChainClient = {
+  fetchTokenBalance: (tokenId: string, address: string) => Promise<Coin>;
+  fetchBalances: (address: string, supportedDenoms: string[]) => Promise<Coin[]>;
+  fetchValidators: () => Promise<{ validators: Validator[] }>;
+};
 
-function fetchBalancesOsmosis(osmosisQueryClient: any) {
-  return (address: string, supportedDenoms: string[]) =>
-    osmosisQueryClient?.cosmos.bank.v1beta1
-      .allBalances({ address })
-      .then((res: { balances: Coin[] }) => res.balances)
-      .then((balances: Coin[]) => balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom)));
-}
+export function useChainClient(chain: ChainId) {
+  const { cosmWasmClient } = useCosmWasmClient();
 
-function getClient(
-  chain: Chains,
-  cosmWasmClient: CosmWasmClient | null,
-  evmProvider: BrowserProvider | null,
-  kujiraQueryClient: KujiraQueryClient | null,
-  osmosisQueryClient: any | null,
-) {
-  if (!chain) return null;
+  const { data: chainClient } = useQuery<ChainClient>(
+    ['chainClient', chain, cosmWasmClient],
+    async () => {
+      if (['kaiyo-1', 'harpoon-4'].includes(chain)) {
+        const client = await Tendermint34Client.create(
+          new HttpBatchClient(getChainEndpoint(chain), {
+            dispatchInterval: 100,
+            batchSizeLimit: 200,
+          }),
+        );
 
-  if (chain === Chains.Moonbeam) {
-    if (!evmProvider) return null;
+        const queryClient = kujiraQueryClient({ client: client as any });
 
-    return {
-      fetchTokenBalance: (tokenId: string, address: string) => fetchBalanceEvm(tokenId, evmProvider, address),
-      fetchBalances: (address: string, supportedDenoms: string[]) =>
-        Promise.all(supportedDenoms.map((denom) => fetchBalanceEvm(denom, evmProvider, address))),
-    };
-  }
+        return {
+          fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
+          fetchBalances: async (address: string, supportedDenoms: string[]) => {
+            const balances = await queryClient.bank.allBalances(address);
+            return balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
+          },
+          fetchValidators: async () => {
+            const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
+            return response as { validators: Validator[] };
+          },
+        };
+      }
 
-  if (chain === Chains.Kujira) {
-    if (!kujiraQueryClient) return null;
-    if (!cosmWasmClient) return null;
+      if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
+        const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
+          rpcEndpoint: getChainEndpoint(chain),
+        });
 
-    return {
-      fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient.getBalance(address, tokenId),
-      fetchBalances: (address: string, supportedDenoms: string[]) =>
-        fetchBalancesKujira(kujiraQueryClient, address, supportedDenoms),
-    };
-  }
+        return {
+          fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
+          fetchBalances: async (address: string, supportedDenoms: string[]) => {
+            const { balances: allBalances } = await queryClient?.cosmos.bank.v1beta1.allBalances({ address });
+            return allBalances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
+          },
+          fetchValidators: async () => {
+            const response = await queryClient?.cosmos.staking.v1beta1.validators({
+              status: 'BOND_STATUS_BONDED',
+            });
+            return response as { validators: Validator[] };
+          },
+        };
+      }
 
-  if (chain === Chains.Osmosis) {
-    if (!osmosisQueryClient) return null;
-    if (!cosmWasmClient) return null;
-
-    return {
-      fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient.getBalance(address, tokenId),
-      fetchBalances: fetchBalancesOsmosis(osmosisQueryClient),
-    };
-  }
-
-  throw new Error(`Unsupported chain ${chain}`);
-}
-
-export function useChainClient(chain: Chains) {
-  const evmProvider = useMetamask((state) => state.provider);
-  const { getCosmWasmClient } = useCosmWasmClient();
-
-  const kujiraQuery = useKujira((state) => state.query);
-  const osmosisQuery = useOsmosis((state) => state.query);
-
-  const queryResult = useQuery<CosmWasmClient | null>(
-    ['cosmWasmClient', getCosmWasmClient, chain],
-    async () => (chain && getCosmWasmClient && (await getCosmWasmClient())) ?? null,
+      throw new Error(`Unsupported chain ${chain}`);
+    },
     {
-      enabled: !!getCosmWasmClient && !!chain,
-      staleTime: 1000 * 60 * 5,
+      enabled: !!chain && !!cosmWasmClient,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      meta: {
+        errorMessage: 'Error fetching chain client',
+      },
     },
   );
 
-  return getClient(chain, queryResult.data ?? null, evmProvider, kujiraQuery, osmosisQuery);
+  return chainClient;
 }

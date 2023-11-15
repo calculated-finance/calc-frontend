@@ -1,4 +1,4 @@
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { dcaInStrategyViewModal as mockStrategy } from 'src/fixtures/strategy';
@@ -25,7 +25,7 @@ describe('destination helpers', () => {
           ],
         },
       };
-      const chain = Chains.Osmosis;
+      const chain = 'osmosis-1';
 
       const result = getStrategyPostSwapType(strategy, chain);
       expect(result).toBe(PostPurchaseOptions.GenerateYield);
@@ -38,7 +38,7 @@ describe('destination helpers', () => {
           ...mockStrategy.rawData,
           destinations: [
             {
-              address: getChainContractAddress(Chains.Osmosis),
+              address: getChainContractAddress('osmosis-1'),
               allocation: '1.0',
               msg: Buffer.from(JSON.stringify({ z_delegate: { validator_address: 'validator_address' } })).toString(
                 'base64',
@@ -47,7 +47,7 @@ describe('destination helpers', () => {
           ],
         },
       };
-      const chain = Chains.Osmosis;
+      const chain = 'osmosis-1';
 
       const result = getStrategyPostSwapType(strategy, chain);
       expect(result).toBe(PostPurchaseOptions.Stake);
@@ -60,14 +60,14 @@ describe('destination helpers', () => {
           ...mockStrategy.rawData,
           destinations: [
             {
-              address: getChainContractAddress(Chains.Osmosis),
+              address: getChainContractAddress('osmosis-1'),
               allocation: '1.0',
               msg: Buffer.from(JSON.stringify({})).toString('base64'),
             },
           ],
         },
       };
-      const chain = Chains.Osmosis;
+      const chain = 'osmosis-1';
 
       const result = getStrategyPostSwapType(strategy, chain);
       expect(result).toBe(PostPurchaseOptions.Reinvest);
@@ -87,7 +87,7 @@ describe('destination helpers', () => {
           ],
         },
       };
-      const chain = Chains.Osmosis;
+      const chain = 'osmosis-1';
 
       const result = getStrategyPostSwapType(strategy, chain);
       expect(result).toBe(PostPurchaseOptions.SendToWallet);

@@ -6,15 +6,13 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TestnetDenomsMoonbeam } from '@models/Denom';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
-import { PairsResponse } from 'src/interfaces/generated-osmosis/response/get_pairs';
-import { PairsResponse as PairsResponseV3 } from 'src/interfaces/v2/generated/response/get_pairs';
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { Pair } from 'src/interfaces/v2/generated/query';
 import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
+import { ChainId } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import { useConfig } from './useConfig';
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -93,20 +91,20 @@ const GET_PAIRS_LIMIT = 400;
 function usePairsMoonbeam() {
   const { chain } = useChain();
 
-  if (chain === Chains.Moonbeam) {
-    return {
-      isLoading: false,
-      data: {
-        pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }] as Pair[],
-      },
-    };
-  }
+  // if (chain === Chains.Moonbeam) {
+  //   return {
+  //     isLoading: false,
+  //     data: {
+  //       pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }] as Pair[],
+  //     },
+  //   };
+  // }
 
   return null;
 }
 
 function usePairsCosmos(config: Config | undefined) {
-  const { getCosmWasmClient } = useCosmWasmClient();
+  const { cosmWasmClient } = useCosmWasmClient();
   const { chain } = useChain();
 
   async function fetchPairsRecursively(
@@ -131,24 +129,10 @@ function usePairsCosmos(config: Config | undefined) {
     return allPairs;
   }
 
-  const queryResult = useQuery<V3Pair[]>(
-    ['pairs-cosmos', chain],
-    async () => {
-      const client = getCosmWasmClient && (await getCosmWasmClient());
-
-      if (!client) {
-        return new Promise(() => {});
-      }
-
-      const pairs = await fetchPairsRecursively(client);
-
-      return pairs;
-    },
-    {
-      enabled: !!getCosmWasmClient && !!config && !!config?.exchange_contract_address && !!chain,
-      staleTime: 1000 * 60 * 5,
-    },
-  );
+  const queryResult = useQuery<V3Pair[]>(['pairs', chain], () => fetchPairsRecursively(cosmWasmClient!), {
+    enabled: !!cosmWasmClient && !!config && !!config?.exchange_contract_address && !!chain,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return {
     ...queryResult,

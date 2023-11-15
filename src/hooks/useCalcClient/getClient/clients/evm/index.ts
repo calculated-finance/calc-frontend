@@ -16,22 +16,6 @@ export async function fetchStrategyEVM(id: string, provider: BrowserProvider): P
   return transformToStrategyEVM(result, balance, id);
 }
 
-// {
-//   dca_vault_execution_completed: {
-//     fee: Coin;
-//     received: Coin;
-//     sent: Coin;
-//   };
-// }
-
-// export interface Event {
-//   block_height: number;
-//   data: EventData;
-//   id: number;
-//   resource_id: Uint128;
-//   timestamp: Timestamp;
-// }
-
 export async function fetchStrategyEvents(id: string, provider: BrowserProvider): Promise<StrategyEvent[]> {
   const contract = getEventManagerContract(provider);
   const events = await contract.getDcaVaultExecutionCompletedEvents(id, '0', '100');

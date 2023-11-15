@@ -14,7 +14,7 @@ import { useFormStore } from '@hooks/useFormStore';
 import TriggerTypes from '@models/TriggerTypes';
 import YesNoValues from '@models/YesNoValues';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
 import { when } from 'jest-when';
 import getDenomInfo from '@utils/getDenomInfo';
@@ -185,7 +185,7 @@ describe('Weighted Scale Out confirm page', () => {
         query: {
           strategyId: '59',
           timeSaved: 300,
-          chain: Chains.Kujira,
+          chain: 'kaiyo-1',
         },
       });
     });

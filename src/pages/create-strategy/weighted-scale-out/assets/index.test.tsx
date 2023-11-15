@@ -13,7 +13,7 @@ import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import Page from './index.page';
@@ -83,9 +83,9 @@ describe('DCA Out Assets page', () => {
       query: jest.fn(),
     });
 
-    useKujira.setState({
-      query: mockKujiraQuery as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: mockKujiraQuery as unknown as KujiraQueryClient,
+    // });
   });
 
   describe('on page load', () => {

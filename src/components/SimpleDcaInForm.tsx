@@ -245,7 +245,7 @@ function SimpleDcaInForm() {
             </Center>
           }
         >
-          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="flex-start" justifyContent="center" h="full">
+          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="center" justifyContent="center" h="full">
             <Box maxWidth={451} mx="auto">
               <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (

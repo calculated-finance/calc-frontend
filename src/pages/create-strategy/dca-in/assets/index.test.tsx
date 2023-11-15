@@ -12,11 +12,11 @@ import userEvent from '@testing-library/user-event';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import { mockFiatPrice } from '@helpers/test/mockFiatPrice';
 import { mockBalances } from '@helpers/test/mockBalances';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { KujiraQueryClient } from 'kujira.js';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {
@@ -77,13 +77,13 @@ describe('DCA In Assets page', () => {
       query: jest.fn(),
     });
 
-    useKujira.setState({
-      query: {
-        bank: {
-          allBalances: mockBalances(),
-        },
-      } as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: {
+    //     bank: {
+    //       allBalances: mockBalances(),
+    //     },
+    //   } as unknown as KujiraQueryClient,
+    // });
     mockFiatPrice();
   });
 
@@ -201,7 +201,7 @@ describe('DCA In Assets page', () => {
 
       expect(mockRouter.push).toHaveBeenCalledWith({
         pathname: '/create-strategy/dca-in/customise',
-        query: { chain: Chains.Kujira },
+        query: { chain: 'kaiyo-1' },
       });
     });
   });

@@ -1,4 +1,4 @@
-import { Badge, ComponentWithAs, IconProps } from "@chakra-ui/react";
+import { Badge, ComponentWithAs, IconProps } from '@chakra-ui/react';
 import {
   Add1Icon,
   Add2Icon,
@@ -8,11 +8,11 @@ import {
   KnowledgeIcon,
   PieChartIcon,
   ToolkitIcon,
-} from "@fusion-icons/react/interface";
-import { Chains } from "@hooks/useChain/Chains";
-import { SVGProps } from "react";
-import { Pages } from "./Pages";
-import { ControlDeskPages } from "./ControlDeskPages";
+} from '@fusion-icons/react/interface';
+import { ChainId } from '@hooks/useChain/Chains';
+import { SVGProps } from 'react';
+import { Pages } from './Pages';
+import { ControlDeskPages } from './ControlDeskPages';
 
 export interface LinkItem {
   name: string;
@@ -20,7 +20,7 @@ export interface LinkItem {
   icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
   href: Pages | ControlDeskPages;
-  exclude?: Chains[];
+  exclude?: ChainId[];
 }
 
 export const LinkItems: Array<LinkItem> = [
@@ -39,13 +39,11 @@ export const LinkItems: Array<LinkItem> = [
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings }
-  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc }
-]
-
-
+  { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
+];
 
 export const ControlDeskLinkItems: Array<LinkItem> = [
   { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
   { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
   { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
-]
+];

@@ -64,8 +64,8 @@ export function CustomiseFormDcaWrapper({ steps }: { steps: StepConfig[] }) {
   const { goToStep, nextStep } = useSteps(steps);
 
   const onSubmit = async (data: DcaInFormDataStep2) => {
-    await actions.updateAction(data);
-    await nextStep();
+    actions.updateAction(data);
+    nextStep();
   };
 
   const handleRestart = () => {

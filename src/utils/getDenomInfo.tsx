@@ -13,18 +13,16 @@ import { isNil } from 'lodash';
 import { isMainnet } from './isMainnet';
 import { DenomInfo } from './DenomInfo';
 import { defaultDenom } from './defaultDenom';
-import { mainnetDenoms } from './mainnetDenoms';
+import { mainnetDenoms } from './mainnetDenomsKujira';
 import { mainnetDenomsOsmosis } from './mainnetDenomsOsmosis';
-import { testnetDenoms } from './testnetDenoms';
+import { testnetDenoms } from './testnetDenomsKujira';
+import { testnetDenomsOsmosis } from './testnetDenomsOsmosis';
 import { testnetDenomsMoonbeam } from './testnetDenomsMoonbeam';
 
-const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL.toString()];
-
 function isDenomInStablesList(denom: Denom) {
-  if (isMainnet()) {
-    return mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.stable;
-  }
-  return stableDenomsTestnet.includes(denom);
+  return isMainnet()
+    ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.stable
+    : testnetDenomsOsmosis[denom as TestnetDenomsOsmosis]?.stable;
 }
 
 const getDenomInfo = (denom: string | undefined): DenomInfo => {
@@ -40,44 +38,41 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
   const asset = assetList?.assets && assetList.assets.find((a) => a.base === denom);
 
   if (asset) {
-    const mapTo = {} as Partial<DenomInfo>;
-
-    mapTo.name = asset.symbol;
-    mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
-    mapTo.stakeable = !isDenomInStablesList(denom as Denom);
-    mapTo.stable = isDenomInStablesList(denom as Denom);
-    mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
-    mapTo.osmosisId = asset.symbol;
-    mapTo.enabledInDcaPlus = isMainnet() ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.enabledInDcaPlus : true;
-
     const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
     const significantFigures = findDenomUnits?.exponent || 6;
 
-    mapTo.significantFigures = significantFigures;
-    mapTo.pricePrecision = 6;
-    mapTo.stakeableAndSupported = denom === 'uosmo';
+    const denoms = { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis };
+    const scopedDenom = denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis;
+
+    let denomInfo = {
+      name: asset.symbol,
+      icon: asset.logo_URIs?.svg || asset.logo_URIs?.png,
+      stakeable: !isDenomInStablesList(denom as Denom),
+      stable: isDenomInStablesList(denom as Denom),
+      coingeckoId: asset.coingecko_id || denoms[scopedDenom]?.coingeckoId || '',
+      osmosisId: asset.symbol,
+      enabledInDcaPlus: isMainnet() ? denoms[scopedDenom]?.enabledInDcaPlus : true,
+      significantFigures,
+      pricePrecision: 6,
+      stakeableAndSupported: denom === 'uosmo',
+    } as Partial<DenomInfo>;
 
     if (!isNil(significantFigures) && significantFigures !== 6) {
-      mapTo.conversion = (value: number) => value / 10 ** significantFigures;
-      mapTo.deconversion = (value: number) => Math.round(value * 10 ** significantFigures);
-      mapTo.priceDeconversion = (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6);
-      mapTo.priceConversion = (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6);
-      mapTo.minimumSwapAmount = 0.05 / 1000;
-    }
-
-    if (isMainnet()) {
-      return {
-        id: denom,
-        ...defaultDenom,
-        ...mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis],
-        ...mapTo,
+      denomInfo = {
+        ...denomInfo,
+        conversion: (value: number) => value / 10 ** significantFigures,
+        deconversion: (value: number) => Math.round(value * 10 ** significantFigures),
+        priceDeconversion: (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6),
+        priceConversion: (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6),
+        minimumSwapAmount: 0.05 / 1000,
       };
     }
+
     return {
       id: denom,
       ...defaultDenom,
-      ...testnetDenoms[denom as TestnetDenoms],
-      ...mapTo,
+      ...denoms[scopedDenom],
+      ...denomInfo,
     };
   }
 

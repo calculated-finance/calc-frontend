@@ -16,7 +16,7 @@ export const queryClient = new QueryClient({
       const label = query.queryKey[0] as string;
       const { errorMessage } = (query.meta as { errorMessage: string }) || {};
 
-      if (!ignoredErrors.find((i) => (error as Error).message.includes(i))) {
+      if (!ignoredErrors.find((i) => (error as Error).message?.includes(i))) {
         Sentry.captureException(error, { tags: { queryKey: label, errorMessage } });
       }
 

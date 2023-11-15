@@ -25,7 +25,7 @@ import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAdmin } from '@hooks/useAdmin';
@@ -35,6 +35,7 @@ import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import { useCalcClient } from '@hooks/useCalcClient';
 
 function InfoPanel() {
   return (
@@ -220,16 +221,17 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
 }
 
 function TotalInvestment() {
-  const kujiraSupportedDenoms = useSupportedDenoms(Chains.Kujira);
-  const osmosisSupportedDenoms = useSupportedDenoms(Chains.Osmosis);
+  const kujiraSupportedDenoms = useSupportedDenoms('kaiyo-1');
+  const osmosisSupportedDenoms = useSupportedDenoms('osmosis-1');
   const { data: fiatPrices } = useFiatPrice(kujiraSupportedDenoms[0], [
     ...kujiraSupportedDenoms,
     ...osmosisSupportedDenoms,
   ]);
-  const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
-  const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
 
-  if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
+  const { client } = useCalcClient();
+  const { data: allStrategies } = useAdminStrategies();
+
+  if (!fiatPrices || !allStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -237,24 +239,13 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmountsKujira = getTotalSwapped(kujiraStrategies, kujiraSupportedDenoms);
-  const totalSwappedTotalKujira = totalFromCoins(
-    totalSwappedAmountsKujira,
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, osmosisSupportedDenoms);
+  const totalSwappedTotal = totalFromCoins(
+    totalSwappedAmounts,
     fiatPrices,
-    kujiraSupportedDenoms,
-    Chains.Kujira,
+    [...osmosisSupportedDenoms, ...kujiraSupportedDenoms],
+    'osmosis-1',
   );
-
-  const totalSwappedAmountsOsmosis = getTotalSwapped(osmosisStrategies, osmosisSupportedDenoms);
-  const totalSwappedTotalOsmosis = totalFromCoins(
-    totalSwappedAmountsOsmosis,
-    fiatPrices,
-    osmosisSupportedDenoms,
-    Chains.Osmosis,
-  );
-  const strategiesCount = kujiraStrategies.length + osmosisStrategies.length;
-
-  const totalSwappedTotal = totalSwappedTotalOsmosis + totalSwappedTotalKujira;
 
   const formattedValue =
     totalSwappedTotal >= 1000000
@@ -270,7 +261,7 @@ function TotalInvestment() {
       <Flex gap={12} direction={['column', null, 'row']}>
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {strategiesCount}
+            {allStrategies.length}
             <Text fontSize="md">total strategies created</Text>
           </Heading>
         </Stack>
@@ -368,7 +359,7 @@ function HomeGrid() {
       )}
 
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
-        {chain !== Chains.Moonbeam && <TotalInvestment />}
+        <TotalInvestment />
       </GridItem>
 
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>

@@ -11,7 +11,7 @@ import { mockFiatPriceHistory } from '@helpers/test/mockFiatPriceHistory';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockStrategy, mockUseStrategy } from '@helpers/test/mockGetVault';
 import { mockCancelVault } from '@helpers/test/mockCancelVault';
-import { useKujira } from '@hooks/useKujira';
+// import { useKujira } from '@hooks/useKujira';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { toBase64 } from '@helpers/base64';
 import { CONTRACT_ADDRESS } from 'src/constants';
@@ -60,9 +60,9 @@ async function renderTarget() {
 describe('Detail page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    useKujira.setState({
-      query: mockKujiraQuery as unknown as KujiraQueryClient,
-    });
+    // useKujira.setState({
+    //   query: mockKujiraQuery as unknown as KujiraQueryClient,
+    // });
 
     useOsmosis.setState({
       query: jest.fn(),
@@ -306,7 +306,7 @@ describe('Detail page', () => {
               vault: mockStrategy({
                 destinations: [
                   {
-                    address: CONTRACT_ADDRESS,
+                    address: CONTRACT_ADDRESS!,
                     allocation: '1',
                     msg: toBase64({
                       z_delegate: {
@@ -332,7 +332,7 @@ describe('Detail page', () => {
               vault: mockStrategy({
                 destinations: [
                   {
-                    address: CONTRACT_ADDRESS,
+                    address: CONTRACT_ADDRESS!,
                     allocation: '1',
                     msg: toBase64({
                       z_delegate: {
