@@ -351,4 +351,13 @@ export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
     enabled: true,
     significantFigures: 6,
   },
+  [MainnetDenoms.FUZN]: {
+    name: 'FUZN',
+    icon: '/images/denoms/fuzn.svg',
+    coingeckoId: 'fuzn',
+    stakeable: false,
+    stable: false,
+    enabled: true,
+    significantFigures: 6,
+  },
 };
