@@ -10,7 +10,7 @@ export type CalcClient = {
   fetchAllStrategies: () => Promise<any[]>;
 };
 
-export default function getClient(chain: ChainId, cosmClient: CosmWasmClient | null) {
+export default function getClient(chainId: ChainId, cosmClient: CosmWasmClient | null) {
   if (!cosmClient) return null;
-  return getCalcClient(getChainContractAddress(chain), cosmClient, chain);
+  return getCalcClient(getChainContractAddress(chainId), cosmClient, chainId);
 }

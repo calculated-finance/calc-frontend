@@ -1,20 +1,21 @@
 import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
-import { useChain } from './useChain';
+import { CHAINS } from 'src/constants';
+import { useChainId } from './useChain';
 import { ChainId } from './useChain/Chains';
 import usePairs, { allDenomsFromPairs } from './usePairs';
 
-export function useSupportedDenoms(injectedChain?: ChainId) {
-  // const { chain: currentChain } = useChain();
+export function useSupportedDenoms(injectedChainId?: ChainId) {
+  const { chainId } = useChainId();
 
-  // const chain = injectedChain || currentChain;
+  const chain = injectedChainId || chainId;
 
-  const { data: pairsData } = usePairs();
+  const { data: pairsData } = usePairs(chain);
 
   const { pairs } = pairsData;
 
-  const allDenoms = allDenomsFromPairs(pairs); // chain !== Chains.Kujira ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
+  const allDenoms = CHAINS.includes(chain) ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
 
   const allDenomInfos = useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
 

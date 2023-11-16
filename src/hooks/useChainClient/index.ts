@@ -14,15 +14,15 @@ export type ChainClient = {
   fetchValidators: () => Promise<{ validators: Validator[] }>;
 };
 
-export function useChainClient(chain: ChainId) {
-  const { cosmWasmClient } = useCosmWasmClient();
+export function useChainClient(chainId: ChainId) {
+  const { cosmWasmClient } = useCosmWasmClient(chainId);
 
   const { data: chainClient } = useQuery<ChainClient>(
-    ['chainClient', chain, cosmWasmClient],
+    ['chainClient', chainId],
     async () => {
-      if (['kaiyo-1', 'harpoon-4'].includes(chain)) {
+      if (['kaiyo-1', 'harpoon-4'].includes(chainId)) {
         const client = await Tendermint34Client.create(
-          new HttpBatchClient(getChainEndpoint(chain), {
+          new HttpBatchClient(getChainEndpoint(chainId), {
             dispatchInterval: 100,
             batchSizeLimit: 200,
           }),
@@ -43,19 +43,19 @@ export function useChainClient(chain: ChainId) {
         };
       }
 
-      if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
+      if (['osmosis-1', 'osmo-test-5'].includes(chainId)) {
         const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
-          rpcEndpoint: getChainEndpoint(chain),
+          rpcEndpoint: getChainEndpoint(chainId),
         });
 
         return {
           fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
           fetchBalances: async (address: string, supportedDenoms: string[]) => {
-            const { balances: allBalances } = await queryClient?.cosmos.bank.v1beta1.allBalances({ address });
+            const { balances: allBalances } = await queryClient.cosmos.bank.v1beta1.allBalances({ address });
             return allBalances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
           },
           fetchValidators: async () => {
-            const response = await queryClient?.cosmos.staking.v1beta1.validators({
+            const response = await queryClient.cosmos.staking.v1beta1.validators({
               status: 'BOND_STATUS_BONDED',
             });
             return response as { validators: Validator[] };
@@ -63,10 +63,10 @@ export function useChainClient(chain: ChainId) {
         };
       }
 
-      throw new Error(`Unsupported chain ${chain}`);
+      throw new Error(`Unsupported chain ${chainId}`);
     },
     {
-      enabled: !!chain && !!cosmWasmClient,
+      enabled: !!chainId && !!cosmWasmClient,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,

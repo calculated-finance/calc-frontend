@@ -5,20 +5,19 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
-import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
-import { ChainId } from './Chains';
 import { CHAINS } from 'src/constants';
+import { ChainId } from './Chains';
 
 type ChainState = {
-  chain: ChainId;
+  chainId: ChainId;
   setChain: (chain: ChainId) => void;
 };
 
 export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
-      chain: 'kaiyo-1',
-      setChain: (chain: ChainId) => set({ chain }),
+      chainId: 'kaiyo-1',
+      setChain: (chain: ChainId) => set({ chainId: chain }),
     }),
     {
       name: 'chain',
@@ -45,11 +44,11 @@ function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
   return {};
 }
 
-export const useChain = () => {
+export const useChainId = () => {
   const router = useRouter();
   const { chain, wasFiltered } = useMemo(() => getChainNameFromRouterQuery(router.query), [router.query]);
-  const clientStore = useCosmWasmClientStore();
-  const storedChain = useChainStore((state) => state.chain);
+  // const clientStore = useCosmWasmClientStore();
+  const storedChain = useChainStore((state) => state.chainId);
   const setStoredChain = useChainStore((state) => state.setChain);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -68,9 +67,9 @@ export const useChain = () => {
   const updateStores = useCallback(
     (newChain: ChainId) => {
       useFormStore.setState({ forms: {} });
-      useCosmWasmClientStore.setState({ client: null });
+      // useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
-      clientStore.updateClient(newChain);
+      // clientStore.updateClient(newChain);
     },
     [setStoredChain],
   );
@@ -79,7 +78,7 @@ export const useChain = () => {
     (newChain: ChainId) => {
       if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
-      useCosmWasmClientStore.setState({ client: null });
+      // useCosmWasmClientStore.setState({ client: null });
       updateStores(newChain);
       updateQueryParam(newChain);
     },
@@ -95,16 +94,16 @@ export const useChain = () => {
         if (wasFiltered) {
           updateQueryParam(chain);
         }
-        setData({ chain: chain as ChainId, setChain });
+        setData({ chainId: chain as ChainId, setChain });
       } else if (storedChain) {
         updateQueryParam(storedChain);
-        setData({ chain: storedChain, setChain });
+        setData({ chainId: storedChain, setChain });
       }
       setIsLoading(false);
     }
   }, [router.isReady, setChain, chain, updateQueryParam, storedChain, updateStores, wasFiltered]);
 
-  const chainConfig = useMemo(() => getChainConfig(data.chain)!, [data.chain]);
+  const chainConfig = useMemo(() => getChainConfig(data.chainId)!, [data.chainId]);
 
   return { ...(data as ChainState), chainConfig, isLoading };
 };

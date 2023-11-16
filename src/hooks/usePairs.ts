@@ -4,15 +4,11 @@ import { V2Pair, V3Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
-import { TestnetDenomsMoonbeam } from '@models/Denom';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { Config } from 'src/interfaces/v2/generated/response/get_config';
-import { Pair } from 'src/interfaces/v2/generated/query';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { ChainId } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
-import { useConfig } from './useConfig';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -88,31 +84,16 @@ export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: Den
 
 const GET_PAIRS_LIMIT = 400;
 
-function usePairsMoonbeam() {
-  const { chain } = useChain();
-
-  // if (chain === Chains.Moonbeam) {
-  //   return {
-  //     isLoading: false,
-  //     data: {
-  //       pairs: [{ denoms: [TestnetDenomsMoonbeam.WDEV, TestnetDenomsMoonbeam.SATURN] }] as Pair[],
-  //     },
-  //   };
-  // }
-
-  return null;
-}
-
-function usePairsCosmos(config: Config | undefined) {
-  const { cosmWasmClient } = useCosmWasmClient();
-  const { chain } = useChain();
+function usePairsCosmos(injectedChainId?: ChainId) {
+  const { chainId } = useChainId();
+  const { cosmWasmClient } = useCosmWasmClient(injectedChainId ?? chainId);
 
   async function fetchPairsRecursively(
     client: CosmWasmClient,
     startAfter = null,
     allPairs = [] as V3Pair[],
   ): Promise<V3Pair[]> {
-    const result = await client!.queryContractSmart(getChainContractAddress(chain), {
+    const result = await client!.queryContractSmart(getChainContractAddress(injectedChainId ?? chainId), {
       get_pairs: {
         limit: GET_PAIRS_LIMIT,
         start_after: startAfter,
@@ -129,10 +110,18 @@ function usePairsCosmos(config: Config | undefined) {
     return allPairs;
   }
 
-  const queryResult = useQuery<V3Pair[]>(['pairs', chain], () => fetchPairsRecursively(cosmWasmClient!), {
-    enabled: !!cosmWasmClient && !!config && !!config?.exchange_contract_address && !!chain,
-    staleTime: 1000 * 60 * 5,
-  });
+  const queryResult = useQuery<V3Pair[]>(
+    ['pairs', injectedChainId ?? chainId],
+    () => {
+      console.log('USE PAIRS', injectedChainId ?? chainId);
+
+      return fetchPairsRecursively(cosmWasmClient!);
+    },
+    {
+      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      staleTime: 1000 * 60 * 5,
+    },
+  );
 
   return {
     ...queryResult,
@@ -149,11 +138,8 @@ function usePairsCosmos(config: Config | undefined) {
   };
 }
 
-export default function usePairs() {
-  const config = useConfig();
+export default function usePairs(injectedChainId?: ChainId) {
+  const comsosPairsData = usePairsCosmos(injectedChainId);
 
-  const comsosPairsData = usePairsCosmos(config);
-  const moonbeamPairsData = usePairsMoonbeam();
-
-  return moonbeamPairsData || comsosPairsData;
+  return comsosPairsData;
 }

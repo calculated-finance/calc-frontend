@@ -1,13 +1,11 @@
 import { ChainId } from '@hooks/useChain/Chains';
-import { isMainnet } from '@utils/isMainnet';
 import { NETWORK } from 'kujira.js';
 
 // Environment specific constants
 export const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK;
 
-export const CONTRACT_ADDRESS = isMainnet()
-  ? process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
-  : 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7';
+export const CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7';
 
 // export const RPC_ENDPOINT = isMainnet()
 //   ? process.env.NEXT_PUBLIC_RPC_ENDPOINT

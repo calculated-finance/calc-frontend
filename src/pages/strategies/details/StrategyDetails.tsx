@@ -43,7 +43,7 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import usePairs from '@hooks/usePairs';
@@ -87,7 +87,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { dexFee } = useDexFee(
     getStrategyInitialDenom(strategy),
     getStrategyResultingDenom(strategy),
@@ -137,7 +137,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);

@@ -7,7 +7,7 @@ import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import * as Sentry from '@sentry/react';
 import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
@@ -42,16 +42,16 @@ Sentry.init({
 function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return ['osmosis-1', 'osmo-test-5'].includes(chain) || assetList ? <>{children}</> : <LoadingState />;
+  return !['osmosis-1', 'osmo-test-5'].includes(chain) || assetList ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <>
@@ -74,16 +74,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         >
           <ChainWrapper>
             <ChainProvider>
-              <InitWrapper>
-                <CalcWalletModalProvider>
-                  <QueryClientProvider client={queryClient}>
-                    <AssetListWrapper>
-                      <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-                    </AssetListWrapper>
-                  </QueryClientProvider>
-                </CalcWalletModalProvider>
-                <ToastContainer />
-              </InitWrapper>
+              <CalcWalletModalProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AssetListWrapper>
+                    <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                  </AssetListWrapper>
+                </QueryClientProvider>
+              </CalcWalletModalProvider>
+              <ToastContainer />
             </ChainProvider>
           </ChainWrapper>
         </Sentry.ErrorBoundary>

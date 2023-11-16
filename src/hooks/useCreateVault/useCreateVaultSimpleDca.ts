@@ -15,8 +15,10 @@ import { handleError } from './handleError';
 
 export const useCreateVaultSimpleDcaIn = () => {
   const { transactionType } = useStrategyInfo();
-  const client = useCalcSigningClient();
+  const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
+
+  console.log('SC', calcSigningClient);
 
   const track = useTrackCreateVault();
 
@@ -28,12 +30,12 @@ export const useCreateVaultSimpleDcaIn = () => {
     {
       state: SimplifiedDcaInFormData | undefined;
     }
-  >(({ state }) => {
+  >(async ({ state }) => {
     if (!state) {
       throw new Error('No state');
     }
 
-    if (!client) {
+    if (!calcSigningClient) {
       throw Error('Invalid client');
     }
 
@@ -70,14 +72,17 @@ export const useCreateVaultSimpleDcaIn = () => {
       },
     };
 
-    const fee = createStrategyFeeInTokens(price);
-
-    return client
-      .createStrategy(address, state.initialDeposit, fee, createVaultContext)
-      .then((result) => {
-        track();
-        return result;
-      })
-      .catch(handleError(createVaultContext));
+    try {
+      const createResponse = await calcSigningClient.createStrategy(
+        address,
+        state.initialDeposit,
+        createStrategyFeeInTokens(price),
+        createVaultContext,
+      );
+      track();
+      return createResponse;
+    } catch (error) {
+      handleError(createVaultContext);
+    }
   });
 };

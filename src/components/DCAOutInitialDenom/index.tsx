@@ -13,7 +13,7 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import { getChainDexName } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
 import { DenomSelect } from '../DenomSelect';
@@ -22,7 +22,7 @@ import { DenomSelect } from '../DenomSelect';
 export default function DCAOutInitialDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>

@@ -7,7 +7,7 @@ import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-starg
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChain } from '../useChain';
+import { useChainId } from '../useChain';
 import { getExecuteMsg } from '../useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from '../useStrategy';
 import { useAnalytics } from '../useAnalytics';
@@ -17,7 +17,7 @@ import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 export function useCustomiseStrategy() {
   const { address, getSigningClient } = useWallet();
   const { track } = useAnalytics();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const queryClient = useQueryClient();
 
   const { data: signingClient } = useQuery<SigningCosmWasmClient>(

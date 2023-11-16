@@ -17,7 +17,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CHAINS, CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import { getChainConfig, getChainDexName } from '@helpers/chains';
@@ -40,7 +40,7 @@ export function FeeBreakdown({
   excludeDepositFee: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <Stack position="relative" spacing={1}>

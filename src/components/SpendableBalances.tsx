@@ -69,7 +69,7 @@ export function BalanceList({ balances = [] }: { balances: Coin[] | undefined })
 }
 
 export function SpendableBalances() {
-  const { data } = useBalances();
+  const { data: balances } = useBalances();
   const { isAdmin } = useAdmin();
 
   return (
@@ -92,14 +92,14 @@ export function SpendableBalances() {
       {isAdmin ? (
         <Stack overflow="auto" maxH={220}>
           <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-            {data?.map((balance: Coin) => (
+            {(balances as Coin[])?.map((balance: Coin) => (
               <CoinBalance balance={balance} key={balance.denom} />
             ))}
           </Grid>
         </Stack>
       ) : (
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-          {data?.map((balance: Coin) => (
+          {(balances as Coin[])?.map((balance: Coin) => (
             <CoinBalance balance={balance} key={balance.denom} />
           ))}
         </Grid>

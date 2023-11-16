@@ -2,14 +2,18 @@ import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, 
 import { KADO_API_KEY } from 'src/constants';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
-import { useChain } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChain';
 
 function OnRampModalContent() {
   const { connected, address } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
-  const network = ['kaiyo-1', 'harpoon-4'].includes(chain) ? 'kujira' : 'osmosis';
+  const network = {
+    'kaiyo-1': 'kujira',
+    'osmosis-1': 'osmosis',
+    'harpoon-4': 'kujira',
+    'osmo-test-5': 'osmosis',
+  }[chain]!;
 
   return (
     <ModalContent mx={6}>

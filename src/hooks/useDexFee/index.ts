@@ -1,5 +1,5 @@
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import { FIN_TAKER_FEE } from 'src/constants';
 import { TransactionType } from '@components/TransactionType';
@@ -13,7 +13,7 @@ export default function useDexFee(
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
 ) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { data: pairsData } = usePairs();
   const { data: pools } = useOsmosisPools(['osmosis-1', 'osmo-test-5'].includes(chain));
 

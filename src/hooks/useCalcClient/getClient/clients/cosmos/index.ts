@@ -2,14 +2,14 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
+import { ChainId } from '@hooks/useChain/Chains';
+import { getChainContractAddress } from '@helpers/chains';
 import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import {
   EventsResponse,
   Event as GeneratedEvent,
 } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
 import { transformToStrategyCosmos } from './transformToStrategy';
-import { ChainId } from '@hooks/useChain/Chains';
-import { getChainContractAddress } from '@helpers/chains';
 
 async function fetchStrategy(
   client: CosmWasmClient,
@@ -67,16 +67,16 @@ async function fetchStrategiesByAddress(client: CosmWasmClient, contractAddress:
   return transformedStrategies as Strategy[];
 }
 
-const GET_VAULTS_LIMIT = 300;
+const GET_VAULTS_LIMIT = 100;
 
 const fetchAllStrategies = async (client: CosmWasmClient, chainId: ChainId) => {
   const fetchVaultsRecursively = async (
-    client: CosmWasmClient,
+    cosmWasmClient: CosmWasmClient,
     chain: ChainId,
     startAfter = null,
     allVaults = [] as Vault[],
   ): Promise<Vault[]> => {
-    const result = await client.queryContractSmart(getChainContractAddress(chain), {
+    const result = await cosmWasmClient.queryContractSmart(getChainContractAddress(chain), {
       get_vaults: {
         limit: GET_VAULTS_LIMIT,
         start_after: startAfter,
@@ -87,7 +87,7 @@ const fetchAllStrategies = async (client: CosmWasmClient, chainId: ChainId) => {
 
     if (result.vaults.length === GET_VAULTS_LIMIT) {
       const newStartAfter = result.vaults[result.vaults.length - 1].id;
-      return fetchVaultsRecursively(client, chain, newStartAfter, allVaults);
+      return fetchVaultsRecursively(cosmWasmClient, chain, newStartAfter, allVaults);
     }
 
     return allVaults;

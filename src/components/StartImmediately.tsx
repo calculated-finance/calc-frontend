@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import YesNoValues from '@models/YesNoValues';
 
@@ -20,7 +20,7 @@ const startImediatelyData: { value: YesNoValues; label: string }[] = [
 
 export default function StartImmediately() {
   const [field, , helpers] = useField({ name: 'startImmediately' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,

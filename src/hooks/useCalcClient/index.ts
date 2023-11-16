@@ -1,23 +1,18 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useQuery } from '@tanstack/react-query';
-import getClient, { CalcClient } from './getClient';
 import { ChainId } from '@hooks/useChain/Chains';
-import { getChainConfig } from '@helpers/chains';
+import getClient, { CalcClient } from './getClient';
 
-export function useCalcClient(injectedChain?: ChainId) {
-  const { chainConfig } = injectedChain ? { chainConfig: getChainConfig(injectedChain) } : useChain();
-  const { cosmWasmClient } = useCosmWasmClient(injectedChain);
+export function useCalcClient(injectedChainId?: ChainId) {
+  const { chainId } = useChainId();
+  const { cosmWasmClient } = useCosmWasmClient(injectedChainId ?? chainId);
 
   const { data: client, ...other } = useQuery<CalcClient | null>(
-    ['calcClient', cosmWasmClient, chainConfig],
-    () => {
-      console.log('useCalcClient', injectedChain, cosmWasmClient, chainConfig, client);
-      return getClient(chainConfig!.name, cosmWasmClient!);
-    },
+    ['calcClient', injectedChainId ?? chainId],
+    () => getClient(injectedChainId ?? chainId, cosmWasmClient!),
     {
-      enabled: !!cosmWasmClient && !!chainConfig,
-      retry: false,
+      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
       meta: {
         errorMessage: 'Error fetching calc client',
       },

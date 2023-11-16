@@ -3,7 +3,7 @@ import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import OnRampModal from '@components/OnRampModalContent';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 
 type GetAssetsCardProps = {
@@ -39,7 +39,7 @@ function BridgeAssetsCard({ name, description, image, href, cta, onClick }: GetA
 function BridgeAssetsCards() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>

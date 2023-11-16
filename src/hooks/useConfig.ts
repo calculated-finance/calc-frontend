@@ -1,21 +1,22 @@
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import { ChainId } from './useChain/Chains';
 
-export function useConfig(): Config | undefined {
-  const { chain } = useChain();
+export function useConfig(injectedChainId?: ChainId): Config | undefined {
+  const { chainId } = useChainId();
   const { cosmWasmClient } = useCosmWasmClient();
 
   const { data: response } = useQuery<ConfigResponse>(
-    ['config', chain],
+    ['config', injectedChainId ?? chainId],
     () =>
-      cosmWasmClient!.queryContractSmart(getChainContractAddress(chain!), {
+      cosmWasmClient!.queryContractSmart(getChainContractAddress(chainId!), {
         get_config: {},
       }),
     {
-      enabled: !!cosmWasmClient && !!chain,
+      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

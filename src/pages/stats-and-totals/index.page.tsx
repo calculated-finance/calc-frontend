@@ -24,7 +24,7 @@ import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
@@ -292,7 +292,7 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 
 function Page() {
   const supportedDenoms = useSupportedDenoms();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { data: contractBalances } = useBalances(getChainContractAddress(chain));
   const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);

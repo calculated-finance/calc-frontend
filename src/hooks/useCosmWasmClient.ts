@@ -1,18 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { keys } from 'rambda';
 import { ChainId } from './useChain/Chains';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useCosmosKit } from './useCosmosKit';
 
-export function useCosmWasmClient(injectedChain?: ChainId) {
-  const { chain } = injectedChain ? { chain: injectedChain } : useChain();
-  const chainContext = useCosmosKit(chain);
+export function useCosmWasmClient(injectedChainId?: ChainId) {
+  const { chainId } = useChainId();
+  const chainContext = useCosmosKit(injectedChainId ?? chainId);
 
   const { data: cosmWasmClient } = useQuery<CosmWasmClient | null>(
-    ['cosmWasmClient', chain],
+    ['cosmWasmClient', injectedChainId ?? chainId],
     async () => {
-      console.log('cosmWasmClient', chain, chainContext);
-
       const client = await chainContext!.getCosmWasmClient();
 
       const originalFn = client.queryContractSmart;
@@ -20,11 +19,11 @@ export function useCosmWasmClient(injectedChain?: ChainId) {
       client.queryContractSmart = async function (address: any, query: any) {
         try {
           const result = await originalFn.apply(this, [address, query]);
-          console.log('QUERY', address, query, chainContext?.chain.chain_name, client);
+          console.log('QUERY', address, keys(query)[0]);
           console.log('RESULT', result);
           return result;
         } catch (error) {
-          console.log('QUERY', address, query, chainContext, client);
+          console.log('QUERY', address, query, client);
           console.log('ERROR', error);
           throw error;
         }
@@ -33,12 +32,7 @@ export function useCosmWasmClient(injectedChain?: ChainId) {
       return client;
     },
     {
-      enabled: !!chainContext,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchInterval: false,
-      retry: false,
+      enabled: !!(injectedChainId ?? chainId) && !!chainContext,
     },
   );
 

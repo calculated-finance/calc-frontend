@@ -15,7 +15,7 @@ import {
   WrapItem,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import { useRouter } from 'next/router';
 
@@ -75,14 +75,12 @@ const imageMap = {
   'osmosis-1': '/images/denoms/osmo.svg',
   'osmo-test-5': '/images/denoms/osmo.svg',
   'kaiyo-1': '/images/denoms/kuji.svg',
-  'harpoon-4': '/images/moonbeam.png',
+  'harpoon-4': '/images/denoms/kuji.svg',
 };
 
 export function ChainSelection() {
   const { isOpen, onClose } = useDisclosure();
-
-  const { chain, setChain } = useChain();
-
+  const { chainId: chain, setChain } = useChainId();
   const router = useRouter();
 
   const isChainSelectionAllowed = chainSelectionAllowedUrls.includes(router.pathname);
@@ -127,21 +125,32 @@ export function ChainSelection() {
             <Text>Osmosis</Text>
           </HStack>
         </MenuItemOption>
-        {/* {chain === Chains.Moonbeam && (
-          <MenuItemOption
-            _checked={{ bg: 'blue.500', color: 'navy' }}
-            isChecked={chain === Chains.Moonbeam}
-            onClick={() => {
-              setChain(Chains.Moonbeam);
-              onClose();
-            }}
-          >
-            <HStack>
-              <Image src="/images/moonbeam.png" w={5} />
-              <Text>Moonbeam</Text>
-            </HStack>
-          </MenuItemOption>
-        )} */}
+        <MenuItemOption
+          _checked={{ bg: 'blue.500', color: 'navy' }}
+          isChecked={chain === 'harpoon-4'}
+          onClick={() => {
+            setChain('harpoon-4');
+            onClose();
+          }}
+        >
+          <HStack>
+            <Image src="/images/denoms/kuji.svg" w={5} />
+            <Text>Kujira (testnet)</Text>
+          </HStack>
+        </MenuItemOption>
+        <MenuItemOption
+          _checked={{ bg: 'blue.500', color: 'navy' }}
+          isChecked={chain === 'osmo-test-5'}
+          onClick={() => {
+            setChain('osmo-test-5');
+            onClose();
+          }}
+        >
+          <HStack>
+            <Image src="/images/denoms/osmo.svg" w={5} />
+            <Text>Osmosis (testnet)</Text>
+          </HStack>
+        </MenuItemOption>
       </MenuList>
     </Menu>
   );

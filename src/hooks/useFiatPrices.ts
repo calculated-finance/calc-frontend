@@ -4,7 +4,7 @@ import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -13,7 +13,7 @@ export type FiatPriceResponse = {
 };
 
 const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const fetchedSupportedDenoms = useSupportedDenoms();
 

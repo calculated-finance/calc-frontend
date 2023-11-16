@@ -2,7 +2,7 @@ import { AssetList } from '@chain-registry/types';
 import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
 import { useAssetList } from './useAssetList';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { ChainId } from './useChain/Chains';
 
 type AssetListState = {
@@ -16,7 +16,7 @@ export const useAssetListStore = create<AssetListState>()((set) => ({
 }));
 
 export function useCachedAssetList() {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const setAssetList = useAssetListStore((state) => state.setAssetList);
   const { data } = useAssetList();
 

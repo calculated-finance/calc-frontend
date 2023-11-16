@@ -5,7 +5,7 @@ import { ExecuteResult } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { Strategy } from '@models/Strategy';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
-import { useChain } from '../useChain';
+import { useChainId } from '../useChain';
 
 type TopUpVariables = {
   values: {

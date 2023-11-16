@@ -12,7 +12,7 @@ import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema 
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useWallet } from '@hooks/useWallet';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
@@ -90,7 +90,7 @@ function ConfigureForm({
 function Page() {
   const { query } = useRouter();
   const { data, isLoading } = useStrategy(query?.id as string);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { address } = useWallet();
 
   if (!data || !chain || !address) {

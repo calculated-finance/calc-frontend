@@ -1,5 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { useTrackCreateVault } from '.'; // adjust this import according to your project structure
@@ -12,7 +12,7 @@ jest.mock('src/pages/create-strategy/dca-in/customise/useStrategyInfo');
 describe('useTrackCreateVault function', () => {
   it('should track "Strategy Created" event with correct parameters', () => {
     // Mock hook values
-    (useChain as jest.Mock).mockReturnValue({ chain: 'mockChain' });
+    (useChainId as jest.Mock).mockReturnValue({ chain: 'mockChain' });
     (useStrategyInfo as jest.Mock).mockReturnValue({ formName: 'mockFormName' });
     (useWallet as jest.Mock).mockReturnValue({ address: 'mockAddress', walletType: 'mockWalletType' });
     (useAnalytics as jest.Mock).mockReturnValue({

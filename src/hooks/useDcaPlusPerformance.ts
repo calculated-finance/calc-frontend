@@ -3,14 +3,14 @@ import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } fro
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '../models/Strategy';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 export type DcaPlusPerformanceResponse = DcaPlusPerformanceResponseGenerated;
 
 export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boolean) {
   const { address } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { cosmWasmClient } = useCosmWasmClient();
 
   return useQuery<DcaPlusPerformanceResponse>(

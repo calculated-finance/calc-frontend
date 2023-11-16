@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useRouter } from 'next/router';
-import { useChain, useChainStore } from '.';
+import { useChainId, useChainStore } from '.';
 import { ChainId } from './Chains';
 
 jest.mock('next/router', () => ({
@@ -24,7 +24,7 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
     expect(result.current.isLoading).toBe(true);
   });
@@ -37,11 +37,11 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
     // await();
 
-    expect(result.current.chain).toBe('osmosis-1');
+    expect(result.current.chainId).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
   });
 
@@ -53,11 +53,11 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
     // await();
 
-    expect(result.current.chain).toBe('kaiyo-1');
+    expect(result.current.chainId).toBe('kaiyo-1');
     expect(result.current.isLoading).toBe(false);
   });
 
@@ -69,9 +69,9 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
-    expect(result.current.chain).toBe('osmosis-1');
+    expect(result.current.chainId).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
 
     // except replace to have been called
@@ -91,11 +91,11 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    useChainStore.setState({ chain: 'osmosis-1' });
+    useChainStore.setState({ chainId: 'osmosis-1' });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
-    expect(result.current.chain).toBe('osmosis-1');
+    expect(result.current.chainId).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
   });
 
@@ -107,13 +107,13 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    useChainStore.setState({ chain: 'kaiyo-1' });
+    useChainStore.setState({ chainId: 'kaiyo-1' });
 
-    const { result } = renderHook(() => useChain());
+    const { result } = renderHook(() => useChainId());
 
-    expect(result.current.chain).toBe('osmosis-1');
+    expect(result.current.chainId).toBe('osmosis-1');
     expect(result.current.isLoading).toBe(false);
-    expect(useChainStore.getState().chain).toBe('osmosis-1');
+    expect(useChainStore.getState().chainId).toBe('osmosis-1');
   });
 
   it('should do all the updates if setChain is called', () => {
@@ -124,7 +124,7 @@ describe('useChain hook', () => {
       pathname: '/',
     });
 
-    const { result, waitFor } = renderHook(() => useChain());
+    const { result, waitFor } = renderHook(() => useChainId());
 
     act(() => {
       result.current.setChain('kaiyo-1');
@@ -137,6 +137,6 @@ describe('useChain hook', () => {
       },
     });
 
-    waitFor(() => expect(useChainStore.getState().chain).toBe('kaiyo-1'));
+    waitFor(() => expect(useChainStore.getState().chainId).toBe('kaiyo-1'));
   });
 });

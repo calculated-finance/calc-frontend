@@ -1,6 +1,6 @@
 import { set } from 'lodash';
 import * as Yup from 'yup';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 
 function getErrorName(error: unknown) {
   if (error instanceof Error) return error.name;
@@ -8,7 +8,7 @@ function getErrorName(error: unknown) {
 }
 
 const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const validate = (values: Yup.InferType<typeof validationSchema>) => {
     try {
       validationSchema.validateSync(values, {

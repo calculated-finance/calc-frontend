@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { Graph2Icon, ViewListIcon } from '@fusion-icons/react/interface';
 import { useAdmin } from '@hooks/useAdmin';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
@@ -48,7 +48,7 @@ function AppHeaderForSidebar() {
 }
 
 function AppHeader() {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <LinkWithQuery href="/">
@@ -113,7 +113,7 @@ function FlowBreadcrumbs() {
 
 function FlowLayout({ children }: { children: ReactElement }) {
   const { address } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const router = useRouter();
   const { pathname } = router;

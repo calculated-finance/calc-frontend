@@ -24,7 +24,7 @@ import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInf
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
@@ -34,8 +34,8 @@ import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import TopPanel from '@components/TopPanel';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
-import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 import { useCalcClient } from '@hooks/useCalcClient';
+import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
   return (
@@ -221,14 +221,19 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
 }
 
 function TotalInvestment() {
-  const kujiraSupportedDenoms = useSupportedDenoms('kaiyo-1');
-  const osmosisSupportedDenoms = useSupportedDenoms('osmosis-1');
-  const { data: fiatPrices } = useFiatPrice(kujiraSupportedDenoms[0], [
-    ...kujiraSupportedDenoms,
-    ...osmosisSupportedDenoms,
-  ]);
+  const { chainId } = useChainId();
+  // const kujiraSupportedDenoms = useSupportedDenoms('kaiyo-1');
+  // const osmosisSupportedDenoms = useSupportedDenoms('osmosis-1');
+  const supportedDenoms = useSupportedDenoms(chainId);
+  const { data: fiatPrices } = useFiatPrice(
+    supportedDenoms[0],
+    supportedDenoms,
+    //   [
+    //   ...kujiraSupportedDenoms,
+    //   ...osmosisSupportedDenoms,
+    // ]
+  );
 
-  const { client } = useCalcClient();
   const { data: allStrategies } = useAdminStrategies();
 
   if (!fiatPrices || !allStrategies) {
@@ -239,12 +244,13 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, osmosisSupportedDenoms);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
   const totalSwappedTotal = totalFromCoins(
     totalSwappedAmounts,
     fiatPrices,
-    [...osmosisSupportedDenoms, ...kujiraSupportedDenoms],
-    'osmosis-1',
+    supportedDenoms,
+    // [...osmosisSupportedDenoms, ...kujiraSupportedDenoms],
+    chainId,
   );
 
   const formattedValue =
@@ -341,7 +347,7 @@ export function LearnAboutCalcPanel() {
 
 function HomeGrid() {
   const { connected } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { data: strategies, isLoading } = useStrategies();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];

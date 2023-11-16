@@ -1,15 +1,15 @@
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { useQuery } from '@tanstack/react-query';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useChainClient } from './useChainClient';
 
 const useValidators = () => {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const chainClient = useChainClient(chain);
 
   const { data, ...other } = useQuery<{ validators: Validator[] }>(
     ['validators', chain],
-    chainClient!.fetchValidators,
+    () => chainClient!.fetchValidators(),
     {
       enabled: !!chain && !!chainClient,
       meta: {

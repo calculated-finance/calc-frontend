@@ -53,7 +53,7 @@ const osmoMainnetConfig = {
 const osmoTestnetConfig = {
   chainId: 'osmo-test-5',
   chainName: 'Osmosis (osmo-test-5)',
-  rpc: 'https://rpc.osmotest5.osmosis.zone',
+  rpc: 'https://rpc.osmotest5.osmosis.zone/',
   rest: 'https://lcd.osmotest5.osmosis.zone',
   bip44: {
     coinType: 118,
@@ -111,7 +111,7 @@ export function getChainInfo(chain: ChainId) {
   return {
     'osmosis-1': osmoMainnetConfig,
     'osmo-test-5': osmoTestnetConfig,
-    'kaiyo-1': CHAIN_INFO['kaiyo-1'],
+    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: 'https://rpc-kujira.mintthemoon.xyz/' },
     'harpoon-4': { ...CHAIN_INFO['harpoon-4'], rpc: 'https://kujira-testnet-rpc.polkachu.com/' },
   }[chain] as ChainInfo;
 }
@@ -130,7 +130,6 @@ export function getFeeCurrencies(chain: ChainId) {
 }
 
 export function getChainEndpoint(chain: ChainId): string {
-  console.log('getChainEndpoint', chain, getChainInfo(chain));
   return getChainInfo(chain).rpc;
 }
 

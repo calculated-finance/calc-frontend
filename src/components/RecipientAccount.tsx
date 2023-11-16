@@ -1,11 +1,11 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup } from '@chakra-ui/react';
 import { getChainInfo } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useField } from 'formik';
 
 export default function RecipientAccount() {
   const [field, meta] = useField({ name: 'recipientAccount' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>

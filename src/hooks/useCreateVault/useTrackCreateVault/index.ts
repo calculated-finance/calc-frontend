@@ -1,10 +1,10 @@
 import { useWallet } from '@hooks/useWallet';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function useTrackCreateVault() {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { formName } = useStrategyInfo();
   const { address: senderAddress } = useWallet();
   const { walletType } = useWallet();

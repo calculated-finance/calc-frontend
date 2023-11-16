@@ -16,7 +16,7 @@ import {
 import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
@@ -34,7 +34,7 @@ import { ChainId } from '@hooks/useChain/Chains';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { address } = useWallet();
   return (
     <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>

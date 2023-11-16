@@ -1,11 +1,9 @@
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { LoadingState } from './LoadingState';
 
-
-
 export function ChainWrapper({ children }: ChildrenProp) {
-  const { chain, isLoading } = useChain();
+  const { chainId: chain, isLoading } = useChainId();
 
   if (isLoading) {
     return <LoadingState />;

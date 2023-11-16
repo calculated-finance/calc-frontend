@@ -1,12 +1,13 @@
 import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import { useChainClient } from './useChainClient';
 
 const useBalances = (injectedAddress: string | null = null) => {
-  const { address } = injectedAddress ? { address: injectedAddress } : useWallet();
-  const { chain } = useChain();
+  const { address: walletAddress } = useWallet();
+  const address = injectedAddress ?? walletAddress;
+  const { chainId: chain } = useChainId();
   const client = useChainClient(chain);
   const supportedDenoms = useSupportedDenoms();
 

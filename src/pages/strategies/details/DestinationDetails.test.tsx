@@ -75,7 +75,7 @@ describe('<DestinationDetails />', () => {
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.Reinvest);
     const { getByText } = renderWithQueryClient(
       <DestinationDetails
-        chain={'osmosis-1'}
+        chain="osmosis-1"
         strategy={strategyWithDestination({
           address: getChainContractAddress('osmosis-1'),
           allocation: '1.0',

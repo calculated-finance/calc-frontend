@@ -41,7 +41,7 @@ import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
@@ -78,11 +78,11 @@ function SimpleDCAInInitialDenom() {
     return null;
   }
 
-  const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
-      .map((denom) => getDenomInfo(denom))
-      .filter(isDenomStable),
+  const denomInfos = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) =>
+    getDenomInfo(denom),
   );
+
+  const denoms = orderAlphabetically(denomInfos.filter(isDenomStable));
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -113,7 +113,7 @@ function SimpleDCAInInitialDenom() {
 
 function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const {
     values: { initialDenom },

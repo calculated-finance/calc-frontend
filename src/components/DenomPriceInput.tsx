@@ -14,7 +14,7 @@ import DenomIcon from '@components/DenomIcon';
 import usePrice from '@hooks/usePrice';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -38,7 +38,7 @@ export function DenomPriceInput({
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { formattedPrice, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;

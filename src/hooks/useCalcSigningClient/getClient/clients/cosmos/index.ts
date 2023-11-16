@@ -137,18 +137,18 @@ async function createVault(
 }
 
 export function getCosmosSigningClient(
-  cosmSigner: SigningCosmWasmClient,
+  signingClient: SigningCosmWasmClient,
   chainConfig: ChainConfig,
   fetchedConfig: Config,
 ) {
   return {
     topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
-      executeTopUpCosmos(address, cosmSigner, chainConfig, strategy, topUpAmount),
+      executeTopUpCosmos(address, signingClient, chainConfig, strategy, topUpAmount),
     createStrategy: (
       address: string,
       initialDeposit: number,
       fee: string | undefined,
       variables: BuildCreateVaultContext,
-    ) => createVault(cosmSigner, chainConfig, fetchedConfig, address, initialDeposit, fee, variables),
+    ) => createVault(signingClient, chainConfig, fetchedConfig, address, initialDeposit, fee, variables),
   };
 }

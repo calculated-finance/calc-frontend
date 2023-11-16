@@ -2,7 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { useChainClient } from './useChainClient';
 
 export type BalanceResponse = {
@@ -11,7 +11,7 @@ export type BalanceResponse = {
 
 function useBalance(token: DenomInfo) {
   const { address } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const client = useChainClient(chain);
 

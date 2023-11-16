@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import * as amplitude from '@amplitude/analytics-browser';
 // import { useKujira } from '@hooks/useKujira';
 import { useKeplr } from '@hooks/useKeplr';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';
@@ -12,6 +12,7 @@ import { HOTJAR_SITE_ID, featureFlags } from 'src/constants';
 import { useMetamask } from '@hooks/useMetamask';
 import { hotjar } from 'react-hotjar';
 import { useMetamaskSnap } from '@hooks/useMetamaskSnap';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 function initAmplitude() {
   if (featureFlags.amplitudeEnabled) {
@@ -22,7 +23,8 @@ function initAmplitude() {
 }
 
 export function InitWrapper({ children }: ChildrenProp) {
-  // const { chain } = useChain();
+  const { chainId: chain } = useChainId();
+  useCosmWasmClient(chain);
   // const initKujira = useKujira();
   // const initOsmosis = useOsmosis((state) => state.init);
   // const initKeplr = useKeplr((state) => state.init);

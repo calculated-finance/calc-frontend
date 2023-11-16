@@ -4,7 +4,7 @@ import Submit from '@components/Submit';
 import RecipientAccount from '@components/RecipientAccount';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { ChainId } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { useWallet } from '@hooks/useWallet';
@@ -19,7 +19,7 @@ import { Reinvest } from '../../Reinvest';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { address } = useWallet();
 
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [

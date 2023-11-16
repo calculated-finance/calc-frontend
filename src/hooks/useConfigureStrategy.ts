@@ -9,7 +9,7 @@ import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 import { Strategy } from '../models/Strategy';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';
@@ -24,7 +24,7 @@ type ConfigureVariables = {
 export function useConfigureStrategy() {
   const { address, getSigningClient } = useWallet();
 
-  const { chain, chainConfig } = useChain();
+  const { chainId: chain, chainConfig } = useChainId();
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(

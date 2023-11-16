@@ -8,7 +8,7 @@ import { encode } from '@helpers/encode';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '../models/Strategy';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 
 function getCancelVaultExecuteMsg(
   strategyId: Strategy['id'],
@@ -39,7 +39,7 @@ function getCancelVaultExecuteMsg(
 
 const useCancelStrategy = () => {
   const { address, getSigningClient } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const { data: client } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chain],

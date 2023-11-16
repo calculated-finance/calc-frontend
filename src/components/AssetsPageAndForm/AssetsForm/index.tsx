@@ -21,7 +21,7 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { getChainDexName } from '@helpers/chains';
 import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { Pair } from 'src/interfaces/v2/generated/query';
@@ -55,12 +55,12 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
-        .filter(isDenomVolatile))
+        .filter(isDenomVolatile),
+    );
   }
 
   return orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
-
   );
 }
 
@@ -88,9 +88,9 @@ export function AssetsForm() {
   const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
   const [strategyField] = useField({ name: 'strategyType' });
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
-  const { chain: resultingChain } = useChain();
+  const { chainId: resultingChain } = useChainId();
 
   if (!pairs) {
     return null;

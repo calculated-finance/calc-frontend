@@ -3,9 +3,6 @@ import { useWalletModal } from '@hooks/useWalletModal';
 
 export function StepOneConnectWallet() {
   const { setVisible } = useWalletModal();
-  const handleConnect = () => {
-    setVisible(true);
-  };
 
-  return <Button onClick={handleConnect}>Connect to a wallet</Button>;
+  return <Button onClick={() => setVisible(true)}>Connect to a wallet</Button>;
 }

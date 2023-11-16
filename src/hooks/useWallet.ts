@@ -1,5 +1,5 @@
 import { useCosmosKit } from './useCosmosKit';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',
@@ -11,10 +11,10 @@ export enum WalletTypes {
 }
 
 export function useWallet() {
-  const chain = useChain();
-  const cosmosKit = useCosmosKit(chain.chainConfig?.name);
+  const { chainId } = useChainId();
+  const cosmosKit = useCosmosKit(chainId);
 
-  if (cosmosKit?.isWalletConnected) {
+  if (cosmosKit && cosmosKit.isWalletConnected) {
     return {
       address: cosmosKit.address,
       connected: cosmosKit.isWalletConnected,
@@ -28,9 +28,9 @@ export function useWallet() {
   return {
     address: undefined,
     connected: false,
-    getSigningClient: () => Promise.resolve(null),
+    getSigningClient: null,
     disconnect: undefined,
     walletType: undefined,
-    isConnecting: true,
+    isConnecting: false,
   };
 }

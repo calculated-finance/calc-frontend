@@ -18,7 +18,7 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 import { useWalletModal } from '@hooks/useWalletModal';
 import { useKeplr } from '@hooks/useKeplr';
 import { WalletTypes, useWallet } from '@hooks/useWallet';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChain';
 import { useLeap } from '@hooks/useLeap';
 import { useXDEFI } from '@hooks/useXDEFI';
 import { useAdmin } from '@hooks/useAdmin';
@@ -68,7 +68,7 @@ function WalletModal() {
     connect: state.connect,
   }));
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const { isOpen, onToggle } = useDisclosure();
 

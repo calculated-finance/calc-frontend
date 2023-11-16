@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import { featureFlags } from 'src/constants';
 import { useCosmosKit } from './useCosmosKit';
-import { useChain } from './useChain';
+import { useChainId } from './useChain';
 
 export interface CalcWalletModalContextState {
   visible: boolean;
@@ -27,17 +27,13 @@ export const CalcWalletModalContext = createContext<CalcWalletModalContextState>
 
 export function useWalletModal(): CalcWalletModalContextState {
   const context = useContext(CalcWalletModalContext);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const cosmoskit = useCosmosKit(chain);
 
-  if (featureFlags.cosmoskitEnabled) {
-    if (cosmoskit) {
-      return {
+  return cosmoskit
+    ? {
         setVisible: cosmoskit.openView,
         visible: false,
-      };
-    }
-  }
-
-  return context;
+      }
+    : context;
 }
