@@ -15,7 +15,7 @@ type TopUpVariables = {
 };
 
 const useTopUpStrategy = () => {
-  const client = useCalcSigningClient();
+  const { calcSigningClient: client } = useCalcSigningClient();
   const { address } = useWallet();
 
   return useMutation<ExecuteResult, Error, TopUpVariables>(

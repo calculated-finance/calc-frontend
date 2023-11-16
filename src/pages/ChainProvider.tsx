@@ -36,7 +36,11 @@ export function ChainProvider({ children }: ChildrenProp) {
     <CosmosKitChainProvider
       chains={chains}
       assetLists={assets}
-      wallets={filter((wallet) => wallet.isModeExtension, [...leapWallets, ...keplrWallets, ...xdefiWallets])}
+      wallets={filter(
+        // eslint-disable-next-line no-restricted-globals
+        (wallet) => (screen.orientation !== null ? wallet.isModeWalletConnect : wallet.isModeExtension),
+        [...leapWallets, ...keplrWallets, ...xdefiWallets],
+      )}
       signerOptions={signerOptions}
       endpointOptions={{
         isLazy: true,
@@ -53,6 +57,12 @@ export function ChainProvider({ children }: ChildrenProp) {
           osmosistestnet: {
             rpc: ['https://rpc.osmotest5.osmosis.zone/'],
           },
+        },
+      }}
+      walletConnectOptions={{
+        signClient: {
+          projectId: '50fa0187387c8c2f72d360c6ba9f3333',
+          ...signerOptions,
         },
       }}
       modalTheme={{ defaultTheme: 'dark' }}

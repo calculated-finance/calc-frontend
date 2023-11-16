@@ -85,7 +85,7 @@ export const useCreateVaultDca = (initialDenom: DenomInfo | undefined) => {
       track();
       return createResponse;
     } catch (error) {
-      handleError(createVaultContext);
+      return handleError(createVaultContext)(error);
     }
   });
 };

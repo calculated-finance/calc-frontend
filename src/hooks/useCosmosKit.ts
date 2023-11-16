@@ -1,6 +1,5 @@
-import { useChain as useChainCosmosKit, useChains } from '@cosmos-kit/react';
+import { useChain } from '@cosmos-kit/react';
 import {
-  CHAINS,
   COSMOS_KIT_KUJIRA_MAINNET,
   COSMOS_KIT_KUJIRA_TESTNET,
   COSMOS_KIT_OSMOSIS_MAINNET,
@@ -9,7 +8,7 @@ import {
 import { ChainId } from './useChain/Chains';
 
 export const useCosmosKit = (chainId: ChainId) => {
-  const chainContext = useChainCosmosKit(
+  const chainContext = useChain(
     {
       'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
       'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,

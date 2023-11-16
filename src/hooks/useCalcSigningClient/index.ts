@@ -8,13 +8,13 @@ import getClient from './getClient';
 export function useCalcSigningClient() {
   const { chainId, chainConfig } = useChainId();
   const fetchedConfig = useConfig();
-  const { getSigningClient } = useWallet();
+  const { connected, getSigningClient } = useWallet();
 
   const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient | null>(
-    ['signingClient', getSigningClient, chainId],
+    ['signingClient', chainId],
     () => getSigningClient!(),
     {
-      enabled: !!getSigningClient,
+      enabled: !!connected && !!getSigningClient,
       meta: {
         errorMessage: 'Error fetching signing client',
       },

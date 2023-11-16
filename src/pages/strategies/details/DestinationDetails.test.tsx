@@ -54,7 +54,7 @@ describe('<DestinationDetails />', () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.Stake);
     const { getByText } = renderWithQueryClient(
-      <DestinationDetails strategy={strategyWithDestination()} chain="osmosis-1" />,
+      <DestinationDetails strategy={strategyWithDestination()} chainId="osmosis-1" />,
     );
 
     waitFor(() => expect(getByText('Auto staking status')).toBeInTheDocument());
@@ -64,7 +64,7 @@ describe('<DestinationDetails />', () => {
     mockUseWallet(mockUseStrategy(), jest.fn(), jest.fn());
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.GenerateYield);
     const { getByText } = renderWithQueryClient(
-      <DestinationDetails strategy={strategyWithDestination()} chain="osmosis-1" />,
+      <DestinationDetails strategy={strategyWithDestination()} chainId="osmosis-1" />,
     );
 
     waitFor(() => expect(getByText('Mars')).toBeInTheDocument());
@@ -75,7 +75,7 @@ describe('<DestinationDetails />', () => {
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.Reinvest);
     const { getByText } = renderWithQueryClient(
       <DestinationDetails
-        chain="osmosis-1"
+        chainId="osmosis-1"
         strategy={strategyWithDestination({
           address: getChainContractAddress('osmosis-1'),
           allocation: '1.0',
@@ -98,7 +98,7 @@ describe('<DestinationDetails />', () => {
     (getStrategyPostSwapType as jest.Mock).mockReturnValueOnce(PostPurchaseOptions.SendToWallet);
 
     const { getByText } = renderWithQueryClient(
-      <DestinationDetails strategy={strategyWithDestination()} chain="osmosis-1" />,
+      <DestinationDetails strategy={strategyWithDestination()} chainId="osmosis-1" />,
     );
 
     expect(getByText('Configure')).toBeInTheDocument();

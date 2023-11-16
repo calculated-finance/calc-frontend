@@ -1,5 +1,3 @@
-import { isMainnet } from '@utils/isMainnet';
-
 const addresses: Record<string, Record<string, string>> = {
   'harpoon-4': {
     'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demoukuji':
@@ -102,4 +100,4 @@ const addresses: Record<string, Record<string, string>> = {
 };
 
 export const getPairAddress = (swapDenom: string, targetDenom: string): string | undefined =>
-  addresses[isMainnet() ? 'kaiyo-1' : 'harpoon-4'][[swapDenom, targetDenom].sort().join('')];
+  ({ ...addresses['kaiyo-1'], ...addresses['harpoon-4'] }[[swapDenom, targetDenom].sort().join('')]);

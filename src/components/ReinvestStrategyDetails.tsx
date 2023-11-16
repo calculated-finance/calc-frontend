@@ -126,7 +126,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {convertDenomFromCoin(balance)} {initialDenom.name}
             </Text>
           </GridItem>
-          <DestinationDetails strategy={strategy} chain={chain} />
+          <DestinationDetails strategy={strategy} chainId={chain} />
         </Grid>
       </Box>
     </GridItem>

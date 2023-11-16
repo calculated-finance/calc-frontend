@@ -34,8 +34,6 @@ import { ChainId } from '@hooks/useChain/Chains';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {
-  const { chainId: chain } = useChainId();
-  const { address } = useWallet();
   return (
     <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
       <Flex justify="end">
@@ -119,7 +117,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy }) {
   );
 }
 
-export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: ChainId }) {
+export function DestinationDetails({ strategy, chainId }: { strategy: Strategy; chainId: ChainId }) {
   const { destinations } = strategy.rawData;
 
   const { address } = useWallet();
@@ -127,7 +125,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
   const { onCopy } = useClipboard(destinations[0].address || '');
   const toast = useToast();
 
-  const postSwapExecutionType = getStrategyPostSwapType(strategy, chain);
+  const postSwapExecutionType = getStrategyPostSwapType(strategy, chainId);
 
   const handleCopy = () => {
     onCopy();
@@ -152,7 +150,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
           <Heading size="xs">Depositing to</Heading>
         </GridItem>
         <GridItem colSpan={1}>
-          <ChakraLink isExternal href={getMarsUrl()}>
+          <ChakraLink isExternal href={getMarsUrl(chainId)}>
             <Text fontSize="sm">Mars</Text>
           </ChakraLink>
         </GridItem>

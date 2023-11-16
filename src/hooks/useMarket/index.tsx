@@ -2,6 +2,7 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import { useChainId } from '@hooks/useChain';
 
 // from https://github.com/mars-protocol/interface/blob/main/src/types/interfaces/redbank.d.ts
 interface InterestRateModel {
@@ -30,6 +31,7 @@ export interface Market {
 }
 
 export function useMarket(resultingDenom: DenomInfo | undefined) {
+  const { chainId } = useChainId();
   const { cosmWasmClient } = useCosmWasmClient();
 
   return useQuery<Market>(
@@ -41,10 +43,10 @@ export function useMarket(resultingDenom: DenomInfo | undefined) {
 
       try {
         const [marketResult, paramsResult] = await Promise.all([
-          cosmWasmClient!.queryContractSmart(getRedBankAddress(), {
+          cosmWasmClient!.queryContractSmart(getRedBankAddress(chainId), {
             market: { denom: resultingDenom.id },
           }),
-          cosmWasmClient!.queryContractSmart(getMarsParamsAddress(), {
+          cosmWasmClient!.queryContractSmart(getMarsParamsAddress(chainId), {
             asset_params: { denom: resultingDenom.id },
           }),
         ]);

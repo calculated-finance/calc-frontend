@@ -1,17 +1,10 @@
 import { QueryCache, QueryClient } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
-import { isMainnet } from '@utils/isMainnet';
 import { toast } from './toast';
 
 const ignoredErrors = ['Load failed', 'Failed to fetch'];
 
-// disable retries on testnet
 export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: !isMainnet(),
-    },
-  },
   queryCache: new QueryCache({
     onError: (error, query) => {
       const label = query.queryKey[0] as string;

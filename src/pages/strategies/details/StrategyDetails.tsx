@@ -298,7 +298,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </LinkWithQuery>
                 </Flex>
               </GridItem>
-              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain} />}
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chainId={chain} />}
             </Grid>
           </Box>
         </Box>

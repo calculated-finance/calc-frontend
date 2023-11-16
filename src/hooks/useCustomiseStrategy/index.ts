@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
 import * as Sentry from '@sentry/react';
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
@@ -23,7 +22,7 @@ export function useCustomiseStrategy() {
   const { data: signingClient } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chain],
     async () => {
-      const client = await getSigningClient();
+      const client = await getSigningClient!();
 
       if (!client) {
         throw new Error('No signing client');

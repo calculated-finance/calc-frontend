@@ -1,9 +1,7 @@
 import 'isomorphic-fetch';
 import { Asset, AssetList } from '@chain-registry/types';
-import * as Sentry from '@sentry/react';
-import testnetAssetList from 'src/assetLists/osmo-test-5.assetlist.json';
-import mainnetAssetList from 'src/assetLists/osmosis-1.assetlist.json';
 import { useQuery } from '@tanstack/react-query';
+import { reduce } from 'rambda';
 import { useChainId } from './useChain';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
@@ -17,23 +15,24 @@ export function useAssetList() {
   return useQuery<AssetList>(
     ['assetList', chainId],
     async () => {
-      try {
-        const assetList = await fetch(`${baseUrl}/${chainId}/${chainId}.assetlist.json`);
-        return await assetList.json();
-      } catch (error) {
-        Sentry.captureException(error, { tags: { page: 'useAssetList' } });
-        return {
-          'osmosis-1': mainnetAssetList,
-          'osmo-test-5': testnetAssetList,
-        }[chainId as string]!;
-      }
+      const responses = await Promise.all(
+        ['osmosis-1', 'osmo-test-5'].map((chain) => fetch(`${baseUrl}/${chain}/${chain}.assetlist.json`)),
+      );
+
+      const assetLists = await Promise.all(responses.map((response) => response.json()));
+
+      return reduce(
+        (allAssets, asset: any) => ({ ...allAssets, [asset.base]: asset }),
+        {},
+        assetLists.map((l) => l.assets).flat(),
+      );
     },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
-      enabled: !!chainId && ['osmosis-1', 'osmo-test-5'].includes(chainId),
+      enabled: !!chainId,
       meta: {
-        errorMessage: 'Error fetching asset list',
+        errorMessage: 'Error fetching asset lists',
       },
     },
   );

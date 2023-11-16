@@ -6,7 +6,6 @@ import { isStrategyActive, isStrategyCancelled, isStrategyCompleted, isStrategyS
 import { Strategy } from '@models/Strategy';
 import { getSidebarLayout } from '@components/Layout';
 import ConnectWallet from '@components/ConnectWallet';
-import useAdminStrategies from '@hooks/useAdminStrategies';
 import { useAdmin } from '@hooks/useAdmin';
 import { LockIcon } from '@chakra-ui/icons';
 import {
@@ -15,22 +14,12 @@ import {
   StrategyAccordionPanel,
   StrategyAccordion,
 } from '@components/StrategyAccordion';
+import useAllStrategies from '@hooks/useAllStrategies';
 
 function Page() {
-  const { data, isLoading } = useAdminStrategies();
+  const { data, isLoading } = useAllStrategies();
   const { isAdmin } = useAdmin();
   const { connected } = useWallet();
-
-  const scheduledStrategies =
-    data?.filter(isStrategyScheduled).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-
-  const activeStrategies =
-    data?.filter(isStrategyActive).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-  const completedStrategies =
-    data?.filter(isStrategyCompleted).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-
-  const cancelledStrategies =
-    data?.filter(isStrategyCancelled).sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
   if (!connected) {
     return <ConnectWallet layerStyle="panel" />;
@@ -44,6 +33,11 @@ function Page() {
       </Center>
     );
   }
+
+  const scheduledStrategies = data?.filter(isStrategyScheduled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies = data?.filter(isStrategyActive) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies = data?.filter(isStrategyCompleted) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const cancelledStrategies = data?.filter(isStrategyCancelled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <Stack spacing={8}>

@@ -1,5 +1,4 @@
 import { Coin } from '@cosmjs/stargate';
-import { isMainnet } from '@utils/isMainnet';
 
 export type Denom = Coin['denom'];
 
@@ -84,4 +83,3 @@ export enum MainnetDenoms {
   nBTC = 'ibc/A6826D67800ED864F3BF51D56B0165DAF2491B00D93433564158D87BAA0C82BE',
   NSTK = 'factory/kujira1aaudpfr9y23lt9d45hrmskphpdfaq9ajxd3ukh/unstk',
 }
-export const Denoms = isMainnet() ? MainnetDenoms : TestnetDenoms;

@@ -9,16 +9,12 @@ import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
 import { useChainId } from '@hooks/useChain';
 import * as Sentry from '@sentry/react';
-import { isMainnet } from '@utils/isMainnet';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
-import { ChainId } from '@hooks/useChain/Chains';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { useMetamask } from '@hooks/useMetamask';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { ChainWrapper } from './ChainWrapper';
-import { InitWrapper } from './InitWrapper';
 import { LoadingState } from './LoadingState';
 import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
@@ -36,16 +32,14 @@ Sentry.init({
   replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
   environment: 'production',
-  enabled: isMainnet(),
+  enabled: true,
 });
 
 function AssetListLoader({ children }: ChildrenProp) {
   const { data: assetList } = useAssetList();
 
-  const { chainId: chain } = useChainId();
-
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return !['osmosis-1', 'osmo-test-5'].includes(chain) || assetList ? <>{children}</> : <LoadingState />;
+  return assetList ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

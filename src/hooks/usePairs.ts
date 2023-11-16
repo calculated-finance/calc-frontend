@@ -5,10 +5,10 @@ import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useChainId } from './useChain';
 import { ChainId } from './useChain/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
+import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -82,51 +82,27 @@ export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: Den
   );
 }
 
-const GET_PAIRS_LIMIT = 400;
-
 function usePairsCosmos(injectedChainId?: ChainId) {
-  const { chainId } = useChainId();
-  const { cosmWasmClient } = useCosmWasmClient(injectedChainId ?? chainId);
+  const { chainId: currentChainId } = useChainId();
+  const chainId = injectedChainId ?? currentChainId;
+  const { cosmWasmClient } = useCosmWasmClient(chainId);
 
-  async function fetchPairsRecursively(
-    client: CosmWasmClient,
-    startAfter = null,
-    allPairs = [] as V3Pair[],
-  ): Promise<V3Pair[]> {
-    const result = await client!.queryContractSmart(getChainContractAddress(injectedChainId ?? chainId), {
-      get_pairs: {
-        limit: GET_PAIRS_LIMIT,
-        start_after: startAfter,
-      },
-    });
-
-    allPairs.push(...result.pairs);
-
-    if (result.pairs.length === GET_PAIRS_LIMIT) {
-      const newStartAfter = result.pairs[result.pairs.length - 1];
-      return fetchPairsRecursively(client, newStartAfter, allPairs);
-    }
-
-    return allPairs;
-  }
-
-  const queryResult = useQuery<V3Pair[]>(
-    ['pairs', injectedChainId ?? chainId],
+  const { data: pairs, ...other } = useQuery<V3Pair[]>(
+    ['pairs', chainId],
     () => {
-      console.log('USE PAIRS', injectedChainId ?? chainId);
-
-      return fetchPairsRecursively(cosmWasmClient!);
+      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, chainId);
+      return calcClient.fetchAllPairs();
     },
     {
-      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      enabled: !!chainId && !!cosmWasmClient,
       staleTime: 1000 * 60 * 5,
     },
   );
 
   return {
-    ...queryResult,
+    ...other,
     data: {
-      pairs: queryResult.data?.filter((pair) =>
+      pairs: pairs?.filter((pair) =>
         isPairVisible({
           denoms: pair.denoms,
         }),
@@ -139,7 +115,5 @@ function usePairsCosmos(injectedChainId?: ChainId) {
 }
 
 export default function usePairs(injectedChainId?: ChainId) {
-  const comsosPairsData = usePairsCosmos(injectedChainId);
-
-  return comsosPairsData;
+  return usePairsCosmos(injectedChainId);
 }

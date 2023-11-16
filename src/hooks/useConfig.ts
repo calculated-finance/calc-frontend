@@ -6,17 +6,18 @@ import { useCosmWasmClient } from './useCosmWasmClient';
 import { ChainId } from './useChain/Chains';
 
 export function useConfig(injectedChainId?: ChainId): Config | undefined {
-  const { chainId } = useChainId();
+  const { chainId: currentChainId } = useChainId();
   const { cosmWasmClient } = useCosmWasmClient();
+  const chainId = injectedChainId ?? currentChainId;
 
   const { data: response } = useQuery<ConfigResponse>(
-    ['config', injectedChainId ?? chainId],
+    ['config', chainId],
     () =>
       cosmWasmClient!.queryContractSmart(getChainContractAddress(chainId!), {
         get_config: {},
       }),
     {
-      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      enabled: !!chainId && !!cosmWasmClient,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
@@ -28,9 +29,5 @@ export function useConfig(injectedChainId?: ChainId): Config | undefined {
     },
   );
 
-  if (!response) {
-    return undefined;
-  }
-
-  return response.config;
+  return response && response.config;
 }

@@ -12,7 +12,6 @@ import {
   getStrategyInitialDenom,
   getTotalSwapped,
   getStrategyEndDateFromRemainingExecutions,
-  hasSwapFees,
   isBuyStrategy,
 } from '@helpers/strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
@@ -45,7 +44,7 @@ export function getStandardDcaTotalDeposit(strategy: Strategy) {
 }
 
 export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
-  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
+  const feeFactor = SWAP_FEE + dexFee;
   return getStandardDcaTotalReceived(strategy) / (1 - feeFactor);
 }
 

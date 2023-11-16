@@ -71,7 +71,7 @@ export function buildCallbackDestinations(
         },
       };
       destinations.push({
-        address: getRedBankAddress(),
+        address: getRedBankAddress(chainConfig.id),
         allocation: '1.0',
         msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
       });

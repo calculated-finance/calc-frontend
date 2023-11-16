@@ -70,13 +70,11 @@ function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
 
 function SimpleDCAInInitialDenom() {
   const { data } = usePairs();
-  const { pairs } = data || {};
+  const { pairs } = data;
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
 
-  if (!pairs) {
-    return null;
-  }
+  if (!pairs) return null;
 
   const denomInfos = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) =>
     getDenomInfo(denom),
@@ -113,7 +111,7 @@ function SimpleDCAInInitialDenom() {
 
 function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
 
   const {
     values: { initialDenom },
@@ -130,7 +128,7 @@ function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        optionLabel={`Swapped on ${getChainDexName(chain)}`}
+        optionLabel={`Swapped on ${getChainDexName(chainId)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
@@ -253,7 +251,6 @@ function SimpleDcaInForm() {
                 ) : (
                   <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
                     <SimpleDcaModalHeader isSuccess={isSuccess} />
-
                     <SimpleDCAInInitialDenom />
                     <SimpleDCAInResultingDenom
                       denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}

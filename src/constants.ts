@@ -1,18 +1,10 @@
 import { ChainId } from '@hooks/useChain/Chains';
 import { NETWORK } from 'kujira.js';
 
-// Environment specific constants
 export const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK;
 
 export const CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7';
-
-// export const RPC_ENDPOINT = isMainnet()
-//   ? process.env.NEXT_PUBLIC_RPC_ENDPOINT
-//   : 'https://kujira-testnet-rpc.polkachu.com/';
-
-// export const OSMOSIS_RPC_ENDPOINT_MAINNET =
-//   process.env.NEXT_PUBLIC_OSMOSIS_RPC_ENDPOINT_MAINNET || 'https://rpc.osmosis.zone/';
 
 export const FEE_TAKER_ADDRESS =
   process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
@@ -114,3 +106,4 @@ export const contentData = {
 };
 
 export const CHAINS = ['kaiyo-1', 'harpoon-4', 'osmosis-1', 'osmo-test-5'] as ChainId[];
+export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];

@@ -34,8 +34,6 @@ import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';

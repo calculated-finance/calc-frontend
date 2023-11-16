@@ -13,8 +13,6 @@ export type FiatPriceResponse = {
 };
 
 const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
-  const { chainId: chain } = useChainId();
-
   const fetchedSupportedDenoms = useSupportedDenoms();
 
   const fiatCurrencyId = 'usd';
@@ -22,7 +20,7 @@ const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
   const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
 
   const { data, ...other } = useQuery<FiatPriceResponse>(
-    ['fiat-price', chain, supportedDenoms],
+    ['fiat-price', supportedDenoms],
     async () => {
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
       const formattedIds = coingeckoIds.join(',');
@@ -39,7 +37,7 @@ const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
     {
       cacheTime: 5000,
       staleTime: 30000,
-      enabled: !!chain && Boolean(supportedDenoms.length),
+      enabled: Boolean(supportedDenoms.length),
       meta: {
         errorMessage: 'Error fetching fiat prices',
       },

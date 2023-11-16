@@ -5,7 +5,7 @@ import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
-import useAdminStrategies from '@hooks/useAdminStrategies';
+import useAllMainnetStrategies from '@hooks/useAllMainnetStrategies';
 import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
@@ -46,11 +46,13 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
 }
 
 function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
-  return strategies
-    .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
-    .map((strategy) => strategy.rawData.swapped_amount.amount)
-    .reduce((total, amount) => total + Number(amount), 0)
-    .toFixed(6);
+  return (
+    strategies
+      .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
+      // .map((strategy) => strategy.rawData.swapped_amount.amount)
+      .reduce((total, strategy) => total + Number(strategy.rawData.swapped_amount.amount), 0)
+      .toFixed(6)
+  );
 }
 
 export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
@@ -297,7 +299,7 @@ function Page() {
   const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
-  const { data: allStrategies } = useAdminStrategies();
+  const { data: allStrategies } = useAllMainnetStrategies();
 
   const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 

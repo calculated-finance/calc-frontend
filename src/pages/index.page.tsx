@@ -17,24 +17,20 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import useAdminStrategies from '@hooks/useAdminStrategies';
-import useFiatPrice from '@hooks/useFiatPrice';
+import useAllMainnetStrategies from '@hooks/useAllMainnetStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useAdmin } from '@hooks/useAdmin';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
-import TopPanel from '@components/TopPanel';
+import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
-import { useCalcClient } from '@hooks/useCalcClient';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function InfoPanel() {
@@ -222,21 +218,13 @@ function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | 
 
 function TotalInvestment() {
   const { chainId } = useChainId();
-  // const kujiraSupportedDenoms = useSupportedDenoms('kaiyo-1');
-  // const osmosisSupportedDenoms = useSupportedDenoms('osmosis-1');
-  const supportedDenoms = useSupportedDenoms(chainId);
-  const { data: fiatPrices } = useFiatPrice(
-    supportedDenoms[0],
-    supportedDenoms,
-    //   [
-    //   ...kujiraSupportedDenoms,
-    //   ...osmosisSupportedDenoms,
-    // ]
-  );
+  const supportedDenoms = useSupportedDenoms();
 
-  const { data: allStrategies } = useAdminStrategies();
+  const { prices } = useFiatPrices(supportedDenoms);
 
-  if (!fiatPrices || !allStrategies) {
+  const { data: allStrategies } = useAllMainnetStrategies();
+
+  if (!prices || !allStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -245,13 +233,8 @@ function TotalInvestment() {
   }
 
   const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(
-    totalSwappedAmounts,
-    fiatPrices,
-    supportedDenoms,
-    // [...osmosisSupportedDenoms, ...kujiraSupportedDenoms],
-    chainId,
-  );
+
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, prices, supportedDenoms, chainId);
 
   const formattedValue =
     totalSwappedTotal >= 1000000

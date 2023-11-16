@@ -31,15 +31,15 @@ export function getStrategyValidatorAddress(strategy: Strategy) {
   return undefined;
 }
 
-export function getStrategyPostSwapType(strategy: Strategy, chain: ChainId) {
+export function getStrategyPostSwapType(strategy: Strategy, chainId: ChainId) {
   const { destinations } = strategy.rawData;
   const [destination] = destinations;
 
-  if (destination.address === getRedBankAddress()) {
+  if (destination.address === getRedBankAddress(chainId)) {
     return PostPurchaseOptions.GenerateYield;
   }
 
-  if (destination.address === getChainContractAddress(chain)) {
+  if (destination.address === getChainContractAddress(chainId)) {
     if (getStrategyValidatorAddress(strategy)) {
       return PostPurchaseOptions.Stake;
     }

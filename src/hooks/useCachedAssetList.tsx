@@ -3,7 +3,6 @@ import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
 import { useAssetList } from './useAssetList';
 import { useChainId } from './useChain';
-import { ChainId } from './useChain/Chains';
 
 type AssetListState = {
   assetList: AssetList | null;
@@ -21,7 +20,7 @@ export function useCachedAssetList() {
   const { data } = useAssetList();
 
   useEffect(() => {
-    if (data && chain === 'osmosis-1') {
+    if (data) {
       setAssetList(data);
     }
   }, [data, chain, setAssetList]);

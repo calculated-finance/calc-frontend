@@ -1,6 +1,5 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
@@ -374,16 +373,8 @@ export function getTotalReceived(strategy: Strategy) {
   return convertDenomFromCoin(strategy.rawData.received_amount);
 }
 
-export function hasSwapFees(strategy: Strategy) {
-  return (
-    !isDcaPlus(strategy) &&
-    getStrategyInitialDenom(strategy).id !== Denoms.USK &&
-    getStrategyResultingDenom(strategy).id !== Denoms.USK
-  );
-}
-
 export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
-  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
+  const feeFactor = !isDcaPlus(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 

@@ -3,7 +3,6 @@ import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenom
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
-import { isMainnet } from './isMainnet';
 import { DenomInfo } from './DenomInfo';
 import { defaultDenom } from './defaultDenom';
 import { mainnetDenoms } from './mainnetDenomsKujira';
@@ -26,7 +25,7 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
 
   const { assetList } = useAssetListStore.getState();
 
-  const asset = assetList?.assets && assetList.assets.find((a) => a.base === denom);
+  const asset = assetList?.[denom];
 
   if (asset) {
     const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
@@ -42,7 +41,7 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
       stable: isDenomInStablesList(denom as Denom),
       coingeckoId: asset.coingecko_id || denoms[scopedDenom]?.coingeckoId || '',
       osmosisId: asset.symbol,
-      enabledInDcaPlus: isMainnet() ? denoms[scopedDenom]?.enabledInDcaPlus : true,
+      enabledInDcaPlus: denoms[scopedDenom]?.enabledInDcaPlus,
       significantFigures,
       pricePrecision: 6,
       stakeableAndSupported: denom === 'uosmo',

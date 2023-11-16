@@ -18,8 +18,6 @@ export const useCreateVaultSimpleDcaIn = () => {
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
 
-  console.log('SC', calcSigningClient);
-
   const track = useTrackCreateVault();
 
   const { prices } = useFiatPrices();
@@ -82,7 +80,7 @@ export const useCreateVaultSimpleDcaIn = () => {
       track();
       return createResponse;
     } catch (error) {
-      handleError(createVaultContext);
+      return handleError(createVaultContext)(error);
     }
   });
 };

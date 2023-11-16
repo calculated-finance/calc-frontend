@@ -20,7 +20,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
 
-  const client = useCalcSigningClient();
+  const { calcSigningClient } = useCalcSigningClient();
   const track = useTrackCreateVault();
 
   const { price } = useFiatPrice(initialDenom);
@@ -33,7 +33,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       reinvestStrategyData: Strategy | undefined;
     }
   >(async ({ state, reinvestStrategyData }) => {
-    if (!client) {
+    if (!calcSigningClient) {
       throw Error('Invalid client');
     }
 
@@ -76,14 +76,17 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
     };
     const fee = createStrategyFeeInTokens(price);
 
-    const id = await client
-      .createStrategy(address, state.initialDeposit, fee, createVaultContext)
-      .then((result) => {
-        track();
-        return result;
-      })
-      .catch(handleError(createVaultContext));
-
-    return id;
+    try {
+      const createResponse = await calcSigningClient.createStrategy(
+        address,
+        state.initialDeposit,
+        fee,
+        createVaultContext,
+      );
+      track();
+      return createResponse;
+    } catch (error) {
+      return handleError(createVaultContext)(error);
+    }
   });
 };

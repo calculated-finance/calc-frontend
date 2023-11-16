@@ -38,7 +38,7 @@ export function DenomPriceInput({
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
   const { formattedPrice, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
@@ -81,7 +81,7 @@ export function DenomPriceInput({
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      {['kaiyo-1', 'harpoon-4'].includes(chain) && (
+      {['kaiyo-1', 'harpoon-4'].includes(chainId) && (
         <FormHelperText>
           <Link
             isExternal
@@ -93,9 +93,12 @@ export function DenomPriceInput({
           </Link>
         </FormHelperText>
       )}
-      {['osmosis-1', 'osmo-test-5'].includes(chain) && (
+      {['osmosis-1', 'osmo-test-5'].includes(chainId) && (
         <FormHelperText>
-          <Link isExternal href={`${getOsmosisWebUrl()}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}>
+          <Link
+            isExternal
+            href={`${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}
+          >
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
               Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>

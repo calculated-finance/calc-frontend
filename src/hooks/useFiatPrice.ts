@@ -2,6 +2,7 @@ import 'isomorphic-fetch';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import useFiatPrices from './useFiatPrices';
+import { useChainId } from './useChain';
 
 export type FiatPriceResponse = {
   [key: string]: {
