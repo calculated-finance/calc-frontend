@@ -1,4 +1,4 @@
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { defaultDenom } from '@utils/defaultDenom';
 import { TransactionType } from '@components/TransactionType';
 import YesNoValues from '@models/YesNoValues';

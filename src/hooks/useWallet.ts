@@ -1,5 +1,5 @@
 import { useCosmosKit } from './useCosmosKit';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 export enum WalletTypes {
   KEPLR = 'Keplr',

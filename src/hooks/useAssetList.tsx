@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import { Asset, AssetList } from '@chain-registry/types';
 import { useQuery } from '@tanstack/react-query';
 import { reduce } from 'rambda';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);

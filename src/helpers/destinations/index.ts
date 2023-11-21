@@ -1,5 +1,5 @@
 import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import { Destination, LockableDuration } from 'src/interfaces/generated-osmosis/execute';

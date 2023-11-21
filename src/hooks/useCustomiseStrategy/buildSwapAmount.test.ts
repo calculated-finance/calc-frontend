@@ -3,7 +3,7 @@ import { Strategy } from '@models/Strategy';
 import { defaultDenom } from '@utils/defaultDenom';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from '@components/TransactionType';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { getSwapAmount } from '@hooks/useCreateVault/buildCreateVaultParams';

@@ -7,7 +7,6 @@ import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
@@ -18,6 +17,7 @@ import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useS
 import { useRouter } from 'next/router';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
 import { AssetsForm } from './AssetsForm';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 
 const strategyTypesToFormTypes = {
   [StrategyTypes.SimpleDCAIn]: FormNames.SimpleDcaIn,
@@ -32,7 +32,7 @@ const strategyTypesToFormTypes = {
 const CUSTOMISE_PAGE_INDEX = 1;
 
 export function Assets() {
-  const { connected } = useWallet();
+  const { isWalletConnected } = useCosmosKit();
   const { strategyType } = useStrategyInfo();
   const stepsConfig = getSteps(strategyType);
   const { data: balances } = useBalances();
@@ -83,7 +83,7 @@ export function Assets() {
           </FormControl>
           <Stack direction="column" spacing={6}>
             <AssetsForm />
-            {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+            {isWalletConnected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
           </Stack>
         </Form>
       </ModalWrapper>

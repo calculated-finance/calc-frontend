@@ -2,7 +2,7 @@ import { Asset } from '@chain-registry/types';
 import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
 import { useAssetList } from './useAssetList';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 type AssetListState = {
   assetList: Record<string, Asset> | null;

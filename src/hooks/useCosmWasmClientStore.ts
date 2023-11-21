@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import * as Sentry from '@sentry/react';
 import { getChainEndpoint } from '@helpers/chains';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { ChainId } from './useChain/Chains';
+import { ChainId } from './useChainId/Chains';
 
 export type IUseCosmWasmClient = {
   client: CosmWasmClient | null;

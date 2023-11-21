@@ -8,7 +8,7 @@ import { ChainContext } from '@cosmos-kit/core';
 import { queryClient } from 'src/pages/queryClient';
 import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import { ChainId } from './useChain/Chains';
+import { ChainId } from './useChainId/Chains';
 
 export default function useAllMainnetStrategies() {
   const chains = values(useChains(MAINNET_CHAINS.map((chainId) => getChainInfo(chainId).chainName)));

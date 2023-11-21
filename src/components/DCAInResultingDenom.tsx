@@ -1,7 +1,7 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';

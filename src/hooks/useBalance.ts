@@ -2,7 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 import { useChainClient } from './useChainClient';
 
 export type BalanceResponse = {

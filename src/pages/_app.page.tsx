@@ -5,16 +5,14 @@ import type { NextPage } from 'next';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-// import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import * as Sentry from '@sentry/react';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
 import { useAssetList } from '@hooks/useAssetList';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
-import { ChainWrapper } from './ChainWrapper';
 import { LoadingState } from './LoadingState';
 import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
@@ -45,18 +43,20 @@ function AssetListLoader({ children }: ChildrenProp) {
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
 
   return (
     <>
       <Head>
-        <title>CALC - Calculated Finance</title>
+        <title>
+          {process.env.NODE_ENV !== 'production' ? `(${process.env.NODE_ENV}) ` : ''}CALC - Calculated Finance
+        </title>
       </Head>
       <ChakraProvider theme={theme}>
         <Sentry.ErrorBoundary
           beforeCapture={(scope) => {
             scope.setTag('location', 'error boundary');
-            scope.setTag('chain', chain);
+            scope.setTag('chain', chainId);
           }}
           fallback={
             <Center m={8} layerStyle="panel" p={8} flexDirection="column" gap={6}>
@@ -66,16 +66,14 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             </Center>
           }
         >
-          <ChainWrapper>
-            <ChainProvider>
-              <QueryClientProvider client={queryClient}>
-                <AssetListWrapper>
-                  <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-                </AssetListWrapper>
-              </QueryClientProvider>
-              <ToastContainer />
-            </ChainProvider>
-          </ChainWrapper>
+          <ChainProvider>
+            <QueryClientProvider client={queryClient}>
+              <AssetListWrapper>
+                <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+              </AssetListWrapper>
+            </QueryClientProvider>
+            <ToastContainer />
+          </ChainProvider>
         </Sentry.ErrorBoundary>
       </ChakraProvider>
     </>

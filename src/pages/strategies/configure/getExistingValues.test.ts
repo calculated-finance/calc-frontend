@@ -4,7 +4,7 @@ import {
   getStrategyValidatorAddress,
   getStrategyReinvestStrategyId,
 } from '@helpers/destinations';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { Strategy } from '@models/Strategy';

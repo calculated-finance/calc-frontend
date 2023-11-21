@@ -1,6 +1,6 @@
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { Strategy } from '@models/Strategy';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { getReceiveAmount } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { buildPriceThreshold } from './buildPriceThreshold';
 import { ConfigureVariables } from './ConfigureVariables';

@@ -20,7 +20,7 @@ import Icon from '@components/Icon';
 import Footer from '@components/Footer';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { LinkItem } from './LinkItems';
 
 const SIDEBAR_WIDTH = 64;

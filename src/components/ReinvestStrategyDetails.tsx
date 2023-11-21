@@ -20,7 +20,7 @@ import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
 import { DestinationDetails } from 'src/pages/strategies/details/DestinationDetails';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chainId: chain } = useChainId();

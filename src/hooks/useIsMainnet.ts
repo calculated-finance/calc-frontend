@@ -1,5 +1,5 @@
 import { MAINNET_CHAINS } from 'src/constants';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 export function useIsMainnet() {
   const { chainId } = useChainId();

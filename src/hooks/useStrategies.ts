@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { Strategy } from '../models/Strategy';
 import { useCalcClient } from './useCalcClient';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 const QUERY_KEY = 'get_vaults_by_address';
 

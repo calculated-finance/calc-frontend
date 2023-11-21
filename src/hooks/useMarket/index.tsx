@@ -2,7 +2,7 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 
 // from https://github.com/mars-protocol/interface/blob/main/src/types/interfaces/redbank.d.ts
 interface InterestRateModel {

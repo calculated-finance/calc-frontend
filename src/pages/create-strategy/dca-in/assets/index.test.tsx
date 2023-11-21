@@ -16,7 +16,7 @@ import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { useFormStore } from '@hooks/useFormStore';
 import { useOsmosis } from '@hooks/useOsmosis';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import Page from './index.page';
 
 const mockRouter = {

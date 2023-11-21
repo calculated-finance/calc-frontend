@@ -1,5 +1,5 @@
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import {
   getStrategyPostSwapType,

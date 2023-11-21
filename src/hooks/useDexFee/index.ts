@@ -1,6 +1,6 @@
 import { useOsmosisPools } from '@hooks/useOsmosisPools';
-import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { FIN_TAKER_FEE } from 'src/constants';
 import { TransactionType } from '@components/TransactionType';
 import { findPair } from '@helpers/findPair';

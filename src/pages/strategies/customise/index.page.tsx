@@ -7,7 +7,7 @@ import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import { initialValues as globalInitialValues } from '@models/DcaInFormData';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';

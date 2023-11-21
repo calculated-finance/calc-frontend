@@ -12,7 +12,7 @@ import { DcaInFormDataPostPurchase, initialValues, postPurchaseValidationSchema 
 import { useConfigureStrategy } from '@hooks/useConfigureStrategy';
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import Submit from '@components/Submit';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useWallet } from '@hooks/useWallet';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';

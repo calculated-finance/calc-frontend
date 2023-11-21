@@ -1,6 +1,6 @@
 import { set } from 'lodash';
 import * as Yup from 'yup';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 function getErrorName(error: unknown) {
   if (error instanceof Error) return error.name;

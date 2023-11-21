@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useConfig } from '@hooks/useConfig';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { useQuery } from '@tanstack/react-query';
 import getClient from './getClient';

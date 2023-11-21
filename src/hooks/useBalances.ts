@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 import { useSupportedDenoms } from './useSupportedDenoms';
 import { useChainClient } from './useChainClient';
 

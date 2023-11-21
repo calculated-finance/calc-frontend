@@ -10,7 +10,7 @@ import { mockBalances } from '@helpers/test/mockBalances';
 import { KujiraQueryClient } from 'kujira.js';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import selectEvent from 'react-select-event';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { mockGetBalance } from '@helpers/test/mockGetBalance';
 import userEvent from '@testing-library/user-event';

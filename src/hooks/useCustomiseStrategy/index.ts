@@ -6,7 +6,7 @@ import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-starg
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChainId } from '../useChain';
+import { useChainId } from '../useChainId';
 import { getExecuteMsg } from '../useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from '../useStrategy';
 import { useAnalytics } from '../useAnalytics';

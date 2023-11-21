@@ -18,7 +18,7 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { executionIntervalLabel } from '../executionIntervalDisplay';

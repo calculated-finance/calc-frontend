@@ -57,7 +57,6 @@ const components = {
       variant: null, // null here
     },
   },
-
   Input: {
     variants: {
       outline: {

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import * as amplitude from '@amplitude/analytics-browser';
 // import { useKujira } from '@hooks/useKujira';
 import { useKeplr } from '@hooks/useKeplr';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { useOsmosis } from '@hooks/useOsmosis';
 import { useLeap } from '@hooks/useLeap';

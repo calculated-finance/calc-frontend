@@ -16,7 +16,7 @@ import {
 import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
@@ -30,7 +30,7 @@ import useValidator from '@hooks/useValidator';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {

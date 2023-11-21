@@ -18,13 +18,13 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {

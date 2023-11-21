@@ -17,7 +17,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CHAINS, CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { getChainConfig, getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';

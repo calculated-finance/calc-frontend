@@ -26,9 +26,8 @@ import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { DenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
-import { useWallet } from '@hooks/useWallet';
-import { useWalletModal } from '@hooks/useWalletModal';
 import { Coin } from '@cosmjs/proto-signing';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 
 interface GetFundsDetailsProps {
   onSquidOpen: () => void;
@@ -125,16 +124,16 @@ export function GetFundsButton({ onOpen }: GetFundsButtonProps) {
   return (
     <HStack spacing={1}>
       <Text fontSize="xs">None</Text>
-        <Button
-          size="xs"
-          data-testid="get-funds-button"
-          colorScheme="blue"
-          variant="link"
-          cursor="pointer"
-          onClick={onOpen}
-        >
-          Get funds
-        </Button>
+      <Button
+        size="xs"
+        data-testid="get-funds-button"
+        colorScheme="blue"
+        variant="link"
+        cursor="pointer"
+        onClick={onOpen}
+      >
+        Get funds
+      </Button>
     </HStack>
   );
 }
@@ -152,18 +151,14 @@ function AvailableFundsButton({
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
 
-  const { connected } = useWallet();
+  const { isWalletConnected, openView } = useCosmosKit();
   const [, , helpers] = useField('initialDeposit');
-  const { setVisible } = useWalletModal();
   const { price } = useFiatPrice(denom);
 
   const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
   const balance = Number(data?.amount);
   const displayAmount = denom.conversion(Math.max(balance - createStrategyFee, 0));
 
-  const handleConnect = () => {
-    setVisible(true);
-  };
   const handleClick = () => {
     helpers.setValue(displayAmount);
   };
@@ -191,7 +186,7 @@ function AvailableFundsButton({
     );
   }
 
-  if (connected) {
+  if (isWalletConnected) {
     return (
       <>
         <GetFundsButton onOpen={onOpen} />
@@ -208,7 +203,7 @@ function AvailableFundsButton({
   }
 
   return (
-    <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleConnect}>
+    <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={openView}>
       Connect wallet
     </Button>
   );

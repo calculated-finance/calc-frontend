@@ -4,8 +4,8 @@ import { useChain } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainInfo } from '@helpers/chains';
 import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import { ChainId } from './useChain/Chains';
-import { useChainId } from './useChain';
+import { ChainId } from './useChainId/Chains';
+import { useChainId } from './useChainId';
 
 export default function useAllStrategies() {
   const { chainId } = useChainId();

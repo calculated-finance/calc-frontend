@@ -3,8 +3,8 @@ import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
-import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
+import { ChainId } from '@hooks/useChainId/Chains';
 import YesNoValues from '@models/YesNoValues';
 
 const startImediatelyData: { value: YesNoValues; label: string }[] = [

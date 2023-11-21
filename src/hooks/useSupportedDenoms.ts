@@ -10,7 +10,7 @@ import { MAINNET_CHAINS } from 'src/constants';
 import { values } from 'rambda';
 import { allDenomsFromPairs } from './usePairs';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import { ChainId } from './useChain/Chains';
+import { ChainId } from './useChainId/Chains';
 
 export function useSupportedDenoms() {
   const allChainContexts = values(useChains(MAINNET_CHAINS.map((chainId) => getChainInfo(chainId).chainName)));

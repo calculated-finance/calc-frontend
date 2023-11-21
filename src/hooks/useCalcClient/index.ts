@@ -1,7 +1,7 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useQuery } from '@tanstack/react-query';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import getClient, { CalcClient } from './getClient';
 
 export function useCalcClient(injectedChainId?: ChainId) {

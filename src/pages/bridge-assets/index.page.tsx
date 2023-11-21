@@ -3,8 +3,8 @@ import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import OnRampModal from '@components/OnRampModalContent';
-import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
+import { ChainId } from '@hooks/useChainId/Chains';
 
 type GetAssetsCardProps = {
   name: string;

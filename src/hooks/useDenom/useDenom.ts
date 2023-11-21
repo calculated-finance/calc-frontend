@@ -1,4 +1,4 @@
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
 

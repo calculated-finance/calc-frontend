@@ -8,7 +8,7 @@ import { encode } from '@helpers/encode';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '../models/Strategy';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 
 function getCancelVaultExecuteMsg(
   strategyId: Strategy['id'],

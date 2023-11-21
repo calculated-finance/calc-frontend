@@ -3,7 +3,7 @@ import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } fro
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '../models/Strategy';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 import { useCosmWasmClient } from './useCosmWasmClient';
 
 export type DcaPlusPerformanceResponse = DcaPlusPerformanceResponseGenerated;

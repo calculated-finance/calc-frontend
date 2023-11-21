@@ -1,7 +1,7 @@
 import { TransactionType } from '@components/TransactionType';
 import { CustomiseSchema } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { DenomInfo } from '@utils/DenomInfo';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { Strategy } from '@models/Strategy';
 
 export type ConfigureVariables = {

@@ -15,8 +15,8 @@ import {
   WrapItem,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { useRouter } from 'next/router';
 
 export function ChainCards({ onChainSelect }: { onChainSelect: (chain: ChainId) => void }) {

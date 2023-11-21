@@ -2,7 +2,7 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { getChainContractAddress } from '@helpers/chains';
 import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import {

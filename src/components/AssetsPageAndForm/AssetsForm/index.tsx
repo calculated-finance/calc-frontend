@@ -21,7 +21,7 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { Pair } from 'src/interfaces/v2/generated/query';

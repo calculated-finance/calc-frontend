@@ -8,7 +8,6 @@ import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { GasPrice } from '@cosmjs/stargate';
 import { SignerOptions } from '@cosmos-kit/core';
 import { isMobile } from 'react-device-detect';
-import { WalletModal } from '@components/WalletModal';
 
 export const signerOptions: SignerOptions = {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -41,7 +40,7 @@ export function ChainProvider({ children }: ChildrenProp) {
       )}
       signerOptions={signerOptions}
       endpointOptions={{
-        isLazy: true,
+        isLazy: !(process.env.NODE_ENV === 'production'),
         endpoints: {
           kujira: {
             rpc: ['https://kujira-rpc.nodes.defiantlabs.net', 'https://rpc-kujira.mintthemoon.xyz'],
@@ -69,8 +68,6 @@ export function ChainProvider({ children }: ChildrenProp) {
           },
         },
       }}
-      // walletModal={WalletModal}
-      modalTheme={{ defaultTheme: 'dark' }}
     >
       {children}
     </CosmosKitChainProvider>

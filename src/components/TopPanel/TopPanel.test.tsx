@@ -4,7 +4,7 @@ import { useWallet } from '@hooks/useWallet';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import { queryClient } from '@helpers/test/testQueryClient';
-import { ChainId } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { useStrategies } from '@hooks/useStrategies';
 import { dcaInStrategyViewModal } from 'src/fixtures/strategy';
 import { Strategy, StrategyStatus } from '@models/Strategy';

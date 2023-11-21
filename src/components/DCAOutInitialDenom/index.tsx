@@ -13,7 +13,7 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import { getChainDexName } from '@helpers/chains';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { DenomInfo } from '@utils/DenomInfo';
 import getDenomInfo from '@utils/getDenomInfo';
 import { DenomSelect } from '../DenomSelect';

@@ -23,12 +23,12 @@ import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInf
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
-import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
+import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';

@@ -41,7 +41,7 @@ import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName } from '@helpers/chains';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';

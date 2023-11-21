@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup } from '@chakra-ui/react';
 import { getChainInfo } from '@helpers/chains';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useField } from 'formik';
 
 export default function RecipientAccount() {

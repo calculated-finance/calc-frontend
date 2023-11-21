@@ -1,5 +1,4 @@
 import React from 'react';
-import { useWallet } from '@hooks/useWallet';
 import {
   HStack,
   Box,
@@ -17,9 +16,8 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
-import { useWalletModal } from 'src/hooks/useWalletModal';
 import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
-import { useAnalytics } from '@hooks/useAnalytics';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 import { featureFlags } from 'src/constants';
 import { SpendableBalances } from './SpendableBalances';
 import OnRampModal from './OnRampModalContent';
@@ -28,25 +26,19 @@ import { truncate } from '../helpers/truncate';
 import CalcIcon from './Icon';
 
 function CosmosWallet() {
-  const { visible, setVisible } = useWalletModal();
-  const { address, disconnect, walletType } = useWallet();
+  const { wallet, address, disconnect, openView } = useCosmosKit();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
   const { onCopy } = useClipboard(address || '');
-  const { track } = useAnalytics();
   const ref = React.createRef<HTMLElement>();
+
   useOutsideClick({
     ref,
     handler: onClose,
   });
 
   const toast = useToast();
-
-  const handleClick = () => {
-    track('Connect wallet button clicked');
-    setVisible(!visible);
-  };
 
   const handleDisconnect = () => {
     disconnect?.();
@@ -122,7 +114,7 @@ function CosmosWallet() {
                     onClick={() => disconnect()}
                     leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                   >
-                    Disconnect from {walletType}
+                    Disconnect from {wallet?.prettyName}
                   </Button>
                 ) : (
                   <Button
@@ -132,14 +124,14 @@ function CosmosWallet() {
                     onClick={handleDisconnect}
                     leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                   >
-                    Disconnect from {walletType}
+                    Disconnect from {wallet?.prettyName}
                   </Button>
                 )}
               </Stack>
             </PopoverContent>
           </Popover>
         ) : (
-          <Button variant="outline" onClick={handleClick}>
+          <Button variant="outline" onClick={openView}>
             Connect to a wallet
           </Button>
         )}

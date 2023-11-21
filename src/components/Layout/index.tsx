@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { Graph2Icon, ViewListIcon } from '@fusion-icons/react/interface';
 import { useAdmin } from '@hooks/useAdmin';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
@@ -29,6 +29,7 @@ import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
 import { ControlDeskLinkItems, LinkItem, LinkItems } from './Sidebar/LinkItems';
 import { Pages } from './Sidebar/Pages';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 
 const HEADER_HEIGHT = '64px';
 
@@ -112,8 +113,8 @@ function FlowBreadcrumbs() {
 }
 
 function FlowLayout({ children }: { children: ReactElement }) {
-  const { address } = useWallet();
-  const { chainId: chain } = useChainId();
+  const { address } = useCosmosKit();
+  const { chainId } = useChainId();
 
   const router = useRouter();
   const { pathname } = router;
@@ -125,12 +126,12 @@ function FlowLayout({ children }: { children: ReactElement }) {
       <AppHeader />
       <Content
         bgImage={
-          ['osmosis-1', 'osmo-test-5'].includes(chain)
+          ['osmosis-1', 'osmo-test-5'].includes(chainId)
             ? '/images/backgrounds/osmoBackground.svg'
             : '/images/backgrounds/twist.svg'
         }
         backgroundPosition="bottom"
-        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chain) ? 'cover' : 'center'}
+        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chainId) ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
         minH="100vh"
         backgroundAttachment="fixed"
@@ -159,7 +160,7 @@ export function getFlowLayout(page: ReactElement) {
 
 function SidebarLayout({ children, linkItems }: { children: ReactElement; linkItems: LinkItem[] }) {
   const { isPageLoading } = usePageLoad();
-  const { connected } = useWallet();
+  const { isWalletConnected } = useCosmosKit();
 
   //  create date one year from now
   const oneYearFromNow = new Date();
@@ -174,10 +175,10 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
-    if (!agreementPreviouslyAccepted && connected) {
+    if (!agreementPreviouslyAccepted && isWalletConnected) {
       onOpen();
     }
-  }, [agreementPreviouslyAccepted, onOpen, connected]);
+  }, [agreementPreviouslyAccepted, onOpen, isWalletConnected]);
 
   const onSubmit = () => {
     setAcceptedAgreementState('true');

@@ -7,7 +7,7 @@ import { getChainEndpoint, getChainId, getGasPrice } from '@helpers/chains';
 import { CosmjsOfflineSigner, connectSnap, getSnaps, Snap } from '@leapwallet/cosmos-snap-provider';
 import { find, values } from 'rambda';
 
-import { ChainId } from './useChain/Chains';
+import { ChainId } from './useChainId/Chains';
 
 interface KeplrWindow extends Window {
   keplr?: WindowKeplr;

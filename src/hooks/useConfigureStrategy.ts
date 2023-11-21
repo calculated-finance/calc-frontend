@@ -9,7 +9,7 @@ import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChainId } from './useChain';
+import { useChainId } from './useChainId';
 import { Strategy } from '../models/Strategy';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';

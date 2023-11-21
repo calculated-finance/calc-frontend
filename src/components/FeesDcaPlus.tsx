@@ -27,7 +27,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import { getChainDexName } from '@helpers/chains';
-import { useChainId } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
