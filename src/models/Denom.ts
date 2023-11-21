@@ -80,5 +80,7 @@ export enum MainnetDenoms {
   WINK = 'factory/kujira12cjjeytrqcj25uv349thltcygnp9k0kukpct0e/uwink',
   wTAO = 'ibc/A2146858B5E3CFE759E32F47CA54591F8E27FAEDFF731D30B448E5AB25CA8EC5',
   yeildETH = 'ibc/B4B3B08FE5FEA65CB25E467C9D95D180A6CDB0EBE730E7BB20CA1BF6C9A80D9B',
+  nBTC = 'ibc/A6826D67800ED864F3BF51D56B0165DAF2491B00D93433564158D87BAA0C82BE',
+  NSTK = 'factory/kujira1aaudpfr9y23lt9d45hrmskphpdfaq9ajxd3ukh/unstk',
 }
 export const Denoms = isMainnet() ? MainnetDenoms : TestnetDenoms;
