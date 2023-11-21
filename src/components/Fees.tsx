@@ -136,15 +136,13 @@ export function FeeBreakdown({
                   </Flex>
                 )}
                 {chain === Chains.Kujira && (
-                  <>
-                    <Flex>
-                      <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                      <Spacer />
-                      <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
-                      </Text>
-                    </Flex>
-                  </>
+                  <Flex>
+                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                    <Spacer />
+                    <Text textStyle="body-xs">
+                      {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
+                    </Text>
+                  </Flex>
                 )}
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
