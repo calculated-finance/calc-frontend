@@ -141,14 +141,7 @@ export function FeeBreakdown({
                       <Text textStyle="body-xs">CALC sustainability tax:</Text>
                       <Spacer />
                       <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
-                      </Text>
-                    </Flex>
-                    <Flex>
-                      <Text textStyle="body-xs">{Chains[chain]} community pool:</Text>
-                      <Spacer />
-                      <Text textStyle="body-xs">
-                        {getPrettyFee(swapAmount, swapFee / 2)} {initialDenomName}
+                        {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
                       </Text>
                     </Flex>
                   </>
@@ -200,7 +193,7 @@ export default function Fees({
   autoStakeValidator: string | null | undefined;
   swapFeeTooltip?: string;
   excludeDepositFee?: boolean;
-  transactionType: TransactionType
+  transactionType: TransactionType;
 }) {
   const { price } = useFiatPrice(initialDenom);
 
