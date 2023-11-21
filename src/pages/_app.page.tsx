@@ -5,7 +5,7 @@ import type { NextPage } from 'next';
 import theme from 'src/theme';
 import { Center, ChakraProvider, Heading, Image, Text } from '@chakra-ui/react';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { CalcWalletModalProvider } from '@components/WalletModalProvider';
+// import { CalcWalletModalProvider } from '@components/WalletModalProvider';
 import Head from 'next/head';
 import { useChainId } from '@hooks/useChain';
 import * as Sentry from '@sentry/react';
@@ -68,13 +68,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         >
           <ChainWrapper>
             <ChainProvider>
-              <CalcWalletModalProvider>
-                <QueryClientProvider client={queryClient}>
-                  <AssetListWrapper>
-                    <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-                  </AssetListWrapper>
-                </QueryClientProvider>
-              </CalcWalletModalProvider>
+              <QueryClientProvider client={queryClient}>
+                <AssetListWrapper>
+                  <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                </AssetListWrapper>
+              </QueryClientProvider>
               <ToastContainer />
             </ChainProvider>
           </ChainWrapper>

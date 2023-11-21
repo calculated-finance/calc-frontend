@@ -12,7 +12,7 @@ export function useAssetList() {
   const { chainId } = useChainId();
   const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
 
-  return useQuery<AssetList>(
+  return useQuery<Record<string, Asset>>(
     ['assetList', chainId],
     async () => {
       const responses = await Promise.all(

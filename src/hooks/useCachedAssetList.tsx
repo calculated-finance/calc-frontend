@@ -1,17 +1,17 @@
-import { AssetList } from '@chain-registry/types';
+import { Asset } from '@chain-registry/types';
 import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
 import { useAssetList } from './useAssetList';
 import { useChainId } from './useChain';
 
 type AssetListState = {
-  assetList: AssetList | null;
-  setAssetList: (assetList: AssetList) => void;
+  assetList: Record<string, Asset> | null;
+  setAssetList: (assetList: Record<string, Asset>) => void;
 };
 
 export const useAssetListStore = create<AssetListState>()((set) => ({
   assetList: null,
-  setAssetList: (assetList: AssetList) => set({ assetList }),
+  setAssetList: (assetList: Record<string, Asset>) => set({ assetList }),
 }));
 
 export function useCachedAssetList() {

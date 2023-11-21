@@ -44,7 +44,6 @@ import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { useChainId } from '@hooks/useChain';
-import { ChainId } from '@hooks/useChain/Chains';
 import useDexFee from '@hooks/useDexFee';
 import usePairs from '@hooks/usePairs';
 import { TransactionType } from '@components/TransactionType';

@@ -1,18 +1,19 @@
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
 import { V3Pair } from '@models/Pair';
-import { useChain } from '@cosmos-kit/react';
-import { getChainContractAddress } from '@helpers/chains';
+import { useChains, useWalletClient } from '@cosmos-kit/react';
+import { getChainContractAddress, getChainInfo } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
 import { useQuery } from '@tanstack/react-query';
 import { queryClient } from 'src/pages/queryClient';
+import { MAINNET_CHAINS } from 'src/constants';
+import { values } from 'rambda';
 import { allDenomsFromPairs } from './usePairs';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChain/Chains';
 
 export function useSupportedDenoms() {
-  const kujiraChainContext = useChain('kujira');
-  const osmosisChainContext = useChain('osmosis');
+  const allChainContexts = values(useChains(MAINNET_CHAINS.map((chainId) => getChainInfo(chainId).chainName)));
 
   const fetchPairs = async (chainContext: ChainContext) => {
     const client = await chainContext.getCosmWasmClient();
@@ -28,11 +29,11 @@ export function useSupportedDenoms() {
 
   const { data: allPairs } = useQuery<V3Pair[]>(
     ['all-pairs'],
-    async () => (await Promise.all([kujiraChainContext, osmosisChainContext].map(fetchPairs))).flat(),
+    async () => (await Promise.all(allChainContexts.map(fetchPairs))).flat(),
     {
       cacheTime: Infinity,
       staleTime: Infinity,
-      enabled: !!kujiraChainContext && !!osmosisChainContext,
+      enabled: !!allChainContexts,
       meta: {
         errorMessage: 'Error fetching pairs',
       },
@@ -41,7 +42,5 @@ export function useSupportedDenoms() {
 
   const allDenoms = allDenomsFromPairs(allPairs);
 
-  const allDenomInfos = useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
-
-  return allDenomInfos;
+  return useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
 }

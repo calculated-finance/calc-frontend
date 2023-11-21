@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import { queryClient } from '@helpers/test/testQueryClient';
 import { mockUseWallet } from '@helpers/test/mockUseWallet';
 import { mockUseStrategy } from '@helpers/test/mockGetVault';
-import { ChainId } from '@hooks/useChain/Chains';
 import Page from './index.page';
 
 const mockRouter = {

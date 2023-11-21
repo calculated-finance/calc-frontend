@@ -6,6 +6,7 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { useAdmin } from '@hooks/useAdmin';
+import { truncate } from '@helpers/truncate';
 
 function CoinBalance({ balance }: { balance: Coin }) {
   const { name, conversion } = getDenomInfo(balance.denom);
@@ -35,7 +36,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{denom.name || balance.denom}</Text>
+        <Text textStyle="body-xs">{denom.name || truncate(balance.denom)}</Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text textStyle="body-xs">{formatFiat((price || 0) * balanceConverted)}</Text>

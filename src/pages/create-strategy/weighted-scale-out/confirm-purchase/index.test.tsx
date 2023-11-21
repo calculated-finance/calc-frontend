@@ -14,7 +14,6 @@ import { useFormStore } from '@hooks/useFormStore';
 import TriggerTypes from '@models/TriggerTypes';
 import YesNoValues from '@models/YesNoValues';
 import { CONTRACT_ADDRESS } from 'src/constants';
-import { ChainId } from '@hooks/useChain/Chains';
 import usePrice from '@hooks/usePrice';
 import { when } from 'jest-when';
 import getDenomInfo from '@utils/getDenomInfo';

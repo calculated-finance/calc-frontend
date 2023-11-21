@@ -1,5 +1,5 @@
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { ChainProvider as CosmosKitChainProvider, useChain } from '@cosmos-kit/react';
+import { ChainProvider as CosmosKitChainProvider } from '@cosmos-kit/react';
 import { assets, chains } from 'chain-registry';
 import { wallets as keplrWallets } from '@cosmos-kit/keplr';
 import { wallets as leapWallets } from '@cosmos-kit/leap';
@@ -7,8 +7,8 @@ import { wallets as xdefiWallets } from '@cosmos-kit/xdefi';
 import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
 import { GasPrice } from '@cosmjs/stargate';
 import { SignerOptions } from '@cosmos-kit/core';
-import { filter } from 'rambda';
-import { useChainId } from '@hooks/useChain';
+import { isMobile } from 'react-device-detect';
+import { WalletModal } from '@components/WalletModal';
 
 export const signerOptions: SignerOptions = {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -36,17 +36,15 @@ export function ChainProvider({ children }: ChildrenProp) {
     <CosmosKitChainProvider
       chains={chains}
       assetLists={assets}
-      wallets={filter(
-        // eslint-disable-next-line no-restricted-globals
-        (wallet) => (screen.orientation !== null ? wallet.isModeWalletConnect : wallet.isModeExtension),
-        [...leapWallets, ...keplrWallets, ...xdefiWallets],
+      wallets={[...leapWallets, ...keplrWallets, ...xdefiWallets].filter((wallet) =>
+        isMobile ? !wallet.isModeExtension : wallet.isModeExtension,
       )}
       signerOptions={signerOptions}
       endpointOptions={{
         isLazy: true,
         endpoints: {
           kujira: {
-            rpc: ['https://rpc-kujira.mintthemoon.xyz'],
+            rpc: ['https://kujira-rpc.nodes.defiantlabs.net', 'https://rpc-kujira.mintthemoon.xyz'],
           },
           osmosis: {
             rpc: ['https://rpc.osmosis.zone/'],
@@ -62,9 +60,16 @@ export function ChainProvider({ children }: ChildrenProp) {
       walletConnectOptions={{
         signClient: {
           projectId: '50fa0187387c8c2f72d360c6ba9f3333',
-          ...signerOptions,
+          relayUrl: 'wss://relay.walletconnect.org',
+          metadata: {
+            name: 'Calculated Finance',
+            description: 'Calculated Finance',
+            icons: [],
+            url: 'https://app.calculated.fi',
+          },
         },
       }}
+      // walletModal={WalletModal}
       modalTheme={{ defaultTheme: 'dark' }}
     >
       {children}

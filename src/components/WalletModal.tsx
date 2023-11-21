@@ -1,206 +1,234 @@
-import { useCallback } from 'react';
-
 import {
   Button,
-  Center,
-  Collapse,
-  Icon,
+  Link,
+  Stack,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
+  Image,
   Text,
-  useDisclosure,
+  useToast,
+  useClipboard,
+  Flex,
+  SimpleGrid,
 } from '@chakra-ui/react';
-import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
-import { useWalletModal } from '@hooks/useWalletModal';
-import { useKeplr } from '@hooks/useKeplr';
-import { WalletTypes, useWallet } from '@hooks/useWallet';
-import { useChainId } from '@hooks/useChain';
-import { useLeap } from '@hooks/useLeap';
-import { useXDEFI } from '@hooks/useXDEFI';
-import { useAdmin } from '@hooks/useAdmin';
-import { useMetamask } from '@hooks/useMetamask';
-import { ChainId } from '@hooks/useChain/Chains';
-import { useAnalytics } from '@hooks/useAnalytics';
-import { useMetamaskSnap } from '@hooks/useMetamaskSnap';
-import { WalletListItem } from './WalletListItem';
-import Spinner from './Spinner';
+import { ChainWalletBase, WalletModalProps, WalletRepo, WalletStatus } from '@cosmos-kit/core';
+import { truncate } from '@helpers/truncate';
+import { useCallback } from 'react';
+import { MAINNET_CHAINS } from 'src/constants';
 
-function WalletModal() {
-  const { visible, setVisible } = useWalletModal();
+export function WalletListItem({ wallet, onConnect }: { wallet: ChainWalletBase; onConnect: () => void }) {
+  const { walletInfo, connect } = wallet;
 
-  const { isConnecting } = useWallet();
+  const handleClick = useCallback(async () => {
+    await connect(true);
 
-  const { isAdminPage } = useAdmin();
-
-  const { track } = useAnalytics();
-
-  // const { isStationInstalled, connect: connectStation } = useStation((state) => ({
-  //   isStationInstalled: state.isStationInstalled,
-  //   connect: state.connect,
-  // }));
-
-  const { isInstalled: isKeplrInstalled, connect: connectKeplr } = useKeplr((state) => ({
-    isInstalled: state.isInstalled,
-    connect: state.connect,
-  }));
-
-  const { isInstalled: isLeapInstalled, connect: connectLeap } = useLeap((state) => ({
-    isInstalled: state.isInstalled,
-    connect: state.connect,
-  }));
-
-  const { isInstalled: isXDEFIInstalled, connect: connectXDEFI } = useXDEFI((state) => ({
-    isInstalled: state.isInstalled,
-    connect: state.connect,
-  }));
-
-  const { isInstalled: isMetamaskInstalled, connect: connectMetamask } = useMetamask((state) => ({
-    isInstalled: state.isInstalled,
-    connect: state.connect,
-  }));
-
-  const { isInstalled: isLeapSnapInstalled, connect: connectLeapSnap } = useMetamaskSnap((state) => ({
-    isInstalled: state.isInstalled,
-    connect: state.connect,
-  }));
-
-  const { chainId: chain } = useChainId();
-
-  const { isOpen, onToggle } = useDisclosure();
-
-  const trackConnectedWallet = (walletType: WalletTypes) => {
-    track('Wallet Connected', { walletType });
-  };
-
-  const handleClose = useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
-
-  const handleKeplrConnect = () => {
-    connectKeplr(chain);
-    trackConnectedWallet(WalletTypes.KEPLR);
-    handleClose();
-  };
-
-  const handleLeapConnect = () => {
-    connectLeap(chain);
-    trackConnectedWallet(WalletTypes.LEAP);
-    handleClose();
-  };
-
-  const handleLeapSnapConnect = () => {
-    connectLeapSnap(chain);
-    trackConnectedWallet(WalletTypes.METAMASK_SNAP);
-    handleClose();
-  };
-
-  const handleXDEFIConnect = () => {
-    connectXDEFI(chain);
-    trackConnectedWallet(WalletTypes.XDEFI);
-    handleClose();
-  };
-
-  const handleMetamaskConnect = () => {
-    connectMetamask();
-    trackConnectedWallet(WalletTypes.METAMASK);
-    handleClose();
-  };
+    if (wallet.isWalletConnected) {
+      setTimeout(() => {
+        onConnect();
+      }, 200);
+    }
+  }, []);
 
   return (
-    <Modal isOpen={visible || Boolean(isConnecting)} onClose={handleClose} size="sm">
+    <Stack
+      onClick={handleClick}
+      bg="deepHorizon"
+      p={6}
+      borderRadius="xl"
+      borderColor="slateGrey"
+      borderWidth={1}
+      cursor="pointer"
+      alignItems="center"
+      textAlign="center"
+      justifyContent="center"
+      spacing={3}
+      _hover={{
+        bg: 'abyss.200',
+        cursor: 'pointer',
+      }}
+    >
+      <Flex px={4}>
+        <Image
+          src={typeof walletInfo.logo === 'string' ? walletInfo?.logo : walletInfo?.logo?.minor}
+          alt={`${walletInfo.prettyName} icon`}
+        />
+      </Flex>
+      <Text fontSize="xs">{walletInfo.prettyName}</Text>
+    </Stack>
+  );
+}
+
+function Connected({ walletRepo, onCloseModal }: { walletRepo: WalletRepo | undefined; onCloseModal: () => void }) {
+  const address = walletRepo?.current?.address;
+  const { onCopy } = useClipboard(address || '');
+
+  const toast = useToast();
+
+  const handleCopy = () => {
+    onCopy();
+    toast({
+      title: 'Wallet address copied to clipboard',
+      position: 'top',
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+      variant: 'subtle',
+    });
+    onCloseModal();
+  };
+  return (
+    <ModalContent>
+      <ModalHeader>
+        <Text>Connected with {walletRepo?.current?.walletInfo.prettyName}</Text>
+        <Button size="xs" onClick={handleCopy} variant="ghost" colorScheme="white">
+          <Text textStyle="gradient">{truncate(walletRepo?.current?.address || '')}</Text>
+        </Button>
+      </ModalHeader>
+      <ModalBody>
+        <Stack spacing={6} align="center" textAlign="center" alignItems="center">
+          <Button size="sm" w="full" variant="outline" onClick={() => walletRepo?.disconnect()}>
+            Disconnect
+          </Button>
+        </Stack>
+      </ModalBody>
+    </ModalContent>
+  );
+}
+
+export function WalletModal({ isOpen, setOpen, walletRepo }: WalletModalProps) {
+  const onCloseModal = () => {
+    setOpen(false);
+  };
+
+  const { walletStatus } = walletRepo?.current || {};
+
+  if (walletStatus === WalletStatus.Connected) {
+    return (
+      <Modal isOpen={isOpen} onClose={onCloseModal} size="sm">
+        <ModalOverlay />
+        <Connected walletRepo={walletRepo} onCloseModal={onCloseModal} />
+      </Modal>
+    );
+  }
+
+  if (walletStatus === WalletStatus.Connecting) {
+    return (
+      <Modal isOpen={isOpen} onClose={onCloseModal} size="sm">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Connecting</ModalHeader>
+          <ModalBody>
+            <Button variant="outline" w="full" onClick={() => walletRepo?.disconnect()}>
+              Cancel
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  if (walletStatus === WalletStatus.Error) {
+    return (
+      <Modal isOpen={isOpen} onClose={onCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Connection Error</ModalHeader>
+          <ModalBody>
+            <Button variant="outline" w="full" onClick={() => walletRepo?.disconnect()}>
+              Go back
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  if (walletStatus === WalletStatus.NotExist) {
+    return (
+      <Modal isOpen={isOpen} onClose={onCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{walletRepo?.current?.walletPrettyName} not installed</ModalHeader>
+          <ModalBody>
+            <Stack spacing={6}>
+              <Text textStyle="body-xs">
+                If {walletRepo?.current?.walletPrettyName} is installed on your device, please refresh this page or
+                follow the browser instruction.
+              </Text>
+              <Stack>
+                <Link
+                  isExternal
+                  href={
+                    walletRepo?.current?.walletInfo.downloads?.find(
+                      (download) => download.device === walletRepo.env.device,
+                    )?.link
+                  }
+                >
+                  <Button w="full">Install</Button>
+                </Link>
+                <Button variant="outline" w="full" onClick={() => walletRepo?.disconnect()}>
+                  Go back
+                </Button>
+              </Stack>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  if (walletStatus === WalletStatus.Rejected) {
+    return (
+      <Modal isOpen={isOpen} onClose={onCloseModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Request Rejected</ModalHeader>
+
+          <ModalBody>
+            <Stack spacing="6">
+              <Text textAlign="center" textStyle="body-xs">
+                Connection permission was denied.
+              </Text>
+              <Button w="full" variant="outline" onClick={() => walletRepo?.disconnect()}>
+                Go back
+              </Button>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  return (
+    <Modal isOpen={isOpen} onClose={onCloseModal} size="xs">
       <ModalOverlay />
       <ModalContent>
-        {isConnecting ? (
-          <>
-            <ModalHeader textAlign="center">Connecting to wallet</ModalHeader>
-            <ModalBody>
-              <Center>
-                <Spinner />
-              </Center>
-            </ModalBody>
-          </>
-        ) : (
-          <>
-            <ModalHeader textAlign="center">Connect wallet</ModalHeader>
-            <ModalBody>
-              <Stack spacing={3}>
-                <WalletListItem
-                  handleClick={handleKeplrConnect}
-                  name="Keplr"
-                  icon="/images/keplr.png"
-                  isInstalled={isKeplrInstalled}
-                  walletInstallLink="https://www.keplr.app/download"
-                />
-                <WalletListItem
-                  handleClick={handleLeapConnect}
-                  name="Leap"
-                  icon="/images/leap.svg"
-                  isInstalled={isLeapInstalled}
-                  walletInstallLink="https://www.leapwallet.io/download"
-                />
-                <WalletListItem
-                  handleClick={handleXDEFIConnect}
-                  name="XDEFI"
-                  icon="/images/xdefi.png"
-                  isInstalled={isXDEFIInstalled}
-                  walletInstallLink="https://www.xdefi.io/"
-                />
-                <WalletListItem
-                  handleClick={handleLeapSnapConnect}
-                  name="Metamask (Leap Snap)"
-                  icon="/images/metamask.png"
-                  isInstalled={isLeapSnapInstalled}
-                  walletInstallLink="https://metamask.io/download/"
-                  walletInstallCallback={isMetamaskInstalled ? () => connectLeapSnap(chain) : undefined}
-                />
-                {/* {chain === Chains.Moonbeam && (
-                  <WalletListItem
-                    handleClick={handleMetamaskConnect}
-                    name="Metamask"
-                    icon="/images/metamask.png"
-                    isInstalled={isMetamaskInstalled}
-                    walletInstallLink="https://metamask.io/download/"
-                  />
-                )} */}
-
-                <Stack>
-                  <Button
-                    onClick={onToggle}
-                    variant="ghost"
-                    colorScheme="blue"
-                    rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}
-                  >
-                    What&apos;s a Wallet?
-                  </Button>
-                  <Collapse in={isOpen}>
-                    <Stack textStyle="body">
-                      <Text>
-                        A wallet or a cryptocurrency wallet stores your public and private keys while providing an
-                        easy-to-use interface to manage crypto balances.
-                      </Text>
-                      <Text>
-                        It is your tool for both authentications (no more username and password) as well as your ticket
-                        to access decentralised apps (like CALC). Each wallet has an address and that&apos;s how people
-                        send you money.
-                      </Text>
-                      <Text>
-                        You can connect your wallet to CALC to start using it. If you don&apos;t have a wallet yet, open
-                        one up and come back!
-                      </Text>
-                    </Stack>
-                  </Collapse>
-                </Stack>
-              </Stack>
-            </ModalBody>
-          </>
-        )}
+        <ModalHeader>Choose Wallet</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <SimpleGrid columns={2} gap={4}>
+            {walletRepo?.wallets.map((wallet) => (
+              <WalletListItem key={wallet.walletName} wallet={wallet} onConnect={onCloseModal} />
+            ))}
+          </SimpleGrid>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );
 }
 
-export default WalletModal;
+// const wallets = useMemo(
+//   () =>
+//     walletRepo?.isMobile && !includeAllWalletsOnMobile
+//       ? walletRepo?.wallets.filter((w) =>
+//           typeof w.walletInfo.mobileDisabled === 'boolean'
+//             ? !w.walletInfo.mobileDisabled
+//             : !w.walletInfo.mobileDisabled()
+//         )
+//       : walletRepo?.wallets,
+//   [walletRepo, includeAllWalletsOnMobile]
+// );
