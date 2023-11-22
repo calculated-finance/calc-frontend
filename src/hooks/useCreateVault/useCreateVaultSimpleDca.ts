@@ -17,10 +17,8 @@ export const useCreateVaultSimpleDcaIn = () => {
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
-
-  const track = useTrackCreateVault();
-
   const { prices } = useFiatPrices();
+  const track = useTrackCreateVault();
 
   return useMutation<
     Strategy['id'] | undefined,

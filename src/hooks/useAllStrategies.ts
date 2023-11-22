@@ -1,35 +1,45 @@
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
-import { useChain } from '@cosmos-kit/react';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { useChains } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainInfo } from '@helpers/chains';
+import { values } from 'rambda';
+import { ChainContext } from '@cosmos-kit/core';
+import { queryClient } from 'src/pages/queryClient';
 import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
-import { useChainId } from './useChainId';
 
 export default function useAllStrategies() {
-  const { chainId } = useChainId();
-  const chain = useChain(getChainInfo(chainId).chainName);
+  const chains = values(
+    useChains(
+      (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(
+        (chainId) => getChainInfo(chainId).chainName,
+      ),
+    ),
+  );
 
   return useQuery<Strategy[]>(
-    ['vaults', chainId],
+    ['all_vaults'],
     async () => {
-      const client = await chain.getCosmWasmClient();
+      const fetchAllStrategies = async (chain: ChainContext) => {
+        const client = await chain.getCosmWasmClient();
+        const calcClient = getCalcClient(
+          getChainContractAddress(chain.chain.chain_id as ChainId),
+          client,
+          chain.chain.chain_id as ChainId,
+        );
+        const allStrategies = (await calcClient.fetchAllStrategies()).map((strategy) =>
+          transformToStrategyCosmos(strategy),
+        );
+        queryClient.setQueryData(['vaults', chain.chain.chain_id], allStrategies);
+        return allStrategies;
+      };
 
-      const calcClient = getCalcClient(
-        getChainContractAddress(chain.chain.chain_id as ChainId),
-        client,
-        chain.chain.chain_id as ChainId,
-      );
-
-      const allStrategies = (await calcClient.fetchAllStrategies()).map((strategy) =>
-        transformToStrategyCosmos(strategy),
-      );
-
-      return allStrategies;
+      return (await Promise.all(chains.map(fetchAllStrategies))).flat();
     },
     {
-      enabled: !!chainId && !!chain,
+      enabled: !!chains,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,

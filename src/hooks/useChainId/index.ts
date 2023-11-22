@@ -16,7 +16,7 @@ type ChainState = {
 export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
-      chainId: 'kaiyo-1',
+      chainId: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 'kaiyo-1' : 'harpoon-4',
       setChain: (chain: ChainId) => set({ chainId: chain }),
     }),
     {
@@ -35,6 +35,7 @@ function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
   if (CHAINS.includes(chain as ChainId)) {
     return { chain: chain as ChainId };
   }
+
   const filteredChainName = CHAINS.find((c) => (chain as string).startsWith(c as string));
 
   if (filteredChainName) {

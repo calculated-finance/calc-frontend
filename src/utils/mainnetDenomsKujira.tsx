@@ -1,7 +1,7 @@
 import { MainnetDenoms } from '@models/Denom';
 import { DenomInfo } from './DenomInfo';
 
-export const mainnetDenoms: Record<MainnetDenoms, Partial<DenomInfo>> = {
+export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.ATOM]: {
     name: 'ATOM',
     icon: '/images/denoms/atom.svg',

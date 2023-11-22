@@ -3,7 +3,7 @@ import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { getExecutionInterval } from '../../useCreateVault/buildCreateVaultParams';
 import { ConfigureVariables } from '../ConfigureVariables';
 
-export function buildTimeInterval({ values, initialValues, context, strategy }: ConfigureVariables) {
+export function buildTimeInterval({ values, initialValues, strategy }: ConfigureVariables) {
   if (!isDcaPlus(strategy)) {
     const castedValues = values as CustomiseSchemaDca | CustomiseSchemaWeightedScale;
     const castedInvitialValues = initialValues as CustomiseSchemaDca | CustomiseSchemaWeightedScale;

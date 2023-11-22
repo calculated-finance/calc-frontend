@@ -20,16 +20,19 @@ import { ChainId } from '@hooks/useChainId/Chains';
 import { useRouter } from 'next/router';
 
 export function ChainCards({ onChainSelect }: { onChainSelect: (chain: ChainId) => void }) {
-  const chains = [
+  const mainnetChains = [
     { id: 'kaiyo-1', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg' },
     { id: 'osmosis-1', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg' },
+  ];
+
+  const testnetChains = [
     { id: 'harpoon-4', name: 'Kujira Testnet', imageSrc: '/images/denoms/kuji.svg' },
     { id: 'osmo-test-5', name: 'Osmosis testnet', imageSrc: '/images/denoms/osmo.svg' },
   ];
 
   return (
     <Wrap justify="center">
-      {chains.map((chain) => (
+      {[...mainnetChains, ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? [] : testnetChains)].map((chain) => (
         <WrapItem>
           <Flex
             alignItems="center"
@@ -80,8 +83,15 @@ const imageMap = {
 
 export function ChainSelection() {
   const { isOpen, onClose } = useDisclosure();
-  const { chainId: chain, setChain } = useChainId();
+  const { chainId, setChain } = useChainId();
   const router = useRouter();
+
+  const chains = [
+    { id: 'kaiyo-1', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: false },
+    { id: 'osmosis-1', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: false },
+    { id: 'harpoon-4', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: true },
+    { id: 'osmo-test-5', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: true },
+  ];
 
   const isChainSelectionAllowed = chainSelectionAllowedUrls.includes(router.pathname);
 
@@ -95,62 +105,31 @@ export function ChainSelection() {
           rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}
           isDisabled={!isChainSelectionAllowed}
         >
-          <Image src={imageMap[chain]} w={5} />
+          <Image src={imageMap[chainId]} w={5} />
         </MenuButton>
       </Tooltip>
       <MenuList fontSize="sm">
-        <MenuItemOption
-          _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === 'kaiyo-1'}
-          onClick={() => {
-            setChain('kaiyo-1');
-            onClose();
-          }}
-        >
-          <HStack>
-            <Image src="/images/denoms/kuji.svg" w={5} />
-            <Text>Kujira</Text>
-          </HStack>
-        </MenuItemOption>
-        <MenuItemOption
-          _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === 'osmosis-1'}
-          onClick={() => {
-            setChain('osmosis-1');
-            onClose();
-          }}
-        >
-          <HStack>
-            <Image src="/images/denoms/osmo.svg" w={5} />
-            <Text>Osmosis</Text>
-          </HStack>
-        </MenuItemOption>
-        <MenuItemOption
-          _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === 'harpoon-4'}
-          onClick={() => {
-            setChain('harpoon-4');
-            onClose();
-          }}
-        >
-          <HStack>
-            <Image src="/images/denoms/kuji.svg" w={5} />
-            <Text>Kujira (testnet)</Text>
-          </HStack>
-        </MenuItemOption>
-        <MenuItemOption
-          _checked={{ bg: 'blue.500', color: 'navy' }}
-          isChecked={chain === 'osmo-test-5'}
-          onClick={() => {
-            setChain('osmo-test-5');
-            onClose();
-          }}
-        >
-          <HStack>
-            <Image src="/images/denoms/osmo.svg" w={5} />
-            <Text>Osmosis (testnet)</Text>
-          </HStack>
-        </MenuItemOption>
+        {chains
+          .filter((chain) => !chain.isTestnet || process.env.NEXT_PUBLIC_APP_ENV !== 'production')
+          .map((chain) => (
+            <MenuItemOption
+              key={chain.id}
+              _checked={{ bg: 'blue.500', color: 'navy' }}
+              isChecked={chainId === chain.id}
+              onClick={() => {
+                setChain(chain.id as ChainId);
+                onClose();
+              }}
+            >
+              <HStack>
+                <Image src={chain.imageSrc} w={5} />
+                <Text>
+                  {chain.name}
+                  {chain.isTestnet ? ' (testnet)' : ''}
+                </Text>
+              </HStack>
+            </MenuItemOption>
+          ))}
       </MenuList>
     </Menu>
   );

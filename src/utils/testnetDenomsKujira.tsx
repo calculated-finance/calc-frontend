@@ -1,7 +1,7 @@
 import { TestnetDenoms } from '@models/Denom';
 import { DenomInfo } from './DenomInfo';
 
-export const testnetDenoms: Record<TestnetDenoms, Partial<DenomInfo>> = {
+export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
     stable: true,
@@ -23,6 +23,7 @@ export const testnetDenoms: Record<TestnetDenoms, Partial<DenomInfo>> = {
     icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
     stakeableAndSupported: true,
+    stakeable: true,
     significantFigures: 6,
     enabledInDcaPlus: true,
   },

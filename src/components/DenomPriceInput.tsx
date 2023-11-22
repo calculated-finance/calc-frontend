@@ -15,7 +15,6 @@ import usePrice from '@hooks/usePrice';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useChainId } from '@hooks/useChainId';
-import { ChainId } from '@hooks/useChainId/Chains';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getPairAddress } from 'src/fixtures/addresses';

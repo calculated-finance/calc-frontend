@@ -41,16 +41,14 @@ function AssetListLoader({ children }: ChildrenProp) {
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page);
-
   const { chainId } = useChainId();
+
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <>
       <Head>
-        <title>
-          {process.env.NODE_ENV !== 'production' ? `(${process.env.NODE_ENV}) ` : ''}CALC - Calculated Finance
-        </title>
+        <title>CALC - Calculated Finance</title>
       </Head>
       <ChakraProvider theme={theme}>
         <Sentry.ErrorBoundary

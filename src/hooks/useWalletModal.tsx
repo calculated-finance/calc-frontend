@@ -1,38 +1,32 @@
-// import { createContext, useContext } from 'react';
-// import { useCosmosKit } from './useCosmosKit';
-// import { useChainId } from './useChainId';
+import { createContext } from 'react';
+import { useCosmosKit } from './useCosmosKit';
+import { useChainId } from './useChainId';
 
-// export interface CalcWalletModalContextState {
-//   visible: boolean;
-//   setVisible: (open: boolean) => void;
-// }
+export interface CalcWalletModalContextState {
+  visible: boolean;
+  setVisible: (open: boolean) => void;
+}
 
-// const DEFAULT_CONTEXT = {
-//   setVisible() {
-//     // console.error(constructMissingProviderErrorMessage('call', 'setVisible'));
-//   },
-//   visible: false,
-// };
-// Object.defineProperty(DEFAULT_CONTEXT, 'visible', {
-//   get() {
-//     // console.error(constructMissingProviderErrorMessage('read', 'visible'));
-//     return false;
-//   },
-// });
+const DEFAULT_CONTEXT = {
+  setVisible() {},
+  visible: false,
+};
+Object.defineProperty(DEFAULT_CONTEXT, 'visible', {
+  get() {
+    return false;
+  },
+});
 
-// export const CalcWalletModalContext = createContext<CalcWalletModalContextState>(
-//   DEFAULT_CONTEXT as CalcWalletModalContextState,
-// );
+export const CalcWalletModalContext = createContext<CalcWalletModalContextState>(
+  DEFAULT_CONTEXT as CalcWalletModalContextState,
+);
 
-// export function useWalletModal(): CalcWalletModalContextState {
-//   const context = useContext(CalcWalletModalContext);
-//   const { chainId: chain } = useChainId();
-//   const cosmoskit = useCosmosKit(chain);
+export function useWalletModal(): CalcWalletModalContextState {
+  const { chainId } = useChainId();
+  const { openView, closeView } = useCosmosKit(chainId);
 
-//   return cosmoskit
-//     ? {
-//         setVisible: cosmoskit.openView,
-//         visible: false,
-//       }
-//     : context;
-// }
+  return {
+    setVisible: (value) => (value ? openView() : closeView()),
+    visible: false,
+  };
+}

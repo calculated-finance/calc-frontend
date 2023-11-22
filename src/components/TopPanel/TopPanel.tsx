@@ -5,12 +5,12 @@ import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/in
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
-import { useCosmosKit } from '@hooks/useCosmosKit';
 
 function Onboarding() {
   return (
@@ -184,14 +184,14 @@ function ActiveWithMany() {
 }
 
 export default function TopPanel() {
-  const { isWalletConnected } = useCosmosKit();
+  const { connected } = useWallet();
 
   const { data, isLoading } = useStrategies();
   const activeStrategies = data?.filter(isStrategyOperating) ?? [];
   const completedStrategies = data?.filter((strategy: Strategy) => !isStrategyOperating(strategy)) ?? [];
 
   const getConfig = () => {
-    if (isWalletConnected && isLoading) {
+    if (connected && isLoading) {
       return {
         background: '/images/backgrounds/twist-thin.svg',
         border: 'transparent',
@@ -199,7 +199,7 @@ export default function TopPanel() {
       };
     }
 
-    if (!activeStrategies.length || !isWalletConnected) {
+    if (!activeStrategies.length || !connected) {
       return {
         background: '/images/backgrounds/twist-thin-blue.svg',
         border: 'transparent',
@@ -248,7 +248,7 @@ export default function TopPanel() {
       colSpan={colSpan}
       minHeight={222}
     >
-      {isWalletConnected && isLoading ? (
+      {connected && isLoading ? (
         <Center h="full">
           <Spinner />
         </Center>

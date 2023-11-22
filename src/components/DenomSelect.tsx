@@ -2,8 +2,7 @@ import { Flex, HStack, Spacer, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { OptionProps, chakraComponents } from 'chakra-react-select';
 import { DenomInfo } from '@utils/DenomInfo';
-import { featureFlags } from 'src/constants';
-import Select, { OptionTypeDenomSelect, SelectDenomWithSearch, SelectProps } from './Select';
+import { OptionTypeDenomSelect, SelectDenomWithSearch, SelectProps } from './Select';
 
 function DenomSelectLabel({ denom }: { denom: DenomInfo }) {
   const { name } = denom;

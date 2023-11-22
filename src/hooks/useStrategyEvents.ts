@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '../models/Strategy';
-import { useChainId } from './useChainId';
 import { StrategyEvent } from './StrategyEvent';
 import { useCalcClient } from './useCalcClient';
 

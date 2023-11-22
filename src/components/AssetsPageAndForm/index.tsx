@@ -16,8 +16,8 @@ import { getSteps } from '@helpers/assets-page/getSteps';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { useRouter } from 'next/router';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
-import { AssetsForm } from './AssetsForm';
 import { useCosmosKit } from '@hooks/useCosmosKit';
+import { AssetsForm } from './AssetsForm';
 
 const strategyTypesToFormTypes = {
   [StrategyTypes.SimpleDCAIn]: FormNames.SimpleDcaIn,

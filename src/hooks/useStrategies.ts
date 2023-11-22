@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
-import { queryClient } from '@helpers/test/testQueryClient';
+import { queryClient } from 'src/pages/queryClient';
 import { Strategy } from '../models/Strategy';
 import { useCalcClient } from './useCalcClient';
 import { useChainId } from './useChainId';

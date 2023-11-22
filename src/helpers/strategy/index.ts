@@ -5,7 +5,7 @@ import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDen
 import totalExecutions from '@utils/totalExecutions';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
-import { V2Pair, V3Pair } from '@models/Pair';
+import { V3Pair } from '@models/Pair';
 import {
   DAYS_IN_A_WEEK,
   DELEGATION_FEE,
@@ -198,7 +198,7 @@ export function getStrategyPriceTrigger(strategy: Strategy) {
   return undefined;
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function getTargetPrice(strategy: Strategy, pairs: V3Pair[] | undefined) {
   let target_price;
 
   if (getStrategyPriceTrigger(strategy)) {
@@ -220,7 +220,7 @@ export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | 
   return null;
 }
 
-export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function getStrategyStartDate(strategy: Strategy, pairs: V3Pair[] | undefined) {
   const { trigger } = strategy.rawData;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)

@@ -40,7 +40,7 @@ export function ChainProvider({ children }: ChildrenProp) {
       )}
       signerOptions={signerOptions}
       endpointOptions={{
-        isLazy: !(process.env.NODE_ENV === 'production'),
+        isLazy: !(process.env.NEXT_PUBLIC_APP_ENV === 'production'),
         endpoints: {
           kujira: {
             rpc: ['https://kujira-rpc.nodes.defiantlabs.net', 'https://rpc-kujira.mintthemoon.xyz'],

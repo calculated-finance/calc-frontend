@@ -6,7 +6,7 @@ module.exports = {
   reactStrictMode: false,
   trailingSlash: true,
   productionBrowserSourceMaps: true,
-  redirects: [
+  redirects: () => [
     {
       source: '/create-strategy/dca-in/',
       destination: '/create-strategy/dca-in/assets',

@@ -16,7 +16,6 @@ import {
 import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
-import { useChainId } from '@hooks/useChainId';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,

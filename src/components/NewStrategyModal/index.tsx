@@ -29,13 +29,13 @@ import { useRouter } from 'next/router';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import broadcast from 'src/animations/broadcast.json';
 import Lottie from 'lottie-react';
+import { useWallet } from '@hooks/useWallet';
 import { findStep } from '@helpers/findStep';
 import { StepConfig } from '@formConfig/StepConfig';
 import { Url, UrlObject } from 'url';
 import { isStepOne } from '@helpers/isStepOne';
 import { routerPush } from '@helpers/routerPush';
 import Stepper from './Stepper';
-import { useCosmosKit } from '@hooks/useCosmosKit';
 
 export default function NewStrategyModal({ children }: ChildrenProp) {
   return (
@@ -80,12 +80,11 @@ export function NewStrategyModalBody({
   const router = useRouter();
   const step = findStep(router.pathname, stepsConfig);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
-      <Box position="relative" w="full" h="full">
+      <Box position="relative" w="full">
         {isLoading ? (
-          <Center>
+          <Center w="full" h="full" minW={400} minH={450}>
             <Spinner />
           </Center>
         ) : (
@@ -145,7 +144,7 @@ export function NewStrategyModalHeader({
 }) {
   const router = useRouter();
   const { currentStep, hasPreviousStep, previousStep, hasNextStep } = useSteps(stepsConfig);
-  const { isWalletConnected } = useCosmosKit();
+  const { connected } = useWallet();
 
   const handleCancel = async () => {
     routerPush(router, cancelUrl);
@@ -174,7 +173,7 @@ export function NewStrategyModalHeader({
             onClick={previousStep}
           />
         )}
-        <Heading size="sm">{!isWalletConnected && !isStepOne(router.pathname) && 'No wallet connected'}</Heading>
+        <Heading size="sm">{!connected && !isStepOne(router.pathname) && 'No wallet connected'}</Heading>
         <Heading size="sm">{currentStep?.title}</Heading>
       </Stack>
       <Spacer />

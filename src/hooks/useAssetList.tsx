@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { Asset, AssetList } from '@chain-registry/types';
+import { Asset } from '@chain-registry/types';
 import { useQuery } from '@tanstack/react-query';
 import { reduce } from 'rambda';
 import { useChainId } from './useChainId';

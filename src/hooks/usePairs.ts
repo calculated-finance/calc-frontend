@@ -1,6 +1,6 @@
 import { filter } from 'rambda';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { V2Pair, V3Pair } from '@models/Pair';
+import { V3Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -37,41 +37,31 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
   });
 }
 
-export function uniqueQuoteDenoms(pairs: V2Pair[] | V3Pair[] | undefined) {
+export function uniqueQuoteDenoms(pairs: V3Pair[] | undefined) {
   return Array.from(new Set(pairs?.map(getQuoteDenom)));
 }
 
-export function uniqueBaseDenoms(pairs: V2Pair[] | V3Pair[] | undefined) {
+export function uniqueBaseDenoms(pairs: V3Pair[] | undefined) {
   return Array.from(new Set(pairs?.map(getBaseDenom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: V3Pair[] | undefined) {
   return Array.from(
-    new Set(
-      filter(
-        (pair: V2Pair | V3Pair) => getQuoteDenom(pair) === initialDenom.id,
-        (pairs as V3Pair[]) ?? (pairs as V3Pair[]),
-      ).map(getBaseDenom),
-    ),
+    new Set(filter((pair: V3Pair) => getQuoteDenom(pair) === initialDenom.id, pairs ?? []).map(getBaseDenom)),
   );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: V3Pair[] | undefined) {
   return Array.from(
-    new Set(
-      filter(
-        (pair: V2Pair | V3Pair) => getBaseDenom(pair) === resultingDenom.id,
-        (pairs as V3Pair[]) ?? (pairs as V3Pair[]),
-      ).map(getQuoteDenom),
-    ),
+    new Set(filter((pair: V3Pair) => getBaseDenom(pair) === resultingDenom.id, pairs ?? []).map(getQuoteDenom)),
   );
 }
 
-export function allDenomsFromPairs(pairs: V2Pair[] | V3Pair[] | undefined) {
+export function allDenomsFromPairs(pairs: V3Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => getQuoteDenom(pair)).concat(pairs?.map(getBaseDenom))));
 }
 
-export function getResultingDenoms(pairs: V2Pair[] | V3Pair[], initialDenom: DenomInfo) {
+export function getResultingDenoms(pairs: V3Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([

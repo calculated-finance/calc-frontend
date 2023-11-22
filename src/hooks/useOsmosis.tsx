@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import * as Sentry from '@sentry/react';
 import { osmosis } from 'osmojs';
 import { getChainEndpoint } from '@helpers/chains';
-import { ChainId } from './useChainId/Chains';
 
 type IUseOsmosis = {
   query: any | null;

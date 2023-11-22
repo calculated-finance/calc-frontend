@@ -14,10 +14,10 @@ import {
   StrategyAccordionPanel,
   StrategyAccordion,
 } from '@components/StrategyAccordion';
-import useAllStrategies from '@hooks/useAllStrategies';
+import useChainStrategies from '@hooks/useChainStrategies';
 
 function Page() {
-  const { data, isLoading } = useAllStrategies();
+  const { strategies, isLoading } = useChainStrategies();
   const { isAdmin } = useAdmin();
   const { connected } = useWallet();
 
@@ -34,10 +34,10 @@ function Page() {
     );
   }
 
-  const scheduledStrategies = data?.filter(isStrategyScheduled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-  const activeStrategies = data?.filter(isStrategyActive) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-  const completedStrategies = data?.filter(isStrategyCompleted) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
-  const cancelledStrategies = data?.filter(isStrategyCancelled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const scheduledStrategies = strategies?.filter(isStrategyScheduled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies = strategies?.filter(isStrategyActive) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const completedStrategies = strategies?.filter(isStrategyCompleted) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const cancelledStrategies = strategies?.filter(isStrategyCancelled) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
 
   return (
     <Stack spacing={8}>

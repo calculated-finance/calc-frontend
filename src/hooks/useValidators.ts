@@ -9,7 +9,7 @@ const useValidators = () => {
 
   const { data, ...other } = useQuery<{ validators: Validator[] }>(
     ['validators', chain],
-    () => chainClient!.fetchValidators(),
+    () => chainClient!.fetchValidators() ?? { validators: [] },
     {
       enabled: !!chain && !!chainClient,
       meta: {

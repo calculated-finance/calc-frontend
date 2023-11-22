@@ -5,7 +5,7 @@ import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
-import useAllMainnetStrategies from '@hooks/useAllMainnetStrategies';
+import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
@@ -18,7 +18,6 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { ChainId } from '@hooks/useChainId/Chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -46,13 +45,10 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
 }
 
 function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
-  return (
-    strategies
-      .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
-      // .map((strategy) => strategy.rawData.swapped_amount.amount)
-      .reduce((total, strategy) => total + Number(strategy.rawData.swapped_amount.amount), 0)
-      .toFixed(6)
-  );
+  return strategies
+    .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
+    .reduce((total, strategy) => total + Number(strategy.rawData.swapped_amount.amount), 0)
+    .toFixed(6);
 }
 
 export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
@@ -70,8 +66,7 @@ export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomIn
 function getTotalReceivedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
     .filter((strategy) => strategy.rawData.received_amount.denom === denom.id)
-    .map((strategy) => strategy.rawData.received_amount.amount)
-    .reduce((total, amount) => total + Number(amount), 0)
+    .reduce((total, strategy) => total + Number(strategy.rawData.received_amount.amount), 0)
     .toFixed(6);
 }
 
@@ -106,12 +101,7 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(
-  coins: Coin[] | undefined,
-  fiatPrices: any,
-  supportedDenoms: DenomInfo[],
-  injectedChain?: ChainId,
-) {
+export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: DenomInfo[]) {
   return (
     coins
       ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
@@ -299,7 +289,7 @@ function Page() {
   const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
-  const { data: allStrategies } = useAllMainnetStrategies();
+  const { data: allStrategies } = useAllStrategies();
 
   const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 

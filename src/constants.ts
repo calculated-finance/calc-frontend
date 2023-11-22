@@ -1,13 +1,4 @@
 import { ChainId } from '@hooks/useChainId/Chains';
-import { NETWORK } from 'kujira.js';
-
-export const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK;
-
-export const CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7';
-
-export const FEE_TAKER_ADDRESS =
-  process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
 
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
@@ -73,7 +64,7 @@ export const ETH_TRIGGER_MANAGER_CONTRACT_ADDRESS = '0x0451ABE786ADDce2C62393127
 export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3f6147cC';
 
 export const featureFlags =
-  CHAIN_ID === 'kaiyo-1'
+  process.env.NEXT_PUBLIC_APP_ENV === 'production'
     ? {
         cosmoskitEnabled: true,
         stationEnabled: false,
@@ -90,8 +81,6 @@ export const featureFlags =
         controlDeskEnabled: true,
         singleAssetsEnabled: true,
       };
-
-export const DEFAULT_PAGE_SIZE = 1000;
 
 export const contentData = {
   dcaIn: {

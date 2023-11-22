@@ -1,24 +1,20 @@
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { getChainEndpoint, getGasPrice } from '@helpers/chains';
 import { useCosmosKit } from './useCosmosKit';
 import { useChainId } from './useChainId';
-
-export enum WalletTypes {
-  KEPLR = 'Keplr',
-  STATION = 'Station',
-  LEAP = 'Leap',
-  METAMASK_SNAP = 'Metamask Snap',
-  XDEFI = 'XDEFI',
-  METAMASK = 'Metamask',
-}
 
 export function useWallet() {
   const { chainId } = useChainId();
   const cosmosKit = useCosmosKit(chainId);
 
-  if (cosmosKit && cosmosKit.isWalletConnected) {
+  if (chainId && cosmosKit && cosmosKit.isWalletConnected) {
     return {
       address: cosmosKit.address,
       connected: cosmosKit.isWalletConnected,
-      getSigningClient: cosmosKit.getSigningCosmWasmClient,
+      getSigningClient: async () =>
+        SigningCosmWasmClient.connectWithSigner(getChainEndpoint(chainId), cosmosKit.getOfflineSignerDirect(), {
+          gasPrice: getGasPrice(chainId),
+        }),
       disconnect: cosmosKit.disconnect,
       walletType: cosmosKit.wallet?.prettyName,
       isConnecting: cosmosKit.isWalletConnecting,

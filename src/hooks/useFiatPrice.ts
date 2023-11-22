@@ -1,8 +1,5 @@
-import 'isomorphic-fetch';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useSupportedDenoms } from './useSupportedDenoms';
 import useFiatPrices from './useFiatPrices';
-import { useChainId } from './useChainId';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -10,20 +7,16 @@ export type FiatPriceResponse = {
   };
 };
 
-const useFiatPrice = (denom: DenomInfo | undefined, injectedSupportedDenoms?: DenomInfo[]) => {
-  const fetchedSupportedDenoms = useSupportedDenoms();
+const FIAT_CURRENCY_ID = 'usd';
+const PRICE_CHANGE_KEY = 'usd_24h_change';
 
-  const fiatCurrencyId = 'usd';
-  const priceChange = 'usd_24h_change';
-
-  const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
-
-  const { prices, ...other } = useFiatPrices(supportedDenoms);
+const useFiatPrice = (denom: DenomInfo | undefined) => {
+  const { prices, ...other } = useFiatPrices();
 
   return {
-    price: denom && prices?.[denom.coingeckoId]?.[fiatCurrencyId],
+    price: denom && prices?.[denom.coingeckoId]?.[FIAT_CURRENCY_ID],
     data: prices,
-    priceChange24Hr: denom && prices?.[denom.coingeckoId]?.[priceChange],
+    priceChange24Hr: denom && prices?.[denom.coingeckoId]?.[PRICE_CHANGE_KEY],
     ...other,
   };
 };

@@ -2,8 +2,7 @@ import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
 import { ChainId } from '@hooks/useChainId/Chains';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import { Destination, LockableDuration } from 'src/interfaces/generated-osmosis/execute';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 
 export function getStrategyPostSwapDetails(strategy: Strategy) {
   const { destinations } = strategy.rawData;

@@ -1,19 +1,25 @@
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
 import { V3Pair } from '@models/Pair';
-import { useChains, useWalletClient } from '@cosmos-kit/react';
+import { useChains } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainInfo } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
 import { useQuery } from '@tanstack/react-query';
 import { queryClient } from 'src/pages/queryClient';
-import { MAINNET_CHAINS } from 'src/constants';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { values } from 'rambda';
 import { allDenomsFromPairs } from './usePairs';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
 
 export function useSupportedDenoms() {
-  const allChainContexts = values(useChains(MAINNET_CHAINS.map((chainId) => getChainInfo(chainId).chainName)));
+  const allChainContexts = values(
+    useChains(
+      (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(
+        (chainId) => getChainInfo(chainId).chainName,
+      ),
+    ),
+  );
 
   const fetchPairs = async (chainContext: ChainContext) => {
     const client = await chainContext.getCosmWasmClient();

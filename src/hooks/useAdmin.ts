@@ -2,7 +2,7 @@
 
 import { isNil } from 'lodash';
 import { useRouter } from 'next/router';
-import { useCosmosKit } from './useCosmosKit';
+import { useWallet } from './useWallet';
 
 const admins = [
   'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt', // d
@@ -29,7 +29,7 @@ export function isAddressAdmin(address: string | undefined | null) {
 const adminPages = ['/admin', '/stats-and-totals', '/experimental-features'];
 
 export function useAdmin() {
-  const { address } = useCosmosKit();
+  const { address } = useWallet();
   const router = useRouter();
   return {
     isAdmin: isAddressAdmin(address),

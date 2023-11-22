@@ -2,9 +2,8 @@ import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
-import { DenomInfo } from '@utils/DenomInfo';
+import { reduce } from 'rambda';
 import { useSupportedDenoms } from './useSupportedDenoms';
-import { useChainId } from './useChainId';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -12,26 +11,37 @@ export type FiatPriceResponse = {
   };
 };
 
-const useFiatPrices = (injectedSupportedDenoms?: DenomInfo[]) => {
-  const fetchedSupportedDenoms = useSupportedDenoms();
+const FIAT_CURRENCY_ID = 'usd';
 
-  const fiatCurrencyId = 'usd';
-
-  const supportedDenoms = injectedSupportedDenoms ?? fetchedSupportedDenoms;
+const useFiatPrices = () => {
+  const supportedDenoms = useSupportedDenoms();
 
   const { data, ...other } = useQuery<FiatPriceResponse>(
     ['fiat-price', supportedDenoms],
     async () => {
-      if (process.env.NODE_ENV !== 'production') throw new Error('Avoid fetching fiat prices in development');
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
+
+      if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
+        return reduce(
+          (acc: Record<string, any>, id: string) => ({
+            ...acc,
+            [id]: { usd: Math.random(), usd_24h_change: Math.random() },
+          }),
+          {},
+          coingeckoIds,
+        );
+      }
+
       const formattedIds = coingeckoIds.join(',');
-      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${fiatCurrencyId}&include_24hr_change=true`;
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true`;
       const response = await fetch(url);
+
       if (!response.ok) {
         const error = await response.json();
         Sentry.captureException(error.error);
         throw new Error('Failed to fetch fiat prices');
       }
+
       return response.json();
     },
     {

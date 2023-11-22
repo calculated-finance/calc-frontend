@@ -29,7 +29,6 @@ import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
 import { ControlDeskLinkItems, LinkItem, LinkItems } from './Sidebar/LinkItems';
 import { Pages } from './Sidebar/Pages';
-import { useCosmosKit } from '@hooks/useCosmosKit';
 
 const HEADER_HEIGHT = '64px';
 
@@ -113,8 +112,8 @@ function FlowBreadcrumbs() {
 }
 
 function FlowLayout({ children }: { children: ReactElement }) {
-  const { address } = useCosmosKit();
-  const { chainId } = useChainId();
+  const { address } = useWallet();
+  const { chainId: chain } = useChainId();
 
   const router = useRouter();
   const { pathname } = router;
@@ -126,12 +125,12 @@ function FlowLayout({ children }: { children: ReactElement }) {
       <AppHeader />
       <Content
         bgImage={
-          ['osmosis-1', 'osmo-test-5'].includes(chainId)
+          ['osmosis-1', 'osmo-test-5'].includes(chain)
             ? '/images/backgrounds/osmoBackground.svg'
             : '/images/backgrounds/twist.svg'
         }
         backgroundPosition="bottom"
-        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chainId) ? 'cover' : 'center'}
+        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chain) ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
         minH="100vh"
         backgroundAttachment="fixed"
@@ -160,7 +159,7 @@ export function getFlowLayout(page: ReactElement) {
 
 function SidebarLayout({ children, linkItems }: { children: ReactElement; linkItems: LinkItem[] }) {
   const { isPageLoading } = usePageLoad();
-  const { isWalletConnected } = useCosmosKit();
+  const { connected } = useWallet();
 
   //  create date one year from now
   const oneYearFromNow = new Date();
@@ -175,10 +174,10 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
-    if (!agreementPreviouslyAccepted && isWalletConnected) {
+    if (!agreementPreviouslyAccepted && connected) {
       onOpen();
     }
-  }, [agreementPreviouslyAccepted, onOpen, isWalletConnected]);
+  }, [agreementPreviouslyAccepted, onOpen, connected]);
 
   const onSubmit = () => {
     setAcceptedAgreementState('true');

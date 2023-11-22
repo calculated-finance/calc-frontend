@@ -11,7 +11,6 @@ export type StrategyInfo = {
   formName: FormNames;
 };
 
-
 type StrategyInfoStore = {
   strategyInfo: StrategyInfo | null;
   setStrategyInfo: (strategyInfo: StrategyInfo) => void;
@@ -23,7 +22,7 @@ export const useStrategyInfoStore = create<StrategyInfoStore>()((set) => ({
 }));
 
 export function useStrategyInfo() {
-  const strategyInfo = useStrategyInfoStore(state => state.strategyInfo);
+  const strategyInfo = useStrategyInfoStore((state) => state.strategyInfo);
 
   if (!strategyInfo) {
     throw new Error('Strategy info must be set before accessing it.');
@@ -33,8 +32,8 @@ export function useStrategyInfo() {
 }
 
 export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo: StrategyInfo } & ChildrenProp) {
-  const setStrategyInfo = useStrategyInfoStore(state => state.setStrategyInfo);
-  const strategyInfoState = useStrategyInfoStore(state => state.strategyInfo);
+  const setStrategyInfo = useStrategyInfoStore((state) => state.setStrategyInfo);
+  const strategyInfoState = useStrategyInfoStore((state) => state.strategyInfo);
 
   useEffect(() => {
     setStrategyInfo(strategyInfo);
@@ -44,5 +43,3 @@ export function StrategyInfoProvider({ strategyInfo, children }: { strategyInfo:
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return strategyInfoState ? <>{children}</> : null;
 }
-
-

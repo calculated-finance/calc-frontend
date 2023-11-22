@@ -5,9 +5,9 @@ import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
 import { DenomInfo } from './DenomInfo';
 import { defaultDenom } from './defaultDenom';
-import { mainnetDenoms } from './mainnetDenomsKujira';
+import { mainnetDenomsKujira } from './mainnetDenomsKujira';
 import { mainnetDenomsOsmosis } from './mainnetDenomsOsmosis';
-import { testnetDenoms } from './testnetDenomsKujira';
+import { testnetDenomsKujira } from './testnetDenomsKujira';
 import { testnetDenomsOsmosis } from './testnetDenomsOsmosis';
 
 function isDenomInStablesList(denom: Denom) {
@@ -66,9 +66,8 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
-  const denoms = { ...mainnetDenoms, ...testnetDenoms };
-
-  const kujiraAsset = denoms[denom as MainnetDenoms | TestnetDenoms];
+  const kujiraDenoms = { ...mainnetDenomsKujira, ...testnetDenomsKujira };
+  const kujiraAsset = kujiraDenoms[denom as MainnetDenoms | TestnetDenoms];
 
   if (kujiraAsset) {
     return {
@@ -94,11 +93,15 @@ export function convertDenomFromCoin(coin: Coin | undefined) {
   if (!coin) {
     return 0;
   }
+
   const denomInfo = getDenomInfo(coin.denom);
+
   if (!denomInfo) {
     return 0;
   }
+
   const { significantFigures, conversion } = denomInfo;
+
   return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
 }
 
@@ -112,7 +115,6 @@ export class DenomValue {
   readonly amount: number;
 
   constructor(denomAmount: Coin) {
-    // make this not option and handle code when loading
     this.denomId = denomAmount?.denom || '';
     this.amount = Number(denomAmount?.amount || 0);
   }
@@ -129,6 +131,7 @@ export class DenomValue {
 export function isDenomStable(denom: DenomInfo | undefined) {
   return denom?.stable;
 }
+
 export function isDenomVolatile(denom: DenomInfo | undefined) {
   return !isDenomStable(denom);
 }
