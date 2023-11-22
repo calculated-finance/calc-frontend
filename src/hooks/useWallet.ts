@@ -12,9 +12,13 @@ export function useWallet() {
       address: cosmosKit.address,
       connected: cosmosKit.isWalletConnected,
       getSigningClient: async () =>
-        SigningCosmWasmClient.connectWithSigner(getChainEndpoint(chainId), cosmosKit.getOfflineSignerDirect(), {
-          gasPrice: getGasPrice(chainId),
-        }),
+        SigningCosmWasmClient.connectWithSigner(
+          await cosmosKit.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
+          cosmosKit.getOfflineSignerDirect(),
+          {
+            gasPrice: getGasPrice(chainId),
+          },
+        ),
       disconnect: cosmosKit.disconnect,
       walletType: cosmosKit.wallet?.prettyName,
       isConnecting: cosmosKit.isWalletConnecting,

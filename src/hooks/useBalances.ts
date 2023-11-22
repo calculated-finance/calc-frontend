@@ -12,7 +12,7 @@ const useBalances = (injectedAddress: string | null = null) => {
   const supportedDenoms = useSupportedDenoms();
 
   return useQueryWithNotification(
-    ['balances', address, client, supportedDenoms],
+    ['balances', chainId, address, client, supportedDenoms],
     async () =>
       client!.fetchBalances(
         address!,
