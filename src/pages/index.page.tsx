@@ -80,7 +80,6 @@ function InvestmentThesisWithActiveStrategies({
             <Icon as={CrownIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
             <Heading size="md">My investment thesis:</Heading>
           </HStack>
-
           <Flex direction="row" gap={8}>
             <Stack direction="column">
               <Heading size="xs" textColor="gray.200">
@@ -88,7 +87,6 @@ function InvestmentThesisWithActiveStrategies({
               </Heading>
               <Heading size="2xl"> {activeStrategies.length}</Heading>
             </Stack>
-
             <Stack spacing={6}>
               <Wrap spacingX={6} spacingY={2} align="center">
                 <Text>Asset(s) accumulating:</Text>
@@ -102,7 +100,6 @@ function InvestmentThesisWithActiveStrategies({
                   )}
                 </HStack>
               </Wrap>
-
               <Wrap spacingX={6} spacingY={2} align="center">
                 <Text>Asset(s) taking profit on:</Text>
                 <HStack>

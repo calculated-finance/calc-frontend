@@ -16,6 +16,7 @@ import { queryClient } from './queryClient';
 import { LoadingState } from './LoadingState';
 import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
+import { InitWrapper } from './InitWrapper';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -25,11 +26,11 @@ Sentry.init({
   dsn: 'https://c9fd7738c4244fbba9ece76de612785b@o4505139619364864.ingest.sentry.io/4505140076281856',
   integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
   // Performance Monitoring
-  tracesSampleRate: 0.0, // Capture 100% of the transactions, reduce in production!
+  tracesSampleRate: 0.1, // Capture 100% of the transactions, reduce in production!
   // Session Replay
   replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
   replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-  environment: 'production',
+  environment: process.env.NODE_ENV,
   enabled: true,
 });
 
@@ -64,14 +65,16 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             </Center>
           }
         >
-          <ChainProvider>
-            <QueryClientProvider client={queryClient}>
-              <AssetListWrapper>
-                <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-              </AssetListWrapper>
-            </QueryClientProvider>
-            <ToastContainer />
-          </ChainProvider>
+          <InitWrapper>
+            <ChainProvider>
+              <QueryClientProvider client={queryClient}>
+                <AssetListWrapper>
+                  <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                </AssetListWrapper>
+              </QueryClientProvider>
+              <ToastContainer />
+            </ChainProvider>
+          </InitWrapper>
         </Sentry.ErrorBoundary>
       </ChakraProvider>
     </>
