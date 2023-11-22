@@ -6,10 +6,11 @@ import { useChainClient } from './useChainClient';
 
 const useBalances = (injectedAddress: string | null = null) => {
   const { address: walletAddress } = useWallet();
-  const address = injectedAddress ?? walletAddress;
   const { chainId } = useChainId();
   const client = useChainClient(chainId);
   const supportedDenoms = useSupportedDenoms();
+
+  const address = injectedAddress ?? walletAddress;
 
   return useQueryWithNotification(
     ['balances', chainId, address, client, supportedDenoms],
