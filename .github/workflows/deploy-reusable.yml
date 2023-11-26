@@ -64,7 +64,7 @@ jobs:
           role-duration-seconds: 1200
 
       - name: Build App
-        run: yarn build
+        run: yarn build:${{ inputs.ENVIRONMENT }}
 
       - name: Export App
         run: yarn export

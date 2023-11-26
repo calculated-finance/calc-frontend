@@ -6,7 +6,7 @@
     "dev": "next dev",
     "dev:prod": "dotenv -e ./.env.production -- next dev",
     "build:test": "dotenv -e ./.env.test -- next build",
-    "build": "dotenv -e ./.env.production -- next build",
+    "build:production": "dotenv -e ./.env.production -- next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
