@@ -90,21 +90,13 @@ export function SpendableBalances() {
           <Divider />
         </GridItem>
       </Grid>
-      {isAdmin ? (
-        <Stack overflow="auto" maxH={220}>
-          <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
-            {(balances as Coin[])?.map((balance: Coin) => (
-              <CoinBalance balance={balance} key={balance.denom} />
-            ))}
-          </Grid>
-        </Stack>
-      ) : (
+      <Stack overflow="auto" maxH={220}>
         <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
           {(balances as Coin[])?.map((balance: Coin) => (
             <CoinBalance balance={balance} key={balance.denom} />
           ))}
         </Grid>
-      )}
+      </Stack>
     </>
   );
 }

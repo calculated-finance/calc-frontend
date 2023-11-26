@@ -13,8 +13,8 @@ const useBalances = (injectedAddress: string | null = null) => {
   const address = injectedAddress ?? walletAddress;
 
   return useQueryWithNotification(
-    ['balances', chainId, address, client, supportedDenoms],
-    async () =>
+    ['balances', chainId, address],
+    () =>
       client!.fetchBalances(
         address!,
         supportedDenoms.map((sd) => sd.id),

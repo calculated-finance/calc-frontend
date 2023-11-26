@@ -16,13 +16,13 @@ import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 export function useCustomiseStrategy() {
   const { address, getSigningClient } = useWallet();
   const { track } = useAnalytics();
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
   const queryClient = useQueryClient();
 
   const { data: signingClient } = useQuery<SigningCosmWasmClient>(
-    ['signingCosmWasmClient', chain],
+    ['signingCosmWasmClient', chainId],
     async () => {
-      const client = await getSigningClient!();
+      const client = await getSigningClient!(chainId);
 
       if (!client) {
         throw new Error('No signing client');
@@ -31,7 +31,7 @@ export function useCustomiseStrategy() {
       return client;
     },
     {
-      enabled: !!chain && !!getSigningClient,
+      enabled: !!chainId && !!getSigningClient,
     },
   );
 
@@ -45,7 +45,7 @@ export function useCustomiseStrategy() {
         throw new Error('client is null or empty');
       }
 
-      if (isNil(chain)) {
+      if (isNil(chainId)) {
         throw new Error('chain is null or empty');
       }
 
@@ -56,7 +56,7 @@ export function useCustomiseStrategy() {
       const msgs: EncodeObject[] = [];
 
       const updateVaultMsg = getUpdateVaultMessage(variables);
-      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
+      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId)));
 
       return signingClient.signAndBroadcast(address, msgs, 'auto');
     },
@@ -66,7 +66,7 @@ export function useCustomiseStrategy() {
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, variables.strategy.id] });
       },
       onError: (error, { values }) => {
-        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
+        Sentry.captureException(error, { tags: { chain: chainId, values: JSON.stringify(values) } });
       },
     },
   );

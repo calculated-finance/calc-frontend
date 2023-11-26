@@ -12,9 +12,9 @@ export function useCalcSigningClient() {
 
   const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient | null>(
     ['signingClient', chainId],
-    () => getSigningClient!(),
+    () => getSigningClient!(chainId),
     {
-      enabled: !!connected && !!getSigningClient,
+      enabled: !!chainId && !!connected && !!getSigningClient,
       meta: {
         errorMessage: 'Error fetching signing client',
       },

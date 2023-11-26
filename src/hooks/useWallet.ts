@@ -5,8 +5,8 @@ import { useChainId } from './useChainId';
 import { ChainId } from './useChainId/Chains';
 
 export function useWallet() {
-  const { chainId } = useChainId();
-  const cosmosKit = useCosmosKit(chainId);
+  const { chainId: currentChainId } = useChainId();
+  const cosmosKit = useCosmosKit(currentChainId);
 
   const getSigningClient = async (chainId: ChainId) =>
     SigningCosmWasmClient.connectWithSigner(
@@ -17,11 +17,11 @@ export function useWallet() {
       },
     );
 
-  if (chainId && cosmosKit && cosmosKit.isWalletConnected) {
+  if (currentChainId && cosmosKit && cosmosKit.isWalletConnected) {
     return {
       address: cosmosKit.address,
       connected: cosmosKit.isWalletConnected,
-      getSigningClient: getSigningClient,
+      getSigningClient,
       disconnect: cosmosKit.disconnect,
       walletType: cosmosKit.wallet?.prettyName,
       isConnecting: cosmosKit.isWalletConnecting,

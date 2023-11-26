@@ -11,26 +11,15 @@ export type BalanceResponse = {
 
 function useBalance(token: DenomInfo) {
   const { address } = useWallet();
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
 
-  const client = useChainClient(chain);
+  const client = useChainClient(chainId);
 
   const result = useQuery<Coin>(
-    ['balance', token?.id, address, client],
-    () => {
-      if (!client) {
-        throw new Error('Client not initialized');
-      }
-      if (!address) {
-        throw new Error('No address provided');
-      }
-      if (!token) {
-        throw new Error('No token provided');
-      }
-      return client.fetchTokenBalance(token.id, address);
-    },
+    ['balance', token?.id, chainId, address],
+    () => client!.fetchTokenBalance(token.id, address!),
     {
-      enabled: !!token && !!address && !!chain && !!client,
+      enabled: !!token && !!address && !!chainId && !!client,
       keepPreviousData: true,
       meta: {
         errorMessage: 'Error fetching balance',
@@ -40,7 +29,6 @@ function useBalance(token: DenomInfo) {
 
   return {
     displayAmount: result.data ? token.conversion(Number(result.data.amount)) : 0,
-
     ...result,
   };
 }

@@ -35,9 +35,9 @@ function DcaIn() {
 
   const { validate } = useValidation(step1ValidationSchema, { balances });
 
-  const onSubmit = async (formData: DcaInFormDataStep1) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataStep1) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   if (!pairs) {
@@ -69,7 +69,6 @@ function DcaIn() {
               <DCAInResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-
               {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
             </Stack>
           </Form>

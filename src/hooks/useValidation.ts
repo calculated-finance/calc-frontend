@@ -8,13 +8,13 @@ function getErrorName(error: unknown) {
 }
 
 const useValidation = (validationSchema: Yup.AnySchema, context = {}) => {
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
   const validate = (values: Yup.InferType<typeof validationSchema>) => {
     try {
       validationSchema.validateSync(values, {
         abortEarly: false,
         context: {
-          chain,
+          chain: chainId,
           ...context,
         },
       });

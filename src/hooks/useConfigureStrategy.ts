@@ -24,7 +24,7 @@ type ConfigureVariables = {
 export function useConfigureStrategy() {
   const { address, getSigningClient } = useWallet();
 
-  const { chainId: chain, chainConfig } = useChainId();
+  const { chainId, chainConfig } = useChainId();
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
@@ -37,7 +37,7 @@ export function useConfigureStrategy() {
         throw new Error('getSigningClient is null or empty');
       }
 
-      const client = await getSigningClient();
+      const client = await getSigningClient(chainId);
 
       if (!client) {
         throw new Error('client is null or empty');
@@ -74,16 +74,16 @@ export function useConfigureStrategy() {
         },
       } as ExecuteMsg;
 
-      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
+      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId)));
 
       return client.signAndBroadcast(address, msgs, 'auto');
     },
     {
-      onSuccess: (data, { strategy }) => {
+      onSuccess: (_, { strategy }) => {
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, strategy.id] });
       },
       onError: (error, { values }) => {
-        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
+        Sentry.captureException(error, { tags: { chain: chainId, values: JSON.stringify(values) } });
       },
     },
   );

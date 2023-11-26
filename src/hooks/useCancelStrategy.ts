@@ -39,12 +39,12 @@ function getCancelVaultExecuteMsg(
 
 const useCancelStrategy = () => {
   const { address, getSigningClient } = useWallet();
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
 
   const { data: client } = useQuery<SigningCosmWasmClient>(
-    ['signingCosmWasmClient', chain],
+    ['signingCosmWasmClient', chainId],
     async () => {
-      const signingClient = getSigningClient && (await getSigningClient());
+      const signingClient = await getSigningClient!(chainId);
 
       if (!signingClient) {
         throw new Error('No signing client');
@@ -53,7 +53,7 @@ const useCancelStrategy = () => {
       return signingClient;
     },
     {
-      enabled: !!chain && !!getSigningClient,
+      enabled: !!chainId && !!getSigningClient,
     },
   );
 
@@ -67,7 +67,7 @@ const useCancelStrategy = () => {
         throw new Error('no address');
       }
 
-      if (chain == null) {
+      if (chainId == null) {
         throw new Error('no chain');
       }
 
@@ -77,13 +77,13 @@ const useCancelStrategy = () => {
 
       return client.signAndBroadcast(
         address,
-        [getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain))],
+        [getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chainId))],
         'auto',
       );
     },
     {
       onError: (error, strategy) => {
-        Sentry.captureException(error, { tags: { chain, strategy: JSON.stringify(strategy) } });
+        Sentry.captureException(error, { tags: { chain: chainId, strategy: JSON.stringify(strategy) } });
       },
     },
   );
