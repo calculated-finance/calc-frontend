@@ -51,7 +51,6 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     conversion: (value: number) => value / 10 ** 18,
     deconversion: (value: number) => Math.round(value * 10 ** 18),
     significantFigures: 18,
-
     priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 12,
     priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 12,
     enabled: true,
@@ -378,7 +377,7 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.NSTK]: {
     name: 'NSTK',
     icon: '/images/denoms/nstk.svg',
-    coingeckoId: '',
+    coingeckoId: 'unstake',
     stakeable: false,
     stable: false,
     enabled: true,
