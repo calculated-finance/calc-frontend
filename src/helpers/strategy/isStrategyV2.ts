@@ -1,8 +1,8 @@
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { Strategy } from '@models/Strategy';
 
-export function isStrategyV2(strategy: Strategy, chain: Chains) {
-  if (chain === Chains.Osmosis) {
+export function isStrategyV2(strategy: Strategy, chain: ChainId) {
+  if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
     return true;
   }
   if ('deposited_amount' in strategy) {

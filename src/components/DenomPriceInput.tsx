@@ -14,8 +14,7 @@ import DenomIcon from '@components/DenomIcon';
 import usePrice from '@hooks/usePrice';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import { getOsmosisWebUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getPairAddress } from 'src/fixtures/addresses';
@@ -38,7 +37,7 @@ export function DenomPriceInput({
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
-  const { chain } = useChain();
+  const { chainId } = useChainId();
   const { formattedPrice, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
@@ -81,7 +80,7 @@ export function DenomPriceInput({
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      {chain === Chains.Kujira && (
+      {['kaiyo-1', 'harpoon-4'].includes(chainId) && (
         <FormHelperText>
           <Link
             isExternal
@@ -93,9 +92,12 @@ export function DenomPriceInput({
           </Link>
         </FormHelperText>
       )}
-      {chain === Chains.Osmosis && (
+      {['osmosis-1', 'osmo-test-5'].includes(chainId) && (
         <FormHelperText>
-          <Link isExternal href={`${getOsmosisWebUrl()}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}>
+          <Link
+            isExternal
+            href={`${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}
+          >
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
               Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>

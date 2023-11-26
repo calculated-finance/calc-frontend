@@ -16,16 +16,16 @@ export default function usePrice(
   enabled = true,
 ) {
   const config = useConfig();
-  const client = useCosmWasmClient((state) => state.client);
+  const { cosmWasmClient } = useCosmWasmClient();
 
   const { data: pairsData } = usePairs();
   const { pairs } = pairsData || {};
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const { data: price, ...helpers } = useQuery<number>(
-    ['price', pair, client],
+    ['price', pair, cosmWasmClient],
     async () => {
-      const twapToNow = await client!.queryContractSmart(config!.exchange_contract_address, {
+      const twapToNow = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
         get_twap_to_now: {
           swap_denom: initialDenom!.id,
           target_denom: resultingDenom!.id,
@@ -42,7 +42,7 @@ export default function usePrice(
       return transactionType === TransactionType.Sell ? safeInvert(Number(adjustedPrice)) : adjustedPrice;
     },
     {
-      enabled: !!client && !!pair && !!config && enabled,
+      enabled: !!cosmWasmClient && !!pair && !!config && enabled,
       meta: {
         errorMessage: 'Error fetching price',
       },

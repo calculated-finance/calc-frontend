@@ -1,5 +1,5 @@
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
 import {
   getStrategyPostSwapType,
@@ -11,7 +11,7 @@ import { Strategy } from '@models/Strategy';
 
 export function getExistingValues(
   strategy: Strategy,
-  chain: Chains,
+  chain: ChainId,
   address: string,
 ): Partial<DcaInFormDataPostPurchase> {
   const postPurchaseOption = getStrategyPostSwapType(strategy, chain);

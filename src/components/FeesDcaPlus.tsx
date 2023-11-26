@@ -27,11 +27,10 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { getSwapAmountFromDuration } from 'src/helpers/getSwapAmountFromDuration';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import { getChainDexName } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { TransactionType } from './TransactionType';
 
 function FeeBreakdown({
   initialDenomName,
@@ -45,7 +44,7 @@ function FeeBreakdown({
   dexFee: number;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { isOpen: isFeesModalOpen, onOpen: onFeesModalOpen, onClose: onFeesModalClose } = useDisclosure();
 
   return (
@@ -213,7 +212,7 @@ export default function FeesDcaPlus({
 }) {
   const { price } = useFiatPrice(initialDenom);
 
-  const { transactionType} = useStrategyInfo();
+  const { transactionType } = useStrategyInfo();
 
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
 

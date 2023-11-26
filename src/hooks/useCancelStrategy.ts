@@ -1,14 +1,14 @@
-import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
+import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import * as Sentry from '@sentry/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { encode } from '@helpers/encode';
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '../models/Strategy';
-import { useChain } from './useChain';
+import { useChainId } from './useChainId';
 
 function getCancelVaultExecuteMsg(
   strategyId: Strategy['id'],
@@ -38,9 +38,24 @@ function getCancelVaultExecuteMsg(
 }
 
 const useCancelStrategy = () => {
-  const { address, signingClient: client } = useWallet();
-  const msgs: EncodeObject[] = [];
-  const { chain } = useChain();
+  const { address, getSigningClient } = useWallet();
+  const { chainId } = useChainId();
+
+  const { data: client } = useQuery<SigningCosmWasmClient>(
+    ['signingCosmWasmClient', chainId],
+    async () => {
+      const signingClient = await getSigningClient!(chainId);
+
+      if (!signingClient) {
+        throw new Error('No signing client');
+      }
+
+      return signingClient;
+    },
+    {
+      enabled: !!chainId && !!getSigningClient,
+    },
+  );
 
   return useMutation<DeliverTxResponse, Error, Strategy>(
     (strategy: Strategy) => {
@@ -52,7 +67,7 @@ const useCancelStrategy = () => {
         throw new Error('no address');
       }
 
-      if (chain == null) {
+      if (chainId == null) {
         throw new Error('no chain');
       }
 
@@ -60,13 +75,15 @@ const useCancelStrategy = () => {
         throw new Error('You are not the owner of this strategy');
       }
 
-      msgs.push(getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chain)));
-
-      return client.signAndBroadcast(address, msgs, 'auto');
+      return client.signAndBroadcast(
+        address,
+        [getCancelVaultExecuteMsg(strategy.id, address, getChainContractAddress(chainId))],
+        'auto',
+      );
     },
     {
       onError: (error, strategy) => {
-        Sentry.captureException(error, { tags: { chain, strategy: JSON.stringify(strategy) } });
+        Sentry.captureException(error, { tags: { chain: chainId, strategy: JSON.stringify(strategy) } });
       },
     },
   );

@@ -199,13 +199,13 @@ export default function TopPanel() {
       };
     }
 
-      if (!activeStrategies.length || !connected) {
-        return {
-          background: '/images/backgrounds/twist-thin-blue.svg',
-          border: 'transparent',
-          Content: LearnNewUsers,
-        };
-      }
+    if (!activeStrategies.length || !connected) {
+      return {
+        background: '/images/backgrounds/twist-thin-blue.svg',
+        border: 'transparent',
+        Content: LearnNewUsers,
+      };
+    }
 
     if (!activeStrategies.length) {
       if (!completedStrategies.length) {

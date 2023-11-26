@@ -9,7 +9,7 @@ import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChain } from './useChain';
+import { useChainId } from './useChainId';
 import { Strategy } from '../models/Strategy';
 import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from './useStrategy';
@@ -22,16 +22,23 @@ type ConfigureVariables = {
 };
 
 export function useConfigureStrategy() {
-  const { address, signingClient: client } = useWallet();
+  const { address, getSigningClient } = useWallet();
 
-  const { chain, chainConfig } = useChain();
+  const { chainId, chainConfig } = useChainId();
 
   const queryClient = useQueryClient();
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
-    ({ values, strategy }) => {
+    async ({ values, strategy }) => {
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
+
+      if (!getSigningClient) {
+        throw new Error('getSigningClient is null or empty');
+      }
+
+      const client = await getSigningClient(chainId);
+
       if (!client) {
         throw new Error('client is null or empty');
       }
@@ -67,16 +74,16 @@ export function useConfigureStrategy() {
         },
       } as ExecuteMsg;
 
-      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chain)));
+      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId)));
 
       return client.signAndBroadcast(address, msgs, 'auto');
     },
     {
-      onSuccess: (data, { strategy }) => {
+      onSuccess: (_, { strategy }) => {
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, strategy.id] });
       },
       onError: (error, { values }) => {
-        Sentry.captureException(error, { tags: { chain, values: JSON.stringify(values) } });
+        Sentry.captureException(error, { tags: { chain: chainId, values: JSON.stringify(values) } });
       },
     },
   );

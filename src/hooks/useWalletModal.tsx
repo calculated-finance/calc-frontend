@@ -1,4 +1,6 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
+import { useCosmosKit } from './useCosmosKit';
+import { useChainId } from './useChainId';
 
 export interface CalcWalletModalContextState {
   visible: boolean;
@@ -6,14 +8,11 @@ export interface CalcWalletModalContextState {
 }
 
 const DEFAULT_CONTEXT = {
-  setVisible() {
-    // console.error(constructMissingProviderErrorMessage('call', 'setVisible'));
-  },
+  setVisible() {},
   visible: false,
 };
 Object.defineProperty(DEFAULT_CONTEXT, 'visible', {
   get() {
-    // console.error(constructMissingProviderErrorMessage('read', 'visible'));
     return false;
   },
 });
@@ -23,5 +22,11 @@ export const CalcWalletModalContext = createContext<CalcWalletModalContextState>
 );
 
 export function useWalletModal(): CalcWalletModalContextState {
-  return useContext(CalcWalletModalContext);
+  const { chainId } = useChainId();
+  const { openView, closeView } = useCosmosKit(chainId);
+
+  return {
+    setVisible: (value) => (value ? openView() : closeView()),
+    visible: false,
+  };
 }

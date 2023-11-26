@@ -8,9 +8,9 @@ import {
 } from '@helpers/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 
-export function getExistingValues(strategy: Strategy, chain: Chains) {
+export function getExistingValues(strategy: Strategy, chain: ChainId) {
   const priceThreshold = getPriceCeilingFloor(strategy, chain);
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;

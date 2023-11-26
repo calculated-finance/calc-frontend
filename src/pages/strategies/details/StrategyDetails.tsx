@@ -43,8 +43,7 @@ import {
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
 
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import usePairs from '@hooks/usePairs';
 import { TransactionType } from '@components/TransactionType';
@@ -87,7 +86,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { dexFee } = useDexFee(
     getStrategyInitialDenom(strategy),
     getStrategyResultingDenom(strategy),
@@ -121,7 +120,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                   isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
                 )}
                 <Text>
-                  {chain === Chains.Osmosis ? 'Osmosis swap' : 'Kujira'} fee: {getPrettyFee(100, dexFee)}%
+                  {['osmosis-1', 'osmo-test-5'].includes(chain) ? 'Osmosis swap' : 'Kujira'} fee:{' '}
+                  {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>
@@ -136,7 +136,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -297,7 +297,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </LinkWithQuery>
                 </Flex>
               </GridItem>
-              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chain={chain} />}
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chainId={chain} />}
             </Grid>
           </Box>
         </Box>

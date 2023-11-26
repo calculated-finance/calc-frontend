@@ -1,30 +1,18 @@
 import * as Sentry from '@sentry/react';
-import {
-  Denom,
-  MainnetDenoms,
-  TestnetDenoms,
-  TestnetDenomsOsmosis,
-  MainnetDenomsOsmosis,
-  TestnetDenomsMoonbeam,
-} from '@models/Denom';
+import { Denom, MainnetDenoms, TestnetDenoms, TestnetDenomsOsmosis, MainnetDenomsOsmosis } from '@models/Denom';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import { useAssetListStore } from '@hooks/useCachedAssetList';
 import { isNil } from 'lodash';
-import { isMainnet } from './isMainnet';
 import { DenomInfo } from './DenomInfo';
 import { defaultDenom } from './defaultDenom';
-import { mainnetDenoms } from './mainnetDenoms';
+import { mainnetDenomsKujira } from './mainnetDenomsKujira';
 import { mainnetDenomsOsmosis } from './mainnetDenomsOsmosis';
-import { testnetDenoms } from './testnetDenoms';
-import { testnetDenomsMoonbeam } from './testnetDenomsMoonbeam';
-
-const stableDenomsTestnet = [TestnetDenomsOsmosis.AXL.toString()];
+import { testnetDenomsKujira } from './testnetDenomsKujira';
+import { testnetDenomsOsmosis } from './testnetDenomsOsmosis';
 
 function isDenomInStablesList(denom: Denom) {
-  if (isMainnet()) {
-    return mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.stable;
-  }
-  return stableDenomsTestnet.includes(denom);
+  return { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis }[denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis]
+    ?.stable;
 }
 
 const getDenomInfo = (denom: string | undefined): DenomInfo => {
@@ -37,85 +25,60 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
 
   const { assetList } = useAssetListStore.getState();
 
-  const asset = assetList?.assets && assetList.assets.find((a) => a.base === denom);
+  const asset = assetList?.[denom];
 
   if (asset) {
-    const mapTo = {} as Partial<DenomInfo>;
-
-    mapTo.name = asset.symbol;
-    mapTo.icon = asset.logo_URIs?.svg || asset.logo_URIs?.png;
-    mapTo.stakeable = !isDenomInStablesList(denom as Denom);
-    mapTo.stable = isDenomInStablesList(denom as Denom);
-    mapTo.coingeckoId = asset.coingecko_id || mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.coingeckoId || '';
-    mapTo.osmosisId = asset.symbol;
-    mapTo.enabledInDcaPlus = isMainnet() ? mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis]?.enabledInDcaPlus : true;
-
     const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
     const significantFigures = findDenomUnits?.exponent || 6;
 
-    mapTo.significantFigures = significantFigures;
-    mapTo.pricePrecision = 6;
-    mapTo.stakeableAndSupported = denom === 'uosmo';
+    const denoms = { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis };
+    const scopedDenom = denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis;
+
+    let denomInfo = {
+      name: asset.symbol,
+      icon: asset.logo_URIs?.svg || asset.logo_URIs?.png,
+      stakeable: !isDenomInStablesList(denom as Denom),
+      stable: isDenomInStablesList(denom as Denom),
+      coingeckoId: asset.coingecko_id || denoms[scopedDenom]?.coingeckoId || '',
+      osmosisId: asset.symbol,
+      enabledInDcaPlus: denoms[scopedDenom]?.enabledInDcaPlus,
+      significantFigures,
+      pricePrecision: 6,
+      stakeableAndSupported: denom === 'uosmo',
+    } as Partial<DenomInfo>;
 
     if (!isNil(significantFigures) && significantFigures !== 6) {
-      mapTo.conversion = (value: number) => value / 10 ** significantFigures;
-      mapTo.deconversion = (value: number) => Math.round(value * 10 ** significantFigures);
-      mapTo.priceDeconversion = (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6);
-      mapTo.priceConversion = (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6);
-      mapTo.minimumSwapAmount = 0.05 / 1000;
-    }
-
-    if (isMainnet()) {
-      return {
-        id: denom,
-        ...defaultDenom,
-        ...mainnetDenomsOsmosis[denom as MainnetDenomsOsmosis],
-        ...mapTo,
+      denomInfo = {
+        ...denomInfo,
+        conversion: (value: number) => value / 10 ** significantFigures,
+        deconversion: (value: number) => Math.round(value * 10 ** significantFigures),
+        priceDeconversion: (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6),
+        priceConversion: (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6),
+        minimumSwapAmount: 0.05 / 1000,
       };
     }
+
     return {
       id: denom,
       ...defaultDenom,
-      ...testnetDenoms[denom as TestnetDenoms],
-      ...mapTo,
+      ...denoms[scopedDenom],
+      ...denomInfo,
     };
   }
 
-  if (isMainnet()) {
-    const kujiraMainnetAsset = mainnetDenoms[denom as MainnetDenoms];
+  const kujiraDenoms = { ...mainnetDenomsKujira, ...testnetDenomsKujira };
+  const kujiraAsset = kujiraDenoms[denom as MainnetDenoms | TestnetDenoms];
 
-    if (kujiraMainnetAsset) {
-      return {
-        id: denom,
-        ...defaultDenom,
-        ...kujiraMainnetAsset,
-      };
-    }
-  } else {
-    const moonbeamTestnetAsset = testnetDenomsMoonbeam[denom.toLowerCase() as TestnetDenomsMoonbeam];
-    if (moonbeamTestnetAsset) {
-      return {
-        ...defaultDenom,
-        ...moonbeamTestnetAsset,
-        minimumSwapAmount: 0.05 / 1000,
-        conversion: (value: number) => value / 10 ** 18,
-        deconversion: (value: number) => Math.round(value * 10 ** 18),
-        id: denom,
-      };
-    }
-
-    const kujiraTestnetAsset = testnetDenoms[denom as TestnetDenoms];
-
-    if (kujiraTestnetAsset) {
-      return {
-        id: denom,
-        ...defaultDenom,
-        ...testnetDenoms[denom as TestnetDenoms],
-      };
-    }
+  if (kujiraAsset) {
+    return {
+      id: denom,
+      ...defaultDenom,
+      ...kujiraAsset,
+    };
   }
 
-  Sentry.captureException('didint find a denom', { tags: { denom } });
+  Sentry.captureException("didn't find a denom", { tags: { denom } });
+
   return {
     id: denom,
     ...defaultDenom,
@@ -130,11 +93,15 @@ export function convertDenomFromCoin(coin: Coin | undefined) {
   if (!coin) {
     return 0;
   }
+
   const denomInfo = getDenomInfo(coin.denom);
+
   if (!denomInfo) {
     return 0;
   }
+
   const { significantFigures, conversion } = denomInfo;
+
   return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
 }
 
@@ -148,7 +115,6 @@ export class DenomValue {
   readonly amount: number;
 
   constructor(denomAmount: Coin) {
-    // make this not option and handle code when loading
     this.denomId = denomAmount?.denom || '';
     this.amount = Number(denomAmount?.amount || 0);
   }
@@ -165,6 +131,7 @@ export class DenomValue {
 export function isDenomStable(denom: DenomInfo | undefined) {
   return denom?.stable;
 }
+
 export function isDenomVolatile(denom: DenomInfo | undefined) {
   return !isDenomStable(denom);
 }

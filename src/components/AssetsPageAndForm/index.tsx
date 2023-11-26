@@ -7,7 +7,6 @@ import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
@@ -17,6 +16,7 @@ import { getSteps } from '@helpers/assets-page/getSteps';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { useRouter } from 'next/router';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 import { AssetsForm } from './AssetsForm';
 
 const strategyTypesToFormTypes = {
@@ -31,10 +31,8 @@ const strategyTypesToFormTypes = {
 
 const CUSTOMISE_PAGE_INDEX = 1;
 
-// { stepsConfig, strategyType }: { stepsConfig: StepConfig[]; strategyType: StrategyTypes }
-
 export function Assets() {
-  const { connected } = useWallet();
+  const { isWalletConnected } = useCosmosKit();
   const { strategyType } = useStrategyInfo();
   const stepsConfig = getSteps(strategyType);
   const { data: balances } = useBalances();
@@ -50,11 +48,11 @@ export function Assets() {
 
   const onSubmit = async (formData: AssetsFormValues) => {
     const formName = strategyTypesToFormTypes[formData.strategyType];
-    await actions.updateAction(formName)(formData);
+    actions.updateAction(formName)(formData);
 
     const currentSteps = getSteps(formData.strategyType);
 
-    await routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
+    routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
   };
 
   if (!pairs) {
@@ -76,21 +74,19 @@ export function Assets() {
 
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //  @ts-ignore
+    // @ts-ignore
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      {({ values }) => (
-        <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
-          <Form autoComplete="off">
-            <FormControl>
-              <CategoryAndStrategyButtonSelectors />
-            </FormControl>
-            <Stack direction="column" spacing={6}>
-              <AssetsForm />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
-            </Stack>
-          </Form>
-        </ModalWrapper>
-      )}
+      <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
+        <Form autoComplete="off">
+          <FormControl>
+            <CategoryAndStrategyButtonSelectors />
+          </FormControl>
+          <Stack direction="column" spacing={6}>
+            <AssetsForm />
+            {isWalletConnected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+          </Stack>
+        </Form>
+      </ModalWrapper>
     </Formik>
   );
 }

@@ -18,10 +18,9 @@ import {
 import { useRouter } from 'next/router';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { Chains } from '@hooks/useChain/Chains';
 import { SidebarControls } from '@components/Layout/SidebarControls';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { LinkItem } from './LinkItems';
 
 const SIDEBAR_WIDTH = 64;
@@ -35,6 +34,7 @@ interface NavItemProps extends FlexProps {
   isActive: boolean | undefined;
   href: LinkItem['href'];
 }
+
 function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
   return (
     <LinkWithQuery href={href}>
@@ -50,7 +50,6 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
         _hover={{
           bg: 'navy',
           boxShadow: 'inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)',
-
           color: isActive ? 'brand.200' : 'white',
         }}
         {...rest}
@@ -74,9 +73,10 @@ function NavItem({ icon, children, isActive, href, ...rest }: NavItemProps) {
 }
 
 const sidebarLogoUrls = {
-  [Chains.Osmosis]: '/images/osmoMascot.svg',
-  [Chains.Kujira]: '/images/kujiMascot.svg',
-  [Chains.Moonbeam]: '/images/moonbeam-large.png',
+  'osmosis-1': '/images/osmoMascot.svg',
+  'osmo-test-5': '/images/osmoMascot.svg',
+  'kaiyo-1': '/images/kujiMascot.svg',
+  'harpoon-4': '/images/kujiMascot.svg',
 };
 
 const controlDeskSidebarLogoUrls = {
@@ -85,7 +85,7 @@ const controlDeskSidebarLogoUrls = {
 
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const bgImage = router.pathname.includes('control-desk') ? controlDeskSidebarLogoUrls.globe : sidebarLogoUrls[chain];
 
@@ -104,11 +104,18 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
     >
       <Flex h="16" alignItems="center" mx="8" justifyContent="space-between">
         <LinkWithQuery href="/">
-          {chain === Chains.Osmosis ? (
-            <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
-          ) : (
-            <Image cursor="pointer" src="/images/logo.svg" w={105} />
-          )}
+          <Image
+            cursor="pointer"
+            src={
+              {
+                'osmosis-1': '/images/osmoLogo.svg',
+                'osmo-test-5': '/images/osmoLogo.svg',
+                'kaiyo-1': '/images/logo.svg',
+                'harpoon-4': '/images/logo.svg',
+              }[chain]
+            }
+            w={105}
+          />
         </LinkWithQuery>
 
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
@@ -142,9 +149,10 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
 interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
+
 function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   return (
     <Flex
       px={8}
@@ -157,11 +165,17 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
     >
       <Flex w="full" pb={8} alignItems="center">
         <Text fontSize="2xl" fontWeight="bold">
-          {chain === Chains.Osmosis ? (
-            <Image src="/images/osmoLogo.svg" w={105} />
-          ) : (
-            <Image src="/images/logo.svg" w={105} />
-          )}
+          <Image
+            src={
+              {
+                'osmosis-1': '/images/osmoLogo.svg',
+                'osmo-test-5': '/images/osmoLogo.svg',
+                'kaiyo-1': '/images/logo.svg',
+                'harpoon-4': '/images/logo.svg',
+              }[chain]
+            }
+            w={105}
+          />
         </Text>
         <Spacer />
         <SidebarControls />
@@ -199,6 +213,7 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
     </Flex>
   );
 }
+
 export default function Sidebar({ children, linkItems }: { children: ReactNode; linkItems: LinkItem[] }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -218,7 +233,6 @@ export default function Sidebar({ children, linkItems }: { children: ReactNode; 
           <SidebarContent linkItems={linkItems} onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav linkItems={linkItems} display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: SIDEBAR_WIDTH }}>{children}</Box>
     </Box>

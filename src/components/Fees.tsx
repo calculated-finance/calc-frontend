@@ -17,8 +17,7 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -40,7 +39,7 @@ export function FeeBreakdown({
   excludeDepositFee: boolean;
 }) {
   const [isOpen, { toggle }] = useBoolean(false);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <Stack position="relative" spacing={1}>
@@ -126,24 +125,13 @@ export function FeeBreakdown({
             <Flex flexGrow={1} flexDirection="column">
               <Heading size="xs">Per swap</Heading>
               <Stack spacing={0}>
-                {chain === Chains.Osmosis && (
-                  <Flex>
-                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                    <Spacer />
-                    <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
-                    </Text>
-                  </Flex>
-                )}
-                {chain === Chains.Kujira && (
-                  <Flex>
-                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
-                    <Spacer />
-                    <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
-                    </Text>
-                  </Flex>
-                )}
+                <Flex>
+                  <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                  <Spacer />
+                  <Text textStyle="body-xs">
+                    {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
+                  </Text>
+                </Flex>
                 <Flex>
                   <Text textStyle="body-xs">Estimated gas:</Text>
                   <Spacer />

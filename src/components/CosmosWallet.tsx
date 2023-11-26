@@ -20,11 +20,11 @@ import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
 import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
 import { useAnalytics } from '@hooks/useAnalytics';
-import CalcIcon from './Icon';
 import { SpendableBalances } from './SpendableBalances';
 import OnRampModal from './OnRampModalContent';
 import SquidModal from './SquidModal';
 import { truncate } from '../helpers/truncate';
+import CalcIcon from './Icon';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
@@ -69,7 +69,7 @@ function CosmosWallet() {
     <Box>
       <HStack spacing="3">
         {address != null ? (
-          <Popover placement="bottom-start" closeOnBlur={false} isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
+          <Popover placement="bottom-start" closeOnBlur isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
                 {truncate(address)}
@@ -117,7 +117,7 @@ function CosmosWallet() {
                   size="xs"
                   w="max-content"
                   variant="link"
-                  onClick={handleDisconnect}
+                  onClick={() => disconnect()}
                   leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                 >
                   Disconnect from {walletType}

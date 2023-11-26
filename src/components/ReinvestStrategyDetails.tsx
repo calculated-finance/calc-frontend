@@ -20,10 +20,10 @@ import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
 import { DestinationDetails } from 'src/pages/strategies/details/DestinationDetails';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { balance } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -126,7 +126,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               {convertDenomFromCoin(balance)} {initialDenom.name}
             </Text>
           </GridItem>
-          <DestinationDetails strategy={strategy} chain={chain} />
+          <DestinationDetails strategy={strategy} chainId={chain} />
         </Grid>
       </Box>
     </GridItem>

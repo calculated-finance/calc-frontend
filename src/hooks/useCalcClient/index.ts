@@ -1,13 +1,23 @@
-import { Chains } from '@hooks/useChain/Chains';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useMetamask } from '@hooks/useMetamask';
-import getClient from './getClient';
+import { useChainId } from '@hooks/useChainId';
+import { useQuery } from '@tanstack/react-query';
+import { ChainId } from '@hooks/useChainId/Chains';
+import getClient, { CalcClient } from './getClient';
 
-export function useCalcClient(chain: Chains) {
-  const evmProvider = useMetamask((state) => state.provider);
-  const cosmClient = useCosmWasmClient((state) => state.client);
+export function useCalcClient(injectedChainId?: ChainId) {
+  const { chainId } = useChainId();
+  const { cosmWasmClient } = useCosmWasmClient(injectedChainId ?? chainId);
 
-  if (!chain) return null;
+  const { data: client, ...other } = useQuery<CalcClient | null>(
+    ['calcClient', injectedChainId ?? chainId],
+    () => getClient(injectedChainId ?? chainId, cosmWasmClient!),
+    {
+      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      meta: {
+        errorMessage: 'Error fetching calc client',
+      },
+    },
+  );
 
-  return getClient(chain, cosmClient, evmProvider);
+  return { client, ...other };
 }

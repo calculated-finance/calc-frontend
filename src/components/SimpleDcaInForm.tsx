@@ -41,7 +41,7 @@ import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
@@ -70,19 +70,17 @@ function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
 
 function SimpleDCAInInitialDenom() {
   const { data } = usePairs();
-  const { pairs } = data || {};
+  const { pairs } = data;
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
 
-  if (!pairs) {
-    return null;
-  }
+  if (!pairs) return null;
 
-  const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
-      .map((denom) => getDenomInfo(denom))
-      .filter(isDenomStable),
+  const denomInfos = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) =>
+    getDenomInfo(denom),
   );
+
+  const denoms = orderAlphabetically(denomInfos.filter(isDenomStable));
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -113,7 +111,7 @@ function SimpleDCAInInitialDenom() {
 
 function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { chain } = useChain();
+  const { chainId } = useChainId();
 
   const {
     values: { initialDenom },
@@ -130,7 +128,7 @@ function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
         placeholder="Choose asset"
         value={field.value}
         onChange={helpers.setValue}
-        optionLabel={`Swapped on ${getChainDexName(chain)}`}
+        optionLabel={`Swapped on ${getChainDexName(chainId)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
@@ -245,7 +243,7 @@ function SimpleDcaInForm() {
             </Center>
           }
         >
-          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="flex-start" justifyContent="center" h="full">
+          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="center" justifyContent="center" h="full">
             <Box maxWidth={451} mx="auto">
               <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
                 {isSuccess ? (
@@ -253,7 +251,6 @@ function SimpleDcaInForm() {
                 ) : (
                   <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
                     <SimpleDcaModalHeader isSuccess={isSuccess} />
-
                     <SimpleDCAInInitialDenom />
                     <SimpleDCAInResultingDenom
                       denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}

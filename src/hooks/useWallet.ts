@@ -1,135 +1,39 @@
-import { useKeplr } from './useKeplr';
-import { useLeap } from './useLeap';
-import { useXDEFI } from './useXDEFI';
-import { useMetamask } from './useMetamask';
-import { useMetamaskSnap } from './useMetamaskSnap';
-
-export enum WalletTypes {
-  KEPLR = 'Keplr',
-  STATION = 'Station',
-  LEAP = 'Leap',
-  METAMASK_SNAP = 'Metamask Snap',
-  XDEFI = 'XDEFI',
-  METAMASK = 'Metamask',
-}
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { getGasPrice } from '@helpers/chains';
+import { useCosmosKit } from './useCosmosKit';
+import { useChainId } from './useChainId';
+import { ChainId } from './useChainId/Chains';
 
 export function useWallet() {
-  const keplrWallet = useKeplr((state) => ({
-    account: state.account,
-    controller: state.controller,
-    isConnecting: state.isConnecting,
-    disconnect: state.disconnect,
-  }));
+  const { chainId: currentChainId } = useChainId();
+  const cosmosKit = useCosmosKit(currentChainId);
 
-  const leapWallet = useLeap((state) => ({
-    account: state.account,
-    controller: state.controller,
-    isConnecting: state.isConnecting,
-    disconnect: state.disconnect,
-  }));
+  const getSigningClient = async (chainId: ChainId) =>
+    SigningCosmWasmClient.connectWithSigner(
+      await cosmosKit.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
+      cosmosKit.getOfflineSignerDirect(),
+      {
+        gasPrice: getGasPrice(chainId),
+      },
+    );
 
-  const leapSnapWallet = useMetamaskSnap((state) => ({
-    account: state.account,
-    controller: state.controller,
-    isConnecting: state.isConnecting,
-    disconnect: state.disconnect,
-  }));
-
-  const XDEFIWallet = useXDEFI((state) => ({
-    account: state.account,
-    controller: state.controller,
-    isConnecting: state.isConnecting,
-    disconnect: state.disconnect,
-  }));
-
-  const metamaskWallet = useMetamask((state) => ({
-    account: state.account,
-    isConnecting: state.isConnecting,
-    disconnect: state.disconnect,
-  }));
-
-  // const stationWallet = useStation((state) => ({
-  //   account: state.account,
-  //   disconnect: state.disconnect,
-  //   signAndBroadcast: state.signAndBroadcast,
-  //   isConnecting: state.isConnecting,
-  // }));
-  if (metamaskWallet.account) {
+  if (currentChainId && cosmosKit && cosmosKit.isWalletConnected) {
     return {
-      address: metamaskWallet.account?.address,
-      connected: true,
-      signingClient: null,
-      disconnect: metamaskWallet.disconnect,
-      walletType: WalletTypes.METAMASK,
-      isConnecting: false,
+      address: cosmosKit.address,
+      connected: cosmosKit.isWalletConnected,
+      getSigningClient,
+      disconnect: cosmosKit.disconnect,
+      walletType: cosmosKit.wallet?.prettyName,
+      isConnecting: cosmosKit.isWalletConnecting,
     };
   }
 
-  if (keplrWallet.account) {
-    return {
-      address: keplrWallet.account?.address,
-      connected: true,
-      signingClient: keplrWallet.controller,
-      disconnect: keplrWallet.disconnect,
-      walletType: WalletTypes.KEPLR,
-      isConnecting: false,
-    };
-  }
-  if (leapWallet.account) {
-    return {
-      address: leapWallet.account?.address,
-      connected: true,
-      signingClient: leapWallet.controller,
-      disconnect: leapWallet.disconnect,
-      walletType: WalletTypes.LEAP,
-      isConnecting: false,
-    };
-  }
-
-  if (leapSnapWallet.account) {
-    return {
-      address: leapSnapWallet.account?.address,
-      connected: true,
-      signingClient: leapSnapWallet.controller,
-      disconnect: leapSnapWallet.disconnect,
-      walletType: WalletTypes.METAMASK_SNAP,
-      isConnecting: false,
-    };
-  }
-
-  if (XDEFIWallet.account) {
-    return {
-      address: XDEFIWallet.account?.address,
-      connected: true,
-      signingClient: XDEFIWallet.controller,
-      disconnect: XDEFIWallet.disconnect,
-      walletType: WalletTypes.XDEFI,
-      isConnecting: false,
-    };
-  }
-  // if (stationWallet?.account) {
-  //   return {
-  //     address: stationWallet.account?.address,
-  //     connected: true,
-  //     disconnect: stationWallet.disconnect,
-  //     signingClient: {
-  //       signAndBroadcast: (
-  //         senderAddress: string,
-  //         msgs: EncodeObject[],
-  //         fee: number | StdFee | 'auto',
-  //         memo?: string | undefined,
-  //       ) => stationWallet.signAndBroadcast(msgs),
-  //     } as SigningCosmWasmClient,
-  //     walletType: WalletTypes.STATION,
-  //     isConnecting: false,
-  //   };
-  // }
   return {
-    isConnecting:
-      keplrWallet.isConnecting ||
-      leapWallet?.isConnecting ||
-      XDEFIWallet?.isConnecting ||
-      metamaskWallet?.isConnecting ||
-      leapSnapWallet?.isConnecting,
+    address: undefined,
+    connected: false,
+    getSigningClient: null,
+    disconnect: undefined,
+    walletType: undefined,
+    isConnecting: false,
   };
 }

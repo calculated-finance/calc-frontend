@@ -67,4 +67,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   [MainnetDenomsOsmosis.TIA]: {
     coingeckoId: 'celestia',
   },
+  [MainnetDenomsOsmosis.OSMO]: {
+    stakeable: true,
+  },
 };

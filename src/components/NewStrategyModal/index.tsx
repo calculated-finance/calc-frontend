@@ -82,9 +82,9 @@ export function NewStrategyModalBody({
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
-      <Box position="relative">
+      <Box position="relative" w="full">
         {isLoading ? (
-          <Center h={56}>
+          <Center w="full" h="full" minW={400} minH={450}>
             <Spinner />
           </Center>
         ) : (
@@ -147,7 +147,7 @@ export function NewStrategyModalHeader({
   const { connected } = useWallet();
 
   const handleCancel = async () => {
-    await routerPush(router, cancelUrl);
+    routerPush(router, cancelUrl);
     if (resetForm) {
       resetForm();
     }

@@ -21,7 +21,7 @@ import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { Pair } from 'src/interfaces/v2/generated/query';
@@ -55,12 +55,12 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
-        .filter(isDenomVolatile))
+        .filter(isDenomVolatile),
+    );
   }
 
   return orderAlphabetically(
     Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
-
   );
 }
 
@@ -72,6 +72,7 @@ function getResultingDenomsFromStrategyType(
   if (!strategyType || !pairs || !initialDenom) {
     return [];
   }
+
   const resultingDenoms = getResultingDenoms(pairs, getDenomInfo(initialDenom));
 
   if (strategyType === StrategyTypes.DCAPlusIn) {
@@ -87,10 +88,7 @@ export function AssetsForm() {
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
   const [strategyField] = useField({ name: 'strategyType' });
-
-  const { chain } = useChain();
-
-  const { chain: resultingChain } = useChain();
+  const { chainId } = useChainId();
 
   if (!pairs) {
     return null;
@@ -109,13 +107,12 @@ export function AssetsForm() {
             <Text textStyle="body-xs">
               {isInStrategy
                 ? 'Choose stablecoin'
-                : `CALC currently supports pairs trading on ${getChainDexName(chain)}.`}{' '}
+                : `CALC currently supports pairs trading on ${getChainDexName(chainId)}.`}{' '}
             </Text>
             <Spacer />
             {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
           </Center>
         </FormHelperText>
-
         <SimpleGrid columns={2} spacing={2}>
           <Box>
             <DenomSelect
@@ -124,18 +121,16 @@ export function AssetsForm() {
               value={field.value}
               onChange={helpers.setValue}
               showPromotion
-              optionLabel={getChainDexName(chain)}
+              optionLabel={getChainDexName(chainId)}
             />
             <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
           </Box>
           <InitialDeposit />
         </SimpleGrid>
       </FormControl>
-
       <FormControl isInvalid={Boolean(resultingMeta.touched && resultingMeta.error)} isDisabled={!field.value}>
         <FormLabel hidden={!isInStrategy}>What asset do you want to invest in?</FormLabel>
         <FormLabel hidden={isInStrategy}>How do you want to hold your profits?</FormLabel>
-
         <FormHelperText>
           <Text textStyle="body-xs">
             {isInStrategy
@@ -148,7 +143,7 @@ export function AssetsForm() {
           placeholder="Choose asset"
           value={resultingField.value}
           onChange={resultingHelpers.setValue}
-          optionLabel={`Swapped on ${getChainDexName(resultingChain)}`}
+          optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
         <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
       </FormControl>

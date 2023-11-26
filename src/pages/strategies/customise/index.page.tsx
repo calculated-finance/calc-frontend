@@ -7,7 +7,7 @@ import useStrategy from '@hooks/useStrategy';
 import { Strategy } from '@models/Strategy';
 import usePageLoad from '@hooks/usePageLoad';
 import { initialValues as globalInitialValues } from '@models/DcaInFormData';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
@@ -44,7 +44,7 @@ import { getExistingValues } from './getExistingValues';
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
 
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const { mutate, error, isError, isLoading } = useCustomiseStrategy();
 
@@ -166,7 +166,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 function Page() {
   const { query } = useRouter();
   const { data: strategy, isLoading } = useStrategy(query?.id as string);
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const { address } = useWallet();
 
   if (!strategy || !chain || !address) {

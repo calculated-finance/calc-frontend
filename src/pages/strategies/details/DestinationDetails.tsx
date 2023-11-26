@@ -16,7 +16,6 @@ import {
 import { Strategy } from '@models/Strategy';
 import { useWallet } from '@hooks/useWallet';
 import { getMarsUrl } from '@helpers/chains';
-import { useChain } from '@hooks/useChain';
 import {
   getStrategyPostSwapType,
   getStrategyReinvestStrategyId,
@@ -30,12 +29,10 @@ import useValidator from '@hooks/useValidator';
 import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {
-  const { chain } = useChain();
-  const { address } = useWallet();
   return (
     <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
       <Flex justify="end">
@@ -119,7 +116,7 @@ export function ValidatorDetails({ strategy }: { strategy: Strategy }) {
   );
 }
 
-export function DestinationDetails({ strategy, chain }: { strategy: Strategy; chain: Chains }) {
+export function DestinationDetails({ strategy, chainId }: { strategy: Strategy; chainId: ChainId }) {
   const { destinations } = strategy.rawData;
 
   const { address } = useWallet();
@@ -127,7 +124,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
   const { onCopy } = useClipboard(destinations[0].address || '');
   const toast = useToast();
 
-  const postSwapExecutionType = getStrategyPostSwapType(strategy, chain);
+  const postSwapExecutionType = getStrategyPostSwapType(strategy, chainId);
 
   const handleCopy = () => {
     onCopy();
@@ -152,7 +149,7 @@ export function DestinationDetails({ strategy, chain }: { strategy: Strategy; ch
           <Heading size="xs">Depositing to</Heading>
         </GridItem>
         <GridItem colSpan={1}>
-          <ChakraLink isExternal href={getMarsUrl()}>
+          <ChakraLink isExternal href={getMarsUrl(chainId)}>
             <Text fontSize="sm">Mars</Text>
           </ChakraLink>
         </GridItem>

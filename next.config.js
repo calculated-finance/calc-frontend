@@ -1,14 +1,12 @@
 /** @type {import('next').NextConfig} */
 
-const withImages = require('next-images');
-
-const nextConfig = {
+module.exports = {
   swcMinify: true,
   pageExtensions: ['page.tsx'],
   reactStrictMode: false,
   trailingSlash: true,
   productionBrowserSourceMaps: true,
-  redirects: [
+  redirects: () => [
     {
       source: '/create-strategy/dca-in/',
       destination: '/create-strategy/dca-in/assets',
@@ -20,19 +18,4 @@ const nextConfig = {
       permanent: true,
     },
   ],
-  // exportPathMap: async function () {
-  //   return {
-  //     '/': { page: '/' },
-  //   };
-  // },
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
-
-    return config;
-  },
 };
-
-module.exports = withImages(nextConfig);

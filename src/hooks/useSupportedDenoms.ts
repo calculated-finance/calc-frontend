@@ -1,22 +1,52 @@
-import { SUPPORTED_DENOMS } from '@utils/SUPPORTED_DENOMS';
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
-import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
-import usePairs, { allDenomsFromPairs } from './usePairs';
+import { V3Pair } from '@models/Pair';
+import { useChains } from '@cosmos-kit/react';
+import { getChainContractAddress, getChainInfo } from '@helpers/chains';
+import { ChainContext } from '@cosmos-kit/core';
+import { useQuery } from '@tanstack/react-query';
+import { queryClient } from 'src/pages/queryClient';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { values } from 'rambda';
+import { allDenomsFromPairs } from './usePairs';
+import getCalcClient from './useCalcClient/getClient/clients/cosmos';
+import { ChainId } from './useChainId/Chains';
 
-export function useSupportedDenoms(injectedChain?: Chains) {
-  const { chain: currentChain } = useChain();
+export function useSupportedDenoms() {
+  const allChainContexts = values(
+    useChains(
+      (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(
+        (chainId) => getChainInfo(chainId).chainName,
+      ),
+    ),
+  );
 
-  const chain = injectedChain || currentChain;
+  const fetchPairs = async (chainContext: ChainContext) => {
+    const client = await chainContext.getCosmWasmClient();
+    const calcClient = getCalcClient(
+      getChainContractAddress(chainContext.chain.chain_id as ChainId),
+      client,
+      chainContext.chain.chain_id as ChainId,
+    );
+    const pairs = await calcClient.fetchAllPairs();
+    queryClient.setQueryData(['pairs', chainContext.chain.chain_id], pairs);
+    return pairs;
+  };
 
-  const { data: pairsData } = usePairs();
+  const { data: allPairs } = useQuery<V3Pair[]>(
+    ['all-pairs'],
+    async () => (await Promise.all(allChainContexts.map(fetchPairs))).flat(),
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      enabled: !!allChainContexts,
+      meta: {
+        errorMessage: 'Error fetching pairs',
+      },
+    },
+  );
 
-  const { pairs } = pairsData;
+  const allDenoms = allDenomsFromPairs(allPairs);
 
-  const allDenoms = chain !== Chains.Kujira ? allDenomsFromPairs(pairs) : (SUPPORTED_DENOMS as string[]);
-
-  const allDenomInfos = useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
-
-  return allDenomInfos;
+  return useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
 }

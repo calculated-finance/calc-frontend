@@ -1,14 +1,14 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Text } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomSelect } from './DenomSelect';
 
 export default function DCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const {
     values: { initialDenom },

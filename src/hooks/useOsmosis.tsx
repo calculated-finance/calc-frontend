@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import * as Sentry from '@sentry/react';
 import { osmosis } from 'osmojs';
 import { getChainEndpoint } from '@helpers/chains';
-import { Chains } from './useChain/Chains';
 
 type IUseOsmosis = {
   query: any | null;
@@ -15,7 +14,7 @@ export const useOsmosis = create<IUseOsmosis>()((set) => ({
     set({ query: null });
     try {
       const { createRPCQueryClient } = osmosis.ClientFactory;
-      const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint(Chains.Osmosis) });
+      const client = await createRPCQueryClient({ rpcEndpoint: getChainEndpoint('osmosis-1') });
       set({ query: client });
     } catch (e) {
       Sentry.captureException(e, { tags: { page: 'useOsmosis' } });

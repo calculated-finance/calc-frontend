@@ -1,22 +1,26 @@
 import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, ModalOverlay } from '@chakra-ui/react';
 import { KADO_API_KEY } from 'src/constants';
-import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
+import { useCosmosKit } from '@hooks/useCosmosKit';
 
 function OnRampModalContent() {
-  const { connected, address } = useWallet();
-  const { chain } = useChain();
+  const { isWalletConnected, address } = useCosmosKit();
+  const { chainId } = useChainId();
 
-  const network = chain === Chains.Kujira ? 'kujira' : 'osmosis';
+  const network = {
+    'kaiyo-1': 'kujira',
+    'osmosis-1': 'osmosis',
+    'harpoon-4': 'kujira',
+    'osmo-test-5': 'osmosis',
+  }[chainId]!;
 
   return (
     <ModalContent mx={6}>
       <ModalHeader>Get axlUSDC now</ModalHeader>
       <ModalCloseButton />
       <ModalBody px={0} pb={8}>
-        {connected ? (
+        {isWalletConnected ? (
           <iframe
             title="kado"
             src={`https://app.kado.money/?apiKey=${KADO_API_KEY}&onRevCurrency=USDC&onToAddress=${address}&cryptoList=USDC&network=${network}&product=BUY`}

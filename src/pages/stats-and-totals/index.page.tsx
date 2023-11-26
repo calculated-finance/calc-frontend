@@ -1,12 +1,11 @@
 import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
-import useContractBalances, { useFeeTakerBalances } from '@hooks/useAdminBalances';
 import { BalanceList } from '@components/SpendableBalances';
 import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
-import useAdminStrategies from '@hooks/useAdminStrategies';
+import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
@@ -19,11 +18,13 @@ import {
   isStrategyActive,
   isStrategyAutoStaking,
 } from '@helpers/strategy';
-import { Chains } from '@hooks/useChain/Chains';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
+import useBalances from '@hooks/useBalances';
+import { useChainId } from '@hooks/useChainId';
+import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -46,8 +47,7 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
 function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
     .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
-    .map((strategy) => strategy.rawData.swapped_amount.amount)
-    .reduce((total, amount) => total + Number(amount), 0)
+    .reduce((total, strategy) => total + Number(strategy.rawData.swapped_amount.amount), 0)
     .toFixed(6);
 }
 
@@ -66,8 +66,7 @@ export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomIn
 function getTotalReceivedForDenom(denom: DenomInfo, strategies: Strategy[]) {
   return strategies
     .filter((strategy) => strategy.rawData.received_amount.denom === denom.id)
-    .map((strategy) => strategy.rawData.received_amount.amount)
-    .reduce((total, amount) => total + Number(amount), 0)
+    .reduce((total, strategy) => total + Number(strategy.rawData.received_amount.amount), 0)
     .toFixed(6);
 }
 
@@ -102,12 +101,7 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(
-  coins: Coin[] | undefined,
-  fiatPrices: any,
-  supportedDenoms: DenomInfo[],
-  injectedChain?: Chains,
-) {
+export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: DenomInfo[]) {
   return (
     coins
       ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
@@ -290,11 +284,12 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 
 function Page() {
   const supportedDenoms = useSupportedDenoms();
-  const { balances: contractBalances } = useContractBalances();
-  const { balances: feeTakerBalances } = useFeeTakerBalances();
+  const { chainId: chain } = useChainId();
+  const { data: contractBalances } = useBalances(getChainContractAddress(chain));
+  const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
   const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
 
-  const { data: allStrategies } = useAdminStrategies();
+  const { data: allStrategies } = useAllStrategies();
 
   const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 
@@ -369,14 +364,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(contractBalances, fiatPrices)} />
+            <BalanceList balances={orderCoinList(contractBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(feeTakerBalances, fiatPrices)} />
+            <BalanceList balances={orderCoinList(feeTakerBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>

@@ -1,12 +1,11 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { Denoms } from '@models/Denom';
 import { StrategyTypes } from '@models/StrategyTypes';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
 import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
-import { V2Pair, V3Pair } from '@models/Pair';
+import { V3Pair } from '@models/Pair';
 import {
   DAYS_IN_A_WEEK,
   DELEGATION_FEE,
@@ -19,7 +18,7 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { Chains } from '@hooks/useChain/Chains';
+import { ChainId } from '@hooks/useChainId/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
@@ -199,7 +198,7 @@ export function getStrategyPriceTrigger(strategy: Strategy) {
   return undefined;
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function getTargetPrice(strategy: Strategy, pairs: V3Pair[] | undefined) {
   let target_price;
 
   if (getStrategyPriceTrigger(strategy)) {
@@ -221,7 +220,7 @@ export function getTargetPrice(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | 
   return null;
 }
 
-export function getStrategyStartDate(strategy: Strategy, pairs: V2Pair[] | V3Pair[] | undefined) {
+export function getStrategyStartDate(strategy: Strategy, pairs: V3Pair[] | undefined) {
   const { trigger } = strategy.rawData;
   const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)
@@ -325,8 +324,8 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
   return Number(directedPrice.toFixed(6));
 }
 
-export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: Chains) {
-  if (chain === Chains.Osmosis) {
+export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
+  if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
   }
 
@@ -341,7 +340,7 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
   return Number(priceDeconversion(price).toFixed(pricePrecision));
 }
 
-export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
+export function getPriceCeilingFloor(strategy: Strategy, chain: ChainId) {
   if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
@@ -349,7 +348,7 @@ export function getPriceCeilingFloor(strategy: Strategy, chain: Chains) {
   return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
 }
 
-export function getBasePrice(strategy: Strategy, chain: Chains) {
+export function getBasePrice(strategy: Strategy, chain: ChainId) {
   const { base_receive_amount } = getWeightedScaleConfig(strategy) || {};
   if (!base_receive_amount) {
     return undefined;
@@ -374,16 +373,8 @@ export function getTotalReceived(strategy: Strategy) {
   return convertDenomFromCoin(strategy.rawData.received_amount);
 }
 
-export function hasSwapFees(strategy: Strategy) {
-  return (
-    !isDcaPlus(strategy) &&
-    getStrategyInitialDenom(strategy).id !== Denoms.USK &&
-    getStrategyResultingDenom(strategy).id !== Denoms.USK
-  );
-}
-
 export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
-  const feeFactor = hasSwapFees(strategy) ? SWAP_FEE + dexFee : dexFee;
+  const feeFactor = !isDcaPlus(strategy) ? SWAP_FEE + dexFee : dexFee;
   return getTotalReceived(strategy) / (1 - feeFactor);
 }
 

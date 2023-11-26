@@ -1,40 +1,38 @@
 import 'isomorphic-fetch';
-import { Asset, AssetList } from '@chain-registry/types';
-import * as Sentry from '@sentry/react';
-import { isMainnet } from '@utils/isMainnet';
-import testnetAssetList from 'src/assetLists/osmo-test-5.assetlist.json';
-import mainnetAssetList from 'src/assetLists/osmosis-1.assetlist.json';
+import { Asset } from '@chain-registry/types';
 import { useQuery } from '@tanstack/react-query';
-import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
+import { reduce } from 'rambda';
+import { useChainId } from './useChainId';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);
 }
 
 export function useAssetList() {
-  const { chain } = useChain();
+  const { chainId } = useChainId();
   const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
 
-  const chainIdentifier = isMainnet() ? 'osmosis-1/osmosis-1' : 'osmo-test-5/osmo-test-5';
+  return useQuery<Record<string, Asset>>(
+    ['assetList', chainId],
+    async () => {
+      const responses = await Promise.all(
+        ['osmosis-1', 'osmo-test-5'].map((chain) => fetch(`${baseUrl}/${chain}/${chain}.assetlist.json`)),
+      );
 
-  const backup = isMainnet() ? mainnetAssetList : testnetAssetList;
+      const assetLists = await Promise.all(responses.map((response) => response.json()));
 
-  return useQuery<AssetList>(
-    ['assetList'],
-    () =>
-      fetch(`${baseUrl}/${chainIdentifier}.assetlist.json`)
-        .then((res) => res.json())
-        .catch((err) => {
-          Sentry.captureException(err, { tags: { page: 'useAssetList' } });
-          return backup;
-        }),
+      return reduce(
+        (allAssets, asset: any) => ({ ...allAssets, [asset.base]: asset }),
+        {},
+        assetLists.map((l) => l.assets).flat(),
+      );
+    },
     {
       staleTime: Infinity,
       cacheTime: Infinity,
-      enabled: chain === Chains.Osmosis,
+      enabled: !!chainId,
       meta: {
-        errorMessage: 'Error fetching asset list',
+        errorMessage: 'Error fetching asset lists',
       },
     },
   );

@@ -1,27 +1,26 @@
-import { AssetList } from '@chain-registry/types';
+import { Asset } from '@chain-registry/types';
 import { ReactNode, useEffect } from 'react';
 import { create } from 'zustand';
 import { useAssetList } from './useAssetList';
-import { useChain } from './useChain';
-import { Chains } from './useChain/Chains';
+import { useChainId } from './useChainId';
 
 type AssetListState = {
-  assetList: AssetList | null;
-  setAssetList: (assetList: AssetList) => void;
+  assetList: Record<string, Asset> | null;
+  setAssetList: (assetList: Record<string, Asset>) => void;
 };
 
 export const useAssetListStore = create<AssetListState>()((set) => ({
   assetList: null,
-  setAssetList: (assetList: AssetList) => set({ assetList }),
+  setAssetList: (assetList: Record<string, Asset>) => set({ assetList }),
 }));
 
 export function useCachedAssetList() {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   const setAssetList = useAssetListStore((state) => state.setAssetList);
   const { data } = useAssetList();
 
   useEffect(() => {
-    if (data && chain === Chains.Osmosis) {
+    if (data) {
       setAssetList(data);
     }
   }, [data, chain, setAssetList]);

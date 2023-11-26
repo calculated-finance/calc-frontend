@@ -17,38 +17,20 @@ import {
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
-import useAdminStrategies from '@hooks/useAdminStrategies';
-import useFiatPrice from '@hooks/useFiatPrice';
+import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
 import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
 import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useAdmin } from '@hooks/useAdmin';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
-import { BarChartIcon, CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
-import TopPanel from '@components/TopPanel';
+import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
+import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
-
-function InfoPanel() {
-  return (
-    <Stack direction="row" layerStyle="panel" p={4} spacing={4}>
-      <Image src="/images/iceblock.svg" />
-      <Flex alignItems="center">
-        <Text textStyle="body">
-          Stay ice cold and calculated by using Calculated Finance &ndash; the smartest way to enter and exit positions
-          &ndash; complimented with pre- and post-swap automation to save time and counter emotional decision-making.
-        </Text>
-      </Flex>
-    </Stack>
-  );
-}
 
 function WarningPanel() {
   return (
@@ -73,51 +55,6 @@ const isStrategyAcculumating = (strategy: Strategy) => isDenomStable(getStrategy
 
 const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
 
-function InvestmentThesis({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
-  const acculumatingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
-  ).map((id) => getDenomInfo(id));
-
-  const profitTakingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => getStrategyInitialDenom(strategy).id)),
-  ).map((id) => getDenomInfo(id));
-  return (
-    <Flex layerStyle="panel" p={8} alignItems="center" h="full">
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Stack spacing={8}>
-          <Heading size="md">My thesis:</Heading>
-          <Heading size="xs">
-            <Wrap spacingX={6} spacingY={2} align="center">
-              <Text>Asset(s) accumulating:</Text>
-              <HStack>
-                {acculumatingAssets.length ? (
-                  acculumatingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
-                ) : (
-                  <Text>-</Text>
-                )}
-              </HStack>
-            </Wrap>
-          </Heading>
-          <Heading size="xs">
-            <Wrap spacingX={6} spacingY={2} align="center">
-              <Text>Asset(s) taking profit on:</Text>
-              <HStack>
-                {profitTakingAssets.length ? (
-                  profitTakingAssets.map((asset) => <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />)
-                ) : (
-                  <Text>-</Text>
-                )}
-              </HStack>
-            </Wrap>
-          </Heading>
-        </Stack>
-      )}
-    </Flex>
-  );
-}
 function InvestmentThesisWithActiveStrategies({
   strategies,
   isLoading,
@@ -143,7 +80,6 @@ function InvestmentThesisWithActiveStrategies({
             <Icon as={CrownIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
             <Heading size="md">My investment thesis:</Heading>
           </HStack>
-
           <Flex direction="row" gap={8}>
             <Stack direction="column">
               <Heading size="xs" textColor="gray.200">
@@ -151,7 +87,6 @@ function InvestmentThesisWithActiveStrategies({
               </Heading>
               <Heading size="2xl"> {activeStrategies.length}</Heading>
             </Stack>
-
             <Stack spacing={6}>
               <Wrap spacingX={6} spacingY={2} align="center">
                 <Text>Asset(s) accumulating:</Text>
@@ -165,7 +100,6 @@ function InvestmentThesisWithActiveStrategies({
                   )}
                 </HStack>
               </Wrap>
-
               <Wrap spacingX={6} spacingY={2} align="center">
                 <Text>Asset(s) taking profit on:</Text>
                 <HStack>
@@ -186,50 +120,12 @@ function InvestmentThesisWithActiveStrategies({
   );
 }
 
-function ActiveStrategies({ strategies, isLoading }: { strategies: Strategy[] | undefined; isLoading: boolean }) {
-  const { connected } = useWallet();
-  const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
-  return (
-    <Flex layerStyle="panel" p={8} alignItems="center">
-      {connected && isLoading ? (
-        <Spinner />
-      ) : (
-        <Stack spacing={4}>
-          <Heading size="md">My active CALC strategies</Heading>
-          <Heading data-testid="my-active-strategy-count" fontSize="5xl">
-            {activeStrategies.length}
-          </Heading>
-          <Stack direction={{ base: 'column', sm: 'row' }}>
-            <LinkWithQuery href="/create-strategy">
-              <Button w={44} variant="outline" colorScheme="blue">
-                {activeStrategies.length ? 'Create new strategy' : 'Set up a strategy'}
-              </Button>
-            </LinkWithQuery>
-            {Boolean(activeStrategies.length) && (
-              <LinkWithQuery href="/strategies">
-                <Button w={44} variant="outline" colorScheme="blue">
-                  Review my strategies
-                </Button>
-              </LinkWithQuery>
-            )}
-          </Stack>
-        </Stack>
-      )}
-    </Flex>
-  );
-}
-
 function TotalInvestment() {
-  const kujiraSupportedDenoms = useSupportedDenoms(Chains.Kujira);
-  const osmosisSupportedDenoms = useSupportedDenoms(Chains.Osmosis);
-  const { data: fiatPrices } = useFiatPrice(kujiraSupportedDenoms[0], [
-    ...kujiraSupportedDenoms,
-    ...osmosisSupportedDenoms,
-  ]);
-  const { data: kujiraStrategies } = useAdminStrategies(Chains.Kujira);
-  const { data: osmosisStrategies } = useAdminStrategies(Chains.Osmosis);
+  const supportedDenoms = useSupportedDenoms();
+  const { prices } = useFiatPrices();
+  const { data: allStrategies } = useAllStrategies();
 
-  if (!fiatPrices || !kujiraStrategies || !osmosisStrategies) {
+  if (!prices || !allStrategies) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -237,24 +133,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmountsKujira = getTotalSwapped(kujiraStrategies, kujiraSupportedDenoms);
-  const totalSwappedTotalKujira = totalFromCoins(
-    totalSwappedAmountsKujira,
-    fiatPrices,
-    kujiraSupportedDenoms,
-    Chains.Kujira,
-  );
-
-  const totalSwappedAmountsOsmosis = getTotalSwapped(osmosisStrategies, osmosisSupportedDenoms);
-  const totalSwappedTotalOsmosis = totalFromCoins(
-    totalSwappedAmountsOsmosis,
-    fiatPrices,
-    osmosisSupportedDenoms,
-    Chains.Osmosis,
-  );
-  const strategiesCount = kujiraStrategies.length + osmosisStrategies.length;
-
-  const totalSwappedTotal = totalSwappedTotalOsmosis + totalSwappedTotalKujira;
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, prices, supportedDenoms);
 
   const formattedValue =
     totalSwappedTotal >= 1000000
@@ -270,7 +150,7 @@ function TotalInvestment() {
       <Flex gap={12} direction={['column', null, 'row']}>
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {strategiesCount}
+            {allStrategies.length}
             <Text fontSize="md">total strategies created</Text>
           </Heading>
         </Stack>
@@ -284,30 +164,6 @@ function TotalInvestment() {
         </Stack>
       </Flex>
     </Stack>
-  );
-}
-
-function OnboardingPanel() {
-  return (
-    <VStack
-      layerStyle="panel"
-      p={8}
-      alignItems="left"
-      borderColor="brand.200"
-      borderWidth={2}
-      backgroundImage="/images/backgrounds/twist-thin.svg"
-    >
-      <Icon as={BarChartIcon} stroke="brand.200" strokeWidth={5} w={6} h={6} />
-      <Stack spacing={1}>
-        <Heading size="md">Ready to set up a CALC strategy?</Heading>
-        <Text fontSize="sm">Set up smart recurring swaps such as DCA or Weighted Scale in just 30 seconds.</Text>
-      </Stack>
-      <LinkWithQuery passHref href="/create-strategy">
-        <Button w={44} variant="outline" size="sm">
-          Get started
-        </Button>
-      </LinkWithQuery>
-    </VStack>
   );
 }
 
@@ -350,7 +206,6 @@ export function LearnAboutCalcPanel() {
 
 function HomeGrid() {
   const { connected } = useWallet();
-  const { chain } = useChain();
   const { data: strategies, isLoading } = useStrategies();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
@@ -368,7 +223,7 @@ function HomeGrid() {
       )}
 
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
-        {chain !== Chains.Moonbeam && <TotalInvestment />}
+        <TotalInvestment />
       </GridItem>
 
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>

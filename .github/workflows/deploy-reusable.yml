@@ -21,18 +21,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      NEXT_PUBLIC_CHAIN_ID:
-        required: true
-      NEXT_PUBLIC_CONTRACT_ADDRESS:
-        required: true
-      NEXT_PUBLIC_REST_ENDPOINT:
-        required: true
-      NEXT_PUBLIC_RPC_ENDPOINT:
-        required: true
-      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS:
-        required: true
-      NEXT_PUBLIC_FEE_TAKER_ADDRESS:
-        required: true
       NEXT_PUBLIC_HOTJAR_SITE_ID:
         required: true
 
@@ -44,19 +32,12 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
-      NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_CONTRACT_ADDRESS }}
-      NEXT_PUBLIC_REST_ENDPOINT: ${{ secrets.NEXT_PUBLIC_REST_ENDPOINT }}
-      NEXT_PUBLIC_RPC_ENDPOINT: ${{ secrets.NEXT_PUBLIC_RPC_ENDPOINT }}
-      NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS: ${{ secrets.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS }}
-      NEXT_PUBLIC_FEE_TAKER_ADDRESS: ${{ secrets.NEXT_PUBLIC_FEE_TAKER_ADDRESS }}
-      NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
-
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       BUCKET_DOMAIN_NAME: ${{ inputs.BUCKET_DOMAIN_NAME }}
       PROJECT_NAME: calc
+      NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -83,7 +64,7 @@ jobs:
           role-duration-seconds: 1200
 
       - name: Build App
-        run: yarn build
+        run: yarn build:${{ inputs.ENVIRONMENT }}
 
       - name: Export App
         run: yarn export

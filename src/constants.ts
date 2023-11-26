@@ -1,22 +1,7 @@
-import { NETWORK } from 'kujira.js';
-
-// Environment specific constants
-export const CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7';
-export const STAKING_ROUTER_CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_STAKING_ROUTER_CONTRACT_ADDRESS ||
-  'kujira1n2jm3jrjzztjvdljwh549m8zx6w5v59svvta5kkysf5znr40af8qu0vpca';
-export const RPC_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || 'https://kujira-testnet-rpc.polkachu.com/';
-
-export const OSMOSIS_RPC_ENDPOINT_MAINNET =
-  process.env.NEXT_PUBLIC_OSMOSIS_RPC_ENDPOINT_MAINNET || 'https://rpc.osmosis.zone/';
-export const CHAIN_ID = (process.env.NEXT_PUBLIC_CHAIN_ID as NETWORK) || 'harpoon-4';
-export const FEE_TAKER_ADDRESS =
-  process.env.NEXT_PUBLIC_FEE_TAKER_ADDRESS || 'kujira1tn65m5uet32563jj3e2j3wxshht960znv64en0';
+import { ChainId } from '@hooks/useChainId/Chains';
 
 export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 
-export const LAUNCHDARKLY_SDK_CLIENT_SIDE_ID = '63928928a029f71140f60625';
 // Generic constants (not environment specific)
 export const CREATE_VAULT_FEE = 0.1; // 10c
 export const CANCEL_VAULT_FEE = 0.5; // $1
@@ -65,6 +50,11 @@ export const SECONDS_IN_A_MINUTE = 60;
 export const COIN_DECIMAL_LIMIT = 6;
 export const COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS = 1;
 
+export const COSMOS_KIT_KUJIRA_MAINNET = 'kujira';
+export const COSMOS_KIT_KUJIRA_TESTNET = 'kujiratestnet';
+export const COSMOS_KIT_OSMOSIS_MAINNET = 'osmosis';
+export const COSMOS_KIT_OSMOSIS_TESTNET = 'osmosistestnet';
+
 export const ETH_DCA_FACTORY_CONTRACT_ADDRESS = '0x8c7877a15DEad1732e33d4756899CD13bC61d0BD';
 
 export const ETH_DCA_EVENT_MANAGER_ADDRESS = '0xFEbc484b5381a9606fBD12a737978442D34CD0A5';
@@ -74,8 +64,9 @@ export const ETH_TRIGGER_MANAGER_CONTRACT_ADDRESS = '0x0451ABE786ADDce2C62393127
 export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3f6147cC';
 
 export const featureFlags =
-  CHAIN_ID === 'kaiyo-1'
+  process.env.NEXT_PUBLIC_APP_ENV === 'production'
     ? {
+        cosmoskitEnabled: true,
         stationEnabled: false,
         leapEnabled: false,
         amplitudeEnabled: true,
@@ -83,14 +74,13 @@ export const featureFlags =
         singleAssetsEnabled: false,
       }
     : {
+        cosmoskitEnabled: true,
         stationEnabled: false,
         leapEnabled: true,
         amplitudeEnabled: false,
         controlDeskEnabled: true,
         singleAssetsEnabled: true,
       };
-
-export const DEFAULT_PAGE_SIZE = 1000;
 
 export const contentData = {
   dcaIn: {
@@ -103,3 +93,6 @@ export const contentData = {
     },
   },
 };
+
+export const CHAINS = ['kaiyo-1', 'harpoon-4', 'osmosis-1', 'osmo-test-5'] as ChainId[];
+export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];

@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "dev:prod": "dotenv -e ./.env.production -- next dev",
-    "build": "next build",
+    "build:test": "dotenv -e ./.env.test -- next build",
+    "build:production": "dotenv -e ./.env.production -- next build",
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
@@ -26,13 +27,18 @@
     "@cosmjs/proto-signing": "^0.31.1",
     "@cosmjs/stargate": "^0.31.1",
     "@cosmjs/tendermint-rpc": "^0.31.1",
+    "@cosmos-kit/core": "^2.7.6",
+    "@cosmos-kit/keplr": "^2.4.10",
+    "@cosmos-kit/leap": "^2.4.9",
+    "@cosmos-kit/react": "^2.9.10",
+    "@cosmos-kit/xdefi": "^2.4.8",
     "@cosmostation/cosmos-client": "^0.0.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/karla": "^4.5.9",
     "@fusion-icons/react": "^0.0.0",
     "@keplr-wallet/types": "^0.11.16",
-    "@leapwallet/cosmos-snap-provider": "^0.1.22",
+    "@leapwallet/cosmos-snap-provider": "^0.1.25",
     "@openzeppelin/contracts": "^4.9.1",
     "@sentry/react": "^7.51.0",
     "@tanstack/react-query": "^4.2.3",
@@ -40,7 +46,7 @@
     "@terra-money/wallet-controller": "^4.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "ahooks": "^3.7.2",
-    "chain-registry": "^1.10.0",
+    "chain-registry": "^1.19.0",
     "chakra-dayzed-datepicker": "^0.2.3",
     "chakra-react-select": "^4.2.2",
     "cosmjs-types": "^0.5.2",
@@ -61,6 +67,7 @@
     "prop-types": "^15.8.1",
     "rambda": "^7.5.0",
     "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.2",
     "react-hotjar": "^5.2.0",
@@ -109,5 +116,8 @@
     "timekeeper": "^2.2.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
+  },
+  "resolutions": {
+    "next/@swc/helpers": "0.4.36"
   }
 }

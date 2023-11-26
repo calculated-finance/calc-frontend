@@ -1,11 +1,11 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup } from '@chakra-ui/react';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { getChainInfo } from '@helpers/chains';
+import { useChainId } from '@hooks/useChainId';
 import { useField } from 'formik';
 
 export default function RecipientAccount() {
   const [field, meta] = useField({ name: 'recipientAccount' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -15,7 +15,7 @@ export default function RecipientAccount() {
         <Input fontSize="sm" placeholder="Input Wallet" {...field} />
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      <FormHelperText>Ensure that this is a valid {Chains[chain]} address.</FormHelperText>
+      <FormHelperText>Ensure that this is a valid {getChainInfo(chain).chainName} address.</FormHelperText>
     </FormControl>
   );
 }

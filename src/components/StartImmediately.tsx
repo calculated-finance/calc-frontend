@@ -3,8 +3,7 @@ import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import YesNoValues from '@models/YesNoValues';
 
 const startImediatelyData: { value: YesNoValues; label: string }[] = [
@@ -20,7 +19,7 @@ const startImediatelyData: { value: YesNoValues; label: string }[] = [
 
 export default function StartImmediately() {
   const [field, , helpers] = useField({ name: 'startImmediately' });
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,
@@ -43,7 +42,7 @@ export default function StartImmediately() {
             );
           })}
         </Radio>
-        {chain !== Chains.Osmosis && <TriggerType />}
+        {['kaiyo-1', 'harpoon-4'].includes(chain) && <TriggerType />}
       </HStack>
     </FormControl>
   );

@@ -4,10 +4,8 @@ import Submit from '@components/Submit';
 import RecipientAccount from '@components/RecipientAccount';
 import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoStakeValidator';
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { useWallet } from '@hooks/useWallet';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
@@ -19,8 +17,7 @@ import { Reinvest } from '../../Reinvest';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
-  const { chain } = useChain();
-  const { address } = useWallet();
+  const { chainId } = useChainId();
 
   const sendToWalletData: { value: PostPurchaseOptions; label: string; supported: boolean; enabled: boolean }[] = [
     {
@@ -45,7 +42,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
       supported: true,
-      enabled: chain === Chains.Osmosis,
+      enabled: ['osmosis-1', 'osmo-test-5'].includes(chainId),
     },
   ].filter((option) => option.enabled);
 

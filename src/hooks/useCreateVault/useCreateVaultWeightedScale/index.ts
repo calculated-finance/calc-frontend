@@ -17,7 +17,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
   const { price } = useFiatPrice(initialDenom);
-  const client = useCalcSigningClient();
+  const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
 
   return useMutation<

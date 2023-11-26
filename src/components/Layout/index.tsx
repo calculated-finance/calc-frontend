@@ -18,8 +18,7 @@ import { useRouter } from 'next/router';
 import { useCookieState } from 'ahooks';
 import { Graph2Icon, ViewListIcon } from '@fusion-icons/react/interface';
 import { useAdmin } from '@hooks/useAdmin';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { featureFlags } from 'src/constants';
@@ -49,11 +48,11 @@ function AppHeaderForSidebar() {
 }
 
 function AppHeader() {
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <LinkWithQuery href="/">
-        {chain === Chains.Osmosis ? (
+        {['osmosis-1', 'osmo-test-5'].includes(chain) ? (
           <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
         ) : (
           <Image cursor="pointer" src="/images/logo.svg" w={105} />
@@ -114,7 +113,7 @@ function FlowBreadcrumbs() {
 
 function FlowLayout({ children }: { children: ReactElement }) {
   const { address } = useWallet();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
 
   const router = useRouter();
   const { pathname } = router;
@@ -125,9 +124,13 @@ function FlowLayout({ children }: { children: ReactElement }) {
     <>
       <AppHeader />
       <Content
-        bgImage={chain === Chains.Osmosis ? '/images/backgrounds/osmoBackground.svg' : '/images/backgrounds/twist.svg'}
+        bgImage={
+          ['osmosis-1', 'osmo-test-5'].includes(chain)
+            ? '/images/backgrounds/osmoBackground.svg'
+            : '/images/backgrounds/twist.svg'
+        }
         backgroundPosition="bottom"
-        backgroundSize={chain === Chains.Osmosis ? 'cover' : 'center'}
+        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chain) ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
         minH="100vh"
         backgroundAttachment="fixed"

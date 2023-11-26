@@ -16,7 +16,7 @@ function usePageLoad(initialState = false) {
       router.events.on('routeChangeComplete', setPageLoading.off);
       router.events.on('routeChangeError', setPageLoading.off);
     };
-  }, []);
+  });
 
   return { isPageLoading, setPageLoading };
 }

@@ -1,16 +1,25 @@
-import { useMetamask } from '@hooks/useMetamask';
 import { useWallet } from '@hooks/useWallet';
 import { useConfig } from '@hooks/useConfig';
-import { useChain } from '@hooks/useChain';
+import { useChainId } from '@hooks/useChainId';
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { useQuery } from '@tanstack/react-query';
 import getClient from './getClient';
 
 export function useCalcSigningClient() {
-  const { chainConfig } = useChain();
+  const { chainId, chainConfig } = useChainId();
   const fetchedConfig = useConfig();
-  const evmSigner = useMetamask((state) => state.signer);
-  const { signingClient: cosmSigner } = useWallet();
+  const { connected, getSigningClient } = useWallet();
 
-  if (!chainConfig) return null;
+  const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient | null>(
+    ['signingClient', chainId],
+    () => getSigningClient!(chainId),
+    {
+      enabled: !!chainId && !!connected && !!getSigningClient,
+      meta: {
+        errorMessage: 'Error fetching signing client',
+      },
+    },
+  );
 
-  return getClient(chainConfig, fetchedConfig, evmSigner, cosmSigner);
+  return { calcSigningClient: getClient(chainConfig, fetchedConfig, signingClient), ...other };
 }

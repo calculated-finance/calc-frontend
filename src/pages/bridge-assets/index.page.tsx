@@ -3,8 +3,7 @@ import { getSidebarLayout } from '@components/Layout';
 import SquidModal from '@components/SquidModal';
 import 'isomorphic-fetch';
 import OnRampModal from '@components/OnRampModalContent';
-import { useChain } from '@hooks/useChain';
-import { Chains } from '@hooks/useChain/Chains';
+import { useChainId } from '@hooks/useChainId';
 
 type GetAssetsCardProps = {
   name: string;
@@ -39,11 +38,11 @@ function BridgeAssetsCard({ name, description, image, href, cta, onClick }: GetA
 function BridgeAssetsCards() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
-  const { chain } = useChain();
+  const { chainId: chain } = useChainId();
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>
-        {chain === Chains.Kujira && (
+        {['kaiyo-1', 'harpoon-4'].includes(chain) && (
           <>
             <BridgeAssetsCard
               name="Cross Chain Bridge"
@@ -68,7 +67,7 @@ function BridgeAssetsCards() {
           onClick={onOpen}
           cta="Get axlUSDC now"
         />
-        {chain === Chains.Kujira && (
+        {['kaiyo-1', 'harpoon-4'].includes(chain) && (
           <BridgeAssetsCard
             name="Mint USK"
             description="Use ATOM or DOT as collateral to mint the USK stablecoin."
