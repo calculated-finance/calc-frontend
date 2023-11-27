@@ -30,6 +30,7 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     name: 'KUJI',
     icon: '/images/denoms/kuji.svg',
     coingeckoId: 'kujira',
+    stakeable: true,
     stakeableAndSupported: true,
     significantFigures: 6,
   },
