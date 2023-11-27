@@ -25,7 +25,7 @@ export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
     stakeableAndSupported: true,
     stakeable: true,
     significantFigures: 6,
-    enabledInDcaPlus: false,
+    enabledInDcaPlus: true,
   },
   [TestnetDenoms.AXL]: {
     name: 'axlUSDC',
