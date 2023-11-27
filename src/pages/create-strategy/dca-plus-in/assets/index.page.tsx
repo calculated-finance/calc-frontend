@@ -16,7 +16,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
@@ -38,8 +38,8 @@ function DcaPlusIn() {
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances });
 
   const onSubmit = async (formData: DcaInFormDataStep1) => {
-    await actions.updateAction(formData);
-    await nextStep();
+    actions.updateAction(formData);
+    nextStep();
   };
 
   if (!pairs) {
@@ -68,14 +68,15 @@ function DcaPlusIn() {
 
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
-
               <DCAInInitialDenom />
-              <DCAInResultingDenom denoms={
-                values.initialDenom
-                  ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
-                  : []
-              } />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              <DCAInResultingDenom
+                denoms={
+                  values.initialDenom
+                    ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)).filter(isSupportedDenomForDcaPlus)
+                    : []
+                }
+              />
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>
@@ -92,12 +93,7 @@ function Page() {
         formName: FormNames.DcaPlusIn,
       }}
     >
-
-      {featureFlags.singleAssetsEnabled ?
-        <Assets />
-        :
-        <DcaPlusIn />
-      }
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaPlusIn />}
     </StrategyInfoProvider>
   );
 }

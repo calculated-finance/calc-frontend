@@ -4,31 +4,7 @@ import { assets, chains } from 'chain-registry';
 import { wallets as keplrWallets } from '@cosmos-kit/keplr';
 import { wallets as leapWallets } from '@cosmos-kit/leap';
 import { wallets as xdefiWallets } from '@cosmos-kit/xdefi';
-import { SigningCosmWasmClientOptions } from '@cosmjs/cosmwasm-stargate';
-import { GasPrice } from '@cosmjs/stargate';
-import { SignerOptions } from '@cosmos-kit/core';
 import { isMobile } from 'react-device-detect';
-
-export const signerOptions: SignerOptions = {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  signingCosmwasm: (chain: Chain) => {
-    const denom = {
-      'kaiyo-1': 'ukuji',
-      'harpoon-4': 'ukuji',
-      'osmosis-1': 'uosmo',
-      'osmo-test-5': 'uosmo',
-    }[chain.chain_id as string];
-
-    if (denom) {
-      return {
-        gasPrice: GasPrice.fromString(`0.015${denom}`),
-      } as SigningCosmWasmClientOptions;
-    }
-
-    return undefined;
-  },
-};
 
 export function ChainProvider({ children }: ChildrenProp) {
   return (
@@ -38,7 +14,6 @@ export function ChainProvider({ children }: ChildrenProp) {
       wallets={[...leapWallets, ...keplrWallets, ...xdefiWallets].filter((wallet) =>
         isMobile ? !wallet.isModeExtension : wallet.isModeExtension,
       )}
-      signerOptions={signerOptions}
       endpointOptions={{
         isLazy: !(process.env.NEXT_PUBLIC_APP_ENV === 'production'),
         endpoints: {

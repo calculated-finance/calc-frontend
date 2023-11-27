@@ -23,7 +23,7 @@ import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import DCAOutInitialDenom from '@components/DCAOutInitialDenom';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { useWallet } from '@hooks/useWallet';
@@ -74,14 +74,14 @@ function DcaPlusOut() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
       {({ values }) => (
         <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
-
           <AssetPageStrategyButtons />
           <Form autoComplete="off">
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
               <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>
@@ -91,7 +91,6 @@ function DcaPlusOut() {
 }
 
 function Page() {
-
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -100,11 +99,7 @@ function Page() {
         formName: FormNames.DcaPlusOut,
       }}
     >
-      {featureFlags.singleAssetsEnabled ?
-        <Assets />
-        :
-        <DcaPlusOut />
-      }
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaPlusOut />}
     </StrategyInfoProvider>
   );
 }

@@ -71,7 +71,6 @@ export function BalanceList({ balances = [] }: { balances: Coin[] | undefined })
 
 export function SpendableBalances() {
   const { data: balances } = useBalances();
-  const { isAdmin } = useAdmin();
 
   return (
     <>

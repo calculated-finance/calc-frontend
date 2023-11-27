@@ -24,7 +24,6 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     stakeable: false,
     stable: true,
     coingeckoId: 'usk',
-
     significantFigures: 6,
   },
   [MainnetDenoms.Kuji]: {

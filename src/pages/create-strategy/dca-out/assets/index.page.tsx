@@ -19,7 +19,7 @@ import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { useWallet } from '@hooks/useWallet';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import Spinner from '@components/Spinner';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { TransactionType } from '@components/TransactionType';
@@ -81,8 +81,9 @@ function DcaOut() {
             <Stack direction="column" spacing={6}>
               <DCAOutInitialDenom denoms={denoms} />
               <DCAOutResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>
@@ -100,9 +101,7 @@ function Page() {
         formName: FormNames.DcaOut,
       }}
     >
-      {featureFlags.singleAssetsEnabled ?
-        <Assets /> :
-        <DcaOut />}
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaOut />}
     </StrategyInfoProvider>
   );
 }

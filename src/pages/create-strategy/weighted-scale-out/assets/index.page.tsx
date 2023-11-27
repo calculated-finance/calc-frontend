@@ -21,7 +21,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import DCAOutResultingDenom from '@components/DCAOutResultingDenom';
 import { featureFlags } from 'src/constants';
@@ -66,7 +66,6 @@ function WeightedScaleOut() {
     resultingDenom: state.step1.resultingDenom,
   };
 
-
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -80,7 +79,7 @@ function WeightedScaleOut() {
               <DCAOutResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>
@@ -98,14 +97,7 @@ function Page() {
         formName: FormNames.WeightedScaleOut,
       }}
     >
-
-      {featureFlags.singleAssetsEnabled ?
-
-        <Assets />
-        :
-        <WeightedScaleOut />
-      }
-
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <WeightedScaleOut />}
     </StrategyInfoProvider>
   );
 }
