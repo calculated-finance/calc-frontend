@@ -1,4 +1,4 @@
-name: Run Tests
+name: Lint and Typecheck
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
         required: true
       NEXT_PUBLIC_HOTJAR_SITE_ID:
         required: true
-  # pull_request:
+  pull_request:
 
 jobs:
   test:
@@ -40,16 +40,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Run Lint
         run: yarn lint
 
       - name: Run Typecheck
         run: yarn typecheck
-
-      - name: Run Tests
-        run: yarn test --coverage
