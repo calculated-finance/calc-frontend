@@ -31,7 +31,10 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
     const significantFigures = findDenomUnits?.exponent || 6;
 
-    const denoms = { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis };
+    const denoms = {
+      ...mainnetDenomsOsmosis,
+      ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? testnetDenomsOsmosis : {}),
+    };
     const scopedDenom = denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis;
 
     let denomInfo = {
@@ -66,7 +69,10 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     };
   }
 
-  const kujiraDenoms = { ...mainnetDenomsKujira, ...testnetDenomsKujira };
+  const kujiraDenoms = {
+    ...mainnetDenomsKujira,
+    ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? testnetDenomsKujira : {}),
+  };
   const kujiraAsset = kujiraDenoms[denom as MainnetDenoms | TestnetDenoms];
 
   if (kujiraAsset) {
