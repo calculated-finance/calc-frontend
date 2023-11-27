@@ -1,4 +1,4 @@
-name: Run Tests
+name: Lint and Typecheck
 
 on:
   workflow_call:
@@ -18,7 +18,7 @@ on:
         required: true
       NEXT_PUBLIC_HOTJAR_SITE_ID:
         required: true
-  # pull_request:
+  pull_request:
 
 jobs:
   test:
@@ -50,6 +50,3 @@ jobs:
 
       - name: Run Typecheck
         run: yarn typecheck
-
-      - name: Run Tests
-        run: yarn test --coverage
