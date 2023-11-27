@@ -16,7 +16,7 @@ export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
     stable: true,
     coingeckoId: 'usk',
     significantFigures: 6,
-    enabledInDcaPlus: true,
+    enabledInDcaPlus: false,
   },
   [TestnetDenoms.Kuji]: {
     name: 'KUJI',
@@ -34,21 +34,21 @@ export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
-    enabledInDcaPlus: true,
+    enabledInDcaPlus: false,
   },
   [TestnetDenoms.LUNA]: {
     name: 'LUNA',
     icon: '/images/denoms/luna.svg',
     coingeckoId: 'terra-luna',
     significantFigures: 6,
-    enabledInDcaPlus: true,
+    enabledInDcaPlus: false,
   },
   [TestnetDenoms.OSMO]: {
     name: 'OSMO',
     icon: '/images/denoms/osmo.svg',
     coingeckoId: 'osmosis',
     significantFigures: 6,
-    enabledInDcaPlus: true,
+    enabledInDcaPlus: false,
   },
   [TestnetDenoms.NBTC]: {
     name: 'NBTC',

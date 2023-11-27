@@ -34,7 +34,7 @@ export function useSupportedDenoms() {
   };
 
   const { data: allPairs } = useQuery<V3Pair[]>(
-    ['all-pairs'],
+    ['all-pairs', process.env.NEXT_PUBLIC_APP_ENV],
     async () => (await Promise.all(allChainContexts.map(fetchPairs))).flat(),
     {
       cacheTime: Infinity,

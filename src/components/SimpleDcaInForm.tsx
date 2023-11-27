@@ -55,6 +55,8 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
+import { useWallet } from '@hooks/useWallet';
+import { ConnectWalletButton } from './StepOneConnectWallet';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -196,6 +198,7 @@ function SimpleDcaInSwapAmount({
 }
 
 function SimpleDcaInForm() {
+  const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
   const {
@@ -260,11 +263,15 @@ function SimpleDcaInForm() {
                       initialDenomString={values.initialDenom}
                       resultingDenomString={values.resultingDenom}
                     />
-                    <SummaryAgreementForm
-                      isError={isError}
-                      error={error}
-                      onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
-                    />
+                    {connected ? (
+                      <SummaryAgreementForm
+                        isError={isError}
+                        error={error}
+                        onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
+                      />
+                    ) : (
+                      <ConnectWalletButton />
+                    )}
                   </Stack>
                 )}
               </NewStrategyModalBody>

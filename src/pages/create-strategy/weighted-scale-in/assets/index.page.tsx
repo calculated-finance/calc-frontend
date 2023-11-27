@@ -16,7 +16,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyTypes } from '@models/StrategyTypes';
 import Spinner from '@components/Spinner';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { useWallet } from '@hooks/useWallet';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
 import DCAInResultingDenom from '@components/DCAInResultingDenom';
@@ -69,9 +69,10 @@ function WeightedScaleIn() {
             <Stack direction="column" spacing={6}>
               <DCAInInitialDenom />
               <DCAInResultingDenom
-                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []} />
+                denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+              />
 
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>
@@ -89,11 +90,7 @@ function Page() {
         formName: FormNames.WeightedScaleIn,
       }}
     >
-      {featureFlags.singleAssetsEnabled ?
-        <Assets />
-        :
-        <WeightedScaleIn />
-      }
+      {featureFlags.singleAssetsEnabled ? <Assets /> : <WeightedScaleIn />}
     </StrategyInfoProvider>
   );
 }

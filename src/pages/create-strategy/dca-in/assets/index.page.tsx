@@ -16,7 +16,7 @@ import Spinner from '@components/Spinner';
 import { useWallet } from '@hooks/useWallet';
 import Submit from '@components/Submit';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
-import { StepOneConnectWallet } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import dcaInSteps from '@formConfig/dcaIn';
 import { featureFlags } from 'src/constants';
 import DCAInInitialDenom from '@components/DCAInInitialDenom';
@@ -69,7 +69,7 @@ function DcaIn() {
               <DCAInResultingDenom
                 denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
               />
-              {connected ? <Submit>Next</Submit> : <StepOneConnectWallet />}
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>

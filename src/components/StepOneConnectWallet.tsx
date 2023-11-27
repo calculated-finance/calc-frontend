@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { useCosmosKit } from '@hooks/useCosmosKit';
 
-export function StepOneConnectWallet() {
+export function ConnectWalletButton() {
   const { openView } = useCosmosKit();
 
   return <Button onClick={openView}>Connect to a wallet</Button>;
