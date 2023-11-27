@@ -52,10 +52,10 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { formatFiat } from '@helpers/format/formatFiat';
+import { useWallet } from '@hooks/useWallet';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
-import { useWallet } from '@hooks/useWallet';
 import { ConnectWalletButton } from './StepOneConnectWallet';
 
 type SimpleDcaModalHeaderProps = {
