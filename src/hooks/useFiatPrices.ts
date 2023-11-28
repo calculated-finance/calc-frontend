@@ -42,9 +42,7 @@ const useFiatPrices = () => {
         throw new Error('Failed to fetch fiat prices');
       }
 
-      const json = await response.json();
-      console.log(json);
-      return json;
+      return response.json();
     },
     {
       cacheTime: 5000,
