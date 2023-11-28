@@ -2,7 +2,7 @@ import { MainnetDenomsOsmosis } from '@models/Denom';
 import { DenomInfoWithoutId } from './DenomInfoWithoutId';
 
 export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInfoWithoutId>> = {
-  [MainnetDenomsOsmosis.AXL]: {
+  [MainnetDenomsOsmosis.axlUSDC]: {
     coingeckoId: 'usd-coin',
     stable: true,
   },
@@ -32,7 +32,7 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     coingeckoId: 'inter-stable-token',
     stable: true,
   },
-  [MainnetDenomsOsmosis.AXLUSDT]: {
+  [MainnetDenomsOsmosis.axlUSDT]: {
     coingeckoId: 'axelar-usdt',
     stable: true,
   },
@@ -69,5 +69,9 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   },
   [MainnetDenomsOsmosis.OSMO]: {
     stakeable: true,
+  },
+  [MainnetDenomsOsmosis.USDC]: {
+    stable: true,
+    coingeckoId: 'usdc',
   },
 };
