@@ -19,9 +19,9 @@ function Page() {
   const { nextStep, goToStep } = useSteps(dcaInSteps);
   const { validate } = useValidation(postPurchaseValidationSchema, { context });
 
-  const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataPostPurchase) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   const handleRestart = () => {

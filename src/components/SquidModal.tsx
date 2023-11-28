@@ -1,16 +1,16 @@
 import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, ModalOverlay } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
-import { useCosmosKit } from '@hooks/useCosmosKit';
+import { useChainContext } from '@hooks/useChainContext';
 
 function SquidModalContent() {
-  const { isWalletConnected } = useCosmosKit();
+  const chainContext = useChainContext();
 
   return (
     <ModalContent mx={6} width={420} height={641}>
       <ModalHeader>Bridge assets now</ModalHeader>
       <ModalCloseButton />
       <ModalBody px={0} pb={8}>
-        {isWalletConnected ? (
+        {chainContext?.isWalletConnected ? (
           <iframe
             title="squid_widget"
             width="420"

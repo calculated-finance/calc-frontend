@@ -1,27 +1,29 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getGasPrice } from '@helpers/chains';
-import { useCosmosKit } from './useCosmosKit';
+import { ChainContext } from '@cosmos-kit/core';
+import { curry } from 'rambda';
+import { useChainContext } from './useChainContext';
 import { ChainId } from './useChainId/Chains';
 
 export function useWallet() {
-  const cosmosKit = useCosmosKit();
+  const chainContext = useChainContext();
 
-  const getSigningClient = async (chainId: ChainId) =>
+  const getSigningClient = async (context: ChainContext, chainId: ChainId) =>
     SigningCosmWasmClient.connectWithSigner(
-      await cosmosKit.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
-      cosmosKit.getOfflineSignerAmino(),
+      await context.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
+      context.getOfflineSignerAmino(),
       {
         gasPrice: getGasPrice(chainId),
       },
     );
 
-  if (cosmosKit && cosmosKit.isWalletConnected) {
+  if (chainContext && chainContext.isWalletConnected) {
     return {
-      connected: cosmosKit.isWalletConnected,
-      getSigningClient,
-      walletType: cosmosKit.wallet?.prettyName,
-      isConnecting: cosmosKit.isWalletConnecting,
-      ...cosmosKit,
+      connected: chainContext.isWalletConnected,
+      getSigningClient: curry(getSigningClient)(chainContext),
+      walletType: chainContext.wallet?.prettyName,
+      isConnecting: chainContext.isWalletConnecting,
+      ...chainContext,
     };
   }
 

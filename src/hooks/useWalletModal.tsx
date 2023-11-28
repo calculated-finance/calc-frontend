@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { useCosmosKit } from './useCosmosKit';
+import { useChainContext } from './useChainContext';
 import { useChainId } from './useChainId';
 
 export interface CalcWalletModalContextState {
@@ -23,10 +23,10 @@ export const CalcWalletModalContext = createContext<CalcWalletModalContextState>
 
 export function useWalletModal(): CalcWalletModalContextState {
   const { chainId } = useChainId();
-  const { openView, closeView } = useCosmosKit(chainId);
+  const context = useChainContext(chainId);
 
   return {
-    setVisible: (value) => (value ? openView() : closeView()),
+    setVisible: (value) => (context ? (value ? context.openView() : context.closeView()) : null),
     visible: false,
   };
 }

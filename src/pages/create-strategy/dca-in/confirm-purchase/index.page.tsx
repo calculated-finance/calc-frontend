@@ -1,6 +1,6 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { useDcaInConfirmForm } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import useSteps from '@hooks/useSteps';
 import dcaInSteps from 'src/formConfig/dcaIn';
@@ -25,7 +25,7 @@ import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
-  const { state, actions } = useConfirmForm();
+  const { state, actions } = useDcaInConfirmForm();
   const initialDenom = useDenom(state?.initialDenom);
   const resultingDenom = useDenom(state?.resultingDenom);
   const { nextStep, goToStep } = useSteps(dcaInSteps);

@@ -1,14 +1,14 @@
 import { Button, Flex, FlexProps, Heading, Link, Stack, Text, Image } from '@chakra-ui/react';
-import { useCosmosKit } from '@hooks/useCosmosKit';
+import { useChainContext } from '@hooks/useChainContext';
 import Spinner from './Spinner';
 
 function ConnectWallet(props: FlexProps) {
-  const { isWalletConnecting, openView } = useCosmosKit();
+  const chainContext = useChainContext();
 
   return (
     <Flex direction="column" alignItems="center" justifyContent="center" w="full" h="sm" p={4} {...props}>
       <Stack direction="column" spacing={4} alignItems="center" justifyContent="center" w="full" h="full">
-        {isWalletConnecting ? (
+        {chainContext?.isWalletConnecting ? (
           <Spinner />
         ) : (
           <>
@@ -18,7 +18,7 @@ function ConnectWallet(props: FlexProps) {
                 You will need to connect to a wallet before continuing.
               </Heading>
             </Stack>
-            <Button onClick={openView}>Connect to a wallet</Button>
+            <Button onClick={chainContext?.openView}>Connect to a wallet</Button>
             <Text color="grey.200" textAlign="center">
               Don&apos;t have a wallet?{' '}
               <Link href="https://www.keplr.app/" target="_blank" rel="noopener noreferrer">

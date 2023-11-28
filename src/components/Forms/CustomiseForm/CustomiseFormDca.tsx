@@ -12,7 +12,7 @@ import { TriggerForm } from '@components/TriggerForm';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { InvalidData } from '@components/InvalidData';
-import { useStep2Form } from '@hooks/useDcaInForm';
+import { useDcaInCustomiseForm } from '@hooks/useDcaInForm';
 import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
@@ -59,11 +59,11 @@ export function CustomiseFormDca({
 
 export function CustomiseFormDcaWrapper({ steps }: { steps: StepConfig[] }) {
   const { strategyType, transactionType } = useStrategyInfo();
-  const { state, actions } = useStep2Form();
+  const { state, actions } = useDcaInCustomiseForm();
   const { validate } = useValidation(step2ValidationSchema, { ...state?.step1, strategyType });
   const { goToStep, nextStep } = useSteps(steps);
 
-  const onSubmit = async (data: DcaInFormDataStep2) => {
+  const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
     nextStep();
   };

@@ -1,8 +1,8 @@
 import { Button } from '@chakra-ui/react';
-import { useCosmosKit } from '@hooks/useCosmosKit';
+import { useChainContext } from '@hooks/useChainContext';
 
 export function ConnectWalletButton() {
-  const { openView } = useCosmosKit();
+  const chainContext = useChainContext();
 
-  return <Button onClick={openView}>Connect to a wallet</Button>;
+  return <Button onClick={chainContext?.openView}>Connect to a wallet</Button>;
 }

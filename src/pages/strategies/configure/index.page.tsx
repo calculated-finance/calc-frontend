@@ -53,8 +53,8 @@ function ConfigureForm({
     return mutate(
       { values: validatedValues as DcaInFormDataPostPurchase, strategy },
       {
-        onSuccess: async () => {
-          await nextStep({
+        onSuccess: () => {
+          nextStep({
             strategyId: strategy.id,
           });
         },

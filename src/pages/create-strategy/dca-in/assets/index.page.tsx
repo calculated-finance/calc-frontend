@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1, step1ValidationSchema } from 'src/models/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import { useDcaInForm } from 'src/hooks/useDcaInForm';
 import usePairs, { getResultingDenoms } from '@hooks/usePairs';
 import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -87,7 +87,7 @@ function Page() {
         formName: FormNames.DcaIn,
       }}
     >
-      {featureFlags.singleAssetsEnabled ? <Assets /> : <DcaIn />}
+      <Assets />
     </StrategyInfoProvider>
   );
 }

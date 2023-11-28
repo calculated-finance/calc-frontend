@@ -80,8 +80,8 @@ function TopUpForm({ strategy }: { strategy: Strategy }) {
     mutate(
       { values, strategy },
       {
-        onSuccess: async () => {
-          await nextStep({
+        onSuccess: () => {
+          nextStep({
             strategyId: strategy.id,
             timeSaved: getTimeSaved(values.topUpAmount, parseFloat(strategy.rawData.swap_amount)),
           });

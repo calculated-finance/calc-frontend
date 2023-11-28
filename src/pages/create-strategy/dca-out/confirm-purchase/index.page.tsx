@@ -1,7 +1,7 @@
 import { Divider, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { SigningState } from '@components/NewStrategyModal';
-import { useConfirmForm } from 'src/hooks/useDcaInForm';
+import { useDcaInConfirmForm } from 'src/hooks/useDcaInForm';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import { FormikHelpers } from 'formik';
 import useSteps from '@hooks/useSteps';
@@ -26,7 +26,7 @@ import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
-  const { state, actions } = useConfirmForm();
+  const { state, actions } = useDcaInConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
 
   const initialDenom = useDenom(state?.initialDenom);

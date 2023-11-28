@@ -2,11 +2,19 @@ import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, 
 import { KADO_API_KEY } from 'src/constants';
 import ConnectWallet from '@components/ConnectWallet';
 import { useChainId } from '@hooks/useChainId';
-import { useCosmosKit } from '@hooks/useCosmosKit';
+import { useChainContext } from '@hooks/useChainContext';
 
 function OnRampModalContent() {
-  const { isWalletConnected, address } = useCosmosKit();
+  const chainContext = useChainContext();
   const { chainId } = useChainId();
+
+  if (!chainContext) {
+    return (
+      <Center h={440}>
+        <ConnectWallet />
+      </Center>
+    );
+  }
 
   const network = {
     'kaiyo-1': 'kujira',
@@ -14,6 +22,8 @@ function OnRampModalContent() {
     'harpoon-4': 'kujira',
     'osmo-test-5': 'osmosis',
   }[chainId]!;
+
+  const { isWalletConnected, address } = chainContext;
 
   return (
     <ModalContent mx={6}>

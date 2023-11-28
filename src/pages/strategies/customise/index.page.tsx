@@ -71,8 +71,8 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     return mutate(
       { values: validatedValues as CustomiseSchemaDca, strategy, context, initialValues },
       {
-        onSuccess: async () => {
-          await nextStep({
+        onSuccess: () => {
+          nextStep({
             strategyId: strategy.id,
           });
         },

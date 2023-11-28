@@ -6,7 +6,7 @@ import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
-import { useWeightedScaleStep2Form } from '@hooks/useWeightedScaleForm';
+import { useWeightedScaleCustomiseForm } from '@hooks/useWeightedScaleForm';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import ExecutionInterval from '@components/ExecutionInterval';
@@ -22,7 +22,7 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepConfig[]; formSchema: AnySchema }) {
-  const { actions, state } = useWeightedScaleStep2Form();
+  const { actions, state } = useWeightedScaleCustomiseForm();
 
   const { strategyType, transactionType } = useStrategyInfo();
 
@@ -44,9 +44,9 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
     return <InvalidData onRestart={handleRestart} />;
   }
 
-  const onSubmit = async (data: DcaInFormDataStep2) => {
-    await actions.updateAction(data);
-    await nextStep();
+  const onSubmit = (data: DcaInFormDataStep2) => {
+    actions.updateAction(data);
+    nextStep();
   };
 
   const initialValues = state.step2;

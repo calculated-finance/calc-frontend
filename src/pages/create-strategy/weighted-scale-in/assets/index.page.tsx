@@ -37,9 +37,9 @@ function WeightedScaleIn() {
 
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances });
 
-  const onSubmit = async (formData: DcaInFormDataStep1) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataStep1) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   if (!pairs) {
