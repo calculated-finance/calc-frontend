@@ -93,7 +93,7 @@ async function fetchStrategiesByAddress(client: CosmWasmClient, contractAddress:
   return transformedStrategies as Strategy[];
 }
 
-const GET_VAULTS_LIMIT = 200;
+const GET_VAULTS_LIMIT = 150;
 
 const fetchAllStrategies = async (client: CosmWasmClient, chainId: ChainId) => {
   const fetchVaultsRecursively = async (
