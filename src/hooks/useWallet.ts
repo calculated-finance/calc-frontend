@@ -11,7 +11,7 @@ export function useWallet() {
   const getSigningClient = async (chainId: ChainId) =>
     SigningCosmWasmClient.connectWithSigner(
       await cosmosKit.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
-      cosmosKit.getOfflineSignerDirect(),
+      cosmosKit.getOfflineSignerAmino(),
       {
         gasPrice: getGasPrice(chainId),
       },
@@ -19,12 +19,11 @@ export function useWallet() {
 
   if (currentChainId && cosmosKit && cosmosKit.isWalletConnected) {
     return {
-      address: cosmosKit.address,
       connected: cosmosKit.isWalletConnected,
       getSigningClient,
-      disconnect: cosmosKit.disconnect,
       walletType: cosmosKit.wallet?.prettyName,
       isConnecting: cosmosKit.isWalletConnecting,
+      ...cosmosKit,
     };
   }
 
