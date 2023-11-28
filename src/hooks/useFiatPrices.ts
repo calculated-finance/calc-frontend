@@ -17,7 +17,7 @@ const useFiatPrices = () => {
   const supportedDenoms = useSupportedDenoms();
 
   const { data, ...other } = useQuery<FiatPriceResponse>(
-    ['fiat-price', supportedDenoms],
+    ['fiat-prices'],
     async () => {
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
 
@@ -42,7 +42,9 @@ const useFiatPrices = () => {
         throw new Error('Failed to fetch fiat prices');
       }
 
-      return response.json();
+      const json = await response.json();
+      console.log(json);
+      return json;
     },
     {
       cacheTime: 5000,

@@ -377,7 +377,7 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
   [MainnetDenoms.NSTK]: {
     name: 'NSTK',
     icon: '/images/denoms/nstk.svg',
-    coingeckoId: 'unstake',
+    coingeckoId: 'unstake-fi',
     stakeable: false,
     stable: false,
     enabled: true,
