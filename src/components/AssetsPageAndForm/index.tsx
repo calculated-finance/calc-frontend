@@ -46,12 +46,11 @@ export function Assets() {
     data: { pairs },
   } = usePairs();
 
-  const onSubmit = async (formData: AssetsFormValues) => {
+  const onSubmit = (formData: AssetsFormValues) => {
     const formName = strategyTypesToFormTypes[formData.strategyType];
     actions.updateAction(formName)(formData);
 
     const currentSteps = getSteps(formData.strategyType);
-
     routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
   };
 

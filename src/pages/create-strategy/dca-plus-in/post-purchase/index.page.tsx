@@ -22,9 +22,9 @@ function Page() {
   const { nextStep, goToStep } = useSteps(steps);
   const { validate } = useValidation(DcaPlusPostPurchaseFormSchema, { context });
 
-  const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataPostPurchase) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   const handleRestart = () => {
@@ -50,16 +50,16 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-        <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusIn,
-      transactionType: TransactionType.Buy,
-      formName: FormNames.DcaPlusIn,
-    }}>
-
-   
-    <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
-      <Page />
-    </ModalWrapper>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusIn,
+        transactionType: TransactionType.Buy,
+        formName: FormNames.DcaPlusIn,
+      }}
+    >
+      <ModalWrapper stepsConfig={dcaPlusInSteps} reset={resetForm(FormNames.DcaPlusIn)}>
+        <Page />
+      </ModalWrapper>
     </StrategyInfoProvider>
   );
 }

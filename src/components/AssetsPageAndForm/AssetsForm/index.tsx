@@ -23,19 +23,25 @@ import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
 import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
-import { getIsInStrategy } from '@helpers/assets-page/getIsInStrategy';
 import { Pair } from 'src/interfaces/v2/generated/query';
 import { StrategyTypes } from '@models/StrategyTypes';
 import { DenomInfo } from '@utils/DenomInfo';
+
+function getIsDcaInStrategy(strategyType: string | undefined) {
+  const strategy = strategyType && strategyType;
+  return [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn].includes(
+    strategy as StrategyTypes,
+  );
+}
 
 function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefined, pairs: Pair[]): DenomInfo[] {
   if (!strategyType || !pairs) {
     return [];
   }
 
-  const isInStrategy = getIsInStrategy(strategyType);
+  const isDcaInStrategy = getIsDcaInStrategy(strategyType);
 
-  if (isInStrategy) {
+  if (isDcaInStrategy) {
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
@@ -94,18 +100,20 @@ export function AssetsForm() {
     return null;
   }
 
-  const isInStrategy = getIsInStrategy(strategyField.value);
+  const isDcaInStrategy = getIsDcaInStrategy(strategyField.value);
 
   return (
     <>
       <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
         <FormLabel>
-          {isInStrategy ? 'How will you fund your first investment?' : 'What position do you want to take profit on?'}
+          {isDcaInStrategy
+            ? 'How will you fund your first investment?'
+            : 'What position do you want to take profit on?'}
         </FormLabel>
         <FormHelperText>
           <Center>
             <Text textStyle="body-xs">
-              {isInStrategy
+              {isDcaInStrategy
                 ? 'Choose stablecoin'
                 : `CALC currently supports pairs trading on ${getChainDexName(chainId)}.`}{' '}
             </Text>
@@ -129,11 +137,11 @@ export function AssetsForm() {
         </SimpleGrid>
       </FormControl>
       <FormControl isInvalid={Boolean(resultingMeta.touched && resultingMeta.error)} isDisabled={!field.value}>
-        <FormLabel hidden={!isInStrategy}>What asset do you want to invest in?</FormLabel>
-        <FormLabel hidden={isInStrategy}>How do you want to hold your profits?</FormLabel>
+        <FormLabel hidden={!isDcaInStrategy}>What asset do you want to invest in?</FormLabel>
+        <FormLabel hidden={isDcaInStrategy}>How do you want to hold your profits?</FormLabel>
         <FormHelperText>
           <Text textStyle="body-xs">
-            {isInStrategy
+            {isDcaInStrategy
               ? 'CALC will purchase this asset for you'
               : 'You will have the choice to move these funds into another strategy at the end.'}
           </Text>

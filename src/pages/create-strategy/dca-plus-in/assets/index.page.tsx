@@ -37,7 +37,7 @@ function DcaPlusIn() {
 
   const { validate } = useValidation(DcaPlusAssetsFormSchema, { balances });
 
-  const onSubmit = async (formData: DcaInFormDataStep1) => {
+  const onSubmit = (formData: DcaInFormDataStep1) => {
     actions.updateAction(formData);
     nextStep();
   };

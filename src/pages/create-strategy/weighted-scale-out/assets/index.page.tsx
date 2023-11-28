@@ -1,7 +1,7 @@
 import { Center, Stack } from '@chakra-ui/react';
 import { getFlowLayout } from '@components/Layout';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
-import useDcaInForm from 'src/hooks/useDcaInForm';
+import { useDcaInForm } from 'src/hooks/useDcaInForm';
 import usePairs, {
   getResultingDenoms,
   orderAlphabetically,
@@ -36,15 +36,14 @@ function WeightedScaleOut() {
   const {
     data: { pairs },
   } = usePairs();
+
   const { nextStep } = useSteps(weightedScaleOutSteps);
-
   const { data: balances } = useBalances();
-
   const { validate } = useValidation(WeightedScaleAssetsFormSchema, { balances });
 
-  const onSubmit = async (formData: DcaInFormDataStep1) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataStep1) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   if (!pairs) {

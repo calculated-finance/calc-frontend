@@ -22,9 +22,9 @@ function Page() {
 
   const { validate } = useValidation(WeightedScalePostPurchaseFormSchema);
 
-  const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataPostPurchase) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   const handleRestart = () => {
@@ -50,11 +50,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.WeightedScaleOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.WeightedScaleOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.WeightedScaleOut,
+      }}
+    >
       <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
         <Page />
       </ModalWrapper>

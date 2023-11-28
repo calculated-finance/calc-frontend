@@ -13,14 +13,14 @@ const useBalances = (injectedAddress: string | null = null) => {
   const address = injectedAddress ?? walletAddress;
 
   return useQueryWithNotification(
-    ['balances', chainId, address],
+    ['balances', chainId, address, supportedDenoms.length],
     () =>
       client!.fetchBalances(
         address!,
         supportedDenoms.map((sd) => sd.id),
       ),
     {
-      enabled: !!address && !!supportedDenoms && !!client,
+      enabled: !!address && Boolean(supportedDenoms.length) && !!client,
       cacheTime: 0,
       meta: {
         errorMessage: `Error fetching balances for ${address}`,

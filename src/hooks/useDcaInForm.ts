@@ -41,7 +41,7 @@ export const useAssetsForm = () => {
   }
 };
 
-const useDcaInForm = () => {
+export const useDcaInForm = () => {
   const { formName } = useStrategyInfo();
   const { address } = useWallet();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
@@ -69,7 +69,7 @@ const useDcaInForm = () => {
   }
 };
 
-export const useStep2Form = () => {
+export const useDcaInCustomiseForm = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();
   const { formName } = useStrategyInfo();
@@ -128,7 +128,7 @@ export const useDcaInFormPostPurchase = () => {
   }
 };
 
-export const useConfirmForm = () => {
+export const useDcaInConfirmForm = () => {
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { formName } = useStrategyInfo();
   const { address } = useWallet();
@@ -152,5 +152,3 @@ export const useConfirmForm = () => {
     };
   }
 };
-
-export default useDcaInForm;

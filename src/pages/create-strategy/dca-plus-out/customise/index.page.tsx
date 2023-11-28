@@ -42,9 +42,9 @@ function Page() {
     return <InvalidData onRestart={handleRestart} />;
   }
 
-  const onSubmit = async (data: DcaInFormDataStep2) => {
-    await actions.updateAction(data);
-    await nextStep();
+  const onSubmit = (data: DcaInFormDataStep2) => {
+    actions.updateAction(data);
+    nextStep();
   };
 
   const initialValues = state.step2;
@@ -84,11 +84,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaPlusOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut,
+      }}
+    >
       <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
         <Page />
       </ModalWrapper>

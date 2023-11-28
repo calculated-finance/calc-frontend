@@ -27,7 +27,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
 import { Coin } from '@cosmjs/proto-signing';
-import { useCosmosKit } from '@hooks/useCosmosKit';
+import { useChainContext } from '@hooks/useChainContext';
 
 interface GetFundsDetailsProps {
   onSquidOpen: () => void;
@@ -151,7 +151,7 @@ function AvailableFundsButton({
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
 
-  const { isWalletConnected, openView } = useCosmosKit();
+  const chainContext = useChainContext();
   const [, , helpers] = useField('initialDeposit');
   const { price } = useFiatPrice(denom);
 
@@ -186,7 +186,7 @@ function AvailableFundsButton({
     );
   }
 
-  if (isWalletConnected) {
+  if (chainContext?.isWalletConnected) {
     return (
       <>
         <GetFundsButton onOpen={onOpen} />
@@ -203,7 +203,7 @@ function AvailableFundsButton({
   }
 
   return (
-    <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={openView}>
+    <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={chainContext?.openView}>
       Connect wallet
     </Button>
   );

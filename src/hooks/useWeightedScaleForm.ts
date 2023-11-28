@@ -38,7 +38,7 @@ export const useWeightedScaleAssetsForm = () => {
   }
 };
 
-export const useWeightedScaleStep2Form = () => {
+export const useWeightedScaleCustomiseForm = () => {
   const { formName } = useStrategyInfo();
   const { forms: state, updateForm: updateAction, resetForm: resetAction } = useFormStore();
   const { address } = useWallet();

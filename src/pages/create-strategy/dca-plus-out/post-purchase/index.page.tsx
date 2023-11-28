@@ -8,7 +8,7 @@ import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
-import { FormNames , useFormStore } from '@hooks/useFormStore';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
@@ -22,9 +22,9 @@ function Page() {
 
   const { validate } = useValidation(DcaPlusPostPurchaseFormSchema);
 
-  const onSubmit = async (formData: DcaInFormDataPostPurchase) => {
-    await actions.updateAction(formData);
-    await nextStep();
+  const onSubmit = (formData: DcaInFormDataPostPurchase) => {
+    actions.updateAction(formData);
+    nextStep();
   };
 
   const handleRestart = () => {
@@ -50,11 +50,13 @@ function PageWrapper() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.DCAPlusOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.DcaPlusOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyTypes.DCAPlusOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.DcaPlusOut,
+      }}
+    >
       <ModalWrapper stepsConfig={dcaPlusOutSteps} reset={resetForm(FormNames.DcaPlusOut)}>
         <Page />
       </ModalWrapper>
