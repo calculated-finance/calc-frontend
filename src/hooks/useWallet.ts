@@ -1,12 +1,10 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getGasPrice } from '@helpers/chains';
 import { useCosmosKit } from './useCosmosKit';
-import { useChainId } from './useChainId';
 import { ChainId } from './useChainId/Chains';
 
 export function useWallet() {
-  const { chainId: currentChainId } = useChainId();
-  const cosmosKit = useCosmosKit(currentChainId);
+  const cosmosKit = useCosmosKit();
 
   const getSigningClient = async (chainId: ChainId) =>
     SigningCosmWasmClient.connectWithSigner(
@@ -17,7 +15,7 @@ export function useWallet() {
       },
     );
 
-  if (currentChainId && cosmosKit && cosmosKit.isWalletConnected) {
+  if (cosmosKit && cosmosKit.isWalletConnected) {
     return {
       connected: cosmosKit.isWalletConnected,
       getSigningClient,
