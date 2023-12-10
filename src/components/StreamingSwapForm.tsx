@@ -106,6 +106,7 @@ function InitialDenom() {
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+      <FormLabel>Swap</FormLabel>
       <FormHelperText>
         <Center>
           <Text textStyle="body-xs">Choose asset to send</Text>
@@ -274,6 +275,8 @@ function DurationSlider() {
 
   const [sliderValue, setSliderValue] = useState<number>(60);
   const [strategyDuration, setStrategyDuration] = useState<number>(60);
+  const [debouncedStrategyDuration, setDebouncedStrategyDuration] = useState<number>(60);
+  const [isSliding, setIsSliding] = useState<boolean>(false);
 
   const [{ onChange: onChangeSwapAmount, ...swapAmountField }, , swapAmountHelpers] = useField<number>({
     name: 'swapAmount',
@@ -309,34 +312,37 @@ function DurationSlider() {
   const slippage =
     !twap || !expectedPrice ? null : expectedPrice < twap ? 0 : (Math.abs(expectedPrice - twap) / twap) * 100;
 
-  const minutes = sliderValue - 1;
+  const minutes = strategyDuration - 1;
   const hours = Number((minutes / 60).toFixed(1));
 
   const minValue = 1;
-  const maxValue = min(maximumSwaps || Infinity, 60 * 48 + 1);
+  const maxValue = min(max(maximumSwaps || Infinity, 60), 60 * 48 + 1);
 
   useEffect(() => {
     const minSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
-    const totalSwaps = strategyDuration && maxSwaps && min(strategyDuration, maxSwaps);
+    const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
     const swapAmount =
       totalSwaps && debouncedInitialDeposit ? Math.ceil(debouncedInitialDeposit / totalSwaps) : undefined;
 
-    if (strategyDuration && totalSwaps)
-      executionIntervalIncrementHelpers.setValue(Math.floor(strategyDuration / totalSwaps));
+    if (debouncedStrategyDuration && totalSwaps)
+      executionIntervalIncrementHelpers.setValue(Math.floor(debouncedStrategyDuration / totalSwaps));
     if (swapAmount || minSwapAmount) swapAmountHelpers.setValue(swapAmount ?? minSwapAmount ?? 0);
-  }, [strategyDuration, debouncedInitialDeposit, initialDenom, resultingDenom]);
+  }, [debouncedStrategyDuration, debouncedInitialDeposit, initialDenom, resultingDenom]);
 
   useEffect(() => {
     if (!swapAmountField.value) {
-      setStrategyDuration(sliderValue);
+      setDebouncedStrategyDuration(sliderValue);
     }
   }, [initialDenomInfo]);
 
+  const getStrategyDurationFromSlider = (value: number, factor = 0.07) =>
+    max(1, Math.round(((factor * value) ** 2 / (factor * maxValue) ** 2) * maxValue));
+
   return (
     <FormControl id="swaps">
-      <FormLabel fontWeight={600}>
+      <FormLabel>
         Duration:{' '}
         {hours >= 1
           ? `${hours} ${hours === 1 ? 'hour' : 'hours'}`
@@ -352,6 +358,7 @@ function DurationSlider() {
             onClick={() => {
               setSliderValue(minValue);
               setStrategyDuration(minValue);
+              setDebouncedStrategyDuration(minValue);
             }}
           >
             Immediate
@@ -365,6 +372,7 @@ function DurationSlider() {
             onClick={() => {
               setSliderValue(maxValue);
               setStrategyDuration(maxValue);
+              setDebouncedStrategyDuration(maxValue);
             }}
           >
             {maxValue > 59 ? `${(maxValue / 60).toFixed(0)} hours` : `${maxValue} minutes`}
@@ -376,8 +384,17 @@ function DurationSlider() {
         value={sliderValue}
         min={minValue}
         max={maxValue}
-        onChange={setSliderValue}
-        onChangeEnd={setStrategyDuration}
+        step={1}
+        onChangeStart={(_) => setIsSliding(true)}
+        onChange={(value) => {
+          setSliderValue(value);
+          setStrategyDuration(getStrategyDurationFromSlider(value));
+        }}
+        onChangeEnd={(value) => {
+          setIsSliding(false);
+          setStrategyDuration(getStrategyDurationFromSlider(value));
+          setDebouncedStrategyDuration(getStrategyDurationFromSlider(value));
+        }}
       >
         <SliderTrack>
           <SliderFilledTrack />
@@ -390,11 +407,11 @@ function DurationSlider() {
             {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
             {parseFloat(
               initialDenomInfo
-                .conversion(Number(swapAmountField.value))
+                .conversion(swaps && debouncedInitialDeposit && Math.ceil(debouncedInitialDeposit / swaps))
                 .toFixed(initialDenomInfo.significantFigures / 3),
             ).toString()}{' '}
-            {initialDenomInfo.name} every {Math.ceil(sliderValue / swaps)} minutes, with estimated{' '}
-            {slippage ? `${slippage.toFixed(3)}%` : <Spinner size="xs" />} price impact
+            {initialDenomInfo.name}
+            {!isSliding && slippage ? ` with estimated ${slippage.toFixed(3)}% price impact` : ''}
           </Text>
         </FormHelperText>
       )}
@@ -403,8 +420,9 @@ function DurationSlider() {
 }
 
 function SwapDenoms() {
-  const [initialDenomValue, , initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [resultingDenomValue, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+  const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
+  const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
+  const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
 
   return (
     <Center>
@@ -412,8 +430,17 @@ function SwapDenoms() {
         src="/images/arrow-down.svg"
         boxSize={8}
         onClick={() => {
-          initialDenomHelpers.setValue(resultingDenomValue.value);
-          resultingDenomHelpers.setValue(initialDenomValue.value);
+          initialDenomHelpers.setValue(resultingDenomValue);
+          resultingDenomHelpers.setValue(initialDenomValue);
+
+          if (initialDepositValue && initialDenomValue && resultingDenomValue) {
+            initialDepositHelpers.setValue(
+              initialDepositValue *
+                10 **
+                  (getDenomInfo(resultingDenomValue).significantFigures -
+                    getDenomInfo(initialDenomValue).significantFigures),
+            );
+          }
         }}
       />
     </Center>
@@ -471,7 +498,7 @@ function PriceThreshold() {
 
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
-      <FormLabel fontWeight={600}>
+      <FormLabel>
         {transactionType === TransactionType.Buy ? 'Set buy price protection' : 'Set sell price protection'}
       </FormLabel>
       <FormHelperText>
@@ -503,7 +530,7 @@ export function Form() {
   const { pairs } = usePairs();
   const { data: balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [, setIsSuccess] = useState(false);
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
