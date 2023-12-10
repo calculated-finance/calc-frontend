@@ -16,7 +16,7 @@ import { handleError } from '../handleError';
 export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
-  const { price } = useFiatPrice(initialDenom);
+  const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
 
@@ -45,7 +45,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
       throw new Error('No sender address');
     }
 
-    if (!price) {
+    if (!fiatPrice) {
       throw Error('Invalid price');
     }
 
@@ -53,7 +53,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
       throw new Error('Invalid reinvest strategy.');
     }
 
-    checkSwapAmountValue(state.swapAmount, price);
+    checkSwapAmountValue(state.swapAmount, fiatPrice);
 
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),

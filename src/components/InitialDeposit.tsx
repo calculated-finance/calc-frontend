@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, FormHelperText } from '@chakra-ui/react';
 import { DcaInFormDataStep1 } from 'src/models/DcaInFormData';
 import { useField, useFormikContext } from 'formik';
 import NumberInput from '@components/NumberInput';

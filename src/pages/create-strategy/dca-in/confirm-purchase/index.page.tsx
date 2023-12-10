@@ -13,7 +13,7 @@ import { SummaryTheSwap } from '@components/Summary/SummaryTheSwap';
 import { SummaryWhileSwapping } from '@components/Summary/SummaryWhileSwapping';
 import { SummaryYourDeposit } from '@components/Summary/SummaryYourDeposit';
 import { FormikHelpers } from 'formik';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
@@ -30,7 +30,7 @@ function Page() {
   const resultingDenom = useDenom(state?.resultingDenom);
   const { nextStep, goToStep } = useSteps(dcaInSteps);
 
-  const { mutate, isError, error, isLoading } = useCreateVaultDca(initialDenom);
+  const { mutate, isError, error, isLoading } = useCreateVaultDca();
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
@@ -94,7 +94,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAIn,
+        strategyType: StrategyType.DCAIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaIn,
       }}

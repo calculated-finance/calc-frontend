@@ -36,8 +36,8 @@ function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
   const linkedToStrategy = data;
-  const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
+  const { fiatPrice: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (

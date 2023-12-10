@@ -181,10 +181,8 @@ export default function Fees({
   excludeDepositFee?: boolean;
   transactionType: TransactionType;
 }) {
-  const { price } = useFiatPrice(initialDenom);
-
+  const { fiatPrice } = useFiatPrice(initialDenom);
   const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
-
   const { name: initialDenomName } = initialDenom;
 
   return (
@@ -194,7 +192,8 @@ export default function Fees({
           <>
             Deposit fee{' '}
             <Text as="span" textColor="white">
-              {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
+              {fiatPrice ? parseFloat((CREATE_VAULT_FEE / fiatPrice).toFixed(3)) : <Spinner size="xs" />}{' '}
+              {initialDenomName}
             </Text>{' '}
             +{' '}
           </>
@@ -212,7 +211,7 @@ export default function Fees({
       <FeeBreakdown
         initialDenomName={initialDenomName}
         swapAmount={swapAmount}
-        price={price}
+        price={fiatPrice}
         dexFee={dexFee}
         swapFee={swapFee}
         excludeDepositFee={excludeDepositFee}

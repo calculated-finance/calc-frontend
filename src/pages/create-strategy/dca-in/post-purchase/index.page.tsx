@@ -11,7 +11,7 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import getDenomInfo from '@utils/getDenomInfo';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
@@ -48,7 +48,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAIn,
+        strategyType: StrategyType.DCAIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaIn,
       }}

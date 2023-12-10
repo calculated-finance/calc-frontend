@@ -1,9 +1,8 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
 import { V3Pair } from '@models/Pair';
 import {
@@ -21,6 +20,7 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { ChainId } from '@hooks/useChainId/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
+import { safeInvert } from '@utils/safeInvert';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -166,14 +166,14 @@ export function getStrategyType(strategy: Strategy) {
   const initialDenom = getStrategyInitialDenom(strategy);
 
   if (isWeightedScale(strategy)) {
-    return isDenomStable(initialDenom) ? StrategyTypes.WeightedScaleIn : StrategyTypes.WeightedScaleOut;
+    return isDenomStable(initialDenom) ? StrategyType.WeightedScaleIn : StrategyType.WeightedScaleOut;
   }
 
   if (isDcaPlus(strategy)) {
-    return isDenomStable(initialDenom) ? StrategyTypes.DCAPlusIn : StrategyTypes.DCAPlusOut;
+    return isDenomStable(initialDenom) ? StrategyType.DCAPlusIn : StrategyType.DCAPlusOut;
   }
 
-  return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
+  return isDenomStable(initialDenom) ? StrategyType.DCAIn : StrategyType.DCAOut;
 }
 
 export function getStrategyRemainingExecutions(strategy: Strategy) {
@@ -185,9 +185,9 @@ export function getStrategyRemainingExecutions(strategy: Strategy) {
 
 export function isBuyStrategy(strategy: Strategy) {
   return (
-    getStrategyType(strategy) === StrategyTypes.DCAIn ||
-    getStrategyType(strategy) === StrategyTypes.DCAPlusIn ||
-    getStrategyType(strategy) === StrategyTypes.WeightedScaleIn
+    getStrategyType(strategy) === StrategyType.DCAIn ||
+    getStrategyType(strategy) === StrategyType.DCAPlusIn ||
+    getStrategyType(strategy) === StrategyType.WeightedScaleIn
   );
 }
 

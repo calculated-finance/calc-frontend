@@ -14,7 +14,7 @@ import { FormikHelpers } from 'formik';
 import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
 import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesDcaPlus from '@components/FeesDcaPlus';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
@@ -104,7 +104,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusOut,
+        strategyType: StrategyType.DCAPlusOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.DcaPlusOut,
       }}

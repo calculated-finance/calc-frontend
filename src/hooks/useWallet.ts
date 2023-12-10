@@ -11,7 +11,7 @@ export function useWallet() {
   const getSigningClient = async (context: ChainContext, chainId: ChainId) =>
     SigningCosmWasmClient.connectWithSigner(
       await context.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
-      context.getOfflineSignerAmino(),
+      context.getOfflineSigner(),
       {
         gasPrice: getGasPrice(chainId),
       },

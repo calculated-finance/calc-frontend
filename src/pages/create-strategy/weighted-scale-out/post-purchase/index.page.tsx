@@ -12,7 +12,7 @@ import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchas
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -52,7 +52,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.WeightedScaleOut,
+        strategyType: StrategyType.WeightedScaleOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.WeightedScaleOut,
       }}

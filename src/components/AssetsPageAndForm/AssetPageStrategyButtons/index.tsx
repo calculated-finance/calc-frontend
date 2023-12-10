@@ -31,7 +31,7 @@ import StrategyUrls from 'src/pages/create-strategy/StrategyUrls';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '../../LinkWithQuery';
-import { BuySellButtons } from './BuySellButtons';
+import { DcaDirection } from './DcaCategory';
 
 const buttonStyles = {
   cursor: 'pointer',
@@ -292,12 +292,12 @@ export function AssetPageStrategyButtons() {
   const buttonOptions = ['Buy strategies', 'Sell strategies'];
   const currentStrategyCategory = useStrategyInfo();
   const initialButtonSelected =
-    currentStrategyCategory?.transactionType === 'buy' ? BuySellButtons.Buy : BuySellButtons.Sell;
+    currentStrategyCategory?.transactionType === 'buy' ? DcaDirection.Buy : DcaDirection.Sell;
   const [buttonClicked, setButtonClicked] = useState(initialButtonSelected);
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'category',
     defaultValue: initialButtonSelected,
-    onChange: (nextValue: BuySellButtons) => setButtonClicked(nextValue),
+    onChange: (nextValue: DcaDirection) => setButtonClicked(nextValue),
   });
   const categoryGroup = getRootProps();
   return (
@@ -312,7 +312,7 @@ export function AssetPageStrategyButtons() {
           );
         })}
       </HStack>
-      {buttonClicked.includes(BuySellButtons.Buy) ? (
+      {buttonClicked.includes(DcaDirection.Buy) ? (
         <BuyButtons pathname={pathname} />
       ) : (
         <SellButtons pathname={pathname} />

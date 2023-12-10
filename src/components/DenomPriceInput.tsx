@@ -11,7 +11,7 @@ import {
   InputProps,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useChainId } from '@hooks/useChainId';
@@ -38,10 +38,10 @@ export function DenomPriceInput({
   onChange: (value: number | undefined) => void;
 } & InputProps) {
   const { chainId } = useChainId();
-  const { formattedPrice, isLoading } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice, isLoading } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
-  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
-  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
+  const priceOfDenom = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
+  const priceInDenom = transactionType === TransactionType.Buy ? initialDenom : resultingDenom;
 
   const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = priceOfDenom;
   const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = priceInDenom;
@@ -50,6 +50,13 @@ export function DenomPriceInput({
 
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);
+  };
+
+  const getPairLink = {
+    'osmosis-1': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`,
+    'osmo-test-5': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`,
+    'kaiyo-1': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
+    'harpoon-4': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
   };
 
   return (
@@ -75,35 +82,23 @@ export function DenomPriceInput({
           onValueChange={handleChange}
           value={value as number}
           defaultValue={defaultValue as number}
-          placeholder={`${formattedPrice} ${priceInDenomName}`}
+          placeholder={`${formattedPrice ?? ''} ${priceInDenomName}`}
           {...inputProps}
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      {['kaiyo-1', 'harpoon-4'].includes(chainId) && (
-        <FormHelperText>
-          <Link
-            isExternal
-            href={`https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`}
-          >
+      <FormHelperText>
+        <HStack spacing={1}>
+          <Text color="white" fontSize={14}>
+            Current price:
+          </Text>
+          <Link isExternal href={chainId && getPairLink[chainId]()}>
             <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-              Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
+              1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
             </Button>
           </Link>
-        </FormHelperText>
-      )}
-      {['osmosis-1', 'osmo-test-5'].includes(chainId) && (
-        <FormHelperText>
-          <Link
-            isExternal
-            href={`${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`}
-          >
-            <Button variant="link" fontWeight="normal" isLoading={isLoading} colorScheme="blue">
-              Current price: 1 {priceOfDenomName} = {formattedPrice} {priceInDenomName}
-            </Button>
-          </Link>
-        </FormHelperText>
-      )}
+        </HStack>
+      </FormHelperText>
     </>
   );
 }

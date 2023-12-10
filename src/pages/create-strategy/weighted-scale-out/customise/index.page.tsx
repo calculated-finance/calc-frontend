@@ -1,6 +1,6 @@
 import { getFlowLayout } from '@components/Layout';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
@@ -12,16 +12,15 @@ function Page() {
   const { resetForm } = useFormStore();
 
   return (
-    <StrategyInfoProvider strategyInfo={{
-      strategyType: StrategyTypes.WeightedScaleOut,
-      transactionType: TransactionType.Sell,
-      formName: FormNames.WeightedScaleOut,
-    }}>
+    <StrategyInfoProvider
+      strategyInfo={{
+        strategyType: StrategyType.WeightedScaleOut,
+        transactionType: TransactionType.Sell,
+        formName: FormNames.WeightedScaleOut,
+      }}
+    >
       <ModalWrapper stepsConfig={weightedScaleOutSteps} reset={resetForm(FormNames.WeightedScaleOut)}>
-        <WeightedScaleCustomisePage
-          steps={weightedScaleOutSteps}
-          formSchema={WeightedScaleCustomiseFormSchema}
-        />
+        <WeightedScaleCustomisePage steps={weightedScaleOutSteps} formSchema={WeightedScaleCustomiseFormSchema} />
       </ModalWrapper>
     </StrategyInfoProvider>
   );

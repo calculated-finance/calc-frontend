@@ -23,7 +23,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { calcSigningClient } = useCalcSigningClient();
   const track = useTrackCreateVault();
 
-  const { price } = useFiatPrice(initialDenom);
+  const { fiatPrice } = useFiatPrice(initialDenom);
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -45,7 +45,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       throw new Error('Invalid reinvest strategy.');
     }
 
-    if (!price) {
+    if (!fiatPrice) {
       throw Error('Invalid price');
     }
 
@@ -55,7 +55,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
 
-    checkSwapAmountValue(swapAmount, price);
+    checkSwapAmountValue(swapAmount, fiatPrice);
 
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom: getDenomInfo(state.initialDenom),
@@ -74,7 +74,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         senderAddress: address,
       },
     };
-    const fee = createStrategyFeeInTokens(price);
+    const fee = createStrategyFeeInTokens(fiatPrice);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

@@ -1,24 +1,27 @@
-import { getFlowLayout } from '@components/Layout';
-import { FormNames } from 'src/hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
-import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
+import { FormNames } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
-import { WeightedScaleConfirmPage } from '@components/WeightedScaleConfirmPage';
+import { BrowserRouter } from 'react-router-dom';
+import { getFlowLayout } from '@components/Layout';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { Form } from '@components/StreamingSwapForm';
 
 function Page() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyType.WeightedScaleIn,
+        strategyType: StrategyType.SimpleDCAIn,
         transactionType: TransactionType.Buy,
-        formName: FormNames.WeightedScaleIn,
+        formName: FormNames.SimpleDcaIn,
       }}
     >
-      <WeightedScaleConfirmPage steps={weightedScaleInSteps} />
+      <BrowserRouter>
+        <Form />
+      </BrowserRouter>
     </StrategyInfoProvider>
   );
 }
+
 Page.getLayout = getFlowLayout;
 
 export default Page;

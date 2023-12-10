@@ -10,7 +10,7 @@ import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyRemainingExecutions,
@@ -25,6 +25,7 @@ import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
 import { useChainId } from '@hooks/useChainId';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import useFiatPrices from '@hooks/useFiatPrices';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -95,7 +96,7 @@ function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: st
   return { strategiesByTimeInterval, percentage };
 }
 
-function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
+function getStrategiesByType(allStrategies: Strategy[], type: StrategyType) {
   const strategiesByType = allStrategies.filter((strategy) => getStrategyType(strategy) === type) || [];
   const percentage = (Number(strategiesByType.length / allStrategies.length) * 100).toFixed(2);
   return { strategiesByType, percentage };
@@ -287,7 +288,7 @@ function Page() {
   const { chainId: chain } = useChainId();
   const { data: contractBalances } = useBalances(getChainContractAddress(chain));
   const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
-  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
+  const { fiatPrices } = useFiatPrices();
 
   const { data: allStrategies } = useAllStrategies();
 
@@ -541,8 +542,8 @@ function Page() {
                 duration: 2000,
                 onLoad: { duration: 1000 },
               }}
-              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut, StrategyTypes.DCAPlusIn, StrategyTypes.DCAPlusOut].map(
-                (type: StrategyTypes) => {
+              data={[StrategyType.DCAIn, StrategyType.DCAOut, StrategyType.DCAPlusIn, StrategyType.DCAPlusOut].map(
+                (type: StrategyType) => {
                   const { strategiesByType, percentage } = getStrategiesByType(allStrategies || [], type) || [];
 
                   return {

@@ -1,12 +1,12 @@
 import { TransactionType } from '@components/TransactionType';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import { FormNames } from '@hooks/useFormStore';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { useEffect } from 'react';
 import { create } from 'zustand';
 
 export type StrategyInfo = {
-  strategyType: StrategyTypes;
+  strategyType: StrategyType;
   transactionType: TransactionType;
   formName: FormNames;
 };

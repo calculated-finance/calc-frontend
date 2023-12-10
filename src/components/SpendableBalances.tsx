@@ -26,7 +26,7 @@ function CoinBalance({ balance }: { balance: Coin }) {
 
 function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
   const denom = useDenom(balance.denom);
-  const { price } = useFiatPrice(denom);
+  const { fiatPrice } = useFiatPrice(denom);
   const balanceConverted = convertDenomFromCoin(balance);
   return (
     <>
@@ -39,7 +39,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
         <Text textStyle="body-xs">{denom.name || truncate(balance.denom)}</Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{formatFiat((price || 0) * balanceConverted)}</Text>
+        <Text textStyle="body-xs">{formatFiat((fiatPrice || 0) * balanceConverted)}</Text>
       </GridItem>
     </>
   );

@@ -2,7 +2,7 @@ import { Box, Code, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
@@ -16,7 +16,7 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
   const initialDenomInfo = useDenom(initialDenom);
   const resultingDenomInfo = useDenom(resultingDenom);
 
-  const { formattedPrice } = usePrice(resultingDenomInfo, initialDenomInfo, transactionType);
+  const { formattedPrice } = useSpotPrice(resultingDenomInfo, initialDenomInfo, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenomInfo : initialDenomInfo;
   const priceInDenom = transactionType === 'buy' ? initialDenomInfo : resultingDenomInfo;

@@ -66,19 +66,9 @@ export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3
 export const featureFlags =
   process.env.NEXT_PUBLIC_APP_ENV === 'production'
     ? {
-        cosmoskitEnabled: true,
-        stationEnabled: false,
-        leapEnabled: false,
-        amplitudeEnabled: true,
-        controlDeskEnabled: false,
         singleAssetsEnabled: false,
       }
     : {
-        cosmoskitEnabled: true,
-        stationEnabled: false,
-        leapEnabled: true,
-        amplitudeEnabled: false,
-        controlDeskEnabled: true,
         singleAssetsEnabled: true,
       };
 
@@ -90,6 +80,11 @@ export const contentData = {
     },
     customise: {
       title: 'Customise Strategy',
+    },
+  },
+  streamingSwap: {
+    assets: {
+      title: 'Streaming Swap',
     },
   },
 };

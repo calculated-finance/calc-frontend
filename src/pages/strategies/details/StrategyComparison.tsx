@@ -161,8 +161,8 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
 
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { fiatPrice: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomPrice } = useFiatPrice(resultingDenom);
 
   const isLoading = !events || !initialDenomPrice || !resultingDenomPrice;
 

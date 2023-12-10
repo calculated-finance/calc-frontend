@@ -30,13 +30,13 @@ import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
 import SwapAmount from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { convertDenomFromCoin } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
@@ -55,7 +55,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   const balance = convertDenomFromCoin(strategy.rawData.balance);
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { spotPrice: price } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
   const context = {
     initialDenom,
@@ -93,7 +93,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
             <StrategyInfoProvider
               strategyInfo={{
-                strategyType: '' as StrategyTypes,
+                strategyType: '' as StrategyType,
                 transactionType,
                 formName: '' as FormNames,
               }}

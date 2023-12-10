@@ -14,7 +14,7 @@ import {
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
-import { StrategyTypes } from './StrategyTypes';
+import { StrategyType } from './StrategyType';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
 
 export type AssetsFormValues = Yup.InferType<typeof assetsFormSchema>;
@@ -27,7 +27,7 @@ export const assetsFormInitialValues = {
 };
 
 export const assetsFormSchema = Yup.object({
-  strategyType: Yup.mixed<StrategyTypes>().required(),
+  strategyType: Yup.mixed<StrategyType>().required(),
   resultingDenom: Yup.string().label('Resulting Denom').required(),
   initialDenom: Yup.string().label('Initial Denom').required(),
   initialDeposit: Yup.number()
@@ -61,7 +61,7 @@ export const assetsFormSchema = Yup.object({
           return true;
         }
 
-        if (strategyType !== StrategyTypes.DCAPlusIn && strategyType !== StrategyTypes.DCAPlusOut) {
+        if (strategyType !== StrategyType.DCAPlusIn && strategyType !== StrategyType.DCAPlusOut) {
           return true;
         }
         const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
@@ -291,7 +291,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAIn && strategyType !== StrategyTypes.WeightedScaleIn) {
+        if (strategyType !== StrategyType.DCAIn && strategyType !== StrategyType.WeightedScaleIn) {
           return true;
         }
         return value >= startPrice;
@@ -308,7 +308,7 @@ export const allSchema = {
         if (!startPrice) {
           return true;
         }
-        if (strategyType !== StrategyTypes.DCAOut && strategyType !== StrategyTypes.WeightedScaleOut) {
+        if (strategyType !== StrategyType.DCAOut && strategyType !== StrategyType.WeightedScaleOut) {
           return true;
         }
         return value <= startPrice;

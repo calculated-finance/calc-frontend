@@ -72,7 +72,7 @@ export function getResultingDenoms(pairs: V3Pair[], initialDenom: DenomInfo) {
   );
 }
 
-function usePairsCosmos(injectedChainId?: ChainId) {
+export default function usePairs(injectedChainId?: ChainId) {
   const { chainId: currentChainId } = useChainId();
   const chainId = injectedChainId ?? currentChainId;
   const { cosmWasmClient } = useCosmWasmClient(chainId);
@@ -86,24 +86,18 @@ function usePairsCosmos(injectedChainId?: ChainId) {
     {
       enabled: !!chainId && !!cosmWasmClient,
       staleTime: 1000 * 60 * 5,
+      meta: {
+        errorMessage: 'Error fetching pairs',
+      },
     },
   );
 
   return {
+    pairs: pairs?.filter((pair) =>
+      isPairVisible({
+        denoms: pair.denoms,
+      }),
+    ),
     ...other,
-    data: {
-      pairs: pairs?.filter((pair) =>
-        isPairVisible({
-          denoms: pair.denoms,
-        }),
-      ),
-    },
-    meta: {
-      errorMessage: 'Error fetching pairs',
-    },
   };
-}
-
-export default function usePairs(injectedChainId?: ChainId) {
-  return usePairsCosmos(injectedChainId);
 }

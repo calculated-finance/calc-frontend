@@ -18,8 +18,8 @@ import { getPerformanceStatistics } from './getPerformanceStatistics';
 export function StrategyChartStats({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { fiatPrice: initialDenomPrice } = useFiatPrice(initialDenom);
 
   const { dexFee } = useDexFee(
     initialDenom,

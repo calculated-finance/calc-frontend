@@ -12,7 +12,7 @@ import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchas
 import { FormNames } from '@hooks/useFormStore';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -62,7 +62,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAOut,
+        strategyType: StrategyType.DCAOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.DcaOut,
       }}

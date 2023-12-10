@@ -1,7 +1,7 @@
 import { Box, HStack, Text, Divider, Stack, Grid, GridItem, Tooltip, Spinner } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { isNil } from 'lodash';
 import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
@@ -122,7 +122,7 @@ export function WeightSummary({
   resultingDenom: DenomInfo;
   priceThresholdValue: number | undefined | null;
 }) {
-  const { price, formattedPrice } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { spotPrice: price, formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;

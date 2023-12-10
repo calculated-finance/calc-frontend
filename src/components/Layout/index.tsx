@@ -21,7 +21,6 @@ import { useAdmin } from '@hooks/useAdmin';
 import { useChainId } from '@hooks/useChainId';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { featureFlags } from 'src/constants';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
 import Sidebar from './Sidebar';
@@ -220,8 +219,4 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
 
 export function getSidebarLayout(page: ReactElement) {
   return <SidebarLayout linkItems={LinkItems}>{page}</SidebarLayout>;
-}
-
-export function getControlDeskSidebarLayout(page: ReactElement) {
-  return featureFlags.controlDeskEnabled && <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>;
 }

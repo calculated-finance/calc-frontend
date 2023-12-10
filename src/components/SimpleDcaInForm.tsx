@@ -26,8 +26,8 @@ import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import { FormNames } from '@hooks/useFormStore';
-import getDenomInfo, { isDenomStable } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
+import getDenomInfo from '@utils/getDenomInfo';
+import { StrategyType } from '@models/StrategyType';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import simpleDcaInSteps from '@formConfig/simpleDcaIn';
@@ -36,7 +36,6 @@ import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import * as Sentry from '@sentry/react';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { useCreateVaultSimpleDcaIn } from '@hooks/useCreateVault/useCreateVaultSimpleDca';
 import { useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
@@ -54,6 +53,7 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { useWallet } from '@hooks/useWallet';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
+import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './StepOneConnectWallet';
@@ -62,7 +62,7 @@ type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
 };
 
-function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
+function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   return (
     <Heading size="sm">
       {isSuccess ? 'Strategy successfully created!' : 'Setup a simple dollar cost averaging (DCA) strategy'}
@@ -70,19 +70,16 @@ function SimpleDcaModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   );
 }
 
-function SimpleDCAInInitialDenom() {
-  const { data } = usePairs();
-  const { pairs } = data;
+function InitialDenom() {
+  const { pairs } = usePairs();
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
 
   if (!pairs) return null;
 
-  const denomInfos = Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) =>
-    getDenomInfo(denom),
+  const denoms = orderAlphabetically(
+    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
   );
-
-  const denoms = orderAlphabetically(denomInfos.filter(isDenomStable));
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -111,7 +108,7 @@ function SimpleDCAInInitialDenom() {
   );
 }
 
-function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
+function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chainId } = useChainId();
 
@@ -137,7 +134,7 @@ function SimpleDCAInResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   );
 }
 
-function SimpleDcaInSwapAmount({
+function SwapAmount({
   initialDenomString,
   resultingDenomString,
 }: {
@@ -197,13 +194,11 @@ function SimpleDcaInSwapAmount({
   );
 }
 
-function SimpleDcaInForm() {
+function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
-  const { mutate, isError, error, isLoading } = useCreateVaultSimpleDcaIn();
-  const {
-    data: { pairs },
-  } = usePairs();
+  const { mutate, isError, error, isLoading } = useCreateVaultDca();
+  const { pairs } = usePairs();
   const { data: balances } = useBalances();
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
@@ -253,16 +248,13 @@ function SimpleDcaInForm() {
                   <SuccessStrategyModalBody />
                 ) : (
                   <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                    <SimpleDcaModalHeader isSuccess={isSuccess} />
-                    <SimpleDCAInInitialDenom />
-                    <SimpleDCAInResultingDenom
+                    <ModalHeader isSuccess={isSuccess} />
+                    <InitialDenom />
+                    <ResultingDenom
                       denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
                     />
                     <ExecutionIntervalLegacy />
-                    <SimpleDcaInSwapAmount
-                      initialDenomString={values.initialDenom}
-                      resultingDenomString={values.resultingDenom}
-                    />
+                    <SwapAmount initialDenomString={values.initialDenom} resultingDenomString={values.resultingDenom} />
                     {connected ? (
                       <SummaryAgreementForm
                         isError={isError}
@@ -287,12 +279,12 @@ export default function SimpleDcaIn() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.SimpleDCAIn,
+        strategyType: StrategyType.SimpleDCAIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.SimpleDcaIn,
       }}
     >
-      <SimpleDcaInForm />
+      <Form />
     </StrategyInfoProvider>
   );
 }

@@ -29,8 +29,8 @@ import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import useFiatPrices from '@hooks/useFiatPrices';
-import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import SimpleDcaIn from '@components/SimpleDcaInForm';
 
 function WarningPanel() {
   return (
@@ -122,7 +122,7 @@ function InvestmentThesisWithActiveStrategies({
 
 function TotalInvestment() {
   const supportedDenoms = useSupportedDenoms();
-  const { prices } = useFiatPrices();
+  const { fiatPrices: prices } = useFiatPrices();
   const { data: allStrategies } = useAllStrategies();
 
   if (!prices || !allStrategies) {

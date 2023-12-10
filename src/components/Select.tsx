@@ -79,10 +79,12 @@ export function SelectDenomWithSearch({
     options,
     placeholder,
     isSearchable,
-    value: options?.find((option: OptionTypeDenomSelect) => {
-      const [id] = option?.value || [];
-      return value === id || null;
-    }),
+    value: value
+      ? options?.find((option: OptionTypeDenomSelect) => {
+          const [id] = option?.value || [];
+          return value === id || null;
+        })
+      : null,
     chakraStyles: {
       control: (provided) => ({
         ...provided,

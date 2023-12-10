@@ -16,7 +16,7 @@ const FIAT_CURRENCY_ID = 'usd';
 const useFiatPrices = () => {
   const supportedDenoms = useSupportedDenoms();
 
-  const { data, ...other } = useQuery<FiatPriceResponse>(
+  const { data: fiatPrices, ...other } = useQuery<FiatPriceResponse>(
     ['fiat-prices'],
     async () => {
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
@@ -55,7 +55,7 @@ const useFiatPrices = () => {
   );
 
   return {
-    prices: data,
+    fiatPrices,
     ...other,
   };
 };

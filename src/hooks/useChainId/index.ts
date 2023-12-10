@@ -5,7 +5,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
-// import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { CHAINS } from 'src/constants';
 import { ChainId } from './Chains';
 

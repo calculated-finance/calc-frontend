@@ -10,10 +10,10 @@ import {
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { DenomInfo } from '@utils/DenomInfo';
 import { ChainConfig, getRedBankAddress } from '@helpers/chains';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { safeInvert } from '@utils/safeInvert';
 
 export function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();

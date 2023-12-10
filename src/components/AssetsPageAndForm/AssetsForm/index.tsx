@@ -24,17 +24,15 @@ import InitialDeposit from '@components/InitialDeposit';
 import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { Pair } from 'src/interfaces/v2/generated/query';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { DenomInfo } from '@utils/DenomInfo';
 
 function getIsDcaInStrategy(strategyType: string | undefined) {
   const strategy = strategyType && strategyType;
-  return [StrategyTypes.DCAIn, StrategyTypes.DCAPlusIn, StrategyTypes.WeightedScaleIn].includes(
-    strategy as StrategyTypes,
-  );
+  return [StrategyType.DCAIn, StrategyType.DCAPlusIn, StrategyType.WeightedScaleIn].includes(strategy as StrategyType);
 }
 
-function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefined, pairs: Pair[]): DenomInfo[] {
+function getInitialDenomsFromStrategyType(strategyType: StrategyType | undefined, pairs: Pair[]): DenomInfo[] {
   if (!strategyType || !pairs) {
     return [];
   }
@@ -49,7 +47,7 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     );
   }
 
-  if (strategyType === StrategyTypes.DCAPlusOut) {
+  if (strategyType === StrategyType.DCAPlusOut) {
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
@@ -57,7 +55,7 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
     );
   }
 
-  if (strategyType === StrategyTypes.DCAOut) {
+  if (strategyType === StrategyType.DCAOut) {
     return orderAlphabetically(
       Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)]))
         .map((denom) => getDenomInfo(denom))
@@ -71,7 +69,7 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyTypes | undefine
 }
 
 function getResultingDenomsFromStrategyType(
-  strategyType: StrategyTypes | undefined,
+  strategyType: StrategyType | undefined,
   pairs: Pair[],
   initialDenom: string,
 ) {
@@ -81,7 +79,7 @@ function getResultingDenomsFromStrategyType(
 
   const resultingDenoms = getResultingDenoms(pairs, getDenomInfo(initialDenom));
 
-  if (strategyType === StrategyTypes.DCAPlusIn) {
+  if (strategyType === StrategyType.DCAPlusIn) {
     return resultingDenoms.filter(isSupportedDenomForDcaPlus);
   }
 
@@ -89,8 +87,7 @@ function getResultingDenomsFromStrategyType(
 }
 
 export function AssetsForm() {
-  const { data } = usePairs();
-  const { pairs } = data || {};
+  const { pairs } = usePairs();
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
   const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
   const [strategyField] = useField({ name: 'strategyType' });

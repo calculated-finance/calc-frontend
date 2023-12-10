@@ -17,7 +17,7 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import useStrategy from '@hooks/useStrategy';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
@@ -87,7 +87,7 @@ export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
 
   const { transactionType } = useStrategyInfo();
 
-  const { price: dexPrice } = usePrice(resultingDenom, initialDenom, transactionType, !!state);
+  const { spotPrice: dexPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, undefined, !!state);
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 

@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import { InvalidData } from '@components/InvalidData';
@@ -26,7 +26,7 @@ function Page() {
 
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.DCAPlusOut,
+    strategyType: StrategyType.DCAPlusOut,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -86,7 +86,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusOut,
+        strategyType: StrategyType.DCAPlusOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.DcaPlusOut,
       }}
