@@ -96,8 +96,13 @@ function addGrants(
   }
 }
 
-function getFunds(initialDenom: DenomInfo, initialDeposit: number) {
-  const funds = [{ denom: initialDenom.id, amount: BigInt(initialDenom.deconversion(initialDeposit)).toString() }];
+function getFunds(initialDenom: DenomInfo, initialDeposit: number, isDeconverted = false) {
+  const funds = [
+    {
+      denom: initialDenom.id,
+      amount: BigInt(isDeconverted ? initialDeposit : initialDenom.deconversion(initialDeposit)).toString(),
+    },
+  ];
 
   const fundsInCoin = [
     Coin.fromPartial({
@@ -119,7 +124,7 @@ async function createVault(
 ) {
   const createVaultMsg = buildCreateVaultMsg(chainConfig, fetchedConfig, createVaultContext);
   const msgs: EncodeObject[] = [];
-  const funds = getFunds(createVaultContext.initialDenom, initialDeposit);
+  const funds = getFunds(createVaultContext.initialDenom, initialDeposit, createVaultContext.isDeconverted);
   msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));
   addGrants(
     createVaultContext.destinationConfig.autoStakeValidator,

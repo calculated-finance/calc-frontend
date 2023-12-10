@@ -26,7 +26,6 @@ export default function useExpectedReceiveAmount(
     {
       enabled: !!cosmWasmClient && !!config && !!targetDenom && !!swapAmount && enabled,
       cacheTime: 15000,
-      retry: true,
       meta: {
         errorMessage: 'Error fetching expected receive amount',
       },

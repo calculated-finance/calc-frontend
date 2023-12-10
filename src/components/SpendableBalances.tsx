@@ -5,7 +5,6 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
 import { useDenom } from '@hooks/useDenom/useDenom';
-import { useAdmin } from '@hooks/useAdmin';
 import { truncate } from '@helpers/truncate';
 
 function CoinBalance({ balance }: { balance: Coin }) {

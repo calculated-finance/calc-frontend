@@ -33,8 +33,11 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
 
     const denoms = {
       ...mainnetDenomsOsmosis,
+      ...mainnetDenomsKujira,
       ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? testnetDenomsOsmosis : {}),
+      ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? testnetDenomsKujira : {}),
     };
+
     const scopedDenom = denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis;
 
     let denomInfo = {
@@ -48,6 +51,7 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
       significantFigures,
       pricePrecision: 6,
       stakeableAndSupported: denom === 'uosmo',
+      ...denoms[scopedDenom],
     } as Partial<DenomInfo>;
 
     if (!isNil(significantFigures) && significantFigures !== 6) {
@@ -73,6 +77,7 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     ...mainnetDenomsKujira,
     ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? testnetDenomsKujira : {}),
   };
+
   const kujiraAsset = kujiraDenoms[denom as MainnetDenoms | TestnetDenoms];
 
   if (kujiraAsset) {

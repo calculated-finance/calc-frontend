@@ -10,14 +10,12 @@ export default function useDexFee(
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
 ) {
-  const { chainId: chain } = useChainId();
-  const { data: pairsData } = usePairs();
+  const { chainId } = useChainId();
+  const { pairs } = usePairs();
 
-  if (['kaiyo-1', 'harpoon-4'].includes(chain)) {
+  if (['kaiyo-1', 'harpoon-4'].includes(chainId)) {
     return { dexFee: FIN_TAKER_FEE };
   }
-
-  const { pairs } = pairsData || {};
 
   const pair =
     pairs && resultingDenom && initialDenom

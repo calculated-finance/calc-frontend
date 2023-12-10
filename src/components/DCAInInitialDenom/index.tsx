@@ -17,8 +17,7 @@ import { DenomSelect } from '@components/DenomSelect';
 import InitialDeposit from '@components/InitialDeposit';
 
 export default function DCAInInitialDenom() {
-  const { data } = usePairs();
-  const { pairs } = data || {};
+  const { pairs } = usePairs();
   const [field, meta, helpers] = useField({ name: 'initialDenom' });
 
   if (!pairs) {

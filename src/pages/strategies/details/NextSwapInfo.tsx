@@ -43,7 +43,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { data: pairsData } = usePairs();
+  const { pairs } = usePairs();
 
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -51,7 +51,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
     const { time } = trigger || {};
     const targetTime = time?.target_time;
 
-    const targetPrice = getTargetPrice(strategy, pairsData?.pairs);
+    const targetPrice = getTargetPrice(strategy, pairs);
 
     if (isStrategyOperating(strategy)) {
       if (targetTime) {
@@ -91,6 +91,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
       }
     }
   }
+
   return nextSwapInfo ? (
     <Stack mb={8} py={4} px={8} layerStyle="panel" direction={{ base: 'column', sm: 'row' }} spacing={4}>
       <HStack spacing={4} w={{ sm: '50%' }}>

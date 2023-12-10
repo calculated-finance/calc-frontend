@@ -9,6 +9,7 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     coingeckoId: 'cosmos',
     significantFigures: 6,
     enabledInDcaPlus: true,
+    stable: false,
   },
   [MainnetDenoms.stATOM]: {
     name: 'stATOM',

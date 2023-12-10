@@ -21,6 +21,7 @@ import {
   useRadioGroup,
 } from '@chakra-ui/react';
 import { FormData, initialValues, schema } from 'src/models/StreamingSwapFormData';
+import CalcSpinner from '@components/Spinner';
 import usePairs, {
   getResultingDenoms,
   orderAlphabetically,
@@ -32,31 +33,33 @@ import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import getDenomInfo from '@utils/getDenomInfo';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { useState } from 'react';
-import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
+import { useEffect, useState } from 'react';
 import { DenomSelect } from '@components/DenomSelect';
 import { AvailableFunds } from '@components/AvailableFunds';
 import useSteps from '@hooks/useSteps';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { useWallet } from '@hooks/useWallet';
-import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import NumberInput from '@components/NumberInput';
 import useFiatPrice from '@hooks/useFiatPrice';
 import useExpectedReceiveAmount from '@hooks/useExpectedReceiveAmount';
 import { coin } from '@cosmjs/proto-signing';
 import useExpectedPrice from '@hooks/useExpectedPrice';
-import { ConnectWalletButton } from './StepOneConnectWallet';
 import streamingSwapSteps from '@formConfig/streamingSwap';
 import useTwap from '@hooks/useTwap';
-import { ModalWrapper } from './ModalWrapper';
-import { useDebounce } from 'ahooks';
-import { TransactionType } from './TransactionType';
+import { max, min } from 'rambda';
+import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import YesNoValues from '@models/YesNoValues';
+import { useDebounce } from 'ahooks';
+import { ModalWrapper } from './ModalWrapper';
+import { TransactionType } from './TransactionType';
 import { CollapseWithRender } from './CollapseWithRender';
 import { DenomPriceInput } from './DenomPriceInput';
 import { yesNoData } from './PriceThreshold';
+import { ConnectWalletButton } from './StepOneConnectWallet';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
+
+import SlippageTolerance from './SlippageTolerance';
 
 function InitialDeposit() {
   const {
@@ -70,10 +73,17 @@ function InitialDeposit() {
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput
-        onChange={(v) => helpers.setValue(v && initialDenomInfo.deconversion(v))}
+        onChange={(newValue) => helpers.setValue(newValue && initialDenomInfo.deconversion(newValue))}
         textAlign="right"
         placeholder="Enter amount"
-        value={(value && initialDenomInfo && Number(initialDenomInfo.conversion(value)?.toFixed(2)).toString()) ?? ''}
+        value={
+          (value &&
+            initialDenomInfo &&
+            Number(
+              initialDenomInfo.conversion(value)?.toFixed(max(initialDenomInfo.significantFigures, 6)),
+            ).toString()) ??
+          ''
+        }
         {...field}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -84,9 +94,9 @@ function InitialDeposit() {
 function InitialDenom() {
   const { pairs } = usePairs();
   const [initialDenom, meta, initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [, , priceThresholdEnabledHelpers] = useField({ name: 'priceThresholdEnabled' });
+  const [, , priceThresholdValueHelpers] = useField({ name: 'priceThresholdValue' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
-  const [initialDeposit] = useField({ name: 'initialDeposit' });
+  const [initialDeposit, , initialDepositHelpers] = useField<number>({ name: 'initialDeposit' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
   const { fiatPrice } = useFiatPrice(getDenomInfo(initialDenom.value));
 
@@ -100,7 +110,7 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose asset to send</Text>
           <Spacer />
-          {initialDenom.value && <AvailableFunds denom={initialDenomInfo} />}
+          {initialDenom.value && <AvailableFunds denom={initialDenomInfo} deconvertValue />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
@@ -113,12 +123,23 @@ function InitialDenom() {
             )}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
             value={initialDenom.value}
-            onChange={(v) => {
-              const denoms = pairs && initialDenom ? getResultingDenoms(pairs, getDenomInfo(v)) : [];
+            onChange={(newValue) => {
+              const newDenomInfo = getDenomInfo(newValue);
+              const denoms = pairs && newValue ? getResultingDenoms(pairs, newDenomInfo) : [];
               const resultingDenomIsNotAllowed = !denoms.find((d) => d.id === resultingDenom.value);
               if (resultingDenomIsNotAllowed) resultingDenomHelpers.setValue(undefined);
-              priceThresholdEnabledHelpers.setValue(YesNoValues.No);
-              initialDenomHelpers.setValue(v);
+              if (
+                initialDeposit.value &&
+                initialDenomInfo &&
+                newDenomInfo &&
+                initialDenomInfo.significantFigures !== newDenomInfo.significantFigures
+              ) {
+                initialDepositHelpers.setValue(
+                  initialDeposit.value * 10 ** (newDenomInfo.significantFigures - initialDenomInfo.significantFigures),
+                );
+              }
+              priceThresholdValueHelpers.setValue('');
+              initialDenomHelpers.setValue(newValue);
             }}
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -135,7 +156,7 @@ function InitialDenom() {
                 initialDeposit.value &&
                 fiatPrice &&
                 initialDenomInfo.conversion(initialDeposit.value) * fiatPrice
-              )?.toFixed(2) ?? '0.00'}
+              )?.toFixed(initialDenomInfo.significantFigures / 3) ?? '0.00'}
             </Text>
           </HStack>
         </Stack>
@@ -147,8 +168,10 @@ function InitialDenom() {
 function ResultingDenom() {
   const { pairs } = usePairs();
   const {
-    values: { initialDenom, initialDeposit, strategyDuration },
+    values: { initialDenom, initialDeposit, swapAmount },
   } = useFormikContext<FormData>();
+
+  const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
   const [{ value: resultingDenomValue, ...resultingDenomField }, resultingDenomMeta, resultingDenomHelpers] = useField({
     name: 'resultingDenom',
@@ -159,34 +182,36 @@ function ResultingDenom() {
 
   const [isMobile] = useMediaQuery('(max-width: 506px)');
 
-  const swapAmount = initialDeposit
-    ? coin(
-        (BigInt(initialDeposit ?? 0) / BigInt(strategyDuration ?? initialValues.strategyDuration)).toString(),
-        initialDenomInfo.id,
-      )
-    : undefined;
-
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
-    swapAmount,
+    swapAmount && initialDenomInfo ? coin(BigInt(swapAmount).toString(), initialDenomInfo.id) : undefined,
     resultingDenomInfo,
     undefined,
     !!swapAmount && !!resultingDenomInfo,
   );
 
   const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
-    coin(`${BigInt(initialDeposit ?? 0).toString()}`, initialDenomInfo.id),
+    debouncedInitialDeposit && initialDenomInfo
+      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenomInfo.id)
+      : undefined,
     resultingDenomInfo,
     undefined,
-    !!initialDeposit && !!initialDenomInfo && !!resultingDenomInfo,
+    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo,
   );
 
   const expectedTotalReceiveAmount =
     initialDenomInfo &&
     swapAmount &&
     expectedReceiveAmount &&
-    Number(expectedReceiveAmount?.amount) * (initialDeposit / Number(swapAmount?.amount));
+    Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmount);
 
   const denoms = pairs && initialDenom ? getResultingDenoms(pairs, getDenomInfo(initialDenom)) : [];
+
+  const extraExpectedReceiveAmount =
+    expectedTotalReceiveAmount &&
+    directExpectedReceiveAmount &&
+    resultingDenomInfo
+      .conversion(max(0, expectedTotalReceiveAmount - Number(directExpectedReceiveAmount.amount)))
+      .toFixed(resultingDenomInfo.significantFigures / 3);
 
   return (
     <FormControl isInvalid={Boolean(resultingDenomMeta.touched && resultingDenomMeta.error)} isDisabled={!initialDenom}>
@@ -223,27 +248,13 @@ function ResultingDenom() {
       <FormHelperText textAlign="right">
         <Spacer />
         <Stack spacing={1} alignItems="end" justify="right">
-          {/* <HStack spacing={1}>
-            <Text textStyle="body-xs">USD Value:</Text>
-            <Text textStyle="body-xs" color="white">
-              {(!initialDeposit || !resultingDenomValue
-                ? '$0.00'
-                : expectedTotalReceiveAmount &&
-                  fiatPrice &&
-                  ` $${(expectedTotalReceiveAmount * fiatPrice).toFixed(2)}`) ?? <Spinner size="xs" />}
-            </Text>
-          </HStack> */}
           <HStack spacing={1}>
-            <Text textStyle="body-xs">
-              Additional{resultingDenomInfo && ` ${resultingDenomInfo.name}`} compared to direct swap:
-            </Text>
-            <Text textStyle="body-xs" color="white">
-              {expectedTotalReceiveAmount && directExpectedReceiveAmount ? (
-                `${resultingDenomInfo
-                  .conversion(expectedTotalReceiveAmount - Number(directExpectedReceiveAmount.amount))
-                  .toFixed(2)}`
-              ) : !initialDenom || !initialDeposit || !resultingDenomValue ? (
-                '0.00'
+            <Text textStyle="body-xs">Additional compared to direct swap:</Text>
+            <Text textStyle="body-xs" color={extraExpectedReceiveAmount > 0 ? 'green.200' : 'white'}>
+              {extraExpectedReceiveAmount ? (
+                `${extraExpectedReceiveAmount} ${resultingDenomInfo && resultingDenomInfo.name}`
+              ) : !initialDenom || !debouncedInitialDeposit || !resultingDenomValue ? (
+                `0.00 ${resultingDenomInfo?.name ?? ''}`
               ) : (
                 <Spinner size="xs" />
               )}
@@ -261,31 +272,38 @@ function DurationSlider() {
     values: { initialDenom, initialDeposit, resultingDenom },
   } = useFormikContext<FormData>();
 
-  const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
-
   const [sliderValue, setSliderValue] = useState<number>(60);
+  const [strategyDuration, setStrategyDuration] = useState<number>(60);
 
-  const [{ onChange: onChangeStrategyDuration, ...strategyDurationField }, , strategyDurationHelpers] = useField({
-    name: 'strategyDuration',
+  const [{ onChange: onChangeSwapAmount, ...swapAmountField }, , swapAmountHelpers] = useField<number>({
+    name: 'swapAmount',
   });
+
+  const [, , executionIntervalIncrementHelpers] = useField<number>({
+    name: 'executionIntervalIncrement',
+  });
+
+  const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
+  const debouncedSwapAmount = useDebounce(swapAmountField.value, { wait: 500 });
 
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
   const { twap } = useTwap(initialDenomInfo, resultingDenomInfo, undefined, !!resultingDenomInfo && !!initialDenomInfo);
+  const { fiatPrice } = useFiatPrice(initialDenomInfo);
 
-  const swapAmount = debouncedInitialDeposit
-    ? coin(
-        (BigInt(debouncedInitialDeposit) / BigInt(strategyDurationField.value ?? sliderValue)).toString(),
-        initialDenomInfo.id,
-      )
-    : undefined;
+  const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
+  const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
+
+  const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
 
   const { expectedPrice } = useExpectedPrice(
-    swapAmount,
+    swapAmountField.value && initialDenomInfo
+      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
+      : undefined,
     resultingDenomInfo,
     undefined,
-    !!swapAmount && !!resultingDenomInfo,
+    !!debouncedSwapAmount && !!resultingDenomInfo,
   );
 
   const slippage =
@@ -295,7 +313,26 @@ function DurationSlider() {
   const hours = Number((minutes / 60).toFixed(1));
 
   const minValue = 1;
-  const maxValue = 60 * 12 + 1;
+  const maxValue = min(maximumSwaps || Infinity, 60 * 48 + 1);
+
+  useEffect(() => {
+    const minSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
+    const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
+
+    const totalSwaps = strategyDuration && maxSwaps && min(strategyDuration, maxSwaps);
+    const swapAmount =
+      totalSwaps && debouncedInitialDeposit ? Math.ceil(debouncedInitialDeposit / totalSwaps) : undefined;
+
+    if (strategyDuration && totalSwaps)
+      executionIntervalIncrementHelpers.setValue(Math.floor(strategyDuration / totalSwaps));
+    if (swapAmount || minSwapAmount) swapAmountHelpers.setValue(swapAmount ?? minSwapAmount ?? 0);
+  }, [strategyDuration, debouncedInitialDeposit, initialDenom, resultingDenom]);
+
+  useEffect(() => {
+    if (!swapAmountField.value) {
+      setStrategyDuration(sliderValue);
+    }
+  }, [initialDenomInfo]);
 
   return (
     <FormControl id="swaps">
@@ -314,10 +351,10 @@ function DurationSlider() {
             cursor="pointer"
             onClick={() => {
               setSliderValue(minValue);
-              strategyDurationHelpers.setValue(minValue);
+              setStrategyDuration(minValue);
             }}
           >
-            {minValue - 1} minutes
+            Immediate
           </Button>
           <Spacer />
           <Button
@@ -327,10 +364,10 @@ function DurationSlider() {
             cursor="pointer"
             onClick={() => {
               setSliderValue(maxValue);
-              strategyDurationHelpers.setValue(maxValue);
+              setStrategyDuration(maxValue);
             }}
           >
-            {(maxValue / 60).toFixed(0)} hours
+            {maxValue > 59 ? `${(maxValue / 60).toFixed(0)} hours` : `${maxValue} minutes`}
           </Button>
         </Center>
       </FormHelperText>
@@ -340,22 +377,24 @@ function DurationSlider() {
         min={minValue}
         max={maxValue}
         onChange={setSliderValue}
-        onChangeEnd={strategyDurationHelpers.setValue}
+        onChangeEnd={setStrategyDuration}
       >
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
         <SliderThumb boxSize={4} bg="blue.200" borderWidth={1} zIndex={0} />
       </Slider>
-      {!!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
+      {!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
         <FormHelperText>
           <Text color="brand.200" fontSize="xs">
-            {strategyDurationField.value} {strategyDurationField.value > 1 ? 'swaps' : 'swap'} of{' '}
+            {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
             {parseFloat(
-              initialDenomInfo.conversion(Math.round(debouncedInitialDeposit / strategyDurationField.value)).toFixed(3),
+              initialDenomInfo
+                .conversion(Number(swapAmountField.value))
+                .toFixed(initialDenomInfo.significantFigures / 3),
             ).toString()}{' '}
-            {initialDenomInfo.name} with expected {slippage ? `${slippage.toFixed(3)}%` : <Spinner size="xs" />} price
-            impact
+            {initialDenomInfo.name} every {Math.ceil(sliderValue / swaps)} minutes, with estimated{' '}
+            {slippage ? `${slippage.toFixed(3)}%` : <Spinner size="xs" />} price impact
           </Text>
         </FormHelperText>
       )}
@@ -404,7 +443,7 @@ function PriceThresholdToggle() {
               <RadioCard
                 key={option.label}
                 isDisabled={!initialDenom || !resultingDenom}
-                disabledMessage="We currently do not support the removal of price thresholds, please set a suitably high or low value for your purpose"
+                disabledMessage="Setting price protection requires both assets to be selected."
                 {...radio}
               >
                 {option.label}
@@ -433,7 +472,7 @@ function PriceThreshold() {
   return (
     <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
       <FormLabel fontWeight={600}>
-        {transactionType === TransactionType.Buy ? 'Set buy price protection' : 'Set buy price protection'}
+        {transactionType === TransactionType.Buy ? 'Set buy price protection' : 'Set sell price protection'}
       </FormLabel>
       <FormHelperText>
         {transactionType === TransactionType.Buy
@@ -460,12 +499,11 @@ function PriceThreshold() {
 export function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(streamingSwapSteps);
-  const { mutate, isError, error, isLoading } = useCreateVaultDca();
+  const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
   const { pairs } = usePairs();
   const { data: balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
-  // const { queryParams, updateValues: updateQueryParams } = useQueryParamStore('swaps');
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
@@ -484,54 +522,37 @@ export function Form() {
       },
     );
 
-  if (!pairs) {
-    return (
-      <Center h={56}>
-        <Spinner />
-      </Center>
-    );
-  }
-
   return (
-    <Formik
-      initialValues={{
-        ...initialValues,
-        // ...queryParams,
-      }}
-      validate={(x) => {
-        // updateQueryParams(x);
-        validate(x);
-      }}
-      onSubmit={() => {}}
-    >
-      {({ values }) => {
-        return (
-          <ModalWrapper stepsConfig={streamingSwapSteps}>
-            {isSuccess ? (
-              <SuccessStrategyModalBody />
-            ) : (
-              <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                  <InitialDenom />
-                  <SwapDenoms />
-                  <ResultingDenom />
-                </Stack>
-                <DurationSlider />
-                <PriceThreshold />
-                {connected ? (
-                  <SummaryAgreementForm
-                    isError={isError}
-                    error={error}
-                    onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
-                  />
-                ) : (
-                  <ConnectWalletButton />
-                )}
+    <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
+      {({ values }) => (
+        <ModalWrapper stepsConfig={[streamingSwapSteps[0]]}>
+          {!pairs || isLoading ? (
+            <Center h={400}>
+              <CalcSpinner />
+            </Center>
+          ) : (
+            <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+              <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                <InitialDenom />
+                <SwapDenoms />
+                <ResultingDenom />
               </Stack>
-            )}
-          </ModalWrapper>
-        );
-      }}
+              <DurationSlider />
+              <PriceThreshold />
+              <SlippageTolerance />
+              {connected ? (
+                <SummaryAgreementForm
+                  isError={isError}
+                  error={error}
+                  onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
+                />
+              ) : (
+                <ConnectWalletButton />
+              )}
+            </Stack>
+          )}
+        </ModalWrapper>
+      )}
     </Formik>
   );
 }

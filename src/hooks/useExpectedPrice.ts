@@ -1,7 +1,7 @@
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/stargate';
-import useExpectedReceiveAmount from './useExpectedReceiveAmount';
 import getDenomInfo from '@utils/getDenomInfo';
+import useExpectedReceiveAmount from './useExpectedReceiveAmount';
 
 export default function useExpectedPrice(
   swapAmount: Coin | undefined,
@@ -15,8 +15,8 @@ export default function useExpectedPrice(
     swapAmount &&
     targetDenom &&
     expectedReceiveAmount &&
-    getDenomInfo(swapAmount?.denom).conversion(Number(swapAmount?.amount)) /
-      targetDenom?.conversion(Number(expectedReceiveAmount?.amount));
+    getDenomInfo(swapAmount.denom).conversion(Number(swapAmount.amount)) /
+      targetDenom.conversion(Number(expectedReceiveAmount.amount));
 
   return {
     expectedPrice,

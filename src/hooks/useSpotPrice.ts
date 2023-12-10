@@ -1,7 +1,6 @@
 import { max } from 'lodash';
 import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useConfig } from '@hooks/useConfig';
 import { safeInvert } from '@utils/safeInvert';
 import useTwap from './useTwap';
 

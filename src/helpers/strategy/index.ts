@@ -136,6 +136,10 @@ export function getStrategyExecutionInterval(strategy: Strategy) {
 }
 
 export function getStrategyName(strategy: Strategy) {
+  if (strategy.rawData.label) {
+    return strategy.rawData.label;
+  }
+
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 

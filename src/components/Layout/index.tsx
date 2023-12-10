@@ -26,7 +26,7 @@ import { isStepOne } from '@helpers/isStepOne';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
-import { ControlDeskLinkItems, LinkItem, LinkItems } from './Sidebar/LinkItems';
+import { LinkItem, LinkItems } from './Sidebar/LinkItems';
 import { Pages } from './Sidebar/Pages';
 
 const HEADER_HEIGHT = '64px';

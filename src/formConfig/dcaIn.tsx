@@ -27,7 +27,6 @@ const dcaInSteps: StepConfig[] = [
               </ListItem>
             </UnorderedList>
           </ListItem>
-
           <ListItem>
             Start based on price.
             <UnorderedList>
@@ -74,7 +73,6 @@ const dcaInSteps: StepConfig[] = [
     href: '/create-strategy/dca-in/confirm-purchase',
     title: 'Confirm & Sign',
   },
-
   {
     href: '/create-strategy/dca-in/success',
     title: 'Strategy Set Successfully',

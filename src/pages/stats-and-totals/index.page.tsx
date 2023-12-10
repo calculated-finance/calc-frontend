@@ -2,7 +2,6 @@ import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import { BalanceList } from '@components/SpendableBalances';
-import useFiatPrice from '@hooks/useFiatPrice';
 import getDenomInfo from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
 import useAllStrategies from '@hooks/useAllStrategies';

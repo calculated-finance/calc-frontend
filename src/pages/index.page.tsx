@@ -29,8 +29,8 @@ import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import useFiatPrices from '@hooks/useFiatPrices';
-import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
+import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function WarningPanel() {
   return (

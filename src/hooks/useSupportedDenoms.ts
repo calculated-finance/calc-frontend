@@ -33,8 +33,8 @@ export function useSupportedDenoms() {
     ['all-pairs', process.env.NEXT_PUBLIC_APP_ENV],
     async () => (await Promise.all(allChainContexts.map(fetchPairs))).flat(),
     {
-      cacheTime: Infinity,
-      staleTime: Infinity,
+      cacheTime: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 10 * 60 * 1000 : 0,
+      staleTime: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 30 * 60 * 1000 : 0,
       enabled: !!allChainContexts,
       meta: {
         errorMessage: 'Error fetching pairs',

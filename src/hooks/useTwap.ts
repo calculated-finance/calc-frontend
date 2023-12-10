@@ -38,7 +38,6 @@ export default function useTwap(
     {
       enabled: !!cosmWasmClient && !!pair && !!config && enabled,
       cacheTime: 15000,
-      retry: true,
       meta: {
         errorMessage: 'Error fetching twap',
       },

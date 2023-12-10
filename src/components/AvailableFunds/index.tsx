@@ -18,6 +18,7 @@ import {
   Heading,
   FormHelperText,
   Image,
+  Spinner,
 } from '@chakra-ui/react';
 import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -142,10 +143,12 @@ function AvailableFundsButton({
   denom,
   isLoading,
   data,
+  deconvertValue = false,
 }: {
   denom: DenomInfo;
   isLoading: boolean;
   data: Coin | undefined;
+  deconvertValue?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
@@ -161,7 +164,7 @@ function AvailableFundsButton({
   const displayFee = denom.conversion(createStrategyFee);
 
   const handleClick = () => {
-    helpers.setValue(displayAmount);
+    helpers.setValue(deconvertValue ? balance : displayAmount);
   };
 
   function handleOpen(onOpener: () => void) {
@@ -182,17 +185,21 @@ function AvailableFundsButton({
         >
           <Text mr={1}>Available: </Text>
         </Tooltip>
-        <Button
-          size="xs"
-          isLoading={isLoading}
-          colorScheme="blue"
-          variant="link"
-          cursor="pointer"
-          isDisabled={!displayAmount}
-          onClick={handleClick}
-        >
-          {displayAmount}
-        </Button>
+        {isLoading ? (
+          <Spinner size="xs" />
+        ) : (
+          <Button
+            size="xs"
+            isLoading={isLoading}
+            colorScheme="blue"
+            variant="link"
+            cursor="pointer"
+            isDisabled={!displayAmount}
+            onClick={handleClick}
+          >
+            {displayAmount}
+          </Button>
+        )}
       </>
     );
   }
@@ -220,12 +227,12 @@ function AvailableFundsButton({
   );
 }
 
-export function AvailableFunds({ denom }: { denom: DenomInfo }) {
+export function AvailableFunds({ denom, deconvertValue }: { denom: DenomInfo; deconvertValue?: boolean }) {
   const { data, isLoading } = useBalance(denom);
 
   return (
     <Center textStyle="body-xs">
-      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} />
+      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} deconvertValue={deconvertValue} />
     </Center>
   );
 }

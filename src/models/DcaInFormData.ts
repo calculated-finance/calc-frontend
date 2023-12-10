@@ -442,6 +442,7 @@ export const dcaSchema = Yup.object({
   yieldOption: allSchema.yieldOption,
   reinvestStrategy: allSchema.reinvestStrategy,
 });
+
 export type DcaInFormDataAll = Yup.InferType<typeof dcaSchema>;
 
 export const step1ValidationSchema = Yup.object({

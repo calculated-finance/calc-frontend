@@ -136,7 +136,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 }
 
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
   const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
@@ -145,9 +145,9 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
 
   const strategyType = getStrategyType(strategy);
 
-  const { data: pairsData } = usePairs();
+  const { pairs } = usePairs();
 
-  const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
+  const startDate = getStrategyStartDate(strategy, pairs);
 
   const { data: events } = useStrategyEvents(strategy.id);
 
@@ -267,7 +267,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   <GridItem colSpan={2}>
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                        {getPriceCeilingFloor(strategy, chain)}{' '}
+                        {getPriceCeilingFloor(strategy, chainId)}{' '}
                         {getDenomName(isBuyStrategy(strategy) ? initialDenom : resultingDenom)}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
@@ -297,7 +297,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   </LinkWithQuery>
                 </Flex>
               </GridItem>
-              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chainId={chain} />}
+              {Boolean(destinations.length) && <DestinationDetails strategy={strategy} chainId={chainId} />}
             </Grid>
           </Box>
         </Box>
@@ -312,10 +312,10 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
                 transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
                 applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
-                basePrice={getBasePrice(strategy, chain)}
+                basePrice={getBasePrice(strategy, chainId)}
                 initialDenom={getStrategyInitialDenom(strategy)}
                 resultingDenom={getStrategyResultingDenom(strategy)}
-                priceThresholdValue={getPriceCeilingFloor(strategy, chain)}
+                priceThresholdValue={getPriceCeilingFloor(strategy, chainId)}
               />
             </Box>
           </Box>

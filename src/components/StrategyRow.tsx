@@ -70,7 +70,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
       >
         <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
-          <Heading size="md">{getStrategyType(strategy)}</Heading>
+          <Heading size="md">{strategy.rawData.label || getStrategyType(strategy)}</Heading>
           <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
         </GridItem>
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>

@@ -143,7 +143,7 @@ export function NewStrategyModalHeader({
   showStepper?: boolean;
 }) {
   const router = useRouter();
-  const { currentStep, hasPreviousStep, previousStep, hasNextStep } = useSteps(stepsConfig);
+  const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
   const { connected } = useWallet();
 
   const handleCancel = async () => {

@@ -18,11 +18,6 @@ export function useConfig(injectedChainId?: ChainId): Config | undefined {
       }),
     {
       enabled: !!chainId && !!cosmWasmClient,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchInterval: false,
-      retry: false,
       meta: {
         errorMessage: 'Error fetching config',
       },

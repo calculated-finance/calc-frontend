@@ -87,11 +87,11 @@ export function getReceiveAmount(
   price: number, // 5.0
   resultingDenom: DenomInfo, // weth
   transactionType: TransactionType,
+  isDeconverted = false,
 ) {
   // convert swap amount to microns e.g. 1.2 -> 1 200 000
   // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
   // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
-
   const { deconversion: initialDeconversion, significantFigures: initialSF } = initialDenom;
   const { significantFigures: resultingSF } = resultingDenom;
 
@@ -99,7 +99,7 @@ export function getReceiveAmount(
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
 
   // get minimum receive amount in initial denom scale
-  const deconvertedSwapAmount = initialDeconversion(swapAmount);
+  const deconvertedSwapAmount = isDeconverted ? swapAmount : initialDeconversion(swapAmount);
 
   const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
 
@@ -206,6 +206,7 @@ export type DestinationConfig = {
 };
 
 export type BuildCreateVaultContext = {
+  label?: string;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
   timeInterval: {
@@ -217,16 +218,18 @@ export type BuildCreateVaultContext = {
   swapAmount: number;
   priceThreshold?: number;
   transactionType: TransactionType;
-  slippageTolerance: number;
+  slippageTolerance?: number;
   swapAdjustment?: SwapAdjustment;
   isDcaPlus?: boolean;
   destinationConfig: DestinationConfig;
+  isDeconverted?: boolean;
 };
 
 export function buildCreateVaultMsg(
   chainConfig: ChainConfig,
   fetchedConfig: Config,
   {
+    label,
     initialDenom,
     resultingDenom,
     timeTrigger,
@@ -239,6 +242,7 @@ export function buildCreateVaultMsg(
     destinationConfig,
     swapAdjustment,
     isDcaPlus,
+    isDeconverted,
   }: BuildCreateVaultContext,
 ): ExecuteMsg {
   if (isDcaPlus && swapAdjustment) {
@@ -264,15 +268,15 @@ export function buildCreateVaultMsg(
 
   const msg = {
     create_vault: {
-      label: '',
+      label,
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
-      swap_amount: getSwapAmount(initialDenom, swapAmount),
+      swap_amount: isDeconverted ? BigInt(swapAmount).toString() : getSwapAmount(initialDenom, swapAmount),
       target_start_time_utc_seconds: timeTrigger && getStartTime(timeTrigger.startDate, timeTrigger.startTime),
       minimum_receive_amount: priceThreshold
-        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType)
+        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, isDeconverted)
         : undefined,
-      slippage_tolerance: getSlippageWithoutTrailingZeros(slippageTolerance),
+      slippage_tolerance: slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : null,
       destinations: buildCallbackDestinations(
         chainConfig,
         destinationConfig.autoStakeValidator,
@@ -282,7 +286,7 @@ export function buildCreateVaultMsg(
         destinationConfig.reinvestStrategyId,
       ),
       target_receive_amount: startPrice
-        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType)
+        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType, isDeconverted)
         : undefined,
       swap_adjustment_strategy: swapAdjustmentStrategy,
       performance_assessment_strategy: performanceAssessmentStrategy,

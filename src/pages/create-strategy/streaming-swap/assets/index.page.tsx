@@ -3,8 +3,8 @@ import { FormNames } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
 import { BrowserRouter } from 'react-router-dom';
 import { getFlowLayout } from '@components/Layout';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 import { Form } from '@components/StreamingSwapForm';
+import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
   return (

@@ -17,7 +17,9 @@ export const queryClient = new QueryClient({
       toast({
         title: 'Something went wrong',
         position: 'top-right',
-        description: `There was a problem while loading (Reason: ${error}) (Query: ${errorMessage}))`,
+        description: `There was a problem while loading (Reason: ${error})${
+          process.env.NEXT_PUBLIC_APP_ENV === 'production' ? '' : ` (Query: ${errorMessage}))`
+        }`,
         status: 'error',
         variant: 'subtle',
         duration: 9000,
