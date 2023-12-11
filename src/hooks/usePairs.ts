@@ -1,6 +1,6 @@
 import { filter } from 'rambda';
 import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { V3Pair } from '@models/Pair';
+import { Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -21,7 +21,7 @@ const hiddenPairs = [
   ]),
 ];
 
-function isPairVisible(pair: V3Pair) {
+function isPairVisible(pair: Pair) {
   return !hiddenPairs.includes(JSON.stringify(pair.denoms));
 }
 
@@ -37,31 +37,31 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
   });
 }
 
-export function uniqueQuoteDenoms(pairs: V3Pair[] | undefined) {
+export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map(getQuoteDenom)));
 }
 
-export function uniqueBaseDenoms(pairs: V3Pair[] | undefined) {
+export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map(getBaseDenom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: V3Pair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(filter((pair: V3Pair) => getQuoteDenom(pair) === initialDenom.id, pairs ?? []).map(getBaseDenom)),
+    new Set(filter((pair: Pair) => getQuoteDenom(pair) === initialDenom.id, pairs ?? []).map(getBaseDenom)),
   );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: V3Pair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
   return Array.from(
-    new Set(filter((pair: V3Pair) => getBaseDenom(pair) === resultingDenom.id, pairs ?? []).map(getQuoteDenom)),
+    new Set(filter((pair: Pair) => getBaseDenom(pair) === resultingDenom.id, pairs ?? []).map(getQuoteDenom)),
   );
 }
 
-export function allDenomsFromPairs(pairs: V3Pair[] | undefined) {
+export function allDenomsFromPairs(pairs: Pair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => getQuoteDenom(pair)).concat(pairs?.map(getBaseDenom))));
 }
 
-export function getResultingDenoms(pairs: V3Pair[], initialDenom: DenomInfo) {
+export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
   return orderAlphabetically(
     Array.from(
       new Set([
@@ -77,7 +77,7 @@ export default function usePairs(injectedChainId?: ChainId) {
   const chainId = injectedChainId ?? currentChainId;
   const { cosmWasmClient } = useCosmWasmClient(chainId);
 
-  const { data: pairs, ...other } = useQuery<V3Pair[]>(
+  const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
     () => {
       const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!);

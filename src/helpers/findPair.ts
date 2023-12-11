@@ -1,11 +1,11 @@
-import { V3Pair } from '@models/Pair';
+import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { find } from 'rambda';
 
-export function findPair(pairs: V3Pair[], resultingDenom: DenomInfo, initialDenom: DenomInfo): V3Pair | undefined {
+export function findPair(pairs: Pair[], resultingDenom: DenomInfo, initialDenom: DenomInfo): Pair | undefined {
   const initialAsQuote = find(
-    (pair: V3Pair) => getBaseDenom(pair) === resultingDenom.id && getQuoteDenom(pair) === initialDenom.id,
+    (pair: Pair) => getBaseDenom(pair) === resultingDenom.id && getQuoteDenom(pair) === initialDenom.id,
     pairs,
   );
 
@@ -14,7 +14,7 @@ export function findPair(pairs: V3Pair[], resultingDenom: DenomInfo, initialDeno
   }
 
   return find(
-    (pair: V3Pair) => getBaseDenom(pair) === initialDenom.id && getQuoteDenom(pair) === resultingDenom.id,
+    (pair: Pair) => getBaseDenom(pair) === initialDenom.id && getQuoteDenom(pair) === resultingDenom.id,
     pairs,
   );
 }

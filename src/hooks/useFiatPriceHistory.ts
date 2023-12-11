@@ -3,6 +3,7 @@ import * as Sentry from '@sentry/react';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
+import dayjs from 'dayjs';
 
 export type FiatPriceHistoryResponse = {
   prices: number[][];
@@ -17,15 +18,26 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
   return useQuery<FiatPriceHistoryResponse>(
     ['fiat-price-history', coingeckoId, fiatCurrencyId, days],
     async () => {
+      if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
+        let i = 0;
+        return {
+          prices: Array.from({ length: 1000 }, () => [
+            dayjs().subtract(i++, 'minutes').toDate().getTime(),
+            Math.random(),
+          ]),
+        };
+      }
+
       const result = await fetch(
         `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}`,
       );
+
       if (!result.ok) {
         const error = await result.json();
         Sentry.captureException(error.error);
-
         throw new Error('Failed to fetch fiat price history');
       }
+
       return result.json();
     },
     {

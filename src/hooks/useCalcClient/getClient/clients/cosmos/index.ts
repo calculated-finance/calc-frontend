@@ -6,7 +6,7 @@ import {
   EventsResponse,
   Event as GeneratedEvent,
 } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
-import { V3Pair } from '@models/Pair';
+import { Pair } from '@models/Pair';
 import { transformToStrategyCosmos } from './transformToStrategy';
 
 const GET_PAIRS_LIMIT = 200;
@@ -15,9 +15,9 @@ async function fetchAllPairs(
   contractAddress: string,
   client: CosmWasmClient,
   startAfter = null,
-  allPairs = [] as V3Pair[],
-): Promise<V3Pair[]> {
-  const { pairs } = await client!.queryContractSmart(contractAddress, {
+  allPairs = [] as Pair[],
+): Promise<Pair[]> {
+  const result = await client!.queryContractSmart(getChainContractAddress(chainId), {
     get_pairs: {
       limit: GET_PAIRS_LIMIT,
       start_after: startAfter,

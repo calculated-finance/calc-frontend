@@ -49,6 +49,8 @@ import useTwap from '@hooks/useTwap';
 import { max, min } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import YesNoValues from '@models/YesNoValues';
+import SlippageTolerance from '@components/SlippageTolerance';
+import useRoute from '@hooks/useRoute';
 import { useDebounce } from 'ahooks';
 import { ModalWrapper } from './ModalWrapper';
 import { TransactionType } from './TransactionType';
@@ -58,8 +60,6 @@ import { yesNoData } from './PriceThreshold';
 import { ConnectWalletButton } from './StepOneConnectWallet';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
-
-import SlippageTolerance from './SlippageTolerance';
 
 function InitialDeposit() {
   const {
@@ -292,7 +292,16 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  const { twap } = useTwap(initialDenomInfo, resultingDenomInfo, undefined, !!resultingDenomInfo && !!initialDenomInfo);
+  // const { route } = useRoute(
+  //   debouncedSwapAmount && initialDenomInfo
+  //     ? coin(BigInt(debouncedSwapAmount).toString(), initialDenomInfo.id)
+  //     : undefined,
+  //   resultingDenomInfo,
+  // );
+
+  const route = undefined;
+
+  const { twap } = useTwap(initialDenomInfo, resultingDenomInfo, route, !!resultingDenomInfo && !!initialDenomInfo);
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
 
   const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
@@ -305,7 +314,7 @@ function DurationSlider() {
       ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
       : undefined,
     resultingDenomInfo,
-    undefined,
+    route,
     !!debouncedSwapAmount && !!resultingDenomInfo,
   );
 
@@ -337,7 +346,7 @@ function DurationSlider() {
     }
   }, [initialDenomInfo]);
 
-  const getStrategyDurationFromSlider = (value: number, factor = 0.07) =>
+  const getStrategyDurationFromSlider = (value: number, factor = 0.2) =>
     max(1, Math.round(((factor * value) ** 2 / (factor * maxValue) ** 2) * maxValue));
 
   return (
@@ -385,7 +394,7 @@ function DurationSlider() {
         min={minValue}
         max={maxValue}
         step={1}
-        onChangeStart={(_) => setIsSliding(true)}
+        onChangeStart={() => setIsSliding(true)}
         onChange={(value) => {
           setSliderValue(value);
           setStrategyDuration(getStrategyDurationFromSlider(value));
@@ -567,6 +576,7 @@ export function Form() {
               <DurationSlider />
               <PriceThreshold />
               <SlippageTolerance />
+              <Box />
               {connected ? (
                 <SummaryAgreementForm
                   isError={isError}

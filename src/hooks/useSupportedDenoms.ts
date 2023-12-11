@@ -1,6 +1,6 @@
 import getDenomInfo from '@utils/getDenomInfo';
 import { useMemo } from 'react';
-import { V3Pair } from '@models/Pair';
+import { Pair } from '@models/Pair';
 import { useChains } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainInfo } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
@@ -29,12 +29,12 @@ export function useSupportedDenoms() {
     return pairs;
   };
 
-  const { data: allPairs } = useQuery<V3Pair[]>(
+  const { data: allPairs } = useQuery<Pair[]>(
     ['all-pairs', process.env.NEXT_PUBLIC_APP_ENV],
     async () => (await Promise.all(allChainContexts.map(fetchPairs))).flat(),
     {
-      cacheTime: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 10 * 60 * 1000 : 0,
-      staleTime: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 30 * 60 * 1000 : 0,
+      cacheTime: 10 * 60 * 1000,
+      staleTime: 30 * 60 * 1000,
       enabled: !!allChainContexts,
       meta: {
         errorMessage: 'Error fetching pairs',

@@ -205,6 +205,13 @@ export function getOsmosisWebUrl(chainId: ChainId) {
   }[chainId as string]!;
 }
 
+export function getOsmosisRouterUrl(chainId: ChainId) {
+  return {
+    'osmosis-1': 'https://sqs.osmosis.zone',
+    'osmo-test-5': 'https://sqs-stage.osmosis.zone',
+  }[chainId as string]!;
+}
+
 export function getRedBankAddress(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
