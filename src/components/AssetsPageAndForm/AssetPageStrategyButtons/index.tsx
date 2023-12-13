@@ -127,6 +127,7 @@ export function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'chil
     </Modal>
   );
 }
+
 export function SellStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -223,7 +224,7 @@ export function CategoryRadioCard({
       >
         <Center>
           <HStack>
-            <Box> {props.children}</Box>
+            <Box>{props.children}</Box>
             <Button
               variant="link"
               size="xs"

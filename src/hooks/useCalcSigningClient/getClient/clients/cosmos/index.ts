@@ -26,7 +26,7 @@ function executeTopUpCosmos(
   if (strategy.owner !== address) {
     throw new Error('You are not the owner of this strategy');
   }
-  const { deconversion, id } = getStrategyInitialDenom(strategy);
+  const { toAtomic: deconversion, id } = getStrategyInitialDenom(strategy);
 
   const msg = {
     deposit: {
@@ -100,7 +100,7 @@ function getFunds(initialDenom: DenomInfo, initialDeposit: number, isDeconverted
   const funds = [
     {
       denom: initialDenom.id,
-      amount: BigInt(isDeconverted ? initialDeposit : initialDenom.deconversion(initialDeposit)).toString(),
+      amount: BigInt(isDeconverted ? initialDeposit : initialDenom.toAtomic(initialDeposit)).toString(),
     },
   ];
 

@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack } from '@chakra-ui/react';
+import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack, Spacer } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
@@ -17,6 +17,7 @@ import {
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import React from 'react';
+import { FiExternalLink } from 'react-icons/fi';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -69,7 +70,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         borderColor="brand.200"
         _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
       >
-        <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
+        <GridItem colSpan={{ base: 15, sm: 8, xl: 4 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
           <Heading size="md">{strategy.rawData.label || getStrategyType(strategy)}</Heading>
           <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
         </GridItem>
@@ -124,10 +125,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             </Stack>
           </Flex>
         </GridItem>
-        <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
+        <GridItem colSpan={{ base: 15, sm: 15, xl: 2 }}>
           <Flex justifyContent="end" alignItems="center" h="full">
             <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
-              <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
+              <Button width={{ base: 'full', xl: 'initial' }}>
+                <HStack>
+                  <Text>View</Text>
+                  <FiExternalLink />
+                </HStack>
+              </Button>
             </LinkWithQuery>
           </Flex>
         </GridItem>

@@ -74,7 +74,7 @@ export const useCreateVaultDca = () => {
       },
     };
 
-    const fee = createStrategyFeeInTokens(price);
+    const fee = createStrategyFeeInTokens(price, initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

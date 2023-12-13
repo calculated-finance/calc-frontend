@@ -1,5 +1,6 @@
-import { CREATE_VAULT_FEE, ONE_MILLION } from 'src/constants';
+import { DenomInfo } from '@utils/DenomInfo';
+import { CREATE_VAULT_FEE } from 'src/constants';
 
-export function createStrategyFeeInTokens(price: number) {
-  return ((CREATE_VAULT_FEE / price) * ONE_MILLION).toFixed(0);
+export function createStrategyFeeInTokens(price: number, denom: DenomInfo) {
+  return denom.toAtomic(CREATE_VAULT_FEE / price);
 }

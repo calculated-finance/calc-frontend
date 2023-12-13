@@ -2,12 +2,19 @@ import {
   Box,
   Button,
   Center,
+  Collapse,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   HStack,
   Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  ModalProps,
   SimpleGrid,
   Slider,
   SliderFilledTrack,
@@ -17,6 +24,8 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
+  useDisclosure,
   useMediaQuery,
   useRadioGroup,
 } from '@chakra-ui/react';
@@ -45,21 +54,29 @@ import useExpectedReceiveAmount from '@hooks/useExpectedReceiveAmount';
 import { coin } from '@cosmjs/proto-signing';
 import useExpectedPrice from '@hooks/useExpectedPrice';
 import streamingSwapSteps from '@formConfig/streamingSwap';
-import useTwap from '@hooks/useTwap';
+import { Icon, QuestionOutlineIcon } from '@chakra-ui/icons';
+import { MdAccessTime } from 'react-icons/md';
+import { FaAnglesUp } from 'react-icons/fa6';
+import useTwapToNow from '@hooks/useTwapToNow';
 import { max, min } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import YesNoValues from '@models/YesNoValues';
 import SlippageTolerance from '@components/SlippageTolerance';
-import useRoute from '@hooks/useRoute';
 import { useDebounce } from 'ahooks';
-import { ModalWrapper } from './ModalWrapper';
+import { ModalWrapper } from '@components/ModalWrapper';
+import { CollapseWithRender } from '@components/CollapseWithRender';
+import RadioCard from '@components/RadioCard';
+import Radio from '@components/Radio';
+import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
+import { DenomPriceInput } from '@components/DenomPriceInput';
+import { yesNoData } from '@components/PriceThreshold';
+import { ConnectWalletButton } from '@components/StepOneConnectWallet';
+import { SWAP_FEE } from 'src/constants';
+import { getPrettyFee } from '@helpers/getPrettyFee';
+import useDexFee from '@hooks/useDexFee';
+import { FeeBreakdown } from '@components/Fees';
+import useRoute from '@hooks/useRoute';
 import { TransactionType } from './TransactionType';
-import { CollapseWithRender } from './CollapseWithRender';
-import { DenomPriceInput } from './DenomPriceInput';
-import { yesNoData } from './PriceThreshold';
-import { ConnectWalletButton } from './StepOneConnectWallet';
-import RadioCard from './RadioCard';
-import Radio from './Radio';
 
 function InitialDeposit() {
   const {
@@ -73,15 +90,13 @@ function InitialDeposit() {
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput
-        onChange={(newValue) => helpers.setValue(newValue && initialDenomInfo.deconversion(newValue))}
+        onChange={(newValue) => helpers.setValue(newValue && Math.round(initialDenomInfo.toAtomic(newValue)))}
         textAlign="right"
         placeholder="Enter amount"
         value={
           (value &&
             initialDenomInfo &&
-            Number(
-              initialDenomInfo.conversion(value)?.toFixed(max(initialDenomInfo.significantFigures, 6)),
-            ).toString()) ??
+            Number(initialDenomInfo.fromAtomic(value)?.toFixed(max(initialDenomInfo.significantFigures, 6)))) ??
           ''
         }
         {...field}
@@ -93,19 +108,27 @@ function InitialDeposit() {
 
 function InitialDenom() {
   const { pairs } = usePairs();
-  const [initialDenom, meta, initialDenomHelpers] = useField({ name: 'initialDenom' });
+  const [initialDenom, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [, , priceThresholdValueHelpers] = useField({ name: 'priceThresholdValue' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [initialDeposit, , initialDepositHelpers] = useField<number>({ name: 'initialDeposit' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
   const { fiatPrice } = useFiatPrice(getDenomInfo(initialDenom.value));
 
+  useEffect(() => {
+    if (!!pairs && !initialDenom.value) {
+      const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+      initialDenomHelpers.setValue(randomPair.denoms[0]);
+      resultingDenomHelpers.setValue(randomPair.denoms[1]);
+    }
+  });
+
   if (!pairs) return null;
 
   const initialDenomInfo = getDenomInfo(initialDenom.value);
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+    <FormControl isInvalid={Boolean(initialDenomMeta.touched && initialDenomMeta.error)}>
       <FormLabel>Swap</FormLabel>
       <FormHelperText>
         <Center>
@@ -143,7 +166,7 @@ function InitialDenom() {
               initialDenomHelpers.setValue(newValue);
             }}
           />
-          <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+          <FormErrorMessage>{initialDenomMeta.touched && initialDenomMeta.error}</FormErrorMessage>
         </Box>
         <InitialDeposit />
       </SimpleGrid>
@@ -153,11 +176,14 @@ function InitialDenom() {
             <Text>USD Value:</Text>
             <Text color="white">
               $
-              {(
-                initialDeposit.value &&
-                fiatPrice &&
-                initialDenomInfo.conversion(initialDeposit.value) * fiatPrice
-              )?.toFixed(initialDenomInfo.significantFigures / 3) ?? '0.00'}
+              {(initialDeposit.value && fiatPrice && initialDenomInfo
+                ? Number(
+                    (initialDenomInfo.fromAtomic(initialDeposit.value) * fiatPrice)?.toFixed(
+                      initialDenomInfo.significantFigures / 3,
+                    ),
+                  )
+                : '0.00'
+              ).toLocaleString()}
             </Text>
           </HStack>
         </Stack>
@@ -166,22 +192,58 @@ function InitialDenom() {
   );
 }
 
+function SwapDenoms() {
+  const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
+  const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
+  const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+
+  return (
+    <Center>
+      <Image
+        src="/images/arrow-down.svg"
+        boxSize={8}
+        onClick={
+          initialDenomValue &&
+          resultingDenomValue &&
+          (() => {
+            initialDenomHelpers.setValue(resultingDenomValue);
+            resultingDenomHelpers.setValue(initialDenomValue);
+
+            if (initialDepositValue && initialDenomValue && resultingDenomValue) {
+              initialDepositHelpers.setValue(
+                initialDepositValue *
+                  10 **
+                    (getDenomInfo(resultingDenomValue).significantFigures -
+                      getDenomInfo(initialDenomValue).significantFigures),
+              );
+            }
+          })
+        }
+      />
+    </Center>
+  );
+}
+
 function ResultingDenom() {
+  const [isMobile] = useMediaQuery('(max-width: 506px)');
   const { pairs } = usePairs();
+  const { dexFee } = useDexFee();
+
   const {
     values: { initialDenom, initialDeposit, swapAmount },
   } = useFormikContext<FormData>();
-
-  const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
   const [{ value: resultingDenomValue, ...resultingDenomField }, resultingDenomMeta, resultingDenomHelpers] = useField({
     name: 'resultingDenom',
   });
 
-  const resultingDenomInfo = resultingDenomValue && getDenomInfo(resultingDenomValue);
+  const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
+
+  const resultingDenomInfo = getDenomInfo(resultingDenomValue);
   const initialDenomInfo = getDenomInfo(initialDenom);
 
-  const [isMobile] = useMediaQuery('(max-width: 506px)');
+  const { fiatPrice: initialDenomFiatPrice } = useFiatPrice(initialDenomInfo);
+  const { fiatPrice: resultingDenomFiatPrice } = useFiatPrice(resultingDenomInfo);
 
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
     swapAmount && initialDenomInfo ? coin(BigInt(swapAmount).toString(), initialDenomInfo.id) : undefined,
@@ -190,29 +252,38 @@ function ResultingDenom() {
     !!swapAmount && !!resultingDenomInfo,
   );
 
-  const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
-    debouncedInitialDeposit && initialDenomInfo
-      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenomInfo.id)
-      : undefined,
-    resultingDenomInfo,
-    undefined,
-    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo,
-  );
-
   const expectedTotalReceiveAmount =
     initialDenomInfo &&
     swapAmount &&
     expectedReceiveAmount &&
     Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmount);
 
-  const denoms = pairs && initialDenom ? getResultingDenoms(pairs, getDenomInfo(initialDenom)) : [];
-
-  const extraExpectedReceiveAmount =
+  const totalFee =
+    resultingDenomInfo &&
     expectedTotalReceiveAmount &&
-    directExpectedReceiveAmount &&
-    resultingDenomInfo
-      .conversion(max(0, expectedTotalReceiveAmount - Number(directExpectedReceiveAmount.amount)))
-      .toFixed(resultingDenomInfo.significantFigures / 3);
+    getPrettyFee(resultingDenomInfo.fromAtomic(expectedTotalReceiveAmount), SWAP_FEE + dexFee);
+
+  const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
+
+  const expectedFinalReceiveAmountFiatValue =
+    expectedFinalReceiveAmount &&
+    resultingDenomFiatPrice &&
+    initialDenomInfo &&
+    Number(
+      (resultingDenomInfo.fromAtomic(expectedFinalReceiveAmount) * resultingDenomFiatPrice)?.toFixed(
+        resultingDenomInfo.significantFigures,
+      ),
+    );
+
+  const initialDepositFiatValue =
+    initialDeposit &&
+    initialDenomFiatPrice &&
+    initialDenomInfo &&
+    Number(
+      (initialDenomInfo.fromAtomic(initialDeposit) * initialDenomFiatPrice)?.toFixed(
+        initialDenomInfo.significantFigures,
+      ),
+    );
 
   return (
     <FormControl isInvalid={Boolean(resultingDenomMeta.touched && resultingDenomMeta.error)} isDisabled={!initialDenom}>
@@ -225,7 +296,7 @@ function ResultingDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <DenomSelect
-          denoms={denoms}
+          denoms={pairs && initialDenom ? getResultingDenoms(pairs, getDenomInfo(initialDenom)) : []}
           placeholder={isMobile ? 'Asset' : 'Choose asset'}
           defaultValue={resultingDenomValue}
           value={resultingDenomValue}
@@ -235,11 +306,16 @@ function ResultingDenom() {
         <NumberInput
           textAlign="right"
           isReadOnly
-          isDisabled={!expectedTotalReceiveAmount}
+          isDisabled={!expectedFinalReceiveAmount}
           value={
-            (resultingDenomInfo &&
-              expectedTotalReceiveAmount &&
-              resultingDenomInfo.conversion(expectedTotalReceiveAmount)?.toFixed(2)) ??
+            (initialDeposit &&
+              resultingDenomInfo &&
+              (expectedFinalReceiveAmount || (expectedFinalReceiveAmount && expectedFinalReceiveAmount === 0)) &&
+              Number(
+                resultingDenomInfo
+                  .fromAtomic(expectedFinalReceiveAmount)
+                  ?.toFixed(resultingDenomInfo.significantFigures),
+              )) ||
             ''
           }
           {...resultingDenomField}
@@ -249,17 +325,15 @@ function ResultingDenom() {
       <FormHelperText textAlign="right">
         <Spacer />
         <Stack spacing={1} alignItems="end" justify="right">
-          <HStack spacing={1}>
-            <Text textStyle="body-xs">Additional compared to direct swap:</Text>
-            <Text textStyle="body-xs" color={extraExpectedReceiveAmount > 0 ? 'green.200' : 'white'}>
-              {extraExpectedReceiveAmount ? (
-                `${extraExpectedReceiveAmount} ${resultingDenomInfo && resultingDenomInfo.name}`
-              ) : !initialDenom || !debouncedInitialDeposit || !resultingDenomValue ? (
-                `0.00 ${resultingDenomInfo?.name ?? ''}`
-              ) : (
-                <Spinner size="xs" />
-              )}
-            </Text>
+          <HStack spacing={1} align="end">
+            <Text>USD Value:</Text>
+            {initialDepositFiatValue && expectedFinalReceiveAmountFiatValue ? (
+              <Text color="white">${expectedFinalReceiveAmountFiatValue.toLocaleString()}</Text>
+            ) : !initialDenom || !resultingDenomValue || !initialDeposit ? (
+              <Text color="white">$0.00</Text>
+            ) : (
+              <Spinner size="xs" />
+            )}
           </HStack>
         </Stack>
       </FormHelperText>
@@ -268,22 +342,62 @@ function ResultingDenom() {
   );
 }
 
+export function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalBody p={6}>
+          <Flex
+            px={8}
+            py={4}
+            bg="abyss.200"
+            fontSize="sm"
+            borderRadius="xl"
+            borderWidth={1}
+            borderColor="slateGrey"
+            w="full"
+          >
+            <Stack>
+              <Text>
+                Price optimised swaps distribute your market swap over several transactions. This method lessens the
+                price impact typically associated with larger orders.
+              </Text>
+              <Text>
+                Unlike standard limit orders, our tool allows you to set a price floor or ceiling, providing a safeguard
+                against less favorable price shifts, while still giving you the opportunity to capitalize on positive
+                market movements.
+              </Text>
+            </Stack>
+          </Flex>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
 function DurationSlider() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const {
     values: { initialDenom, initialDeposit, resultingDenom },
   } = useFormikContext<FormData>();
 
-  const [sliderValue, setSliderValue] = useState<number>(60);
+  const [sliderValue, setSliderValue] = useState<number>(415);
   const [strategyDuration, setStrategyDuration] = useState<number>(60);
   const [debouncedStrategyDuration, setDebouncedStrategyDuration] = useState<number>(60);
   const [isSliding, setIsSliding] = useState<boolean>(false);
 
-  const [{ onChange: onChangeSwapAmount, ...swapAmountField }, , swapAmountHelpers] = useField<number>({
+  const [{ onChange: onChangeSwapAmount, ...swapAmountField }, swapAmountMeta, swapAmountHelpers] = useField<number>({
     name: 'swapAmount',
   });
 
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
+  });
+
+  const [routeField, , routeHelpers] = useField<number>({
+    name: 'route',
   });
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
@@ -292,19 +406,27 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  // const { route } = useRoute(
-  //   debouncedSwapAmount && initialDenomInfo
-  //     ? coin(BigInt(debouncedSwapAmount).toString(), initialDenomInfo.id)
-  //     : undefined,
-  //   resultingDenomInfo,
-  // );
+  const { route } = useRoute(
+    debouncedSwapAmount && initialDenomInfo
+      ? coin(BigInt(debouncedSwapAmount).toString(), initialDenomInfo.id)
+      : undefined,
+    resultingDenomInfo,
+  );
 
-  const route = undefined;
+  useEffect(() => {
+    routeHelpers.setValue(route);
+  }, [route]);
 
-  const { twap } = useTwap(initialDenomInfo, resultingDenomInfo, route, !!resultingDenomInfo && !!initialDenomInfo);
+  const { twap } = useTwapToNow(
+    initialDenomInfo,
+    resultingDenomInfo,
+    route,
+    !!resultingDenomInfo && !!initialDenomInfo,
+  );
+  const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
 
-  const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
+  const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
@@ -327,8 +449,49 @@ function DurationSlider() {
   const minValue = 1;
   const maxValue = min(max(maximumSwaps || Infinity, 60), 60 * 48 + 1);
 
+  const [{ value: resultingDenomValue }] = useField({
+    name: 'resultingDenom',
+  });
+
+  const { expectedReceiveAmount } = useExpectedReceiveAmount(
+    swapAmountField.value && initialDenomInfo
+      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
+      : undefined,
+    resultingDenomInfo,
+    undefined,
+    !!swapAmountField.value && !!resultingDenomInfo,
+  );
+
+  const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
+    debouncedInitialDeposit && initialDenomInfo
+      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenomInfo.id)
+      : undefined,
+    resultingDenomInfo,
+    undefined,
+    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo,
+  );
+
+  const expectedTotalReceiveAmount =
+    initialDenomInfo &&
+    swapAmountField.value &&
+    expectedReceiveAmount &&
+    Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmountField.value);
+
+  const totalFee =
+    resultingDenomInfo &&
+    expectedTotalReceiveAmount &&
+    getPrettyFee(resultingDenomInfo.fromAtomic(expectedTotalReceiveAmount), SWAP_FEE + dexFee);
+
+  const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
+
+  const extraExpectedReceiveAmount =
+    !!expectedFinalReceiveAmount &&
+    !!directExpectedReceiveAmount &&
+    !!resultingDenomInfo &&
+    resultingDenomInfo.fromAtomic(max(0, expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)));
+
   useEffect(() => {
-    const minSwapAmount = fiatPrice && Math.floor(initialDenomInfo.deconversion(1) * (0.51 / fiatPrice));
+    const minSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
     const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
@@ -350,109 +513,181 @@ function DurationSlider() {
     max(1, Math.round(((factor * value) ** 2 / (factor * maxValue) ** 2) * maxValue));
 
   return (
-    <FormControl id="swaps">
-      <FormLabel>
-        Duration:{' '}
-        {hours >= 1
-          ? `${hours} ${hours === 1 ? 'hour' : 'hours'}`
-          : `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`}
-      </FormLabel>
-      <FormHelperText>
-        <Center>
-          <Button
-            size="xs"
-            colorScheme="blue"
-            variant="link"
-            cursor="pointer"
-            onClick={() => {
-              setSliderValue(minValue);
-              setStrategyDuration(minValue);
-              setDebouncedStrategyDuration(minValue);
-            }}
-          >
-            Immediate
+    <>
+      <FormControl id="swaps">
+        <FormLabel>
+          Price optimised swap
+          <Button variant="link" size="xs" color="slategrey" onClick={onOpen}>
+            <Icon as={QuestionOutlineIcon} _hover={{ color: 'blue.200' }} />
           </Button>
-          <Spacer />
-          <Button
-            size="xs"
-            colorScheme="blue"
-            variant="link"
-            cursor="pointer"
-            onClick={() => {
-              setSliderValue(maxValue);
-              setStrategyDuration(maxValue);
-              setDebouncedStrategyDuration(maxValue);
-            }}
-          >
-            {maxValue > 59 ? `${(maxValue / 60).toFixed(0)} hours` : `${maxValue} minutes`}
-          </Button>
-        </Center>
-      </FormHelperText>
-      <Slider
-        defaultValue={sliderValue}
-        value={sliderValue}
-        min={minValue}
-        max={maxValue}
-        step={1}
-        onChangeStart={() => setIsSliding(true)}
-        onChange={(value) => {
-          setSliderValue(value);
-          setStrategyDuration(getStrategyDurationFromSlider(value));
-        }}
-        onChangeEnd={(value) => {
-          setIsSliding(false);
-          setStrategyDuration(getStrategyDurationFromSlider(value));
-          setDebouncedStrategyDuration(getStrategyDurationFromSlider(value));
-        }}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb boxSize={4} bg="blue.200" borderWidth={1} zIndex={0} />
-      </Slider>
-      {!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
+        </FormLabel>
         <FormHelperText>
-          <Text color="brand.200" fontSize="xs">
-            {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
-            {parseFloat(
-              initialDenomInfo
-                .conversion(swaps && debouncedInitialDeposit && Math.ceil(debouncedInitialDeposit / swaps))
-                .toFixed(initialDenomInfo.significantFigures / 3),
-            ).toString()}{' '}
-            {initialDenomInfo.name}
-            {!isSliding && slippage ? ` with estimated ${slippage.toFixed(3)}% price impact` : ''}
-          </Text>
+          <Center>
+            <Button
+              size="xs"
+              colorScheme="blue"
+              variant="link"
+              cursor="pointer"
+              onClick={() => {
+                setSliderValue(minValue);
+                setStrategyDuration(minValue);
+                setDebouncedStrategyDuration(minValue);
+              }}
+            >
+              Immediate
+            </Button>
+            <Spacer />
+            <Button
+              size="xs"
+              colorScheme="blue"
+              variant="link"
+              cursor="pointer"
+              onClick={() => {
+                setSliderValue(maxValue);
+                setStrategyDuration(maxValue);
+                setDebouncedStrategyDuration(maxValue);
+              }}
+            >
+              {maxValue > 59
+                ? `${(maxValue / 60).toFixed(0)} ${maxValue / 60 < 2 ? 'hour' : 'hours'}`
+                : `${maxValue} minutes`}
+            </Button>
+          </Center>
         </FormHelperText>
-      )}
-    </FormControl>
-  );
-}
-
-function SwapDenoms() {
-  const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
-  const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
-
-  return (
-    <Center>
-      <Image
-        src="/images/arrow-down.svg"
-        boxSize={8}
-        onClick={() => {
-          initialDenomHelpers.setValue(resultingDenomValue);
-          resultingDenomHelpers.setValue(initialDenomValue);
-
-          if (initialDepositValue && initialDenomValue && resultingDenomValue) {
-            initialDepositHelpers.setValue(
-              initialDepositValue *
-                10 **
-                  (getDenomInfo(resultingDenomValue).significantFigures -
-                    getDenomInfo(initialDenomValue).significantFigures),
-            );
-          }
-        }}
-      />
-    </Center>
+        <Slider
+          defaultValue={sliderValue}
+          value={sliderValue}
+          min={minValue}
+          max={maxValue}
+          step={1}
+          onChangeStart={() => setIsSliding(true)}
+          onChange={(value) => {
+            setSliderValue(value);
+            setStrategyDuration(getStrategyDurationFromSlider(value));
+          }}
+          onChangeEnd={(value) => {
+            setIsSliding(false);
+            setStrategyDuration(getStrategyDurationFromSlider(value));
+            setDebouncedStrategyDuration(getStrategyDurationFromSlider(value));
+          }}
+        >
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb boxSize={4} bg="blue.200" borderWidth={1} zIndex={0} />
+        </Slider>
+        {!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
+          <FormHelperText>
+            <Text color="brand.200" fontSize="xs">
+              {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
+              {Number(
+                initialDenomInfo
+                  .fromAtomic(swaps && debouncedInitialDeposit && Math.ceil(debouncedInitialDeposit / swaps))
+                  .toFixed(initialDenomInfo.significantFigures),
+              ).toString()}{' '}
+              {initialDenomInfo.name}
+              {!isSliding && slippage ? ` with estimated ${Number(slippage.toFixed(3))}% price impact` : ''}
+            </Text>
+          </FormHelperText>
+        )}
+      </FormControl>
+      <Collapse in={!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom}>
+        <Box position="relative" borderRadius="lg" p={4}>
+          <Box
+            position="absolute"
+            top={0}
+            right={0}
+            bottom={0}
+            left={0}
+            bg="green.200"
+            opacity={0.15}
+            borderRadius="lg"
+          />
+          <Stack spacing={2} align="stretch">
+            <HStack justifyContent="space-between">
+              <HStack>
+                <Icon color="green.200" as={MdAccessTime} />
+                <Text color="white" fontSize="m" fontWeight={600}>
+                  Swap time:
+                </Text>
+              </HStack>
+              <Text color="white" fontSize="m" fontWeight={600}>
+                {hours >= 1
+                  ? `${hours} ${hours === 1 ? 'hour' : 'hours'}`
+                  : `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`}
+              </Text>
+            </HStack>
+            <HStack justifyContent="space-between" alignItems="flex-start">
+              <HStack alignItems="flex-start">
+                <Icon mt="5px" color="green.200" opacity={1} as={FaAnglesUp} />
+                <Stack spacing={1.5}>
+                  <Text color="white" fontSize="m" fontWeight={600}>
+                    Increased returns:
+                  </Text>
+                  <Text fontSize="xs" color="grey" fontWeight={600}>
+                    Compared to a single swap.
+                  </Text>
+                </Stack>
+              </HStack>
+              <Stack spacing={0} justifyContent="flex-end">
+                {extraExpectedReceiveAmount ? (
+                  <Text
+                    color={extraExpectedReceiveAmount && extraExpectedReceiveAmount > 0 ? 'green.200' : 'white'}
+                    fontSize="m"
+                    fontWeight={600}
+                  >
+                    +
+                    {resultingDenomInfo &&
+                      Number(extraExpectedReceiveAmount.toFixed(resultingDenomInfo.significantFigures)).toLocaleString(
+                        [],
+                        {
+                          maximumFractionDigits: resultingDenomInfo.significantFigures,
+                        },
+                      )}{' '}
+                    {resultingDenomInfo && resultingDenomInfo.name}
+                  </Text>
+                ) : !initialDenom ||
+                  !debouncedInitialDeposit ||
+                  !resultingDenomValue ||
+                  extraExpectedReceiveAmount === 0 ? (
+                  <Text fontSize="m" fontWeight={600}>
+                    0.00 {resultingDenomInfo?.name ?? ''}
+                  </Text>
+                ) : (
+                  <Spinner mt={3} mr={3} p={1} />
+                )}
+                <Text
+                  opacity={1}
+                  color={
+                    extraExpectedReceiveAmount && totalFee && extraExpectedReceiveAmount - totalFee > 0
+                      ? 'green.200'
+                      : 'white'
+                  }
+                  fontSize="m"
+                  fontWeight={600}
+                  textAlign="end"
+                >
+                  {extraExpectedReceiveAmount
+                    ? `(+${
+                        expectedFinalReceiveAmount &&
+                        directExpectedReceiveAmount &&
+                        Number(
+                          (
+                            100 *
+                            ((expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)) /
+                              Number(directExpectedReceiveAmount.amount))
+                          ).toFixed(2),
+                        )
+                      }%)`
+                    : ''}
+                </Text>
+              </Stack>
+            </HStack>
+          </Stack>
+        </Box>
+      </Collapse>
+      <BuyStrategyInfoModal isOpen={isOpen} onClose={onClose} />
+    </>
   );
 }
 
@@ -532,6 +767,49 @@ function PriceThreshold() {
   );
 }
 
+function FeeSection() {
+  const {
+    values: { initialDenom, initialDeposit, resultingDenom, swapAmount },
+  } = useFormikContext<FormData>();
+
+  const initialDenomInfo = getDenomInfo(initialDenom);
+  const resultingDenomInfo = getDenomInfo(resultingDenom);
+  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
+
+  const { fiatPrice } = useFiatPrice(initialDenomInfo);
+  const { dexFee } = useDexFee(initialDenomInfo, resultingDenomInfo, transactionType);
+
+  return (
+    <Collapse in={!!initialDenom && !!initialDeposit && !!resultingDenom && !!swapAmount}>
+      <Stack spacing={0}>
+        <Text textStyle="body-xs" as="span">
+          Estimated fees:
+          <Tooltip label={`Standard ${SWAP_FEE * 100}% fee on all streaming swaps.`} placement="top">
+            <Text as="span" textColor="white">
+              {' '}
+              {String.fromCharCode(8275)}
+              {getPrettyFee(initialDenomInfo.fromAtomic(initialDeposit), SWAP_FEE + dexFee)} {initialDenomInfo.name}{' '}
+              {`(${getPrettyFee(initialDenomInfo.fromAtomic(swapAmount), SWAP_FEE + dexFee)} ${
+                initialDenomInfo.name
+              } per swap)`}
+            </Text>
+          </Tooltip>
+        </Text>
+        <Box pl={2}>
+          <FeeBreakdown
+            initialDenomName={initialDenomInfo.name}
+            swapAmount={initialDenomInfo.fromAtomic(swapAmount)}
+            price={fiatPrice}
+            dexFee={dexFee}
+            swapFee={SWAP_FEE}
+            excludeDepositFee={false}
+          />
+        </Box>
+      </Stack>
+    </Collapse>
+  );
+}
+
 export function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(streamingSwapSteps);
@@ -569,14 +847,17 @@ export function Form() {
           ) : (
             <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
               <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                <AdvancedSettingsSwitch />
                 <InitialDenom />
                 <SwapDenoms />
                 <ResultingDenom />
               </Stack>
               <DurationSlider />
-              <PriceThreshold />
-              <SlippageTolerance />
-              <Box />
+              <Collapse in={values.advancedSettings}>
+                <PriceThreshold />
+                <SlippageTolerance />
+              </Collapse>
+              <FeeSection />
               {connected ? (
                 <SummaryAgreementForm
                   isError={isError}

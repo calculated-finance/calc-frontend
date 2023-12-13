@@ -47,7 +47,7 @@ export const assetsFormSchema = Yup.object({
         if (!amount) {
           return false;
         }
-        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
+        return value <= getDenomInfo(context.parent.initialDenom).fromAtomic(Number(amount));
       },
     })
     .test({
@@ -133,7 +133,7 @@ export const allSchema = {
         if (!amount) {
           return false;
         }
-        return value <= getDenomInfo(context.parent.initialDenom).conversion(Number(amount));
+        return value <= getDenomInfo(context.parent.initialDenom).fromAtomic(Number(amount));
       },
     }),
   advancedSettings: Yup.boolean(),

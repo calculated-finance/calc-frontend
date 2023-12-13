@@ -92,7 +92,7 @@ export function getReceiveAmount(
   // convert swap amount to microns e.g. 1.2 -> 1 200 000
   // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
   // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
-  const { deconversion: initialDeconversion, significantFigures: initialSF } = initialDenom;
+  const { toAtomic: initialDeconversion, significantFigures: initialSF } = initialDenom;
   const { significantFigures: resultingSF } = resultingDenom;
 
   // make the price in terms of the initial denom (doesnt matter if its buy or sell)
@@ -121,7 +121,7 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
 }
 
 export function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
-  const { deconversion } = initialDenom;
+  const { toAtomic: deconversion } = initialDenom;
 
   return BigInt(deconversion(swapAmount)).toString();
 }

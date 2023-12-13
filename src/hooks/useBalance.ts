@@ -28,7 +28,7 @@ function useBalance(token: DenomInfo) {
   );
 
   return {
-    displayAmount: result.data ? token.conversion(Number(result.data.amount)) : 0,
+    displayAmount: result.data ? token.fromAtomic(Number(result.data.amount)) : 0,
     ...result,
   };
 }

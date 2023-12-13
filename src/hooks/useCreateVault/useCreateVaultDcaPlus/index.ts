@@ -33,6 +33,10 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       reinvestStrategyData: Strategy | undefined;
     }
   >(async ({ state, reinvestStrategyData }) => {
+    if (!initialDenom) {
+      throw Error('Invalid initial denom');
+    }
+
     if (!calcSigningClient) {
       throw Error('Invalid client');
     }
@@ -58,7 +62,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
     checkSwapAmountValue(swapAmount, fiatPrice);
 
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
+      initialDenom,
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: 'daily' as ExecutionIntervals, increment: 1 },
       swapAmount: getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
@@ -74,7 +78,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         senderAddress: address,
       },
     };
-    const fee = createStrategyFeeInTokens(fiatPrice);
+    const fee = createStrategyFeeInTokens(fiatPrice, initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

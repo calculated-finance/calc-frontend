@@ -2,8 +2,9 @@ import { Coin } from '@cosmjs/proto-signing';
 import { getOsmosisRouterUrl } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useQuery } from '@tanstack/react-query';
-import { useChainId } from './useChainId';
+import getDenomInfo from '@utils/getDenomInfo';
 import { ChainId } from './useChainId/Chains';
+import { useChainId } from './useChainId';
 
 const useRouteKujira = (_?: ChainId, __?: Coin, ___?: DenomInfo, _enabled = true) => ({ route: undefined });
 
@@ -11,22 +12,45 @@ const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: Den
   const { data: route, ...helpers } = useQuery(
     ['route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
     async () => {
-      const response = await fetch(
-        `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
-          tokenIn: `${swapAmount!.amount}${swapAmount!.denom}`,
-          tokenOutDenom: targetDenom!.id,
-        })}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+      let response;
+
+      console.log('route params', getDenomInfo(swapAmount!.denom).name, swapAmount?.amount, targetDenom?.name);
+
+      try {
+        response = await (
+          await fetch(
+            `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
+              tokenIn: `${swapAmount!.amount}${swapAmount!.denom}`,
+              tokenOutDenom: targetDenom!.id,
+            })}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+        ).json();
+      } catch (error) {
+        if (`${error}`.includes('amount of')) {
+          const initialDenomInfo = getDenomInfo(swapAmount!.denom);
+          throw new Error(
+            `Swap amount of ${initialDenomInfo.fromAtomic(Number(swapAmount!.amount))} ${
+              initialDenomInfo.name
+            } too high to find dynamic osmosis route.`,
+          );
+        }
+
+        console.log('route failed', error);
+
+        return undefined;
+      }
+
+      console.log('route', response.route);
 
       return Buffer.from(
         JSON.stringify(
-          (await response.json()).route.flatMap((r: any) =>
+          response.route.flatMap((r: any) =>
             r.pools.map((pool: any) => ({
               pool_id: `${pool.id}`,
               token_out_denom: pool.token_out_denom,

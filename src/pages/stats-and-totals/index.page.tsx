@@ -32,7 +32,7 @@ function orderCoinList(coinList: Coin[], fiatPrices: any) {
   }
   return coinList
     .map((coin) => {
-      const { conversion, coingeckoId } = getDenomInfo(coin.denom);
+      const { fromAtomic: conversion, coingeckoId } = getDenomInfo(coin.denom);
       const denomConvertedAmount = conversion(Number(coin.amount));
       const fiatPriceInfo = fiatPrices[coingeckoId];
       const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
@@ -106,7 +106,7 @@ export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, suppo
     coins
       ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
       .map((balance) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
+        const { fromAtomic: conversion, coingeckoId } = getDenomInfo(balance.denom);
         const denomConvertedAmount = conversion(Number(balance.amount));
         const fiatPriceInfo = fiatPrices[coingeckoId];
         const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
@@ -169,7 +169,7 @@ function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
   const fees = SWAP_FEE * Number(strategy.rawData.swap_amount);
-  const { conversion } = getDenomInfo(strategy.rawData.balance.denom);
+  const { fromAtomic: conversion } = getDenomInfo(strategy.rawData.balance.denom);
   const convertedFees = conversion(fees);
 
   return convertedFees;

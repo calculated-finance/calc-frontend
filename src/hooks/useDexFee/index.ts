@@ -6,9 +6,9 @@ import usePairs from '@hooks/usePairs';
 import { DenomInfo } from '@utils/DenomInfo';
 
 export default function useDexFee(
-  initialDenom: DenomInfo,
-  resultingDenom: DenomInfo,
-  transactionType: TransactionType,
+  initialDenom?: DenomInfo,
+  resultingDenom?: DenomInfo,
+  transactionType?: TransactionType,
 ) {
   const { chainId } = useChainId();
   const { pairs } = usePairs();
@@ -17,18 +17,20 @@ export default function useDexFee(
     return { dexFee: FIN_TAKER_FEE };
   }
 
-  const pair =
-    pairs && resultingDenom && initialDenom
-      ? findPair(
-          pairs,
-          transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
-          transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
-        )
-      : null;
+  return { dexFee: 0.003 };
 
-  if (!pair) {
-    return { dexFee: 0 };
-  }
+  // const pair =
+  //   pairs && resultingDenom && initialDenom
+  //     ? findPair(
+  //         pairs,
+  //         transactionType === TransactionType.Buy ? resultingDenom : initialDenom,
+  //         transactionType === TransactionType.Buy ? initialDenom : resultingDenom,
+  //       )
+  //     : null;
 
-  return { dexFee: 0 };
+  // if (!pair) {
+  //   return { dexFee: 0 };
+  // }
+
+  // return { dexFee: 0 };
 }

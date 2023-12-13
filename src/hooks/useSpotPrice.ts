@@ -2,7 +2,7 @@ import { max } from 'lodash';
 import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
 import { safeInvert } from '@utils/safeInvert';
-import useTwap from './useTwap';
+import useTwapToNow from './useTwapToNow';
 
 export default function useSpotPrice(
   resultingDenom: DenomInfo | undefined,
@@ -11,7 +11,7 @@ export default function useSpotPrice(
   route?: string,
   enabled = true,
 ) {
-  const { twap, ...helpers } = useTwap(initialDenom, resultingDenom, route, enabled);
+  const { twap, ...helpers } = useTwapToNow(initialDenom, resultingDenom, route, enabled);
 
   const spotPrice = twap && transactionType === TransactionType.Sell ? safeInvert(twap) : twap;
   const pricePrecision = max([initialDenom?.pricePrecision || 0, resultingDenom?.pricePrecision || 0]);

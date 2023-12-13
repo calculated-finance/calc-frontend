@@ -10,11 +10,13 @@ export const initialValues = {
   initialDenom: '',
   initialDeposit: undefined,
   swapAmount: null,
+  route: undefined,
   executionInterval: 'minute',
   executionIntervalIncrement: 1,
   priceThresholdEnabled: YesNoValues.No,
   priceThresholdValue: undefined,
   slippageTolerance: 2,
+  advancedSettings: false,
 };
 
 export const schema = Yup.object({
@@ -77,6 +79,7 @@ export const schema = Yup.object({
         );
       },
     }),
+  route: Yup.string().notRequired(),
   executionInterval: Yup.mixed<ExecutionIntervals>().required(),
   executionIntervalIncrement: Yup.number()
     .label('Increment')
@@ -107,7 +110,6 @@ export const schema = Yup.object({
       is: false,
       then: (s) => s.transform(() => YesNoValues.No),
     }),
-
   slippageTolerance: Yup.number()
     .label('Slippage Tolerance')
     .lessThan(100)

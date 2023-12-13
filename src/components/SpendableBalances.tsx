@@ -8,7 +8,7 @@ import { useDenom } from '@hooks/useDenom/useDenom';
 import { truncate } from '@helpers/truncate';
 
 function CoinBalance({ balance }: { balance: Coin }) {
-  const { name, conversion } = getDenomInfo(balance.denom);
+  const { name, fromAtomic: conversion } = getDenomInfo(balance.denom);
   return (
     <>
       <GridItem colSpan={1}>

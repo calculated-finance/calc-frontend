@@ -162,7 +162,7 @@ export function getSwapAmount(strategy: Strategy) {
 }
 
 export function getConvertedSwapAmount(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
+  const { fromAtomic: conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
 

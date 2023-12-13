@@ -15,8 +15,8 @@ export default function useExpectedPrice(
     swapAmount &&
     targetDenom &&
     expectedReceiveAmount &&
-    getDenomInfo(swapAmount.denom).conversion(Number(swapAmount.amount)) /
-      targetDenom.conversion(Number(expectedReceiveAmount.amount));
+    getDenomInfo(swapAmount.denom).fromAtomic(Number(swapAmount.amount)) /
+      targetDenom.fromAtomic(Number(expectedReceiveAmount.amount));
 
   return {
     expectedPrice,

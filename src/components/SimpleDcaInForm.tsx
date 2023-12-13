@@ -36,7 +36,7 @@ import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import * as Sentry from '@sentry/react';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName } from '@helpers/chains';
@@ -72,8 +72,17 @@ function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
 
 function InitialDenom() {
   const { pairs } = usePairs();
-  const [field, meta, helpers] = useField({ name: 'initialDenom' });
+  const [initialDenom, meta, initialDenomHelpers] = useField({ name: 'initialDenom' });
+  const [, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
+
+  useEffect(() => {
+    if (!!pairs && !initialDenom.value) {
+      const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
+      initialDenomHelpers.setValue(randomPair.denoms[0]);
+      resultingDenomHelpers.setValue(randomPair.denoms[1]);
+    }
+  });
 
   if (!pairs) return null;
 
@@ -88,7 +97,7 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose stablecoin</Text>
           <Spacer />
-          {field.value && <AvailableFunds denom={getDenomInfo(field.value)} />}
+          {initialDenom.value && <AvailableFunds denom={getDenomInfo(initialDenom.value)} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
@@ -96,8 +105,8 @@ function InitialDenom() {
           <DenomSelect
             denoms={denoms}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
-            value={field.value}
-            onChange={helpers.setValue}
+            value={initialDenom.value}
+            onChange={initialDenomHelpers.setValue}
             showPromotion
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>

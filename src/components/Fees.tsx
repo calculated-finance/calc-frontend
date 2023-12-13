@@ -207,15 +207,16 @@ export default function Fees({
         </Tooltip>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
-
-      <FeeBreakdown
-        initialDenomName={initialDenomName}
-        swapAmount={swapAmount}
-        price={fiatPrice}
-        dexFee={dexFee}
-        swapFee={swapFee}
-        excludeDepositFee={excludeDepositFee}
-      />
+      <Box pl={2}>
+        <FeeBreakdown
+          initialDenomName={initialDenomName}
+          swapAmount={swapAmount}
+          price={fiatPrice}
+          dexFee={dexFee}
+          swapFee={swapFee}
+          excludeDepositFee={excludeDepositFee}
+        />
+      </Box>
     </Stack>
   );
 }

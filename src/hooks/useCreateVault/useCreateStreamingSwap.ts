@@ -50,7 +50,7 @@ export const useCreateStreamingSwap = () => {
 
     const createVaultContext: BuildCreateVaultContext = {
       label: 'Streaming Swap',
-      initialDenom: getDenomInfo(state.initialDenom),
+      initialDenom: initialDenomInfo,
       resultingDenom: getDenomInfo(state.resultingDenom),
       timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement! },
       timeTrigger: undefined,
@@ -70,7 +70,7 @@ export const useCreateStreamingSwap = () => {
       isDeconverted: true,
     };
 
-    const fee = createStrategyFeeInTokens(price);
+    const fee = createStrategyFeeInTokens(price, initialDenomInfo).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

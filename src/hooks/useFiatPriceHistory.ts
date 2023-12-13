@@ -21,10 +21,10 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
       if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
         let i = 0;
         return {
-          prices: Array.from({ length: 1000 }, () => [
-            dayjs().subtract(i++, 'minutes').toDate().getTime(),
-            Math.random(),
-          ]),
+          prices: Array.from({ length: 1000 }, () => {
+            i += 1;
+            return [dayjs().subtract(i, 'minutes').toDate().getTime(), Math.random()];
+          }),
         };
       }
 

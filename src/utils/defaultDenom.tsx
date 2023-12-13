@@ -3,8 +3,8 @@ import { DenomInfoWithoutId } from './DenomInfoWithoutId';
 export const defaultDenom = {
   name: '',
   icon: '',
-  conversion: (value: number) => value / 1000000,
-  deconversion: (value: number) => Math.round(value * 1000000),
+  fromAtomic: (value: number) => value / 1000000,
+  toAtomic: (value: number) => Math.round(value * 1000000),
   stakeable: false,
   stakeableAndSupported: false,
   stable: false,

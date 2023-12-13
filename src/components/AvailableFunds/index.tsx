@@ -158,14 +158,12 @@ function AvailableFundsButton({
   const [, , helpers] = useField('initialDeposit');
   const { fiatPrice } = useFiatPrice(denom);
 
-  const createStrategyFee = fiatPrice ? Number(createStrategyFeeInTokens(fiatPrice)) : 0;
-  const balance = Number(data?.amount);
-  const displayAmount = denom.conversion(Math.max(balance - createStrategyFee, 0));
-  const displayFee = denom.conversion(createStrategyFee);
+  const createStrategyFee = fiatPrice ? createStrategyFeeInTokens(fiatPrice, denom) : 0;
 
-  const handleClick = () => {
-    helpers.setValue(deconvertValue ? balance : displayAmount);
-  };
+  const balance = Number(data?.amount);
+  const displayAmount = denom.fromAtomic(Math.max(balance - createStrategyFee, 0));
+
+  const displayFee = denom.fromAtomic(createStrategyFee);
 
   function handleOpen(onOpener: () => void) {
     return () => {
@@ -195,7 +193,7 @@ function AvailableFundsButton({
             variant="link"
             cursor="pointer"
             isDisabled={!displayAmount}
-            onClick={handleClick}
+            onClick={() => helpers.setValue(deconvertValue ? denom.toAtomic(displayAmount) : displayAmount)}
           >
             {displayAmount}
           </Button>

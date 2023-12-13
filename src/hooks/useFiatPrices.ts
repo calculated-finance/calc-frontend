@@ -21,16 +21,16 @@ const useFiatPrices = () => {
     async () => {
       const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
 
-      if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
-        return reduce(
-          (acc: Record<string, any>, id: string) => ({
-            ...acc,
-            [id]: { usd: Math.random(), usd_24h_change: Math.random() },
-          }),
-          {},
-          coingeckoIds,
-        );
-      }
+      // if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
+      //   return reduce(
+      //     (acc: Record<string, any>, id: string) => ({
+      //       ...acc,
+      //       [id]: { usd: Math.random(), usd_24h_change: Math.random() },
+      //     }),
+      //     {},
+      //     coingeckoIds,
+      //   );
+      // }
 
       const formattedIds = coingeckoIds.join(',');
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true`;
@@ -45,8 +45,8 @@ const useFiatPrices = () => {
       return response.json();
     },
     {
-      cacheTime: 5000,
-      staleTime: 30000,
+      staleTime: 300000,
+      refetchOnWindowFocus: false,
       enabled: Boolean(supportedDenoms.length),
       meta: {
         errorMessage: 'Error fetching fiat prices',

@@ -4,8 +4,8 @@ export type DenomInfo = {
   id: Denom;
   name: string;
   icon: string;
-  conversion: (value: number) => number;
-  deconversion: (value: number) => number;
+  fromAtomic: (value: number) => number;
+  toAtomic: (value: number) => number;
   priceDeconversion: (value: number | undefined | null) => number;
   priceConversion: (value: number | undefined | null) => number;
   stakeable: boolean;

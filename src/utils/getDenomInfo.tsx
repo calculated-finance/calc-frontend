@@ -57,8 +57,8 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
     if (!isNil(significantFigures) && significantFigures !== 6) {
       denomInfo = {
         ...denomInfo,
-        conversion: (value: number) => value / 10 ** significantFigures,
-        deconversion: (value: number) => Math.round(value * 10 ** significantFigures),
+        fromAtomic: (value: number) => value / 10 ** significantFigures,
+        toAtomic: (value: number) => Math.round(value * 10 ** significantFigures),
         priceDeconversion: (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6),
         priceConversion: (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6),
         minimumSwapAmount: 0.05 / 1000,
@@ -111,7 +111,7 @@ export function convertDenomFromCoin(coin: Coin | undefined) {
     return 0;
   }
 
-  const { significantFigures, conversion } = denomInfo;
+  const { significantFigures, fromAtomic: conversion } = denomInfo;
 
   return Number(conversion(Number(coin.amount)).toFixed(significantFigures));
 }
@@ -131,7 +131,7 @@ export class DenomValue {
   }
 
   toConverted() {
-    const { conversion } = getDenomInfo(this.denomId) || {};
+    const { fromAtomic: conversion } = getDenomInfo(this.denomId) || {};
     if (!conversion) {
       return 0;
     }

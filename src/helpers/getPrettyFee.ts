@@ -1,3 +1,1 @@
-export function getPrettyFee(amountOfToken: number, fee: number) {
-  return parseFloat((amountOfToken * fee).toFixed(3))
-}
+export const getPrettyFee = (amountOfToken: number, fee: number) => Number((amountOfToken * fee).toFixed(12));
