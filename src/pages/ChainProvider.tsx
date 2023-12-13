@@ -5,11 +5,17 @@ import { wallets as keplrWallets } from '@cosmos-kit/keplr';
 import { wallets as leapWallets } from '@cosmos-kit/leap';
 import { wallets as xdefiWallets } from '@cosmos-kit/xdefi';
 import { isMobile } from 'react-device-detect';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { ChainId } from '@hooks/useChainId/Chains';
 
 export function ChainProvider({ children }: ChildrenProp) {
   return (
     <CosmosKitChainProvider
-      chains={chains}
+      chains={chains.filter((chain) =>
+        (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).includes(
+          chain.chain_id as ChainId,
+        ),
+      )}
       assetLists={assets}
       wallets={[...leapWallets, ...keplrWallets, ...xdefiWallets].filter((wallet) =>
         isMobile ? !wallet.isModeExtension : wallet.isModeExtension,
