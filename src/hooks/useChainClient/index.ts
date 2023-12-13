@@ -67,9 +67,7 @@ export function useChainClient(chainId: ChainId) {
     },
     {
       enabled: !!chainId && !!cosmWasmClient,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      staleTime: 1000 * 60 * 10,
       meta: {
         errorMessage: 'Error fetching chain client',
       },

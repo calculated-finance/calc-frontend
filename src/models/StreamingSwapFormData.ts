@@ -13,7 +13,7 @@ export const initialValues = {
   route: undefined,
   executionInterval: 'minute',
   executionIntervalIncrement: 1,
-  priceThresholdEnabled: YesNoValues.No,
+  priceThresholdEnabled: YesNoValues.Yes,
   priceThresholdValue: undefined,
   slippageTolerance: 2,
   advancedSettings: false,

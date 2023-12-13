@@ -15,14 +15,10 @@ export default function useExpectedReceiveAmount(
   const { cosmWasmClient } = useCosmWasmClient();
 
   const { data: expectedReceiveAmount, ...helpers } = useQuery<Coin>(
-    ['expected-receive-amount', swapAmount?.denom, swapAmount?.amount, targetDenom?.id, route],
+    ['prices', 'expected-receive-amount', swapAmount?.denom, swapAmount?.amount, targetDenom?.id, route],
     async () => {
-      console.log('route 1', route);
-      console.log(getDenomInfo('ibc/6329DD8CF31A334DD5BE3F68C846C9FE313281362B37686A62343BAC1EB1546D')?.name);
-
-      let response;
       try {
-        response = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
+        return await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
           get_expected_receive_amount: {
             swap_amount: swapAmount,
             target_denom: targetDenom?.id,
@@ -40,8 +36,6 @@ export default function useExpectedReceiveAmount(
         }
         throw error;
       }
-
-      return response;
     },
     {
       enabled: !!cosmWasmClient && !!config && !!targetDenom && !!swapAmount && enabled,

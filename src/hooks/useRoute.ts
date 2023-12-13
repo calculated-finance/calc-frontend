@@ -10,14 +10,10 @@ const useRouteKujira = (_?: ChainId, __?: Coin, ___?: DenomInfo, _enabled = true
 
 const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: DenomInfo, enabled = true) => {
   const { data: route, ...helpers } = useQuery(
-    ['route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
+    ['prices', 'route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
     async () => {
-      let response;
-
-      console.log('route params', getDenomInfo(swapAmount!.denom).name, swapAmount?.amount, targetDenom?.name);
-
       try {
-        response = await (
+        const response = await (
           await fetch(
             `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
               tokenIn: `${swapAmount!.amount}${swapAmount!.denom}`,
@@ -31,7 +27,18 @@ const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: Den
             },
           )
         ).json();
-      } catch (error) {
+
+        return Buffer.from(
+          JSON.stringify(
+            response.route.flatMap((r: any) =>
+              r.pools.map((pool: any) => ({
+                pool_id: `${pool.id}`,
+                token_out_denom: pool.token_out_denom,
+              })),
+            ),
+          ),
+        ).toString('base64');
+      } catch (error: any) {
         if (`${error}`.includes('amount of')) {
           const initialDenomInfo = getDenomInfo(swapAmount!.denom);
           throw new Error(
@@ -41,23 +48,8 @@ const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: Den
           );
         }
 
-        console.log('route failed', error);
-
-        return undefined;
+        throw error;
       }
-
-      console.log('route', response.route);
-
-      return Buffer.from(
-        JSON.stringify(
-          response.route.flatMap((r: any) =>
-            r.pools.map((pool: any) => ({
-              pool_id: `${pool.id}`,
-              token_out_denom: pool.token_out_denom,
-            })),
-          ),
-        ),
-      ).toString('base64');
     },
     {
       enabled: !!chainId && !!swapAmount && !!targetDenom && enabled,

@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
 import usePairs from './usePairs';
-import SwapAmount from '@components/SwapAmount';
 
 export default function useTwapToNow(
   initialDenom: DenomInfo | undefined,
@@ -19,7 +18,7 @@ export default function useTwapToNow(
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const { data: twap, ...helpers } = useQuery<number>(
-    ['twap', cosmWasmClient, initialDenom, resultingDenom, route],
+    ['prices', 'twap', cosmWasmClient, initialDenom, resultingDenom, route],
     async () => {
       try {
         const twapToNow = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {

@@ -76,6 +76,7 @@ import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import useRoute from '@hooks/useRoute';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { TransactionType } from './TransactionType';
 
 function InitialDeposit() {
@@ -258,10 +259,7 @@ function ResultingDenom() {
     expectedReceiveAmount &&
     Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmount);
 
-  const totalFee =
-    resultingDenomInfo &&
-    expectedTotalReceiveAmount &&
-    getPrettyFee(resultingDenomInfo.fromAtomic(expectedTotalReceiveAmount), SWAP_FEE + dexFee);
+  const totalFee = resultingDenomInfo && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
 
   const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
 
@@ -388,27 +386,30 @@ function DurationSlider() {
   const [debouncedStrategyDuration, setDebouncedStrategyDuration] = useState<number>(60);
   const [isSliding, setIsSliding] = useState<boolean>(false);
 
-  const [{ onChange: onChangeSwapAmount, ...swapAmountField }, swapAmountMeta, swapAmountHelpers] = useField<number>({
+  const [{ value: resultingDenomValue }] = useField({
+    name: 'resultingDenom',
+  });
+  const [{ onChange: onChangeSwapAmount, ...swapAmountField }, , swapAmountHelpers] = useField<number>({
     name: 'swapAmount',
   });
-
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
   });
-
-  const [routeField, , routeHelpers] = useField<number>({
+  const [, , routeHelpers] = useField<number>({
     name: 'route',
+  });
+  const [, , priceThresholdValueHelpers] = useField<number>({
+    name: 'priceThresholdValue',
   });
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
-  const debouncedSwapAmount = useDebounce(swapAmountField.value, { wait: 500 });
 
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
   const { route } = useRoute(
-    debouncedSwapAmount && initialDenomInfo
-      ? coin(BigInt(debouncedSwapAmount).toString(), initialDenomInfo.id)
+    swapAmountField.value && initialDenomInfo
+      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
       : undefined,
     resultingDenomInfo,
   );
@@ -426,22 +427,39 @@ function DurationSlider() {
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
 
+  const { spotPrice } = useSpotPrice(
+    resultingDenomInfo,
+    initialDenomInfo,
+    initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell,
+    route,
+    !!resultingDenomInfo && !!initialDenomInfo,
+  );
+
   const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
 
-  const { expectedPrice } = useExpectedPrice(
+  const swapAmount =
     swapAmountField.value && initialDenomInfo
       ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-      : undefined,
+      : undefined;
+
+  const { expectedPrice } = useExpectedPrice(
+    swapAmount,
     resultingDenomInfo,
     route,
-    !!debouncedSwapAmount && !!resultingDenomInfo,
+    !!swapAmountField.value && !!resultingDenomInfo,
   );
 
   const slippage =
     !twap || !expectedPrice ? null : expectedPrice < twap ? 0 : (Math.abs(expectedPrice - twap) / twap) * 100;
+
+  useEffect(() => {
+    if (!!spotPrice && !!slippage) {
+      priceThresholdValueHelpers.setValue(spotPrice * ((100 - slippage) / 100));
+    }
+  }, [spotPrice, slippage]);
 
   const minutes = strategyDuration - 1;
   const hours = Number((minutes / 60).toFixed(1));
@@ -449,14 +467,8 @@ function DurationSlider() {
   const minValue = 1;
   const maxValue = min(max(maximumSwaps || Infinity, 60), 60 * 48 + 1);
 
-  const [{ value: resultingDenomValue }] = useField({
-    name: 'resultingDenom',
-  });
-
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
-    swapAmountField.value && initialDenomInfo
-      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-      : undefined,
+    swapAmount,
     resultingDenomInfo,
     undefined,
     !!swapAmountField.value && !!resultingDenomInfo,
@@ -477,11 +489,7 @@ function DurationSlider() {
     expectedReceiveAmount &&
     Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmountField.value);
 
-  const totalFee =
-    resultingDenomInfo &&
-    expectedTotalReceiveAmount &&
-    getPrettyFee(resultingDenomInfo.fromAtomic(expectedTotalReceiveAmount), SWAP_FEE + dexFee);
-
+  const totalFee = resultingDenomInfo && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
   const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
 
   const extraExpectedReceiveAmount =
@@ -495,12 +503,12 @@ function DurationSlider() {
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
     const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
-    const swapAmount =
+    const newSwapAmount =
       totalSwaps && debouncedInitialDeposit ? Math.ceil(debouncedInitialDeposit / totalSwaps) : undefined;
 
     if (debouncedStrategyDuration && totalSwaps)
       executionIntervalIncrementHelpers.setValue(Math.floor(debouncedStrategyDuration / totalSwaps));
-    if (swapAmount || minSwapAmount) swapAmountHelpers.setValue(swapAmount ?? minSwapAmount ?? 0);
+    if (newSwapAmount || minSwapAmount) swapAmountHelpers.setValue(newSwapAmount ?? minSwapAmount ?? 0);
   }, [debouncedStrategyDuration, debouncedInitialDeposit, initialDenom, resultingDenom]);
 
   useEffect(() => {
@@ -853,8 +861,8 @@ export function Form() {
                 <ResultingDenom />
               </Stack>
               <DurationSlider />
+              <PriceThreshold />
               <Collapse in={values.advancedSettings}>
-                <PriceThreshold />
                 <SlippageTolerance />
               </Collapse>
               <FeeSection />

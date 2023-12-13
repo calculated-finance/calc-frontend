@@ -13,6 +13,7 @@ export function useCalcClient(injectedChainId?: ChainId) {
     () => getClient(injectedChainId ?? chainId, cosmWasmClient!),
     {
       enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      staleTime: 1000 * 60 * 10,
       meta: {
         errorMessage: 'Error fetching calc client',
       },
