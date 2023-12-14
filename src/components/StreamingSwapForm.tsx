@@ -197,6 +197,7 @@ function SwapDenoms() {
   const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+  const [, priceThresholdValueMeta, priceThresholdValueHelpers] = useField({ name: 'priceThresholdValue' });
 
   return (
     <Center>
@@ -218,6 +219,8 @@ function SwapDenoms() {
                       getDenomInfo(initialDenomValue).significantFigures),
               );
             }
+
+            if (priceThresholdValueMeta.touched) priceThresholdValueHelpers.setTouched(false);
           })
         }
       />
@@ -418,7 +421,7 @@ function DurationSlider() {
   const [, , routeHelpers] = useField<number>({
     name: 'route',
   });
-  const [priceThresholdValue, , priceThresholdValueHelpers] = useField<number | undefined>({
+  const [priceThresholdValue, priceThresholdValueMeta, priceThresholdValueHelpers] = useField<number | undefined>({
     name: 'priceThresholdValue',
   });
 
@@ -476,19 +479,17 @@ function DurationSlider() {
     !!swapAmountField.value && !!resultingDenomInfo,
   );
 
-  const expectedPriceImpact = !twap || !expectedPrice ? null : (Math.abs(expectedPrice - twap) / twap) * 100;
+  const expectedPriceImpact = !twap || !expectedPrice ? null : ((expectedPrice - twap) / twap) * 100;
 
   useEffect(() => {
-    if (!!spotPrice && !!expectedPriceImpact && !!slippageTolerance) {
-      const totalAllowedPriceImpact = expectedPriceImpact + slippageTolerance;
+    if (!!spotPrice && !!expectedPriceImpact && !!slippageTolerance && !priceThresholdValueMeta.touched) {
       priceThresholdValueHelpers.setValue(
         spotPrice *
-          ((transactionType === TransactionType.Buy ? 100 + totalAllowedPriceImpact : 100 - totalAllowedPriceImpact) /
-            100),
+          ((transactionType === TransactionType.Buy ? 100 + expectedPriceImpact : 100 - expectedPriceImpact) / 100),
         true,
       );
     }
-  }, [spotPrice, priceThresholdValue.value, expectedPriceImpact, slippageTolerance]);
+  }, [spotPrice, priceThresholdValue.value, expectedPriceImpact, initialDenom, resultingDenom]);
 
   const minutes = strategyDuration - 1;
   const hours = Number((minutes / 60).toFixed(1));
@@ -647,7 +648,7 @@ function DurationSlider() {
               <HStack>
                 <Icon color="green.200" as={MdAccessTime} />
                 <Text color="white" fontSize="m" fontWeight={600}>
-                  Swap time:
+                  Estimated swap time:
                 </Text>
               </HStack>
               <Text color="white" fontSize="m" fontWeight={600}>
@@ -730,42 +731,6 @@ function DurationSlider() {
   );
 }
 
-function PriceThresholdToggle() {
-  const {
-    values: { initialDenom, resultingDenom },
-  } = useFormikContext<FormData>();
-
-  const [field, , helpers] = useField({ name: 'priceThresholdEnabled' });
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    ...field,
-    value: field.value,
-    onChange: helpers.setValue,
-  });
-
-  return (
-    <FormControl>
-      <HStack>
-        <Radio {...getRootProps}>
-          {yesNoData.map((option) => {
-            const radio = getRadioProps({ value: option.value });
-            return (
-              <RadioCard
-                key={option.label}
-                isDisabled={!initialDenom || !resultingDenom}
-                disabledMessage="ting price protection requires both assets to be selected."
-                {...radio}
-              >
-                {option.label}
-              </RadioCard>
-            );
-          })}
-        </Radio>
-      </HStack>
-    </FormControl>
-  );
-}
-
 function PriceThreshold() {
   const {
     values: { initialDenom, resultingDenom, priceThresholdValue },
@@ -783,13 +748,11 @@ function PriceThreshold() {
 
   return (
     <FormControl isInvalid={priceThresholdValueMeta.touched && Boolean(priceThresholdValueMeta.error)}>
-      <FormLabel>
-        {transactionType === TransactionType.Buy ? 'Calculated price ceiling' : 'Calculated price floor'}
-      </FormLabel>
+      <FormLabel>{transactionType === TransactionType.Buy ? 'Set price ceiling' : 'Set price floor'}</FormLabel>
       <FormHelperText>
-        Current price {transactionType === TransactionType.Buy ? '+' : '-'} expected price impact + slippage tolerance
-        {/* This gets calculated by adding your expected price impact to your slippage tolerance, and{' '}
-        {transactionType === TransactionType.Buy ? 'adding' : 'subtracting'} it from the current price. */}
+        {transactionType === TransactionType.Buy
+          ? "CALC won't buy if the asset price exceeds this set value."
+          : "CALC won't sell if the asset price drops below this set value."}
       </FormHelperText>
       <Stack spacing={3}>
         <DenomPriceInput
@@ -797,7 +760,6 @@ function PriceThreshold() {
           resultingDenom={resultingDenomInfo}
           transactionType={transactionType}
           error={priceThresholdValueMeta.touched && priceThresholdValueMeta.error}
-          isReadOnly
           onChange={(v) => priceThresholdValueHelpers.setValue(v as number)}
           value={priceThresholdValue}
           {...priceThresholdValueField}
@@ -887,18 +849,17 @@ export function Form() {
               <CalcSpinner />
             </Center>
           ) : (
-            <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
-              <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                <AdvancedSettingsSwitch />
-                <InitialDenom />
-                <SwapDenoms />
-                <ResultingDenom />
+            <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+              <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
+                <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                  <AdvancedSettingsSwitch />
+                  <InitialDenom />
+                  <SwapDenoms />
+                  <ResultingDenom />
+                </Stack>
+                <DurationSlider />
               </Stack>
-              <DurationSlider />
               <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                <Collapse in={values.advancedSettings}>
-                  <SlippageTolerance subtext="If the slippage exceeds your tolerance, CALC will set a limit order that will restart the strategy once it is filled." />
-                </Collapse>
                 <Collapse in={values.advancedSettings}>
                   <PriceThreshold />
                 </Collapse>

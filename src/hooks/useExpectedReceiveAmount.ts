@@ -21,7 +21,7 @@ export default function useExpectedReceiveAmount(
         return await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
           get_expected_receive_amount: {
             swap_amount: swapAmount,
-            target_denom: targetDenom?.id,
+            target_denom: targetDenom!.id,
             route,
           },
         });
@@ -38,7 +38,7 @@ export default function useExpectedReceiveAmount(
       }
     },
     {
-      enabled: !!cosmWasmClient && !!config && !!targetDenom && !!swapAmount && enabled,
+      enabled: !!cosmWasmClient && !!config && !!targetDenom?.id && !!swapAmount && enabled,
       cacheTime: 15000,
       meta: {
         errorMessage: 'Error fetching expected receive amount',
