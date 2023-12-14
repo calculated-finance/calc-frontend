@@ -340,7 +340,7 @@ function ResultingDenom() {
   );
 }
 
-export function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
+function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -357,14 +357,34 @@ export function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'chil
             w="full"
           >
             <Stack>
-              <Text>
+              <Text fontWeight={600} textAlign="center">
+                What are price optimised swaps?
+              </Text>
+              <Text textAlign="center">
                 Price optimised swaps distribute your market swap over several transactions. This method lessens the
                 price impact typically associated with larger orders.
               </Text>
-              <Text>
-                Unlike standard limit orders, our tool allows you to set a price floor or ceiling, providing a safeguard
-                against less favorable price shifts, while still giving you the opportunity to capitalize on positive
-                market movements.
+              <Text textAlign="center">
+                Unlike standard limit orders, CALC Streaming Swaps allow you to set a price floor or ceiling, providing
+                a safeguard against less favorable price shifts, while still giving you the opportunity to capitalize on
+                positive market movements.
+              </Text>
+              <br />
+              <Text fontWeight={600} textAlign="center">
+                What happens if the price changes?
+              </Text>
+              <Text textAlign="center">
+                If the price goes beyond your specified price threshold, CALC will set a limit order at your price
+                threshold price, and the swap will only resume once the order is filled.
+              </Text>
+              <Text textAlign="center">
+                This means that if the strategy finishes, you will receive at least the amount shown. However, if the
+                price of the token falls below your price threshold, the strategy will not execute until the price
+                recovers (which could be never).
+              </Text>
+              <Text textAlign="center">
+                You can also cancel any active swaps via the strategies tab, which will return any unswapped assets back
+                to your wallet.
               </Text>
             </Stack>
           </Flex>
@@ -378,7 +398,7 @@ function DurationSlider() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
-    values: { initialDenom, initialDeposit, resultingDenom },
+    values: { initialDenom, initialDeposit, resultingDenom, slippageTolerance },
   } = useFormikContext<FormData>();
 
   const [sliderValue, setSliderValue] = useState<number>(415);
@@ -398,7 +418,7 @@ function DurationSlider() {
   const [, , routeHelpers] = useField<number>({
     name: 'route',
   });
-  const [, , priceThresholdValueHelpers] = useField<number>({
+  const [priceThresholdValue, , priceThresholdValueHelpers] = useField<number | undefined>({
     name: 'priceThresholdValue',
   });
 
@@ -407,16 +427,18 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  const { route } = useRoute(
-    swapAmountField.value && initialDenomInfo
-      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-      : undefined,
-    resultingDenomInfo,
-  );
+  // const { route } = useRoute(
+  //   swapAmountField.value && initialDenomInfo
+  //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
+  //     : undefined,
+  //   resultingDenomInfo,
+  // );
 
-  useEffect(() => {
-    routeHelpers.setValue(route);
-  }, [route]);
+  const route = undefined;
+
+  // useEffect(() => {
+  //   routeHelpers.setValue(route);
+  // }, [route]);
 
   const { twap } = useTwapToNow(
     initialDenomInfo,
@@ -427,10 +449,12 @@ function DurationSlider() {
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
 
+  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
+
   const { spotPrice } = useSpotPrice(
     resultingDenomInfo,
     initialDenomInfo,
-    initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell,
+    transactionType,
     route,
     !!resultingDenomInfo && !!initialDenomInfo,
   );
@@ -452,14 +476,19 @@ function DurationSlider() {
     !!swapAmountField.value && !!resultingDenomInfo,
   );
 
-  const slippage =
-    !twap || !expectedPrice ? null : expectedPrice < twap ? 0 : (Math.abs(expectedPrice - twap) / twap) * 100;
+  const expectedPriceImpact = !twap || !expectedPrice ? null : (Math.abs(expectedPrice - twap) / twap) * 100;
 
   useEffect(() => {
-    if (!!spotPrice && !!slippage) {
-      priceThresholdValueHelpers.setValue(spotPrice * ((100 - slippage) / 100));
+    if (!!spotPrice && !!expectedPriceImpact && !!slippageTolerance) {
+      const totalAllowedPriceImpact = expectedPriceImpact + slippageTolerance;
+      priceThresholdValueHelpers.setValue(
+        spotPrice *
+          ((transactionType === TransactionType.Buy ? 100 + totalAllowedPriceImpact : 100 - totalAllowedPriceImpact) /
+            100),
+        true,
+      );
     }
-  }, [spotPrice, slippage]);
+  }, [spotPrice, priceThresholdValue.value, expectedPriceImpact, slippageTolerance]);
 
   const minutes = strategyDuration - 1;
   const hours = Number((minutes / 60).toFixed(1));
@@ -594,12 +623,14 @@ function DurationSlider() {
                   .toFixed(initialDenomInfo.significantFigures),
               ).toString()}{' '}
               {initialDenomInfo.name}
-              {!isSliding && slippage ? ` with estimated ${Number(slippage.toFixed(3))}% price impact` : ''}
+              {!isSliding && expectedPriceImpact
+                ? ` with estimated ${Number(expectedPriceImpact.toFixed(3))}% price impact`
+                : ''}
             </Text>
           </FormHelperText>
         )}
       </FormControl>
-      <Collapse in={!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom}>
+      <Collapse in={!!swaps && !!debouncedInitialDeposit}>
         <Box position="relative" borderRadius="lg" p={4}>
           <Box
             position="absolute"
@@ -722,7 +753,7 @@ function PriceThresholdToggle() {
               <RadioCard
                 key={option.label}
                 isDisabled={!initialDenom || !resultingDenom}
-                disabledMessage="Setting price protection requires both assets to be selected."
+                disabledMessage="ting price protection requires both assets to be selected."
                 {...radio}
               >
                 {option.label}
@@ -737,11 +768,13 @@ function PriceThresholdToggle() {
 
 function PriceThreshold() {
   const {
-    values: { initialDenom, resultingDenom },
+    values: { initialDenom, resultingDenom, priceThresholdValue },
   } = useFormikContext<FormData>();
 
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'priceThresholdValue' });
-  const [priceThresholdField] = useField({ name: 'priceThresholdEnabled' });
+  const [{ onChange, value, ...priceThresholdValueField }, priceThresholdValueMeta, priceThresholdValueHelpers] =
+    useField<number | undefined>({
+      name: 'priceThresholdValue',
+    });
 
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = getDenomInfo(resultingDenom);
@@ -749,27 +782,26 @@ function PriceThreshold() {
   const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
 
   return (
-    <FormControl isInvalid={meta.touched && Boolean(meta.error)}>
+    <FormControl isInvalid={priceThresholdValueMeta.touched && Boolean(priceThresholdValueMeta.error)}>
       <FormLabel>
-        {transactionType === TransactionType.Buy ? 'Set buy price protection' : 'Set sell price protection'}
+        {transactionType === TransactionType.Buy ? 'Calculated price ceiling' : 'Calculated price floor'}
       </FormLabel>
       <FormHelperText>
-        {transactionType === TransactionType.Buy
-          ? "CALC won't buy if the asset price exceeds this set value."
-          : "CALC won't sell if the asset price drops below this set value."}
+        Current price {transactionType === TransactionType.Buy ? '+' : '-'} expected price impact + slippage tolerance
+        {/* This gets calculated by adding your expected price impact to your slippage tolerance, and{' '}
+        {transactionType === TransactionType.Buy ? 'adding' : 'subtracting'} it from the current price. */}
       </FormHelperText>
       <Stack spacing={3}>
-        <PriceThresholdToggle />
-        <CollapseWithRender isOpen={priceThresholdField.value === YesNoValues.Yes}>
-          <DenomPriceInput
-            initialDenom={initialDenomInfo}
-            resultingDenom={resultingDenomInfo}
-            transactionType={transactionType}
-            error={meta.touched && meta.error}
-            onChange={helpers.setValue}
-            {...field}
-          />
-        </CollapseWithRender>
+        <DenomPriceInput
+          initialDenom={initialDenomInfo}
+          resultingDenom={resultingDenomInfo}
+          transactionType={transactionType}
+          error={priceThresholdValueMeta.touched && priceThresholdValueMeta.error}
+          isReadOnly
+          onChange={(v) => priceThresholdValueHelpers.setValue(v as number)}
+          value={priceThresholdValue}
+          {...priceThresholdValueField}
+        />
       </Stack>
     </FormControl>
   );
@@ -797,15 +829,17 @@ function FeeSection() {
               {' '}
               {String.fromCharCode(8275)}
               {getPrettyFee(initialDenomInfo.fromAtomic(initialDeposit), SWAP_FEE + dexFee)} {initialDenomInfo.name}{' '}
-              {`(${getPrettyFee(initialDenomInfo.fromAtomic(swapAmount), SWAP_FEE + dexFee)} ${
-                initialDenomInfo.name
-              } per swap)`}
+              {`(${Number(
+                getPrettyFee(initialDenomInfo.fromAtomic(swapAmount), SWAP_FEE + dexFee).toFixed(
+                  initialDenomInfo.significantFigures,
+                ),
+              )} ${initialDenomInfo.name} per swap)`}
             </Text>
           </Tooltip>
         </Text>
         <Box pl={2}>
           <FeeBreakdown
-            initialDenomName={initialDenomInfo.name}
+            initialDenom={initialDenomInfo}
             swapAmount={initialDenomInfo.fromAtomic(swapAmount)}
             price={fiatPrice}
             dexFee={dexFee}
@@ -853,7 +887,7 @@ export function Form() {
               <CalcSpinner />
             </Center>
           ) : (
-            <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+            <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
               <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
                 <AdvancedSettingsSwitch />
                 <InitialDenom />
@@ -861,10 +895,14 @@ export function Form() {
                 <ResultingDenom />
               </Stack>
               <DurationSlider />
-              <PriceThreshold />
-              <Collapse in={values.advancedSettings}>
-                <SlippageTolerance />
-              </Collapse>
+              <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+                <Collapse in={values.advancedSettings}>
+                  <SlippageTolerance subtext="If the slippage exceeds your tolerance, CALC will set a limit order that will restart the strategy once it is filled." />
+                </Collapse>
+                <Collapse in={values.advancedSettings}>
+                  <PriceThreshold />
+                </Collapse>
+              </Stack>
               <FeeSection />
               {connected ? (
                 <SummaryAgreementForm

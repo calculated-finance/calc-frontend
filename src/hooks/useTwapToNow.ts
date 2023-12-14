@@ -20,21 +20,16 @@ export default function useTwapToNow(
   const { data: twap, ...helpers } = useQuery<number>(
     ['prices', 'twap', cosmWasmClient, initialDenom, resultingDenom, route],
     async () => {
-      try {
-        const twapToNow = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
-          get_twap_to_now: {
-            swap_denom: initialDenom!.id,
-            target_denom: resultingDenom!.id,
-            period: config!.twap_period,
-            route,
-          },
-        });
+      const twapToNow = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
+        get_twap_to_now: {
+          swap_denom: initialDenom!.id,
+          target_denom: resultingDenom!.id,
+          period: config!.twap_period,
+          route,
+        },
+      });
 
-        return Number(twapToNow) * 10 ** (resultingDenom!.significantFigures - initialDenom!.significantFigures);
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
+      return Number(twapToNow) * 10 ** (resultingDenom!.significantFigures - initialDenom!.significantFigures);
     },
     {
       enabled: !!cosmWasmClient && !!pair && !!config && enabled,

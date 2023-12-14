@@ -24,14 +24,14 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 export function FeeBreakdown({
-  initialDenomName,
+  initialDenom,
   swapAmount,
   price,
   dexFee,
   swapFee,
   excludeDepositFee,
 }: {
-  initialDenomName: string;
+  initialDenom: DenomInfo;
   swapAmount: number;
   price: number | undefined;
   dexFee: number;
@@ -82,7 +82,7 @@ export function FeeBreakdown({
                     <Text textStyle="body-xs" as="span">
                       {' '}
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   )}
                 </Flex>
@@ -116,7 +116,7 @@ export function FeeBreakdown({
                   ) : (
                     <Text textStyle="body-xs" textColor="white" as="span">
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   )}
                 </Flex>
@@ -129,7 +129,8 @@ export function FeeBreakdown({
                   <Text textStyle="body-xs">CALC sustainability tax:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, swapFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
                 <Flex>
@@ -141,7 +142,8 @@ export function FeeBreakdown({
                   <Text textStyle="body-xs">{getChainDexName(chain)} txn fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
                 <Flex>
@@ -150,7 +152,8 @@ export function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, swapFee + dexFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, swapFee + dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
               </Stack>
@@ -209,7 +212,7 @@ export default function Fees({
       </Text>
       <Box pl={2}>
         <FeeBreakdown
-          initialDenomName={initialDenomName}
+          initialDenom={initialDenom}
           swapAmount={swapAmount}
           price={fiatPrice}
           dexFee={dexFee}

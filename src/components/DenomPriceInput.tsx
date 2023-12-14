@@ -9,6 +9,7 @@ import {
   Link,
   Input,
   InputProps,
+  Stack,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import useSpotPrice from '@hooks/useSpotPrice';
@@ -60,7 +61,7 @@ export function DenomPriceInput({
   };
 
   return (
-    <>
+    <Stack spacing={2}>
       <InputGroup>
         <InputLeftElement
           pointerEvents="none"
@@ -80,14 +81,14 @@ export function DenomPriceInput({
           textAlign="right"
           customInput={Input}
           onValueChange={handleChange}
-          value={value as number}
+          value={value ? (value as number) : null}
           defaultValue={defaultValue as number}
           placeholder={`${formattedPrice ?? ''} ${priceInDenomName}`}
           {...inputProps}
         />
       </InputGroup>
       <FormErrorMessage>{error}</FormErrorMessage>
-      <FormHelperText>
+      <FormHelperText m={0}>
         <HStack spacing={1}>
           <Text color="white" fontSize={14}>
             Current price:
@@ -99,6 +100,6 @@ export function DenomPriceInput({
           </Link>
         </HStack>
       </FormHelperText>
-    </>
+    </Stack>
   );
 }

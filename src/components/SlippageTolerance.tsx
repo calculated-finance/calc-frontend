@@ -39,16 +39,16 @@ function SlippagePreset({ value }: { value: number }) {
   );
 }
 
-export default function SlippageTolerance() {
+export default function SlippageTolerance({ subtext }: { subtext?: string }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'slippageTolerance' });
   const values = [0.5, 1.0, 2.0];
 
   return (
     <FormControl mt={3} isInvalid={meta.touched && Boolean(meta.error)}>
-      <FormLabel>Set slippage tolerance</FormLabel>
+      <FormLabel>Slippage tolerance</FormLabel>
       <FormHelperText>
-        If the slippage exceeds your tolerance, the swap will fail, be skipped for that increment and your strategy
-        length will increase by 1 increment.
+        {subtext ??
+          'If the slippage exceeds your tolerance, the swap will fail, be skipped for that increment and your strategy length will increase by 1 increment.'}
       </FormHelperText>
       <HStack spacing={2}>
         <InputGroup w={154} ml="px">

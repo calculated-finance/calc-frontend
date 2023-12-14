@@ -94,7 +94,6 @@ export const schema = Yup.object({
       return value;
     }),
   priceThresholdValue: Yup.number()
-    .nullable()
     .label('Price Threshold')
     .positive()
     .when(['advancedSettings', 'priceThresholdEnabled'], {
@@ -112,6 +111,7 @@ export const schema = Yup.object({
     }),
   slippageTolerance: Yup.number()
     .label('Slippage Tolerance')
+    .nullable()
     .lessThan(100)
     .min(0)
     .default(initialValues.slippageTolerance)

@@ -48,7 +48,7 @@ const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: Den
           );
         }
 
-        throw error;
+        throw new Error('Error fetching route from Osmosis');
       }
     },
     {
