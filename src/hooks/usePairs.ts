@@ -80,7 +80,7 @@ function usePairsCosmos(injectedChainId?: ChainId) {
   const { data: pairs, ...other } = useQuery<V3Pair[]>(
     ['pairs', chainId],
     () => {
-      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, chainId);
+      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!);
       return calcClient.fetchAllPairs();
     },
     {

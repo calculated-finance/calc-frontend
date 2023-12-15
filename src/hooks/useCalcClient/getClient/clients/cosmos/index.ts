@@ -2,9 +2,6 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
-import { ChainId } from '@hooks/useChainId/Chains';
-import { getChainContractAddress } from '@helpers/chains';
-import { VaultsResponse } from 'src/interfaces/v2/generated/response/get_vaults_by_address';
 import {
   EventsResponse,
   Event as GeneratedEvent,
@@ -12,53 +9,49 @@ import {
 import { V3Pair } from '@models/Pair';
 import { transformToStrategyCosmos } from './transformToStrategy';
 
-const GET_PAIRS_LIMIT = 400;
+const GET_PAIRS_LIMIT = 200;
 
 async function fetchAllPairs(
-  chainId: ChainId,
+  contractAddress: string,
   client: CosmWasmClient,
   startAfter = null,
   allPairs = [] as V3Pair[],
 ): Promise<V3Pair[]> {
-  const result = await client!.queryContractSmart(getChainContractAddress(chainId), {
+  const { pairs } = await client!.queryContractSmart(contractAddress, {
     get_pairs: {
       limit: GET_PAIRS_LIMIT,
       start_after: startAfter,
     },
   });
 
-  allPairs.push(...result.pairs);
+  allPairs.push(...pairs);
 
-  if (result.pairs.length === GET_PAIRS_LIMIT) {
-    const newStartAfter = result.pairs[result.pairs.length - 1];
-    return fetchAllPairs(chainId, client, newStartAfter, allPairs);
+  if (pairs.length === GET_PAIRS_LIMIT) {
+    const newStartAfter = pairs[pairs.length - 1];
+    return fetchAllPairs(contractAddress, client, newStartAfter, allPairs);
   }
 
   return allPairs;
 }
 
-async function fetchStrategy(
-  client: CosmWasmClient,
-  contractAddress: string,
-  id: string | undefined,
-): Promise<Strategy> {
-  const result = (await client.queryContractSmart(contractAddress, {
+async function fetchVault(client: CosmWasmClient, contractAddress: string, id: string | undefined): Promise<Strategy> {
+  const { vault } = (await client.queryContractSmart(contractAddress, {
     get_vault: {
       vault_id: id,
     },
   } as QueryMsg)) as VaultResponse;
 
-  return transformToStrategyCosmos(result.vault);
+  return transformToStrategyCosmos(vault);
 }
 
-export const GET_EVENTS_LIMIT = 400;
+export const GET_EVENTS_LIMIT = 200;
 
-async function fetchStrategyEvents(client: CosmWasmClient, contractAddress: string, id: string | undefined) {
+async function fetchVaultEvents(client: CosmWasmClient, contractAddress: string, id: string | undefined) {
   async function fetchEventsRecursively(
     startAfter: number | null = null,
     allEvents = [] as GeneratedEvent[],
   ): Promise<GeneratedEvent[]> {
-    const result = (await client.queryContractSmart(contractAddress, {
+    const { events } = (await client.queryContractSmart(contractAddress, {
       get_events_by_resource_id: {
         resource_id: id,
         limit: GET_EVENTS_LIMIT,
@@ -66,7 +59,6 @@ async function fetchStrategyEvents(client: CosmWasmClient, contractAddress: stri
       },
     } as QueryMsg)) as EventsResponse;
 
-    const { events } = result;
     allEvents.push(...events);
 
     // sometimes the contract returns limit - 1 events (it's a bug),
@@ -75,59 +67,68 @@ async function fetchStrategyEvents(client: CosmWasmClient, contractAddress: stri
       const newStartAfter = events[events.length - 1].id;
       return fetchEventsRecursively(newStartAfter, allEvents);
     }
+
     return allEvents;
   }
 
   return fetchEventsRecursively();
 }
 
-async function fetchStrategiesByAddress(client: CosmWasmClient, contractAddress: string, userAddress: string) {
-  const result = (await client.queryContractSmart(contractAddress, {
-    get_vaults_by_address: {
-      address: userAddress,
-      limit: 1000,
-    },
-  })) as VaultsResponse;
+const GET_STRATEGIES_LIMIT = 100;
 
-  const transformedStrategies = result.vaults.map((vault) => transformToStrategyCosmos(vault) as Strategy);
-  return transformedStrategies as Strategy[];
-}
-
-const GET_VAULTS_LIMIT = 150;
-
-const fetchAllStrategies = async (client: CosmWasmClient, chainId: ChainId) => {
-  const fetchVaultsRecursively = async (
-    cosmWasmClient: CosmWasmClient,
-    chain: ChainId,
-    startAfter = null,
-    allVaults = [] as Vault[],
-  ): Promise<Vault[]> => {
-    const result = await cosmWasmClient.queryContractSmart(getChainContractAddress(chain), {
-      get_vaults: {
-        limit: GET_VAULTS_LIMIT,
+async function fetchVaultByAddress(client: CosmWasmClient, contractAddress: string, userAddress: string) {
+  const fetchVaultsByAddressRecursively = async (startAfter = null, allVaults = [] as Vault[]): Promise<Vault[]> => {
+    const { vaults } = await client.queryContractSmart(contractAddress, {
+      get_vaults_by_address: {
+        address: userAddress,
+        limit: GET_STRATEGIES_LIMIT,
         start_after: startAfter,
       },
     });
 
-    allVaults.push(...result.vaults);
+    console.log(vaults);
 
-    if (result.vaults.length === GET_VAULTS_LIMIT) {
-      const newStartAfter = result.vaults[result.vaults.length - 1].id;
-      return fetchVaultsRecursively(cosmWasmClient, chain, newStartAfter, allVaults);
+    allVaults.push(...vaults.map(transformToStrategyCosmos));
+
+    if (vaults.length === GET_STRATEGIES_LIMIT) {
+      const newStartAfter = vaults[vaults.length - 1].id;
+      return fetchVaultsByAddressRecursively(newStartAfter, allVaults);
     }
 
     return allVaults;
   };
 
-  return fetchVaultsRecursively(client, chainId);
+  return fetchVaultsByAddressRecursively();
+}
+
+const fetchAllVaults = async (client: CosmWasmClient, contractAddress: string) => {
+  const fetchAllVaultsRecursively = async (startAfter = null, allVaults = [] as Strategy[]): Promise<Strategy[]> => {
+    const { vaults } = await client.queryContractSmart(contractAddress, {
+      get_vaults: {
+        limit: GET_STRATEGIES_LIMIT,
+        start_after: startAfter,
+      },
+    });
+
+    allVaults.push(...vaults.map(transformToStrategyCosmos));
+
+    if (vaults.length === GET_STRATEGIES_LIMIT) {
+      const newStartAfter = vaults[vaults.length - 1].id;
+      return fetchAllVaultsRecursively(newStartAfter, allVaults);
+    }
+
+    return allVaults;
+  };
+
+  return fetchAllVaultsRecursively();
 };
 
-export default function getCalcClient(contractAddress: string, cosmClient: CosmWasmClient, chainId: ChainId) {
+export default function getCalcClient(contractAddress: string, cosmWasmClient: CosmWasmClient) {
   return {
-    fetchAllPairs: () => fetchAllPairs(chainId, cosmClient),
-    fetchStrategy: (id: string) => fetchStrategy(cosmClient, contractAddress, id),
-    fetchStrategyEvents: (id: string) => fetchStrategyEvents(cosmClient, contractAddress, id),
-    fetchStrategies: (userAddress: string) => fetchStrategiesByAddress(cosmClient, contractAddress, userAddress),
-    fetchAllStrategies: () => fetchAllStrategies(cosmClient, chainId),
+    fetchAllPairs: () => fetchAllPairs(contractAddress, cosmWasmClient),
+    fetchVault: (id: string) => fetchVault(cosmWasmClient, contractAddress, id),
+    fetchVaultEvents: (id: string) => fetchVaultEvents(cosmWasmClient, contractAddress, id),
+    fetchVaults: (userAddress: string) => fetchVaultByAddress(cosmWasmClient, contractAddress, userAddress),
+    fetchAllVaults: () => fetchAllVaults(cosmWasmClient, contractAddress),
   };
 }

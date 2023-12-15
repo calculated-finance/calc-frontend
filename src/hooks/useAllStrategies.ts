@@ -6,7 +6,6 @@ import { getChainContractAddress, getChainInfo } from '@helpers/chains';
 import { values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
 import { queryClient } from 'src/pages/queryClient';
-import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
 
@@ -24,14 +23,8 @@ export default function useAllStrategies() {
     async () => {
       const fetchAllStrategies = async (chain: ChainContext) => {
         const client = await chain.getCosmWasmClient();
-        const calcClient = getCalcClient(
-          getChainContractAddress(chain.chain.chain_id as ChainId),
-          client,
-          chain.chain.chain_id as ChainId,
-        );
-        const allStrategies = (await calcClient.fetchAllStrategies()).map((strategy) =>
-          transformToStrategyCosmos(strategy),
-        );
+        const calcClient = getCalcClient(getChainContractAddress(chain.chain.chain_id as ChainId), client);
+        const allStrategies = await calcClient.fetchAllVaults();
         queryClient.setQueryData(['vaults', chain.chain.chain_id], allStrategies);
         return allStrategies;
       };

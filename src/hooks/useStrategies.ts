@@ -14,7 +14,7 @@ export function useStrategies() {
   const { chainId } = useChainId();
   const { client } = useCalcClient(chainId);
 
-  return useQuery<Strategy[]>([QUERY_KEY, chainId, address], () => client!.fetchStrategies(address!), {
+  return useQuery<Strategy[]>([QUERY_KEY, chainId, address], () => client!.fetchVaults(address!), {
     enabled: !!chainId && !!address && !!client,
     refetchInterval: 60 * 1000,
     meta: {

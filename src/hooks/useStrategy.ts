@@ -13,7 +13,7 @@ export default function useStrategy(id: Strategy['id'] | null | undefined) {
   return useQuery<Strategy>(
     [STRATEGY_KEY, id, client, address],
     async () => {
-      const result = await client!.fetchStrategy(id!);
+      const result = await client!.fetchVault(id!);
 
       if (result.owner !== address && !isAddressAdmin(address)) {
         throw new Error('Strategy not found');

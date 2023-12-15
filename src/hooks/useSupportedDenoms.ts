@@ -23,11 +23,7 @@ export function useSupportedDenoms() {
 
   const fetchPairs = async (chainContext: ChainContext) => {
     const client = await chainContext.getCosmWasmClient();
-    const calcClient = getCalcClient(
-      getChainContractAddress(chainContext.chain.chain_id as ChainId),
-      client,
-      chainContext.chain.chain_id as ChainId,
-    );
+    const calcClient = getCalcClient(getChainContractAddress(chainContext.chain.chain_id as ChainId), client);
     const pairs = await calcClient.fetchAllPairs();
     queryClient.setQueryData(['pairs', chainContext.chain.chain_id], pairs);
     return pairs;
