@@ -8,7 +8,7 @@ export const GET_EVENTS_LIMIT = 400;
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { client } = useCalcClient();
 
-  return useQuery<StrategyEvent[]>(['strategyEvents', id, client], () => client!.fetchStrategyEvents(id!), {
+  return useQuery<StrategyEvent[]>(['strategyEvents', id, client], () => client!.fetchVaultEvents(id!), {
     enabled: !!client && !!id && !!enabled,
     meta: {
       errorMessage: 'Error fetching strategy events',

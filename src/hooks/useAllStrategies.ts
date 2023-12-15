@@ -29,7 +29,7 @@ export default function useAllStrategies() {
           client,
           chain.chain.chain_id as ChainId,
         );
-        const allStrategies = (await calcClient.fetchAllStrategies()).map((strategy) =>
+        const allStrategies = (await calcClient.fetchAllVaults()).map((strategy) =>
           transformToStrategyCosmos(strategy),
         );
         queryClient.setQueryData(['vaults', chain.chain.chain_id], allStrategies);

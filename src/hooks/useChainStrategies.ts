@@ -23,9 +23,7 @@ export default function useChainStrategies(injectedChainId?: ChainId) {
         chain.chain_id as ChainId,
       );
 
-      const allStrategies = (await calcClient.fetchAllStrategies()).map((strategy) =>
-        transformToStrategyCosmos(strategy),
-      );
+      const allStrategies = (await calcClient.fetchAllVaults()).map((strategy) => transformToStrategyCosmos(strategy));
 
       return allStrategies;
     },

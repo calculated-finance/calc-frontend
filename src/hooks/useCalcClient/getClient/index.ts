@@ -5,13 +5,13 @@ import getCalcClient from './clients/cosmos';
 
 export type CalcClient = {
   fetchAllPairs: () => Promise<any[]>;
-  fetchStrategy: (id: string) => Promise<any>;
-  fetchStrategyEvents: (id: string) => Promise<any>;
-  fetchStrategies: (userAddress: string) => Promise<any>;
-  fetchAllStrategies: () => Promise<any[]>;
+  fetchVault: (id: string) => Promise<any>;
+  fetchVaultEvents: (id: string) => Promise<any>;
+  fetchVaults: (userAddress: string) => Promise<any>;
+  fetchAllVaults: () => Promise<any[]>;
 };
 
-export default function getClient(chainId: ChainId, cosmClient: CosmWasmClient | null) {
-  if (!cosmClient) return null;
-  return getCalcClient(getChainContractAddress(chainId), cosmClient, chainId);
+export default function getClient(chainId: ChainId, cosmWasmClient: CosmWasmClient | null) {
+  if (!cosmWasmClient) return null;
+  return getCalcClient(getChainContractAddress(chainId), cosmWasmClient, chainId);
 }
