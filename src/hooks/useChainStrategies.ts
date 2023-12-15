@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChain } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainInfo } from '@helpers/chains';
-import { transformToStrategyCosmos } from './useCalcClient/getClient/clients/cosmos/transformToStrategy';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
 import { useChainId } from './useChainId';
@@ -17,15 +16,7 @@ export default function useChainStrategies(injectedChainId?: ChainId) {
     async () => {
       const client = await getCosmWasmClient();
 
-      const calcClient = getCalcClient(
-        getChainContractAddress(chain.chain_id as ChainId),
-        client,
-        chain.chain_id as ChainId,
-      );
-
-      const allStrategies = (await calcClient.fetchAllVaults()).map((strategy) => transformToStrategyCosmos(strategy));
-
-      return allStrategies;
+      return getCalcClient(getChainContractAddress(chain.chain_id as ChainId), client).fetchAllVaults();
     },
     {
       enabled: !!chainId && !!chain,

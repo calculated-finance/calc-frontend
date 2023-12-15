@@ -13,5 +13,5 @@ export type CalcClient = {
 
 export default function getClient(chainId: ChainId, cosmWasmClient: CosmWasmClient | null) {
   if (!cosmWasmClient) return null;
-  return getCalcClient(getChainContractAddress(chainId), cosmWasmClient, chainId);
+  return getCalcClient(getChainContractAddress(chainId), cosmWasmClient);
 }

@@ -2,7 +2,6 @@ import { QueryMsg } from 'src/interfaces/v2/generated/query';
 import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
-import { ChainId } from '@hooks/useChainId/Chains';
 import {
   EventsResponse,
   Event as GeneratedEvent,
@@ -103,7 +102,7 @@ async function fetchVaultByAddress(client: CosmWasmClient, contractAddress: stri
 }
 
 const fetchAllVaults = async (client: CosmWasmClient, contractAddress: string) => {
-  const fetchAllVaultsRecursively = async (startAfter = null, allVaults = [] as Vault[]): Promise<Vault[]> => {
+  const fetchAllVaultsRecursively = async (startAfter = null, allVaults = [] as Strategy[]): Promise<Strategy[]> => {
     const { vaults } = await client.queryContractSmart(contractAddress, {
       get_vaults: {
         limit: GET_STRATEGIES_LIMIT,
@@ -111,7 +110,7 @@ const fetchAllVaults = async (client: CosmWasmClient, contractAddress: string) =
       },
     });
 
-    allVaults.push(...vaults);
+    allVaults.push(...vaults.map(transformToStrategyCosmos));
 
     if (vaults.length === GET_STRATEGIES_LIMIT) {
       const newStartAfter = vaults[vaults.length - 1].id;
@@ -124,7 +123,7 @@ const fetchAllVaults = async (client: CosmWasmClient, contractAddress: string) =
   return fetchAllVaultsRecursively();
 };
 
-export default function getCalcClient(contractAddress: string, cosmWasmClient: CosmWasmClient, chainId: ChainId) {
+export default function getCalcClient(contractAddress: string, cosmWasmClient: CosmWasmClient) {
   return {
     fetchAllPairs: () => fetchAllPairs(contractAddress, cosmWasmClient),
     fetchVault: (id: string) => fetchVault(cosmWasmClient, contractAddress, id),
