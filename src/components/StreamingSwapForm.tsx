@@ -27,7 +27,6 @@ import {
   Tooltip,
   useDisclosure,
   useMediaQuery,
-  useRadioGroup,
 } from '@chakra-ui/react';
 import { FormData, initialValues, schema } from 'src/models/StreamingSwapFormData';
 import CalcSpinner from '@components/Spinner';
@@ -60,22 +59,15 @@ import { FaAnglesUp } from 'react-icons/fa6';
 import useTwapToNow from '@hooks/useTwapToNow';
 import { max, min } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
-import YesNoValues from '@models/YesNoValues';
-import SlippageTolerance from '@components/SlippageTolerance';
 import { useDebounce } from 'ahooks';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { CollapseWithRender } from '@components/CollapseWithRender';
-import RadioCard from '@components/RadioCard';
-import Radio from '@components/Radio';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DenomPriceInput } from '@components/DenomPriceInput';
-import { yesNoData } from '@components/PriceThreshold';
 import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
-import useRoute from '@hooks/useRoute';
 import useSpotPrice from '@hooks/useSpotPrice';
 import { TransactionType } from './TransactionType';
 
@@ -437,11 +429,11 @@ function DurationSlider() {
   //   resultingDenomInfo,
   // );
 
-  const route = undefined;
-
   // useEffect(() => {
   //   routeHelpers.setValue(route);
   // }, [route]);
+
+  const route = undefined;
 
   const { twap } = useTwapToNow(
     initialDenomInfo,

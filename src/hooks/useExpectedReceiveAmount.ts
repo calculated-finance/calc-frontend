@@ -29,9 +29,9 @@ export default function useExpectedReceiveAmount(
         if (`${error}`.includes('amount of')) {
           const initialDenomInfo = getDenomInfo(swapAmount!.denom);
           throw new Error(
-            `Insufficient liquidity to swap ${initialDenomInfo.fromAtomic(Number(swapAmount!.amount))} ${
-              initialDenomInfo.name
-            } for ${targetDenom!.name}`,
+            `Insufficient liquidity to swap ${BigInt(
+              Math.round(initialDenomInfo.fromAtomic(Number(swapAmount!.amount))),
+            )} ${initialDenomInfo.name} for ${targetDenom!.name}`,
           );
         }
         throw error;
