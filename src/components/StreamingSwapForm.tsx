@@ -425,8 +425,8 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
   return (
     <Stack>
       <HStack w="full" spacing={0}>
-        <Text noOfLines={1} color={!isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
-          Manually set slippage
+        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
+          {isUsingPriceProtection ? 'Price Protection' : 'Manually set slippage'}
         </Text>
         <Switch
           marginInline={2}
@@ -435,11 +435,9 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
           isChecked={isUsingPriceProtection}
           onChange={() => {
             if (isUsingPriceProtection) {
-              console.log('no price thresh');
               priceThresholdHelpers.setValue(undefined);
               slippageToleranceHelpers.setValue(slippageTolerance);
             } else {
-              console.log('no slippage');
               priceThresholdHelpers.setValue(
                 expectedPrice &&
                   expectedPrice * (transactionType === TransactionType.Buy ? 1 - priceThreshold : 1 + priceThreshold),
@@ -449,17 +447,14 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
             setIsUsingPriceProtection(!isUsingPriceProtection);
           }}
         />
-        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
-          Price protection
-        </Text>
         <Spacer />
         {isUsingPriceProtection ? (
           expectedPrice ? (
             <HStack spacing={1}>
-              <Text noOfLines={1} textAlign="end" fontSize="11">
+              <Text noOfLines={1} textAlign="end" fontSize="11.5">
                 Skip swaps if:
               </Text>
-              <Text noOfLines={1} textAlign="end" fontSize="11" color="blue.200">
+              <Text noOfLines={1} textAlign="end" fontSize="11.5" color="blue.200">
                 {`1 ${
                   (transactionType === TransactionType.Buy ? resultingDenomInfo : initialDenomInfo).name
                 } < ${Number(
@@ -573,12 +568,6 @@ function DurationSlider() {
   });
   const [, , routeHelpers] = useField<number>({
     name: 'route',
-  });
-  const [priceThreshold, priceThresholdMeta, priceThresholdHelpers] = useField<number | undefined>({
-    name: 'priceThreshold',
-  });
-  const [slippageTolerance] = useField<number | undefined>({
-    name: 'slippageTolerance',
   });
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
@@ -962,7 +951,6 @@ export function Form() {
             <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
               <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
                 <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                  <AdvancedSettingsSwitch />
                   <InitialDenom />
                   <SwapDenoms />
                   <ResultingDenom />
