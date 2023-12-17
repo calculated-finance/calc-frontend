@@ -47,9 +47,8 @@ const components = {
   Select: {
     baseStyle: {
       field: {
-        borderRadius: 'xl',
-        borderColor: 'slateGrey',
-        borderWidth: 1,
+        borderRadius: 'md',
+        borderColor: 'abyss.200',
         bg: 'abyss.200',
       },
     },
@@ -61,9 +60,8 @@ const components = {
     variants: {
       outline: {
         field: {
-          borderRadius: 'xl',
-          borderColor: 'slateGrey',
-          borderWidth: 1,
+          borderRadius: 'md',
+          borderColor: 'abyss.200',
           bg: 'abyss.200',
         },
       },
@@ -76,9 +74,8 @@ const components = {
     variants: {
       outline: {
         field: {
-          borderRadius: 'xl',
-          borderColor: 'slateGrey',
-          borderWidth: 1,
+          borderRadius: 'md',
+          borderColor: 'abyss.200',
           bg: 'abyss.200',
         },
       },

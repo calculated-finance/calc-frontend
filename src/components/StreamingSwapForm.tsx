@@ -23,6 +23,7 @@ import {
   Spacer,
   Spinner,
   Stack,
+  Switch,
   Text,
   Tooltip,
   useDisclosure,
@@ -55,19 +56,19 @@ import useExpectedPrice from '@hooks/useExpectedPrice';
 import streamingSwapSteps from '@formConfig/streamingSwap';
 import { Icon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { MdAccessTime } from 'react-icons/md';
-import { FaAnglesUp } from 'react-icons/fa6';
+import { FaAnglesUp, FaChevronDown, FaChevronUp, FaShieldHalved } from 'react-icons/fa6';
 import useTwapToNow from '@hooks/useTwapToNow';
 import { max, min } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import { useDebounce } from 'ahooks';
 import { ModalWrapper } from '@components/ModalWrapper';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
-import { DenomPriceInput } from '@components/DenomPriceInput';
 import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
+import { Swap2Icon } from '@fusion-icons/react/web3';
 import useSpotPrice from '@hooks/useSpotPrice';
 import { TransactionType } from './TransactionType';
 
@@ -102,7 +103,7 @@ function InitialDeposit() {
 function InitialDenom() {
   const { pairs } = usePairs();
   const [initialDenom, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [, , priceThresholdValueHelpers] = useField({ name: 'priceThresholdValue' });
+  const [, , priceThresholdHelpers] = useField({ name: 'priceThreshold' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [initialDeposit, , initialDepositHelpers] = useField<number>({ name: 'initialDeposit' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
@@ -155,7 +156,7 @@ function InitialDenom() {
                   initialDeposit.value * 10 ** (newDenomInfo.significantFigures - initialDenomInfo.significantFigures),
                 );
               }
-              priceThresholdValueHelpers.setValue('');
+              priceThresholdHelpers.setValue('');
               initialDenomHelpers.setValue(newValue);
             }}
           />
@@ -189,7 +190,7 @@ function SwapDenoms() {
   const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
-  const [, priceThresholdValueMeta, priceThresholdValueHelpers] = useField({ name: 'priceThresholdValue' });
+  const [, priceThresholdMeta, priceThresholdHelpers] = useField({ name: 'priceThreshold' });
 
   return (
     <Center>
@@ -212,7 +213,7 @@ function SwapDenoms() {
               );
             }
 
-            if (priceThresholdValueMeta.touched) priceThresholdValueHelpers.setTouched(false);
+            if (priceThresholdMeta.touched) priceThresholdHelpers.setTouched(false);
           })
         }
       />
@@ -389,11 +390,171 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
   );
 }
 
+function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined }) {
+  const {
+    values: { initialDenom, resultingDenom, priceThreshold: pT, slippageTolerance: sT },
+  } = useFormikContext<FormData>();
+
+  const [, , slippageToleranceHelpers] = useField<number | undefined>({
+    name: 'slippageTolerance',
+  });
+
+  const [, priceThresholdMeta, priceThresholdHelpers] = useField<number | undefined>({
+    name: 'priceThreshold',
+  });
+
+  const [isUsingPriceProtection, setIsUsingPriceProtection] = useState(true);
+  const [slippageTolerance, setSlippageTolerance] = useState(2);
+  const [priceThreshold, setPriceThreshold] = useState(0.02);
+
+  const initialDenomInfo = getDenomInfo(initialDenom);
+  const resultingDenomInfo = getDenomInfo(resultingDenom);
+
+  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
+
+  useEffect(() => {
+    if (!!expectedPrice && !priceThresholdMeta.touched) {
+      priceThresholdHelpers.setValue(
+        expectedPrice &&
+          expectedPrice * (transactionType === TransactionType.Buy ? 1 - priceThreshold : 1 + priceThreshold),
+      );
+      priceThresholdHelpers.setTouched(true);
+    }
+  }, [expectedPrice, priceThresholdMeta.touched, transactionType, priceThreshold]);
+
+  return (
+    <Stack>
+      <HStack w="full" spacing={0}>
+        <Text noOfLines={1} color={!isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
+          Manually set slippage
+        </Text>
+        <Switch
+          marginInline={2}
+          size="sm"
+          colorScheme="brand"
+          isChecked={isUsingPriceProtection}
+          onChange={() => {
+            if (isUsingPriceProtection) {
+              console.log('no price thresh');
+              priceThresholdHelpers.setValue(undefined);
+              slippageToleranceHelpers.setValue(slippageTolerance);
+            } else {
+              console.log('no slippage');
+              priceThresholdHelpers.setValue(
+                expectedPrice &&
+                  expectedPrice * (transactionType === TransactionType.Buy ? 1 - priceThreshold : 1 + priceThreshold),
+              );
+              slippageToleranceHelpers.setValue(undefined);
+            }
+            setIsUsingPriceProtection(!isUsingPriceProtection);
+          }}
+        />
+        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
+          Price protection
+        </Text>
+        <Spacer />
+        {isUsingPriceProtection ? (
+          expectedPrice ? (
+            <HStack spacing={1}>
+              <Text noOfLines={1} textAlign="end" fontSize="11">
+                Skip swaps if:
+              </Text>
+              <Text noOfLines={1} textAlign="end" fontSize="11" color="blue.200">
+                {`1 ${
+                  (transactionType === TransactionType.Buy ? resultingDenomInfo : initialDenomInfo).name
+                } < ${Number(
+                  (
+                    expectedPrice &&
+                    expectedPrice * (transactionType === TransactionType.Buy ? 1 + priceThreshold : 1 - priceThreshold)
+                  )?.toFixed(3),
+                )} ${(transactionType === TransactionType.Buy ? initialDenomInfo : resultingDenomInfo).name}`}
+              </Text>
+            </HStack>
+          ) : (
+            <Spinner size="xs" />
+          )
+        ) : null}
+      </HStack>
+      <Box position="relative" borderRadius="16px 4px 4px 16px" border="1px solid" borderColor="abyss.200">
+        <HStack w="full" marginBlock={2.5} ml={4}>
+          {isUsingPriceProtection ? (
+            <Box ml={1}>
+              <FaShieldHalved color="slateGray" />
+            </Box>
+          ) : (
+            <Icon as={Swap2Icon} stroke="slateGrey" boxSize={6} />
+          )}
+          <Text color="slateGrey">{isUsingPriceProtection ? 'Price Protection' : 'Slippage Tolerance'}</Text>
+          <Icon as={QuestionOutlineIcon} color="slateGray" />
+          <Spacer />
+        </HStack>
+        <Box position="absolute" w="100px" top={0} right={0} bottom={0} h="full" backgroundColor="abyss.200">
+          <HStack h="full" alignItems="center" pr={2} spacing={1}>
+            <Stack h="full" spacing={0} justifyContent="center" pb={1}>
+              <Button
+                h={4}
+                variant="unstyled"
+                onClick={
+                  isUsingPriceProtection
+                    ? () => {
+                        const value = max(0, priceThreshold + 0.001);
+                        setPriceThreshold(value);
+                        if (expectedPrice)
+                          priceThresholdHelpers.setValue(
+                            expectedPrice * (transactionType === TransactionType.Buy ? 1 - value : 1 + value),
+                          );
+                      }
+                    : () => {
+                        const value = max(0, slippageTolerance + 0.1);
+                        setSlippageTolerance(value);
+                        slippageToleranceHelpers.setValue(value);
+                      }
+                }
+              >
+                <Icon as={FaChevronUp} color="brand.300" fontSize={10} />
+              </Button>
+              <Button
+                h={4}
+                variant="unstyled"
+                onClick={
+                  isUsingPriceProtection
+                    ? () => {
+                        const value = max(0, priceThreshold - 0.001);
+                        setPriceThreshold(value);
+                        if (expectedPrice)
+                          priceThresholdHelpers.setValue(
+                            expectedPrice * (transactionType === TransactionType.Buy ? 1 - value : 1 + value),
+                          );
+                      }
+                    : () => {
+                        const value = max(0, slippageTolerance - 0.1);
+                        setSlippageTolerance(value);
+                        slippageToleranceHelpers.setValue(value);
+                      }
+                }
+              >
+                <Icon as={FaChevronDown} color="brand.300" fontSize={10} />
+              </Button>
+            </Stack>
+            <Spacer />
+            <Text fontWeight="700">
+              {!isUsingPriceProtection
+                ? Number(slippageTolerance.toFixed(2))
+                : Number((priceThreshold * 100).toFixed(2))}
+            </Text>
+            <Text color="slateGrey">%</Text>
+          </HStack>
+        </Box>
+      </Box>
+    </Stack>
+  );
+}
+
 function DurationSlider() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
-    values: { initialDenom, initialDeposit, resultingDenom, slippageTolerance },
+    values: { initialDenom, initialDeposit, resultingDenom },
   } = useFormikContext<FormData>();
 
   const [sliderValue, setSliderValue] = useState<number>(415);
@@ -413,8 +574,11 @@ function DurationSlider() {
   const [, , routeHelpers] = useField<number>({
     name: 'route',
   });
-  const [priceThresholdValue, priceThresholdValueMeta, priceThresholdValueHelpers] = useField<number | undefined>({
-    name: 'priceThresholdValue',
+  const [priceThreshold, priceThresholdMeta, priceThresholdHelpers] = useField<number | undefined>({
+    name: 'priceThreshold',
+  });
+  const [slippageTolerance] = useField<number | undefined>({
+    name: 'slippageTolerance',
   });
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
@@ -422,7 +586,7 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  // const { route } = useRoute(
+  // const { route, ...useRouteHelpers } = useRoute(
   //   swapAmountField.value && initialDenomInfo
   //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
   //     : undefined,
@@ -433,13 +597,13 @@ function DurationSlider() {
   //   routeHelpers.setValue(route);
   // }, [route]);
 
-  const route = undefined;
+  const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
 
   const { twap } = useTwapToNow(
     initialDenomInfo,
     resultingDenomInfo,
     route,
-    !!resultingDenomInfo && !!initialDenomInfo,
+    !!resultingDenomInfo && !!initialDenomInfo && !useRouteHelpers.isLoading,
   );
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
@@ -451,7 +615,7 @@ function DurationSlider() {
     initialDenomInfo,
     transactionType,
     route,
-    !!resultingDenomInfo && !!initialDenomInfo,
+    !!resultingDenomInfo && !!initialDenomInfo && !useRouteHelpers.isLoading,
   );
 
   const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
@@ -468,20 +632,10 @@ function DurationSlider() {
     swapAmount,
     resultingDenomInfo,
     route,
-    !!swapAmountField.value && !!resultingDenomInfo,
+    !!swapAmountField.value && !!resultingDenomInfo && !useRouteHelpers.isLoading,
   );
 
   const expectedPriceImpact = !twap || !expectedPrice ? null : ((expectedPrice - twap) / twap) * 100;
-
-  useEffect(() => {
-    if (!!spotPrice && !!expectedPriceImpact && !!slippageTolerance && !priceThresholdValueMeta.touched) {
-      priceThresholdValueHelpers.setValue(
-        spotPrice *
-          ((transactionType === TransactionType.Buy ? 100 + expectedPriceImpact : 100 - expectedPriceImpact) / 100),
-        true,
-      );
-    }
-  }, [spotPrice, priceThresholdValue.value, expectedPriceImpact, initialDenom, resultingDenom]);
 
   const minutes = strategyDuration - 1;
   const hours = Number((minutes / 60).toFixed(1));
@@ -492,8 +646,8 @@ function DurationSlider() {
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
     swapAmount,
     resultingDenomInfo,
-    undefined,
-    !!swapAmountField.value && !!resultingDenomInfo,
+    route,
+    !!swapAmountField.value && !!resultingDenomInfo && !useRouteHelpers.isLoading,
   );
 
   const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
@@ -501,8 +655,8 @@ function DurationSlider() {
       ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenomInfo.id)
       : undefined,
     resultingDenomInfo,
-    undefined,
-    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo,
+    route,
+    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo && !useRouteHelpers.isLoading,
   );
 
   const expectedTotalReceiveAmount =
@@ -616,7 +770,7 @@ function DurationSlider() {
                   .toFixed(initialDenomInfo.significantFigures),
               ).toString()}{' '}
               {initialDenomInfo.name}
-              {!isSliding && expectedPriceImpact
+              {!isSliding && expectedPriceImpact && !useRouteHelpers.isLoading
                 ? ` with estimated ${Number(expectedPriceImpact.toFixed(3))}% price impact`
                 : ''}
             </Text>
@@ -624,140 +778,104 @@ function DurationSlider() {
         )}
       </FormControl>
       <Collapse in={!!swaps && !!debouncedInitialDeposit}>
-        <Box position="relative" borderRadius="lg" p={4}>
-          <Box
-            position="absolute"
-            top={0}
-            right={0}
-            bottom={0}
-            left={0}
-            bg="green.200"
-            opacity={0.15}
-            borderRadius="lg"
-          />
-          <Stack spacing={2} align="stretch">
-            <HStack justifyContent="space-between">
-              <HStack>
-                <Icon color="green.200" as={MdAccessTime} />
+        <Stack spacing={4}>
+          <Box position="relative" borderRadius="lg" p={4}>
+            <Box
+              position="absolute"
+              top={0}
+              right={0}
+              bottom={0}
+              left={0}
+              bg="green.200"
+              opacity={0.15}
+              borderRadius="lg"
+            />
+            <Stack spacing={2} align="stretch">
+              <HStack justifyContent="space-between">
+                <HStack>
+                  <Icon color="green.200" as={MdAccessTime} />
+                  <Text color="white" fontSize="m" fontWeight={600}>
+                    Estimated swap time:
+                  </Text>
+                </HStack>
                 <Text color="white" fontSize="m" fontWeight={600}>
-                  Estimated swap time:
+                  {hours >= 1
+                    ? `${hours} ${hours === 1 ? 'hour' : 'hours'}`
+                    : `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`}
                 </Text>
               </HStack>
-              <Text color="white" fontSize="m" fontWeight={600}>
-                {hours >= 1
-                  ? `${hours} ${hours === 1 ? 'hour' : 'hours'}`
-                  : `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`}
-              </Text>
-            </HStack>
-            <HStack justifyContent="space-between" alignItems="flex-start">
-              <HStack alignItems="flex-start">
-                <Icon mt="5px" color="green.200" opacity={1} as={FaAnglesUp} />
-                <Stack spacing={1.5}>
-                  <Text color="white" fontSize="m" fontWeight={600}>
-                    Increased returns:
-                  </Text>
-                  <Text fontSize="xs" color="grey" fontWeight={600}>
-                    Compared to a single swap.
+              <HStack justifyContent="space-between" alignItems="flex-start">
+                <HStack alignItems="flex-start">
+                  <Icon mt="5px" color="green.200" opacity={1} as={FaAnglesUp} />
+                  <Stack spacing={1.5}>
+                    <Text color="white" fontSize="m" fontWeight={600}>
+                      Increased returns:
+                    </Text>
+                    <Text fontSize="xs" color="grey" fontWeight={600}>
+                      Compared to a single swap.
+                    </Text>
+                  </Stack>
+                </HStack>
+                <Stack spacing={0} justifyContent="flex-end">
+                  {extraExpectedReceiveAmount ? (
+                    <Text
+                      color={extraExpectedReceiveAmount && extraExpectedReceiveAmount > 0 ? 'green.200' : 'white'}
+                      fontSize="m"
+                      fontWeight={600}
+                    >
+                      +
+                      {resultingDenomInfo &&
+                        Number(
+                          extraExpectedReceiveAmount.toFixed(resultingDenomInfo.significantFigures),
+                        ).toLocaleString([], {
+                          maximumFractionDigits: resultingDenomInfo.significantFigures,
+                        })}{' '}
+                      {resultingDenomInfo && resultingDenomInfo.name}
+                    </Text>
+                  ) : !initialDenom ||
+                    !debouncedInitialDeposit ||
+                    !resultingDenomValue ||
+                    extraExpectedReceiveAmount === 0 ? (
+                    <Text fontSize="m" fontWeight={600}>
+                      0.00 {resultingDenomInfo?.name ?? ''}
+                    </Text>
+                  ) : (
+                    <Spinner mt={3} mr={3} p={1} />
+                  )}
+                  <Text
+                    opacity={1}
+                    color={
+                      extraExpectedReceiveAmount && totalFee && extraExpectedReceiveAmount - totalFee > 0
+                        ? 'green.200'
+                        : 'white'
+                    }
+                    fontSize="m"
+                    fontWeight={600}
+                    textAlign="end"
+                  >
+                    {extraExpectedReceiveAmount
+                      ? `(+${
+                          expectedFinalReceiveAmount &&
+                          directExpectedReceiveAmount &&
+                          Number(
+                            (
+                              100 *
+                              ((expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)) /
+                                Number(directExpectedReceiveAmount.amount))
+                            ).toFixed(2),
+                          )
+                        }%)`
+                      : ''}
                   </Text>
                 </Stack>
               </HStack>
-              <Stack spacing={0} justifyContent="flex-end">
-                {extraExpectedReceiveAmount ? (
-                  <Text
-                    color={extraExpectedReceiveAmount && extraExpectedReceiveAmount > 0 ? 'green.200' : 'white'}
-                    fontSize="m"
-                    fontWeight={600}
-                  >
-                    +
-                    {resultingDenomInfo &&
-                      Number(extraExpectedReceiveAmount.toFixed(resultingDenomInfo.significantFigures)).toLocaleString(
-                        [],
-                        {
-                          maximumFractionDigits: resultingDenomInfo.significantFigures,
-                        },
-                      )}{' '}
-                    {resultingDenomInfo && resultingDenomInfo.name}
-                  </Text>
-                ) : !initialDenom ||
-                  !debouncedInitialDeposit ||
-                  !resultingDenomValue ||
-                  extraExpectedReceiveAmount === 0 ? (
-                  <Text fontSize="m" fontWeight={600}>
-                    0.00 {resultingDenomInfo?.name ?? ''}
-                  </Text>
-                ) : (
-                  <Spinner mt={3} mr={3} p={1} />
-                )}
-                <Text
-                  opacity={1}
-                  color={
-                    extraExpectedReceiveAmount && totalFee && extraExpectedReceiveAmount - totalFee > 0
-                      ? 'green.200'
-                      : 'white'
-                  }
-                  fontSize="m"
-                  fontWeight={600}
-                  textAlign="end"
-                >
-                  {extraExpectedReceiveAmount
-                    ? `(+${
-                        expectedFinalReceiveAmount &&
-                        directExpectedReceiveAmount &&
-                        Number(
-                          (
-                            100 *
-                            ((expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)) /
-                              Number(directExpectedReceiveAmount.amount))
-                          ).toFixed(2),
-                        )
-                      }%)`
-                    : ''}
-                </Text>
-              </Stack>
-            </HStack>
-          </Stack>
-        </Box>
+            </Stack>
+          </Box>
+          <AdvancedSettings expectedPrice={expectedPrice} />
+        </Stack>
       </Collapse>
       <BuyStrategyInfoModal isOpen={isOpen} onClose={onClose} />
     </>
-  );
-}
-
-function PriceThreshold() {
-  const {
-    values: { initialDenom, resultingDenom, priceThresholdValue },
-  } = useFormikContext<FormData>();
-
-  const [{ onChange, value, ...priceThresholdValueField }, priceThresholdValueMeta, priceThresholdValueHelpers] =
-    useField<number | undefined>({
-      name: 'priceThresholdValue',
-    });
-
-  const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
-
-  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
-
-  return (
-    <FormControl isInvalid={priceThresholdValueMeta.touched && Boolean(priceThresholdValueMeta.error)}>
-      <FormLabel>{transactionType === TransactionType.Buy ? 'Set price ceiling' : 'Set price floor'}</FormLabel>
-      <FormHelperText>
-        {transactionType === TransactionType.Buy
-          ? "CALC won't buy if the asset price exceeds this set value."
-          : "CALC won't sell if the asset price drops below this set value."}
-      </FormHelperText>
-      <Stack spacing={3}>
-        <DenomPriceInput
-          initialDenom={initialDenomInfo}
-          resultingDenom={resultingDenomInfo}
-          transactionType={transactionType}
-          error={priceThresholdValueMeta.touched && priceThresholdValueMeta.error}
-          onChange={(v) => priceThresholdValueHelpers.setValue(v as number)}
-          value={priceThresholdValue}
-          {...priceThresholdValueField}
-        />
-      </Stack>
-    </FormControl>
   );
 }
 
@@ -850,11 +968,6 @@ export function Form() {
                   <ResultingDenom />
                 </Stack>
                 <DurationSlider />
-              </Stack>
-              <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                <Collapse in={values.advancedSettings}>
-                  <PriceThreshold />
-                </Collapse>
               </Stack>
               <FeeSection />
               {connected ? (

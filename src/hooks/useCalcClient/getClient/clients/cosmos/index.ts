@@ -17,7 +17,7 @@ async function fetchAllPairs(
   startAfter = null,
   allPairs = [] as Pair[],
 ): Promise<Pair[]> {
-  const result = await client!.queryContractSmart(getChainContractAddress(chainId), {
+  const { pairs } = await client!.queryContractSmart(contractAddress, {
     get_pairs: {
       limit: GET_PAIRS_LIMIT,
       start_after: startAfter,

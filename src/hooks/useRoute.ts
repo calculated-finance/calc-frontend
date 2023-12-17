@@ -6,7 +6,10 @@ import getDenomInfo from '@utils/getDenomInfo';
 import { ChainId } from './useChainId/Chains';
 import { useChainId } from './useChainId';
 
-const useRouteKujira = (_?: ChainId, __?: Coin, ___?: DenomInfo, _enabled = true) => ({ route: undefined });
+const useRouteKujira = (_?: ChainId, __?: Coin, ___?: DenomInfo, _enabled = true) => ({
+  route: undefined,
+  isLoading: false,
+});
 
 const useRouteOsmosis = (chainId?: ChainId, swapAmount?: Coin, targetDenom?: DenomInfo, enabled = true) => {
   const { data: route, ...helpers } = useQuery(
@@ -77,7 +80,7 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
     'harpoon-4': useRouteKujira(chainId, swapAmount, targetDenom, isEnabled('harpoon-4')),
   };
 
-  return routes[chainId] ?? { route: undefined };
+  return routes[chainId] ?? { route: undefined, isLoading: false };
 };
 
 export default useRoute;

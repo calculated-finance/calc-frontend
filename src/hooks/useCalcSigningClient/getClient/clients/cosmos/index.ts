@@ -96,11 +96,11 @@ function addGrants(
   }
 }
 
-function getFunds(initialDenom: DenomInfo, initialDeposit: number, isDeconverted = false) {
+function getFunds(initialDenom: DenomInfo, initialDeposit: number, isInAtomics = false) {
   const funds = [
     {
       denom: initialDenom.id,
-      amount: BigInt(isDeconverted ? initialDeposit : initialDenom.toAtomic(initialDeposit)).toString(),
+      amount: BigInt(isInAtomics ? initialDeposit : initialDenom.toAtomic(initialDeposit)).toString(),
     },
   ];
 
@@ -124,7 +124,7 @@ async function createVault(
 ) {
   const createVaultMsg = buildCreateVaultMsg(chainConfig, fetchedConfig, createVaultContext);
   const msgs: EncodeObject[] = [];
-  const funds = getFunds(createVaultContext.initialDenom, initialDeposit, createVaultContext.isDeconverted);
+  const funds = getFunds(createVaultContext.initialDenom, initialDeposit, createVaultContext.isInAtomics);
   msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));
   addGrants(
     createVaultContext.destinationConfig.autoStakeValidator,

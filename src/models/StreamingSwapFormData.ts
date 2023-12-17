@@ -13,9 +13,8 @@ export const initialValues = {
   route: undefined,
   executionInterval: 'minute',
   executionIntervalIncrement: 1,
-  priceThresholdEnabled: YesNoValues.Yes,
-  priceThresholdValue: undefined,
-  slippageTolerance: 2,
+  priceThreshold: undefined,
+  slippageTolerance: undefined,
   advancedSettings: false,
 };
 
@@ -93,7 +92,7 @@ export const schema = Yup.object({
       }
       return value;
     }),
-  priceThresholdValue: Yup.number()
+  priceThreshold: Yup.number()
     .label('Price Threshold')
     .positive()
     .when(['advancedSettings', 'priceThresholdEnabled'], {
@@ -102,16 +101,9 @@ export const schema = Yup.object({
       then: (s) => s.required(),
       otherwise: (s) => s.transform(() => null),
     }),
-  priceThresholdEnabled: Yup.mixed<YesNoValues>()
-    .oneOf(Object.values(YesNoValues))
-    .required()
-    .when('advancedSettings', {
-      is: false,
-      then: (s) => s.transform(() => YesNoValues.No),
-    }),
   slippageTolerance: Yup.number()
     .label('Slippage Tolerance')
-    .nullable()
+    .notRequired()
     .lessThan(100)
     .min(0)
     .default(initialValues.slippageTolerance)

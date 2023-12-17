@@ -27,6 +27,7 @@ export const useCreateStreamingSwap = () => {
       state: FormData | undefined;
     }
   >(async ({ state }) => {
+    console.log(state);
     if (!state) {
       throw new Error('No state');
     }
@@ -52,13 +53,13 @@ export const useCreateStreamingSwap = () => {
       label: 'Streaming Swap',
       initialDenom: initialDenomInfo,
       resultingDenom: getDenomInfo(state.resultingDenom),
-      timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement! },
+      timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement },
       timeTrigger: undefined,
       startPrice: undefined,
-      swapAmount: state.swapAmount!,
-      priceThreshold: state.priceThresholdValue || undefined,
+      swapAmount: state.swapAmount,
+      priceThreshold: state.priceThreshold || undefined,
       transactionType,
-      slippageTolerance: undefined,
+      slippageTolerance: state.slippageTolerance,
       destinationConfig: {
         autoStakeValidator: undefined,
         autoCompoundStakingRewards: undefined,
@@ -67,7 +68,7 @@ export const useCreateStreamingSwap = () => {
         reinvestStrategyId: undefined,
         senderAddress: address,
       },
-      isDeconverted: true,
+      isInAtomics: true,
     };
 
     const fee = createStrategyFeeInTokens(price, initialDenomInfo).toFixed(0);

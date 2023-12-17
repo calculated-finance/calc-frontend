@@ -87,7 +87,7 @@ export function getReceiveAmount(
   price: number, // 5.0
   resultingDenom: DenomInfo, // weth
   transactionType: TransactionType,
-  isDeconverted = false,
+  isInAtomics = false,
 ) {
   // convert swap amount to microns e.g. 1.2 -> 1 200 000
   // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
@@ -99,7 +99,7 @@ export function getReceiveAmount(
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
 
   // get minimum receive amount in initial denom scale
-  const deconvertedSwapAmount = isDeconverted ? swapAmount : initialDeconversion(swapAmount);
+  const deconvertedSwapAmount = isInAtomics ? swapAmount : initialDeconversion(swapAmount);
 
   const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
 
@@ -222,7 +222,7 @@ export type BuildCreateVaultContext = {
   swapAdjustment?: SwapAdjustment;
   isDcaPlus?: boolean;
   destinationConfig: DestinationConfig;
-  isDeconverted?: boolean;
+  isInAtomics?: boolean;
 };
 
 export function buildCreateVaultMsg(
@@ -242,7 +242,7 @@ export function buildCreateVaultMsg(
     destinationConfig,
     swapAdjustment,
     isDcaPlus,
-    isDeconverted,
+    isInAtomics,
   }: BuildCreateVaultContext,
 ): ExecuteMsg {
   if (isDcaPlus && swapAdjustment) {
@@ -271,10 +271,10 @@ export function buildCreateVaultMsg(
       label,
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
-      swap_amount: isDeconverted ? BigInt(swapAmount).toString() : getSwapAmount(initialDenom, swapAmount),
+      swap_amount: isInAtomics ? BigInt(swapAmount).toString() : getSwapAmount(initialDenom, swapAmount),
       target_start_time_utc_seconds: timeTrigger && getStartTime(timeTrigger.startDate, timeTrigger.startTime),
       minimum_receive_amount: priceThreshold
-        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, isDeconverted)
+        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, isInAtomics)
         : undefined,
       slippage_tolerance: slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : null,
       destinations: buildCallbackDestinations(
@@ -286,7 +286,7 @@ export function buildCreateVaultMsg(
         destinationConfig.reinvestStrategyId,
       ),
       target_receive_amount: startPrice
-        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType, isDeconverted)
+        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType, isInAtomics)
         : undefined,
       swap_adjustment_strategy: swapAdjustmentStrategy,
       performance_assessment_strategy: performanceAssessmentStrategy,
