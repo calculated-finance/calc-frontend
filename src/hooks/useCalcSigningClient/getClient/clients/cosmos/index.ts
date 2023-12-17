@@ -48,7 +48,7 @@ export function getGrantMsg(
   value = GenericAuthorization.encode(
     GenericAuthorization.fromPartial({ msg: '/cosmos.staking.v1beta1.MsgDelegate' }),
   ).finish(),
-  seconds: number = new Date().getTime() / 1000 + 31536000, // 31536000 seconds in a year
+  seconds = BigInt(new Date().getTime() / 1000 + 31536000), // 31536000 seconds in a year
 ): { typeUrl: string; value: MsgGrant } {
   return {
     typeUrl: '/cosmos.authz.v1beta1.MsgGrant',

@@ -38,7 +38,7 @@ export function useChainClient(chainId: ChainId) {
           },
           fetchValidators: async () => {
             const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
-            return response as { validators: Validator[] };
+            return response as unknown as { validators: Validator[] };
           },
         };
       }
@@ -58,7 +58,7 @@ export function useChainClient(chainId: ChainId) {
             const response = await queryClient.cosmos.staking.v1beta1.validators({
               status: 'BOND_STATUS_BONDED',
             });
-            return response as { validators: Validator[] };
+            return response as unknown as { validators: Validator[] };
           },
         };
       }
