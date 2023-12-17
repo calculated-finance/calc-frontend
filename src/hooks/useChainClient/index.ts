@@ -3,15 +3,18 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
 import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import { getChainEndpoint } from '@helpers/chains';
+import { getChainEndpoint, getOsmosisRouterUrl } from '@helpers/chains';
 import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
+import { DenomInfo } from '@utils/DenomInfo';
+import getDenomInfo from '@utils/getDenomInfo';
 
 export type ChainClient = {
   fetchTokenBalance: (tokenId: string, address: string) => Promise<Coin>;
-  fetchBalances: (address: string, supportedDenoms: string[]) => Promise<Coin[]>;
+  fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
+  fetchRoute: (swapAmount: Coin, targetDenom: DenomInfo) => Promise<string | undefined>;
 };
 
 export function useChainClient(chainId: ChainId) {
@@ -32,14 +35,15 @@ export function useChainClient(chainId: ChainId) {
 
         return {
           fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
-          fetchBalances: async (address: string, supportedDenoms: string[]) => {
+          fetchBalances: async (address: string) => {
             const balances = await queryClient.bank.allBalances(address);
-            return balances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
+            return balances;
           },
           fetchValidators: async () => {
             const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
             return response as unknown as { validators: Validator[] };
           },
+          fetchRoute: async (_swapAmount: Coin, _targetDenom: DenomInfo) => undefined,
         };
       }
 
@@ -50,15 +54,55 @@ export function useChainClient(chainId: ChainId) {
 
         return {
           fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
-          fetchBalances: async (address: string, supportedDenoms: string[]) => {
-            const { balances: allBalances } = await queryClient.cosmos.bank.v1beta1.allBalances({ address });
-            return allBalances.filter((balance: Coin) => supportedDenoms.includes(balance.denom));
+          fetchBalances: async (address: string) => {
+            const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({ address });
+            return balances;
           },
           fetchValidators: async () => {
             const response = await queryClient.cosmos.staking.v1beta1.validators({
               status: 'BOND_STATUS_BONDED',
             });
             return response as unknown as { validators: Validator[] };
+          },
+          fetchRoute: async (swapAmount: Coin, targetDenom: DenomInfo) => {
+            try {
+              const response = await (
+                await fetch(
+                  `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
+                    tokenIn: `${swapAmount!.amount}${swapAmount!.denom}`,
+                    tokenOutDenom: targetDenom!.id,
+                  })}`,
+                  {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  },
+                )
+              ).json();
+
+              return Buffer.from(
+                JSON.stringify(
+                  response.route.flatMap((r: any) =>
+                    r.pools.map((pool: any) => ({
+                      pool_id: `${pool.id}`,
+                      token_out_denom: pool.token_out_denom,
+                    })),
+                  ),
+                ),
+              ).toString('base64');
+            } catch (error: any) {
+              if (`${error}`.includes('amount of')) {
+                const initialDenomInfo = getDenomInfo(swapAmount!.denom);
+                throw new Error(
+                  `Swap amount of ${initialDenomInfo.fromAtomic(Number(swapAmount!.amount))} ${
+                    initialDenomInfo.name
+                  } too high to find dynamic osmosis route.`,
+                );
+              }
+
+              throw new Error('Error fetching route from Osmosis');
+            }
           },
         };
       }

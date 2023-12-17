@@ -5,14 +5,15 @@ import { ChainId } from '@hooks/useChainId/Chains';
 import getClient, { CalcClient } from './getClient';
 
 export function useCalcClient(injectedChainId?: ChainId) {
-  const { chainId } = useChainId();
-  const { cosmWasmClient } = useCosmWasmClient(injectedChainId ?? chainId);
+  const { chainId: currentChainId } = useChainId();
+  const chainId = injectedChainId ?? currentChainId;
+  const { cosmWasmClient } = useCosmWasmClient(chainId);
 
-  const { data: client, ...other } = useQuery<CalcClient | null>(
-    ['calcClient', injectedChainId ?? chainId],
-    () => getClient(injectedChainId ?? chainId, cosmWasmClient!),
+  const { data: client, ...helpers } = useQuery<CalcClient | null>(
+    ['calcClient', chainId],
+    () => getClient(chainId, cosmWasmClient!),
     {
-      enabled: !!(injectedChainId ?? chainId) && !!cosmWasmClient,
+      enabled: !!chainId && !!cosmWasmClient,
       staleTime: 1000 * 60 * 10,
       meta: {
         errorMessage: 'Error fetching calc client',
@@ -20,5 +21,5 @@ export function useCalcClient(injectedChainId?: ChainId) {
     },
   );
 
-  return { client, ...other };
+  return { client, ...helpers };
 }

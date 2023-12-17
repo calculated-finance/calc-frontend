@@ -62,15 +62,14 @@ import { max, min } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import { useDebounce } from 'ahooks';
 import { ModalWrapper } from '@components/ModalWrapper';
-import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
-import useSpotPrice from '@hooks/useSpotPrice';
 import { TransactionType } from './TransactionType';
+import useRoute from '@hooks/useRoute';
 
 function InitialDeposit() {
   const {
@@ -566,7 +565,7 @@ function DurationSlider() {
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
   });
-  const [, , routeHelpers] = useField<number>({
+  const [, , routeHelpers] = useField<string | undefined>({
     name: 'route',
   });
 
@@ -575,18 +574,18 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  // const { route, ...useRouteHelpers } = useRoute(
-  //   swapAmountField.value && initialDenomInfo
-  //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-  //     : undefined,
-  //   resultingDenomInfo,
-  // );
+  const { route, ...useRouteHelpers } = useRoute(
+    swapAmountField.value && initialDenomInfo
+      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
+      : undefined,
+    resultingDenomInfo,
+  );
 
-  // useEffect(() => {
-  //   routeHelpers.setValue(route);
-  // }, [route]);
+  useEffect(() => {
+    routeHelpers.setValue(route);
+  }, [route]);
 
-  const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
+  // const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
 
   const { twap } = useTwapToNow(
     initialDenomInfo,
@@ -596,16 +595,6 @@ function DurationSlider() {
   );
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
-
-  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
-
-  const { spotPrice } = useSpotPrice(
-    resultingDenomInfo,
-    initialDenomInfo,
-    transactionType,
-    route,
-    !!resultingDenomInfo && !!initialDenomInfo && !useRouteHelpers.isLoading,
-  );
 
   const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);

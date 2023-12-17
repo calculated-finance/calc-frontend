@@ -20,7 +20,6 @@ function useBalance(token: DenomInfo) {
     () => client!.fetchTokenBalance(token.id, address!),
     {
       enabled: !!token && !!address && !!chainId && !!client,
-      keepPreviousData: true,
       meta: {
         errorMessage: 'Error fetching balance',
       },
