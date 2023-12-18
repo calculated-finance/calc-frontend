@@ -12,7 +12,6 @@ const useBalances = (injectedAddress: string | null = null) => {
 
   return useQueryWithNotification(['balances', chainId, address], () => client!.fetchBalances(address!), {
     enabled: !!address && !!client,
-    cacheTime: 0,
     meta: {
       errorMessage: `Error fetching balances for ${address}`,
     },

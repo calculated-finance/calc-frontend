@@ -1,4 +1,4 @@
-import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack, Spacer } from '@chakra-ui/react';
+import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
@@ -84,12 +84,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             <DenomIcon showTooltip denomInfo={resultingDenom} />
           </HStack>
         </GridItem>
-
         <GridItem colSpan={{ base: 8, sm: 3, xl: 2 }}>
           <Text fontSize="sm">Status:</Text>
           <StrategyStatusBadge strategy={strategy} />
         </GridItem>
-
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Interval:</Text>
           <Text textStyle="body-xs">
@@ -97,7 +95,6 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {initialDenom.name}
           </Text>
         </GridItem>
-
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Balance:</Text>
           <Text textStyle="body-xs">

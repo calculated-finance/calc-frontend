@@ -14,7 +14,7 @@ export type ChainClient = {
   fetchTokenBalance: (tokenId: string, address: string) => Promise<Coin>;
   fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
-  fetchRoute: (swapAmount: Coin, targetDenom: DenomInfo) => Promise<string | undefined>;
+  fetchRoute: (swapAmount: Coin, targetDenom: DenomInfo) => Promise<{ route: string | undefined; feeRate: number }>;
 };
 
 export function useChainClient(chainId: ChainId) {
@@ -43,7 +43,7 @@ export function useChainClient(chainId: ChainId) {
             const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
             return response as unknown as { validators: Validator[] };
           },
-          fetchRoute: async (_swapAmount: Coin, _targetDenom: DenomInfo) => undefined,
+          fetchRoute: async (_: Coin, __: DenomInfo) => ({ route: undefined, feeRate: 0.0075 }),
         };
       }
 
@@ -81,16 +81,19 @@ export function useChainClient(chainId: ChainId) {
                 )
               ).json();
 
-              return Buffer.from(
-                JSON.stringify(
-                  response.route.flatMap((r: any) =>
-                    r.pools.map((pool: any) => ({
-                      pool_id: `${pool.id}`,
-                      token_out_denom: pool.token_out_denom,
-                    })),
+              return {
+                route: Buffer.from(
+                  JSON.stringify(
+                    response.route.flatMap((r: any) =>
+                      r.pools.map((pool: any) => ({
+                        pool_id: `${pool.id}`,
+                        token_out_denom: pool.token_out_denom,
+                      })),
+                    ),
                   ),
-                ),
-              ).toString('base64');
+                ).toString('base64'),
+                feeRate: 0.003,
+              };
             } catch (error: any) {
               if (`${error}`.includes('amount of')) {
                 const initialDenomInfo = getDenomInfo(swapAmount!.denom);

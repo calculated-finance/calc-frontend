@@ -44,5 +44,5 @@ export function useSupportedDenoms() {
 
   const allDenoms = allDenomsFromPairs(allPairs);
 
-  return useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms.length]);
+  return useMemo(() => allDenoms.map((denom) => getDenomInfo(denom)), [allDenoms]);
 }

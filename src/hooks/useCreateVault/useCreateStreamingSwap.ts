@@ -27,7 +27,6 @@ export const useCreateStreamingSwap = () => {
       state: FormData | undefined;
     }
   >(async ({ state }) => {
-    console.log(state);
     if (!state) {
       throw new Error('No state');
     }

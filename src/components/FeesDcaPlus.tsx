@@ -212,9 +212,7 @@ export default function FeesDcaPlus({
 }) {
   const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const { transactionType } = useStrategyInfo();
-
-  const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
+  const { dexFee } = useDexFee();
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 

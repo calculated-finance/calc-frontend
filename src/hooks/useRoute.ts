@@ -8,7 +8,7 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   const { chainId } = useChainId();
   const chainClient = useChainClient(chainId);
 
-  const { data: route, ...helpers } = useQuery(
+  const result = useQuery(
     ['prices', 'route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
     () => chainClient?.fetchRoute(swapAmount!, targetDenom!),
     {
@@ -21,8 +21,8 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   );
 
   return {
-    route,
-    ...helpers,
+    route: result.data?.route,
+    ...result,
   };
 };
 

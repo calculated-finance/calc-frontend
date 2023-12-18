@@ -68,8 +68,8 @@ import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
-import { TransactionType } from './TransactionType';
 import useRoute from '@hooks/useRoute';
+import { TransactionType } from '@components/TransactionType';
 
 function InitialDeposit() {
   const {
@@ -391,7 +391,7 @@ function BuyStrategyInfoModal({ isOpen, onClose }: Omit<ModalProps, 'children'>)
 
 function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined }) {
   const {
-    values: { initialDenom, resultingDenom, priceThreshold: pT, slippageTolerance: sT },
+    values: { initialDenom, resultingDenom },
   } = useFormikContext<FormData>();
 
   const [, , slippageToleranceHelpers] = useField<number | undefined>({
@@ -405,6 +405,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
   const [isUsingPriceProtection, setIsUsingPriceProtection] = useState(true);
   const [slippageTolerance, setSlippageTolerance] = useState(2);
   const [priceThreshold, setPriceThreshold] = useState(0.02);
+  const [rektProtekt, setRektProtekt] = useState(false);
 
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = getDenomInfo(resultingDenom);
@@ -419,13 +420,13 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
       );
       priceThresholdHelpers.setTouched(true);
     }
-  }, [expectedPrice, priceThresholdMeta.touched, transactionType, priceThreshold]);
+  }, [expectedPrice, priceThresholdMeta.touched, transactionType, priceThreshold, priceThresholdHelpers]);
 
   return (
     <Stack>
       <HStack w="full" spacing={0}>
-        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="10">
-          {isUsingPriceProtection ? 'Price Protection' : 'Manually set slippage'}
+        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="11.5">
+          {rektProtekt ? 'Rekt' : 'Price'} Protection
         </Text>
         <Switch
           marginInline={2}
@@ -467,7 +468,17 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
           ) : (
             <Spinner size="xs" />
           )
-        ) : null}
+        ) : (
+          <Text
+            noOfLines={1}
+            textAlign="end"
+            fontSize="11.5"
+            color="darkGrey"
+            onClick={() => setRektProtekt(!rektProtekt)}
+          >
+            rekt protekt
+          </Text>
+        )}
       </HStack>
       <Box position="relative" borderRadius="16px 4px 4px 16px" border="1px solid" borderColor="abyss.200">
         <HStack w="full" marginBlock={2.5} ml={4}>
@@ -478,8 +489,18 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
           ) : (
             <Icon as={Swap2Icon} stroke="slateGrey" boxSize={6} />
           )}
-          <Text color="slateGrey">{isUsingPriceProtection ? 'Price Protection' : 'Slippage Tolerance'}</Text>
-          <Icon as={QuestionOutlineIcon} color="slateGray" />
+          <Text color="slateGrey">
+            {isUsingPriceProtection ? (rektProtekt ? 'Rekt Protektion' : 'Price Protection') : 'Slippage Tolerance'}
+          </Text>
+          <Tooltip
+            label={
+              isUsingPriceProtection
+                ? "Your order won't execute and is protected if the market price dips more than your set price through market movement OR pool manipulation from bad actors."
+                : 'If the slippage exceeds your tolerance, the swap will fail.'
+            }
+          >
+            <Icon as={QuestionOutlineIcon} color="slateGray" />
+          </Tooltip>
           <Spacer />
         </HStack>
         <Box position="absolute" w="100px" top={0} right={0} bottom={0} h="full" backgroundColor="abyss.200">
@@ -551,7 +572,7 @@ function DurationSlider() {
     values: { initialDenom, initialDeposit, resultingDenom },
   } = useFormikContext<FormData>();
 
-  const [sliderValue, setSliderValue] = useState<number>(415);
+  const [sliderValue, setSliderValue] = useState<number>(415); // where 1 hour sits on the exponential slider
   const [strategyDuration, setStrategyDuration] = useState<number>(60);
   const [debouncedStrategyDuration, setDebouncedStrategyDuration] = useState<number>(60);
   const [isSliding, setIsSliding] = useState<boolean>(false);
@@ -565,7 +586,7 @@ function DurationSlider() {
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
   });
-  const [, , routeHelpers] = useField<string | undefined>({
+  const [, , _] = useField<string | undefined>({
     name: 'route',
   });
 
@@ -574,18 +595,18 @@ function DurationSlider() {
   const initialDenomInfo = getDenomInfo(initialDenom);
   const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
 
-  const { route, ...useRouteHelpers } = useRoute(
-    swapAmountField.value && initialDenomInfo
-      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-      : undefined,
-    resultingDenomInfo,
-  );
+  // const { route, ...useRouteHelpers } = useRoute(
+  //   swapAmountField.value && initialDenomInfo
+  //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
+  //     : undefined,
+  //   resultingDenomInfo,
+  // );
 
-  useEffect(() => {
-    routeHelpers.setValue(route);
-  }, [route]);
+  // useEffect(() => {
+  //   routeHelpers.setValue(route);
+  // }, [route]);
 
-  // const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
+  const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
 
   const { twap } = useTwapToNow(
     initialDenomInfo,
@@ -863,11 +884,9 @@ function FeeSection() {
   } = useFormikContext<FormData>();
 
   const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
-  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
 
   const { fiatPrice } = useFiatPrice(initialDenomInfo);
-  const { dexFee } = useDexFee(initialDenomInfo, resultingDenomInfo, transactionType);
+  const { dexFee } = useDexFee();
 
   return (
     <Collapse in={!!initialDenom && !!initialDeposit && !!resultingDenom && !!swapAmount}>

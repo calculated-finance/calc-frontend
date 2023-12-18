@@ -125,11 +125,11 @@ function Strategies() {
   const showFearAndGreedAccumulate = index < 41;
   const showFearAndGreedProfit = index > 59;
 
-  function accumulationStratgies(): StrategyCardProps[] {
+  function accumulationStrategies(): StrategyCardProps[] {
     return [
       {
-        name: 'Streaming Swap In',
-        description: 'Reduce slippage by swapping in smaller amounts over time.',
+        name: 'Streaming Swap',
+        description: 'Reduce slippage by swapping smaller amounts over time.',
         advanced: false,
         enabled: true,
         icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
@@ -168,8 +168,8 @@ function Strategies() {
   function takeProfitStrategies(): StrategyCardProps[] {
     return [
       {
-        name: 'Streaming Swap Out',
-        description: 'Reduce slippage by swapping in smaller amounts over time.',
+        name: 'Streaming Swap',
+        description: 'Reduce slippage by swapping smaller amounts over time.',
         advanced: false,
         enabled: true,
         icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
@@ -213,7 +213,7 @@ function Strategies() {
           {showFearAndGreedAccumulate && <FearGreedStrategyRecommendation isAccumulation />}
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
-          {accumulationStratgies().map((strategy) => (
+          {accumulationStrategies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>

@@ -185,7 +185,7 @@ export default function Fees({
   transactionType: TransactionType;
 }) {
   const { fiatPrice } = useFiatPrice(initialDenom);
-  const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
+  const { dexFee } = useDexFee();
   const { name: initialDenomName } = initialDenom;
 
   return (

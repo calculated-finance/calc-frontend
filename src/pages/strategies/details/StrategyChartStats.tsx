@@ -12,7 +12,6 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
-import { TransactionType } from '@components/TransactionType';
 import { getPerformanceStatistics } from './getPerformanceStatistics';
 
 export function StrategyChartStats({ strategy }: { strategy: Strategy }) {
@@ -21,11 +20,7 @@ export function StrategyChartStats({ strategy }: { strategy: Strategy }) {
   const { fiatPrice: resultingDenomPrice } = useFiatPrice(resultingDenom);
   const { fiatPrice: initialDenomPrice } = useFiatPrice(initialDenom);
 
-  const { dexFee } = useDexFee(
-    initialDenom,
-    resultingDenom,
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
+  const { dexFee } = useDexFee();
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (

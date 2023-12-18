@@ -86,12 +86,8 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
 
 export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
   const { min, max } = getStrategySwapRange(strategy) || {};
-  const { chainId: chain } = useChainId();
-  const { dexFee } = useDexFee(
-    getStrategyInitialDenom(strategy),
-    getStrategyResultingDenom(strategy),
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
+  const { chainId } = useChainId();
+  const { dexFee } = useDexFee();
 
   return (
     <>
@@ -120,7 +116,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                   isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
                 )}
                 <Text>
-                  {['osmosis-1', 'osmo-test-5'].includes(chain) ? 'Osmosis swap' : 'Kujira'} fee:{' '}
+                  {['osmosis-1', 'osmo-test-5'].includes(chainId) ? 'Osmosis swap' : 'Kujira'} fee:{' '}
                   {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
