@@ -3,13 +3,15 @@ import { Asset } from '@chain-registry/types';
 import { useQuery } from '@tanstack/react-query';
 import { reduce } from 'rambda';
 import { useChainId } from './useChainId';
+import { ChainId } from './useChainId/Chains';
 
 export function findAsset(assets: Asset[], denom: string | undefined) {
   return assets.find((asset) => asset.base === denom);
 }
 
-export function useAssetList() {
-  const { chainId } = useChainId();
+export function useAssetList(injectedChainId?: ChainId) {
+  const { chainId: currentChainId } = useChainId();
+  const chainId = injectedChainId ?? currentChainId;
   const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
 
   return useQuery<Record<string, Asset>>(

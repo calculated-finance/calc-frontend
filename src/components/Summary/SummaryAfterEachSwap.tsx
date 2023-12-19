@@ -1,11 +1,11 @@
 import { Box, Code, Spinner, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import BadgeButton from '@components/BadgeButton';
 import useValidator from '@hooks/useValidator';
 import useStrategy from '@hooks/useStrategy';
 import { getStrategyExecutionInterval, getStrategyResultingDenom, getStrategyType } from '@helpers/strategy';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
+import useDenoms from '@hooks/useDenoms';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
   const { data: strategy, isLoading } = useStrategy(reinvestStrategy);
@@ -21,7 +21,7 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
       After each swap, CALC will automatically reinvest those tokens into your{' '}
       <BadgeButton url="post-purchase">
         <Text>
-          {getStrategyExecutionInterval(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}{' '}
+          {getStrategyExecutionInterval(strategy)} {getStrategyResultingDenom(strategy).name}{' '}
           {getStrategyType(strategy)} strategy
         </Text>
         <Code bg="abyss.200" fontSize="xx-small">
@@ -33,6 +33,8 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
 }
 
 export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
+  const { getDenomInfo } = useDenoms();
+
   const {
     resultingDenom,
     autoStakeValidator,
@@ -42,19 +44,18 @@ export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
     reinvestStrategy,
   } = state;
 
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
   const { validator, isLoading } = useValidator(autoStakeValidator);
 
   return (
     <Box>
       <Text textStyle="body-xs">After each swap</Text>
       <Text lineHeight={8}>
-        {!autoStakeValidator && !recipientAccount && !yieldOption && !reinvestStrategy && (
+        {!autoStakeValidator && !recipientAccount && !yieldOption && !reinvestStrategy && resultingDenom && (
           <>
             After each swap, CALC will send{' '}
             <BadgeButton url="assets">
-              <Text>{resultingDenomInfo.name}</Text>
-              <DenomIcon denomInfo={resultingDenomInfo} />
+              <Text>{resultingDenom.name}</Text>
+              <DenomIcon denomInfo={resultingDenom} />
             </BadgeButton>{' '}
             to{' '}
             <BadgeButton url="post-purchase">

@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { reduce } from 'rambda';
-import { useSupportedDenoms } from './useSupportedDenoms';
+import useDenoms from './useDenoms';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -14,12 +14,12 @@ export type FiatPriceResponse = {
 const FIAT_CURRENCY_ID = 'usd';
 
 const useFiatPrices = () => {
-  const supportedDenoms = useSupportedDenoms();
+  const { allDenoms } = useDenoms();
 
   const { data: fiatPrices, ...other } = useQuery<FiatPriceResponse>(
-    ['fiat-prices'],
+    ['fiat-prices', allDenoms?.length],
     async () => {
-      const coingeckoIds = supportedDenoms.map((supportedDenom) => supportedDenom.coingeckoId);
+      const coingeckoIds = allDenoms!.map((denom: any) => denom.coingeckoId);
 
       if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
         return reduce(
@@ -45,9 +45,9 @@ const useFiatPrices = () => {
       return response.json();
     },
     {
-      staleTime: 300000,
+      staleTime: 1000 * 30,
       refetchOnWindowFocus: false,
-      enabled: Boolean(supportedDenoms.length),
+      enabled: !!allDenoms,
       meta: {
         errorMessage: 'Error fetching fiat prices',
       },

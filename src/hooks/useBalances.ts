@@ -10,12 +10,21 @@ const useBalances = (injectedAddress: string | null = null) => {
 
   const address = injectedAddress ?? walletAddress;
 
-  return useQueryWithNotification(['balances', chainId, address], () => client!.fetchBalances(address!), {
-    enabled: !!address && !!client,
-    meta: {
-      errorMessage: `Error fetching balances for ${address}`,
+  const { data: balances, ...helpers } = useQueryWithNotification(
+    ['balances', chainId, address],
+    () => client!.fetchBalances(address!),
+    {
+      enabled: !!address && !!client,
+      meta: {
+        errorMessage: `Error fetching balances for ${address}`,
+      },
     },
-  });
+  );
+
+  return {
+    balances,
+    ...helpers,
+  };
 };
 
 export default useBalances;

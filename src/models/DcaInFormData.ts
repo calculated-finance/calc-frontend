@@ -1,4 +1,4 @@
-import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
+import { fromAtomic, getDenomName } from '@utils/getDenomInfo';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
@@ -16,20 +16,37 @@ import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyType } from './StrategyType';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
+import { DenomInfo } from '@utils/DenomInfo';
 
 export type AssetsFormValues = Yup.InferType<typeof assetsFormSchema>;
 
 export const assetsFormInitialValues = {
   strategyType: '',
-  resultingDenom: '',
-  initialDenom: '',
+  initialDenom: undefined,
+  resultingDenom: undefined,
   initialDeposit: null,
+};
+
+export const denomInfoSchema = {
+  id: Yup.string().required(),
+  name: Yup.string().required(),
+  coingeckoId: Yup.string().required(),
+  icon: Yup.string().required(),
+  minimumSwapAmount: Yup.number().required(),
+  chain: Yup.string().required(),
+  stakeable: Yup.boolean().required(),
+  stable: Yup.boolean().required(),
+  stakeableAndSupported: Yup.boolean().required(),
+  enabled: Yup.boolean().required(),
+  significantFigures: Yup.number().required(),
+  enabledInDcaPlus: Yup.boolean().required(),
+  pricePrecision: Yup.number().required(),
 };
 
 export const assetsFormSchema = Yup.object({
   strategyType: Yup.mixed<StrategyType>().required(),
-  resultingDenom: Yup.string().label('Resulting Denom').required(),
-  initialDenom: Yup.string().label('Initial Denom').required(),
+  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
+  initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()
@@ -40,14 +57,18 @@ export const assetsFormSchema = Yup.object({
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const { balances } = context?.options?.context || {};
+
         if (!balances || !value || value <= 0) {
           return true;
         }
-        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
-        if (!amount) {
+
+        const balance = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
+
+        if (!balance) {
           return false;
         }
-        return value <= getDenomInfo(context.parent.initialDenom).fromAtomic(Number(amount));
+
+        return value <= fromAtomic(context.parent.initialDenom, Number(balance));
       },
     })
     .test({
@@ -56,7 +77,9 @@ export const assetsFormSchema = Yup.object({
         if (isNil(value)) {
           return true;
         }
+
         const { initialDenom = null, strategyType = null } = { ...context.parent, ...context.options.context };
+
         if (!initialDenom) {
           return true;
         }
@@ -64,7 +87,7 @@ export const assetsFormSchema = Yup.object({
         if (strategyType !== StrategyType.DCAPlusIn && strategyType !== StrategyType.DCAPlusOut) {
           return true;
         }
-        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+        const { minimumSwapAmount = 0 } = initialDenom;
 
         const dcaPlusMinimumDeposit =
           minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT * MIN_DCA_PLUS_STRATEGY_DURATION;
@@ -74,17 +97,15 @@ export const assetsFormSchema = Yup.object({
         }
 
         return context.createError({
-          message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${getDenomName(
-            getDenomInfo(initialDenom),
-          )}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
+          message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${initialDenom.name}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
         });
       },
     }),
 });
 
 export const initialValues = {
-  resultingDenom: '',
-  initialDenom: '',
+  resultingDenom: undefined,
+  initialDenom: undefined,
   initialDeposit: null,
   advancedSettings: false,
   startImmediately: YesNoValues.Yes,
@@ -113,9 +134,10 @@ export const initialValues = {
 };
 
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
+
 export const allSchema = {
-  resultingDenom: Yup.string().label('Resulting Denom').required(),
-  initialDenom: Yup.string().label('Initial Denom').required(),
+  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
+  initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()
@@ -129,11 +151,11 @@ export const allSchema = {
         if (!balances || !value || value <= 0) {
           return true;
         }
-        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom)?.amount;
+        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
         if (!amount) {
           return false;
         }
-        return value <= getDenomInfo(context.parent.initialDenom).fromAtomic(Number(amount));
+        return value <= fromAtomic(context.parent.initialDenom, Number(amount));
       },
     }),
   advancedSettings: Yup.boolean(),
@@ -241,11 +263,14 @@ export const allSchema = {
         if (isNil(value)) {
           return true;
         }
+
         const { initialDenom = null } = { ...context.parent, ...context.options.context };
+
         if (!initialDenom) {
           return true;
         }
-        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+
+        const { minimumSwapAmount = 0 } = initialDenom;
 
         if (value > minimumSwapAmount) {
           return true;
@@ -401,7 +426,7 @@ export const allSchema = {
         if (!initialDenom || !initialDeposit) {
           return true;
         }
-        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+        const { minimumSwapAmount = 0 } = initialDenom;
 
         const maximumDurationFromDeposit = Math.ceil(
           initialDeposit / (minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT),

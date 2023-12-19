@@ -9,7 +9,7 @@ import { StrategyType } from '@models/StrategyType';
 import Spinner from '@components/Spinner';
 import Submit from '@components/Submit';
 import { ConnectWalletButton } from '@components/StepOneConnectWallet';
-import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
+import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrategyButtonSelectors';
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
@@ -36,7 +36,7 @@ export function Assets() {
   const { connected } = useWallet();
   const { strategyType } = useStrategyInfo();
   const stepsConfig = getSteps(strategyType);
-  const { data: balances } = useBalances();
+  const { balances } = useBalances();
 
   const { validate } = useValidation(assetsFormSchema, { balances });
 

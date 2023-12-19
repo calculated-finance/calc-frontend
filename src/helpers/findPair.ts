@@ -1,11 +1,15 @@
-import { Pair } from '@models/Pair';
+import { HydratedPair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { find } from 'rambda';
 
-export function findPair(pairs: Pair[], resultingDenom: DenomInfo, initialDenom: DenomInfo): Pair | undefined {
+export function findPair(
+  pairs: HydratedPair[],
+  resultingDenom: DenomInfo,
+  initialDenom: DenomInfo,
+): HydratedPair | undefined {
   const initialAsQuote = find(
-    (pair: Pair) => getBaseDenom(pair) === resultingDenom.id && getQuoteDenom(pair) === initialDenom.id,
+    (pair: HydratedPair) => getBaseDenom(pair).id === resultingDenom.id && getQuoteDenom(pair).id === initialDenom.id,
     pairs,
   );
 
@@ -14,7 +18,7 @@ export function findPair(pairs: Pair[], resultingDenom: DenomInfo, initialDenom:
   }
 
   return find(
-    (pair: Pair) => getBaseDenom(pair) === initialDenom.id && getQuoteDenom(pair) === resultingDenom.id,
+    (pair: HydratedPair) => getBaseDenom(pair).id === initialDenom.id && getQuoteDenom(pair).id === resultingDenom.id,
     pairs,
   );
 }

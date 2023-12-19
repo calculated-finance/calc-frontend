@@ -63,8 +63,8 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     fromAtomic: (value: number) => value / 10 ** 14,
     toAtomic: (value: number) => Math.round(value * 10 ** 14),
     significantFigures: 14,
-    priceDeconversion: (value: number | undefined | null) => Number(value) * 10 ** 8,
-    priceConversion: (value: number | undefined | null) => Number(value) / 10 ** 8,
+    priceFromRatio: (value: number | undefined | null) => Number(value) * 10 ** 8,
+    ratioFromPrice: (value: number | undefined | null) => Number(value) / 10 ** 8,
     minimumSwapAmount: 0.05 / 10000,
   },
   [MainnetDenomsOsmosis.LINK]: {

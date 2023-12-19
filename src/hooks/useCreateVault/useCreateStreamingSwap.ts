@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
@@ -35,8 +34,7 @@ export const useCreateStreamingSwap = () => {
       throw Error('Invalid client');
     }
 
-    const initialDenomInfo = getDenomInfo(state.initialDenom);
-    const price = initialDenomInfo?.coingeckoId && prices?.[initialDenomInfo?.coingeckoId]?.usd;
+    const price = state.initialDenom?.coingeckoId && prices?.[state.initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
       throw Error('Invalid price');
@@ -48,10 +46,14 @@ export const useCreateStreamingSwap = () => {
 
     checkSwapAmountValue(state.swapAmount!, price);
 
+    if (!state.resultingDenom) {
+      throw new Error('Invalid resulting denom');
+    }
+
     const createVaultContext: BuildCreateVaultContext = {
       label: 'Streaming Swap',
-      initialDenom: initialDenomInfo,
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      initialDenom: state.initialDenom,
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement },
       timeTrigger: undefined,
       startPrice: undefined,
@@ -70,7 +72,7 @@ export const useCreateStreamingSwap = () => {
       isInAtomics: true,
     };
 
-    const fee = createStrategyFeeInTokens(price, initialDenomInfo).toFixed(0);
+    const fee = createStrategyFeeInTokens(price, state.initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

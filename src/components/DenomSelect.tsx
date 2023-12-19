@@ -14,13 +14,7 @@ function DenomSelectLabel({ denom }: { denom: DenomInfo }) {
   );
 }
 
-function DenomOption({
-  showPromotion,
-  isSelected,
-  rightLabel,
-  children,
-  ...optionProps
-}: OptionProps & { rightLabel?: string; showPromotion?: boolean }) {
+function DenomOption({ isSelected, rightLabel, children, ...optionProps }: OptionProps & { rightLabel?: string }) {
   return (
     <chakraComponents.Option isSelected={isSelected} {...optionProps}>
       <Flex alignItems="center" w="full">
@@ -47,7 +41,7 @@ export function DenomSelect({
   denoms,
   optionLabel,
   ...selectProps
-}: { denoms: DenomInfo[]; optionLabel?: string; showPromotion?: boolean } & Omit<SelectProps, 'options'>) {
+}: { denoms: DenomInfo[]; optionLabel?: string } & Omit<SelectProps, 'options'>) {
   const customComponents = () => ({
     Option: getDenomOptionComponent(optionLabel),
   });

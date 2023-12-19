@@ -4,10 +4,11 @@ import { isNil } from 'rambda';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { ExecutionIntervals } from './ExecutionIntervals';
+import { denomInfoSchema } from './DcaInFormData';
 
 export const initialValues = {
-  resultingDenom: '',
-  initialDenom: '',
+  resultingDenom: undefined,
+  initialDenom: undefined,
   initialDeposit: undefined,
   swapAmount: null,
   route: undefined,
@@ -19,8 +20,8 @@ export const initialValues = {
 };
 
 export const schema = Yup.object({
-  resultingDenom: Yup.string().label('Resulting Denom').required(),
-  initialDenom: Yup.string().label('Initial Denom').required(),
+  initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
+  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()

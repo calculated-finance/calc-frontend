@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
 import { Coin } from '@cosmjs/stargate';
-import getDenomInfo from '@utils/getDenomInfo';
 
 export default function useExpectedReceiveAmount(
   swapAmount: Coin | undefined,
@@ -27,12 +26,7 @@ export default function useExpectedReceiveAmount(
         });
       } catch (error) {
         if (`${error}`.includes('amount of')) {
-          const initialDenomInfo = getDenomInfo(swapAmount!.denom);
-          throw new Error(
-            `Insufficient liquidity to swap ${BigInt(
-              Math.round(initialDenomInfo.fromAtomic(Number(swapAmount!.amount))),
-            )} ${initialDenomInfo.name} for ${targetDenom!.name}`,
-          );
+          throw new Error(`Invalid swap or receive amount`);
         }
         throw error;
       }

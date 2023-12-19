@@ -2,6 +2,12 @@ import { GasPrice } from '@cosmjs/stargate';
 import { ChainId } from '@hooks/useChainId/Chains';
 import { ChainInfo } from '@keplr-wallet/types';
 import { CHAIN_INFO } from 'kujira.js';
+import {
+  COSMOS_KIT_KUJIRA_MAINNET,
+  COSMOS_KIT_KUJIRA_TESTNET,
+  COSMOS_KIT_OSMOSIS_MAINNET,
+  COSMOS_KIT_OSMOSIS_TESTNET,
+} from 'src/constants';
 
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',
@@ -167,8 +173,13 @@ export function getChainStakingRouterContractAddress(chainId: ChainId) {
   return getChainContractAddress(chainId);
 }
 
-export function getChainId(chainId: ChainId) {
-  return chainId;
+export function getChainName(chainId: ChainId) {
+  return {
+    'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
+    'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
+    'kaiyo-1': COSMOS_KIT_KUJIRA_MAINNET,
+    'harpoon-4': COSMOS_KIT_KUJIRA_TESTNET,
+  }[chainId];
 }
 
 export function getChainDexName(chainId: ChainId) {

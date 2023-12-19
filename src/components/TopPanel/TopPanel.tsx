@@ -4,13 +4,14 @@ import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
-import getDenomInfo, { DenomValue } from '@utils/getDenomInfo';
+import { DenomValue } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
+import useDenoms from '@hooks/useDenoms';
 
 function Onboarding() {
   return (
@@ -102,6 +103,7 @@ function LearnNewUsers() {
 }
 
 function ActiveWithOne() {
+  const { getDenomInfo } = useDenoms();
   const { data } = useStrategies();
   const activeStrategies = data?.filter(isStrategyOperating);
   const activeStrategy = activeStrategies && activeStrategies[0];
@@ -121,7 +123,7 @@ function ActiveWithOne() {
       <HStack align="center">
         <Icon as={Block3DIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">
-          {displayBalance} {getDenomInfo(balanceValue.denomId).name} remaining in vault
+          {displayBalance} {getDenomInfo(balanceValue.denomId)?.name} remaining in vault
         </Text>
       </HStack>
       <Stack spacing={1}>

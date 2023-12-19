@@ -40,12 +40,12 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
 
     if ('dca_vault_execution_completed' in data) {
       const { received, fee, sent } = data.dca_vault_execution_completed;
-      const { fromAtomic: conversion, name } = getDenomInfo(received.denom);
-      const { fromAtomic: sentConversion } = getDenomInfo(sent.denom);
-      const sentAmount = sentConversion(Number(sent.amount));
+      const { fromAtomic: receivedFromAtomic, name } = getDenomInfo(received.denom);
+      const { fromAtomic: sentFromAtomic } = getDenomInfo(sent.denom);
+      const sentAmount = sentFromAtomic(Number(sent.amount));
       const sentDenom = sent.denom;
 
-      const amount = conversion(Number(received.amount) - Number(fee.amount));
+      const amount = receivedFromAtomic(Number(received.amount) - Number(fee.amount));
       totalAmount += Number(amount);
 
       return {

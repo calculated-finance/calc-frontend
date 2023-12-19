@@ -29,6 +29,7 @@ import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
 import { Coin } from '@cosmjs/proto-signing';
 import { useChainContext } from '@hooks/useChainContext';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 interface GetFundsDetailsProps {
   onSquidOpen: () => void;
@@ -161,9 +162,9 @@ function AvailableFundsButton({
   const createStrategyFee = fiatPrice ? createStrategyFeeInTokens(fiatPrice, denom) : 0;
 
   const balance = Number(data?.amount);
-  const displayAmount = denom.fromAtomic(Math.max(balance - createStrategyFee, 0));
+  const displayAmount = fromAtomic(denom, Math.max(balance - createStrategyFee, 0));
 
-  const displayFee = denom.fromAtomic(createStrategyFee);
+  const displayFee = fromAtomic(denom, createStrategyFee);
 
   function handleOpen(onOpener: () => void) {
     return () => {
@@ -193,7 +194,7 @@ function AvailableFundsButton({
             variant="link"
             cursor="pointer"
             isDisabled={!displayAmount}
-            onClick={() => helpers.setValue(deconvertValue ? denom.toAtomic(displayAmount) : displayAmount)}
+            onClick={() => helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount)}
           >
             {displayAmount}
           </Button>

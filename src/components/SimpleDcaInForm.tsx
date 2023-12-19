@@ -26,7 +26,6 @@ import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import { FormNames } from '@hooks/useFormStore';
-import getDenomInfo from '@utils/getDenomInfo';
 import { StrategyType } from '@models/StrategyType';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
@@ -57,6 +56,8 @@ import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './StepOneConnectWallet';
+import useDenoms from '@hooks/useDenoms';
+import { values } from 'rambda';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -72,6 +73,8 @@ function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
 
 function InitialDenom() {
   const { pairs } = usePairs();
+  const { getDenomInfo, denoms } = useDenoms();
+  const { chainId } = useChainId();
   const [initialDenom, meta, initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [isMobile] = useMediaQuery('(max-width: 506px)');
@@ -86,10 +89,6 @@ function InitialDenom() {
 
   if (!pairs) return null;
 
-  const denoms = orderAlphabetically(
-    Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) => getDenomInfo(denom)),
-  );
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>Using:</FormLabel>
@@ -97,17 +96,16 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose stablecoin</Text>
           <Spacer />
-          {initialDenom.value && <AvailableFunds denom={getDenomInfo(initialDenom.value)} />}
+          {initialDenom.value && <AvailableFunds denom={initialDenom.value} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
           <DenomSelect
-            denoms={denoms}
+            denoms={orderAlphabetically(values(denoms?.[chainId] ?? {}))}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
             value={initialDenom.value}
-            onChange={initialDenomHelpers.setValue}
-            showPromotion
+            onChange={(v) => v && initialDenomHelpers.setValue(getDenomInfo(v))}
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>
@@ -120,6 +118,9 @@ function InitialDenom() {
 function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chainId } = useChainId();
+  const { getDenomInfo } = useDenoms();
+
+  console.log({ denoms });
 
   const {
     values: { initialDenom },
@@ -135,7 +136,7 @@ function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
         denoms={denoms}
         placeholder="Choose asset"
         value={field.value}
-        onChange={helpers.setValue}
+        onChange={(v) => v && helpers.setValue(getDenomInfo(v))}
         optionLabel={`Swapped on ${getChainDexName(chainId)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -144,18 +145,15 @@ function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
 }
 
 function SwapAmount({
-  initialDenomString,
-  resultingDenomString,
+  initialDenom,
+  resultingDenom,
 }: {
-  initialDenomString: string | undefined;
-  resultingDenomString: string | undefined;
+  initialDenom: DenomInfo | undefined;
+  resultingDenom: DenomInfo | undefined;
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
   const [{ value: initialDeposit }, depositMeta] = useField({ name: 'initialDeposit' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
-
-  const initialDenom = useDenom(initialDenomString);
-  const resultingDenom = useDenom(resultingDenomString);
 
   const executions = initialDeposit && field.value ? totalExecutions(initialDeposit, field.value) : 0;
   const displayExecutionInterval =
@@ -168,10 +166,10 @@ function SwapAmount({
       isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}
       isDisabled={!executionInterval || !initialDeposit}
     >
-      <FormLabel>How much {initialDenom.name} each purchase?</FormLabel>
+      <FormLabel>How much {initialDenom?.name} each purchase?</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
-          <Text>The amount you want swapped each purchase for {resultingDenom.name}.</Text>
+          <Text>The amount you want swapped each purchase for {resultingDenom?.name}.</Text>
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
@@ -207,8 +205,9 @@ function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
-  const { pairs } = usePairs();
-  const { data: balances } = useBalances();
+  const { hydratedPairs: pairs } = usePairs();
+  const { getDenomInfo } = useDenoms();
+  const { balances } = useBalances();
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
@@ -260,10 +259,10 @@ function Form() {
                     <ModalHeader isSuccess={isSuccess} />
                     <InitialDenom />
                     <ResultingDenom
-                      denoms={values.initialDenom ? getResultingDenoms(pairs, getDenomInfo(values.initialDenom)) : []}
+                      denoms={values.initialDenom ? getResultingDenoms(pairs, values.initialDenom) : []}
                     />
                     <ExecutionIntervalLegacy />
-                    <SwapAmount initialDenomString={values.initialDenom} resultingDenomString={values.resultingDenom} />
+                    <SwapAmount initialDenom={values.initialDenom} resultingDenom={values.resultingDenom} />
                     {connected ? (
                       <SummaryAgreementForm
                         isError={isError}

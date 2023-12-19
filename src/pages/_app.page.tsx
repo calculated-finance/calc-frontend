@@ -17,6 +17,7 @@ import { LoadingState } from './LoadingState';
 import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
 import { InitWrapper } from './InitWrapper';
+import useDenoms from '@hooks/useDenoms';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -35,10 +36,10 @@ Sentry.init({
 });
 
 function AssetListLoader({ children }: ChildrenProp) {
-  const { data: assetList } = useAssetList();
+  const { allDenoms } = useDenoms();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return assetList ? <>{children}</> : <LoadingState />;
+  return allDenoms ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

@@ -17,6 +17,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
   const { name: initialDenomName } = initialDenom;
   const { name: resultingDenomName } = resultingDenom;
+
   return (
     <Flex justify="space-between" gap={2} align="center" w="full">
       <HStack>
@@ -43,7 +44,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { pairs } = usePairs();
+  const { hydratedPairs: pairs } = usePairs();
 
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -71,9 +72,9 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+        const { priceFromRatio, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
-        const convertedPrice = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
+        const convertedPrice = Number(priceFromRatio(targetPrice).toFixed(pricePrecision));
 
         if (isBuyStrategy(strategy)) {
           nextSwapInfo = (

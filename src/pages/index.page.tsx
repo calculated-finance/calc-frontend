@@ -23,7 +23,6 @@ import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInf
 import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
@@ -31,6 +30,7 @@ import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interfac
 import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import useDenoms from '@hooks/useDenoms';
 
 function WarningPanel() {
   return (
@@ -51,7 +51,7 @@ function WarningPanel() {
   );
 }
 
-const isStrategyAcculumating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
+const isStrategyAccumulating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
 
 const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
 
@@ -64,7 +64,7 @@ function InvestmentThesisWithActiveStrategies({
 }) {
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
   const acculumatingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
+    new Set(activeStrategies.filter(isStrategyAccumulating).map((strategy) => getStrategyResultingDenom(strategy).id)),
   ).map((id) => getDenomInfo(id));
 
   const profitTakingAssets = Array.from(
@@ -121,7 +121,7 @@ function InvestmentThesisWithActiveStrategies({
 }
 
 function TotalInvestment() {
-  const supportedDenoms = useSupportedDenoms();
+  const { allDenoms } = useDenoms();
   const { fiatPrices: prices } = useFiatPrices();
   const { data: allStrategies } = useAllStrategies();
 
@@ -133,8 +133,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, prices, supportedDenoms);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, allDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, prices, allDenoms);
 
   const formattedValue =
     totalSwappedTotal >= 1000000

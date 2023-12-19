@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { isNil } from 'lodash';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -61,9 +60,13 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     checkSwapAmountValue(swapAmount, fiatPrice);
 
+    if (!state.resultingDenom) {
+      throw new Error('Invalid resulting denom');
+    }
+
     const createVaultContext: BuildCreateVaultContext = {
       initialDenom,
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: 'daily' as ExecutionIntervals, increment: 1 },
       swapAmount: getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
       transactionType,

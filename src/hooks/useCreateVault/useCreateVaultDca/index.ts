@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { isEmpty, isNil } from 'lodash';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -12,12 +11,14 @@ import useFiatPrices from '@hooks/useFiatPrices';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 import { useTrackCreateVault } from '../useTrackCreateVault';
+import useDenoms from '@hooks/useDenoms';
 
 export const useCreateVaultDca = () => {
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
   const { fiatPrices: prices } = useFiatPrices();
+  const { getDenomInfo } = useDenoms();
 
   const track = useTrackCreateVault();
 
@@ -41,8 +42,11 @@ export const useCreateVaultDca = () => {
       throw Error('Invalid client');
     }
 
-    const initialDenom = getDenomInfo(state.initialDenom);
-    const price = initialDenom?.coingeckoId && prices?.[initialDenom?.coingeckoId]?.usd;
+    if (!state.initialDenom) {
+      throw Error('Invalid initial denom');
+    }
+
+    const price = state.initialDenom?.coingeckoId && prices?.[state.initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
       throw Error('Invalid price');
@@ -54,9 +58,13 @@ export const useCreateVaultDca = () => {
 
     checkSwapAmountValue(state.swapAmount!, price);
 
+    if (!state.resultingDenom) {
+      throw new Error('Invalid resulting denom');
+    }
+
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      initialDenom: state.initialDenom,
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement! },
       timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,
@@ -74,7 +82,7 @@ export const useCreateVaultDca = () => {
       },
     };
 
-    const fee = createStrategyFeeInTokens(price, initialDenom).toFixed(0);
+    const fee = createStrategyFeeInTokens(price, state.initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

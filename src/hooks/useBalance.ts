@@ -4,6 +4,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
 import { useChainId } from './useChainId';
 import { useChainClient } from './useChainClient';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export type BalanceResponse = {
   amount: number;
@@ -26,7 +27,7 @@ function useBalance(token: DenomInfo) {
   );
 
   return {
-    displayAmount: result.data ? token.fromAtomic(Number(result.data.amount)) : 0,
+    displayAmount: result.data ? fromAtomic(token, Number(result.data.amount)) : 0,
     ...result,
   };
 }

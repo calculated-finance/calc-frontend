@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -12,6 +11,7 @@ import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { useTrackCreateVault } from '../useTrackCreateVault';
 import { handleError } from '../handleError';
+import useDenoms from '@hooks/useDenoms';
 
 export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
@@ -19,6 +19,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
+  const { getDenomInfo } = useDenoms();
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -55,9 +56,13 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
 
     checkSwapAmountValue(state.swapAmount, fiatPrice);
 
+    if (!state.initialDenom || !state.resultingDenom) {
+      throw new Error('Invalid denoms');
+    }
+
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      initialDenom: state.initialDenom,
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
       timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,

@@ -18,13 +18,13 @@ import {
   isStrategyAutoStaking,
 } from '@helpers/strategy';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
 import { useChainId } from '@hooks/useChainId';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import useFiatPrices from '@hooks/useFiatPrices';
+import useDenoms from '@hooks/useDenoms';
 
 function orderCoinList(coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
@@ -191,7 +191,7 @@ function getProjectedRevenueForStrategyForDate(strategy: Strategy, date: Date, f
   return fees * fiatPrice;
 }
 
-function getProjectedRevenueForStrategysForDate(strategies: Strategy[], date: Date, fiatPrices: any) {
+function getProjectedRevenueForStrategiesForDate(strategies: Strategy[], date: Date, fiatPrices: any) {
   return strategies
     .map((strategy) => getProjectedRevenueForStrategyForDate(strategy, date, fiatPrices))
     .reduce((amount, total) => total + amount, 0);
@@ -239,41 +239,41 @@ function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string
 }
 
 function getWalletsWithOnlyScheduledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'scheduled';
   });
 }
 
 function getWalletsWithOnlyCancelledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'cancelled';
   });
 }
 
 function getWalletsWithActiveStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.includes('active');
   });
 }
 
 function getWalletsWithOnlyInactive(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'inactive';
   });
 }
 
 function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled');
   });
 }
@@ -283,10 +283,10 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 }
 
 function Page() {
-  const supportedDenoms = useSupportedDenoms();
-  const { chainId: chain } = useChainId();
-  const { data: contractBalances } = useBalances(getChainContractAddress(chain));
-  const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
+  const { allDenoms } = useDenoms();
+  const { chainId } = useChainId();
+  const { balances: contractBalances } = useBalances(getChainContractAddress(chainId));
+  const { balances: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chainId));
   const { fiatPrices } = useFiatPrices();
 
   const { data: allStrategies } = useAllStrategies();
@@ -296,28 +296,28 @@ function Page() {
   if (!fiatPrices || !allStrategies) {
     return null;
   }
-  const totalInContract = totalFromCoins(contractBalances, fiatPrices, supportedDenoms);
+  const totalInContract = totalFromCoins(contractBalances, fiatPrices, allDenoms);
 
-  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices, supportedDenoms);
+  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices, allDenoms);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, allDenoms);
+  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, allDenoms);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies, supportedDenoms);
-  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices, supportedDenoms);
+  const totalReceivedAmounts = getTotalReceived(allStrategies, allDenoms);
+  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices, allDenoms);
 
-  const ThirtyDaysFromNow = new Date();
-  ThirtyDaysFromNow.setDate(ThirtyDaysFromNow.getDate() + 30);
+  const thirtyDaysFromNow = new Date();
+  thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-  const ThreeMonthsFromNow = new Date();
-  ThreeMonthsFromNow.setDate(ThreeMonthsFromNow.getDate() + 90);
+  const threeMonthsFromNow = new Date();
+  threeMonthsFromNow.setDate(threeMonthsFromNow.getDate() + 90);
 
-  const AYearFromNow = new Date();
-  AYearFromNow.setDate(AYearFromNow.getDate() + 365);
+  const aYearFromNow = new Date();
+  aYearFromNow.setDate(aYearFromNow.getDate() + 365);
 
-  const thirtDayRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThirtyDaysFromNow, fiatPrices);
-  const threeMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThreeMonthsFromNow, fiatPrices);
-  const twelveMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, AYearFromNow, fiatPrices);
+  const thirtyDayRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, thirtyDaysFromNow, fiatPrices);
+  const threeMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, threeMonthsFromNow, fiatPrices);
+  const twelveMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, aYearFromNow, fiatPrices);
   const averageDuration = getAverageDurationForActiveStrategies(allStrategies);
   const averageDurationInDays = Math.floor(averageDuration / (1000 * 60 * 60 * 24));
 
@@ -379,7 +379,7 @@ function Page() {
           <Text textStyle="body-xs">Based on expected executions and swap amounts </Text>
           <SimpleGrid columns={2} spacing={4} textStyle="bod">
             <Text> 30 Days: </Text>
-            <Text>{formatFiat(thirtDayRevenue)}</Text>
+            <Text>{formatFiat(thirtyDayRevenue)}</Text>
             <Text> 3 Months: </Text>
             <Text>{formatFiat(threeMonthRevenue)}</Text>
             <Text> 1 Year: </Text>

@@ -1,6 +1,6 @@
-import { filter } from 'rambda';
-import getDenomInfo, { isDenomVolatile } from '@utils/getDenomInfo';
-import { Pair } from '@models/Pair';
+import { any, filter } from 'rambda';
+import { isDenomVolatile } from '@utils/getDenomInfo';
+import { HydratedPair, Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -9,6 +9,7 @@ import { useChainId } from './useChainId';
 import { ChainId } from './useChainId/Chains';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
+import useDenoms from './useDenoms';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -21,8 +22,8 @@ const hiddenPairs = [
   ]),
 ];
 
-function isPairVisible(pair: Pair) {
-  return !hiddenPairs.includes(JSON.stringify(pair.denoms));
+function isPairVisible(denoms: string[]) {
+  return !hiddenPairs.includes(JSON.stringify(denoms));
 }
 
 export function isSupportedDenomForDcaPlus(denom: DenomInfo) {
@@ -37,50 +38,56 @@ export function orderAlphabetically(denoms: DenomInfo[]) {
   });
 }
 
-export function uniqueQuoteDenoms(pairs: Pair[] | undefined) {
+export function uniqueQuoteDenoms(pairs: HydratedPair[] | undefined) {
   return Array.from(new Set(pairs?.map(getQuoteDenom)));
 }
 
-export function uniqueBaseDenoms(pairs: Pair[] | undefined) {
+export function uniqueBaseDenoms(pairs: HydratedPair[] | undefined) {
   return Array.from(new Set(pairs?.map(getBaseDenom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: Pair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: HydratedPair[] | undefined) {
   return Array.from(
-    new Set(filter((pair: Pair) => getQuoteDenom(pair) === initialDenom.id, pairs ?? []).map(getBaseDenom)),
+    new Set(filter((pair: HydratedPair) => getQuoteDenom(pair).id === initialDenom.id, pairs ?? []).map(getBaseDenom)),
   );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: Pair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: HydratedPair[] | undefined) {
   return Array.from(
-    new Set(filter((pair: Pair) => getBaseDenom(pair) === resultingDenom.id, pairs ?? []).map(getQuoteDenom)),
+    new Set(
+      filter((pair: HydratedPair) => getBaseDenom(pair).id === resultingDenom.id, pairs ?? []).map(getQuoteDenom),
+    ),
   );
 }
 
-export function allDenomsFromPairs(pairs: Pair[] | undefined) {
+export function allDenomsFromPairs(pairs: HydratedPair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => getQuoteDenom(pair)).concat(pairs?.map(getBaseDenom))));
 }
 
-export function getResultingDenoms(pairs: Pair[], initialDenom: DenomInfo) {
-  return orderAlphabetically(
-    Array.from(
-      new Set([
-        ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
-        ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
-      ]),
-    ).map((denom) => getDenomInfo(denom)),
-  );
+export function getResultingDenoms(pairs: HydratedPair[], initialDenom?: DenomInfo) {
+  console.log({ initialDenom, pairs });
+  return !initialDenom
+    ? []
+    : orderAlphabetically(
+        Array.from(
+          new Set([
+            ...uniqueQuoteDenomsFromBaseDenom(initialDenom, pairs),
+            ...uniqueBaseDenomsFromQuoteDenom(initialDenom, pairs),
+          ]),
+        ),
+      );
 }
 
 export default function usePairs(injectedChainId?: ChainId) {
   const { chainId: currentChainId } = useChainId();
   const chainId = injectedChainId ?? currentChainId;
   const { cosmWasmClient } = useCosmWasmClient(chainId);
+  const { denoms, getDenomInfo } = useDenoms();
 
   const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
     () => {
-      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!);
+      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, getDenomInfo);
       return calcClient.fetchAllPairs();
     },
     {
@@ -93,11 +100,18 @@ export default function usePairs(injectedChainId?: ChainId) {
   );
 
   return {
-    pairs: pairs?.filter((pair) =>
-      isPairVisible({
-        denoms: pair.denoms,
-      }),
-    ),
+    pairs: pairs?.filter((pair) => isPairVisible(pair.denoms)),
+    hydratedPairs:
+      denoms &&
+      pairs
+        ?.filter((pair) => isPairVisible(pair.denoms) && !any((denom) => denom === undefined, pair.denoms))
+        ?.map(
+          (pair) =>
+            ({
+              denoms: pair.denoms.map((denom) => getDenomInfo(denom)),
+            } as HydratedPair),
+        )
+        .filter((pair) => pair.denoms.every((denom) => !!denom)),
     ...other,
   };
 }

@@ -1,10 +1,10 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { StrategyType } from '@models/StrategyType';
-import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
+import { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
 import { findPair } from '@helpers/findPair';
-import { Pair } from '@models/Pair';
+import { HydratedPair } from '@models/Pair';
 import {
   DAYS_IN_A_WEEK,
   DELEGATION_FEE,
@@ -60,11 +60,11 @@ export function getStrategyInitialDenomId(strategy: Strategy): string {
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.rawData.balance.denom);
+  return strategy.initialDenom;
 }
 
 export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.rawData.received_amount.denom);
+  return strategy.resultingDenom;
 }
 
 export function getStrategyExecutionIntervalData(strategy: Strategy): {
@@ -162,7 +162,7 @@ export function getSwapAmount(strategy: Strategy) {
 }
 
 export function getConvertedSwapAmount(strategy: Strategy) {
-  const { fromAtomic: conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
+  const { fromAtomic: conversion } = strategy.initialDenom;
   return Number(conversion(getSwapAmount(strategy)).toFixed(6));
 }
 
@@ -203,7 +203,7 @@ export function getStrategyPriceTrigger(strategy: Strategy) {
   return undefined;
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
+export function getTargetPrice(strategy: Strategy, pairs: HydratedPair[] | undefined) {
   let target_price;
 
   if (getStrategyPriceTrigger(strategy)) {
@@ -215,7 +215,7 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
     const resultingDenom = getStrategyResultingDenom(strategy);
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
 
-    if (pair && getBaseDenom(pair) === getStrategyInitialDenom(strategy).id) {
+    if (pair && getBaseDenom(pair).id === getStrategyInitialDenom(strategy).id) {
       return safeInvert(Number(target_price));
     }
 
@@ -225,9 +225,9 @@ export function getTargetPrice(strategy: Strategy, pairs: Pair[] | undefined) {
   return null;
 }
 
-export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefined) {
+export function getStrategyStartDate(strategy: Strategy, pairs: HydratedPair[] | undefined) {
   const { trigger } = strategy.rawData;
-  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
+  const { priceFromRatio, pricePrecision } = isBuyStrategy(strategy)
     ? getStrategyResultingDenom(strategy)
     : getStrategyInitialDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
@@ -236,7 +236,7 @@ export function getStrategyStartDate(strategy: Strategy, pairs: Pair[] | undefin
   const targetPrice = getTargetPrice(strategy, pairs);
 
   if (targetPrice) {
-    const price = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
+    const price = Number(priceFromRatio(targetPrice).toFixed(pricePrecision));
 
     if (isBuyStrategy(strategy)) {
       return `When ${resultingDenom.name} hits ${price} ${initialDenom.name}`;
@@ -336,13 +336,13 @@ export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, 
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+  const { priceFromRatio, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
-  const price = isBuyStrategy(strategy)
+  const ratio = isBuyStrategy(strategy)
     ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
     : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
 
-  return Number(priceDeconversion(price).toFixed(pricePrecision));
+  return Number(priceFromRatio(ratio).toFixed(pricePrecision));
 }
 
 export function getPriceCeilingFloor(strategy: Strategy, chain: ChainId) {

@@ -1,24 +1,30 @@
 import { Text, Divider, GridItem, Grid, Stack } from '@chakra-ui/react';
 import useBalances from '@hooks/useBalances';
-import getDenomInfo, { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { convertDenomFromCoin, fromAtomic } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { truncate } from '@helpers/truncate';
+import useDenoms from '@hooks/useDenoms';
 
 function CoinBalance({ balance }: { balance: Coin }) {
-  const { name, fromAtomic: conversion } = getDenomInfo(balance.denom);
+  const { getDenomInfo } = useDenoms();
+  const initialDenomInfo = getDenomInfo(balance.denom);
   return (
     <>
-      <GridItem colSpan={1}>
-        <Text fontSize="xs" noOfLines={1}>
-          {conversion(Number(balance.amount))}
-        </Text>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Text textStyle="body-xs">{name || balance.denom}</Text>
-      </GridItem>
+      {initialDenomInfo && (
+        <>
+          <GridItem colSpan={1}>
+            <Text fontSize="xs" noOfLines={1}>
+              {fromAtomic(initialDenomInfo, Number(balance.amount))}
+            </Text>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <Text textStyle="body-xs">{initialDenomInfo.name || truncate(balance.denom)}</Text>
+          </GridItem>
+        </>
+      )}
     </>
   );
 }
@@ -35,7 +41,7 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
         </Text>
       </GridItem>
       <GridItem colSpan={1}>
-        <Text textStyle="body-xs">{denom.name || truncate(balance.denom)}</Text>
+        <Text textStyle="body-xs">{denom?.name || truncate(balance.denom)}</Text>
       </GridItem>
       <GridItem colSpan={1}>
         <Text textStyle="body-xs">{formatFiat((fiatPrice || 0) * balanceConverted)}</Text>
@@ -69,7 +75,7 @@ export function BalanceList({ balances = [] }: { balances: Coin[] | undefined })
 }
 
 export function SpendableBalances() {
-  const { data: balances } = useBalances();
+  const { balances } = useBalances();
 
   return (
     <>

@@ -13,7 +13,6 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { WeightSummary } from '@components/WeightSummary';
 import { StepConfig } from '@formConfig/StepConfig';
 import { SWAP_FEE_WS } from 'src/constants';
-import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import useStrategy from '@hooks/useStrategy';
@@ -22,6 +21,7 @@ import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
 import { SigningState } from './NewStrategyModal';
+import useDenoms from '@hooks/useDenoms';
 
 function PageInternal({
   state,
@@ -34,8 +34,10 @@ function PageInternal({
   error: Error | null;
   handleSubmit: (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => void;
 }) {
-  const initialDenom = getDenomInfo(state.initialDenom);
-  const resultingDenom = getDenomInfo(state.resultingDenom);
+  const initialDenom = state.initialDenom;
+  const resultingDenom = state.resultingDenom;
+
+  if (!initialDenom || !resultingDenom) return null;
 
   const { transactionType } = useStrategyInfo();
   return (
@@ -67,7 +69,7 @@ function PageInternal({
         autoStakeValidator={state.autoStakeValidator}
         swapAmount={state.swapAmount}
         swapFee={SWAP_FEE_WS}
-        swapFeeTooltip="Calcuated assuming base swap. Actual fees per swap depend on the resulting swap amount."
+        swapFeeTooltip="Calculated assuming base swap. Actual fees per swap depend on the resulting swap amount."
         excludeDepositFee
         transactionType={transactionType}
       />
@@ -79,9 +81,10 @@ function PageInternal({
 export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   const { state, actions } = useWeightedScaleConfirmForm();
   const { nextStep, goToStep } = useSteps(steps);
+  const { getDenomInfo } = useDenoms();
 
-  const initialDenom = getDenomInfo(state?.initialDenom);
-  const resultingDenom = getDenomInfo(state?.resultingDenom);
+  const initialDenom = state?.initialDenom;
+  const resultingDenom = state?.resultingDenom;
 
   const { mutate, isError, error, isLoading } = useCreateVaultWeightedScale(initialDenom);
 
@@ -96,7 +99,7 @@ export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
       { state, dexPrice, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
-          await nextStep({
+          nextStep({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
           });

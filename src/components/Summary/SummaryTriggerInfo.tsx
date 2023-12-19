@@ -1,7 +1,6 @@
 import { Text } from '@chakra-ui/react';
 import BadgeButton from '@components/BadgeButton';
 import DenomIcon from '@components/DenomIcon';
-import getDenomInfo from '@utils/getDenomInfo';
 import TriggerTypes from '@models/TriggerTypes';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
@@ -108,16 +107,22 @@ export function SummaryTriggerInfo({
 }) {
   const { startImmediately, triggerType, initialDenom, resultingDenom, startPrice } = state;
 
+  if (!initialDenom || !resultingDenom) {
+    return null;
+  }
+
   if (startImmediately === YesNoValues.Yes) {
     return <ImmediateTriggerInfo />;
   }
+
   if (triggerType === TriggerTypes.Date) {
     return <TimeTriggerInfo state={state} />;
   }
+
   return (
     <PriceTriggerInfo
-      initialDenom={getDenomInfo(initialDenom)}
-      resultingDenom={getDenomInfo(resultingDenom)}
+      initialDenom={initialDenom}
+      resultingDenom={resultingDenom}
       transactionType={transactionType}
       startPrice={startPrice}
     />

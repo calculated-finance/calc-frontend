@@ -15,6 +15,7 @@ import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { toAtomic } from '@utils/getDenomInfo';
 
 function executeTopUpCosmos(
   address: string,
@@ -26,7 +27,7 @@ function executeTopUpCosmos(
   if (strategy.owner !== address) {
     throw new Error('You are not the owner of this strategy');
   }
-  const { toAtomic: deconversion, id } = getStrategyInitialDenom(strategy);
+  const initialDenom = getStrategyInitialDenom(strategy);
 
   const msg = {
     deposit: {
@@ -35,7 +36,7 @@ function executeTopUpCosmos(
     },
   } as ExecuteMsg;
 
-  const funds = [{ denom: id, amount: BigInt(deconversion(topUpAmount)).toString() }];
+  const funds = [{ denom: initialDenom.id, amount: BigInt(toAtomic(initialDenom, topUpAmount)).toString() }];
 
   const result = client.execute(address, chainConfig.contractAddress, msg, 'auto', undefined, funds);
   return result;
@@ -100,7 +101,7 @@ function getFunds(initialDenom: DenomInfo, initialDeposit: number, isInAtomics =
   const funds = [
     {
       denom: initialDenom.id,
-      amount: BigInt(isInAtomics ? initialDeposit : initialDenom.toAtomic(initialDeposit)).toString(),
+      amount: BigInt(isInAtomics ? initialDeposit : toAtomic(initialDenom, initialDeposit)).toString(),
     },
   ];
 

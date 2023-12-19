@@ -54,8 +54,8 @@ export function DenomPriceInput({
   };
 
   const getPairLink = {
-    'osmosis-1': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`,
-    'osmo-test-5': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.osmosisId}&to=${priceInDenom.osmosisId}`,
+    'osmosis-1': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.name}&to=${priceInDenom.name}`,
+    'osmo-test-5': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.name}&to=${priceInDenom.name}`,
     'kaiyo-1': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
     'harpoon-4': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
   };

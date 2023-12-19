@@ -40,7 +40,6 @@ import usePairs, {
 import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
-import getDenomInfo from '@utils/getDenomInfo';
 import { AgreementForm, SummaryAgreementForm } from '@components/Summary/SummaryAgreementForm';
 import { useEffect, useState } from 'react';
 import { DenomSelect } from '@components/DenomSelect';
@@ -68,8 +67,10 @@ import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
-import useRoute from '@hooks/useRoute';
 import { TransactionType } from '@components/TransactionType';
+import useDenoms from '@hooks/useDenoms';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
+import { DenomInfo } from '@utils/DenomInfo';
 
 function InitialDeposit() {
   const {
@@ -78,18 +79,18 @@ function InitialDeposit() {
 
   const [{ onChange, value, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput
-        onChange={(newValue) => helpers.setValue(newValue && Math.round(initialDenomInfo.toAtomic(newValue)))}
+        onChange={(newValue) =>
+          helpers.setValue(newValue && initialDenom && Math.round(toAtomic(initialDenom, newValue)))
+        }
         textAlign="right"
         placeholder="Enter amount"
         value={
           (value &&
-            initialDenomInfo &&
-            Number(initialDenomInfo.fromAtomic(value)?.toFixed(max(initialDenomInfo.significantFigures, 6)))) ??
+            initialDenom &&
+            Number(fromAtomic(initialDenom, value)?.toFixed(max(initialDenom.significantFigures, 6)))) ??
           ''
         }
         {...field}
@@ -100,7 +101,8 @@ function InitialDeposit() {
 }
 
 function InitialDenom() {
-  const { pairs } = usePairs();
+  const { getDenomInfo } = useDenoms();
+  const { hydratedPairs: pairs } = usePairs();
   const [initialDenom, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [, , priceThresholdHelpers] = useField({ name: 'priceThreshold' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
@@ -111,8 +113,8 @@ function InitialDenom() {
   useEffect(() => {
     if (!!pairs && !initialDenom.value) {
       const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-      initialDenomHelpers.setValue(randomPair.denoms[0]);
-      resultingDenomHelpers.setValue(randomPair.denoms[1]);
+      initialDenomHelpers.setValue(randomPair.denoms[0].id);
+      resultingDenomHelpers.setValue(randomPair.denoms[1].id);
     }
   });
 
@@ -127,21 +129,22 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose asset to send</Text>
           <Spacer />
-          {initialDenom.value && <AvailableFunds denom={initialDenomInfo} deconvertValue />}
+          {initialDenomInfo && <AvailableFunds denom={initialDenomInfo} deconvertValue />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
           <DenomSelect
             denoms={orderAlphabetically(
-              Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).map((denom) =>
-                getDenomInfo(denom),
+              Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(
+                (denom) => denom !== undefined,
               ),
             )}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
             value={initialDenom.value}
             onChange={(newValue) => {
-              const newDenomInfo = getDenomInfo(newValue);
+              if (!newValue) return;
+              const newDenomInfo = getDenomInfo(newValue)!;
               const denoms = pairs && newValue ? getResultingDenoms(pairs, newDenomInfo) : [];
               const resultingDenomIsNotAllowed = !denoms.find((d) => d.id === resultingDenom.value);
               if (resultingDenomIsNotAllowed) resultingDenomHelpers.setValue(undefined);
@@ -171,7 +174,7 @@ function InitialDenom() {
               $
               {(initialDeposit.value && fiatPrice && initialDenomInfo
                 ? Number(
-                    (initialDenomInfo.fromAtomic(initialDeposit.value) * fiatPrice)?.toFixed(
+                    (fromAtomic(initialDenomInfo, initialDeposit.value) * fiatPrice)?.toFixed(
                       initialDenomInfo.significantFigures / 3,
                     ),
                   )
@@ -186,11 +189,14 @@ function InitialDenom() {
 }
 
 function SwapDenoms() {
+  const { getDenomInfo } = useDenoms();
   const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [, priceThresholdMeta, priceThresholdHelpers] = useField({ name: 'priceThreshold' });
 
+  const resultingDenomInfo = getDenomInfo(resultingDenomValue);
+  const initialDenomInfo = getDenomInfo(initialDenomValue);
   return (
     <Center>
       <Image
@@ -203,12 +209,10 @@ function SwapDenoms() {
             initialDenomHelpers.setValue(resultingDenomValue);
             resultingDenomHelpers.setValue(initialDenomValue);
 
-            if (initialDepositValue && initialDenomValue && resultingDenomValue) {
+            if (initialDepositValue && resultingDenomInfo && initialDenomInfo) {
               initialDepositHelpers.setValue(
                 initialDepositValue *
-                  10 **
-                    (getDenomInfo(resultingDenomValue).significantFigures -
-                      getDenomInfo(initialDenomValue).significantFigures),
+                  10 ** (resultingDenomInfo.significantFigures - initialDenomInfo.significantFigures),
               );
             }
 
@@ -222,8 +226,9 @@ function SwapDenoms() {
 
 function ResultingDenom() {
   const [isMobile] = useMediaQuery('(max-width: 506px)');
-  const { pairs } = usePairs();
+  const { hydratedPairs: pairs } = usePairs();
   const { dexFee } = useDexFee();
+  const { getDenomInfo } = useDenoms();
 
   const {
     values: { initialDenom, initialDeposit, swapAmount },
@@ -235,47 +240,43 @@ function ResultingDenom() {
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
-  const resultingDenomInfo = getDenomInfo(resultingDenomValue);
-  const initialDenomInfo = getDenomInfo(initialDenom);
-
-  const { fiatPrice: initialDenomFiatPrice } = useFiatPrice(initialDenomInfo);
-  const { fiatPrice: resultingDenomFiatPrice } = useFiatPrice(resultingDenomInfo);
+  const { fiatPrice: initialDenomFiatPrice } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomFiatPrice } = useFiatPrice(resultingDenomValue);
 
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
-    swapAmount && initialDenomInfo ? coin(BigInt(swapAmount).toString(), initialDenomInfo.id) : undefined,
-    resultingDenomInfo,
+    swapAmount && initialDenom ? coin(BigInt(swapAmount).toString(), initialDenom.id) : undefined,
+    resultingDenomValue,
     undefined,
-    !!swapAmount && !!resultingDenomInfo,
+    !!swapAmount && !!resultingDenomValue,
   );
 
   const expectedTotalReceiveAmount =
-    initialDenomInfo &&
+    initialDenom &&
     swapAmount &&
     expectedReceiveAmount &&
     Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmount);
 
-  const totalFee = resultingDenomInfo && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
+  const totalFee =
+    resultingDenomValue && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
 
   const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
 
   const expectedFinalReceiveAmountFiatValue =
     expectedFinalReceiveAmount &&
     resultingDenomFiatPrice &&
-    initialDenomInfo &&
+    initialDenom &&
     Number(
-      (resultingDenomInfo.fromAtomic(expectedFinalReceiveAmount) * resultingDenomFiatPrice)?.toFixed(
-        resultingDenomInfo.significantFigures,
+      (fromAtomic(resultingDenomValue, expectedFinalReceiveAmount) * resultingDenomFiatPrice)?.toFixed(
+        resultingDenomValue.significantFigures,
       ),
     );
 
   const initialDepositFiatValue =
     initialDeposit &&
     initialDenomFiatPrice &&
-    initialDenomInfo &&
+    initialDenom &&
     Number(
-      (initialDenomInfo.fromAtomic(initialDeposit) * initialDenomFiatPrice)?.toFixed(
-        initialDenomInfo.significantFigures,
-      ),
+      (fromAtomic(initialDenom, initialDeposit) * initialDenomFiatPrice)?.toFixed(initialDenom.significantFigures),
     );
 
   return (
@@ -289,11 +290,11 @@ function ResultingDenom() {
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <DenomSelect
-          denoms={pairs && initialDenom ? getResultingDenoms(pairs, getDenomInfo(initialDenom)) : []}
+          denoms={pairs && initialDenom ? getResultingDenoms(pairs, initialDenom) : []}
           placeholder={isMobile ? 'Asset' : 'Choose asset'}
-          defaultValue={resultingDenomValue}
+          defaultValue={resultingDenomValue.id}
           value={resultingDenomValue}
-          onChange={resultingDenomHelpers.setValue}
+          onChange={(v) => v && resultingDenomHelpers.setValue(getDenomInfo(v))}
         />
         <FormErrorMessage>{resultingDenomMeta.touched && resultingDenomMeta.error}</FormErrorMessage>
         <NumberInput
@@ -302,12 +303,12 @@ function ResultingDenom() {
           isDisabled={!expectedFinalReceiveAmount}
           value={
             (initialDeposit &&
-              resultingDenomInfo &&
+              resultingDenomValue &&
               (expectedFinalReceiveAmount || (expectedFinalReceiveAmount && expectedFinalReceiveAmount === 0)) &&
               Number(
-                resultingDenomInfo
-                  .fromAtomic(expectedFinalReceiveAmount)
-                  ?.toFixed(resultingDenomInfo.significantFigures),
+                fromAtomic(resultingDenomValue, expectedFinalReceiveAmount)?.toFixed(
+                  resultingDenomValue.significantFigures,
+                ),
               )) ||
             ''
           }
@@ -407,10 +408,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
   const [priceThreshold, setPriceThreshold] = useState(0.02);
   const [rektProtekt, setRektProtekt] = useState(false);
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = getDenomInfo(resultingDenom);
-
-  const transactionType = initialDenomInfo.stable ? TransactionType.Buy : TransactionType.Sell;
+  const transactionType = initialDenom && (initialDenom.stable ? TransactionType.Buy : TransactionType.Sell);
 
   useEffect(() => {
     if (!!expectedPrice && !priceThresholdMeta.touched) {
@@ -454,16 +452,17 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
               <Text noOfLines={1} textAlign="end" fontSize="11.5">
                 Skip swaps if:
               </Text>
-              <Text noOfLines={1} textAlign="end" fontSize="11.5" color="blue.200">
-                {`1 ${
-                  (transactionType === TransactionType.Buy ? resultingDenomInfo : initialDenomInfo).name
-                } < ${Number(
-                  (
-                    expectedPrice &&
-                    expectedPrice * (transactionType === TransactionType.Buy ? 1 + priceThreshold : 1 - priceThreshold)
-                  )?.toFixed(3),
-                )} ${(transactionType === TransactionType.Buy ? initialDenomInfo : resultingDenomInfo).name}`}
-              </Text>
+              {transactionType && resultingDenom && initialDenom && (
+                <Text noOfLines={1} textAlign="end" fontSize="11.5" color="blue.200">
+                  {`1 ${(transactionType === TransactionType.Buy ? resultingDenom : initialDenom).name} < ${Number(
+                    (
+                      expectedPrice &&
+                      expectedPrice *
+                        (transactionType === TransactionType.Buy ? 1 + priceThreshold : 1 - priceThreshold)
+                    )?.toFixed(3),
+                  )} ${(transactionType === TransactionType.Buy ? initialDenom : resultingDenom).name}`}
+                </Text>
+              )}
             </HStack>
           ) : (
             <Spinner size="xs" />
@@ -566,6 +565,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
 }
 
 function DurationSlider() {
+  const { getDenomInfo, denoms } = useDenoms();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
@@ -592,9 +592,6 @@ function DurationSlider() {
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-  const resultingDenomInfo = resultingDenom ? getDenomInfo(resultingDenom) : undefined;
-
   // const { route, ...useRouteHelpers } = useRoute(
   //   swapAmountField.value && initialDenomInfo
   //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
@@ -609,29 +606,27 @@ function DurationSlider() {
   const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
 
   const { twap } = useTwapToNow(
-    initialDenomInfo,
-    resultingDenomInfo,
+    initialDenom,
+    resultingDenom,
     route,
-    !!resultingDenomInfo && !!initialDenomInfo && !useRouteHelpers.isLoading,
+    !!resultingDenom && !!initialDenom && !useRouteHelpers.isLoading,
   );
   const { dexFee } = useDexFee();
-  const { fiatPrice } = useFiatPrice(initialDenomInfo);
+  const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const minimumSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
+  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (0.51 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
 
   const swapAmount =
-    swapAmountField.value && initialDenomInfo
-      ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-      : undefined;
+    swapAmountField.value && initialDenom ? coin(BigInt(swapAmountField.value).toString(), initialDenom.id) : undefined;
 
   const { expectedPrice } = useExpectedPrice(
     swapAmount,
-    resultingDenomInfo,
+    resultingDenom,
     route,
-    !!swapAmountField.value && !!resultingDenomInfo && !useRouteHelpers.isLoading,
+    !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const expectedPriceImpact = !twap || !expectedPrice ? null : ((expectedPrice - twap) / twap) * 100;
@@ -644,37 +639,37 @@ function DurationSlider() {
 
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
     swapAmount,
-    resultingDenomInfo,
+    resultingDenom,
     route,
-    !!swapAmountField.value && !!resultingDenomInfo && !useRouteHelpers.isLoading,
+    !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
-    debouncedInitialDeposit && initialDenomInfo
-      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenomInfo.id)
+    debouncedInitialDeposit && initialDenom
+      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenom.id)
       : undefined,
-    resultingDenomInfo,
+    resultingDenom,
     route,
-    !!debouncedInitialDeposit && !!initialDenomInfo && !!resultingDenomInfo && !useRouteHelpers.isLoading,
+    !!debouncedInitialDeposit && !!initialDenom && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const expectedTotalReceiveAmount =
-    initialDenomInfo &&
+    initialDenom &&
     swapAmountField.value &&
     expectedReceiveAmount &&
     Number(expectedReceiveAmount?.amount) * (debouncedInitialDeposit / swapAmountField.value);
 
-  const totalFee = resultingDenomInfo && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
+  const totalFee = resultingDenom && expectedTotalReceiveAmount && expectedTotalReceiveAmount * (SWAP_FEE + dexFee);
   const expectedFinalReceiveAmount = expectedTotalReceiveAmount && totalFee && expectedTotalReceiveAmount - totalFee;
 
   const extraExpectedReceiveAmount =
     !!expectedFinalReceiveAmount &&
     !!directExpectedReceiveAmount &&
-    !!resultingDenomInfo &&
-    resultingDenomInfo.fromAtomic(max(0, expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)));
+    !!resultingDenom &&
+    fromAtomic(resultingDenom, max(0, expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)));
 
   useEffect(() => {
-    const minSwapAmount = fiatPrice && Math.floor(initialDenomInfo.toAtomic(1) * (0.51 / fiatPrice));
+    const minSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (0.51 / fiatPrice));
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
     const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
@@ -690,7 +685,7 @@ function DurationSlider() {
     if (!swapAmountField.value) {
       setDebouncedStrategyDuration(sliderValue);
     }
-  }, [initialDenomInfo]);
+  }, [initialDenom]);
 
   const getStrategyDurationFromSlider = (value: number, factor = 0.2) =>
     max(1, Math.round(((factor * value) ** 2 / (factor * maxValue) ** 2) * maxValue));
@@ -699,10 +694,14 @@ function DurationSlider() {
     <>
       <FormControl id="swaps">
         <FormLabel>
-          Price optimised swap
-          <Button variant="link" size="xs" color="slategrey" onClick={onOpen}>
-            <Icon as={QuestionOutlineIcon} _hover={{ color: 'blue.200' }} />
-          </Button>
+          <HStack>
+            <Text>Price optimised swap</Text>
+            <Tooltip
+              label={`Reduce the price impact your swap has on the market by breaking up 1 swap into several transactions so you get more in return rather than profit the arb bots. Enable price protection to safeguard against less favorable price shifts, while still giving you the opportunity to capitalize on positive market movements.`}
+            >
+              <Icon as={QuestionOutlineIcon} _hover={{ color: 'blue.200' }} />
+            </Tooltip>
+          </HStack>
         </FormLabel>
         <FormHelperText>
           <Center>
@@ -764,11 +763,12 @@ function DurationSlider() {
             <Text color="brand.200" fontSize="xs">
               {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
               {Number(
-                initialDenomInfo
-                  .fromAtomic(swaps && debouncedInitialDeposit && Math.ceil(debouncedInitialDeposit / swaps))
-                  .toFixed(initialDenomInfo.significantFigures),
+                fromAtomic(
+                  initialDenom,
+                  swaps && debouncedInitialDeposit && Math.ceil(debouncedInitialDeposit / swaps),
+                ).toFixed(initialDenom.significantFigures),
               ).toString()}{' '}
-              {initialDenomInfo.name}
+              {initialDenom.name}
               {!isSliding && expectedPriceImpact && !useRouteHelpers.isLoading
                 ? ` with estimated ${Number(expectedPriceImpact.toFixed(3))}% price impact`
                 : ''}
@@ -823,20 +823,21 @@ function DurationSlider() {
                       fontWeight={600}
                     >
                       +
-                      {resultingDenomInfo &&
-                        Number(
-                          extraExpectedReceiveAmount.toFixed(resultingDenomInfo.significantFigures),
-                        ).toLocaleString([], {
-                          maximumFractionDigits: resultingDenomInfo.significantFigures,
-                        })}{' '}
-                      {resultingDenomInfo && resultingDenomInfo.name}
+                      {resultingDenom &&
+                        Number(extraExpectedReceiveAmount.toFixed(resultingDenom.significantFigures)).toLocaleString(
+                          [],
+                          {
+                            maximumFractionDigits: resultingDenom.significantFigures,
+                          },
+                        )}{' '}
+                      {resultingDenom && resultingDenom.name}
                     </Text>
                   ) : !initialDenom ||
                     !debouncedInitialDeposit ||
                     !resultingDenomValue ||
                     extraExpectedReceiveAmount === 0 ? (
                     <Text fontSize="m" fontWeight={600}>
-                      0.00 {resultingDenomInfo?.name ?? ''}
+                      0.00 {resultingDenom?.name ?? ''}
                     </Text>
                   ) : (
                     <Spinner mt={3} mr={3} p={1} />
@@ -879,14 +880,15 @@ function DurationSlider() {
 }
 
 function FeeSection() {
+  const { getDenomInfo } = useDenoms();
   const {
     values: { initialDenom, initialDeposit, resultingDenom, swapAmount },
   } = useFormikContext<FormData>();
 
-  const initialDenomInfo = getDenomInfo(initialDenom);
-
-  const { fiatPrice } = useFiatPrice(initialDenomInfo);
+  const { fiatPrice } = useFiatPrice(initialDenom);
   const { dexFee } = useDexFee();
+
+  if (!initialDenom) return null;
 
   return (
     <Collapse in={!!initialDenom && !!initialDeposit && !!resultingDenom && !!swapAmount}>
@@ -894,28 +896,34 @@ function FeeSection() {
         <Text textStyle="body-xs" as="span">
           Estimated fees:
           <Tooltip label={`Standard ${SWAP_FEE * 100}% fee on all streaming swaps.`} placement="top">
-            <Text as="span" textColor="white">
-              {' '}
-              {String.fromCharCode(8275)}
-              {getPrettyFee(initialDenomInfo.fromAtomic(initialDeposit), SWAP_FEE + dexFee)} {initialDenomInfo.name}{' '}
-              {`(${Number(
-                getPrettyFee(initialDenomInfo.fromAtomic(swapAmount), SWAP_FEE + dexFee).toFixed(
-                  initialDenomInfo.significantFigures,
-                ),
-              )} ${initialDenomInfo.name} per swap)`}
-            </Text>
+            {initialDenom ? (
+              <Text as="span" textColor="white">
+                {' '}
+                {String.fromCharCode(8275)}
+                {getPrettyFee(fromAtomic(initialDenom, initialDeposit), SWAP_FEE + dexFee)} {initialDenom.name}{' '}
+                {`(${Number(
+                  getPrettyFee(fromAtomic(initialDenom, swapAmount), SWAP_FEE + dexFee).toFixed(
+                    initialDenom.significantFigures,
+                  ),
+                )} ${initialDenom.name} per swap)`}
+              </Text>
+            ) : (
+              <Text></Text>
+            )}
           </Tooltip>
         </Text>
-        <Box pl={2}>
-          <FeeBreakdown
-            initialDenom={initialDenomInfo}
-            swapAmount={initialDenomInfo.fromAtomic(swapAmount)}
-            price={fiatPrice}
-            dexFee={dexFee}
-            swapFee={SWAP_FEE}
-            excludeDepositFee={false}
-          />
-        </Box>
+        {initialDenom && (
+          <Box pl={2}>
+            <FeeBreakdown
+              initialDenom={initialDenom}
+              swapAmount={fromAtomic(initialDenom, swapAmount)}
+              price={fiatPrice}
+              dexFee={dexFee}
+              swapFee={SWAP_FEE}
+              excludeDepositFee={false}
+            />
+          </Box>
+        )}
       </Stack>
     </Collapse>
   );
@@ -926,7 +934,7 @@ export function Form() {
   const { nextStep } = useSteps(streamingSwapSteps);
   const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
   const { pairs } = usePairs();
-  const { data: balances } = useBalances();
+  const { balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
   const [, setIsSuccess] = useState(false);
 

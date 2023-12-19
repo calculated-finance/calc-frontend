@@ -17,13 +17,7 @@ export default function DCAOutResultingDenom({ denoms }: { denoms: DenomInfo[] }
       <FormHelperText>
         <Text textStyle="body-xs">You will have the choice to move these funds into another strategy at the end.</Text>
       </FormHelperText>
-      <DenomSelect
-        denoms={denoms}
-        placeholder="Choose asset"
-        value={field.value}
-        onChange={helpers.setValue}
-        showPromotion
-      />
+      <DenomSelect denoms={denoms} placeholder="Choose asset" value={field.value} onChange={helpers.setValue} />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
     </FormControl>
   );

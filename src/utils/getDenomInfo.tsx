@@ -14,6 +14,15 @@ function isDenomInStablesList(denom: Denom) {
   return { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis }[denom as MainnetDenomsOsmosis | TestnetDenomsOsmosis]
     ?.stable;
 }
+export const fromAtomic = (denom: DenomInfo, value: number) => value / 10 ** denom.significantFigures;
+
+export const toAtomic = (denom: DenomInfo, value: number) => Math.round(value * 10 ** denom.significantFigures);
+
+export const priceFromRatio = (denom: DenomInfo, value: number | null | undefined) =>
+  Number(value) * 10 ** (denom.significantFigures - 6);
+
+export const ratioFromPrice = (denom: DenomInfo, value: number | null | undefined) =>
+  Number(value) / 10 ** (denom.significantFigures - 6);
 
 const getDenomInfo = (denom: string | undefined): DenomInfo => {
   if (!denom) {
@@ -46,7 +55,6 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
       stakeable: !isDenomInStablesList(denom as Denom),
       stable: isDenomInStablesList(denom as Denom),
       coingeckoId: asset.coingecko_id || denoms[scopedDenom]?.coingeckoId || '',
-      osmosisId: asset.symbol,
       enabledInDcaPlus: denoms[scopedDenom]?.enabledInDcaPlus,
       significantFigures,
       pricePrecision: 6,
@@ -59,8 +67,8 @@ const getDenomInfo = (denom: string | undefined): DenomInfo => {
         ...denomInfo,
         fromAtomic: (value: number) => value / 10 ** significantFigures,
         toAtomic: (value: number) => Math.round(value * 10 ** significantFigures),
-        priceDeconversion: (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6),
-        priceConversion: (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6),
+        priceFromRatio: (value: number | null | undefined) => Number(value) * 10 ** (significantFigures - 6),
+        ratioFromPrice: (value: number | null | undefined) => Number(value) / 10 ** (significantFigures - 6),
         minimumSwapAmount: 0.05 / 1000,
       };
     }

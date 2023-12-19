@@ -4,6 +4,7 @@ import { DenomInfo } from './DenomInfo';
 export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
   [TestnetDenoms.Demo]: {
     name: 'DEMO',
+    icon: 'missing',
     stable: true,
     coingeckoId: 'usd-coin',
     significantFigures: 6,
@@ -52,6 +53,7 @@ export const testnetDenomsKujira: Record<TestnetDenoms, Partial<DenomInfo>> = {
   },
   [TestnetDenoms.NBTC]: {
     name: 'NBTC',
+    icon: '/images/denoms/nbtc.svg',
     stakeable: false,
     coingeckoId: 'bitcoin',
     significantFigures: 6,
