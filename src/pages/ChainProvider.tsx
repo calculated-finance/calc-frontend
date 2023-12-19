@@ -21,10 +21,10 @@ export function ChainProvider({ children }: ChildrenProp) {
         isMobile ? !wallet.isModeExtension : wallet.isModeExtension,
       )}
       endpointOptions={{
-        isLazy: !(process.env.NEXT_PUBLIC_APP_ENV === 'production'),
+        isLazy: true,
         endpoints: {
           kujira: {
-            rpc: ['https://kujira-rpc.nodes.defiantlabs.net', 'https://rpc-kujira.mintthemoon.xyz'],
+            rpc: ['https://kujira-rpc.nodes.defiantlabs.net'],
           },
           osmosis: {
             rpc: ['https://rpc.osmosis.zone/'],
