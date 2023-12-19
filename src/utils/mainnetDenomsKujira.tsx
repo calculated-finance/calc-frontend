@@ -326,8 +326,8 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     enabledInDcaPlus: false,
     pricePrecision: 2,
   },
-  [MainnetDenoms.yeildETH]: {
-    name: 'yeildETH',
+  [MainnetDenoms.yieldETH]: {
+    name: 'yieldETH',
     icon: '/images/denoms/yieldeth.svg',
     coingeckoId: 'yieldeth-sommelier',
     stakeable: false,
