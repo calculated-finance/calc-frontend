@@ -48,7 +48,6 @@ export function Assets() {
   const onSubmit = (formData: AssetsFormValues) => {
     const formName = strategyTypesToFormTypes[formData.strategyType];
     actions.updateAction(formName)(formData);
-
     const currentSteps = getSteps(formData.strategyType);
     routerPush(router, currentSteps[CUSTOMISE_PAGE_INDEX].href);
   };

@@ -74,7 +74,7 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
           stakeableAndSupported: overrides.stakeableAndSupported || false,
           stable: overrides.stable || false,
           coingeckoId: asset.coingecko_id || overrides.coingeckoId || '',
-          enabledInDcaPlus: overrides.enabledInDcaPlus,
+          enabledInDcaPlus: overrides.enabledInDcaPlus || false,
           significantFigures,
         }),
       };

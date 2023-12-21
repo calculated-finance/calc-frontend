@@ -71,12 +71,10 @@ export function AssetsForm() {
   const { denoms } = useDenoms();
   const { pairs } = usePairs();
   const [initialDenom, meta, helpers] = useField({ name: 'initialDenom' });
-  const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
-  const [strategyField] = useField({ name: 'strategyType' });
+  const [resultingDenom, resultingDenomMeta, resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+  const [strategyType] = useField({ name: 'strategyType' });
   const { chainId } = useChainId();
   const { getDenomById } = useDenoms();
-
-  const initialDenomInfo = initialDenom.value;
 
   if (!pairs || !denoms?.[chainId])
     return (
@@ -87,7 +85,7 @@ export function AssetsForm() {
       </Box>
     );
 
-  const isDcaInStrategy = getIsDcaInStrategy(strategyField.value);
+  const isDcaInStrategy = getIsDcaInStrategy(strategyType.value);
 
   return (
     <>
@@ -105,7 +103,7 @@ export function AssetsForm() {
                 : `CALC currently supports pairs trading on ${getChainDexName(chainId)}.`}{' '}
             </Text>
             <Spacer />
-            <AvailableFunds denom={initialDenomInfo} />
+            <AvailableFunds denom={initialDenom.value} />
           </Center>
         </FormHelperText>
         <SimpleGrid columns={2} spacing={2}>
@@ -113,11 +111,11 @@ export function AssetsForm() {
             <DenomSelect
               denoms={
                 denoms && chainId && denoms[chainId]
-                  ? orderAlphabetically(getInitialDenomsFromStrategyType(strategyField.value, values(denoms[chainId])))
+                  ? orderAlphabetically(getInitialDenomsFromStrategyType(strategyType.value, values(denoms[chainId])))
                   : []
               }
               placeholder="Choose&nbsp;asset"
-              value={initialDenom.value}
+              value={initialDenom.value.id}
               onChange={(v) => v && helpers.setValue(getDenomById(v))}
               optionLabel={getChainDexName(chainId)}
             />
@@ -126,7 +124,10 @@ export function AssetsForm() {
           <InitialDeposit />
         </SimpleGrid>
       </FormControl>
-      <FormControl isInvalid={Boolean(resultingMeta.touched && resultingMeta.error)} isDisabled={!initialDenom.value}>
+      <FormControl
+        isInvalid={Boolean(resultingDenomMeta.touched && resultingDenomMeta.error)}
+        isDisabled={!initialDenom.value}
+      >
         <FormLabel hidden={!isDcaInStrategy}>What asset do you want to invest in?</FormLabel>
         <FormLabel hidden={isDcaInStrategy}>How do you want to hold your profits?</FormLabel>
         <FormHelperText>
@@ -137,10 +138,10 @@ export function AssetsForm() {
           </Text>
         </FormHelperText>
         <DenomSelect
-          denoms={getResultingDenomsFromStrategyType(strategyField.value, pairs, initialDenom.value)}
+          denoms={getResultingDenomsFromStrategyType(strategyType.value, pairs, initialDenom.value)}
           placeholder="Choose asset"
-          value={resultingField.value}
-          onChange={(v) => v && resultingHelpers.setValue(getDenomById(v))}
+          value={resultingDenom.value}
+          onChange={(v) => v && resultingDenomHelpers.setValue(getDenomById(v))}
           optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
         <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
