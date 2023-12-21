@@ -65,7 +65,6 @@ export function allDenomsFromPairs(pairs: HydratedPair[] | undefined) {
 }
 
 export function getResultingDenoms(pairs: HydratedPair[], initialDenom?: DenomInfo) {
-  console.log({ initialDenom, pairs });
   return !initialDenom
     ? []
     : orderAlphabetically(
@@ -82,14 +81,11 @@ export default function usePairs(injectedChainId?: ChainId) {
   const { chainId: currentChainId } = useChainId();
   const chainId = injectedChainId ?? currentChainId;
   const { cosmWasmClient } = useCosmWasmClient(chainId);
-  const { denoms, getDenomInfo } = useDenoms();
+  const { denoms, getDenomById } = useDenoms();
 
   const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
-    () => {
-      const calcClient = getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, getDenomInfo);
-      return calcClient.fetchAllPairs();
-    },
+    () => getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllPairs(),
     {
       enabled: !!chainId && !!cosmWasmClient,
       staleTime: 1000 * 60 * 5,
@@ -100,15 +96,14 @@ export default function usePairs(injectedChainId?: ChainId) {
   );
 
   return {
-    pairs: pairs?.filter((pair) => isPairVisible(pair.denoms)),
-    hydratedPairs:
+    pairs:
       denoms &&
       pairs
         ?.filter((pair) => isPairVisible(pair.denoms) && !any((denom) => denom === undefined, pair.denoms))
         ?.map(
           (pair) =>
             ({
-              denoms: pair.denoms.map((denom) => getDenomInfo(denom)),
+              denoms: pair.denoms.map((denom) => getDenomById(denom)),
             } as HydratedPair),
         )
         .filter((pair) => pair.denoms.every((denom) => !!denom)),

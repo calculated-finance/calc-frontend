@@ -4,10 +4,8 @@ import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import {
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
   getStrategyType,
   getStrategyName,
   isStrategyCancelled,
@@ -52,8 +50,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
 }
 
 function StrategyRow({ strategy }: { strategy: Strategy }) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const { initialDenom, resultingDenom } = strategy;
 
   return (
     <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
@@ -98,7 +95,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Balance:</Text>
           <Text textStyle="body-xs">
-            {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
+            {fromAtomic(strategy.initialDenom, Number(strategy.rawData.balance.amount))} {initialDenom.name}
           </Text>
         </GridItem>
         <GridItem

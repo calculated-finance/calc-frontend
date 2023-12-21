@@ -30,13 +30,7 @@ import {
   useMediaQuery,
 } from '@chakra-ui/react';
 import { FormData, initialValues, schema } from 'src/models/StreamingSwapFormData';
-import CalcSpinner from '@components/Spinner';
-import usePairs, {
-  getResultingDenoms,
-  orderAlphabetically,
-  uniqueBaseDenoms,
-  uniqueQuoteDenoms,
-} from '@hooks/usePairs';
+import usePairs, { getResultingDenoms, orderAlphabetically } from '@hooks/usePairs';
 import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
@@ -57,10 +51,9 @@ import { Icon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import { MdAccessTime } from 'react-icons/md';
 import { FaAnglesUp, FaChevronDown, FaChevronUp, FaShieldHalved } from 'react-icons/fa6';
 import useTwapToNow from '@hooks/useTwapToNow';
-import { max, min } from 'rambda';
+import { max, min, toLower, values } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import { useDebounce } from 'ahooks';
-import { ModalWrapper } from '@components/ModalWrapper';
 import { ConnectWalletButton } from '@components/StepOneConnectWallet';
 import { SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
@@ -70,27 +63,36 @@ import { Swap2Icon } from '@fusion-icons/react/web3';
 import { TransactionType } from '@components/TransactionType';
 import useDenoms from '@hooks/useDenoms';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
-import { DenomInfo } from '@utils/DenomInfo';
+import useQueryState from '@hooks/useQueryState';
+import { useChainId } from '@hooks/useChainId';
+import { NewStrategyModalBody } from './NewStrategyModal';
 
 function InitialDeposit() {
   const {
     values: { initialDenom },
   } = useFormikContext<FormData>();
 
+  const [{ amount }, setQueryState] = useQueryState();
   const [{ onChange, value, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
+
+  useEffect(() => {
+    helpers.setValue(amount);
+  }, [amount]);
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput
-        onChange={(newValue) =>
-          helpers.setValue(newValue && initialDenom && Math.round(toAtomic(initialDenom, newValue)))
+        onChange={(newAmount) =>
+          setQueryState({
+            amount: newAmount && initialDenom && BigInt(Math.round(toAtomic(initialDenom, newAmount))).toString(),
+          })
         }
         textAlign="right"
         placeholder="Enter amount"
         value={
-          (value &&
+          (amount &&
             initialDenom &&
-            Number(fromAtomic(initialDenom, value)?.toFixed(max(initialDenom.significantFigures, 6)))) ??
+            Number(fromAtomic(initialDenom, amount)?.toFixed(max(initialDenom.significantFigures, 6)))) ??
           ''
         }
         {...field}
@@ -101,26 +103,54 @@ function InitialDeposit() {
 }
 
 function InitialDenom() {
-  const { getDenomInfo } = useDenoms();
-  const { hydratedPairs: pairs } = usePairs();
+  const [isMobile] = useMediaQuery('(max-width: 506px)');
+  const { denoms, getDenomById, getDenomByName } = useDenoms();
+  const { chainId } = useChainId();
+  const { pairs } = usePairs();
+
+  const [{ from: initialDenomName, to: resultingDenomName, amount }, setQueryState] = useQueryState();
+
   const [initialDenom, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [, , priceThresholdHelpers] = useField({ name: 'priceThreshold' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
-  const [initialDeposit, , initialDepositHelpers] = useField<number>({ name: 'initialDeposit' });
-  const [isMobile] = useMediaQuery('(max-width: 506px)');
-  const { fiatPrice } = useFiatPrice(getDenomInfo(initialDenom.value));
+  const [initialDeposit] = useField<number>({ name: 'initialDeposit' });
+
+  const { fiatPrice } = useFiatPrice(initialDenom.value);
 
   useEffect(() => {
-    if (!!pairs && !initialDenom.value) {
+    const initialDenomAlreadySet = initialDenomName && getDenomByName(initialDenomName)?.id === initialDenom.value?.id;
+    const resultingDenomAlreadySet =
+      initialDenomAlreadySet &&
+      resultingDenomName &&
+      getDenomByName(resultingDenomName)?.id === resultingDenom.value?.id;
+
+    const denomsAlreadySet = initialDenomAlreadySet && resultingDenomAlreadySet;
+
+    if (!pairs || denomsAlreadySet) return;
+
+    priceThresholdHelpers.setValue(''); // check
+
+    if (!initialDenomName && !initialDenom.value) {
       const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
-      initialDenomHelpers.setValue(randomPair.denoms[0].id);
-      resultingDenomHelpers.setValue(randomPair.denoms[1].id);
+      setQueryState({ from: randomPair.denoms[0].name, to: randomPair.denoms[1].name });
+    } else {
+      const newInitialDenom = getDenomByName(initialDenomName);
+
+      if (!initialDenomAlreadySet) {
+        initialDenomHelpers.setValue(newInitialDenom);
+        setQueryState({ from: newInitialDenom?.name });
+      }
+
+      if (!resultingDenomAlreadySet) {
+        const validResultingDenoms = pairs && newInitialDenom ? getResultingDenoms(pairs, newInitialDenom) : [];
+        const newResultingDenom =
+          resultingDenomName && validResultingDenoms.find((d) => toLower(d.name) === toLower(resultingDenomName));
+
+        setQueryState({ to: newResultingDenom?.name });
+        resultingDenomHelpers.setValue(newResultingDenom);
+      }
     }
-  });
-
-  if (!pairs) return null;
-
-  const initialDenomInfo = getDenomInfo(initialDenom.value);
+  }, [initialDenomName, pairs?.length]);
 
   return (
     <FormControl isInvalid={Boolean(initialDenomMeta.touched && initialDenomMeta.error)}>
@@ -129,37 +159,29 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose asset to send</Text>
           <Spacer />
-          {initialDenomInfo && <AvailableFunds denom={initialDenomInfo} deconvertValue />}
+          {initialDenom.value && <AvailableFunds denom={initialDenom.value} deconvertValue />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
         <Box>
           <DenomSelect
-            denoms={orderAlphabetically(
-              Array.from(new Set([...uniqueBaseDenoms(pairs), ...uniqueQuoteDenoms(pairs)])).filter(
-                (denom) => denom !== undefined,
-              ),
-            )}
+            denoms={orderAlphabetically(values(denoms?.[chainId] ?? {}))}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
-            value={initialDenom.value}
-            onChange={(newValue) => {
-              if (!newValue) return;
-              const newDenomInfo = getDenomInfo(newValue)!;
-              const denoms = pairs && newValue ? getResultingDenoms(pairs, newDenomInfo) : [];
-              const resultingDenomIsNotAllowed = !denoms.find((d) => d.id === resultingDenom.value);
-              if (resultingDenomIsNotAllowed) resultingDenomHelpers.setValue(undefined);
-              if (
-                initialDeposit.value &&
-                initialDenomInfo &&
-                newDenomInfo &&
-                initialDenomInfo.significantFigures !== newDenomInfo.significantFigures
-              ) {
-                initialDepositHelpers.setValue(
-                  initialDeposit.value * 10 ** (newDenomInfo.significantFigures - initialDenomInfo.significantFigures),
-                );
-              }
-              priceThresholdHelpers.setValue('');
-              initialDenomHelpers.setValue(newValue);
+            defaultValue={initialDenom.value?.id}
+            isDisabled={!pairs}
+            value={initialDenom.value?.id}
+            onChange={(v) => {
+              const newInitialDenom = v ? getDenomById(v) : undefined;
+              setQueryState({
+                from: newInitialDenom?.name,
+                amount:
+                  amount &&
+                  initialDenom &&
+                  newInitialDenom &&
+                  BigInt(
+                    amount * 10 ** (newInitialDenom.significantFigures - initialDenom.value.significantFigures),
+                  ).toString(),
+              });
             }}
           />
           <FormErrorMessage>{initialDenomMeta.touched && initialDenomMeta.error}</FormErrorMessage>
@@ -172,10 +194,10 @@ function InitialDenom() {
             <Text>USD Value:</Text>
             <Text color="white">
               $
-              {(initialDeposit.value && fiatPrice && initialDenomInfo
+              {(initialDeposit.value && fiatPrice && initialDenom.value
                 ? Number(
-                    (fromAtomic(initialDenomInfo, initialDeposit.value) * fiatPrice)?.toFixed(
-                      initialDenomInfo.significantFigures / 3,
+                    (fromAtomic(initialDenom.value, initialDeposit.value) * fiatPrice)?.toFixed(
+                      initialDenom.value.significantFigures / 3,
                     ),
                   )
                 : '0.00'
@@ -189,14 +211,13 @@ function InitialDenom() {
 }
 
 function SwapDenoms() {
-  const { getDenomInfo } = useDenoms();
-  const [{ value: initialDenomValue }, , initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [{ value: initialDepositValue }, , initialDepositHelpers] = useField({ name: 'initialDeposit' });
-  const [{ value: resultingDenomValue }, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+  const [{ value: initialDenomValue }] = useField({ name: 'initialDenom' });
+  const [{ value: resultingDenomValue }] = useField({ name: 'resultingDenom' });
   const [, priceThresholdMeta, priceThresholdHelpers] = useField({ name: 'priceThreshold' });
 
-  const resultingDenomInfo = getDenomInfo(resultingDenomValue);
-  const initialDenomInfo = getDenomInfo(initialDenomValue);
+  const { getDenomById } = useDenoms();
+  const [{ amount }, setQueryState] = useQueryState();
+
   return (
     <Center>
       <Image
@@ -206,15 +227,17 @@ function SwapDenoms() {
           initialDenomValue &&
           resultingDenomValue &&
           (() => {
-            initialDenomHelpers.setValue(resultingDenomValue);
-            resultingDenomHelpers.setValue(initialDenomValue);
-
-            if (initialDepositValue && resultingDenomInfo && initialDenomInfo) {
-              initialDepositHelpers.setValue(
-                initialDepositValue *
-                  10 ** (resultingDenomInfo.significantFigures - initialDenomInfo.significantFigures),
-              );
-            }
+            setQueryState({
+              from: getDenomById(resultingDenomValue.id)?.name,
+              to: getDenomById(initialDenomValue.id)?.name,
+              ...(amount && resultingDenomValue && initialDenomValue
+                ? {
+                    amount: BigInt(
+                      amount * 10 ** (resultingDenomValue.significantFigures - initialDenomValue.significantFigures),
+                    ).toString(),
+                  }
+                : {}),
+            });
 
             if (priceThresholdMeta.touched) priceThresholdHelpers.setTouched(false);
           })
@@ -226,9 +249,11 @@ function SwapDenoms() {
 
 function ResultingDenom() {
   const [isMobile] = useMediaQuery('(max-width: 506px)');
-  const { hydratedPairs: pairs } = usePairs();
+  const { pairs } = usePairs();
   const { dexFee } = useDexFee();
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById, getDenomByName } = useDenoms();
+
+  const [{ to: resultingDenomName }, setQueryState] = useQueryState();
 
   const {
     values: { initialDenom, initialDeposit, swapAmount },
@@ -237,6 +262,11 @@ function ResultingDenom() {
   const [{ value: resultingDenomValue, ...resultingDenomField }, resultingDenomMeta, resultingDenomHelpers] = useField({
     name: 'resultingDenom',
   });
+
+  useEffect(() => {
+    if (!resultingDenomName) return;
+    resultingDenomHelpers.setValue(getDenomByName(resultingDenomName));
+  }, [resultingDenomName]);
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
@@ -292,9 +322,9 @@ function ResultingDenom() {
         <DenomSelect
           denoms={pairs && initialDenom ? getResultingDenoms(pairs, initialDenom) : []}
           placeholder={isMobile ? 'Asset' : 'Choose asset'}
-          defaultValue={resultingDenomValue.id}
-          value={resultingDenomValue}
-          onChange={(v) => v && resultingDenomHelpers.setValue(getDenomInfo(v))}
+          defaultValue={resultingDenomValue?.id}
+          value={resultingDenomValue?.id}
+          onChange={(v) => setQueryState({ to: v && getDenomById(v)?.name })}
         />
         <FormErrorMessage>{resultingDenomMeta.touched && resultingDenomMeta.error}</FormErrorMessage>
         <NumberInput
@@ -565,8 +595,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
 }
 
 function DurationSlider() {
-  const { getDenomInfo, denoms } = useDenoms();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
 
   const {
     values: { initialDenom, initialDeposit, resultingDenom },
@@ -696,9 +725,7 @@ function DurationSlider() {
         <FormLabel>
           <HStack>
             <Text>Price optimised swap</Text>
-            <Tooltip
-              label={`Reduce the price impact your swap has on the market by breaking up 1 swap into several transactions so you get more in return rather than profit the arb bots. Enable price protection to safeguard against less favorable price shifts, while still giving you the opportunity to capitalize on positive market movements.`}
-            >
+            <Tooltip label="Reduce the price impact your swap has on the market by breaking up 1 swap into several transactions so you get more in return rather than profit the arb bots. Enable price protection to safeguard against less favorable price shifts, while still giving you the opportunity to capitalize on positive market movements.">
               <Icon as={QuestionOutlineIcon} _hover={{ color: 'blue.200' }} />
             </Tooltip>
           </HStack>
@@ -776,7 +803,7 @@ function DurationSlider() {
           </FormHelperText>
         )}
       </FormControl>
-      <Collapse in={!!swaps && !!debouncedInitialDeposit}>
+      <Collapse in={!!swaps && !!debouncedInitialDeposit && !!resultingDenom}>
         <Stack spacing={4}>
           <Box position="relative" borderRadius="lg" p={4}>
             <Box
@@ -880,7 +907,6 @@ function DurationSlider() {
 }
 
 function FeeSection() {
-  const { getDenomInfo } = useDenoms();
   const {
     values: { initialDenom, initialDeposit, resultingDenom, swapAmount },
   } = useFormikContext<FormData>();
@@ -907,9 +933,7 @@ function FeeSection() {
                   ),
                 )} ${initialDenom.name} per swap)`}
               </Text>
-            ) : (
-              <Text></Text>
-            )}
+            ) : null}
           </Tooltip>
         </Text>
         {initialDenom && (
@@ -932,8 +956,8 @@ function FeeSection() {
 export function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(streamingSwapSteps);
+  const { isLoading: isPairsLoading } = usePairs();
   const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
-  const { pairs } = usePairs();
   const { balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
   const [, setIsSuccess] = useState(false);
@@ -957,13 +981,13 @@ export function Form() {
 
   return (
     <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-      {({ values }) => (
-        <ModalWrapper stepsConfig={[streamingSwapSteps[0]]}>
-          {!pairs || isLoading ? (
-            <Center h={400}>
-              <CalcSpinner />
-            </Center>
-          ) : (
+      {({ values: formValues }) => (
+        <Box maxWidth={451} mx="auto">
+          <NewStrategyModalBody
+            stepsConfig={streamingSwapSteps}
+            isLoading={isLoading || isPairsLoading}
+            isSigning={isLoading}
+          >
             <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
               <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
                 <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
@@ -978,14 +1002,14 @@ export function Form() {
                 <SummaryAgreementForm
                   isError={isError}
                   error={error}
-                  onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
+                  onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
                 />
               ) : (
                 <ConnectWalletButton />
               )}
             </Stack>
-          )}
-        </ModalWrapper>
+          </NewStrategyModalBody>
+        </Box>
       )}
     </Formik>
   );

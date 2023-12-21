@@ -1,7 +1,8 @@
-import getDenomInfo from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getCompletedEvents } from '@helpers/getCompletedEvents';
+import { DenomInfo } from '@utils/DenomInfo';
 
 type EventWithAccumulation = {
   time: Date;
@@ -32,7 +33,7 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
   return currentPrice;
 };
 
-export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
+export function getEventsWithAccumulation(completedEvents: StrategyEvent[], denoms: { [x: string]: DenomInfo }) {
   let totalAmount = 0;
 
   return completedEvents?.map((event) => {
@@ -40,12 +41,11 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
 
     if ('dca_vault_execution_completed' in data) {
       const { received, fee, sent } = data.dca_vault_execution_completed;
-      const { fromAtomic: receivedFromAtomic, name } = getDenomInfo(received.denom);
-      const { fromAtomic: sentFromAtomic } = getDenomInfo(sent.denom);
-      const sentAmount = sentFromAtomic(Number(sent.amount));
-      const sentDenom = sent.denom;
+      const receivedDenom = denoms[received.denom];
+      const initialDenom = denoms[sent.denom];
+      const sentAmount = fromAtomic(initialDenom, Number(sent.amount));
 
-      const amount = receivedFromAtomic(Number(received.amount) - Number(fee.amount));
+      const amount = fromAtomic(receivedDenom, Number(received.amount) - Number(fee.amount));
       totalAmount += Number(amount);
 
       return {
@@ -53,8 +53,8 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[]) {
         time: new Date(Number(event.timestamp) / 1000000),
         accumulation: totalAmount,
         swapAmount: amount,
-        swapDenom: name,
-        denomSent: sentDenom,
+        swapDenom: receivedDenom.name,
+        denomSent: initialDenom,
         denomAmountSent: sentAmount,
       };
     }
@@ -82,13 +82,14 @@ export function getChartDataSwaps(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  denoms: { [x: string]: DenomInfo },
 ) {
   const completedEvents = getCompletedEvents(events);
 
   if (!completedEvents || !fiatPrices || !displayPrices) {
     return null;
   }
-  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
+  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents, denoms);
 
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
@@ -98,6 +99,7 @@ export function getChartDataSwaps(
     if (currentPriceInTime === null) {
       return null;
     }
+
     return {
       date,
       blockHeight: event.blockHeight,
@@ -114,6 +116,7 @@ export function getChartData(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
+  denoms: { [x: string]: DenomInfo },
 ) {
   const completedEvents = getCompletedEvents(events);
 
@@ -121,7 +124,7 @@ export function getChartData(
     return null;
   }
 
-  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents);
+  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents, denoms);
 
   const chartData = fiatPrices?.map((price) => ({
     date: new Date(price[0]),
@@ -130,7 +133,7 @@ export function getChartData(
       .toLocaleTimeString()
       .replace(/\b([ap]m)\b/gi, (match) => match.toUpperCase())})`,
   }));
-  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, displayPrices) || [])];
+  return [...chartData, ...(getChartDataSwaps(events, fiatPrices, displayPrices, denoms) || [])];
 }
 
 export function getPriceData(fiatPrices: FiatPriceHistoryResponse['prices'] | undefined) {

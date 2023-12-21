@@ -1,4 +1,4 @@
-import { fromAtomic, getDenomName } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
@@ -16,7 +16,6 @@ import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyType } from './StrategyType';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
-import { DenomInfo } from '@utils/DenomInfo';
 
 export type AssetsFormValues = Yup.InferType<typeof assetsFormSchema>;
 
@@ -57,45 +56,23 @@ export const assetsFormSchema = Yup.object({
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const { balances } = context?.options?.context || {};
-
-        if (!balances || !value || value <= 0) {
-          return true;
-        }
-
-        const balance = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
-
-        if (!balance) {
-          return false;
-        }
-
+        if (!balances || !value || value <= 0) return true;
+        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom.id)?.amount;
+        if (!balance) return false;
         return value <= fromAtomic(context.parent.initialDenom, Number(balance));
       },
     })
     .test({
       name: 'greater-than-minimum-deposit',
       test(value, context) {
-        if (isNil(value)) {
-          return true;
-        }
-
+        if (isNil(value)) return true;
         const { initialDenom = null, strategyType = null } = { ...context.parent, ...context.options.context };
-
-        if (!initialDenom) {
-          return true;
-        }
-
-        if (strategyType !== StrategyType.DCAPlusIn && strategyType !== StrategyType.DCAPlusOut) {
-          return true;
-        }
+        if (!initialDenom) return true;
+        if (strategyType !== StrategyType.DCAPlusIn && strategyType !== StrategyType.DCAPlusOut) return true;
         const { minimumSwapAmount = 0 } = initialDenom;
-
         const dcaPlusMinimumDeposit =
           minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT * MIN_DCA_PLUS_STRATEGY_DURATION;
-
-        if (value > dcaPlusMinimumDeposit) {
-          return true;
-        }
-
+        if (value > dcaPlusMinimumDeposit) return true;
         return context.createError({
           message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${initialDenom.name}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
         });
@@ -148,13 +125,9 @@ export const allSchema = {
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const { balances } = context?.options?.context || {};
-        if (!balances || !value || value <= 0) {
-          return true;
-        }
+        if (!balances || !value || value <= 0) return true;
         const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
-        if (!amount) {
-          return false;
-        }
+        if (!amount) return false;
         return value <= fromAtomic(context.parent.initialDenom, Number(amount));
       },
     }),
@@ -184,7 +157,6 @@ export const allSchema = {
           .min(minDate, ({ label }) => `${label} must be in the future.`)
           .required();
       }
-
       return schema.transform(() => null);
     }) as ConditionBuilder<MixedSchema>),
   startPrice: Yup.number()
@@ -213,13 +185,9 @@ export const allSchema = {
       name: 'time-is-in-past',
       message: 'Date and time must be in the future',
       test(value, context) {
-        if (!value?.match(timeFormat)) {
-          return true;
-        }
+        if (!value?.match(timeFormat)) return true;
         const { startDate = new Date() } = { ...context.parent };
-        if (!value || !startDate) {
-          return false;
-        }
+        if (!value || !startDate) return false;
         return new Date() <= combineDateAndTime(startDate, value);
       },
     }),
@@ -240,41 +208,24 @@ export const allSchema = {
     .label('Swap Amount')
     .required()
     .nullable()
-    .transform((value, originalValue) => {
-      if (originalValue === '') {
-        return null;
-      }
-      return value;
-    })
+    .transform((value, originalValue) => (originalValue === '' ? null : value))
     .test({
       name: 'less-than-deposit',
       message: 'Swap amount must be less than initial deposit',
       test(value, context) {
         const { initialDeposit = 0 } = { ...context.parent, ...context.options.context };
-        if (!value) {
-          return true;
-        }
+        if (!value) return true;
         return value <= initialDeposit;
       },
     })
     .test({
       name: 'greater-than-minimum-swap',
       test(value, context) {
-        if (isNil(value)) {
-          return true;
-        }
-
+        if (isNil(value)) return true;
         const { initialDenom = null } = { ...context.parent, ...context.options.context };
-
-        if (!initialDenom) {
-          return true;
-        }
-
+        if (!initialDenom) return true;
         const { minimumSwapAmount = 0 } = initialDenom;
-
-        if (value > minimumSwapAmount) {
-          return true;
-        }
+        if (value > minimumSwapAmount) return true;
         return context.createError({ message: `Swap amount should be greater than ${minimumSwapAmount}` });
       },
     }),
@@ -309,16 +260,10 @@ export const allSchema = {
       name: 'less-than-price-trigger',
       message: 'Price ceiling must be greater than or equal to price trigger',
       test(value, context) {
-        if (!value) {
-          return true;
-        }
+        if (!value) return true;
         const { startPrice = undefined, strategyType = undefined } = { ...context.parent, ...context.options.context };
-        if (!startPrice) {
-          return true;
-        }
-        if (strategyType !== StrategyType.DCAIn && strategyType !== StrategyType.WeightedScaleIn) {
-          return true;
-        }
+        if (!startPrice) return true;
+        if (strategyType !== StrategyType.DCAIn && strategyType !== StrategyType.WeightedScaleIn) return true;
         return value >= startPrice;
       },
     })
@@ -326,16 +271,10 @@ export const allSchema = {
       name: 'greater-than-price-trigger',
       message: 'Price floor must be less than or equal to price trigger',
       test(value, context) {
-        if (!value) {
-          return true;
-        }
+        if (!value) return true;
         const { startPrice = undefined, strategyType = undefined } = { ...context.parent, ...context.options.context };
-        if (!startPrice) {
-          return true;
-        }
-        if (strategyType !== StrategyType.DCAOut && strategyType !== StrategyType.WeightedScaleOut) {
-          return true;
-        }
+        if (!startPrice) return true;
+        if (strategyType !== StrategyType.DCAOut && strategyType !== StrategyType.WeightedScaleOut) return true;
         return value <= startPrice;
       },
     }),
@@ -360,28 +299,19 @@ export const allSchema = {
       name: 'correct-length',
       message: ({ label }) => `${label} is not a valid address`,
       test(value, context) {
-        if (!value) {
-          return true;
-        }
+        if (!value) return true;
         const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
+        if (!chain) return true;
         return value?.length === getChainAddressLength(chain);
       },
     })
-
     .test({
       name: 'starts-with-chain-prefix',
       message: ({ label }) => `${label} has an invalid prefix`,
       test(value, context) {
-        if (!value) {
-          return true;
-        }
+        if (!value) return true;
         const { chain } = context.options.context || {};
-        if (!chain) {
-          return true;
-        }
+        if (!chain) return true;
         return value?.startsWith(getChainAddressPrefix(chain));
       },
     }),
@@ -419,23 +349,14 @@ export const allSchema = {
     .test({
       name: 'swaps-greater-than-minimum',
       test(value, context) {
-        if (isNil(value)) {
-          return true;
-        }
+        if (isNil(value)) return true;
         const { initialDenom = null, initialDeposit = null } = { ...context.parent, ...context.options.context };
-        if (!initialDenom || !initialDeposit) {
-          return true;
-        }
+        if (!initialDenom || !initialDeposit) return true;
         const { minimumSwapAmount = 0 } = initialDenom;
-
         const maximumDurationFromDeposit = Math.ceil(
           initialDeposit / (minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT),
         );
-
-        if (value < maximumDurationFromDeposit) {
-          return true;
-        }
-
+        if (value < maximumDurationFromDeposit) return true;
         return context.createError({
           message: `Duration must be less than ${maximumDurationFromDeposit} days. Increase your initial deposit to allow for a longer duration.`,
         });

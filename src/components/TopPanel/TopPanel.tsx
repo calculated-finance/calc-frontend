@@ -4,14 +4,13 @@ import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
-import { DenomValue } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
 import { isStrategyOperating } from '@helpers/strategy';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
-import useDenoms from '@hooks/useDenoms';
 
 function Onboarding() {
   return (
@@ -103,7 +102,6 @@ function LearnNewUsers() {
 }
 
 function ActiveWithOne() {
-  const { getDenomInfo } = useDenoms();
   const { data } = useStrategies();
   const activeStrategies = data?.filter(isStrategyOperating);
   const activeStrategy = activeStrategies && activeStrategies[0];
@@ -111,19 +109,22 @@ function ActiveWithOne() {
   if (!activeStrategy) {
     return null;
   }
-  const { balance } = activeStrategy.rawData;
-  const balanceValue = new DenomValue(balance);
+  const {
+    initialDenom,
+    rawData: { balance },
+  } = activeStrategy;
 
-  const displayBalance = balanceValue.toConverted().toLocaleString('en-US', {
+  const displayBalance = fromAtomic(initialDenom, Number(balance.amount)).toLocaleString('en-US', {
     maximumFractionDigits: 6,
     minimumFractionDigits: 2,
   });
+
   return (
     <>
       <HStack align="center">
         <Icon as={Block3DIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
         <Text textStyle="body">
-          {displayBalance} {getDenomInfo(balanceValue.denomId)?.name} remaining in vault
+          {displayBalance} {activeStrategy.initialDenom.name} remaining in vault
         </Text>
       </HStack>
       <Stack spacing={1}>

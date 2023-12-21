@@ -15,7 +15,7 @@ import {
   Code,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import { DenomValue, getDenomName } from '@utils/getDenomInfo';
+import { fromAtomic, getDenomName } from '@utils/getDenomInfo';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@models/Strategy';
@@ -111,7 +111,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
               <Box>
                 <Text>Fees automatically deducted from each swap:</Text>
                 {!isDcaPlus(strategy) && !isWeightedScale(strategy) ? (
-                  <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
+                  <Text>Sustainability fee: {getPrettyFee(100, SWAP_FEE)}%</Text>
                 ) : (
                   isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
                 )}
@@ -136,17 +136,10 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { balance, destinations } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-
-  const initialDenomValue = new DenomValue(balance);
-
   const strategyType = getStrategyType(strategy);
-
   const { pairs } = usePairs();
-
   const startDate = getStrategyStartDate(strategy, pairs);
-
   const { data: events } = useStrategyEvents(strategy.id);
-
   const showEditButton = !isStrategyCancelled(strategy);
 
   return (
@@ -276,7 +269,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={1}>
                 <Text fontSize="sm" data-testid="strategy-current-balance">
-                  {initialDenomValue.toConverted()} {getDenomName(initialDenom)}
+                  {fromAtomic(initialDenom, Number(balance.amount))} {getDenomName(initialDenom)}
                 </Text>
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>

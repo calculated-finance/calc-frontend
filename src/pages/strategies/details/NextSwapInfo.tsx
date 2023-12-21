@@ -13,6 +13,7 @@ import {
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import usePairs from '@hooks/usePairs';
 import { DenomInfo } from '@utils/DenomInfo';
+import { priceFromRatio } from '@utils/getDenomInfo';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
   const { name: initialDenomName } = initialDenom;
@@ -44,7 +45,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { hydratedPairs: pairs } = usePairs();
+  const { pairs } = usePairs();
 
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -72,9 +73,9 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           </>
         );
       } else if (targetPrice) {
-        const { priceFromRatio, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+        const denom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
-        const convertedPrice = Number(priceFromRatio(targetPrice).toFixed(pricePrecision));
+        const convertedPrice = Number(priceFromRatio(denom, targetPrice).toFixed(denom.pricePrecision));
 
         if (isBuyStrategy(strategy)) {
           nextSwapInfo = (

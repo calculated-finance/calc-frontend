@@ -22,6 +22,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import useDenoms from '@hooks/useDenoms';
 import { HydratedPair } from '@models/Pair';
 import Spinner from '@components/Spinner';
+import { values } from 'rambda';
 
 function getIsDcaInStrategy(strategyType: string | undefined) {
   const strategy = strategyType && strategyType;
@@ -36,18 +37,18 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyType | undefined
   const isDcaInStrategy = getIsDcaInStrategy(strategyType);
 
   if (isDcaInStrategy) {
-    return orderAlphabetically(denoms.filter(isDenomStable));
+    return denoms.filter(isDenomStable);
   }
 
   if (strategyType === StrategyType.DCAPlusOut) {
-    return orderAlphabetically(denoms.filter(isSupportedDenomForDcaPlus));
+    return denoms.filter(isSupportedDenomForDcaPlus);
   }
 
   if (strategyType === StrategyType.DCAOut) {
-    return orderAlphabetically(denoms.filter(isDenomVolatile));
+    return denoms.filter(isDenomVolatile);
   }
 
-  return orderAlphabetically(denoms);
+  return denoms;
 }
 
 function getResultingDenomsFromStrategyType(
@@ -67,17 +68,17 @@ function getResultingDenomsFromStrategyType(
 }
 
 export function AssetsForm() {
-  const { allDenoms } = useDenoms();
-  const { hydratedPairs } = usePairs();
+  const { denoms } = useDenoms();
+  const { pairs } = usePairs();
   const [initialDenom, meta, helpers] = useField({ name: 'initialDenom' });
   const [resultingField, resultingMeta, resultingHelpers] = useField({ name: 'resultingDenom' });
   const [strategyField] = useField({ name: 'strategyType' });
   const { chainId } = useChainId();
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById } = useDenoms();
 
   const initialDenomInfo = initialDenom.value;
 
-  if (!hydratedPairs || !initialDenomInfo)
+  if (!pairs || !denoms?.[chainId])
     return (
       <Box height={200}>
         <Center h="full">
@@ -110,10 +111,14 @@ export function AssetsForm() {
         <SimpleGrid columns={2} spacing={2}>
           <Box>
             <DenomSelect
-              denoms={getInitialDenomsFromStrategyType(strategyField.value, allDenoms)}
+              denoms={
+                denoms && chainId && denoms[chainId]
+                  ? orderAlphabetically(getInitialDenomsFromStrategyType(strategyField.value, values(denoms[chainId])))
+                  : []
+              }
               placeholder="Choose&nbsp;asset"
               value={initialDenom.value}
-              onChange={(v) => v && helpers.setValue(getDenomInfo(v))}
+              onChange={(v) => v && helpers.setValue(getDenomById(v))}
               optionLabel={getChainDexName(chainId)}
             />
             <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -132,10 +137,10 @@ export function AssetsForm() {
           </Text>
         </FormHelperText>
         <DenomSelect
-          denoms={getResultingDenomsFromStrategyType(strategyField.value, hydratedPairs, initialDenom.value)}
+          denoms={getResultingDenomsFromStrategyType(strategyField.value, pairs, initialDenom.value)}
           placeholder="Choose asset"
           value={resultingField.value}
-          onChange={(v) => v && resultingHelpers.setValue(getDenomInfo(v))}
+          onChange={(v) => v && resultingHelpers.setValue(getDenomById(v))}
           optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
         <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>

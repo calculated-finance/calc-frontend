@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import { BalanceList } from '@components/SpendableBalances';
-import getDenomInfo from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
 import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
@@ -25,15 +25,16 @@ import { useChainId } from '@hooks/useChainId';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
 import useFiatPrices from '@hooks/useFiatPrices';
 import useDenoms from '@hooks/useDenoms';
+import { values } from 'rambda';
 
-function orderCoinList(coinList: Coin[], fiatPrices: any) {
+function orderCoinList(denoms: { [x: string]: DenomInfo }, coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
     return [];
   }
   return coinList
     .map((coin) => {
-      const { fromAtomic: conversion, coingeckoId } = getDenomInfo(coin.denom);
-      const denomConvertedAmount = conversion(Number(coin.amount));
+      const { coingeckoId } = denoms[coin.denom];
+      const denomConvertedAmount = fromAtomic(denoms[coin.denom], Number(coin.amount));
       const fiatPriceInfo = fiatPrices[coingeckoId];
       const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
       if (isNaN(fiatAmount)) {
@@ -101,15 +102,15 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyType) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: DenomInfo[]) {
+export function totalFromCoins(denoms: { [x: string]: DenomInfo }, coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
-      ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
+      ?.filter((coin) => coin.denom in denoms)
       .map((balance) => {
-        const { fromAtomic: conversion, coingeckoId } = getDenomInfo(balance.denom);
-        const denomConvertedAmount = conversion(Number(balance.amount));
-        const fiatPriceInfo = fiatPrices[coingeckoId];
-        const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
+        const denomInfo = denoms[balance.denom];
+        const denomConvertedAmount = fromAtomic(denomInfo, Number(balance.amount));
+        const fiatPriceInfo = fiatPrices[denomInfo.coingeckoId];
+        const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[denomInfo.coingeckoId].usd : 0;
 
         if (isNaN(fiatAmount)) {
           return 0;
@@ -158,9 +159,6 @@ const timeIntervalMap: Record<any, (date: Date) => number> = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  // const timeFunction = timeIntervalMap[strategy.rawData.time_interval] || (() => 0);
-  // return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
-
   if (typeof strategy.rawData.time_interval === 'string') {
     return Math.min(timeIntervalMap[strategy.rawData.time_interval](date), getStrategyRemainingExecutions(strategy));
   }
@@ -169,8 +167,7 @@ function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
   const fees = SWAP_FEE * Number(strategy.rawData.swap_amount);
-  const { fromAtomic: conversion } = getDenomInfo(strategy.rawData.balance.denom);
-  const convertedFees = conversion(fees);
+  const convertedFees = fromAtomic(strategy.initialDenom, fees);
 
   return convertedFees;
 }
@@ -180,14 +177,13 @@ function getFeesUntilDate(strategy: Strategy, date: Date) {
   return getFeesPerSwapForStrategy(strategy) * swapCount;
 }
 
-function getFiatPriceFromList(fiatPrices: any, denom: string) {
-  const { coingeckoId } = getDenomInfo(denom);
-  return fiatPrices[coingeckoId]?.usd;
+function getFiatPriceFromList(fiatPrices: any, denom: DenomInfo) {
+  return fiatPrices[denom.coingeckoId]?.usd;
 }
 
 function getProjectedRevenueForStrategyForDate(strategy: Strategy, date: Date, fiatPrices: any) {
   const fees = getFeesUntilDate(strategy, date);
-  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.rawData.balance.denom);
+  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.initialDenom);
   return fees * fiatPrice;
 }
 
@@ -283,7 +279,7 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 }
 
 function Page() {
-  const { allDenoms } = useDenoms();
+  const { denoms } = useDenoms();
   const { chainId } = useChainId();
   const { balances: contractBalances } = useBalances(getChainContractAddress(chainId));
   const { balances: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chainId));
@@ -293,18 +289,19 @@ function Page() {
 
   const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 
-  if (!fiatPrices || !allStrategies) {
-    return null;
-  }
-  const totalInContract = totalFromCoins(contractBalances, fiatPrices, allDenoms);
+  if (!fiatPrices || !allStrategies || !denoms) return null;
 
-  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices, allDenoms);
+  const totalInContract = totalFromCoins(denoms[chainId], contractBalances, fiatPrices);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, allDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, allDenoms);
+  const totalInFeeTaker = totalFromCoins(denoms[chainId], feeTakerBalances, fiatPrices);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies, allDenoms);
-  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices, allDenoms);
+  const chainDenoms = values(denoms[chainId]);
+
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, chainDenoms);
+  const totalSwappedTotal = totalFromCoins(denoms[chainId], totalSwappedAmounts, fiatPrices);
+
+  const totalReceivedAmounts = getTotalReceived(allStrategies, chainDenoms);
+  const totalReceivedTotal = totalFromCoins(denoms[chainId], totalReceivedAmounts, fiatPrices);
 
   const thirtyDaysFromNow = new Date();
   thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
@@ -364,14 +361,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(contractBalances ?? [], fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], contractBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(feeTakerBalances ?? [], fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], feeTakerBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
@@ -391,14 +388,14 @@ function Page() {
           <Heading size="md">Amount Swapped</Heading>
           <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalSwappedAmounts, fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], totalSwappedAmounts, fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount Received</Heading>
           <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalReceivedAmounts, fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], totalReceivedAmounts, fiatPrices)} />
           </Box>
         </Stack>
 

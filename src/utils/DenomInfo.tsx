@@ -15,15 +15,15 @@ export type DenomInfo = {
 };
 
 export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
-  if (!denomInfo.chain || !denomInfo.id || !denomInfo.name || !denomInfo.icon) {
+  if (!denomInfo.chain || !denomInfo.id) {
     throw new Error(`Invalid partial denom info: ${JSON.stringify(denomInfo)}`);
   }
 
   return {
     chain: denomInfo.chain,
     id: denomInfo.id,
-    name: denomInfo.name,
-    icon: denomInfo.icon,
+    name: denomInfo.id,
+    icon: '/images/circleDollar.svg',
     minimumSwapAmount: 0,
     stakeable: false,
     stable: false,

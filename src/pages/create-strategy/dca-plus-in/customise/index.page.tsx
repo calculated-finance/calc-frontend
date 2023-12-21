@@ -15,7 +15,6 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -35,12 +34,11 @@ function Page() {
     goToStep(0);
   };
 
-  const initialDenom = useDenom(state?.step1.initialDenom);
-  const resulingDenom = useDenom(state?.step1.resultingDenom);
-
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state.step1;
 
   const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
@@ -62,7 +60,7 @@ function Page() {
           <Stack direction="column" spacing={4}>
             <DcaDiagram
               initialDenom={initialDenom}
-              resultingDenom={resulingDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={state.step1.initialDeposit}
             />
             <AdvancedSettingsSwitch />

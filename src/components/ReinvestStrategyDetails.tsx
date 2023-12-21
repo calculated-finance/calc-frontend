@@ -1,5 +1,5 @@
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import {
   getStrategyInitialDenom,
@@ -121,7 +121,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-current-balance">
-              {convertDenomFromCoin(balance)} {initialDenom.name}
+              {fromAtomic(initialDenom, Number(balance.amount))} {initialDenom.name}
             </Text>
           </GridItem>
           <DestinationDetails strategy={strategy} chainId={chainId} />

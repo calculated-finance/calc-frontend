@@ -126,7 +126,7 @@ export function FeeBreakdown({
               <Heading size="xs">Per swap</Heading>
               <Stack spacing={0}>
                 <Flex>
-                  <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                  <Text textStyle="body-xs">Sustainability tax:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
                     {Number(getPrettyFee(swapAmount, swapFee).toFixed(initialDenom.significantFigures))}{' '}

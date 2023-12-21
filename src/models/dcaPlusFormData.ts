@@ -1,4 +1,3 @@
-import getDenomInfo, { getDenomName } from '@utils/getDenomInfo';
 import { isNil } from 'lodash';
 import { DCA_PLUS_MIN_SWAP_COEFFICIENT, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
 import * as Yup from 'yup';
@@ -18,7 +17,7 @@ export const dcaPlusSchema = Yup.object({
       if (!initialDenom) {
         return true;
       }
-      const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+      const { minimumSwapAmount = 0 } = initialDenom;
 
       const dcaPlusMinimumDeposit = minimumSwapAmount * DCA_PLUS_MIN_SWAP_COEFFICIENT * MIN_DCA_PLUS_STRATEGY_DURATION;
 
@@ -27,9 +26,7 @@ export const dcaPlusSchema = Yup.object({
       }
 
       return context.createError({
-        message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${getDenomName(
-          getDenomInfo(initialDenom),
-        )}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
+        message: `Initial deposit must be more than ${dcaPlusMinimumDeposit} ${initialDenom.name}, otherwise the minimum swap amount will decay performance. We recommend depositing at least $50 worth of assets.`,
       });
     },
   }),

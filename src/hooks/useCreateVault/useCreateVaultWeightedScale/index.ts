@@ -8,10 +8,10 @@ import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
+import useDenoms from '@hooks/useDenoms';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { useTrackCreateVault } from '../useTrackCreateVault';
 import { handleError } from '../handleError';
-import useDenoms from '@hooks/useDenoms';
 
 export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
@@ -19,7 +19,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById } = useDenoms();
 
   return useMutation<
     Strategy['id'] | undefined,

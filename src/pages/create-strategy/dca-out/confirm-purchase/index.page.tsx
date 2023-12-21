@@ -19,8 +19,6 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
-import getDenomInfo from '@utils/getDenomInfo';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -28,9 +26,6 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 function Page() {
   const { state, actions } = useDcaInConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaOutSteps);
-
-  const initialDenom = useDenom(state?.initialDenom);
-  const resultingDenom = getDenomInfo(state?.resultingDenom);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
@@ -40,7 +35,7 @@ function Page() {
       { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
-          await nextStep({
+          nextStep({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
           });
@@ -62,6 +57,8 @@ function Page() {
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state;
 
   return (
     <SigningState isSigning={isLoading}>

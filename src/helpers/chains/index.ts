@@ -7,6 +7,10 @@ import {
   COSMOS_KIT_KUJIRA_TESTNET,
   COSMOS_KIT_OSMOSIS_MAINNET,
   COSMOS_KIT_OSMOSIS_TESTNET,
+  KUJIRA_MAINNET_RPC,
+  KUJIRA_TESTNET_RPC,
+  OSMOSIS_MAINNET_RPC,
+  OSMOSIS_TESTNET_RPC,
 } from 'src/constants';
 
 const osmoMainnetConfig = {
@@ -114,12 +118,12 @@ export function getGasPrice(chain: ChainId) {
 
 export function getChainInfo(chainId: ChainId) {
   return {
-    'osmosis-1': osmoMainnetConfig,
-    'osmo-test-5': osmoTestnetConfig,
-    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: 'https://rpc-kujira.mintthemoon.xyz/', chainName: 'kujira' },
+    'osmosis-1': { ...osmoMainnetConfig, rpc: OSMOSIS_MAINNET_RPC },
+    'osmo-test-5': { ...osmoTestnetConfig, rpc: OSMOSIS_TESTNET_RPC },
+    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: KUJIRA_MAINNET_RPC, chainName: 'kujira' },
     'harpoon-4': {
       ...CHAIN_INFO['harpoon-4'],
-      rpc: 'https://kujira-testnet-rpc.polkachu.com/',
+      rpc: KUJIRA_TESTNET_RPC,
       chainName: 'kujiratestnet',
     },
   }[chainId ?? 'kaiyo-1'] as ChainInfo;

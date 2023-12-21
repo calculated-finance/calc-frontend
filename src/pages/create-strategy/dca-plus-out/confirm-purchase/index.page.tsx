@@ -19,7 +19,6 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
@@ -28,10 +27,7 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaPlusOutSteps);
-  const initialDenom = useDenom(state?.initialDenom);
-  const resultingDenom = useDenom(state?.resultingDenom);
-
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(initialDenom);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(state?.initialDenom);
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
@@ -65,6 +61,8 @@ function Page() {
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state;
 
   return (
     <SigningState isSigning={isLoading}>

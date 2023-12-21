@@ -9,15 +9,14 @@ import Head from 'next/head';
 import { useChainId } from '@hooks/useChainId';
 import * as Sentry from '@sentry/react';
 import { AssetListWrapper } from '@hooks/useCachedAssetList';
-import { useAssetList } from '@hooks/useAssetList';
 import { ChildrenProp } from '@helpers/ChildrenProp';
+import useDenoms from '@hooks/useDenoms';
+import '@interchain-ui/react/styles';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { LoadingState } from './LoadingState';
-import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
 import { InitWrapper } from './InitWrapper';
-import useDenoms from '@hooks/useDenoms';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -36,10 +35,10 @@ Sentry.init({
 });
 
 function AssetListLoader({ children }: ChildrenProp) {
-  const { allDenoms } = useDenoms();
+  const { isSuccess } = useDenoms();
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return allDenoms ? <>{children}</> : <LoadingState />;
+  return isSuccess ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {

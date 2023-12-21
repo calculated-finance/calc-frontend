@@ -3,7 +3,6 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import useSpotPrice from '@hooks/useSpotPrice';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
@@ -13,13 +12,10 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
 
   const { transactionType } = useStrategyInfo();
 
-  const initialDenomInfo = useDenom(initialDenom);
-  const resultingDenomInfo = useDenom(resultingDenom);
+  const { formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
-  const { formattedPrice } = useSpotPrice(resultingDenomInfo, initialDenomInfo, transactionType);
-
-  const priceOfDenom = transactionType === 'buy' ? resultingDenomInfo : initialDenomInfo;
-  const priceInDenom = transactionType === 'buy' ? initialDenomInfo : resultingDenomInfo;
+  const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
+  const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;
 
   const { name: priceOfDenomName } = priceOfDenom;
   const { name: priceInDenomName } = priceInDenom;
@@ -31,9 +27,9 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap the amount of{' '}
         <BadgeButton url="customise">
           <Code color="none" bg="none">
-            {swapAmount} {initialDenomInfo.name}
+            {swapAmount} {initialDenom.name}
           </Code>
-          <DenomIcon denomInfo={initialDenomInfo} />
+          <DenomIcon denomInfo={initialDenom} />
           <Code color="none" bg="none">
             &times; (1 - price delta &times; {swapMultiplier})
           </Code>
@@ -47,8 +43,8 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
         </BadgeButton>
         for{' '}
         <BadgeButton url="assets">
-          <Text>{resultingDenomInfo.name}</Text>
-          <DenomIcon denomInfo={resultingDenomInfo} />
+          <Text>{resultingDenom.name}</Text>
+          <DenomIcon denomInfo={resultingDenom} />
         </BadgeButton>{' '}
         every <IncrementAndInterval state={state} />
       </Text>

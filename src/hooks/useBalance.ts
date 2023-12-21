@@ -2,9 +2,9 @@ import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { useChainId } from './useChainId';
 import { useChainClient } from './useChainClient';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 export type BalanceResponse = {
   amount: number;

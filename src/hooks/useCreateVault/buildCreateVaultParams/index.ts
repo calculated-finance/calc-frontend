@@ -14,6 +14,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { ChainConfig, getRedBankAddress } from '@helpers/chains';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { safeInvert } from '@utils/safeInvert';
+import { toAtomic } from '@utils/getDenomInfo';
 
 export function getSlippageWithoutTrailingZeros(slippage: number) {
   return parseFloat((slippage / 100).toFixed(4)).toString();
@@ -82,29 +83,17 @@ export function buildCallbackDestinations(
 }
 
 export function getReceiveAmount(
-  initialDenom: DenomInfo, // osmo
-  swapAmount: number, // 1.2
-  price: number, // 5.0
-  resultingDenom: DenomInfo, // weth
+  initialDenom: DenomInfo,
+  swapAmount: number,
+  price: number,
+  resultingDenom: DenomInfo,
   transactionType: TransactionType,
   isInAtomics = false,
 ) {
-  // convert swap amount to microns e.g. 1.2 -> 1 200 000
-  // find minimum recevie amount in initial denom scale -> 1200000 / 5 = 240 000 => initialAmount / price
-  // min rcv amount * 10 ** (rcv sf - initial sf) = 240 000 * 10 ** (18 - 6) = 240 000 000000000000
-  const { toAtomic: initialDeconversion, significantFigures: initialSF } = initialDenom;
-  const { significantFigures: resultingSF } = resultingDenom;
-
-  // make the price in terms of the initial denom (doesnt matter if its buy or sell)
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
-
-  // get minimum receive amount in initial denom scale
-  const deconvertedSwapAmount = isInAtomics ? swapAmount : initialDeconversion(swapAmount);
-
+  const deconvertedSwapAmount = isInAtomics ? swapAmount : toAtomic(initialDenom, swapAmount);
   const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
-
-  // get scaled receive amount
-  const scalingFactor = 10 ** (resultingSF - initialSF);
+  const scalingFactor = 10 ** (resultingDenom.significantFigures - initialDenom.significantFigures);
   const scaledReceiveAmount = BigInt(Math.floor(unscaledReceiveAmount * scalingFactor));
 
   return scaledReceiveAmount.toString();
@@ -121,9 +110,7 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
 }
 
 export function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
-  const { toAtomic: deconversion } = initialDenom;
-
-  return BigInt(deconversion(swapAmount)).toString();
+  return BigInt(toAtomic(initialDenom, swapAmount)).toString();
 }
 
 export function getExecutionInterval(executionInterval: ExecutionIntervals, executionIntervalIncrement: number) {

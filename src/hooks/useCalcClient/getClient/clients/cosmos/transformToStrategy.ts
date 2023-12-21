@@ -12,14 +12,14 @@ const vaultStatusMap: Record<VaultStatus, StrategyStatus> = {
 
 export function transformToStrategyCosmos(
   vaultData: Vault,
-  getDenomInfo: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => DenomInfo | undefined,
 ): Strategy {
   return {
     id: vaultData.id,
     owner: vaultData.owner,
     status: vaultStatusMap[vaultData.status],
-    initialDenom: getDenomInfo(vaultData.balance.denom)!,
-    resultingDenom: getDenomInfo(vaultData.received_amount.denom)!,
+    initialDenom: getDenomById(vaultData.balance.denom)!,
+    resultingDenom: getDenomById(vaultData.received_amount.denom)!,
     rawData: vaultData,
   };
 }

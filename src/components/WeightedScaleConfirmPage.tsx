@@ -17,11 +17,11 @@ import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import useStrategy from '@hooks/useStrategy';
 import useSpotPrice from '@hooks/useSpotPrice';
+import useDenoms from '@hooks/useDenoms';
 import Fees from './Fees';
 import { InvalidData } from './InvalidData';
 import { ModalWrapper } from './ModalWrapper';
 import { SigningState } from './NewStrategyModal';
-import useDenoms from '@hooks/useDenoms';
 
 function PageInternal({
   state,
@@ -34,12 +34,10 @@ function PageInternal({
   error: Error | null;
   handleSubmit: (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => void;
 }) {
-  const initialDenom = state.initialDenom;
-  const resultingDenom = state.resultingDenom;
-
+  const { transactionType } = useStrategyInfo();
+  const { initialDenom, resultingDenom } = state;
   if (!initialDenom || !resultingDenom) return null;
 
-  const { transactionType } = useStrategyInfo();
   return (
     <Stack spacing={4}>
       <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
@@ -81,7 +79,7 @@ function PageInternal({
 export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   const { state, actions } = useWeightedScaleConfirmForm();
   const { nextStep, goToStep } = useSteps(steps);
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById } = useDenoms();
 
   const initialDenom = state?.initialDenom;
   const resultingDenom = state?.resultingDenom;

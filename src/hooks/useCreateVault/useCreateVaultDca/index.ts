@@ -8,17 +8,17 @@ import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import useFiatPrices from '@hooks/useFiatPrices';
+import useDenoms from '@hooks/useDenoms';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 import { useTrackCreateVault } from '../useTrackCreateVault';
-import useDenoms from '@hooks/useDenoms';
 
 export const useCreateVaultDca = () => {
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
   const { fiatPrices: prices } = useFiatPrices();
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById } = useDenoms();
 
   const track = useTrackCreateVault();
 

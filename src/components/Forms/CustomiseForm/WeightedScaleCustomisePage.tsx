@@ -37,12 +37,11 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
     goToStep(0);
   };
 
-  const initialDenomInfo = useDenom(state?.step1.initialDenom);
-  const resultingDenomInfo = useDenom(state?.step1.resultingDenom);
-
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state.step1;
 
   const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
@@ -63,25 +62,25 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
         <Form autoComplete="off">
           <Stack direction="column" spacing={4}>
             <DcaDiagram
-              initialDenom={initialDenomInfo}
-              resultingDenom={resultingDenomInfo}
+              initialDenom={initialDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={state.step1.initialDeposit}
             />
             <AdvancedSettingsSwitch />
             <Collapse in={values.advancedSettings}>
-              <TriggerForm initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
+              <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
             </Collapse>
             <ExecutionInterval />
-            <BaseSwapAmount initialDenom={initialDenomInfo} initialDeposit={state.step1.initialDeposit} />
-            <SwapMultiplier initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
+            <BaseSwapAmount initialDenom={initialDenom} initialDeposit={state.step1.initialDeposit} />
+            <SwapMultiplier initialDenom={initialDenom} resultingDenom={resultingDenom} />
             <Collapse in={values.advancedSettings}>
               <Box m="px">
                 <Stack spacing={4}>
                   <ApplyMultiplier />
-                  <BasePrice initialDenom={initialDenomInfo} resultingDenom={resultingDenomInfo} />
+                  <BasePrice initialDenom={initialDenom} resultingDenom={resultingDenom} />
                   <PriceThreshold
-                    initialDenom={initialDenomInfo}
-                    resultingDenom={resultingDenomInfo}
+                    initialDenom={initialDenom}
+                    resultingDenom={resultingDenom}
                     transactionType={transactionType}
                   />
                   <SlippageTolerance />

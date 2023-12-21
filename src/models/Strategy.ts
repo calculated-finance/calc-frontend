@@ -16,10 +16,3 @@ export type Strategy = {
   initialDenom: DenomInfo;
   rawData: Omit<Vault, 'id' | 'owner' | 'status'>;
 };
-
-// export type Strategy = {
-//   rawData: Vault;
-//   resultingDenom: DenomInfo;
-//   initialDenom: DenomInfo;
-//   balance: number;
-// };

@@ -43,7 +43,7 @@ const fetchDenomsKujira = (chainId: ChainId): Promise<{ [x: string]: DenomInfo }
         [id]: fromPartial({ chain: chainId, id, ...info }),
       }),
       {},
-      toPairs(chainId == 'kaiyo-1' ? mainnetDenomsKujira : testnetDenomsKujira),
+      toPairs(chainId === 'kaiyo-1' ? mainnetDenomsKujira : testnetDenomsKujira),
     ),
   );
 };
@@ -177,13 +177,13 @@ export function useChainClient(chainId: ChainId) {
 
   const { data: chainClient } = useQuery<ChainClient>(
     ['chainClient', chainId],
-    async () => {
+    () => {
       if (KUJIRA_CHAINS.includes(chainId)) {
-        return await kujiraChainClient(chainId, cosmWasmClient!);
+        return kujiraChainClient(chainId, cosmWasmClient!);
       }
 
       if (OSMOSIS_CHAINS.includes(chainId)) {
-        return await osmosisChainClient(chainId, cosmWasmClient!);
+        return osmosisChainClient(chainId, cosmWasmClient!);
       }
 
       throw new Error(`Unsupported chain ${chainId}`);

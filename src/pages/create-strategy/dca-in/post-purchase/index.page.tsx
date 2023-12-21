@@ -8,7 +8,6 @@ import dcaInSteps from 'src/formConfig/dcaIn';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
-import getDenomInfo from '@utils/getDenomInfo';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyType } from '@models/StrategyType';
@@ -34,7 +33,7 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {state && context ? (
-        <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
+        <PostPurchaseForm resultingDenom={context.resultingDenom} />
       ) : (
         <InvalidData onRestart={handleRestart} />
       )}

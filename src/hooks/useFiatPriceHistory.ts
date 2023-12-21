@@ -20,10 +20,11 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
     async () => {
       if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
         let i = 0;
+        const price = Math.random();
         return {
-          prices: Array.from({ length: 1000 }, () => {
+          prices: Array.from({ length: 100 }, () => {
             i += 1;
-            return [dayjs().subtract(i, 'minutes').toDate().getTime(), Math.random()];
+            return [dayjs().subtract(i, 'minutes').toDate().getTime(), price + i / 50];
           }),
         };
       }
@@ -42,6 +43,7 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
     },
     {
       enabled: !!coingeckoId && !!fiatCurrencyId && !!days,
+      staleTime: 1000 * 60 * 300,
       meta: {
         errorMessage: 'Error fetching fiat price history',
       },

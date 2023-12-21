@@ -16,12 +16,7 @@ import {
   useMediaQuery,
 } from '@chakra-ui/react';
 import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
-import usePairs, {
-  getResultingDenoms,
-  orderAlphabetically,
-  uniqueBaseDenoms,
-  uniqueQuoteDenoms,
-} from '@hooks/usePairs';
+import usePairs, { getResultingDenoms, orderAlphabetically } from '@hooks/usePairs';
 import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
@@ -44,20 +39,19 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import useSteps from '@hooks/useSteps';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import totalExecutions from '@utils/totalExecutions';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { useWallet } from '@hooks/useWallet';
+import useDenoms from '@hooks/useDenoms';
+import { values } from 'rambda';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './StepOneConnectWallet';
-import useDenoms from '@hooks/useDenoms';
-import { values } from 'rambda';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -73,7 +67,7 @@ function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
 
 function InitialDenom() {
   const { pairs } = usePairs();
-  const { getDenomInfo, denoms } = useDenoms();
+  const { getDenomById, denoms } = useDenoms();
   const { chainId } = useChainId();
   const [initialDenom, meta, initialDenomHelpers] = useField({ name: 'initialDenom' });
   const [, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
@@ -104,8 +98,13 @@ function InitialDenom() {
           <DenomSelect
             denoms={orderAlphabetically(values(denoms?.[chainId] ?? {}))}
             placeholder={isMobile ? 'Asset' : 'Choose asset'}
-            value={initialDenom.value}
-            onChange={(v) => v && initialDenomHelpers.setValue(getDenomInfo(v))}
+            defaultValue={initialDenom.value?.id}
+            value={initialDenom.value?.id}
+            onChange={(newValue) => {
+              if (!newValue) return;
+              initialDenomHelpers.setValue(getDenomById(newValue));
+              resultingDenomHelpers.setValue(undefined);
+            }}
           />
           <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
         </Box>
@@ -118,9 +117,7 @@ function InitialDenom() {
 function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
   const [field, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chainId } = useChainId();
-  const { getDenomInfo } = useDenoms();
-
-  console.log({ denoms });
+  const { getDenomById } = useDenoms();
 
   const {
     values: { initialDenom },
@@ -135,8 +132,9 @@ function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
       <DenomSelect
         denoms={denoms}
         placeholder="Choose asset"
-        value={field.value}
-        onChange={(v) => v && helpers.setValue(getDenomInfo(v))}
+        defaultValue={field.value?.id}
+        value={field.value?.id}
+        onChange={(v) => v && helpers.setValue(getDenomById(v))}
         optionLabel={`Swapped on ${getChainDexName(chainId)}`}
       />
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
@@ -205,8 +203,7 @@ function Form() {
   const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
-  const { hydratedPairs: pairs } = usePairs();
-  const { getDenomInfo } = useDenoms();
+  const { pairs } = usePairs();
   const { balances } = useBalances();
   const { isPageLoading } = usePageLoad();
   const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
@@ -239,7 +236,7 @@ function Form() {
 
   return (
     <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-      {({ values }) => (
+      {({ values: formValues }) => (
         <Sentry.ErrorBoundary
           fallback={
             <Center m={8} p={8} flexDirection="column" gap={6}>
@@ -259,15 +256,17 @@ function Form() {
                     <ModalHeader isSuccess={isSuccess} />
                     <InitialDenom />
                     <ResultingDenom
-                      denoms={values.initialDenom ? getResultingDenoms(pairs, values.initialDenom) : []}
+                      denoms={formValues.initialDenom ? getResultingDenoms(pairs, formValues.initialDenom) : []}
                     />
                     <ExecutionIntervalLegacy />
-                    <SwapAmount initialDenom={values.initialDenom} resultingDenom={values.resultingDenom} />
+                    <SwapAmount initialDenom={formValues.initialDenom} resultingDenom={formValues.resultingDenom} />
                     {connected ? (
                       <SummaryAgreementForm
                         isError={isError}
                         error={error}
-                        onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, values)}
+                        onSubmit={(agreementData, setSubmitting) =>
+                          handleSubmit(agreementData, setSubmitting, formValues)
+                        }
                       />
                     ) : (
                       <ConnectWalletButton />

@@ -1,8 +1,8 @@
 import { useChains } from '@cosmos-kit/react';
+import { getChainName } from '@helpers/chains';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainId } from './useChainId/Chains';
 import { useChainId } from './useChainId';
-import { getChainName } from '@helpers/chains';
 
 export const useChainContext = (injectedChainId?: ChainId) => {
   const contexts = useChains(

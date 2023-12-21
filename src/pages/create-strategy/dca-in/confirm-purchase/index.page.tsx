@@ -18,7 +18,6 @@ import Fees from '@components/Fees';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
@@ -26,19 +25,17 @@ import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useDcaInConfirmForm();
-  const initialDenom = useDenom(state?.initialDenom);
-  const resultingDenom = useDenom(state?.resultingDenom);
   const { nextStep, goToStep } = useSteps(dcaInSteps);
 
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
-  const handleSubmit = (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
+  const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
     mutate(
       { state, reinvestStrategyData },
       {
         onSuccess: async (strategyId) => {
-          await nextStep({
+          nextStep({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
           });
@@ -60,6 +57,8 @@ function Page() {
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state;
 
   return (
     <SigningState isSigning={isLoading}>

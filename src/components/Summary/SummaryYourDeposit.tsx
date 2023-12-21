@@ -2,14 +2,10 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
-export function SummaryYourDeposit({ state }: { state: DcaFormState;  }) {
-  const { initialDenom: initialDenomId, initialDeposit } = state;
-
-  const initialDenom = useDenom(initialDenomId);
-
+export function SummaryYourDeposit({ state }: { state: DcaFormState }) {
+  const { initialDenom, initialDeposit } = state;
   const { strategyType } = useStrategyInfo();
 
   return (

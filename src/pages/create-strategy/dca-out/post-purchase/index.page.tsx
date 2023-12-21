@@ -10,7 +10,6 @@ import { InvalidData } from '@components/InvalidData';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { FormNames } from '@hooks/useFormStore';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -33,7 +32,8 @@ function Page() {
     goToStep(0);
   };
 
-  const resultingDenom = useDenom(context?.resultingDenom);
+  const resultingDenom = context?.resultingDenom;
+
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
@@ -46,7 +46,7 @@ function Page() {
             cancelUrl="/create-strategy"
           />
           <NewStrategyModalBody stepsConfig={steps} isLoading={isPageLoading && !isSubmitting}>
-            {state && context ? (
+            {state && context && resultingDenom ? (
               <PostPurchaseForm resultingDenom={resultingDenom} />
             ) : (
               <InvalidData onRestart={handleRestart} />

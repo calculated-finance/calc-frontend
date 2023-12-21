@@ -1,4 +1,3 @@
-import getDenomInfo from '@utils/getDenomInfo';
 import * as Yup from 'yup';
 import { isNil } from 'rambda';
 import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
@@ -33,7 +32,7 @@ export const schema = Yup.object({
       test(value, context) {
         const balances = context?.options?.context?.balances;
         if (!balances || !value || value <= 0) return true;
-        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom)?.amount;
+        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom?.id)?.amount;
         return balance && value <= Number(balance);
       },
     }),
@@ -71,7 +70,7 @@ export const schema = Yup.object({
           return true;
         }
 
-        const { minimumSwapAmount = 0 } = getDenomInfo(initialDenom);
+        const { minimumSwapAmount = 0 } = initialDenom;
 
         return (
           value > minimumSwapAmount ||

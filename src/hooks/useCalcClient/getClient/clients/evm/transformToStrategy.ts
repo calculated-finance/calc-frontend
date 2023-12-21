@@ -1,9 +1,18 @@
-// import { Strategy, StrategyStatus } from '@models/Strategy';
+import { Strategy, StrategyStatus } from '@models/Strategy';
 // import { formatEther } from 'ethers';
 // import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 
-// export function transformToStrategyEVM(result: any, balance: any, id: string): Strategy {
-//   const { toAtomic: deconversion } = getDenomInfo(result.tokenIn);
+export function transformToStrategyEVM(result: any, balance: any, id: string): Strategy {
+  return {
+    id,
+    owner: result.owner,
+    status: StrategyStatus.ACTIVE,
+    initialDenom: result.tokenIn,
+    resultingDenom: result.tokenOut,
+    rawData: result,
+  };
+}
+//   const { toAtomic: deconversion } = getDenomById(result.tokenIn);
 
 //   const owner = result.owner as string;
 //   const status = balance ? StrategyStatus.ACTIVE : StrategyStatus.COMPLETED;

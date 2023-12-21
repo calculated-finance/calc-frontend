@@ -33,7 +33,7 @@ function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
 }
 
 export function SummaryAfterEachSwap({ state }: { state: DcaFormState }) {
-  const { getDenomInfo } = useDenoms();
+  const { getDenomById } = useDenoms();
 
   const {
     resultingDenom,
