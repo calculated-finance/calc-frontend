@@ -123,12 +123,11 @@ function InvestmentThesisWithActiveStrategies({
 }
 
 function TotalInvestment() {
-  const { denoms } = useDenoms();
-  const { chainId } = useChainId();
+  const { allDenoms } = useDenoms();
   const { fiatPrices: prices } = useFiatPrices();
   const { data: allStrategies } = useAllStrategies();
 
-  if (!prices || !allStrategies || !denoms) {
+  if (!prices || !allStrategies || !allDenoms) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -136,8 +135,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, values(denoms[chainId] ?? {}));
-  const totalSwappedTotal = totalFromCoins(denoms[chainId], totalSwappedAmounts, prices);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, values(allDenoms ?? {}));
+  const totalSwappedTotal = totalFromCoins(allDenoms, totalSwappedAmounts, prices);
 
   const formattedValue =
     totalSwappedTotal >= 1000000

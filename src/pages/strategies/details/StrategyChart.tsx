@@ -81,10 +81,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { name: priceOfDenomName } = priceOfDenom;
   const { name: priceInDenomName } = priceInDenom;
 
-  const { denoms } = useDenoms();
-  const { chainId } = useChainId();
+  const { allDenoms } = useDenoms();
 
-  if (!denoms || !(chainId in denoms)) {
+  if (!allDenoms) {
     return (
       <Center width="full" height={250} ref={elementRef} px={6}>
         <Spinner />
@@ -92,8 +91,8 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
     );
   }
 
-  const chartData = getChartData(events, coingeckoData?.prices, displayPrices, denoms[chainId]);
-  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices, denoms[chainId]);
+  const chartData = getChartData(events, coingeckoData?.prices, displayPrices, allDenoms);
+  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices, allDenoms);
 
   const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
   const swapsFailedDataWithLabel = swapsFailedData?.map((swap) => ({

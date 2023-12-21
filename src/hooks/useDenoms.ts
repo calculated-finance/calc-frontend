@@ -34,12 +34,12 @@ const useDenoms = () => {
   );
 
   const { chainId } = useChainId();
+  const allDenoms = (denoms ? denoms && mergeAll(values(denoms)) : {}) as { [x: string]: DenomInfo };
 
   return {
     denoms,
-    allDenoms: denoms ? denoms && mergeAll(values(denoms)) : {},
-    getDenomById: (id: string, injectedChainId?: ChainId): DenomInfo | undefined =>
-      denoms?.[injectedChainId ?? chainId]?.[id],
+    allDenoms,
+    getDenomById: (id: string): DenomInfo | undefined => allDenoms[id],
     getDenomByName: (name: string, injectedChainId?: ChainId): DenomInfo | undefined =>
       indexBy(
         (d) => toLower(d.name),

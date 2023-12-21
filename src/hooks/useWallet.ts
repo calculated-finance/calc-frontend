@@ -39,7 +39,7 @@ export function useWallet() {
   if (chainContext && chainContext.isWalletConnected) {
     return {
       connected: chainContext.isWalletConnected,
-      getSigningClient: curry(getSigningClient)(chainContext),
+      getSigningClient: (chainId: ChainId) => getSigningClient(chainContext, chainId),
       walletType: chainContext.wallet?.prettyName,
       isConnecting: chainContext.isWalletConnecting,
       ...chainContext,

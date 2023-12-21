@@ -19,7 +19,7 @@ export default function useAllStrategies() {
     ),
   );
 
-  const { getDenomById } = useDenoms();
+  const { denoms, getDenomById } = useDenoms();
 
   return useQuery<Strategy[]>(
     ['all_vaults'],
@@ -39,7 +39,7 @@ export default function useAllStrategies() {
       return (await Promise.all(chains.map(fetchAllStrategies))).flat();
     },
     {
-      enabled: !!chains,
+      enabled: !!chains && !!denoms,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
