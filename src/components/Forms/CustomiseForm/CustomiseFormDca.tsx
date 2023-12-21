@@ -10,7 +10,6 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import SwapAmount from '@components/SwapAmount';
 import { TriggerForm } from '@components/TriggerForm';
 import { CollapseWithRender } from '@components/CollapseWithRender';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { InvalidData } from '@components/InvalidData';
 import { useDcaInCustomiseForm } from '@hooks/useDcaInForm';
 import useSteps from '@hooks/useSteps';

@@ -112,7 +112,6 @@ function InitialDenom() {
   const [{ from: initialDenomName, to: resultingDenomName, amount }, setQueryState] = useQueryState();
 
   const [initialDenom, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [, , priceThresholdHelpers] = useField({ name: 'priceThreshold' });
   const [resultingDenom, , resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [initialDeposit] = useField<number>({ name: 'initialDeposit' });
 
@@ -128,8 +127,6 @@ function InitialDenom() {
     const denomsAlreadySet = initialDenomAlreadySet && resultingDenomAlreadySet;
 
     if (!pairs || denomsAlreadySet) return;
-
-    priceThresholdHelpers.setValue(''); // check
 
     if (!initialDenomName && !initialDenom.value) {
       const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
@@ -214,7 +211,6 @@ function InitialDenom() {
 function SwapDenoms() {
   const [{ value: initialDenomValue }] = useField({ name: 'initialDenom' });
   const [{ value: resultingDenomValue }] = useField({ name: 'resultingDenom' });
-  const [, priceThresholdMeta, priceThresholdHelpers] = useField({ name: 'priceThreshold' });
 
   const { getDenomById } = useDenoms();
   const [{ amount }, setQueryState] = useQueryState();
@@ -239,8 +235,6 @@ function SwapDenoms() {
                   }
                 : {}),
             });
-
-            if (priceThresholdMeta.touched) priceThresholdHelpers.setTouched(false);
           })
         }
       />
@@ -426,72 +420,51 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
     values: { initialDenom, resultingDenom },
   } = useFormikContext<FormData>();
 
-  const [, , slippageToleranceHelpers] = useField<number | undefined>({
+  const [{ value: slippageToleranceValue }, , slippageToleranceHelpers] = useField<number | undefined>({
     name: 'slippageTolerance',
   });
 
-  const [, priceThresholdMeta, priceThresholdHelpers] = useField<number | undefined>({
+  const [{ value: priceThresholdValue }, , priceThresholdHelpers] = useField<number | undefined>({
     name: 'priceThreshold',
   });
 
-  const [isUsingPriceProtection, setIsUsingPriceProtection] = useState(true);
+  const [usingPriceProtection, setUsingPriceProtection] = useState(true);
   const [slippageTolerance, setSlippageTolerance] = useState(2);
   const [priceThreshold, setPriceThreshold] = useState(0.02);
   const [rektProtekt, setRektProtekt] = useState(false);
 
-  const transactionType = initialDenom && (initialDenom.stable ? TransactionType.Buy : TransactionType.Sell);
-
   useEffect(() => {
-    if (!!expectedPrice && !priceThresholdMeta.touched) {
-      priceThresholdHelpers.setValue(
-        expectedPrice &&
-          expectedPrice * (transactionType === TransactionType.Buy ? 1 - priceThreshold : 1 + priceThreshold),
-      );
-      priceThresholdHelpers.setTouched(true);
-    }
-  }, [expectedPrice, priceThresholdMeta.touched, transactionType, priceThreshold, priceThresholdHelpers]);
+    priceThresholdHelpers.setValue(
+      usingPriceProtection ? expectedPrice && expectedPrice * (1 + Number(priceThreshold)) : undefined,
+    );
+    slippageToleranceHelpers.setValue(usingPriceProtection ? undefined : slippageTolerance);
+  }, [priceThreshold, slippageTolerance, usingPriceProtection, expectedPrice]);
 
   return (
     <Stack>
       <HStack w="full" spacing={0}>
-        <Text noOfLines={1} color={isUsingPriceProtection ? 'white' : 'slateGrey'} fontSize="11.5">
-          {rektProtekt ? 'Rekt' : 'Price'} Protection
+        <Text noOfLines={1} color={usingPriceProtection ? 'white' : 'slateGrey'} fontSize="11.5">
+          {rektProtekt ? 'Rekt Protektion' : 'Price Protection'}
         </Text>
         <Switch
           marginInline={2}
           size="sm"
           colorScheme="brand"
-          isChecked={isUsingPriceProtection}
-          onChange={() => {
-            if (isUsingPriceProtection) {
-              priceThresholdHelpers.setValue(undefined);
-              slippageToleranceHelpers.setValue(slippageTolerance);
-            } else {
-              priceThresholdHelpers.setValue(
-                expectedPrice &&
-                  expectedPrice * (transactionType === TransactionType.Buy ? 1 - priceThreshold : 1 + priceThreshold),
-              );
-              slippageToleranceHelpers.setValue(undefined);
-            }
-            setIsUsingPriceProtection(!isUsingPriceProtection);
-          }}
+          isChecked={usingPriceProtection}
+          onChange={() => setUsingPriceProtection(!usingPriceProtection)}
         />
         <Spacer />
-        {isUsingPriceProtection ? (
+        {usingPriceProtection ? (
           expectedPrice ? (
             <HStack spacing={1}>
               <Text noOfLines={1} textAlign="end" fontSize="11.5">
                 Skip swaps if:
               </Text>
-              {transactionType && resultingDenom && initialDenom && (
+              {resultingDenom && initialDenom && (
                 <Text noOfLines={1} textAlign="end" fontSize="11.5" color="blue.200">
-                  {`1 ${(transactionType === TransactionType.Buy ? resultingDenom : initialDenom).name} < ${Number(
-                    (
-                      expectedPrice &&
-                      expectedPrice *
-                        (transactionType === TransactionType.Buy ? 1 + priceThreshold : 1 - priceThreshold)
-                    )?.toFixed(3),
-                  )} ${(transactionType === TransactionType.Buy ? initialDenom : resultingDenom).name}`}
+                  {`1 ${resultingDenom.name} > ${Number(
+                    (expectedPrice && expectedPrice * (1 + priceThreshold))?.toFixed(3),
+                  )} ${initialDenom.name}`}
                 </Text>
               )}
             </HStack>
@@ -512,7 +485,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
       </HStack>
       <Box position="relative" borderRadius="16px 4px 4px 16px" border="1px solid" borderColor="abyss.200">
         <HStack w="full" marginBlock={2.5} ml={4}>
-          {isUsingPriceProtection ? (
+          {usingPriceProtection ? (
             <Box ml={1}>
               <FaShieldHalved color="slateGray" />
             </Box>
@@ -520,11 +493,11 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
             <Icon as={Swap2Icon} stroke="slateGrey" boxSize={6} />
           )}
           <Text color="slateGrey">
-            {isUsingPriceProtection ? (rektProtekt ? 'Rekt Protektion' : 'Price Protection') : 'Slippage Tolerance'}
+            {usingPriceProtection ? (rektProtekt ? 'Rekt Protektion' : 'Price Protection') : 'Slippage Tolerance'}
           </Text>
           <Tooltip
             label={
-              isUsingPriceProtection
+              usingPriceProtection
                 ? "Your order won't execute and is protected if the market price dips more than your set price through market movement OR pool manipulation from bad actors."
                 : 'If the slippage exceeds your tolerance, the swap will fail.'
             }
@@ -540,20 +513,9 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
                 h={4}
                 variant="unstyled"
                 onClick={
-                  isUsingPriceProtection
-                    ? () => {
-                        const value = max(0, priceThreshold + 0.001);
-                        setPriceThreshold(value);
-                        if (expectedPrice)
-                          priceThresholdHelpers.setValue(
-                            expectedPrice * (transactionType === TransactionType.Buy ? 1 - value : 1 + value),
-                          );
-                      }
-                    : () => {
-                        const value = max(0, slippageTolerance + 0.1);
-                        setSlippageTolerance(value);
-                        slippageToleranceHelpers.setValue(value);
-                      }
+                  usingPriceProtection
+                    ? () => setPriceThreshold(max(0, Number(Number(priceThreshold + 0.001).toFixed(3))))
+                    : () => setSlippageTolerance(max(0, Number(Number(slippageTolerance + 0.1).toFixed(1))))
                 }
               >
                 <Icon as={FaChevronUp} color="brand.300" fontSize={10} />
@@ -562,20 +524,9 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
                 h={4}
                 variant="unstyled"
                 onClick={
-                  isUsingPriceProtection
-                    ? () => {
-                        const value = max(0, priceThreshold - 0.001);
-                        setPriceThreshold(value);
-                        if (expectedPrice)
-                          priceThresholdHelpers.setValue(
-                            expectedPrice * (transactionType === TransactionType.Buy ? 1 - value : 1 + value),
-                          );
-                      }
-                    : () => {
-                        const value = max(0, slippageTolerance - 0.1);
-                        setSlippageTolerance(value);
-                        slippageToleranceHelpers.setValue(value);
-                      }
+                  usingPriceProtection
+                    ? () => setPriceThreshold(max(0, Number(Number(priceThreshold - 0.001).toFixed(3))))
+                    : () => setSlippageTolerance(max(0, Number(Number(slippageTolerance - 0.1).toFixed(1))))
                 }
               >
                 <Icon as={FaChevronDown} color="brand.300" fontSize={10} />
@@ -583,9 +534,7 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
             </Stack>
             <Spacer />
             <Text fontWeight="700">
-              {!isUsingPriceProtection
-                ? Number(slippageTolerance.toFixed(2))
-                : Number((priceThreshold * 100).toFixed(2))}
+              {!usingPriceProtection ? Number(slippageTolerance.toFixed(2)) : Number((priceThreshold * 100).toFixed(2))}
             </Text>
             <Text color="slateGrey">%</Text>
           </HStack>
@@ -927,9 +876,14 @@ function FeeSection() {
               <Text as="span" textColor="white">
                 {' '}
                 {String.fromCharCode(8275)}
-                {getPrettyFee(fromAtomic(initialDenom, initialDeposit), SWAP_FEE + dexFee)} {initialDenom.name}{' '}
+                {Number(
+                  Number(fromAtomic(initialDenom, initialDeposit) * (SWAP_FEE + dexFee)).toFixed(
+                    initialDenom.significantFigures,
+                  ),
+                )}{' '}
+                {initialDenom.name}{' '}
                 {`(${Number(
-                  getPrettyFee(fromAtomic(initialDenom, swapAmount), SWAP_FEE + dexFee).toFixed(
+                  Number(fromAtomic(initialDenom, swapAmount) * (SWAP_FEE + dexFee)).toFixed(
                     initialDenom.significantFigures,
                   ),
                 )} ${initialDenom.name} per swap)`}
@@ -967,7 +921,7 @@ export function Form() {
     mutate(
       { state },
       {
-        onSuccess: async (strategyId) => {
+        onSuccess: (strategyId) => {
           nextStep({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
@@ -984,11 +938,7 @@ export function Form() {
     <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
       {({ values: formValues }) => (
         <Box maxWidth={451} mx="auto">
-          <NewStrategyModalBody
-            stepsConfig={streamingSwapSteps}
-            isLoading={isLoading || isPairsLoading}
-            isSigning={isLoading}
-          >
+          <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
             {isSuccess ? (
               <SuccessStrategyModalBody />
             ) : (

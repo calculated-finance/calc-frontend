@@ -30,6 +30,7 @@ import SquidModal from '@components/SquidModal';
 import { Coin } from '@cosmjs/proto-signing';
 import { useChainContext } from '@hooks/useChainContext';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
+import useQueryState from '@hooks/useQueryState';
 
 interface GetFundsDetailsProps {
   onSquidOpen: () => void;
@@ -158,6 +159,7 @@ function AvailableFundsButton({
   const chainContext = useChainContext();
   const [, , helpers] = useField('initialDeposit');
   const { fiatPrice } = useFiatPrice(denom);
+  const [, setQueryState] = useQueryState();
 
   const createStrategyFee = fiatPrice ? createStrategyFeeInTokens(fiatPrice, denom) : 0;
 
@@ -194,7 +196,11 @@ function AvailableFundsButton({
             variant="link"
             cursor="pointer"
             isDisabled={!displayAmount}
-            onClick={() => helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount)}
+            onClick={() => {
+              const value = deconvertValue ? toAtomic(denom, displayAmount) : displayAmount;
+              setQueryState({ amount: value });
+              helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount);
+            }}
           >
             {displayAmount}
           </Button>

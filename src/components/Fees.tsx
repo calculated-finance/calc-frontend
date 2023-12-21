@@ -42,7 +42,7 @@ export function FeeBreakdown({
   const { chainId: chain } = useChainId();
 
   return (
-    <Stack position="relative" spacing={1}>
+    <Stack position="relative" spacing={isOpen ? 1 : 0}>
       <Box position="relative" w="min-content" zIndex={10} ml={isOpen ? 4 : 0}>
         <Box position="absolute" w="full" h="full" bg="darkGrey" />
         <Button
@@ -67,7 +67,6 @@ export function FeeBreakdown({
             borderRadius="md"
           />
         </Fade>
-
         <Collapse in={isOpen}>
           <Flex flexDirection="row" px={2} pb={4} mt={0} gap={3}>
             <Flex flexGrow={10} flexDirection="column">
@@ -168,21 +167,17 @@ export function FeeBreakdown({
 export default function Fees({
   swapFee,
   initialDenom,
-  resultingDenom,
   swapAmount,
   autoStakeValidator,
   swapFeeTooltip,
   excludeDepositFee = false,
-  transactionType,
 }: {
   swapFee: number;
   initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
   swapAmount: number;
   autoStakeValidator: string | null | undefined;
   swapFeeTooltip?: string;
   excludeDepositFee?: boolean;
-  transactionType: TransactionType;
 }) {
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { dexFee } = useDexFee();

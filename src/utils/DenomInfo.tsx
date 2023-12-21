@@ -31,7 +31,7 @@ export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
     stakeableAndSupported: false,
     enabled: false,
     significantFigures: 6,
-    pricePrecision: 6,
+    pricePrecision: 3,
     enabledInDcaPlus: false,
     ...denomInfo,
   };

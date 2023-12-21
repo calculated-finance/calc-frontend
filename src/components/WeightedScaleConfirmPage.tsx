@@ -63,13 +63,11 @@ function PageInternal({
       <SummaryAfterEachSwap state={state} />
       <Fees
         initialDenom={initialDenom}
-        resultingDenom={resultingDenom}
         autoStakeValidator={state.autoStakeValidator}
         swapAmount={state.swapAmount}
         swapFee={SWAP_FEE_WS}
         swapFeeTooltip="Calculated assuming base swap. Actual fees per swap depend on the resulting swap amount."
         excludeDepositFee
-        transactionType={transactionType}
       />
       <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
     </Stack>
@@ -79,7 +77,6 @@ function PageInternal({
 export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
   const { state, actions } = useWeightedScaleConfirmForm();
   const { nextStep, goToStep } = useSteps(steps);
-  const { getDenomById } = useDenoms();
 
   const initialDenom = state?.initialDenom;
   const resultingDenom = state?.resultingDenom;

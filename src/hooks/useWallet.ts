@@ -1,7 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getGasPrice } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
-import { curry } from 'rambda';
 import { useEffect } from 'react';
 import { useChainContext } from './useChainContext';
 import { ChainId } from './useChainId/Chains';
@@ -14,7 +13,6 @@ export function useWallet() {
       !chainContext?.isWalletDisconnected &&
       !chainContext?.isWalletConnected &&
       !chainContext?.isWalletConnecting &&
-      !chainContext?.isWalletDisconnected &&
       chainContext?.wallet
     ) {
       chainContext.disconnect();

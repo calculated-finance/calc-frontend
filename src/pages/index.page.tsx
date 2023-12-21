@@ -31,7 +31,6 @@ import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
 import useDenoms from '@hooks/useDenoms';
 import { values } from 'rambda';
-import { useChainId } from '@hooks/useChainId';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function WarningPanel() {
