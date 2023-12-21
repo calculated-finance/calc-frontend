@@ -15,6 +15,7 @@ import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { useRouter } from 'next/router';
+import { BrowserRouter } from 'react-router-dom';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
 import { useWallet } from '@hooks/useWallet';
 import { AssetsForm } from './AssetsForm';
@@ -62,7 +63,7 @@ export function Assets() {
     );
   }
 
-  const initialValues = {
+  const initialValues: any = {
     ...state.step1,
     strategyType,
     initialDenom: state.step1.initialDenom,
@@ -72,18 +73,20 @@ export function Assets() {
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
-      <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
-        <Form autoComplete="off">
-          <FormControl>
-            <CategoryAndStrategyButtonSelectors />
-          </FormControl>
-          <Stack direction="column" spacing={6}>
-            <AssetsForm />
-            {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
-          </Stack>
-        </Form>
-      </ModalWrapper>
-    </Formik>
+    <BrowserRouter>
+      <Formik initialValues={initialValues} validate={validate} onSubmit={onSubmit}>
+        <ModalWrapper reset={actions.resetAction} stepsConfig={stepsConfig}>
+          <Form autoComplete="off">
+            <FormControl>
+              <CategoryAndStrategyButtonSelectors />
+            </FormControl>
+            <Stack direction="column" spacing={6}>
+              <AssetsForm />
+              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
+            </Stack>
+          </Form>
+        </ModalWrapper>
+      </Formik>
+    </BrowserRouter>
   );
 }

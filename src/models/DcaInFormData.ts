@@ -44,8 +44,8 @@ export const denomInfoSchema = {
 
 export const assetsFormSchema = Yup.object({
   strategyType: Yup.mixed<StrategyType>().required(),
-  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
-  initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
+  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom'),
+  initialDenom: Yup.object(denomInfoSchema).label('Initial Denom'),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()
