@@ -51,12 +51,12 @@ import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
-import { ConnectWalletButton } from './StepOneConnectWallet';
+import { ConnectWalletButton } from './ConnectWalletButton';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
 };
-./ConnectWalletButton
+
 function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   return (
     <Heading size="sm">

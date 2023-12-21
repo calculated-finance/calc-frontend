@@ -960,7 +960,7 @@ export function Form() {
   const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
   const { balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
-  const [, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
@@ -988,26 +988,30 @@ export function Form() {
             isLoading={isLoading || isPairsLoading}
             isSigning={isLoading}
           >
-            <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-              <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
-                <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                  <InitialDenom />
-                  <SwapDenoms />
-                  <ResultingDenom />
+            {isSuccess ? (
+              <SuccessStrategyModalBody />
+            ) : (
+              <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+                <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
+                  <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                    <InitialDenom />
+                    <SwapDenoms />
+                    <ResultingDenom />
+                  </Stack>
+                  <DurationSlider />
                 </Stack>
-                <DurationSlider />
+                <FeeSection />
+                {connected ? (
+                  <SummaryAgreementForm
+                    isError={isError}
+                    error={error}
+                    onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
+                  />
+                ) : (
+                  <ConnectWalletButton />
+                )}
               </Stack>
-              <FeeSection />
-              {connected ? (
-                <SummaryAgreementForm
-                  isError={isError}
-                  error={error}
-                  onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
-                />
-              ) : (
-                <ConnectWalletButton />
-              )}
-            </Stack>
+            )}
           </NewStrategyModalBody>
         </Box>
       )}

@@ -17,8 +17,7 @@ export const useCreateVaultDca = () => {
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
-  const { fiatPrices: prices } = useFiatPrices();
-  const { getDenomById } = useDenoms();
+  const { fiatPrices } = useFiatPrices();
 
   const track = useTrackCreateVault();
 
@@ -46,7 +45,7 @@ export const useCreateVaultDca = () => {
       throw Error('Invalid initial denom');
     }
 
-    const price = state.initialDenom?.coingeckoId && prices?.[state.initialDenom?.coingeckoId]?.usd;
+    const price = state.initialDenom?.coingeckoId && fiatPrices?.[state.initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
       throw Error('Invalid price');

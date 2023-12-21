@@ -108,10 +108,10 @@ const osmoTestnetConfig = {
 export function getGasPrice(chain: ChainId) {
   return GasPrice.fromString(
     {
-      'osmosis-1': '0.015uosmo',
-      'osmo-test-5': '0.015uosmo',
-      'kaiyo-1': '0.015ukuji',
-      'harpoon-4': '0.015ukuji',
+      'osmosis-1': '0.0025uosmo',
+      'osmo-test-5': '0.0025uosmo',
+      'kaiyo-1': '0.0034ukuji',
+      'harpoon-4': '0.0034ukuji',
     }[chain],
   );
 }
