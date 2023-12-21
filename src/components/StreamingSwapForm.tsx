@@ -65,7 +65,8 @@ import useDenoms from '@hooks/useDenoms';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import useQueryState from '@hooks/useQueryState';
 import { useChainId } from '@hooks/useChainId';
-import { NewStrategyModalBody } from './NewStrategyModal';
+import { NewStrategyModalBody } from '@components/NewStrategyModal';
+import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 
 function InitialDeposit() {
   const {

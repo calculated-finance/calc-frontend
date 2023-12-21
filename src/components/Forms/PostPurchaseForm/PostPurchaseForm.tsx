@@ -9,12 +9,12 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
-import AutoCompoundStakingRewards from '@components/AutocompoundStakingRewards';
+import AutoCompoundStakingRewards from '@components/AutoCompoundStakingRewards';
+import { OSMOSIS_CHAINS } from 'src/constants';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
 import { Reinvest } from '../../Reinvest';
-import { OSMOSIS_CHAINS } from 'src/constants';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });

@@ -2,7 +2,7 @@ import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Sp
 import Icon from '@components/Icon';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
-import { FiDivide, FiMinimize } from 'react-icons/fi';
+import { FiDivide } from 'react-icons/fi';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
