@@ -127,15 +127,15 @@ function Strategies() {
 
   function accumulationStrategies(): StrategyCardProps[] {
     return [
-      {
-        name: 'Streaming Swap',
-        description: 'Reduce slippage by swapping smaller amounts over time.',
-        advanced: false,
-        enabled: true,
-        icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
-        href: StrategyUrls.StreamingSwap,
-        learnMoreHref: LearningHubLinks.MoreAboutCalc,
-      },
+      // {
+      //   name: 'Streaming Swap',
+      //   description: 'Reduce slippage by swapping smaller amounts over time.',
+      //   advanced: false,
+      //   enabled: true,
+      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
+      //   href: StrategyUrls.StreamingSwap,
+      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
+      // },
       {
         name: 'Standard DCA In',
         description: 'Customise your own dollar-cost average buying strategy.',
@@ -167,15 +167,15 @@ function Strategies() {
 
   function takeProfitStrategies(): StrategyCardProps[] {
     return [
-      {
-        name: 'Streaming Swap',
-        description: 'Reduce slippage by swapping smaller amounts over time.',
-        advanced: false,
-        enabled: true,
-        icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
-        href: StrategyUrls.StreamingSwap,
-        learnMoreHref: LearningHubLinks.MoreAboutCalc,
-      },
+      // {
+      //   name: 'Streaming Swap',
+      //   description: 'Reduce slippage by swapping smaller amounts over time.',
+      //   advanced: false,
+      //   enabled: true,
+      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
+      //   href: StrategyUrls.StreamingSwap,
+      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
+      // },
       {
         name: 'Standard DCA Out',
         description: 'Dollar-cost average out of an asset with ease.',
