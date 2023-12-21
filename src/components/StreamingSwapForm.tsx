@@ -54,7 +54,7 @@ import useTwapToNow from '@hooks/useTwapToNow';
 import { max, min, toLower, values } from 'rambda';
 import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreamingSwap';
 import { useDebounce } from 'ahooks';
-import { ConnectWalletButton } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/ConnectWalletButton';
 import { SWAP_FEE } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';

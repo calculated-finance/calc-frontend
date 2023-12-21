@@ -10,6 +10,7 @@ import {
   DELEGATION_FEE,
   HOURS_IN_A_DAY,
   MINUTES_IN_A_HOUR,
+  OSMOSIS_CHAINS,
   SECONDS_IN_A_DAY,
   SECONDS_IN_A_HOUR,
   SECONDS_IN_A_MINUTE,
@@ -324,7 +325,7 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
 }
 
 export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
-  if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
+  if (OSMOSIS_CHAINS.includes(chain)) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
   }
 

@@ -56,7 +56,7 @@ import { ConnectWalletButton } from './StepOneConnectWallet';
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
 };
-
+./ConnectWalletButton
 function ModalHeader({ isSuccess }: SimpleDcaModalHeaderProps) {
   return (
     <Heading size="sm">

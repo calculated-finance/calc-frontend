@@ -14,6 +14,7 @@ import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
 import { Reinvest } from '../../Reinvest';
+import { OSMOSIS_CHAINS } from 'src/constants';
 
 function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: boolean }) {
   const [field, , helpers] = useField({ name: 'postPurchaseOption' });
@@ -42,7 +43,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
       supported: true,
-      enabled: ['osmosis-1', 'osmo-test-5'].includes(chainId),
+      enabled: OSMOSIS_CHAINS.includes(chainId),
     },
   ].filter((option) => option.enabled);
 

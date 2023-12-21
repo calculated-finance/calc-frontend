@@ -8,7 +8,7 @@ import { ModalWrapper } from '@components/ModalWrapper';
 import { StrategyType } from '@models/StrategyType';
 import Spinner from '@components/Spinner';
 import Submit from '@components/Submit';
-import { ConnectWalletButton } from '@components/StepOneConnectWallet';
+import { ConnectWalletButton } from '@components/ConnectWalletButton';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrategyButtonSelectors';
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
