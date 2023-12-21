@@ -4,10 +4,8 @@ import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import {
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
   getStrategyType,
   getStrategyName,
   isStrategyCancelled,
@@ -17,6 +15,7 @@ import {
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import React from 'react';
+import { FiExternalLink } from 'react-icons/fi';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
@@ -51,8 +50,7 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
 }
 
 function StrategyRow({ strategy }: { strategy: Strategy }) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const { initialDenom, resultingDenom } = strategy;
 
   return (
     <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
@@ -69,8 +67,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         borderColor="brand.200"
         _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
       >
-        <GridItem colSpan={{ base: 15, sm: 8, xl: 3 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
-          <Heading size="md">{getStrategyType(strategy)}</Heading>
+        <GridItem colSpan={{ base: 15, sm: 8, xl: 4 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
+          <Heading size="md">{strategy.rawData.label || getStrategyType(strategy)}</Heading>
           <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
         </GridItem>
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
@@ -83,12 +81,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             <DenomIcon showTooltip denomInfo={resultingDenom} />
           </HStack>
         </GridItem>
-
         <GridItem colSpan={{ base: 8, sm: 3, xl: 2 }}>
           <Text fontSize="sm">Status:</Text>
           <StrategyStatusBadge strategy={strategy} />
         </GridItem>
-
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Interval:</Text>
           <Text textStyle="body-xs">
@@ -96,11 +92,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             {initialDenom.name}
           </Text>
         </GridItem>
-
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Balance:</Text>
           <Text textStyle="body-xs">
-            {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
+            {fromAtomic(strategy.initialDenom, Number(strategy.rawData.balance.amount))} {initialDenom.name}
           </Text>
         </GridItem>
         <GridItem
@@ -124,10 +119,15 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
             </Stack>
           </Flex>
         </GridItem>
-        <GridItem colSpan={{ base: 15, sm: 15, xl: 3 }}>
+        <GridItem colSpan={{ base: 15, sm: 15, xl: 2 }}>
           <Flex justifyContent="end" alignItems="center" h="full">
             <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
-              <Button width={{ base: 'full', xl: 'initial' }}>View performance</Button>
+              <Button width={{ base: 'full', xl: 'initial' }}>
+                <HStack>
+                  <Text>View</Text>
+                  <FiExternalLink />
+                </HStack>
+              </Button>
             </LinkWithQuery>
           </Flex>
         </GridItem>

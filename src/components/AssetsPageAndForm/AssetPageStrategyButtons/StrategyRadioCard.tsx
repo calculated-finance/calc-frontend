@@ -1,11 +1,9 @@
 import { Box, Center, HStack, UseRadioProps, useRadio } from '@chakra-ui/react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 
-export function StrategyRadioCard({
-  buttonClicked,
-  ...props
-}: { buttonClicked: string | undefined } & UseRadioProps & ChildrenProp) {
+export function StrategyRadioCard({ ...props }: UseRadioProps & ChildrenProp) {
   const { getInputProps, getRadioProps } = useRadio(props);
+
   const input = getInputProps();
   const checkbox = getRadioProps();
 

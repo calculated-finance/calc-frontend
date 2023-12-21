@@ -5,7 +5,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
-// import { useCosmWasmClientStore } from '@hooks/useCosmWasmClientStore';
 import { CHAINS } from 'src/constants';
 import { ChainId } from './Chains';
 
@@ -49,7 +48,6 @@ function getChainNameFromRouterQuery(query: ParsedUrlQuery) {
 export const useChainId = () => {
   const router = useRouter();
   const { chain, wasFiltered } = useMemo(() => getChainNameFromRouterQuery(router.query), [router.query]);
-  // const clientStore = useCosmWasmClientStore();
   const storedChain = useChainStore((state) => state.chainId);
   const setStoredChain = useChainStore((state) => state.setChain);
 
@@ -69,9 +67,7 @@ export const useChainId = () => {
   const updateStores = useCallback(
     (newChain: ChainId) => {
       useFormStore.setState({ forms: {} });
-      // useCosmWasmClientStore.setState({ client: null });
       setStoredChain(newChain);
-      // clientStore.updateClient(newChain);
     },
     [setStoredChain],
   );
@@ -80,7 +76,6 @@ export const useChainId = () => {
     (newChain: ChainId) => {
       if (newChain === chain) return;
       useFormStore.setState({ forms: {} });
-      // useCosmWasmClientStore.setState({ client: null });
       updateStores(newChain);
       updateQueryParam(newChain);
     },

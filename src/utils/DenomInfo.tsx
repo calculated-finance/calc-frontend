@@ -1,22 +1,38 @@
-import { Denom } from '@models/Denom';
-
 export type DenomInfo = {
-  id: Denom;
+  chain: string;
+  id: string;
   name: string;
   icon: string;
-  conversion: (value: number) => number;
-  deconversion: (value: number) => number;
-  priceDeconversion: (value: number | undefined | null) => number;
-  priceConversion: (value: number | undefined | null) => number;
   stakeable: boolean;
   stable: boolean;
   coingeckoId: string;
   stakeableAndSupported: boolean;
-  promotion?: JSX.Element;
   enabled: boolean;
   minimumSwapAmount: number;
   significantFigures: number;
   enabledInDcaPlus: boolean;
-  osmosisId?: string;
   pricePrecision: number;
+};
+
+export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
+  if (!denomInfo.chain || !denomInfo.id) {
+    throw new Error(`Invalid partial denom info: ${JSON.stringify(denomInfo)}`);
+  }
+
+  return {
+    chain: denomInfo.chain,
+    id: denomInfo.id,
+    name: denomInfo.id,
+    icon: '/images/circleDollar.svg',
+    minimumSwapAmount: 0,
+    stakeable: false,
+    stable: false,
+    coingeckoId: '',
+    stakeableAndSupported: false,
+    enabled: false,
+    significantFigures: 6,
+    pricePrecision: 6,
+    enabledInDcaPlus: false,
+    ...denomInfo,
+  };
 };

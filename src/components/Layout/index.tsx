@@ -21,13 +21,13 @@ import { useAdmin } from '@hooks/useAdmin';
 import { useChainId } from '@hooks/useChainId';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { featureFlags } from 'src/constants';
 import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPageStrategyButtons';
 import { isStepOne } from '@helpers/isStepOne';
+import { OSMOSIS_CHAINS } from 'src/constants';
 import Sidebar from './Sidebar';
 import { TermsModal } from '../TermsModal';
 import { SidebarControls } from './SidebarControls';
-import { ControlDeskLinkItems, LinkItem, LinkItems } from './Sidebar/LinkItems';
+import { LinkItem, LinkItems } from './Sidebar/LinkItems';
 import { Pages } from './Sidebar/Pages';
 
 const HEADER_HEIGHT = '64px';
@@ -52,7 +52,7 @@ function AppHeader() {
   return (
     <Flex position="absolute" h={HEADER_HEIGHT} w="full" p={8} alignItems="center">
       <LinkWithQuery href="/">
-        {['osmosis-1', 'osmo-test-5'].includes(chain) ? (
+        {OSMOSIS_CHAINS.includes(chain) ? (
           <Image cursor="pointer" src="/images/osmoLogo.svg" w={105} />
         ) : (
           <Image cursor="pointer" src="/images/logo.svg" w={105} />
@@ -125,12 +125,10 @@ function FlowLayout({ children }: { children: ReactElement }) {
       <AppHeader />
       <Content
         bgImage={
-          ['osmosis-1', 'osmo-test-5'].includes(chain)
-            ? '/images/backgrounds/osmoBackground.svg'
-            : '/images/backgrounds/twist.svg'
+          OSMOSIS_CHAINS.includes(chain) ? '/images/backgrounds/osmoBackground.svg' : '/images/backgrounds/twist.svg'
         }
         backgroundPosition="bottom"
-        backgroundSize={['osmosis-1', 'osmo-test-5'].includes(chain) ? 'cover' : 'center'}
+        backgroundSize={OSMOSIS_CHAINS.includes(chain) ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"
         minH="100vh"
         backgroundAttachment="fixed"
@@ -220,8 +218,4 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
 
 export function getSidebarLayout(page: ReactElement) {
   return <SidebarLayout linkItems={LinkItems}>{page}</SidebarLayout>;
-}
-
-export function getControlDeskSidebarLayout(page: ReactElement) {
-  return featureFlags.controlDeskEnabled && <SidebarLayout linkItems={ControlDeskLinkItems}>{page}</SidebarLayout>;
 }

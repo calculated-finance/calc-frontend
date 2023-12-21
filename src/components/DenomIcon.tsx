@@ -6,7 +6,7 @@ function DenomIcon({
   size = 4,
   showTooltip = false,
 }: {
-  denomInfo: DenomInfo;
+  denomInfo: DenomInfo | undefined;
   size?: number;
   showTooltip?: boolean;
 }) {
@@ -30,7 +30,7 @@ function DenomIcon({
           lineHeight={1.3}
           cursor="default"
         >
-          {name.charAt(0) || '?'}
+          {name?.charAt(0) || '?'}
         </Box>
       )}
     </Tooltip>

@@ -9,10 +9,9 @@ import { useDcaPlusInFormPostPurchase } from '@hooks/useDcaPlusForm';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { DcaPlusPostPurchaseFormSchema } from '@models/dcaPlusFormData';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -32,13 +31,12 @@ function Page() {
     goToStep(0);
   };
 
-  const resultingDenom = useDenom(context?.resultingDenom);
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {state && context ? (
-        <PostPurchaseForm resultingDenom={resultingDenom} />
+        <PostPurchaseForm resultingDenom={context.resultingDenom} />
       ) : (
         <InvalidData onRestart={handleRestart} />
       )}
@@ -52,7 +50,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusIn,
+        strategyType: StrategyType.DCAPlusIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaPlusIn,
       }}

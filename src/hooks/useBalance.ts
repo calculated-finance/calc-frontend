@@ -2,6 +2,7 @@ import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { useChainId } from './useChainId';
 import { useChainClient } from './useChainClient';
 
@@ -12,15 +13,13 @@ export type BalanceResponse = {
 function useBalance(token: DenomInfo) {
   const { address } = useWallet();
   const { chainId } = useChainId();
-
   const client = useChainClient(chainId);
 
   const result = useQuery<Coin>(
     ['balance', token.id, chainId, address],
     () => client!.fetchTokenBalance(token.id, address!),
     {
-      enabled: !!token && !!address && !!chainId && !!client,
-      keepPreviousData: true,
+      enabled: !!token.id && !!address && !!chainId && !!client,
       meta: {
         errorMessage: 'Error fetching balance',
       },
@@ -28,7 +27,7 @@ function useBalance(token: DenomInfo) {
   );
 
   return {
-    displayAmount: result.data ? token.conversion(Number(result.data.amount)) : 0,
+    displayAmount: result.data ? fromAtomic(token, Number(result.data.amount)) : 0,
     ...result,
   };
 }

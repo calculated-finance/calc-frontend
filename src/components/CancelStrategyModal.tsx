@@ -19,15 +19,13 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { getStrategyInitialDenomId, getStrategyResultingDenom } from '@helpers/strategy';
 import { getStandardDcaEndDate, getEscrowAmount } from '@helpers/strategy/dcaPlus';
 import { Strategy } from '@models/Strategy';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import useCancelStrategy from 'src/hooks/useCancelStrategy';
 import { formatDate } from '@helpers/format/formatDate';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { useDenom } from '@hooks/useDenom/useDenom';
 
 type CancelStrategyModalProps = {
   strategy: Strategy;
@@ -35,7 +33,6 @@ type CancelStrategyModalProps = {
 } & Omit<ModalProps, 'children'>;
 
 export default function CancelStrategyModal({ isOpen, onClose, onCancel, strategy }: CancelStrategyModalProps) {
-  const initialDenom = useDenom(getStrategyInitialDenomId(strategy));
   const { mutate: cancelStrategy, isLoading } = useCancelStrategy();
 
   const toast = useToast();
@@ -86,7 +83,8 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                 <Heading size="sm">Amount to be returned:</Heading>
                 <Spacer />
                 <Text as="span" fontSize="lg" color="blue.200">
-                  {convertDenomFromCoin(strategy.rawData.balance)} {initialDenom.name}
+                  {fromAtomic(strategy.initialDenom, Number(strategy.rawData.balance.amount))}{' '}
+                  {strategy.initialDenom.name}
                 </Text>
               </Flex>
               {isDcaPlus(strategy) && (
@@ -94,7 +92,7 @@ export default function CancelStrategyModal({ isOpen, onClose, onCancel, strateg
                   <Heading size="sm">Amount escrowed:</Heading>
                   <Spacer />
                   <Text as="span" fontSize="lg" color="blue.200">
-                    {getEscrowAmount(strategy)} {getStrategyResultingDenom(strategy).name}
+                    {getEscrowAmount(strategy)} {strategy.resultingDenom.name}
                   </Text>
                 </Flex>
               )}

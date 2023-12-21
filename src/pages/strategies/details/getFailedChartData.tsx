@@ -2,12 +2,16 @@ import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { findCurrentPriceInTime } from './getChartData';
 
-type ExecutionSkippedReason = 'slippage_tolerance_exceeded' | 'swap_amount_adjusted_to_zero';
+type ExecutionSkippedReason =
+  | 'slippage_tolerance_exceeded'
+  | 'swap_amount_adjusted_to_zero'
+  | 'price_threshold_exceeded';
 
 function convertToSentence(reason: ExecutionSkippedReason) {
   const sentenceMap = {
     slippage_tolerance_exceeded: 'Slippage tolerance exceeded',
     swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
+    price_threshold_exceeded: 'Price threshold exceeded',
   };
 
   return sentenceMap[reason] || 'Failed swap';

@@ -17,7 +17,6 @@ import {
   getTotalSwapped,
 } from '@helpers/strategy';
 import useDexFee from '@hooks/useDexFee';
-import { TransactionType } from '@components/TransactionType';
 import CalcSpinner from '@components/Spinner';
 import { getStrategyReinvestStrategyId } from '@helpers/destinations';
 import useStrategy from '@hooks/useStrategy';
@@ -27,17 +26,13 @@ import { LinkedStrategyDetails } from './LinkedStrategyDetails';
 function StrategyPerformanceDetails({ strategy }: { strategy: Strategy }) {
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { dexFee } = useDexFee(
-    initialDenom,
-    resultingDenom,
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
+  const { dexFee } = useDexFee();
 
   const id = getStrategyReinvestStrategyId(strategy);
   const { data } = useStrategy(id);
   const linkedToStrategy = data;
-  const { price: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
-  const { price: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomPrice, priceChange24Hr: resultingPriceChange24Hr } = useFiatPrice(resultingDenom);
+  const { fiatPrice: initialDenomPrice, priceChange24Hr: initialPriceChange24Hr } = useFiatPrice(initialDenom);
 
   if (!resultingDenomPrice || !initialDenomPrice) {
     return (

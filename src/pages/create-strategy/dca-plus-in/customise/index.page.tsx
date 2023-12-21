@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import { FormNames, useFormStore } from 'src/hooks/useFormStore';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import DcaDiagram from '@components/DcaDiagram';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
@@ -15,7 +15,6 @@ import { DcaPlusCustomiseFormSchema } from '@models/dcaPlusFormData';
 import { InvalidData } from '@components/InvalidData';
 import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -26,7 +25,7 @@ function Page() {
 
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.DCAPlusIn,
+    strategyType: StrategyType.DCAPlusIn,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -35,12 +34,11 @@ function Page() {
     goToStep(0);
   };
 
-  const initialDenom = useDenom(state?.step1.initialDenom);
-  const resulingDenom = useDenom(state?.step1.resultingDenom);
-
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state.step1;
 
   const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
@@ -62,7 +60,7 @@ function Page() {
           <Stack direction="column" spacing={4}>
             <DcaDiagram
               initialDenom={initialDenom}
-              resultingDenom={resulingDenom}
+              resultingDenom={resultingDenom}
               initialDeposit={state.step1.initialDeposit}
             />
             <AdvancedSettingsSwitch />
@@ -86,7 +84,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusIn,
+        strategyType: StrategyType.DCAPlusIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaPlusIn,
       }}

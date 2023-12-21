@@ -8,7 +8,11 @@ type NumberInputProps = {
 
 export default function NumberInput({ value, onChange, type, defaultValue, ...props }: NumberInputProps) {
   const handleChange = (values: NumberFormatValues) => {
-    onChange(values.floatValue || null);
+    try {
+      onChange(values.floatValue || null);
+    } catch (error) {
+      // swallow
+    }
   };
 
   return (

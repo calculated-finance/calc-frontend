@@ -1,16 +1,16 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { StrategyTypes } from '@models/StrategyTypes';
-import getDenomInfo, { convertDenomFromCoin, isDenomStable } from '@utils/getDenomInfo';
+import { StrategyType } from '@models/StrategyType';
+import { fromAtomic, isDenomStable, priceFromRatio } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
-import { safeInvert } from '@hooks/usePrice/safeInvert';
 import { findPair } from '@helpers/findPair';
-import { V3Pair } from '@models/Pair';
+import { HydratedPair } from '@models/Pair';
 import {
   DAYS_IN_A_WEEK,
   DELEGATION_FEE,
   HOURS_IN_A_DAY,
   MINUTES_IN_A_HOUR,
+  OSMOSIS_CHAINS,
   SECONDS_IN_A_DAY,
   SECONDS_IN_A_HOUR,
   SECONDS_IN_A_MINUTE,
@@ -21,6 +21,7 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { ChainId } from '@hooks/useChainId/Chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
+import { safeInvert } from '@utils/safeInvert';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
 import { getEndDateFromRemainingExecutions } from '../getEndDateFromRemainingExecutions';
@@ -52,7 +53,7 @@ export function isStrategyCancelled(strategy: Strategy) {
 export function getStrategyBalance(strategy: Strategy) {
   const { balance } = strategy.rawData || {};
 
-  return convertDenomFromCoin(balance);
+  return fromAtomic(strategy.initialDenom, Number(balance.amount));
 }
 
 export function getStrategyInitialDenomId(strategy: Strategy): string {
@@ -60,11 +61,11 @@ export function getStrategyInitialDenomId(strategy: Strategy): string {
 }
 
 export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.rawData.balance.denom);
+  return strategy.initialDenom;
 }
 
 export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
-  return getDenomInfo(strategy.rawData.received_amount.denom);
+  return strategy.resultingDenom;
 }
 
 export function getStrategyExecutionIntervalData(strategy: Strategy): {
@@ -136,10 +137,11 @@ export function getStrategyExecutionInterval(strategy: Strategy) {
 }
 
 export function getStrategyName(strategy: Strategy) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  if (strategy.rawData.label) {
+    return strategy.rawData.label;
+  }
 
-  return `${initialDenom.name} to ${resultingDenom.name} - ${getStrategyExecutionInterval(strategy)}`;
+  return `${strategy.initialDenom.name} to ${strategy.resultingDenom.name} - ${getStrategyExecutionInterval(strategy)}`;
 }
 
 export function getSlippageTolerance(strategy: Strategy) {
@@ -158,22 +160,21 @@ export function getSwapAmount(strategy: Strategy) {
 }
 
 export function getConvertedSwapAmount(strategy: Strategy) {
-  const { conversion } = getDenomInfo(strategy.rawData.swapped_amount.denom);
-  return Number(conversion(getSwapAmount(strategy)).toFixed(6));
+  return Number(
+    fromAtomic(strategy.initialDenom, getSwapAmount(strategy)).toFixed(strategy.initialDenom.pricePrecision),
+  );
 }
 
 export function getStrategyType(strategy: Strategy) {
-  const initialDenom = getStrategyInitialDenom(strategy);
-
   if (isWeightedScale(strategy)) {
-    return isDenomStable(initialDenom) ? StrategyTypes.WeightedScaleIn : StrategyTypes.WeightedScaleOut;
+    return isDenomStable(strategy.initialDenom) ? StrategyType.WeightedScaleIn : StrategyType.WeightedScaleOut;
   }
 
   if (isDcaPlus(strategy)) {
-    return isDenomStable(initialDenom) ? StrategyTypes.DCAPlusIn : StrategyTypes.DCAPlusOut;
+    return isDenomStable(strategy.initialDenom) ? StrategyType.DCAPlusIn : StrategyType.DCAPlusOut;
   }
 
-  return isDenomStable(initialDenom) ? StrategyTypes.DCAIn : StrategyTypes.DCAOut;
+  return isDenomStable(strategy.initialDenom) ? StrategyType.DCAIn : StrategyType.DCAOut;
 }
 
 export function getStrategyRemainingExecutions(strategy: Strategy) {
@@ -185,9 +186,9 @@ export function getStrategyRemainingExecutions(strategy: Strategy) {
 
 export function isBuyStrategy(strategy: Strategy) {
   return (
-    getStrategyType(strategy) === StrategyTypes.DCAIn ||
-    getStrategyType(strategy) === StrategyTypes.DCAPlusIn ||
-    getStrategyType(strategy) === StrategyTypes.WeightedScaleIn
+    getStrategyType(strategy) === StrategyType.DCAIn ||
+    getStrategyType(strategy) === StrategyType.DCAPlusIn ||
+    getStrategyType(strategy) === StrategyType.WeightedScaleIn
   );
 }
 
@@ -199,7 +200,7 @@ export function getStrategyPriceTrigger(strategy: Strategy) {
   return undefined;
 }
 
-export function getTargetPrice(strategy: Strategy, pairs: V3Pair[] | undefined) {
+export function getTargetPrice(strategy: Strategy, pairs: HydratedPair[] | undefined) {
   let target_price;
 
   if (getStrategyPriceTrigger(strategy)) {
@@ -211,7 +212,7 @@ export function getTargetPrice(strategy: Strategy, pairs: V3Pair[] | undefined) 
     const resultingDenom = getStrategyResultingDenom(strategy);
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
 
-    if (pair && getBaseDenom(pair) === getStrategyInitialDenom(strategy).id) {
+    if (pair && getBaseDenom(pair).id === getStrategyInitialDenom(strategy).id) {
       return safeInvert(Number(target_price));
     }
 
@@ -221,18 +222,16 @@ export function getTargetPrice(strategy: Strategy, pairs: V3Pair[] | undefined) 
   return null;
 }
 
-export function getStrategyStartDate(strategy: Strategy, pairs: V3Pair[] | undefined) {
+export function getStrategyStartDate(strategy: Strategy, pairs: HydratedPair[] | undefined) {
   const { trigger } = strategy.rawData;
-  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy)
-    ? getStrategyResultingDenom(strategy)
-    : getStrategyInitialDenom(strategy);
+  const denom = isBuyStrategy(strategy) ? strategy.resultingDenom : strategy.initialDenom;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const targetPrice = getTargetPrice(strategy, pairs);
 
   if (targetPrice) {
-    const price = Number(priceDeconversion(targetPrice).toFixed(pricePrecision));
+    const price = Number(priceFromRatio(denom, targetPrice).toFixed(denom.pricePrecision));
 
     if (isBuyStrategy(strategy)) {
       return `When ${resultingDenom.name} hits ${price} ${initialDenom.name}`;
@@ -326,19 +325,19 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
 }
 
 export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
-  if (['osmosis-1', 'osmo-test-5'].includes(chain)) {
+  if (OSMOSIS_CHAINS.includes(chain)) {
     return convertReceiveAmountOsmosis(strategy, receiveAmount);
   }
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const { priceDeconversion, pricePrecision } = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+  const denom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
 
-  const price = isBuyStrategy(strategy)
+  const ratio = isBuyStrategy(strategy)
     ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
     : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
 
-  return Number(priceDeconversion(price).toFixed(pricePrecision));
+  return Number(priceFromRatio(denom, ratio).toFixed(denom.pricePrecision));
 }
 
 export function getPriceCeilingFloor(strategy: Strategy, chain: ChainId) {
@@ -367,11 +366,11 @@ export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {
 }
 
 export function getTotalSwapped(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.rawData.swapped_amount);
+  return fromAtomic(strategy.initialDenom, Number(strategy.rawData.swapped_amount.amount));
 }
 
 export function getTotalReceived(strategy: Strategy) {
-  return convertDenomFromCoin(strategy.rawData.received_amount);
+  return fromAtomic(strategy.resultingDenom, Number(strategy.rawData.received_amount.amount));
 }
 
 export function getTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {

@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { isNil } from 'lodash';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -23,7 +22,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { calcSigningClient } = useCalcSigningClient();
   const track = useTrackCreateVault();
 
-  const { price } = useFiatPrice(initialDenom);
+  const { fiatPrice } = useFiatPrice(initialDenom);
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -33,6 +32,10 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       reinvestStrategyData: Strategy | undefined;
     }
   >(async ({ state, reinvestStrategyData }) => {
+    if (!initialDenom) {
+      throw Error('Invalid initial denom');
+    }
+
     if (!calcSigningClient) {
       throw Error('Invalid client');
     }
@@ -45,7 +48,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
       throw new Error('Invalid reinvest strategy.');
     }
 
-    if (!price) {
+    if (!fiatPrice) {
       throw Error('Invalid price');
     }
 
@@ -55,11 +58,15 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
 
-    checkSwapAmountValue(swapAmount, price);
+    checkSwapAmountValue(swapAmount, fiatPrice);
+
+    if (!state.resultingDenom) {
+      throw new Error('Invalid resulting denom');
+    }
 
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      initialDenom,
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: 'daily' as ExecutionIntervals, increment: 1 },
       swapAmount: getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration),
       transactionType,
@@ -74,7 +81,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         senderAddress: address,
       },
     };
-    const fee = createStrategyFeeInTokens(price);
+    const fee = createStrategyFeeInTokens(fiatPrice, initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(

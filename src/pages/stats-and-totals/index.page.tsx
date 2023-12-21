@@ -2,15 +2,14 @@ import 'isomorphic-fetch';
 import { Box, Heading, SimpleGrid, Stack, Text } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
 import { BalanceList } from '@components/SpendableBalances';
-import useFiatPrice from '@hooks/useFiatPrice';
-import getDenomInfo from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { SWAP_FEE } from 'src/constants';
 import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
 import { Coin } from '@cosmjs/stargate';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryHistogram, VictoryTheme, VictoryTooltip } from 'victory';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { formatFiat } from '@helpers/format/formatFiat';
 import {
   getStrategyRemainingExecutions,
@@ -19,21 +18,23 @@ import {
   isStrategyAutoStaking,
 } from '@helpers/strategy';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
 import { useChainId } from '@hooks/useChainId';
 import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import useFiatPrices from '@hooks/useFiatPrices';
+import useDenoms from '@hooks/useDenoms';
+import { values } from 'rambda';
 
-function orderCoinList(coinList: Coin[], fiatPrices: any) {
+function orderCoinList(denoms: { [x: string]: DenomInfo }, coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
     return [];
   }
   return coinList
     .map((coin) => {
-      const { conversion, coingeckoId } = getDenomInfo(coin.denom);
-      const denomConvertedAmount = conversion(Number(coin.amount));
+      const { coingeckoId } = denoms[coin.denom];
+      const denomConvertedAmount = fromAtomic(denoms[coin.denom], Number(coin.amount));
       const fiatPriceInfo = fiatPrices[coingeckoId];
       const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
       if (isNaN(fiatAmount)) {
@@ -95,21 +96,21 @@ function getStrategiesByTimeInterval(allStrategies: Strategy[], timeInterval: st
   return { strategiesByTimeInterval, percentage };
 }
 
-function getStrategiesByType(allStrategies: Strategy[], type: StrategyTypes) {
+function getStrategiesByType(allStrategies: Strategy[], type: StrategyType) {
   const strategiesByType = allStrategies.filter((strategy) => getStrategyType(strategy) === type) || [];
   const percentage = (Number(strategiesByType.length / allStrategies.length) * 100).toFixed(2);
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(coins: Coin[] | undefined, fiatPrices: any, supportedDenoms: DenomInfo[]) {
+export function totalFromCoins(denoms: { [x: string]: DenomInfo }, coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
-      ?.filter((coin) => supportedDenoms.map((denom) => denom.id).includes(coin.denom))
+      ?.filter((coin) => coin.denom in denoms)
       .map((balance) => {
-        const { conversion, coingeckoId } = getDenomInfo(balance.denom);
-        const denomConvertedAmount = conversion(Number(balance.amount));
-        const fiatPriceInfo = fiatPrices[coingeckoId];
-        const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[coingeckoId].usd : 0;
+        const denomInfo = denoms[balance.denom];
+        const denomConvertedAmount = fromAtomic(denomInfo, Number(balance.amount));
+        const fiatPriceInfo = fiatPrices[denomInfo.coingeckoId];
+        const fiatAmount = fiatPriceInfo ? denomConvertedAmount * fiatPrices[denomInfo.coingeckoId].usd : 0;
 
         if (isNaN(fiatAmount)) {
           return 0;
@@ -158,9 +159,6 @@ const timeIntervalMap: Record<any, (date: Date) => number> = {
 };
 
 function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
-  // const timeFunction = timeIntervalMap[strategy.rawData.time_interval] || (() => 0);
-  // return Math.min(timeFunction(date), getStrategyRemainingExecutions(strategy));
-
   if (typeof strategy.rawData.time_interval === 'string') {
     return Math.min(timeIntervalMap[strategy.rawData.time_interval](date), getStrategyRemainingExecutions(strategy));
   }
@@ -169,8 +167,7 @@ function getSwapCountForStrategyUntilDate(strategy: Strategy, date: Date) {
 
 function getFeesPerSwapForStrategy(strategy: Strategy) {
   const fees = SWAP_FEE * Number(strategy.rawData.swap_amount);
-  const { conversion } = getDenomInfo(strategy.rawData.balance.denom);
-  const convertedFees = conversion(fees);
+  const convertedFees = fromAtomic(strategy.initialDenom, fees);
 
   return convertedFees;
 }
@@ -180,18 +177,17 @@ function getFeesUntilDate(strategy: Strategy, date: Date) {
   return getFeesPerSwapForStrategy(strategy) * swapCount;
 }
 
-function getFiatPriceFromList(fiatPrices: any, denom: string) {
-  const { coingeckoId } = getDenomInfo(denom);
-  return fiatPrices[coingeckoId]?.usd;
+function getFiatPriceFromList(fiatPrices: any, denom: DenomInfo) {
+  return fiatPrices[denom.coingeckoId]?.usd;
 }
 
 function getProjectedRevenueForStrategyForDate(strategy: Strategy, date: Date, fiatPrices: any) {
   const fees = getFeesUntilDate(strategy, date);
-  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.rawData.balance.denom);
+  const fiatPrice = getFiatPriceFromList(fiatPrices, strategy.initialDenom);
   return fees * fiatPrice;
 }
 
-function getProjectedRevenueForStrategysForDate(strategies: Strategy[], date: Date, fiatPrices: any) {
+function getProjectedRevenueForStrategiesForDate(strategies: Strategy[], date: Date, fiatPrices: any) {
   return strategies
     .map((strategy) => getProjectedRevenueForStrategyForDate(strategy, date, fiatPrices))
     .reduce((amount, total) => total + amount, 0);
@@ -239,41 +235,41 @@ function groupStrategiesByOwnerThenStatus(strategies: Strategy[]): Record<string
 }
 
 function getWalletsWithOnlyScheduledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'scheduled';
   });
 }
 
 function getWalletsWithOnlyCancelledStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'cancelled';
   });
 }
 
 function getWalletsWithActiveStrategies(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.includes('active');
   });
 }
 
 function getWalletsWithOnlyInactive(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 1 && statuses[0] === 'inactive';
   });
 }
 
 function getWalletsWithOnlyInactiveAndCancelled(strategies: Strategy[]) {
-  const strategiedByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
-  return Object.keys(strategiedByOwnerGroupedByStatus).filter((owner) => {
-    const statuses = Object.keys(strategiedByOwnerGroupedByStatus[owner]);
+  const strategiesByOwnerGroupedByStatus = groupStrategiesByOwnerThenStatus(strategies);
+  return Object.keys(strategiesByOwnerGroupedByStatus).filter((owner) => {
+    const statuses = Object.keys(strategiesByOwnerGroupedByStatus[owner]);
     return statuses.length === 2 && statuses.includes('inactive') && statuses.includes('cancelled');
   });
 }
@@ -283,41 +279,42 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 }
 
 function Page() {
-  const supportedDenoms = useSupportedDenoms();
-  const { chainId: chain } = useChainId();
-  const { data: contractBalances } = useBalances(getChainContractAddress(chain));
-  const { data: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chain));
-  const { data: fiatPrices } = useFiatPrice(supportedDenoms[0]);
+  const { denoms } = useDenoms();
+  const { chainId } = useChainId();
+  const { balances: contractBalances } = useBalances(getChainContractAddress(chainId));
+  const { balances: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chainId));
+  const { fiatPrices } = useFiatPrices();
 
   const { data: allStrategies } = useAllStrategies();
 
   const uniqueWalletAddresses = uniqueAddresses(allStrategies);
 
-  if (!fiatPrices || !allStrategies) {
-    return null;
-  }
-  const totalInContract = totalFromCoins(contractBalances, fiatPrices, supportedDenoms);
+  if (!fiatPrices || !allStrategies || !denoms) return null;
 
-  const totalInFeeTaker = totalFromCoins(feeTakerBalances, fiatPrices, supportedDenoms);
+  const totalInContract = totalFromCoins(denoms[chainId], contractBalances, fiatPrices);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, fiatPrices, supportedDenoms);
+  const totalInFeeTaker = totalFromCoins(denoms[chainId], feeTakerBalances, fiatPrices);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies, supportedDenoms);
-  const totalReceivedTotal = totalFromCoins(totalReceivedAmounts, fiatPrices, supportedDenoms);
+  const chainDenoms = values(denoms[chainId]);
 
-  const ThirtyDaysFromNow = new Date();
-  ThirtyDaysFromNow.setDate(ThirtyDaysFromNow.getDate() + 30);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, chainDenoms);
+  const totalSwappedTotal = totalFromCoins(denoms[chainId], totalSwappedAmounts, fiatPrices);
 
-  const ThreeMonthsFromNow = new Date();
-  ThreeMonthsFromNow.setDate(ThreeMonthsFromNow.getDate() + 90);
+  const totalReceivedAmounts = getTotalReceived(allStrategies, chainDenoms);
+  const totalReceivedTotal = totalFromCoins(denoms[chainId], totalReceivedAmounts, fiatPrices);
 
-  const AYearFromNow = new Date();
-  AYearFromNow.setDate(AYearFromNow.getDate() + 365);
+  const thirtyDaysFromNow = new Date();
+  thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-  const thirtDayRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThirtyDaysFromNow, fiatPrices);
-  const threeMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, ThreeMonthsFromNow, fiatPrices);
-  const twelveMonthRevenue = getProjectedRevenueForStrategysForDate(allStrategies, AYearFromNow, fiatPrices);
+  const threeMonthsFromNow = new Date();
+  threeMonthsFromNow.setDate(threeMonthsFromNow.getDate() + 90);
+
+  const aYearFromNow = new Date();
+  aYearFromNow.setDate(aYearFromNow.getDate() + 365);
+
+  const thirtyDayRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, thirtyDaysFromNow, fiatPrices);
+  const threeMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, threeMonthsFromNow, fiatPrices);
+  const twelveMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, aYearFromNow, fiatPrices);
   const averageDuration = getAverageDurationForActiveStrategies(allStrategies);
   const averageDurationInDays = Math.floor(averageDuration / (1000 * 60 * 60 * 24));
 
@@ -364,14 +361,14 @@ function Page() {
           <Heading size="md">Amount in contract</Heading>
           <Text>Total: {formatFiat(totalInContract)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(contractBalances ?? [], fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], contractBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount in Fee Taker</Heading>
           <Text>Total: {formatFiat(totalInFeeTaker)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(feeTakerBalances ?? [], fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], feeTakerBalances ?? [], fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
@@ -379,7 +376,7 @@ function Page() {
           <Text textStyle="body-xs">Based on expected executions and swap amounts </Text>
           <SimpleGrid columns={2} spacing={4} textStyle="bod">
             <Text> 30 Days: </Text>
-            <Text>{formatFiat(thirtDayRevenue)}</Text>
+            <Text>{formatFiat(thirtyDayRevenue)}</Text>
             <Text> 3 Months: </Text>
             <Text>{formatFiat(threeMonthRevenue)}</Text>
             <Text> 1 Year: </Text>
@@ -391,14 +388,14 @@ function Page() {
           <Heading size="md">Amount Swapped</Heading>
           <Text>Total: {formatFiat(totalSwappedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalSwappedAmounts, fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], totalSwappedAmounts, fiatPrices)} />
           </Box>
         </Stack>
         <Stack spacing={4} layerStyle="panel" p={4}>
           <Heading size="md">Amount Received</Heading>
           <Text>Total: {formatFiat(totalReceivedTotal)}</Text>
           <Box w={300}>
-            <BalanceList balances={orderCoinList(totalReceivedAmounts, fiatPrices)} />
+            <BalanceList balances={orderCoinList(denoms[chainId], totalReceivedAmounts, fiatPrices)} />
           </Box>
         </Stack>
 
@@ -541,8 +538,8 @@ function Page() {
                 duration: 2000,
                 onLoad: { duration: 1000 },
               }}
-              data={[StrategyTypes.DCAIn, StrategyTypes.DCAOut, StrategyTypes.DCAPlusIn, StrategyTypes.DCAPlusOut].map(
-                (type: StrategyTypes) => {
+              data={[StrategyType.DCAIn, StrategyType.DCAOut, StrategyType.DCAPlusIn, StrategyType.DCAPlusOut].map(
+                (type: StrategyType) => {
                   const { strategiesByType, percentage } = getStrategiesByType(allStrategies || [], type) || [];
 
                   return {

@@ -9,7 +9,8 @@ import { ChildrenProp } from '@helpers/ChildrenProp';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
-import AutoCompoundStakingRewards from '@components/AutocompoundStakingRewards';
+import AutoCompoundStakingRewards from '@components/AutoCompoundStakingRewards';
+import { OSMOSIS_CHAINS } from 'src/constants';
 import RadioCard from '../../RadioCard';
 import Radio from '../../Radio';
 import { PostPurchaseOptions } from '../../../models/PostPurchaseOptions';
@@ -42,7 +43,7 @@ function PostPurchaseOptionRadio({ autoStakeSupported }: { autoStakeSupported: b
       value: PostPurchaseOptions.GenerateYield,
       label: 'Generate yield',
       supported: true,
-      enabled: ['osmosis-1', 'osmo-test-5'].includes(chainId),
+      enabled: OSMOSIS_CHAINS.includes(chainId),
     },
   ].filter((option) => option.enabled);
 

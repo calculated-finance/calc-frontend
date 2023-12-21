@@ -5,11 +5,11 @@ import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import Spinner from '@components/Spinner';
 import Submit from '@components/Submit';
-import { ConnectWalletButton } from '@components/StepOneConnectWallet';
-import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrateyButtonSelectors';
+import { ConnectWalletButton } from '@components/ConnectWalletButton';
+import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrategyButtonSelectors';
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
@@ -20,13 +20,14 @@ import { useWallet } from '@hooks/useWallet';
 import { AssetsForm } from './AssetsForm';
 
 const strategyTypesToFormTypes = {
-  [StrategyTypes.SimpleDCAIn]: FormNames.SimpleDcaIn,
-  [StrategyTypes.DCAIn]: FormNames.DcaIn,
-  [StrategyTypes.DCAOut]: FormNames.DcaOut,
-  [StrategyTypes.DCAPlusIn]: FormNames.DcaPlusIn,
-  [StrategyTypes.DCAPlusOut]: FormNames.DcaPlusOut,
-  [StrategyTypes.WeightedScaleIn]: FormNames.WeightedScaleIn,
-  [StrategyTypes.WeightedScaleOut]: FormNames.WeightedScaleOut,
+  [StrategyType.SimpleDCAIn]: FormNames.SimpleDcaIn,
+  [StrategyType.DCAIn]: FormNames.DcaIn,
+  [StrategyType.DCAOut]: FormNames.DcaOut,
+  [StrategyType.DCAPlusIn]: FormNames.DcaPlusIn,
+  [StrategyType.DCAPlusOut]: FormNames.DcaPlusOut,
+  [StrategyType.WeightedScaleIn]: FormNames.WeightedScaleIn,
+  [StrategyType.WeightedScaleOut]: FormNames.WeightedScaleOut,
+  [StrategyType.StreamingSwap]: FormNames.StreamingSwap,
 };
 
 const CUSTOMISE_PAGE_INDEX = 1;
@@ -35,16 +36,14 @@ export function Assets() {
   const { connected } = useWallet();
   const { strategyType } = useStrategyInfo();
   const stepsConfig = getSteps(strategyType);
-  const { data: balances } = useBalances();
+  const { balances } = useBalances();
 
   const { validate } = useValidation(assetsFormSchema, { balances });
 
   const { state, actions } = useAssetsForm();
   const router = useRouter();
 
-  const {
-    data: { pairs },
-  } = usePairs();
+  const { pairs } = usePairs();
 
   const onSubmit = (formData: AssetsFormValues) => {
     const formName = strategyTypesToFormTypes[formData.strategyType];

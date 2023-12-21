@@ -110,7 +110,7 @@ function FeeBreakdown({
                 <Heading size="xs">Per swap</Heading>
                 <Stack spacing={0}>
                   <Flex>
-                    <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                    <Text textStyle="body-xs">Sustainability tax:</Text>
                     <Spacer />
                     <Text textStyle="body-xs">FREE</Text>
                   </Flex>
@@ -210,11 +210,9 @@ export default function FeesDcaPlus({
   strategyDuration: number;
   autoStakeValidator: string | null | undefined;
 }) {
-  const { price } = useFiatPrice(initialDenom);
+  const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const { transactionType } = useStrategyInfo();
-
-  const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
+  const { dexFee } = useDexFee();
 
   const swapAmount = getSwapAmountFromDuration(initialDeposit, strategyDuration);
 
@@ -225,7 +223,7 @@ export default function FeesDcaPlus({
       <Text textStyle="body-xs" as="span">
         Transaction fee{' '}
         <Text as="span" textColor="white">
-          {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
+          {fiatPrice ? parseFloat((CREATE_VAULT_FEE / fiatPrice).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
@@ -235,7 +233,7 @@ export default function FeesDcaPlus({
         performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={price} dexFee={dexFee} />
+      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={fiatPrice} dexFee={dexFee} />
     </Stack>
   );
 }

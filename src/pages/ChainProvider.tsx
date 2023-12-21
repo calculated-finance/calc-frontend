@@ -5,7 +5,14 @@ import { wallets as keplrWallets } from '@cosmos-kit/keplr';
 import { wallets as leapWallets } from '@cosmos-kit/leap';
 import { wallets as xdefiWallets } from '@cosmos-kit/xdefi';
 import { isMobile } from 'react-device-detect';
-import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import {
+  CHAINS,
+  KUJIRA_MAINNET_RPC,
+  KUJIRA_TESTNET_RPC,
+  MAINNET_CHAINS,
+  OSMOSIS_MAINNET_RPC,
+  OSMOSIS_TESTNET_RPC,
+} from 'src/constants';
 import { ChainId } from '@hooks/useChainId/Chains';
 
 export function ChainProvider({ children }: ChildrenProp) {
@@ -24,16 +31,16 @@ export function ChainProvider({ children }: ChildrenProp) {
         isLazy: true,
         endpoints: {
           kujira: {
-            rpc: ['https://kujira-rpc.nodes.defiantlabs.net'],
+            rpc: [KUJIRA_MAINNET_RPC],
           },
           osmosis: {
-            rpc: ['https://rpc.osmosis.zone/'],
+            rpc: [OSMOSIS_MAINNET_RPC],
           },
           kujiratestnet: {
-            rpc: ['https://kujira-testnet-rpc.polkachu.com/'],
+            rpc: [KUJIRA_TESTNET_RPC],
           },
           osmosistestnet: {
-            rpc: ['https://rpc.osmotest5.osmosis.zone/'],
+            rpc: [OSMOSIS_TESTNET_RPC],
           },
         },
       }}

@@ -17,10 +17,9 @@ import { FormikHelpers } from 'formik';
 import { SummaryTheSwapDcaPlus } from '@components/Summary/SummaryTheSwapDcaPlus';
 import { SummaryBenchmark } from '@components/Summary/SummaryBenchmark';
 import FeesDcaPlus from '@components/FeesDcaPlus';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -28,11 +27,7 @@ import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm();
   const { nextStep, goToStep } = useSteps(dcaPlusInSteps);
-
-  const initialDenom = useDenom(state?.initialDenom);
-  const resultingDenom = useDenom(state?.resultingDenom);
-
-  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(initialDenom);
+  const { mutate, isError, error, isLoading } = useCreateVaultDcaPlus(state?.initialDenom);
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) =>
@@ -65,6 +60,8 @@ function Page() {
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state;
 
   return (
     <SigningState isSigning={isLoading}>
@@ -105,7 +102,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusIn,
+        strategyType: StrategyType.DCAPlusIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaPlusIn,
       }}

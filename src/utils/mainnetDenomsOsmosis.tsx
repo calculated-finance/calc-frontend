@@ -47,9 +47,21 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
     enabledInDcaPlus: true,
   },
   [MainnetDenomsOsmosis.wBTC]: {
-    enabledInDcaPlus: true,
     coingeckoId: 'wrapped-bitcoin',
-    minimumSwapAmount: 0.05 / 1000,
+    stakeable: false,
+    stable: false,
+    enabled: true,
+    enabledInDcaPlus: true,
+    minimumSwapAmount: 0.05 / 10000,
+  },
+  [MainnetDenomsOsmosis.nBTC]: {
+    coingeckoId: 'bitcoin',
+    stakeable: false,
+    stable: false,
+    enabled: true,
+    enabledInDcaPlus: true,
+    significantFigures: 14,
+    minimumSwapAmount: 0.05 / 10000,
   },
   [MainnetDenomsOsmosis.LINK]: {
     minimumSwapAmount: 1e16,
@@ -72,6 +84,5 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   },
   [MainnetDenomsOsmosis.USDC]: {
     stable: true,
-    coingeckoId: 'usdc',
   },
 };

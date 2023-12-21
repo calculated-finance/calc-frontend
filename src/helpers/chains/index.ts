@@ -2,6 +2,16 @@ import { GasPrice } from '@cosmjs/stargate';
 import { ChainId } from '@hooks/useChainId/Chains';
 import { ChainInfo } from '@keplr-wallet/types';
 import { CHAIN_INFO } from 'kujira.js';
+import {
+  COSMOS_KIT_KUJIRA_MAINNET,
+  COSMOS_KIT_KUJIRA_TESTNET,
+  COSMOS_KIT_OSMOSIS_MAINNET,
+  COSMOS_KIT_OSMOSIS_TESTNET,
+  KUJIRA_MAINNET_RPC,
+  KUJIRA_TESTNET_RPC,
+  OSMOSIS_MAINNET_RPC,
+  OSMOSIS_TESTNET_RPC,
+} from 'src/constants';
 
 const osmoMainnetConfig = {
   chainId: 'osmosis-1',
@@ -98,22 +108,22 @@ const osmoTestnetConfig = {
 export function getGasPrice(chain: ChainId) {
   return GasPrice.fromString(
     {
-      'osmosis-1': '0.015uosmo',
-      'osmo-test-5': '0.015uosmo',
-      'kaiyo-1': '0.015ukuji',
-      'harpoon-4': '0.015ukuji',
+      'osmosis-1': '0.0025uosmo',
+      'osmo-test-5': '0.0025uosmo',
+      'kaiyo-1': '0.0034ukuji',
+      'harpoon-4': '0.0034ukuji',
     }[chain],
   );
 }
 
 export function getChainInfo(chainId: ChainId) {
   return {
-    'osmosis-1': osmoMainnetConfig,
-    'osmo-test-5': osmoTestnetConfig,
-    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: 'https://rpc-kujira.mintthemoon.xyz/', chainName: 'kujira' },
+    'osmosis-1': { ...osmoMainnetConfig, rpc: OSMOSIS_MAINNET_RPC },
+    'osmo-test-5': { ...osmoTestnetConfig, rpc: OSMOSIS_TESTNET_RPC },
+    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: KUJIRA_MAINNET_RPC, chainName: 'kujira' },
     'harpoon-4': {
       ...CHAIN_INFO['harpoon-4'],
-      rpc: 'https://kujira-testnet-rpc.polkachu.com/',
+      rpc: KUJIRA_TESTNET_RPC,
       chainName: 'kujiratestnet',
     },
   }[chainId ?? 'kaiyo-1'] as ChainInfo;
@@ -167,8 +177,13 @@ export function getChainStakingRouterContractAddress(chainId: ChainId) {
   return getChainContractAddress(chainId);
 }
 
-export function getChainId(chainId: ChainId) {
-  return chainId;
+export function getChainName(chainId: ChainId) {
+  return {
+    'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
+    'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
+    'kaiyo-1': COSMOS_KIT_KUJIRA_MAINNET,
+    'harpoon-4': COSMOS_KIT_KUJIRA_TESTNET,
+  }[chainId];
 }
 
 export function getChainDexName(chainId: ChainId) {
@@ -202,6 +217,13 @@ export function getOsmosisWebUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://app.osmosis.zone',
     'osmo-test-5': 'https://testnet.osmosis.zone',
+  }[chainId as string]!;
+}
+
+export function getOsmosisRouterUrl(chainId: ChainId) {
+  return {
+    'osmosis-1': 'https://sqs.osmosis.zone',
+    'osmo-test-5': 'https://sqs-stage.osmosis.zone',
   }[chainId as string]!;
 }
 

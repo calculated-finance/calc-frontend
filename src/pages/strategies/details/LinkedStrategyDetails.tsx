@@ -18,7 +18,7 @@ import { StrategyModal } from '@components/Reinvest';
 import { ArrowForwardIcon, InfoOutlineIcon } from '@chakra-ui/icons';
 import Lottie from 'lottie-react';
 import looping from 'src/animations/looping.json';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 function LinkedStrategyModal({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,11 +53,17 @@ export function LinkedStrategyDetails({
   const linkingIntoId = getStrategyReinvestStrategyId(curStrategy);
   const isLooped = originalStrategy.id === linkingIntoId;
 
-  const convertedOriginalStrategyBalance = convertDenomFromCoin(originalStrategy.rawData.balance);
+  const convertedOriginalStrategyBalance = fromAtomic(
+    originalStrategy.initialDenom,
+    Number(originalStrategy.rawData.balance),
+  );
   const originalStrategyValue = originalStrategyInitialPrice * convertedOriginalStrategyBalance;
   const originalTotalValue = formatFiat(originalStrategyValue);
 
-  const convertedLinkedStrategyBalance = convertDenomFromCoin(linkedToStrategy.rawData.balance);
+  const convertedLinkedStrategyBalance = fromAtomic(
+    linkedToStrategy.initialDenom,
+    Number(linkedToStrategy.rawData.balance.amount),
+  );
   const linkedStrategyValue = linkedStrategyInitialPrice * convertedLinkedStrategyBalance;
 
   const linkedTotalValue = formatFiat(linkedStrategyValue);

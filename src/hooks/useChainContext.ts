@@ -1,26 +1,15 @@
-import { useChain } from '@cosmos-kit/react';
-import {
-  COSMOS_KIT_KUJIRA_MAINNET,
-  COSMOS_KIT_KUJIRA_TESTNET,
-  COSMOS_KIT_OSMOSIS_MAINNET,
-  COSMOS_KIT_OSMOSIS_TESTNET,
-} from 'src/constants';
+import { useChains } from '@cosmos-kit/react';
+import { getChainName } from '@helpers/chains';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainId } from './useChainId/Chains';
 import { useChainId } from './useChainId';
 
 export const useChainContext = (injectedChainId?: ChainId) => {
+  const contexts = useChains(
+    (process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? CHAINS : MAINNET_CHAINS).map(getChainName),
+  );
   const { chainId: currentChainId } = useChainId();
-
   const chainId = injectedChainId ?? currentChainId;
 
-  const chainContext = useChain(
-    {
-      'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
-      'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
-      'kaiyo-1': COSMOS_KIT_KUJIRA_MAINNET,
-      'harpoon-4': COSMOS_KIT_KUJIRA_TESTNET,
-    }[chainId ?? 'kaiyo-1'],
-  );
-
-  return chainId ? chainContext : null;
+  return chainId ? contexts[getChainName(chainId)] : null;
 };

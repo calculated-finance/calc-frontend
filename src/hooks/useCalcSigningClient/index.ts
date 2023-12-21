@@ -15,6 +15,7 @@ export function useCalcSigningClient() {
     () => getSigningClient!(chainId),
     {
       enabled: !!chainId && !!connected && !!getSigningClient,
+      staleTime: 1000 * 60 * 10,
       meta: {
         errorMessage: 'Error fetching signing client',
       },

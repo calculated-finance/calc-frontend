@@ -1,32 +1,30 @@
 import { useWallet } from '@hooks/useWallet';
 import useQueryWithNotification from './useQueryWithNotification';
 import { useChainId } from './useChainId';
-import { useSupportedDenoms } from './useSupportedDenoms';
 import { useChainClient } from './useChainClient';
 
 const useBalances = (injectedAddress: string | null = null) => {
   const { address: walletAddress } = useWallet();
   const { chainId } = useChainId();
   const client = useChainClient(chainId);
-  const supportedDenoms = useSupportedDenoms();
 
   const address = injectedAddress ?? walletAddress;
 
-  return useQueryWithNotification(
-    ['balances', chainId, address, supportedDenoms.length],
-    () =>
-      client!.fetchBalances(
-        address!,
-        supportedDenoms.map((sd) => sd.id),
-      ),
+  const { data: balances, ...helpers } = useQueryWithNotification(
+    ['balances', chainId, address],
+    () => client!.fetchBalances(address!),
     {
-      enabled: !!address && Boolean(supportedDenoms.length) && !!client,
-      cacheTime: 0,
+      enabled: !!address && !!client,
       meta: {
         errorMessage: `Error fetching balances for ${address}`,
       },
     },
   );
+
+  return {
+    balances,
+    ...helpers,
+  };
 };
 
 export default useBalances;

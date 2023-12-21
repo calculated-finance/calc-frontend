@@ -1,5 +1,8 @@
 import { Pair as GeneratedPair } from 'src/interfaces/v2/generated/response/get_pairs';
-import { Pair as GeneratedOsmosisPair } from 'src/interfaces/generated-osmosis/response/get_pairs';
+import { DenomInfo } from '@utils/DenomInfo';
 
-export type V3Pair = GeneratedPair;
-export type V2Pair = GeneratedOsmosisPair;
+export type Pair = GeneratedPair;
+
+export type HydratedPair = {
+  denoms: [DenomInfo, DenomInfo];
+};

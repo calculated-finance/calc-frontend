@@ -27,8 +27,7 @@ export function CustomiseFormDca({
   transactionType: TransactionType;
 }) {
   const { values } = useFormikContext<DcaInFormDataStep2>();
-  const initialDenom = useDenom(step1.initialDenom);
-  const resultingDenom = useDenom(step1.resultingDenom);
+  const { initialDenom, resultingDenom } = step1;
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={4}>

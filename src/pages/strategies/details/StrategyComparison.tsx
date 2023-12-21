@@ -29,7 +29,6 @@ import {
 } from '@helpers/strategy';
 import { differenceInDays } from 'date-fns';
 import useDexFee from '@hooks/useDexFee';
-import { TransactionType } from '@components/TransactionType';
 import { StrategyComparisonCard } from './StrategyComparisonCard';
 
 function EstimatedDaysRemaining({ strategy, strategyEvents }: { strategy: Strategy; strategyEvents: StrategyEvent[] }) {
@@ -66,14 +65,9 @@ function StrategyComparisonDetails({
   strategyEvents: StrategyEvent[];
   resultingDenomPrice: number;
 }) {
-  const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
-  const { dexFee } = useDexFee(
-    initialDenom,
-    resultingDenom,
-    isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell,
-  );
+  const { dexFee } = useDexFee();
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap={3} w="full">
@@ -161,8 +155,8 @@ export default function StrategyComparison({ strategy }: { strategy: Strategy })
 
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
-  const { price: initialDenomPrice } = useFiatPrice(initialDenom);
-  const { price: resultingDenomPrice } = useFiatPrice(resultingDenom);
+  const { fiatPrice: initialDenomPrice } = useFiatPrice(initialDenom);
+  const { fiatPrice: resultingDenomPrice } = useFiatPrice(resultingDenom);
 
   const isLoading = !events || !initialDenomPrice || !resultingDenomPrice;
 

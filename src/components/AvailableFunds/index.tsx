@@ -18,6 +18,7 @@ import {
   Heading,
   FormHelperText,
   Image,
+  Spinner,
 } from '@chakra-ui/react';
 import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
@@ -28,6 +29,7 @@ import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
 import { Coin } from '@cosmjs/proto-signing';
 import { useChainContext } from '@hooks/useChainContext';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 interface GetFundsDetailsProps {
   onSquidOpen: () => void;
@@ -142,10 +144,12 @@ function AvailableFundsButton({
   denom,
   isLoading,
   data,
+  deconvertValue = false,
 }: {
   denom: DenomInfo;
   isLoading: boolean;
   data: Coin | undefined;
+  deconvertValue?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
@@ -153,15 +157,14 @@ function AvailableFundsButton({
 
   const chainContext = useChainContext();
   const [, , helpers] = useField('initialDeposit');
-  const { price } = useFiatPrice(denom);
+  const { fiatPrice } = useFiatPrice(denom);
 
-  const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
+  const createStrategyFee = fiatPrice ? createStrategyFeeInTokens(fiatPrice, denom) : 0;
+
   const balance = Number(data?.amount);
-  const displayAmount = denom.conversion(Math.max(balance - createStrategyFee, 0));
+  const displayAmount = fromAtomic(denom, Math.max(balance - createStrategyFee, 0));
 
-  const handleClick = () => {
-    helpers.setValue(displayAmount);
-  };
+  const displayFee = fromAtomic(denom, createStrategyFee);
 
   function handleOpen(onOpener: () => void) {
     return () => {
@@ -172,17 +175,31 @@ function AvailableFundsButton({
 
   if (displayAmount) {
     return (
-      <Button
-        size="xs"
-        isLoading={isLoading}
-        colorScheme="blue"
-        variant="link"
-        cursor="pointer"
-        isDisabled={!displayAmount}
-        onClick={handleClick}
-      >
-        {displayAmount}
-      </Button>
+      <>
+        <Tooltip
+          isDisabled={balance === 0}
+          label={`This is the estimated balance available to you after fees have been deducted ( ${String.fromCharCode(
+            8275,
+          )} ${displayFee} ${denom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
+        >
+          <Text mr={1}>Available: </Text>
+        </Tooltip>
+        {isLoading ? (
+          <Spinner size="xs" />
+        ) : (
+          <Button
+            size="xs"
+            isLoading={isLoading}
+            colorScheme="blue"
+            variant="link"
+            cursor="pointer"
+            isDisabled={!displayAmount}
+            onClick={() => helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount)}
+          >
+            {displayAmount}
+          </Button>
+        )}
+      </>
     );
   }
 
@@ -209,25 +226,12 @@ function AvailableFundsButton({
   );
 }
 
-export function AvailableFunds({ denom }: { denom: DenomInfo }) {
-  const { price } = useFiatPrice(denom);
+export function AvailableFunds({ denom, deconvertValue }: { denom: DenomInfo; deconvertValue?: boolean }) {
   const { data, isLoading } = useBalance(denom);
-  const createStrategyFee = price ? Number(createStrategyFeeInTokens(price)) : 0;
-  const balance = Number(data?.amount);
-
-  const displayFee = denom.conversion(createStrategyFee);
 
   return (
     <Center textStyle="body-xs">
-      <Tooltip
-        isDisabled={balance === 0}
-        label={`This is the estimated balance available to you after fees have been deducted ( ${String.fromCharCode(
-          8275,
-        )} ${displayFee} ${denom.name}). This excludes gas fees, so please make sure you have remaining funds.`}
-      >
-        <Text mr={1}>Max*: </Text>
-      </Tooltip>
-      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} />
+      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} deconvertValue={deconvertValue} />
     </Center>
   );
 }

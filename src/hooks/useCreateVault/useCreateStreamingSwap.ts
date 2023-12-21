@@ -1,30 +1,29 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
-import { SimplifiedDcaInFormData } from '@models/DcaInFormData';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
-import { SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE } from 'src/constants';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import useFiatPrices from '@hooks/useFiatPrices';
-import { useTrackCreateVault } from './useTrackCreateVault';
+import { FormData } from '@models/StreamingSwapFormData';
 import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
+import { useTrackCreateVault } from './useTrackCreateVault';
 
-export const useCreateVaultSimpleDcaIn = () => {
+export const useCreateStreamingSwap = () => {
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
-  const { prices } = useFiatPrices();
+  const { fiatPrices: prices } = useFiatPrices();
+
   const track = useTrackCreateVault();
 
   return useMutation<
     Strategy['id'] | undefined,
     Error,
     {
-      state: SimplifiedDcaInFormData | undefined;
+      state: FormData | undefined;
     }
   >(async ({ state }) => {
     if (!state) {
@@ -35,8 +34,7 @@ export const useCreateVaultSimpleDcaIn = () => {
       throw Error('Invalid client');
     }
 
-    const initialDenom = getDenomInfo(state.initialDenom);
-    const price = initialDenom?.coingeckoId && prices?.[initialDenom?.coingeckoId]?.usd;
+    const price = state.initialDenom?.coingeckoId && prices?.[state.initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
       throw Error('Invalid price');
@@ -46,18 +44,23 @@ export const useCreateVaultSimpleDcaIn = () => {
       throw new Error('No sender address');
     }
 
-    checkSwapAmountValue(state.swapAmount, price);
+    checkSwapAmountValue(state.swapAmount!, price);
+
+    if (!state.resultingDenom) {
+      throw new Error('Invalid resulting denom');
+    }
 
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
-      timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
+      label: 'Streaming Swap',
+      initialDenom: state.initialDenom,
+      resultingDenom: state.resultingDenom,
+      timeInterval: { interval: state.executionInterval!, increment: state.executionIntervalIncrement },
       timeTrigger: undefined,
       startPrice: undefined,
       swapAmount: state.swapAmount,
-      priceThreshold: undefined,
+      priceThreshold: state.priceThreshold || undefined,
       transactionType,
-      slippageTolerance: SIMPLIFIED_DCA_SLIPPAGE_TOLERANCE,
+      slippageTolerance: state.slippageTolerance,
       destinationConfig: {
         autoStakeValidator: undefined,
         autoCompoundStakingRewards: undefined,
@@ -66,13 +69,16 @@ export const useCreateVaultSimpleDcaIn = () => {
         reinvestStrategyId: undefined,
         senderAddress: address,
       },
+      isInAtomics: true,
     };
+
+    const fee = createStrategyFeeInTokens(price, state.initialDenom).toFixed(0);
 
     try {
       const createResponse = await calcSigningClient.createStrategy(
         address,
-        state.initialDeposit,
-        createStrategyFeeInTokens(price),
+        state.initialDeposit!,
+        fee,
         createVaultContext,
       );
       track();

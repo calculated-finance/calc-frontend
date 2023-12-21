@@ -9,10 +9,9 @@ import { WeightedScalePostPurchaseFormSchema } from '@models/weightedScaleFormDa
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
 
 function Page() {
@@ -32,13 +31,12 @@ function Page() {
     goToStep(0);
   };
 
-  const resultingDenom = useDenom(context?.resultingDenom);
   return (
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {state && context ? (
-        <PostPurchaseForm resultingDenom={resultingDenom} />
+        <PostPurchaseForm resultingDenom={context.resultingDenom} />
       ) : (
         <InvalidData onRestart={handleRestart} />
       )}
@@ -52,7 +50,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.WeightedScaleOut,
+        strategyType: StrategyType.WeightedScaleOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.WeightedScaleOut,
       }}

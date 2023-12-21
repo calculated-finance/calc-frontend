@@ -46,7 +46,7 @@ export function getTotalAtTime(events: AccumulatedSwapEvent[], time: Date): numb
   return 0;
 }
 
-function filterAcculumationEventsByTime(
+function filterAccumulationEventsByTime(
   swapEventsWithAccumulation: AccumulatedSwapEvent[],
   startTime: Date,
   endTime: Date,
@@ -80,19 +80,17 @@ export function buildLineChartData(swapEventsWithAccumulation: AccumulatedSwapEv
   const totalAtStart = getTotalAtTime(swapEventsWithAccumulation, startTime);
   const totalAtEnd = getTotalAtTime(swapEventsWithAccumulation, endTime);
 
-  const filteredSwapEventsWithAccumulation = filterAcculumationEventsByTime(
+  const filteredSwapEventsWithAccumulation = filterAccumulationEventsByTime(
     swapEventsWithAccumulation,
     startTime,
     endTime,
   );
 
-  // line chart data
   const lineChartData = filteredSwapEventsWithAccumulation.map((event) => ({
     time: event.time,
     amount: event.total,
   }));
 
-  // add start and end points in functional way
   const lineChartDataWithStartAndEnd = [
     {
       time: startTime,
@@ -113,13 +111,12 @@ export function buildSwapsChartData(
   startTime: Date,
   endTime: Date,
 ) {
-  const filteredSwapEventsWithAccumulation = filterAcculumationEventsByTime(
+  const filteredSwapEventsWithAccumulation = filterAccumulationEventsByTime(
     swapEventsWithAccumulation,
     startTime,
     endTime,
   );
 
-  // line chart data
   const swapsChartData = filteredSwapEventsWithAccumulation.map((event) => ({
     time: event.time,
     amount: event.total,

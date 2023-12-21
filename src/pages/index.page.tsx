@@ -19,17 +19,19 @@ import DenomIcon from '@components/DenomIcon';
 import Spinner from '@components/Spinner';
 import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
-import getDenomInfo, { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 import { useWallet } from '@hooks/useWallet';
-import { getStrategyInitialDenom, isStrategyOperating, getStrategyResultingDenom } from '@helpers/strategy';
+import { getStrategyInitialDenom, isStrategyOperating } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
-import { useSupportedDenoms } from '@hooks/useSupportedDenoms';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useAnalytics } from '@hooks/useAnalytics';
 import { useStrategies } from '@hooks/useStrategies';
 import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
 import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
+import useDenoms from '@hooks/useDenoms';
+import { values } from 'rambda';
+import { useChainId } from '@hooks/useChainId';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
 function WarningPanel() {
@@ -51,7 +53,7 @@ function WarningPanel() {
   );
 }
 
-const isStrategyAcculumating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
+const isStrategyAccumulating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
 
 const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
 
@@ -63,13 +65,13 @@ function InvestmentThesisWithActiveStrategies({
   isLoading: boolean;
 }) {
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
-  const acculumatingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyAcculumating).map((strategy) => getStrategyResultingDenom(strategy).id)),
-  ).map((id) => getDenomInfo(id));
-
+  const accumulatingAssets = Array.from(
+    new Set(activeStrategies.filter(isStrategyAccumulating).map((strategy) => strategy.resultingDenom)),
+  );
   const profitTakingAssets = Array.from(
-    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => getStrategyInitialDenom(strategy).id)),
-  ).map((id) => getDenomInfo(id));
+    new Set(activeStrategies.filter(isStrategyProfitTaking).map((strategy) => strategy.initialDenom)),
+  );
+
   return (
     <Flex layerStyle="panel" p={8} alignItems="center" h="full">
       {isLoading ? (
@@ -91,8 +93,8 @@ function InvestmentThesisWithActiveStrategies({
               <Wrap spacingX={6} spacingY={2} align="center">
                 <Text>Asset(s) accumulating:</Text>
                 <HStack>
-                  {acculumatingAssets.length ? (
-                    acculumatingAssets.map((asset) => (
+                  {accumulatingAssets.length ? (
+                    accumulatingAssets.map((asset) => (
                       <DenomIcon size={6} showTooltip key={asset.id} denomInfo={asset} />
                     ))
                   ) : (
@@ -121,11 +123,12 @@ function InvestmentThesisWithActiveStrategies({
 }
 
 function TotalInvestment() {
-  const supportedDenoms = useSupportedDenoms();
-  const { prices } = useFiatPrices();
+  const { denoms } = useDenoms();
+  const { chainId } = useChainId();
+  const { fiatPrices: prices } = useFiatPrices();
   const { data: allStrategies } = useAllStrategies();
 
-  if (!prices || !allStrategies) {
+  if (!prices || !allStrategies || !denoms) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -133,8 +136,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, supportedDenoms);
-  const totalSwappedTotal = totalFromCoins(totalSwappedAmounts, prices, supportedDenoms);
+  const totalSwappedAmounts = getTotalSwapped(allStrategies, values(denoms[chainId] ?? {}));
+  const totalSwappedTotal = totalFromCoins(denoms[chainId], totalSwappedAmounts, prices);
 
   const formattedValue =
     totalSwappedTotal >= 1000000

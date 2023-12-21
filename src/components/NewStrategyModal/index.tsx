@@ -143,7 +143,7 @@ export function NewStrategyModalHeader({
   showStepper?: boolean;
 }) {
   const router = useRouter();
-  const { currentStep, hasPreviousStep, previousStep, hasNextStep } = useSteps(stepsConfig);
+  const { currentStep, hasPreviousStep, previousStep } = useSteps(stepsConfig);
   const { connected } = useWallet();
 
   const handleCancel = async () => {
@@ -152,6 +152,7 @@ export function NewStrategyModalHeader({
       resetForm();
     }
   };
+
   return (
     <Flex
       bg="darkGrey"
@@ -178,26 +179,24 @@ export function NewStrategyModalHeader({
       </Stack>
       <Spacer />
       {showStepper && <Stepper steps={stepsConfig} />}
-      {hasNextStep && (
-        <Box position="relative">
-          <Button
-            position="absolute"
-            bottom={5}
-            right={-6}
-            borderRadius={0}
-            borderBottomLeftRadius="lg"
-            borderTopRightRadius="2xl"
-            size="xs"
-            variant="ghost"
-            bg="abyss.200"
-            fontSize="xx-small"
-            onClick={handleCancel}
-            height={5}
-          >
-            Cancel
-          </Button>
-        </Box>
-      )}
+      <Box position="relative">
+        <Button
+          position="absolute"
+          bottom={5}
+          right={-6}
+          borderRadius={0}
+          borderBottomLeftRadius="lg"
+          borderTopRightRadius="2xl"
+          size="xs"
+          variant="ghost"
+          bg="abyss.200"
+          fontSize="xx-small"
+          onClick={handleCancel}
+          height={5}
+        >
+          Cancel
+        </Button>
+      </Box>
     </Flex>
   );
 }

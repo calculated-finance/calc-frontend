@@ -125,8 +125,17 @@ function Strategies() {
   const showFearAndGreedAccumulate = index < 41;
   const showFearAndGreedProfit = index > 59;
 
-  function accumulationStratgies(): StrategyCardProps[] {
+  function accumulationStrategies(): StrategyCardProps[] {
     return [
+      // {
+      //   name: 'Streaming Swap',
+      //   description: 'Reduce slippage by swapping smaller amounts over time.',
+      //   advanced: false,
+      //   enabled: true,
+      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
+      //   href: StrategyUrls.StreamingSwap,
+      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
+      // },
       {
         name: 'Standard DCA In',
         description: 'Customise your own dollar-cost average buying strategy.',
@@ -158,6 +167,15 @@ function Strategies() {
 
   function takeProfitStrategies(): StrategyCardProps[] {
     return [
+      // {
+      //   name: 'Streaming Swap',
+      //   description: 'Reduce slippage by swapping smaller amounts over time.',
+      //   advanced: false,
+      //   enabled: true,
+      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
+      //   href: StrategyUrls.StreamingSwap,
+      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
+      // },
       {
         name: 'Standard DCA Out',
         description: 'Dollar-cost average out of an asset with ease.',
@@ -195,7 +213,7 @@ function Strategies() {
           {showFearAndGreedAccumulate && <FearGreedStrategyRecommendation isAccumulation />}
         </Wrap>
         <Flex gap={8} flexDirection="row" wrap="wrap">
-          {accumulationStratgies().map((strategy) => (
+          {accumulationStrategies().map((strategy) => (
             <StrategyCard key={strategy.name} {...strategy} />
           ))}
         </Flex>

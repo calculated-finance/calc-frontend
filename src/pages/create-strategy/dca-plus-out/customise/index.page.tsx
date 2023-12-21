@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import useValidation from '@hooks/useValidation';
 import Submit from '@components/Submit';
 import DcaDiagram from '@components/DcaDiagram';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import AdvancedSettingsSwitch from '@components/AdvancedSettingsSwitch';
 import { DcaInFormDataStep2 } from '@models/DcaInFormData';
 import { InvalidData } from '@components/InvalidData';
@@ -15,7 +15,6 @@ import StrategyDuration from '@components/StrategyDuration';
 import SlippageTolerance from '@components/SlippageTolerance';
 import dcaPlusOutSteps from '@formConfig/dcaPlusOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
-import { useDenom } from '@hooks/useDenom/useDenom';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
@@ -26,7 +25,7 @@ function Page() {
 
   const { validate } = useValidation(DcaPlusCustomiseFormSchema, {
     ...state?.step1,
-    strategyType: StrategyTypes.DCAPlusOut,
+    strategyType: StrategyType.DCAPlusOut,
   });
   const { nextStep, goToStep } = useSteps(steps);
 
@@ -35,12 +34,11 @@ function Page() {
     goToStep(0);
   };
 
-  const initialDenom = useDenom(state?.step1.initialDenom);
-  const resultingDenom = useDenom(state?.step1.resultingDenom);
-
   if (!state) {
     return <InvalidData onRestart={handleRestart} />;
   }
+
+  const { initialDenom, resultingDenom } = state.step1;
 
   const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
@@ -86,7 +84,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAPlusOut,
+        strategyType: StrategyType.DCAPlusOut,
         transactionType: TransactionType.Sell,
         formName: FormNames.DcaPlusOut,
       }}

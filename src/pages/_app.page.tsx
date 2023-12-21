@@ -8,13 +8,12 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useChainId } from '@hooks/useChainId';
 import * as Sentry from '@sentry/react';
-import { AssetListWrapper } from '@hooks/useCachedAssetList';
-import { useAssetList } from '@hooks/useAssetList';
 import { ChildrenProp } from '@helpers/ChildrenProp';
+import useDenoms from '@hooks/useDenoms';
+import '@interchain-ui/react/styles';
 import { ToastContainer } from './toast';
 import { queryClient } from './queryClient';
 import { LoadingState } from './LoadingState';
-import '@interchain-ui/react/styles';
 import { ChainProvider } from './ChainProvider';
 import { InitWrapper } from './InitWrapper';
 
@@ -35,10 +34,9 @@ Sentry.init({
 });
 
 function AssetListLoader({ children }: ChildrenProp) {
-  const { data: assetList } = useAssetList();
-
+  const { isSuccess } = useDenoms();
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return assetList ? <>{children}</> : <LoadingState />;
+  return isSuccess ? <>{children}</> : <LoadingState />;
 }
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
@@ -68,9 +66,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           <InitWrapper>
             <ChainProvider>
               <QueryClientProvider client={queryClient}>
-                <AssetListWrapper>
-                  <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
-                </AssetListWrapper>
+                <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
               </QueryClientProvider>
               <ToastContainer />
             </ChainProvider>

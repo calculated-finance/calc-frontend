@@ -15,6 +15,8 @@ import { Strategy } from '@models/Strategy';
 import { useSize } from 'ahooks';
 import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import { getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
+import useDenoms from '@hooks/useDenoms';
+import { useChainId } from '@hooks/useChainId';
 import { COIN_DECIMAL_LIMIT, COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS } from 'src/constants';
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
@@ -79,8 +81,19 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const { name: priceOfDenomName } = priceOfDenom;
   const { name: priceInDenomName } = priceInDenom;
 
-  const chartData = getChartData(events, coingeckoData?.prices, displayPrices);
-  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices);
+  const { denoms } = useDenoms();
+  const { chainId } = useChainId();
+
+  if (!denoms || !(chainId in denoms)) {
+    return (
+      <Center width="full" height={250} ref={elementRef} px={6}>
+        <Spinner />
+      </Center>
+    );
+  }
+
+  const chartData = getChartData(events, coingeckoData?.prices, displayPrices, denoms[chainId]);
+  const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices, denoms[chainId]);
 
   const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
   const swapsFailedDataWithLabel = swapsFailedData?.map((swap) => ({

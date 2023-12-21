@@ -1,4 +1,5 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
+import { DenomInfo } from '@utils/DenomInfo';
 import { VaultStatus } from 'src/interfaces/v2/generated/query';
 import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
 
@@ -9,15 +10,16 @@ const vaultStatusMap: Record<VaultStatus, StrategyStatus> = {
   inactive: StrategyStatus.COMPLETED,
 };
 
-function getStrategyStatus(vault: Vault) {
-  return vaultStatusMap[vault.status];
-}
-
-export function transformToStrategyCosmos(vaultData: Vault): Strategy {
+export function transformToStrategyCosmos(
+  vaultData: Vault,
+  getDenomById: (denom: string) => DenomInfo | undefined,
+): Strategy {
   return {
     id: vaultData.id,
     owner: vaultData.owner,
-    status: getStrategyStatus(vaultData),
+    status: vaultStatusMap[vaultData.status],
+    initialDenom: getDenomById(vaultData.balance.denom)!,
+    resultingDenom: getDenomById(vaultData.received_amount.denom)!,
     rawData: vaultData,
   };
 }

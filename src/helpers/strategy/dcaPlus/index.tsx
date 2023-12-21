@@ -1,4 +1,4 @@
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import totalExecutions from '@utils/totalExecutions';
 
@@ -24,13 +24,21 @@ import { getWeightedScaleConfig, isWeightedScale } from '../isWeightedScale';
 export function getStandardDcaTotalReceived(strategy: Strategy) {
   const { standard_dca_received_amount } = getDcaPlusConfig(strategy) || {};
 
-  return convertDenomFromCoin(standard_dca_received_amount);
+  return Number(
+    fromAtomic(strategy.resultingDenom, Number(standard_dca_received_amount?.amount)).toFixed(
+      strategy.resultingDenom.significantFigures,
+    ),
+  );
 }
 
 export function getStandardDcaTotalSwapped(strategy: Strategy) {
   const { standard_dca_swapped_amount } = getDcaPlusConfig(strategy) || {};
 
-  return convertDenomFromCoin(standard_dca_swapped_amount);
+  return Number(
+    fromAtomic(strategy.initialDenom, Number(standard_dca_swapped_amount?.amount)).toFixed(
+      strategy.initialDenom.significantFigures,
+    ),
+  );
 }
 
 export function getStandardDcaTotalCost(strategy: Strategy, dexFee: number) {
@@ -40,7 +48,9 @@ export function getStandardDcaTotalCost(strategy: Strategy, dexFee: number) {
 export function getStandardDcaTotalDeposit(strategy: Strategy) {
   const { total_deposit } = getDcaPlusConfig(strategy) || {};
 
-  return convertDenomFromCoin(total_deposit);
+  return Number(
+    fromAtomic(strategy.initialDenom, Number(total_deposit?.amount)).toFixed(strategy.initialDenom.significantFigures),
+  );
 }
 
 export function getStandardDcaTotalReceivedBeforeFees(strategy: Strategy, dexFee: number) {
@@ -65,7 +75,11 @@ export function getEscrowLevel(strategy: Strategy) {
 export function getEscrowAmount(strategy: Strategy) {
   const { escrowed_balance } = getDcaPlusConfig(strategy) || {};
 
-  return convertDenomFromCoin(escrowed_balance);
+  return Number(
+    fromAtomic(strategy.resultingDenom, Number(escrowed_balance?.amount)).toFixed(
+      strategy.resultingDenom.significantFigures,
+    ),
+  );
 }
 
 export function getAccumulationGained(strategy: Strategy) {
@@ -142,13 +156,16 @@ export function getPerformanceFactor(performance: DcaPlusPerformanceResponse | u
   return difference;
 }
 
-function getDcaPlusFee(performance: DcaPlusPerformanceResponse | undefined) {
+function getDcaPlusFee(strategy: Strategy, performance: DcaPlusPerformanceResponse | undefined) {
   const { fee } = performance || {};
-  return convertDenomFromCoin(fee);
+
+  return Number(
+    fromAtomic(strategy.resultingDenom, Number(fee?.amount)).toFixed(strategy.resultingDenom.significantFigures),
+  );
 }
 
 export function getReturnedEscrowAmount(strategy: Strategy, performance: DcaPlusPerformanceResponse | undefined) {
-  return getEscrowAmount(strategy) - getDcaPlusFee(performance);
+  return getEscrowAmount(strategy) - getDcaPlusFee(strategy, performance);
 }
 
 export function getStandardDcaRemainingBalance(strategy: Strategy) {

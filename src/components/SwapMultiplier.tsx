@@ -14,7 +14,6 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
-import { getDenomName } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
@@ -29,7 +28,6 @@ export default function SwapMultiplier({
   resultingDenom: DenomInfo;
   swapAmountInjected?: number;
 }) {
-
   const { transactionType } = useStrategyInfo();
   const [{ value }, meta, { setValue }] = useField({ name: 'swapMultiplier' });
 
@@ -47,7 +45,7 @@ export default function SwapMultiplier({
       <FormHelperText fontSize="xs">Your swap amount will be calculated as:</FormHelperText>
       <Flex justify="center">
         <Code bg="abyss.200" color="white" borderRadius="md" p={1}>
-          {swapAmount || swapAmountInjected || 0} {getDenomName(initialDenom)} &times; (1 - price delta &times; {value})
+          {swapAmount || swapAmountInjected || 0} {initialDenom.name} &times; (1 - price delta &times; {value})
         </Code>
       </Flex>
       <Flex textStyle="body-xs">

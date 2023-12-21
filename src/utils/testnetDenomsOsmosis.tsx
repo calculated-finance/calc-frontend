@@ -15,4 +15,7 @@ export const testnetDenomsOsmosis: Record<TestnetDenomsOsmosis, Partial<DenomInf
   [TestnetDenomsOsmosis.ION]: {
     coingeckoId: 'osmosis',
   },
+  [TestnetDenomsOsmosis.ATOM]: {
+    coingeckoId: 'cosmos',
+  },
 };

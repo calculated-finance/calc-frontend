@@ -8,6 +8,7 @@ import { ChainContext } from '@cosmos-kit/core';
 import { queryClient } from 'src/pages/queryClient';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
+import useDenoms from './useDenoms';
 
 export default function useAllStrategies() {
   const chains = values(
@@ -18,12 +19,18 @@ export default function useAllStrategies() {
     ),
   );
 
+  const { getDenomById } = useDenoms();
+
   return useQuery<Strategy[]>(
     ['all_vaults'],
     async () => {
       const fetchAllStrategies = async (chain: ChainContext) => {
         const client = await chain.getCosmWasmClient();
-        const calcClient = getCalcClient(getChainContractAddress(chain.chain.chain_id as ChainId), client);
+        const calcClient = getCalcClient(
+          getChainContractAddress(chain.chain.chain_id as ChainId),
+          client,
+          getDenomById,
+        );
         const allStrategies = await calcClient.fetchAllVaults();
         queryClient.setQueryData(['vaults', chain.chain.chain_id], allStrategies);
         return allStrategies;

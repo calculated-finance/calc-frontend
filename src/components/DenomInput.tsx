@@ -5,29 +5,22 @@ import { DenomInfo } from '@utils/DenomInfo';
 
 type DenomInputProps = {
   onChange: (value: number | undefined) => void;
+  denom: DenomInfo | undefined;
 } & Omit<InputProps, 'onChange'>;
 
-export function DenomInput({
-  denom,
-  value,
-  onChange,
-  type,
-  defaultValue,
-  ...props
-}: { denom: DenomInfo } & DenomInputProps) {
+export function DenomInput({ denom, value, onChange, type, defaultValue, ...props }: DenomInputProps) {
   const handleChange = (values: NumberFormatValues) => {
     onChange(values.floatValue);
   };
-  const validDenom = denom.id !== '';
   return (
     <InputGroup>
-      {validDenom && (
+      {denom && (
         <InputLeftElement>
           <DenomIcon denomInfo={denom} />
         </InputLeftElement>
       )}
       <NumericFormat
-        pl={validDenom ? 10 : undefined}
+        pl={denom ? 10 : undefined}
         placeholder="Enter amount"
         customInput={Input}
         allowNegative={false}
@@ -38,7 +31,7 @@ export function DenomInput({
         {...props}
       />
       <InputRightElement textStyle="body-xs" w="min-content" p={3}>
-        {denom.name}
+        {denom?.name}
       </InputRightElement>
     </InputGroup>
   );

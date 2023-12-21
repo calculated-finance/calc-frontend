@@ -1,5 +1,4 @@
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
 
 export type SwapEvent = {
   time: Date;
@@ -9,42 +8,36 @@ export type SwapEvent = {
 };
 
 export function createDcaPlusSwapEvent(strategyEvent: StrategyEvent): SwapEvent | null {
-  // get data from strategyEvent
-  const { data } = strategyEvent;
+  const { data, timestamp } = strategyEvent;
 
-  // check that event is a swap event
   if (!('dca_vault_execution_completed' in data)) {
     return null;
   }
 
   const { received, fee, sent } = data.dca_vault_execution_completed;
-  const { timestamp } = strategyEvent;
 
   return {
     time: new Date(Number(timestamp) / 1000000),
-    received: convertDenomFromCoin(received),
-    fee: convertDenomFromCoin(fee),
-    sent: convertDenomFromCoin(sent),
+    received: Number(received.amount),
+    fee: Number(fee.amount),
+    sent: Number(sent.amount),
   };
 }
 
 export function createTradSwapEvent(strategyEvent: StrategyEvent): SwapEvent | null {
-  // get data from strategyEvent
-  const { data } = strategyEvent;
+  const { data, timestamp } = strategyEvent;
 
-  // check that event is a swap event
   if (!('simulated_dca_vault_execution_completed' in data)) {
     return null;
   }
 
   const { received, fee, sent } = data.simulated_dca_vault_execution_completed;
-  const { timestamp } = strategyEvent;
 
   return {
     time: new Date(Number(timestamp) / 1000000),
-    received: convertDenomFromCoin(received),
-    fee: convertDenomFromCoin(fee),
-    sent: convertDenomFromCoin(sent),
+    received: Number(received.amount),
+    fee: Number(fee.amount),
+    sent: Number(sent.amount),
   };
 }
 

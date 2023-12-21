@@ -1,9 +1,8 @@
 import * as amplitude from '@amplitude/analytics-browser';
-import { featureFlags } from 'src/constants';
 
 export function useAnalytics() {
   const track = (eventName: string, eventProperties?: any) => {
-    if (featureFlags.amplitudeEnabled) {
+    if (process.env.NEXT_PUBLIC_APP_ENV === 'production') {
       amplitude.track(eventName, eventProperties);
     }
   };

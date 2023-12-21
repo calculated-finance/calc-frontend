@@ -1,6 +1,5 @@
 import { Heading, Grid, GridItem, Box, Text, Divider, Badge, Flex, HStack, Code } from '@chakra-ui/react';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
-
+import { fromAtomic } from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import {
   getStrategyInitialDenom,
@@ -15,7 +14,6 @@ import {
   isBuyStrategy,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
-
 import { SwapEachCycle } from 'src/pages/strategies/details/StrategyDetails';
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import usePairs from '@hooks/usePairs';
@@ -23,15 +21,15 @@ import { DestinationDetails } from 'src/pages/strategies/details/DestinationDeta
 import { useChainId } from '@hooks/useChainId';
 
 export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
-  const { chainId: chain } = useChainId();
+  const { chainId } = useChainId();
   const { balance } = strategy.rawData;
   const initialDenom = getStrategyInitialDenom(strategy);
   const resultingDenom = getStrategyResultingDenom(strategy);
 
   const strategyType = getStrategyType(strategy);
-  const { data: pairsData } = usePairs();
+  const { pairs } = usePairs();
 
-  const startDate = getStrategyStartDate(strategy, pairsData?.pairs);
+  const startDate = getStrategyStartDate(strategy, pairs);
 
   return (
     <GridItem colSpan={[6, null, null, null, 3]}>
@@ -110,7 +108,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy, chain)}{' '}
+                    {getPriceCeilingFloor(strategy, chainId)}{' '}
                     {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
@@ -123,10 +121,10 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
           </GridItem>
           <GridItem colSpan={2}>
             <Text fontSize="sm" data-testid="strategy-current-balance">
-              {convertDenomFromCoin(balance)} {initialDenom.name}
+              {fromAtomic(initialDenom, Number(balance.amount))} {initialDenom.name}
             </Text>
           </GridItem>
-          <DestinationDetails strategy={strategy} chainId={chain} />
+          <DestinationDetails strategy={strategy} chainId={chainId} />
         </Grid>
       </Box>
     </GridItem>

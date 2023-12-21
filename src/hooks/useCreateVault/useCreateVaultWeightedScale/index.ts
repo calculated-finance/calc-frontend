@@ -1,6 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import getDenomInfo from '@utils/getDenomInfo';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
@@ -9,6 +8,7 @@ import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
+import useDenoms from '@hooks/useDenoms';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { useTrackCreateVault } from '../useTrackCreateVault';
 import { handleError } from '../handleError';
@@ -16,9 +16,10 @@ import { handleError } from '../handleError';
 export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
-  const { price } = useFiatPrice(initialDenom);
+  const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
+  const { getDenomById } = useDenoms();
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -45,7 +46,7 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
       throw new Error('No sender address');
     }
 
-    if (!price) {
+    if (!fiatPrice) {
       throw Error('Invalid price');
     }
 
@@ -53,11 +54,15 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
       throw new Error('Invalid reinvest strategy.');
     }
 
-    checkSwapAmountValue(state.swapAmount, price);
+    checkSwapAmountValue(state.swapAmount, fiatPrice);
+
+    if (!state.initialDenom || !state.resultingDenom) {
+      throw new Error('Invalid denoms');
+    }
 
     const createVaultContext: BuildCreateVaultContext = {
-      initialDenom: getDenomInfo(state.initialDenom),
-      resultingDenom: getDenomInfo(state.resultingDenom),
+      initialDenom: state.initialDenom,
+      resultingDenom: state.resultingDenom,
       timeInterval: { interval: state.executionInterval, increment: state.executionIntervalIncrement },
       timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,

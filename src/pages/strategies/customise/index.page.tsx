@@ -30,40 +30,37 @@ import SwapMultiplier from '@components/SwapMultiplier';
 import ApplyMultiplier from '@components/ApplyMultiplier';
 import SwapAmount from '@components/SwapAmount';
 import BasePrice from '@components/BasePrice';
-import usePrice from '@hooks/usePrice';
+import useSpotPrice from '@hooks/useSpotPrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
-import { convertDenomFromCoin } from '@utils/getDenomInfo';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { fromAtomic } from '@utils/getDenomInfo';
+import { StrategyType } from '@models/StrategyType';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
 import { getExistingValues } from './getExistingValues';
 
 function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initialValues: CustomiseSchema }) {
   const { nextStep } = useSteps(customiseSteps);
-
-  const { chainId: chain } = useChainId();
-
+  const { chainId } = useChainId();
   const { mutate, error, isError, isLoading } = useCustomiseStrategy();
-
   const { isPageLoading } = usePageLoad();
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const balance = convertDenomFromCoin(strategy.rawData.balance);
+  const balance = fromAtomic(strategy.initialDenom, Number(strategy.rawData.balance.amount));
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
-  const { price } = usePrice(resultingDenom, initialDenom, transactionType);
+  const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
   const context = {
     initialDenom,
     swapAmount: getConvertedSwapAmount(strategy),
     resultingDenom,
     transactionType,
-    currentPrice: price,
-    chain,
+    currentPrice: spotPrice,
+    chain: chainId,
   };
 
   const onSubmit = (values: CustomiseSchemaDca, { setSubmitting }: FormikHelpers<CustomiseSchemaDca>) => {
@@ -93,7 +90,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
             <StrategyInfoProvider
               strategyInfo={{
-                strategyType: '' as StrategyTypes,
+                strategyType: '' as StrategyType,
                 transactionType,
                 formName: '' as FormNames,
               }}

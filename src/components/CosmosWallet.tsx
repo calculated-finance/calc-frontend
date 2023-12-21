@@ -47,11 +47,6 @@ function CosmosWallet() {
     setVisible(!visible);
   };
 
-  const handleDisconnect = () => {
-    disconnect?.();
-    onClose();
-  };
-
   const handleCopy = () => {
     onCopy();
     toast({

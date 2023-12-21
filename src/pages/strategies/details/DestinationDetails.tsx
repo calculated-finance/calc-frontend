@@ -26,7 +26,6 @@ import { generateStrategyConfigureUrl } from '@components/TopPanel/generateStrat
 import { isStrategyCancelled, getStrategyResultingDenom } from '@helpers/strategy';
 import useStrategy from '@hooks/useStrategy';
 import useValidator from '@hooks/useValidator';
-import { getDenomName } from '@utils/getDenomInfo';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { ChainId } from '@hooks/useChainId/Chains';
@@ -70,7 +69,7 @@ export function ReinvestDetails({ strategy }: { strategy: Strategy }) {
                 color="blue.200"
                 display={{ base: 'none', lg: 'contents' }}
               >
-                {getDenomName(getStrategyResultingDenom(reinvestStrategy))} Strategy | id: {id} <ExternalLinkIcon />
+                {getStrategyResultingDenom(reinvestStrategy).name} Strategy | id: {id} <ExternalLinkIcon />
               </Code>
               <Code
                 bg="abyss.200"

@@ -24,14 +24,14 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { TransactionType } from './TransactionType';
 
 export function FeeBreakdown({
-  initialDenomName,
+  initialDenom,
   swapAmount,
   price,
   dexFee,
   swapFee,
   excludeDepositFee,
 }: {
-  initialDenomName: string;
+  initialDenom: DenomInfo;
   swapAmount: number;
   price: number | undefined;
   dexFee: number;
@@ -82,7 +82,7 @@ export function FeeBreakdown({
                     <Text textStyle="body-xs" as="span">
                       {' '}
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   )}
                 </Flex>
@@ -116,7 +116,7 @@ export function FeeBreakdown({
                   ) : (
                     <Text textStyle="body-xs" textColor="white" as="span">
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   )}
                 </Flex>
@@ -126,10 +126,11 @@ export function FeeBreakdown({
               <Heading size="xs">Per swap</Heading>
               <Stack spacing={0}>
                 <Flex>
-                  <Text textStyle="body-xs">CALC sustainability tax:</Text>
+                  <Text textStyle="body-xs">Sustainability tax:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, swapFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, swapFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
                 <Flex>
@@ -141,7 +142,8 @@ export function FeeBreakdown({
                   <Text textStyle="body-xs">{getChainDexName(chain)} txn fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
                 <Flex>
@@ -150,7 +152,8 @@ export function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {getPrettyFee(swapAmount, swapFee + dexFee)} {initialDenomName}
+                    {Number(getPrettyFee(swapAmount, swapFee + dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {initialDenom.name}
                   </Text>
                 </Flex>
               </Stack>
@@ -181,10 +184,8 @@ export default function Fees({
   excludeDepositFee?: boolean;
   transactionType: TransactionType;
 }) {
-  const { price } = useFiatPrice(initialDenom);
-
-  const { dexFee } = useDexFee(initialDenom, resultingDenom, transactionType);
-
+  const { fiatPrice } = useFiatPrice(initialDenom);
+  const { dexFee } = useDexFee();
   const { name: initialDenomName } = initialDenom;
 
   return (
@@ -194,7 +195,8 @@ export default function Fees({
           <>
             Deposit fee{' '}
             <Text as="span" textColor="white">
-              {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />} {initialDenomName}
+              {fiatPrice ? parseFloat((CREATE_VAULT_FEE / fiatPrice).toFixed(3)) : <Spinner size="xs" />}{' '}
+              {initialDenomName}
             </Text>{' '}
             +{' '}
           </>
@@ -208,15 +210,16 @@ export default function Fees({
         </Tooltip>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap
       </Text>
-
-      <FeeBreakdown
-        initialDenomName={initialDenomName}
-        swapAmount={swapAmount}
-        price={price}
-        dexFee={dexFee}
-        swapFee={swapFee}
-        excludeDepositFee={excludeDepositFee}
-      />
+      <Box pl={2}>
+        <FeeBreakdown
+          initialDenom={initialDenom}
+          swapAmount={swapAmount}
+          price={fiatPrice}
+          dexFee={dexFee}
+          swapFee={swapFee}
+          excludeDepositFee={excludeDepositFee}
+        />
+      </Box>
     </Stack>
   );
 }

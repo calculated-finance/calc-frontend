@@ -8,10 +8,9 @@ import dcaInSteps from 'src/formConfig/dcaIn';
 import { PostPurchaseForm } from '@components/Forms/PostPurchaseForm/PostPurchaseForm';
 import { InvalidData } from '@components/InvalidData';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
-import getDenomInfo from '@utils/getDenomInfo';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyTypes } from '@models/StrategyTypes';
+import { StrategyType } from '@models/StrategyType';
 import { StrategyInfoProvider } from '../customise/useStrategyInfo';
 
 function Page() {
@@ -34,7 +33,7 @@ function Page() {
     //  @ts-ignore
     <Formik initialValues={state} validate={validate} onSubmit={onSubmit}>
       {state && context ? (
-        <PostPurchaseForm resultingDenom={getDenomInfo(context.resultingDenom)} />
+        <PostPurchaseForm resultingDenom={context.resultingDenom} />
       ) : (
         <InvalidData onRestart={handleRestart} />
       )}
@@ -48,7 +47,7 @@ function PageWrapper() {
   return (
     <StrategyInfoProvider
       strategyInfo={{
-        strategyType: StrategyTypes.DCAIn,
+        strategyType: StrategyType.DCAIn,
         transactionType: TransactionType.Buy,
         formName: FormNames.DcaIn,
       }}
