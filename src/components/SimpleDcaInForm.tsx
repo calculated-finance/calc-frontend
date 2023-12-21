@@ -46,6 +46,7 @@ import { getTimeSaved } from '@helpers/getTimeSaved';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { useWallet } from '@hooks/useWallet';
 import useDenoms from '@hooks/useDenoms';
+import { BrowserRouter } from 'react-router-dom';
 import { values } from 'rambda';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
@@ -291,7 +292,9 @@ export default function SimpleDcaIn() {
         formName: FormNames.SimpleDcaIn,
       }}
     >
-      <Form />
+      <BrowserRouter>
+        <Form />
+      </BrowserRouter>
     </StrategyInfoProvider>
   );
 }

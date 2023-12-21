@@ -67,6 +67,7 @@ import useQueryState from '@hooks/useQueryState';
 import { useChainId } from '@hooks/useChainId';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
+import { BrowserRouter } from 'react-router-dom';
 
 function InitialDeposit() {
   const {
@@ -935,37 +936,41 @@ export function Form() {
     );
 
   return (
-    <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-      {({ values: formValues }) => (
-        <Box maxWidth={451} mx="auto">
-          <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
-            {isSuccess ? (
-              <SuccessStrategyModalBody />
-            ) : (
-              <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
-                  <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                    <InitialDenom />
-                    <SwapDenoms />
-                    <ResultingDenom />
+    <BrowserRouter>
+      <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
+        {({ values: formValues }) => (
+          <Box maxWidth={451} mx="auto">
+            <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
+              {isSuccess ? (
+                <SuccessStrategyModalBody />
+              ) : (
+                <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+                  <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
+                    <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                      <InitialDenom />
+                      <SwapDenoms />
+                      <ResultingDenom />
+                    </Stack>
+                    <DurationSlider />
                   </Stack>
-                  <DurationSlider />
+                  <FeeSection />
+                  {connected ? (
+                    <SummaryAgreementForm
+                      isError={isError}
+                      error={error}
+                      onSubmit={(agreementData, setSubmitting) =>
+                        handleSubmit(agreementData, setSubmitting, formValues)
+                      }
+                    />
+                  ) : (
+                    <ConnectWalletButton />
+                  )}
                 </Stack>
-                <FeeSection />
-                {connected ? (
-                  <SummaryAgreementForm
-                    isError={isError}
-                    error={error}
-                    onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
-                  />
-                ) : (
-                  <ConnectWalletButton />
-                )}
-              </Stack>
-            )}
-          </NewStrategyModalBody>
-        </Box>
-      )}
-    </Formik>
+              )}
+            </NewStrategyModalBody>
+          </Box>
+        )}
+      </Formik>
+    </BrowserRouter>
   );
 }
