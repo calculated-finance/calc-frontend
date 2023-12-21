@@ -86,7 +86,6 @@ function Page() {
         <SummaryBenchmark state={state} />
         <FeesDcaPlus
           initialDenom={initialDenom}
-          resultingDenom={resultingDenom}
           strategyDuration={state.strategyDuration}
           initialDeposit={state.initialDeposit}
           autoStakeValidator={state.autoStakeValidator}

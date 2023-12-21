@@ -30,7 +30,6 @@ import { getChainDexName } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
 
 function FeeBreakdown({
   initialDenomName,
@@ -199,13 +198,11 @@ function FeeBreakdown({
 
 export default function FeesDcaPlus({
   initialDenom,
-  resultingDenom,
   initialDeposit,
   strategyDuration,
   autoStakeValidator,
 }: {
   initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
   initialDeposit: number;
   strategyDuration: number;
   autoStakeValidator: string | null | undefined;

@@ -19,7 +19,6 @@ export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined)
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
   const track = useTrackCreateVault();
-  const { getDenomById } = useDenoms();
 
   return useMutation<
     Strategy['id'] | undefined,
