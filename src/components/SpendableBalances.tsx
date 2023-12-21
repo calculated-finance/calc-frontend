@@ -52,14 +52,17 @@ function CoinBalanceWithFiat({ balance }: { balance: Coin }) {
 
 export function BalanceList({ balances = [] }: { balances: Coin[] | undefined }) {
   const { fiatPrices } = useFiatPrices();
+  const { getDenomById } = useDenoms();
 
   if (!fiatPrices) return null;
 
-  balances.sort((a, b) => {
-    const aFiatPrice = fiatPrices[a.denom].usd;
-    const bFiatPrice = fiatPrices[b.denom].usd;
-    return aFiatPrice && bFiatPrice ? (aFiatPrice > bFiatPrice ? -1 : 1) : 0;
-  });
+  balances
+    .map((b) => getDenomById(b.denom))
+    .sort((a, b) => {
+      const aFiatPrice = a && fiatPrices[a.coingeckoId]?.usd;
+      const bFiatPrice = b && fiatPrices[b.coingeckoId]?.usd;
+      return aFiatPrice && bFiatPrice ? (aFiatPrice > bFiatPrice ? -1 : 1) : 0;
+    });
 
   return (
     <Grid templateRows="repeat(1, 1fr)" templateColumns="repeat(3, 1fr)" gap={2}>
