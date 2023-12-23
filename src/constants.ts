@@ -94,7 +94,7 @@ export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];
 export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
 
-export const OSMOSIS_MAINNET_RPC = 'https://rpc-osmosis.goldenratiostaking.net';
+export const OSMOSIS_MAINNET_RPC = 'https://rpc.osmosis.calcfinance.itbc.dev';
 export const OSMOSIS_TESTNET_RPC = 'https://rpc.osmotest5.osmosis.zone/';
 export const KUJIRA_MAINNET_RPC = 'https://kujira-rpc.nodes.defiantlabs.net';
 export const KUJIRA_TESTNET_RPC = 'https://kujira-testnet-rpc.polkachu.com/';
