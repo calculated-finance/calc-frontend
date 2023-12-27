@@ -89,7 +89,7 @@ function InitialDenom() {
       <FormLabel>Using:</FormLabel>
       <FormHelperText>
         <Center>
-          <Text textStyle="body-xs">Choose stablecoin</Text>
+          <Text textStyle="body-xs">Choose asset to sell</Text>
           <Spacer />
           {initialDenom.value && <AvailableFunds denom={initialDenom.value} />}
         </Center>

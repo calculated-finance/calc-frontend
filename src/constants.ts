@@ -63,15 +63,6 @@ export const ETH_TIME_HELPERS_CONTRACT_ADDRESS = '0x296303bA819CAed9C1151d24bAc9
 export const ETH_TRIGGER_MANAGER_CONTRACT_ADDRESS = '0x0451ABE786ADDce2C62393127C55F3EC640A33B1';
 export const ETH_SWAPPER_CONTRACT_ADDRESS = '0xd0f4E9e74346A3D66B29C5cDa2ea36eC3f6147cC';
 
-export const featureFlags =
-  process.env.NEXT_PUBLIC_APP_ENV === 'production'
-    ? {
-        singleAssetsEnabled: false,
-      }
-    : {
-        singleAssetsEnabled: true,
-      };
-
 export const contentData = {
   dcaIn: {
     assets: {
@@ -94,7 +85,7 @@ export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];
 export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
 
-export const OSMOSIS_MAINNET_RPC = 'https://rpc.osmosis.calcfinance.itbc.dev/'; // 'https://rpc-osmosis.goldenratiostaking.net/'; use this one for local dev
-export const OSMOSIS_TESTNET_RPC = 'https://rpc.osmotest5.osmosis.zone/';
-export const KUJIRA_MAINNET_RPC = 'https://kujira-rpc.nodes.defiantlabs.net';
-export const KUJIRA_TESTNET_RPC = 'https://kujira-testnet-rpc.polkachu.com/';
+export const OSMOSIS_MAINNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_MAINNET_RPC!;
+export const OSMOSIS_TESTNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_TESTNET_RPC!;
+export const KUJIRA_MAINNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_MAINNET_RPC!;
+export const KUJIRA_TESTNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_TESTNET_RPC!;
