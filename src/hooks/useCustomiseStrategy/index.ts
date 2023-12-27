@@ -22,7 +22,7 @@ export function useCustomiseStrategy() {
   const { data: signingClient } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chainId],
     async () => {
-      const client = await getSigningClient!(chainId);
+      const client = await getSigningClient!();
 
       if (!client) {
         throw new Error('No signing client');
@@ -31,7 +31,8 @@ export function useCustomiseStrategy() {
       return client;
     },
     {
-      enabled: !!chainId && !!getSigningClient,
+      enabled: !!getSigningClient,
+      staleTime: 1000 * 60 * 10,
     },
   );
 

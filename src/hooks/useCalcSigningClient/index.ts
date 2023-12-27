@@ -12,7 +12,7 @@ export function useCalcSigningClient() {
 
   const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient | null>(
     ['signingClient', chainId],
-    () => getSigningClient!(chainId),
+    getSigningClient,
     {
       enabled: !!chainId && !!connected && !!getSigningClient,
       staleTime: 1000 * 60 * 10,

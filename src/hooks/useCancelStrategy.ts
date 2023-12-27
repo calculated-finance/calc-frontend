@@ -44,7 +44,7 @@ const useCancelStrategy = () => {
   const { data: client } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chainId],
     async () => {
-      const signingClient = await getSigningClient!(chainId);
+      const signingClient = await getSigningClient!();
 
       if (!signingClient) {
         throw new Error('No signing client');
@@ -54,6 +54,7 @@ const useCancelStrategy = () => {
     },
     {
       enabled: !!chainId && !!getSigningClient,
+      staleTime: 1000 * 60 * 10,
     },
   );
 
