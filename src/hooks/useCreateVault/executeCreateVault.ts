@@ -18,31 +18,25 @@ export function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse | undefi
   return id || undefined;
 }
 
-export function executeCreateVault(
+export async function executeCreateVault(
   client: SigningCosmWasmClient,
   senderAddress: string,
   msgs: EncodeObject[],
 ): Promise<string | undefined> {
-  return signAndBroadcast(client, senderAddress, msgs)
-    .then((data) => {
-      try {
-        return getVaultIdFromDeliverTxResponse(data);
-      } catch (error) {
-        const { rawLog } = data || {};
-        throw rawLog ? new Error(rawLog) : error;
-      }
-    })
-    .catch((error) => {
-      const errorMatchers: Record<string, string> = {
-        'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
-        'Failed to fetch': 'Something went wrong when submitting, please try again.',
-        'insufficient fees': 'Insufficient fees. Please ensure you have enough for the transaction fees and gas.',
-        "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
-          LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
-        'transaction indexing is disabled': TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE,
-      };
+  try {
+    const newLocal = await signAndBroadcast(client, senderAddress, msgs);
+    return getVaultIdFromDeliverTxResponse(newLocal);
+  } catch (error: any) {
+    const errorMatchers: Record<string, string> = {
+      'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
+      'Failed to fetch': 'Something went wrong when submitting, please try again.',
+      'insufficient fees': 'Insufficient fees. Please ensure you have enough for the transaction fees and gas.',
+      "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
+        LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
+      'transaction indexing is disabled': TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE,
+    };
 
-      const matchingErrorKey = Object.keys(errorMatchers).find((key) => error.toString().includes(key));
-      throw new Error(matchingErrorKey ? errorMatchers[matchingErrorKey] : error);
-    });
+    const matchingErrorKey = Object.keys(errorMatchers).find((key) => error.toString().includes(key));
+    throw new Error(matchingErrorKey ? errorMatchers[matchingErrorKey] : error);
+  }
 }

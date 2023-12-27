@@ -1,5 +1,5 @@
 import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+import { ExecuteResult, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainConfig } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { getStrategyInitialDenom } from '@helpers/strategy';
@@ -23,7 +23,7 @@ function executeTopUpCosmos(
   chainConfig: ChainConfig,
   strategy: Strategy,
   topUpAmount: number,
-) {
+): Promise<ExecuteResult> {
   if (strategy.owner !== address) {
     throw new Error('You are not the owner of this strategy');
   }
@@ -37,9 +37,7 @@ function executeTopUpCosmos(
   } as ExecuteMsg;
 
   const funds = [{ denom: initialDenom.id, amount: BigInt(toAtomic(initialDenom, topUpAmount)).toString() }];
-
-  const result = client.execute(address, chainConfig.contractAddress, msg, 'auto', undefined, funds);
-  return result;
+  return client.execute(address, chainConfig.contractAddress, msg, 'auto', undefined, funds);
 }
 
 export function getGrantMsg(
@@ -97,23 +95,6 @@ function addGrants(
   }
 }
 
-function getFunds(initialDenom: DenomInfo, initialDeposit: number, isInAtomics = false) {
-  const funds = [
-    {
-      denom: initialDenom.id,
-      amount: BigInt(isInAtomics ? initialDeposit : toAtomic(initialDenom, initialDeposit)).toString(),
-    },
-  ];
-
-  const fundsInCoin = [
-    Coin.fromPartial({
-      amount: funds[0].amount,
-      denom: funds[0].denom,
-    }),
-  ];
-  return fundsInCoin;
-}
-
 async function createVault(
   signer: SigningCosmWasmClient,
   chainConfig: ChainConfig,
@@ -124,9 +105,20 @@ async function createVault(
   createVaultContext: BuildCreateVaultContext,
 ) {
   const createVaultMsg = buildCreateVaultMsg(chainConfig, fetchedConfig, createVaultContext);
+
   const msgs: EncodeObject[] = [];
-  const funds = getFunds(createVaultContext.initialDenom, initialDeposit, createVaultContext.isInAtomics);
+
+  const funds = [
+    Coin.fromPartial({
+      amount: BigInt(
+        createVaultContext.isInAtomics ? initialDeposit : toAtomic(createVaultContext.initialDenom, initialDeposit),
+      ).toString(),
+      denom: createVaultContext.initialDenom.id,
+    }),
+  ];
+
   msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));
+
   addGrants(
     createVaultContext.destinationConfig.autoStakeValidator,
     msgs,

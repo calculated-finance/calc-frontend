@@ -56,7 +56,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^6",
     "isomorphic-fetch": "^3.0.0",
-    "kujira.js": "^0.8.1",
+    "kujira.js": "^0.9.94",
     "little-state-machine": "^4.6.0",
     "lodash": "^4.17.21",
     "long": "^5.2.1",

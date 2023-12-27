@@ -36,12 +36,16 @@ export function ChainProvider({ children }: ChildrenProp) {
           osmosis: {
             rpc: [OSMOSIS_MAINNET_RPC],
           },
-          kujiratestnet: {
-            rpc: [KUJIRA_TESTNET_RPC],
-          },
-          osmosistestnet: {
-            rpc: [OSMOSIS_TESTNET_RPC],
-          },
+          ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production'
+            ? {
+                kujiratestnet: {
+                  rpc: [KUJIRA_TESTNET_RPC],
+                },
+                osmosistestnet: {
+                  rpc: [OSMOSIS_TESTNET_RPC],
+                },
+              }
+            : {}),
         },
       }}
       walletConnectOptions={{

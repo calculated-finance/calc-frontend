@@ -21,7 +21,7 @@ import { fromAtomic } from '@utils/getDenomInfo';
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
-  fetchTokenBalance: (tokenId: string, address: string) => Promise<Coin>;
+  fetchTokenBalance: (address: string, tokenId: string) => Promise<Coin>;
   fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
   fetchRoute: (
@@ -96,11 +96,8 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
 
   return {
     fetchDenoms: () => fetchDenomsKujira(chainId),
-    fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
-    fetchBalances: async (address: string) => {
-      const balances = await queryClient.bank.allBalances(address);
-      return balances;
-    },
+    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
+    fetchBalances: queryClient.bank.allBalances,
     fetchValidators: async () => {
       const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
       return response as unknown as { validators: Validator[] };
@@ -116,7 +113,7 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
 
   return {
     fetchDenoms: () => fetchDenomsOsmosis(chainId),
-    fetchTokenBalance: (tokenId: string, address: string) => cosmWasmClient!.getBalance(address, tokenId),
+    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
     fetchBalances: async (address: string) => {
       const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({ address });
       return balances;
