@@ -37,7 +37,7 @@ export function useConfigureStrategy() {
         throw new Error('getSigningClient is null or empty');
       }
 
-      const client = await getSigningClient(chainId);
+      const client = await getSigningClient();
 
       if (!client) {
         throw new Error('client is null or empty');

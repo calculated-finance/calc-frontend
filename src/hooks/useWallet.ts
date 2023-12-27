@@ -25,19 +25,19 @@ export function useWallet() {
     chainContext?.wallet,
   ]);
 
-  const getSigningClient = async (context: ChainContext, chainId: ChainId) =>
+  const getSigningClient = async (context: ChainContext) =>
     SigningCosmWasmClient.connectWithSigner(
       await context.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
       context.getOfflineSignerAmino(),
       {
-        gasPrice: getGasPrice(chainId),
+        gasPrice: getGasPrice(context.chain.chain_id as ChainId),
       },
     );
 
   if (chainContext && chainContext.isWalletConnected) {
     return {
       connected: chainContext.isWalletConnected,
-      getSigningClient: (chainId: ChainId) => getSigningClient(chainContext, chainId),
+      getSigningClient: () => getSigningClient(chainContext),
       walletType: chainContext.wallet?.prettyName,
       isConnecting: chainContext.isWalletConnecting,
       ...chainContext,
@@ -47,7 +47,9 @@ export function useWallet() {
   return {
     address: undefined,
     connected: false,
-    getSigningClient: null,
+    getSigningClient: () => {
+      throw new Error('Attempting to get signing client while not connected');
+    },
     disconnect: undefined,
     walletType: undefined,
     isConnecting: false,
