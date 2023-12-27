@@ -16,8 +16,8 @@ function useBalance(token: DenomInfo) {
   const client = useChainClient(chainId);
 
   const result = useQuery<Coin>(
-    ['balance', token.id, chainId, address],
-    () => client!.fetchTokenBalance(token.id, address!),
+    ['balance', chainId, address, token.id],
+    () => client!.fetchTokenBalance(address!, token.id),
     {
       enabled: !!token.id && !!address && !!chainId && !!client,
       meta: {

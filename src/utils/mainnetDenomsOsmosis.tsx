@@ -48,17 +48,11 @@ export const mainnetDenomsOsmosis: Record<MainnetDenomsOsmosis, Partial<DenomInf
   },
   [MainnetDenomsOsmosis.wBTC]: {
     coingeckoId: 'wrapped-bitcoin',
-    stakeable: false,
-    stable: false,
-    enabled: true,
     enabledInDcaPlus: true,
     minimumSwapAmount: 0.05 / 10000,
   },
   [MainnetDenomsOsmosis.nBTC]: {
     coingeckoId: 'bitcoin',
-    stakeable: false,
-    stable: false,
-    enabled: true,
     enabledInDcaPlus: true,
     significantFigures: 14,
     minimumSwapAmount: 0.05 / 10000,

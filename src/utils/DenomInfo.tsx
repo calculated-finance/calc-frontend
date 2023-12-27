@@ -29,7 +29,7 @@ export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
     stable: false,
     coingeckoId: '',
     stakeableAndSupported: false,
-    enabled: false,
+    enabled: true,
     significantFigures: 6,
     pricePrecision: 3,
     enabledInDcaPlus: false,
