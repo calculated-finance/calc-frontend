@@ -18,6 +18,7 @@ import { mainnetDenomsOsmosis } from '@utils/mainnetDenomsOsmosis';
 import { MainnetDenomsOsmosis, TestnetDenomsOsmosis } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { fromAtomic } from '@utils/getDenomInfo';
+import Long from 'long';
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
@@ -97,7 +98,14 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
   return {
     fetchDenoms: () => fetchDenomsKujira(chainId),
     fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
-    fetchBalances: queryClient.bank.allBalances,
+    fetchBalances: (address: string) =>
+      queryClient.bank.allBalances(address, {
+        key: Buffer.from(''),
+        offset: Long.fromInt(0),
+        limit: Long.fromInt(1000),
+        countTotal: false,
+        reverse: false,
+      }),
     fetchValidators: async () => {
       const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
       return response as unknown as { validators: Validator[] };
@@ -115,7 +123,16 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
     fetchDenoms: () => fetchDenomsOsmosis(chainId),
     fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
     fetchBalances: async (address: string) => {
-      const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({ address });
+      const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
+        address,
+        pagination: {
+          key: Buffer.from(''),
+          offset: Long.fromInt(0),
+          limit: Long.fromInt(1000),
+          countTotal: false,
+          reverse: false,
+        },
+      });
       return balances;
     },
     fetchValidators: async () => {
