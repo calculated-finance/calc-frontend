@@ -124,12 +124,11 @@ export const allSchema = {
       name: 'less-than-deposit',
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
-        return true; // TODO: return here and fix this validation
-        // const { balances } = context?.options?.context || {};
-        // if (!balances || !value || value <= 0) return true;
-        // const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
-        // if (!amount) return false;
-        // return value <= fromAtomic(context.parent.initialDenom, Number(amount));
+        const { balances } = context?.options?.context || {};
+        if (!balances || !value || value <= 0) return true;
+        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
+        if (!amount) return false;
+        return value <= fromAtomic(context.parent.initialDenom, Number(amount));
       },
     }),
   advancedSettings: Yup.boolean(),
