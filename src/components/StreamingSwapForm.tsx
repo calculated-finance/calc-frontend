@@ -56,11 +56,9 @@ import { useCreateStreamingSwap } from '@hooks/useCreateVault/useCreateStreaming
 import { useDebounce } from 'ahooks';
 import { ConnectWalletButton } from '@components/ConnectWalletButton';
 import { SWAP_FEE } from 'src/constants';
-import { getPrettyFee } from '@helpers/getPrettyFee';
 import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
-import { TransactionType } from '@components/TransactionType';
 import useDenoms from '@hooks/useDenoms';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import useQueryState from '@hooks/useQueryState';
@@ -86,7 +84,7 @@ function InitialDeposit() {
       <NumberInput
         onChange={(newAmount) =>
           setQueryState({
-            amount: newAmount && initialDenom && BigInt(Math.round(toAtomic(initialDenom, newAmount))).toString(),
+            amount: newAmount && initialDenom && BigInt(toAtomic(initialDenom, newAmount)).toString(),
           })
         }
         textAlign="right"
@@ -178,7 +176,9 @@ function InitialDenom() {
                   initialDenom &&
                   newInitialDenom &&
                   BigInt(
-                    amount * 10 ** (newInitialDenom.significantFigures - initialDenom.value.significantFigures),
+                    Math.round(
+                      amount * 10 ** (newInitialDenom.significantFigures - initialDenom.value.significantFigures),
+                    ),
                   ).toString(),
               });
             }}
@@ -231,7 +231,9 @@ function SwapDenoms() {
               ...(amount && resultingDenomValue && initialDenomValue
                 ? {
                     amount: BigInt(
-                      amount * 10 ** (resultingDenomValue.significantFigures - initialDenomValue.significantFigures),
+                      Math.round(
+                        amount * 10 ** (resultingDenomValue.significantFigures - initialDenomValue.significantFigures),
+                      ),
                     ).toString(),
                   }
                 : {}),
@@ -270,7 +272,7 @@ function ResultingDenom() {
   const { fiatPrice: resultingDenomFiatPrice } = useFiatPrice(resultingDenomValue);
 
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
-    swapAmount && initialDenom ? coin(BigInt(swapAmount).toString(), initialDenom.id) : undefined,
+    swapAmount && initialDenom ? coin(BigInt(Math.round(swapAmount)).toString(), initialDenom.id) : undefined,
     resultingDenomValue,
     undefined,
     !!swapAmount && !!resultingDenomValue,
@@ -600,7 +602,9 @@ function DurationSlider() {
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
 
   const swapAmount =
-    swapAmountField.value && initialDenom ? coin(BigInt(swapAmountField.value).toString(), initialDenom.id) : undefined;
+    swapAmountField.value && initialDenom
+      ? coin(BigInt(Math.round(swapAmountField.value)).toString(), initialDenom.id)
+      : undefined;
 
   const { expectedPrice } = useExpectedPrice(
     swapAmount,
@@ -626,7 +630,7 @@ function DurationSlider() {
 
   const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
     debouncedInitialDeposit && initialDenom
-      ? coin(`${BigInt(debouncedInitialDeposit).toString()}`, initialDenom.id)
+      ? coin(`${BigInt(Math.round(debouncedInitialDeposit)).toString()}`, initialDenom.id)
       : undefined,
     resultingDenom,
     route,

@@ -258,7 +258,7 @@ export function buildCreateVaultMsg(
       label,
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
-      swap_amount: isInAtomics ? BigInt(swapAmount).toString() : getSwapAmount(initialDenom, swapAmount),
+      swap_amount: isInAtomics ? BigInt(Math.round(swapAmount)).toString() : getSwapAmount(initialDenom, swapAmount),
       target_start_time_utc_seconds: timeTrigger && getStartTime(timeTrigger.startDate, timeTrigger.startTime),
       minimum_receive_amount: priceThreshold
         ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, isInAtomics)
