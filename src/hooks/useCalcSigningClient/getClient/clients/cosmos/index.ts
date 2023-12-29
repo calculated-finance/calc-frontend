@@ -47,7 +47,7 @@ export function getGrantMsg(
   value = GenericAuthorization.encode(
     GenericAuthorization.fromPartial({ msg: '/cosmos.staking.v1beta1.MsgDelegate' }),
   ).finish(),
-  seconds = BigInt(new Date().getTime() / 1000 + 31536000), // 31536000 seconds in a year
+  seconds = BigInt(Math.round(new Date().getTime() / 1000 + 31536000)), // 31536000 seconds in a year
 ): { typeUrl: string; value: MsgGrant } {
   return {
     typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
@@ -111,7 +111,9 @@ async function createVault(
   const funds = [
     Coin.fromPartial({
       amount: BigInt(
-        createVaultContext.isInAtomics ? initialDeposit : toAtomic(createVaultContext.initialDenom, initialDeposit),
+        createVaultContext.isInAtomics
+          ? Math.round(initialDeposit)
+          : toAtomic(createVaultContext.initialDenom, initialDeposit),
       ).toString(),
       denom: createVaultContext.initialDenom.id,
     }),
