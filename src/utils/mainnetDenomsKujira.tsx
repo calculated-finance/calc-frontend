@@ -263,4 +263,14 @@ export const mainnetDenomsKujira: Record<MainnetDenoms, Partial<DenomInfo>> = {
     coingeckoId: 'realio-network',
     significantFigures: 18,
   },
+  [MainnetDenoms.NEWT]: {
+    name: 'NEWT',
+    icon: '/images/denoms/newt.png',
+    coingeckoId: 'newt',
+  },
+  [MainnetDenoms.TORI]: {
+    name: 'TORI',
+    icon: '/images/denoms/tori.svg',
+    coingeckoId: 'teritori',
+  },
 };
