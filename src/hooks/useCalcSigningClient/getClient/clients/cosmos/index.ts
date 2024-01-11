@@ -9,7 +9,6 @@ import { BuildCreateVaultContext, buildCreateVaultMsg } from '@hooks/useCreateVa
 import { executeCreateVault } from '@hooks/useCreateVault/executeCreateVault';
 import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
 import { AuthorizationType, StakeAuthorization } from 'cosmjs-types/cosmos/staking/v1beta1/authz';
-import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
@@ -17,7 +16,7 @@ import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
 import { toAtomic } from '@utils/getDenomInfo';
 
-function executeTopUpCosmos(
+function topUpStrategy(
   address: string,
   client: SigningCosmWasmClient,
   chainConfig: ChainConfig,
@@ -95,7 +94,7 @@ function addGrants(
   }
 }
 
-async function createVault(
+async function createStrategy(
   signer: SigningCosmWasmClient,
   chainConfig: ChainConfig,
   fetchedConfig: Config,
@@ -136,19 +135,19 @@ async function createVault(
   return executeCreateVault(signer, senderAddress, msgs);
 }
 
-export function getCosmosSigningClient(
+export function getCosmosCalcSigningClient(
   signingClient: SigningCosmWasmClient,
   chainConfig: ChainConfig,
   fetchedConfig: Config,
 ) {
   return {
     topUpStrategy: (address: string, strategy: Strategy, topUpAmount: number) =>
-      executeTopUpCosmos(address, signingClient, chainConfig, strategy, topUpAmount),
+      topUpStrategy(address, signingClient, chainConfig, strategy, topUpAmount),
     createStrategy: (
       address: string,
       initialDeposit: number,
       fee: string | undefined,
       variables: BuildCreateVaultContext,
-    ) => createVault(signingClient, chainConfig, fetchedConfig, address, initialDeposit, fee, variables),
+    ) => createStrategy(signingClient, chainConfig, fetchedConfig, address, initialDeposit, fee, variables),
   };
 }
