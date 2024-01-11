@@ -1,5 +1,5 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { getGasPrice } from '@helpers/chains';
+import { getChainInfo, getGasPrice } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
 import { useEffect } from 'react';
 import { useChainContext } from './useChainContext';
@@ -27,7 +27,7 @@ export function useWallet() {
 
   const getSigningClient = async (context: ChainContext) =>
     SigningCosmWasmClient.connectWithSigner(
-      await context.getRpcEndpoint(process.env.NEXT_PUBLIC_APP_ENV !== 'production'),
+      getChainInfo(context.chain.chain_id as ChainId).rpc,
       context.getOfflineSignerAmino(),
       {
         gasPrice: getGasPrice(context.chain.chain_id as ChainId),
