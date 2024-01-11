@@ -1,7 +1,7 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainConfig } from '@helpers/chains';
 import { Config } from 'src/interfaces/v2/generated/response/get_config';
-import { getCosmosSigningClient } from './clients/cosmos';
+import { getCosmosCalcSigningClient } from './clients/cosmos';
 
 export default function getClient(
   chainConfig: ChainConfig,
@@ -11,5 +11,5 @@ export default function getClient(
   if (!signingClient) return null;
   if (!fetchedConfig) return null;
 
-  return getCosmosSigningClient(signingClient, chainConfig, fetchedConfig);
+  return getCosmosCalcSigningClient(signingClient, chainConfig, fetchedConfig);
 }
