@@ -1,9 +1,9 @@
 import 'isomorphic-fetch';
 import * as Sentry from '@sentry/react';
 import { COINGECKO_ENDPOINT } from 'src/constants';
-import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import dayjs from 'dayjs';
+import useQueryWithNotification from './useQueryWithNotification';
 
 export type FiatPriceHistoryResponse = {
   prices: number[][];
@@ -15,7 +15,7 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
   const { coingeckoId } = denom || {};
   const fiatCurrencyId = 'usd';
 
-  return useQuery<FiatPriceHistoryResponse>(
+  return useQueryWithNotification<FiatPriceHistoryResponse>(
     ['fiat-price-history', coingeckoId, fiatCurrencyId, days],
     async () => {
       if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
@@ -43,7 +43,7 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
     },
     {
       enabled: !!coingeckoId && !!fiatCurrencyId && !!days,
-      staleTime: 1000 * 60 * 300,
+      staleTime: 1000 * 60 * 5,
       meta: {
         errorMessage: 'Error fetching fiat price history',
       },
