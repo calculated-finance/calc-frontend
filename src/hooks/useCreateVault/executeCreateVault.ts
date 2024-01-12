@@ -24,8 +24,7 @@ export async function executeCreateVault(
   msgs: EncodeObject[],
 ): Promise<string | undefined> {
   try {
-    const newLocal = await signAndBroadcast(client, senderAddress, msgs);
-    return getVaultIdFromDeliverTxResponse(newLocal);
+    return getVaultIdFromDeliverTxResponse(await signAndBroadcast(client, senderAddress, msgs));
   } catch (error: any) {
     const errorMatchers: Record<string, string> = {
       'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
