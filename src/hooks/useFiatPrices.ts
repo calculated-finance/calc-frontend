@@ -4,6 +4,7 @@ import { COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { reduce, values } from 'rambda';
 import useDenoms from './useDenoms';
+import useQueryWithNotification from './useQueryWithNotification';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -17,7 +18,7 @@ const useFiatPrices = () => {
   const { allDenoms } = useDenoms();
   const denomsList = values(allDenoms ?? {});
 
-  const { data: fiatPrices, ...other } = useQuery<FiatPriceResponse>(
+  const { data: fiatPrices, ...other } = useQueryWithNotification<FiatPriceResponse>(
     ['fiat-prices', denomsList.length],
     async () => {
       const coingeckoIds = denomsList.map((denom: any) => denom.coingeckoId);
