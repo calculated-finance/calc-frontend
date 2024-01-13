@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChain } from '@cosmos-kit/react';
-import { getChainContractAddress, getChainInfo } from '@helpers/chains';
+import { getChainContractAddress, getChainName } from '@helpers/chains';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
 import { useChainId } from './useChainId';
@@ -10,7 +10,7 @@ import useDenoms from './useDenoms';
 export default function useChainStrategies(injectedChainId?: ChainId) {
   const { chainId: currentChainId } = useChainId();
   const chainId = injectedChainId ?? currentChainId;
-  const { chain, getCosmWasmClient } = useChain(getChainInfo(chainId).chainName);
+  const { chain, getCosmWasmClient } = useChain(getChainName(chainId));
   const { getDenomById } = useDenoms();
 
   const { data: strategies, ...other } = useQuery<Strategy[]>(

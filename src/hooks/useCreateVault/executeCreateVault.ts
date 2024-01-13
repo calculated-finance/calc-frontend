@@ -29,7 +29,7 @@ export async function executeCreateVault(
     const errorMatchers: Record<string, string> = {
       'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
       'Failed to fetch': 'Something went wrong when submitting, please try again.',
-      'insufficient fees': 'Insufficient fees. Please ensure you have enough for the transaction fees and gas.',
+      // 'insufficient fees': 'Insufficient fees. Please ensure you have enough for the transaction fees and gas.',
       "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
         LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE,
       'transaction indexing is disabled': TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE,

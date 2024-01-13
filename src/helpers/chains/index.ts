@@ -1,7 +1,5 @@
 import { GasPrice } from '@cosmjs/stargate';
 import { ChainId } from '@hooks/useChainId/Chains';
-import { ChainInfo } from '@keplr-wallet/types';
-import { CHAIN_INFO } from 'kujira.js';
 import {
   COSMOS_KIT_KUJIRA_MAINNET,
   COSMOS_KIT_KUJIRA_TESTNET,
@@ -13,137 +11,24 @@ import {
   OSMOSIS_TESTNET_RPC,
 } from 'src/constants';
 
-const osmoMainnetConfig = {
-  chainId: 'osmosis-1',
-  chainName: 'osmosis',
-  rpc: 'https://rpc.osmosis.zone',
-  rest: 'https://lcd.osmosis.zone',
-  bip44: {
-    coinType: 118,
-  },
-  bech32Config: {
-    bech32PrefixAccAddr: 'osmo',
-    bech32PrefixAccPub: 'osmopub',
-    bech32PrefixValAddr: 'osmovaloper',
-    bech32PrefixValPub: 'osmovaloperpub',
-    bech32PrefixConsAddr: 'osmovalcons',
-    bech32PrefixConsPub: 'osmovalconspub',
-  },
-  currencies: [
-    {
-      coinDenom: 'OSMO',
-      coinMinimalDenom: 'uosmo',
-      coinDecimals: 6,
-      coinGeckoId: 'osmosis',
-    },
-  ],
-  feeCurrencies: [
-    {
-      coinDenom: 'OSMO',
-      coinMinimalDenom: 'uosmo',
-      coinDecimals: 6,
-      coinGeckoId: 'osmosis',
-      gasPriceStep: {
-        low: 0.00125,
-        average: 0.0025,
-        high: 0.00375,
-      },
-    },
-  ],
-  stakeCurrency: {
-    coinDenom: 'OSMO',
-    coinMinimalDenom: 'uosmo',
-    coinDecimals: 6,
-    coinGeckoId: 'osmosis',
-  },
-  coinType: 118,
-} as ChainInfo;
-
-const osmoTestnetConfig = {
-  chainId: 'osmo-test-5',
-  chainName: 'osmosistestnet',
-  rpc: 'https://rpc.osmotest5.osmosis.zone/',
-  rest: 'https://lcd.osmotest5.osmosis.zone',
-  bip44: {
-    coinType: 118,
-  },
-  bech32Config: {
-    bech32PrefixAccAddr: 'osmo',
-    bech32PrefixAccPub: 'osmopub',
-    bech32PrefixValAddr: 'osmovaloper',
-    bech32PrefixValPub: 'osmovaloperpub',
-    bech32PrefixConsAddr: 'osmovalcons',
-    bech32PrefixConsPub: 'osmovalconspub',
-  },
-  currencies: [
-    {
-      coinDenom: 'OSMO',
-      coinMinimalDenom: 'uosmo',
-      coinDecimals: 6,
-      coinGeckoId: 'osmosis',
-    },
-  ],
-  feeCurrencies: [
-    {
-      coinDenom: 'OSMO',
-      coinMinimalDenom: 'uosmo',
-      coinDecimals: 6,
-      coinGeckoId: 'osmosis',
-      gasPriceStep: {
-        low: 0.00125,
-        average: 0.0025,
-        high: 0.00375,
-      },
-    },
-  ],
-  stakeCurrency: {
-    coinDenom: 'OSMO',
-    coinMinimalDenom: 'uosmo',
-    coinDecimals: 6,
-    coinGeckoId: 'osmosis',
-  },
-  coinType: 118,
-} as ChainInfo;
-
 export function getGasPrice(chain: ChainId) {
   return GasPrice.fromString(
     {
-      'osmosis-1': '0.0036uosmo',
-      'osmo-test-5': '0.0036uosmo',
-      'kaiyo-1': '0.0034ukuji',
-      'harpoon-4': '0.0034ukuji',
+      'osmosis-1': '0.004uosmo',
+      'osmo-test-5': '0.004uosmo',
+      'kaiyo-1': '0.004ukuji',
+      'harpoon-4': '0.004ukuji',
     }[chain],
   );
 }
 
-export function getChainInfo(chainId: ChainId) {
-  return {
-    'osmosis-1': { ...osmoMainnetConfig, rpc: OSMOSIS_MAINNET_RPC },
-    'osmo-test-5': { ...osmoTestnetConfig, rpc: OSMOSIS_TESTNET_RPC },
-    'kaiyo-1': { ...CHAIN_INFO['kaiyo-1'], rpc: KUJIRA_MAINNET_RPC, chainName: 'kujira' },
-    'harpoon-4': {
-      ...CHAIN_INFO['harpoon-4'],
-      rpc: KUJIRA_TESTNET_RPC,
-      chainName: 'kujiratestnet',
-    },
-  }[chainId ?? 'kaiyo-1'] as ChainInfo;
-}
-
-export function getFeeCurrencies(chain: ChainId) {
-  return getChainInfo(chain).feeCurrencies.filter(
-    (x) =>
-      x.coinMinimalDenom ===
-      {
-        'osmosis-1': 'uosmo',
-        'osmo-test-5': 'uosmo',
-        'kaiyo-1': 'ukuji',
-        'harpoon-4': 'ukuji',
-      }[chain],
-  );
-}
-
 export function getChainEndpoint(chain: ChainId): string {
-  return getChainInfo(chain).rpc;
+  return {
+    'osmosis-1': OSMOSIS_MAINNET_RPC,
+    'osmo-test-5': OSMOSIS_TESTNET_RPC,
+    'kaiyo-1': KUJIRA_MAINNET_RPC,
+    'harpoon-4': KUJIRA_TESTNET_RPC,
+  }[chain];
 }
 
 export function getChainContractAddress(chainId: ChainId) {

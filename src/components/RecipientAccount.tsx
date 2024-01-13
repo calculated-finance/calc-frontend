@@ -1,5 +1,5 @@
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup } from '@chakra-ui/react';
-import { getChainInfo } from '@helpers/chains';
+import { getChainName } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import { useField } from 'formik';
 
@@ -15,7 +15,7 @@ export default function RecipientAccount() {
         <Input fontSize="sm" placeholder="Input Wallet" {...field} />
       </InputGroup>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      <FormHelperText>Ensure that this is a valid {getChainInfo(chain).chainName} address.</FormHelperText>
+      <FormHelperText>Ensure that this is a valid {getChainName(chain)} address.</FormHelperText>
     </FormControl>
   );
 }
