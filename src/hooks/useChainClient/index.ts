@@ -85,8 +85,6 @@ const fetchDenomsArchway = async (chainId: ChainId) => {
 
   const { data: assets } = await (await fetch(url)).json();
 
-  console.log({ assets });
-
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: any) => ({
       ...acc,
@@ -231,48 +229,7 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       });
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: number) => {
-      try {
-        const response = await (
-          await fetch(
-            `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
-              tokenIn: `${swapAmount}${initialDenom.id}`,
-              tokenOutDenom: targetDenom!.id,
-            })}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
-          )
-        ).json();
-
-        return {
-          route: Buffer.from(
-            JSON.stringify(
-              response.route.flatMap((r: any) =>
-                r.pools.map((pool: any) => ({
-                  pool_id: `${pool.id}`,
-                  token_out_denom: pool.token_out_denom,
-                })),
-              ),
-            ),
-          ).toString('base64'),
-          feeRate: 0.003,
-        };
-      } catch (error: any) {
-        if (`${error}`.includes('amount of')) {
-          throw new Error(
-            `Swap amount of ${fromAtomic(initialDenom, Number(swapAmount))} ${
-              initialDenom.name
-            } too high to find dynamic osmosis route.`,
-          );
-        }
-
-        throw new Error('Error fetching route from Osmosis');
-      }
-    },
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: number) => ({ route: undefined, feeRate: 0.0075 }), // TODO: understand fees
   };
 };
 
