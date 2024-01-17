@@ -8,17 +8,14 @@ import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
-import { KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
+import { ARCHWAY_CHAINS, KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
 import { reduce, toPairs } from 'rambda';
-import { testnetDenomsKujira } from '@utils/testnetDenomsKujira';
-import { mainnetDenomsKujira } from '@utils/mainnetDenomsKujira';
 import { Asset } from '@chain-registry/types';
-import { testnetDenomsOsmosis } from '@utils/testnetDenomsOsmosis';
-import { mainnetDenomsOsmosis } from '@utils/mainnetDenomsOsmosis';
-import { MainnetDenomsOsmosis, TestnetDenomsOsmosis } from '@models/Denom';
+import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { fromAtomic } from '@utils/getDenomInfo';
 import Long from 'long';
+import { DENOMS } from '@utils/denoms';
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
@@ -32,36 +29,31 @@ export type ChainClient = {
   ) => Promise<{ route: string | undefined; feeRate: number }>;
 };
 
-const fetchDenomsKujira = (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> => {
-  if (!KUJIRA_CHAINS.includes(chainId)) {
-    throw new Error(`${chainId} not a Kujira chain`);
-  }
-
-  return Promise.resolve(
+const fetchDenomsKujira = (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> =>
+  Promise.resolve(
     reduce(
       (acc: { [x: string]: DenomInfo }, [id, info]: [string, Partial<DenomInfo>]) => ({
         ...acc,
         [id]: fromPartial({ chain: chainId, id, ...info }),
       }),
       {},
-      toPairs(chainId === 'kaiyo-1' ? mainnetDenomsKujira : testnetDenomsKujira),
+      toPairs(DENOMS[chainId]),
     ),
   );
-};
 
 const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> => {
   const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
   const response = await fetch(`${baseUrl}/${chainId}/${chainId}.assetlist.json`);
   const { assets } = await response.json();
 
-  const allOverrides = { ...mainnetDenomsOsmosis, ...testnetDenomsOsmosis };
+  const allOverrides = DENOMS[chainId];
 
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: Asset) => {
       const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
       const significantFigures = findDenomUnits?.exponent || 6;
 
-      const denom = asset.base as MainnetDenomsOsmosis | TestnetDenomsOsmosis;
+      const denom = asset.base as OsmosisMainnetDenoms | OsmosisTestnetDenoms;
       const overrides = (denom in allOverrides && allOverrides[denom]) || {};
 
       return {
@@ -80,6 +72,32 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
         }),
       };
     },
+    {},
+    assets,
+  );
+};
+
+const fetchDenomsArchway = async (chainId: ChainId) => {
+  const url =
+    chainId === 'constantine-3'
+      ? 'https://const.astrovault.io/asset?env=public'
+      : 'https://arch.astrovault.io/asset?env=public';
+
+  const { data: assets } = await (await fetch(url)).json();
+
+  console.log({ assets });
+
+  return reduce(
+    (acc: { [x: string]: DenomInfo }, asset: any) => ({
+      ...acc,
+      [asset.id]: fromPartial({
+        chain: chainId,
+        id: asset.id,
+        name: asset.label,
+        significantFigures: asset.decimals,
+        ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
+      }),
+    }),
     {},
     assets,
   );
@@ -186,6 +204,78 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
   };
 };
 
+const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClient): Promise<ChainClient> => {
+  const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
+    rpcEndpoint: getChainEndpoint(chainId),
+  });
+
+  return {
+    fetchDenoms: () => fetchDenomsArchway(chainId),
+    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
+    fetchBalances: async (address: string) => {
+      const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
+        address,
+        pagination: {
+          key: Buffer.from(''),
+          offset: Long.fromInt(0),
+          limit: Long.fromInt(1000),
+          countTotal: false,
+          reverse: false,
+        },
+      });
+      return balances;
+    },
+    fetchValidators: async () => {
+      const response = await queryClient.cosmos.staking.v1beta1.validators({
+        status: 'BOND_STATUS_BONDED',
+      });
+      return response as unknown as { validators: Validator[] };
+    },
+    fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: number) => {
+      try {
+        const response = await (
+          await fetch(
+            `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
+              tokenIn: `${swapAmount}${initialDenom.id}`,
+              tokenOutDenom: targetDenom!.id,
+            })}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+        ).json();
+
+        return {
+          route: Buffer.from(
+            JSON.stringify(
+              response.route.flatMap((r: any) =>
+                r.pools.map((pool: any) => ({
+                  pool_id: `${pool.id}`,
+                  token_out_denom: pool.token_out_denom,
+                })),
+              ),
+            ),
+          ).toString('base64'),
+          feeRate: 0.003,
+        };
+      } catch (error: any) {
+        if (`${error}`.includes('amount of')) {
+          throw new Error(
+            `Swap amount of ${fromAtomic(initialDenom, Number(swapAmount))} ${
+              initialDenom.name
+            } too high to find dynamic osmosis route.`,
+          );
+        }
+
+        throw new Error('Error fetching route from Osmosis');
+      }
+    },
+  };
+};
+
 export function useChainClient(chainId: ChainId) {
   const { cosmWasmClient } = useCosmWasmClient(chainId);
 
@@ -198,6 +288,10 @@ export function useChainClient(chainId: ChainId) {
 
       if (OSMOSIS_CHAINS.includes(chainId)) {
         return osmosisChainClient(chainId, cosmWasmClient!);
+      }
+
+      if (ARCHWAY_CHAINS.includes(chainId)) {
+        return archwayChainClient(chainId, cosmWasmClient!);
       }
 
       throw new Error(`Unsupported chain ${chainId}`);
