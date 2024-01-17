@@ -11,7 +11,7 @@ export const SWAP_FEE = 0.005;
 export const SWAP_FEE_WS = 0.01;
 export const DELEGATION_FEE = 0.0;
 export const FIN_TAKER_FEE = 0.0015;
-export const MINIMUM_SWAP_VALUE_IN_USD = 0.5;
+export const MINIMUM_SWAP_VALUE_IN_USD = 1.0;
 
 export const OUT_OF_GAS_ERROR_MESSAGE = 'The transaction ran out of gas during execution. Please provide more gas.';
 export const PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE =
@@ -54,6 +54,7 @@ export const COSMOS_KIT_KUJIRA_MAINNET = 'kujira';
 export const COSMOS_KIT_KUJIRA_TESTNET = 'kujiratestnet';
 export const COSMOS_KIT_OSMOSIS_MAINNET = 'osmosis';
 export const COSMOS_KIT_OSMOSIS_TESTNET = 'osmosistestnet';
+export const COSMOS_KIT_ARCHWAY_TESTNET = 'archwaytestnet';
 
 export const ETH_DCA_FACTORY_CONTRACT_ADDRESS = '0x8c7877a15DEad1732e33d4756899CD13bC61d0BD';
 
@@ -80,12 +81,14 @@ export const contentData = {
   },
 };
 
-export const CHAINS = ['kaiyo-1', 'harpoon-4', 'osmosis-1', 'osmo-test-5'] as ChainId[];
-export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];
 export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
+export const ARCHWAY_CHAINS = ['constantine-3'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
+export const CHAINS = [...KUJIRA_CHAINS, ...OSMOSIS_CHAINS, ...ARCHWAY_CHAINS] as ChainId[];
+export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1'] as ChainId[];
 
 export const OSMOSIS_MAINNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_MAINNET_RPC!;
 export const OSMOSIS_TESTNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_TESTNET_RPC!;
 export const KUJIRA_MAINNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_MAINNET_RPC!;
 export const KUJIRA_TESTNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_TESTNET_RPC!;
+export const ARCHWAY_TESTNET_RPC = process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_RPC!;

@@ -194,11 +194,7 @@ function InitialDenom() {
             <Text color="white">
               $
               {(initialDeposit.value && fiatPrice && initialDenom.value
-                ? Number(
-                    (fromAtomic(initialDenom.value, initialDeposit.value) * fiatPrice)?.toFixed(
-                      initialDenom.value.significantFigures / 3,
-                    ),
-                  )
+                ? Number((fromAtomic(initialDenom.value, initialDeposit.value) * fiatPrice)?.toFixed(2))
                 : '0.00'
               ).toLocaleString()}
             </Text>
@@ -350,7 +346,7 @@ function ResultingDenom() {
           <HStack spacing={1} align="end">
             <Text>USD Value:</Text>
             {initialDepositFiatValue && expectedFinalReceiveAmountFiatValue ? (
-              <Text color="white">${expectedFinalReceiveAmountFiatValue.toLocaleString()}</Text>
+              <Text color="white">${Number(expectedFinalReceiveAmountFiatValue.toFixed(2)).toLocaleString()}</Text>
             ) : !initialDenom || !resultingDenomValue || !initialDeposit ? (
               <Text color="white">$0.00</Text>
             ) : (
@@ -537,7 +533,9 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
             </Stack>
             <Spacer />
             <Text fontWeight="700">
-              {!usingPriceProtection ? Number(slippageTolerance.toFixed(2)) : Number((priceThreshold * 100).toFixed(2))}
+              {!usingPriceProtection
+                ? Number(slippageTolerance.toFixed(2))
+                : `-${Number((priceThreshold * 100).toFixed(2))}`}
             </Text>
             <Text color="slateGrey">%</Text>
           </HStack>
@@ -596,7 +594,7 @@ function DurationSlider() {
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (0.51 / fiatPrice));
+  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (1.0 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);

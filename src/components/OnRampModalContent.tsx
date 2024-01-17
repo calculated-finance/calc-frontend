@@ -21,6 +21,7 @@ function OnRampModalContent() {
     'osmosis-1': 'osmosis',
     'harpoon-4': 'kujira',
     'osmo-test-5': 'osmosis',
+    'constantine-3': 'archway',
   }[chainId]!;
 
   const { isWalletConnected, address } = chainContext;

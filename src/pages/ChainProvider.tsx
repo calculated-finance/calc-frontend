@@ -44,6 +44,7 @@ export function ChainProvider({ children }: ChildrenProp) {
                 osmosistestnet: {
                   rpc: [OSMOSIS_TESTNET_RPC],
                 },
+                archwaytestnet: {},
               }
             : {}),
         },
