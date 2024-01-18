@@ -285,11 +285,13 @@ function Page() {
   const { balances: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chainId));
   const { fiatPrices } = useFiatPrices();
 
-  const { data: allStrategies } = useAllStrategies();
+  const { strategies } = useAllStrategies();
 
-  const uniqueWalletAddresses = uniqueAddresses(allStrategies);
+  console.log({ strategies });
 
-  if (!fiatPrices || !allStrategies || !denoms) return null;
+  const uniqueWalletAddresses = uniqueAddresses(strategies);
+
+  if (!fiatPrices || !strategies || !denoms) return null;
 
   const totalInContract = totalFromCoins(denoms[chainId], contractBalances, fiatPrices);
 
@@ -297,10 +299,10 @@ function Page() {
 
   const chainDenoms = values(denoms[chainId]);
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, chainDenoms);
+  const totalSwappedAmounts = getTotalSwapped(strategies, chainDenoms);
   const totalSwappedTotal = totalFromCoins(denoms[chainId], totalSwappedAmounts, fiatPrices);
 
-  const totalReceivedAmounts = getTotalReceived(allStrategies, chainDenoms);
+  const totalReceivedAmounts = getTotalReceived(strategies, chainDenoms);
   const totalReceivedTotal = totalFromCoins(denoms[chainId], totalReceivedAmounts, fiatPrices);
 
   const thirtyDaysFromNow = new Date();
@@ -312,13 +314,13 @@ function Page() {
   const aYearFromNow = new Date();
   aYearFromNow.setDate(aYearFromNow.getDate() + 365);
 
-  const thirtyDayRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, thirtyDaysFromNow, fiatPrices);
-  const threeMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, threeMonthsFromNow, fiatPrices);
-  const twelveMonthRevenue = getProjectedRevenueForStrategiesForDate(allStrategies, aYearFromNow, fiatPrices);
-  const averageDuration = getAverageDurationForActiveStrategies(allStrategies);
+  const thirtyDayRevenue = getProjectedRevenueForStrategiesForDate(strategies, thirtyDaysFromNow, fiatPrices);
+  const threeMonthRevenue = getProjectedRevenueForStrategiesForDate(strategies, threeMonthsFromNow, fiatPrices);
+  const twelveMonthRevenue = getProjectedRevenueForStrategiesForDate(strategies, aYearFromNow, fiatPrices);
+  const averageDuration = getAverageDurationForActiveStrategies(strategies);
   const averageDurationInDays = Math.floor(averageDuration / (1000 * 60 * 60 * 24));
 
-  const maxDurationInDays = getMaxDurationInMilliseconds(allStrategies) / (1000 * 60 * 60 * 24);
+  const maxDurationInDays = getMaxDurationInMilliseconds(strategies) / (1000 * 60 * 60 * 24);
 
   return (
     <Stack spacing={6}>
@@ -328,32 +330,32 @@ function Page() {
           <Heading size="md">Totals</Heading>
           <Heading size="sm" />
           <Text>Unique wallets with strategies: {uniqueWalletAddresses.length}</Text>
-          <Text>Total strategies: {allStrategies?.length}</Text>
+          <Text>Total strategies: {strategies?.length}</Text>
           <Text textStyle="body-xs">
-            Strategies per wallet: {((allStrategies?.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
+            Strategies per wallet: {((strategies?.length || 0) / uniqueWalletAddresses.length).toFixed(2)}
           </Text>
           <Text textStyle="body-xs">
-            Strategies with autostaking: {allStrategies?.filter(isStrategyAutoStaking).length}
+            Strategies with autostaking: {strategies?.filter(isStrategyAutoStaking).length}
           </Text>
-          <Text textStyle="body-xs">Strategies using DCA+: {allStrategies?.filter(isDcaPlus).length}</Text>
+          <Text textStyle="body-xs">Strategies using DCA+: {strategies?.filter(isDcaPlus).length}</Text>
           <Text textStyle="body-xs">
             Average Time Until End of Strategy: {averageDurationInDays} days (Max: {maxDurationInDays} days)
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with only scheduled strategies: {getWalletsWithOnlyScheduledStrategies(allStrategies).length}
+            Unique wallets with only scheduled strategies: {getWalletsWithOnlyScheduledStrategies(strategies).length}
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with active an active strategy: {getWalletsWithActiveStrategies(allStrategies).length}
+            Unique wallets with active an active strategy: {getWalletsWithActiveStrategies(strategies).length}
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with only completed strategies: {getWalletsWithOnlyInactive(allStrategies).length}
+            Unique wallets with only completed strategies: {getWalletsWithOnlyInactive(strategies).length}
           </Text>
           <Text textStyle="body-xs">
             Unique wallets with only completed and cancelled strategies:{' '}
-            {getWalletsWithOnlyInactiveAndCancelled(allStrategies).length}
+            {getWalletsWithOnlyInactiveAndCancelled(strategies).length}
           </Text>
           <Text textStyle="body-xs">
-            Unique wallets with only cancelled strategies: {getWalletsWithOnlyCancelledStrategies(allStrategies).length}
+            Unique wallets with only cancelled strategies: {getWalletsWithOnlyCancelledStrategies(strategies).length}
           </Text>
         </Stack>
 
@@ -417,7 +419,7 @@ function Page() {
             />
             <VictoryBar
               data={['scheduled', 'active', 'inactive', 'cancelled'].map((timeInterval: string) => {
-                const { strategiesByStatus } = getStrategiesByStatus(allStrategies || [], timeInterval) || [];
+                const { strategiesByStatus } = getStrategiesByStatus(strategies || [], timeInterval) || [];
 
                 return {
                   x: timeInterval,
@@ -455,7 +457,7 @@ function Page() {
               data={['scheduled', 'active', 'inactive', 'cancelled'].map((status: string) => {
                 const strategiesByStatus = Array.from(
                   new Set(
-                    (getStrategiesByStatus(allStrategies || [], status) || []).strategiesByStatus.map(
+                    (getStrategiesByStatus(strategies || [], status) || []).strategiesByStatus.map(
                       (strategy) => strategy.owner,
                     ),
                   ),
@@ -499,7 +501,7 @@ function Page() {
               }}
               data={['hourly', 'daily', 'weekly', 'monthly'].map((timeInterval: string) => {
                 const { strategiesByTimeInterval, percentage } =
-                  getStrategiesByTimeInterval(allStrategies || [], timeInterval) || [];
+                  getStrategiesByTimeInterval(strategies || [], timeInterval) || [];
 
                 return {
                   x: timeInterval,
@@ -540,7 +542,7 @@ function Page() {
               }}
               data={[StrategyType.DCAIn, StrategyType.DCAOut, StrategyType.DCAPlusIn, StrategyType.DCAPlusOut].map(
                 (type: StrategyType) => {
-                  const { strategiesByType, percentage } = getStrategiesByType(allStrategies || [], type) || [];
+                  const { strategiesByType, percentage } = getStrategiesByType(strategies || [], type) || [];
 
                   return {
                     x: type,
@@ -581,7 +583,7 @@ function Page() {
                 onLoad: { duration: 1000 },
               }}
               bins={20}
-              data={allStrategies.filter(isStrategyActive).map((strategy: Strategy) => {
+              data={strategies.filter(isStrategyActive).map((strategy: Strategy) => {
                 const remainingTime = timeUntilEndOfStrategyInMilliseconds(strategy);
                 const remainingTimeInDays = Math.round(remainingTime / (1000 * 60 * 60 * 24));
                 return {

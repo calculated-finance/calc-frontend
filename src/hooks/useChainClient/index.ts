@@ -61,14 +61,11 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
         [asset.base]: fromPartial({
           chain: chainId,
           id: asset.base,
-          name: overrides.name || asset.symbol,
-          icon: overrides.icon || asset.logo_URIs?.svg || asset.logo_URIs?.png,
-          stakeable: overrides.stakeable || false,
-          stakeableAndSupported: overrides.stakeableAndSupported || false,
-          stable: overrides.stable || false,
-          coingeckoId: overrides.coingeckoId || asset.coingecko_id || '',
-          enabledInDcaPlus: overrides.enabledInDcaPlus || false,
+          name: asset.symbol,
+          icon: asset.logo_URIs?.svg || asset.logo_URIs?.png,
+          coingeckoId: asset.coingecko_id || '',
           significantFigures,
+          ...overrides,
         }),
       };
     },
@@ -83,7 +80,17 @@ const fetchDenomsArchway = async (chainId: ChainId) => {
       ? 'https://const.astrovault.io/asset?env=public'
       : 'https://arch.astrovault.io/asset?env=public';
 
-  const { data: assets } = await (await fetch(url)).json();
+  const fetchDenoms = async () => {
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      console.log({ response });
+      return response.ok ? await response.json() : { data: [] };
+    } catch (error) {
+      return { data: [] }; // TODO: default to static denoms list
+    }
+  };
+
+  const { data: assets } = await fetchDenoms();
 
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: any) => ({

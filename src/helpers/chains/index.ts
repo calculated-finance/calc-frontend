@@ -109,6 +109,36 @@ export function getChainAddressLength(chainId: ChainId) {
   }[chainId];
 }
 
+export function getStrategiesFetchLimit(chainId: ChainId) {
+  return {
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 100,
+    'osmo-test-5': 100,
+    'kaiyo-1': 100,
+    'harpoon-4': 100,
+    'constantine-3': 100,
+  }[chainId];
+}
+
+export function getEventsFetchLimit(chainId: ChainId) {
+  return {
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 200,
+    'osmo-test-5': 200,
+    'kaiyo-1': 200,
+    'harpoon-4': 200,
+    'constantine-3': 200,
+  }[chainId];
+}
+
+export function getPairsFetchLimit(chainId: ChainId) {
+  return {
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 200,
+    'osmo-test-5': 200,
+    'kaiyo-1': 200,
+    'harpoon-4': 200,
+    'constantine-3': 200,
+  }[chainId];
+}
+
 export function getOsmosisWebUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://app.osmosis.zone',

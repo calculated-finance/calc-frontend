@@ -7,10 +7,13 @@ import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { transformToStrategyCosmos } from './transformToStrategy';
+import { ChainId } from '@hooks/useChainId/Chains';
+import { getEventsFetchLimit, getPairsFetchLimit, getStrategiesFetchLimit } from '@helpers/chains';
 
 const GET_PAIRS_LIMIT = 200;
 
 async function fetchAllPairs(
+  chainId: ChainId,
   contractAddress: string,
   client: CosmWasmClient,
   startAfter = null,
@@ -18,22 +21,23 @@ async function fetchAllPairs(
 ): Promise<Pair[]> {
   const { pairs } = await client!.queryContractSmart(contractAddress, {
     get_pairs: {
-      limit: GET_PAIRS_LIMIT,
+      limit: getPairsFetchLimit(chainId),
       start_after: startAfter,
     },
   });
 
   allPairs.push(...pairs);
 
-  if (pairs.length === GET_PAIRS_LIMIT) {
+  if (pairs.length === getPairsFetchLimit(chainId)) {
     const newStartAfter = pairs[pairs.length - 1];
-    return fetchAllPairs(contractAddress, client, newStartAfter, allPairs);
+    return fetchAllPairs(chainId, contractAddress, client, newStartAfter, allPairs);
   }
 
   return allPairs;
 }
 
 async function fetchVault(
+  chainId: ChainId,
   client: CosmWasmClient,
   contractAddress: string,
   id: string | undefined,
@@ -45,18 +49,19 @@ async function fetchVault(
     },
   } as QueryMsg)) as VaultResponse;
 
-  return transformToStrategyCosmos(vault, getDenomById);
+  return transformToStrategyCosmos(vault, getDenomById, chainId);
 }
 
 export const GET_EVENTS_LIMIT = 200;
 
 async function fetchVaultEvents(
+  chainId: ChainId,
   client: CosmWasmClient,
   contractAddress: string,
   id: string | undefined,
   getDenomById: (denom: string) => DenomInfo | undefined,
 ): Promise<StrategyEvent[]> {
-  const vault = await fetchVault(client, contractAddress, id, getDenomById);
+  const vault = await fetchVault(chainId, client, contractAddress, id, getDenomById);
 
   const fetchEventsRecursively = async (
     startAfter: number | null = null,
@@ -65,7 +70,7 @@ async function fetchVaultEvents(
     const { events } = (await client.queryContractSmart(contractAddress, {
       get_events_by_resource_id: {
         resource_id: id,
-        limit: GET_EVENTS_LIMIT,
+        limit: getEventsFetchLimit(chainId),
         start_after: startAfter,
       },
     } as QueryMsg)) as EventsResponse;
@@ -78,7 +83,7 @@ async function fetchVaultEvents(
       })),
     );
 
-    if (events.length === GET_EVENTS_LIMIT || events.length === GET_EVENTS_LIMIT - 1) {
+    if (events.length === getEventsFetchLimit(chainId) || events.length === getEventsFetchLimit(chainId) - 1) {
       const newStartAfter = events[events.length - 1].id;
       return fetchEventsRecursively(newStartAfter, allEvents);
     }
@@ -92,6 +97,7 @@ async function fetchVaultEvents(
 const GET_STRATEGIES_LIMIT = 100;
 
 async function fetchVaultsByAddress(
+  chainId: ChainId,
   client: CosmWasmClient,
   contractAddress: string,
   userAddress: string,
@@ -104,14 +110,14 @@ async function fetchVaultsByAddress(
     const { vaults } = await client.queryContractSmart(contractAddress, {
       get_vaults_by_address: {
         address: userAddress,
-        limit: GET_STRATEGIES_LIMIT,
+        limit: getStrategiesFetchLimit(chainId),
         start_after: startAfter,
       },
     });
 
-    allVaults.push(...vaults.map((v: Vault) => transformToStrategyCosmos(v, getDenomById)));
+    allVaults.push(...vaults.map((v: Vault) => transformToStrategyCosmos(v, getDenomById, chainId)));
 
-    if (vaults.length === GET_STRATEGIES_LIMIT) {
+    if (vaults.length === getStrategiesFetchLimit(chainId)) {
       const newStartAfter = vaults[vaults.length - 1].id;
       return fetchVaultsByAddressRecursively(newStartAfter, allVaults);
     }
@@ -123,6 +129,7 @@ async function fetchVaultsByAddress(
 }
 
 const fetchAllVaults = async (
+  chainId: ChainId,
   client: CosmWasmClient,
   contractAddress: string,
   getDenomById: (denom: string) => DenomInfo | undefined,
@@ -130,14 +137,14 @@ const fetchAllVaults = async (
   const fetchAllVaultsRecursively = async (startAfter = null, allVaults = [] as Strategy[]): Promise<Strategy[]> => {
     const { vaults } = await client.queryContractSmart(contractAddress, {
       get_vaults: {
-        limit: GET_STRATEGIES_LIMIT,
+        limit: getStrategiesFetchLimit(chainId),
         start_after: startAfter,
       },
     });
 
-    allVaults.push(...vaults.map((v: Vault) => transformToStrategyCosmos(v, getDenomById)));
+    allVaults.push(...vaults.map((v: Vault) => transformToStrategyCosmos(v, getDenomById, chainId)));
 
-    if (vaults.length === GET_STRATEGIES_LIMIT) {
+    if (vaults.length === getStrategiesFetchLimit(chainId)) {
       const newStartAfter = vaults[vaults.length - 1].id;
       return fetchAllVaultsRecursively(newStartAfter, allVaults);
     }
@@ -149,16 +156,17 @@ const fetchAllVaults = async (
 };
 
 export default function getCalcClient(
+  chainId: ChainId,
   contractAddress: string,
   cosmWasmClient: CosmWasmClient,
   getDenomById: (denom: string) => DenomInfo | undefined,
 ) {
   return {
-    fetchAllPairs: () => fetchAllPairs(contractAddress, cosmWasmClient),
-    fetchVault: (id: string) => fetchVault(cosmWasmClient, contractAddress, id, getDenomById),
-    fetchVaultEvents: (id: string) => fetchVaultEvents(cosmWasmClient, contractAddress, id, getDenomById),
+    fetchAllPairs: () => fetchAllPairs(chainId, contractAddress, cosmWasmClient),
+    fetchVault: (id: string) => fetchVault(chainId, cosmWasmClient, contractAddress, id, getDenomById),
+    fetchVaultEvents: (id: string) => fetchVaultEvents(chainId, cosmWasmClient, contractAddress, id, getDenomById),
     fetchVaults: (userAddress: string) =>
-      fetchVaultsByAddress(cosmWasmClient, contractAddress, userAddress, getDenomById),
-    fetchAllVaults: () => fetchAllVaults(cosmWasmClient, contractAddress, getDenomById),
+      fetchVaultsByAddress(chainId, cosmWasmClient, contractAddress, userAddress, getDenomById),
+    fetchAllVaults: () => fetchAllVaults(chainId, cosmWasmClient, contractAddress, getDenomById),
   };
 }

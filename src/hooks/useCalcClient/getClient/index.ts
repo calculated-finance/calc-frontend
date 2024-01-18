@@ -21,5 +21,5 @@ export default function getClient(
   getDenomById: (denom: string) => DenomInfo | undefined,
 ) {
   if (!cosmWasmClient) return null;
-  return getCalcClient(getChainContractAddress(chainId), cosmWasmClient, getDenomById);
+  return getCalcClient(chainId, getChainContractAddress(chainId), cosmWasmClient, getDenomById);
 }

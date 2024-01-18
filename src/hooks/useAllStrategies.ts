@@ -10,7 +10,7 @@ import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import { ChainId } from './useChainId/Chains';
 import useDenoms from './useDenoms';
 
-export default function useAllStrategies() {
+const useAllStrategies = () => {
   const chains = values(
     useChains(
       (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map((chainId) =>
@@ -21,19 +21,20 @@ export default function useAllStrategies() {
 
   const { denoms, getDenomById } = useDenoms();
 
-  return useQuery<Strategy[]>(
+  const { data: strategies, ...helpers } = useQuery<Strategy[]>(
     ['all_vaults'],
     async () => {
       const fetchAllStrategies = async (chain: ChainContext) => {
         const client = await chain.getCosmWasmClient();
         const calcClient = getCalcClient(
+          chain.chain.chain_id as ChainId,
           getChainContractAddress(chain.chain.chain_id as ChainId),
           client,
           getDenomById,
         );
-        const allStrategies = await calcClient.fetchAllVaults();
-        queryClient.setQueryData(['vaults', chain.chain.chain_id], allStrategies);
-        return allStrategies;
+        const chainStrategies = await calcClient.fetchAllVaults();
+        queryClient.setQueryData(['strategies', chain.chain.chain_id], chainStrategies);
+        return chainStrategies;
       };
 
       return (await Promise.all(chains.map(fetchAllStrategies))).flat();
@@ -43,9 +44,14 @@ export default function useAllStrategies() {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      staleTime: 1000 * 60 * 10,
       meta: {
         errorMessage: 'Error fetching all strategies',
       },
     },
   );
-}
+
+  return { strategies, ...helpers };
+};
+
+export default useAllStrategies;

@@ -85,10 +85,10 @@ export default function usePairs(injectedChainId?: ChainId) {
 
   const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
-    () => getCalcClient(getChainContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllPairs(),
+    () => getCalcClient(chainId, getChainContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllPairs(),
     {
       enabled: !!chainId && !!cosmWasmClient,
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 30,
       meta: {
         errorMessage: 'Error fetching pairs',
       },
