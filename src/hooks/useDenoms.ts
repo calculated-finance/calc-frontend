@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { DenomInfo } from '@utils/DenomInfo';
+import { DenomInfo, fromPartial } from '@utils/DenomInfo';
 import { KeyValuePair, all, indexBy, isNil, map, mergeAll, reduce, toLower, values, zip } from 'rambda';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainClient, useChainClient } from './useChainClient';

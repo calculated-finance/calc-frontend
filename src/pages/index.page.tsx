@@ -123,10 +123,10 @@ function InvestmentThesisWithActiveStrategies({
 
 function TotalInvestment() {
   const { allDenoms } = useDenoms();
-  const { fiatPrices: prices } = useFiatPrices();
-  const { data: allStrategies } = useAllStrategies();
+  const { fiatPrices } = useFiatPrices();
+  const { strategies } = useAllStrategies();
 
-  if (!prices || !allStrategies || !allDenoms) {
+  if (!fiatPrices || !strategies || !allDenoms) {
     return (
       <Center layerStyle="panel" p={8} h="full">
         <Spinner />
@@ -134,8 +134,8 @@ function TotalInvestment() {
     );
   }
 
-  const totalSwappedAmounts = getTotalSwapped(allStrategies, values(allDenoms ?? {}));
-  const totalSwappedTotal = totalFromCoins(allDenoms, totalSwappedAmounts, prices);
+  const totalSwappedAmounts = getTotalSwapped(strategies, values(allDenoms ?? {}));
+  const totalSwappedTotal = totalFromCoins(allDenoms, totalSwappedAmounts, fiatPrices);
 
   const formattedValue =
     totalSwappedTotal >= 1000000
@@ -151,7 +151,7 @@ function TotalInvestment() {
       <Flex gap={12} direction={['column', null, 'row']}>
         <Stack spacing={4}>
           <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {allStrategies.length}
+            {strategies.length}
             <Text fontSize="md">total strategies created</Text>
           </Heading>
         </Stack>
