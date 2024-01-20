@@ -2,8 +2,8 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getGasPrice } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
 import { useEffect } from 'react';
-import { useChainContext } from './useChainContext';
 import { ChainId } from '@models/ChainId';
+import { useChainContext } from './useChainContext';
 
 export function useWallet() {
   const chainContext = useChainContext();
