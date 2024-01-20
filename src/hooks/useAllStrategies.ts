@@ -5,9 +5,9 @@ import { useChains } from '@cosmos-kit/react';
 import { getChainContractAddress, getChainName } from '@helpers/chains';
 import { values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
+import { ChainId } from '@models/ChainId';
 import { queryClient } from 'src/pages/queryClient';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import { ChainId } from '@models/ChainId';
 import useDenoms from './useDenoms';
 
 const useAllStrategies = () => {

@@ -6,9 +6,9 @@ import { EventsResponse } from 'src/interfaces/v2/generated/response/get_events_
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import { StrategyEvent } from '@hooks/StrategyEvent';
-import { transformToStrategyCosmos } from './transformToStrategy';
 import { ChainId } from '@models/ChainId';
 import { getEventsFetchLimit, getPairsFetchLimit, getStrategiesFetchLimit } from '@helpers/chains';
+import { transformToStrategyCosmos } from './transformToStrategy';
 
 const GET_PAIRS_LIMIT = 200;
 
