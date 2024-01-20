@@ -1,4 +1,4 @@
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
 import { VaultStatus } from 'src/interfaces/v2/generated/query';

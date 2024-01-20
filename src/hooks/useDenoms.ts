@@ -3,7 +3,7 @@ import { DenomInfo, fromPartial } from '@utils/DenomInfo';
 import { KeyValuePair, all, indexBy, isNil, map, mergeAll, reduce, toLower, values, zip } from 'rambda';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainClient, useChainClient } from './useChainClient';
-import { ChainId } from './useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { useChainId } from './useChainId';
 
 const useDenoms = () => {

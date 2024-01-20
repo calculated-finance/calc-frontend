@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useChainId } from '@hooks/useChainId';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { useRouter } from 'next/router';
 
 export function ChainCards({ onChainSelect }: { onChainSelect: (chain: ChainId) => void }) {

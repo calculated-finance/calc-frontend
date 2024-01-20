@@ -39,32 +39,30 @@ function topUpStrategy(
   return client.execute(address, chainConfig.contractAddress, msg, 'auto', undefined, funds);
 }
 
-export function getGrantMsg(
+export const getGrantMsg = (
   granter: string,
   grantee: string,
   typeUrl = '/cosmos.authz.v1beta1.GenericAuthorization',
   value = GenericAuthorization.encode(
     GenericAuthorization.fromPartial({ msg: '/cosmos.staking.v1beta1.MsgDelegate' }),
   ).finish(),
-  seconds = BigInt(Math.round(new Date().getTime() / 1000 + 31536000)), // 31536000 seconds in a year
-): { typeUrl: string; value: MsgGrant } {
-  return {
-    typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
-    value: {
-      granter,
-      grantee,
-      grant: {
-        authorization: {
-          typeUrl,
-          value,
-        },
-        expiration: Timestamp.fromPartial({ seconds, nanos: 0 }),
+  seconds = BigInt(Math.round(new Date().getTime() / 1000 + 60 * 60 * 24 * 365)),
+): { typeUrl: string; value: MsgGrant } => ({
+  typeUrl: '/cosmos.authz.v1beta1.MsgGrant',
+  value: MsgGrant.fromPartial({
+    granter,
+    grantee,
+    grant: {
+      authorization: {
+        typeUrl,
+        value,
       },
-    } as MsgGrant,
-  };
-}
+      expiration: Timestamp.fromPartial({ seconds }),
+    },
+  }),
+});
 
-function addGrants(
+function addStakingGrants(
   autoStakeValidator: string | undefined,
   msgs: EncodeObject[],
   senderAddress: string,
@@ -83,9 +81,7 @@ function addGrants(
           StakeAuthorization.encode(
             StakeAuthorization.fromPartial({
               authorizationType: AuthorizationType.AUTHORIZATION_TYPE_DELEGATE,
-              allowList: {
-                address: [autoStakeValidator],
-              },
+              allowList: { address: [autoStakeValidator] },
             }),
           ).finish(),
         ),
@@ -120,7 +116,7 @@ async function createStrategy(
 
   msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));
 
-  addGrants(
+  addStakingGrants(
     createVaultContext.destinationConfig.autoStakeValidator,
     msgs,
     senderAddress,
