@@ -13,7 +13,7 @@ import {
   OSMOSIS_MAINNET_RPC,
   OSMOSIS_TESTNET_RPC,
 } from 'src/constants';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 
 export function ChainProvider({ children }: ChildrenProp) {
   return (

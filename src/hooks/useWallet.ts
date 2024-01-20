@@ -3,7 +3,7 @@ import { getChainEndpoint, getGasPrice } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
 import { useEffect } from 'react';
 import { useChainContext } from './useChainContext';
-import { ChainId } from './useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 
 export function useWallet() {
   const chainContext = useChainContext();
@@ -28,7 +28,7 @@ export function useWallet() {
   const getSigningClient = async (context: ChainContext) =>
     SigningCosmWasmClient.connectWithSigner(
       getChainEndpoint(context.chain.chain_id as ChainId),
-      context.getOfflineSignerAmino(),
+      context.getOfflineSignerDirect(),
       {
         gasPrice: getGasPrice(context.chain.chain_id as ChainId),
       },

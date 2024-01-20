@@ -1,4 +1,4 @@
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import {
   ArchwayTestnetDenoms,
   KujiraMainnetDenoms,
@@ -401,6 +401,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
     [OsmosisMainnetDenoms.OSMO]: {
       stakeable: true,
+      stakeableAndSupported: true,
     },
     [OsmosisMainnetDenoms.USDC]: {
       stable: true,

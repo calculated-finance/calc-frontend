@@ -6,7 +6,7 @@ import { persist } from 'zustand/middleware';
 import { ParsedUrlQuery } from 'querystring';
 import { getChainConfig } from '@helpers/chains';
 import { CHAINS } from 'src/constants';
-import { ChainId } from './Chains';
+import { ChainId } from '@models/ChainId';
 
 type ChainState = {
   chainId: ChainId;

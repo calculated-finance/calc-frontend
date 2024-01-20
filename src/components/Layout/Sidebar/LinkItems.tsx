@@ -9,7 +9,7 @@ import {
   PieChartIcon,
   ToolkitIcon,
 } from '@fusion-icons/react/interface';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { SVGProps } from 'react';
 import { Pages } from './Pages';
 import { ControlDeskPages } from './ControlDeskPages';

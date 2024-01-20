@@ -28,7 +28,7 @@ import useStrategy from '@hooks/useStrategy';
 import useValidator from '@hooks/useValidator';
 import { HiOutlineCube } from 'react-icons/hi';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { truncate } from '@helpers/truncate';
 
 export function ConfigureButton({ strategy }: { strategy: Strategy }) {

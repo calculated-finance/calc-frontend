@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
 import { useChainId } from './useChainId';
 import { useCosmWasmClient } from './useCosmWasmClient';
-import { ChainId } from './useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 
 export function useConfig(injectedChainId?: ChainId): Config | undefined {
   const { chainId: currentChainId } = useChainId();

@@ -8,7 +8,7 @@ import {
 } from '@helpers/strategy';
 import YesNoValues from '@models/YesNoValues';
 import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 
 export function getExistingValues(strategy: Strategy, chain: ChainId) {
   const priceThreshold = getPriceCeilingFloor(strategy, chain);

@@ -1,5 +1,5 @@
 import { GasPrice } from '@cosmjs/stargate';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import {
   ARCHWAY_TESTNET_RPC,
   COSMOS_KIT_ARCHWAY_TESTNET,

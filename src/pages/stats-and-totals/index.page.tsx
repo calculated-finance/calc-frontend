@@ -287,8 +287,6 @@ function Page() {
 
   const { strategies } = useAllStrategies();
 
-  console.log({ strategies });
-
   const uniqueWalletAddresses = uniqueAddresses(strategies);
 
   if (!fiatPrices || !strategies || !denoms) return null;

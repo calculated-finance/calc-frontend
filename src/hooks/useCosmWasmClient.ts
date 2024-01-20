@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { ChainId } from './useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { useChainId } from './useChainId';
 import { useChainContext } from './useChainContext';
 

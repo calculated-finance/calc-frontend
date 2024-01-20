@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { useChainId } from './useChainId';
-import { ChainId } from './useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { useCosmWasmClient } from './useCosmWasmClient';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import useDenoms from './useDenoms';

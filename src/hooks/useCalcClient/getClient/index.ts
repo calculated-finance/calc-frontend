@@ -1,5 +1,5 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { StrategyEvent } from '@hooks/StrategyEvent';

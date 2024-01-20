@@ -1,4 +1,4 @@
-import { ChainId } from '@hooks/useChainId/Chains';
+import { ChainId } from '@models/ChainId';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
@@ -83,7 +83,6 @@ const fetchDenomsArchway = async (chainId: ChainId) => {
   const fetchDenoms = async () => {
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-      console.log({ response });
       return response.ok ? await response.json() : { data: [] };
     } catch (error) {
       return { data: [] }; // TODO: default to static denoms list
