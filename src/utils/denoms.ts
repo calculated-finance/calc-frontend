@@ -229,7 +229,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     [KujiraMainnetDenoms.FUZN]: {
       name: 'FUZN',
       icon: '/images/denoms/fuzn.svg',
-      coingeckoId: 'fuzn',
+      coingeckoId: 'fuzion',
     },
     [KujiraMainnetDenoms.nBTC]: {
       name: 'nBTC',
