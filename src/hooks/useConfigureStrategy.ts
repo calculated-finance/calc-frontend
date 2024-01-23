@@ -34,7 +34,7 @@ export function useConfigureStrategy() {
       }
 
       if (!getSigningClient) {
-        throw new Error('getSigningClient is null or empty');
+        throw new Error('wallet is not connected');
       }
 
       const client = await getSigningClient();

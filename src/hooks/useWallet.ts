@@ -28,7 +28,7 @@ export function useWallet() {
   const getSigningClient = async (context: ChainContext) =>
     SigningCosmWasmClient.connectWithSigner(
       getChainEndpoint(context.chain.chain_id as ChainId),
-      context.getOfflineSignerDirect(),
+      context.getOfflineSignerAmino(),
       {
         gasPrice: getGasPrice(context.chain.chain_id as ChainId),
       },
@@ -47,9 +47,7 @@ export function useWallet() {
   return {
     address: undefined,
     connected: false,
-    getSigningClient: () => {
-      throw new Error('Attempting to get signing client while not connected');
-    },
+    getSigningClient: undefined,
     disconnect: undefined,
     walletType: undefined,
     isConnecting: false,
