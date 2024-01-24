@@ -2,7 +2,7 @@
 
 describe('example to-do app', () => {
   beforeEach(() => {
-    cy.visit('https://app.calculated.fi/?chain=Kujira');
+    cy.visit('https://app.calculated.fi/?chain=kaiyo-1');
     Cypress.config('defaultCommandTimeout', 60000);
   });
 
