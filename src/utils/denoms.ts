@@ -247,7 +247,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     [KujiraMainnetDenoms.PLNK]: {
       name: 'PLNK',
       icon: '/images/denoms/plnk.png',
-      coingeckoId: 'unknown',
+      coingeckoId: 'plankton',
     },
     [KujiraMainnetDenoms.DYDX]: {
       name: 'DYDX',
