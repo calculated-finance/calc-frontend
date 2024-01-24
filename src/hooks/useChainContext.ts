@@ -8,6 +8,7 @@ export const useChainContext = (injectedChainId?: ChainId) => {
   const contexts = useChains(
     (process.env.NEXT_PUBLIC_APP_ENV !== 'production' ? CHAINS : MAINNET_CHAINS).map(getChainName),
   );
+
   const { chainId: currentChainId } = useChainId();
   const chainId = injectedChainId ?? currentChainId;
 
