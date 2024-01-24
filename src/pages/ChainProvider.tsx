@@ -27,7 +27,7 @@ declare global {
   }
 }
 
-export function ChainProvider({ children }: ChildrenProp & { wallets: MainWalletBase[] }) {
+export function ChainProvider({ children }: ChildrenProp) {
   const [wallets, setWallets] = useState<MainWalletBase[]>([]);
 
   useEffect(() => {
@@ -91,7 +91,5 @@ export function ChainProvider({ children }: ChildrenProp & { wallets: MainWallet
     >
       {children}
     </CosmosKitChainProvider>
-  ) : (
-    <></>
-  );
+  ) : null;
 }
