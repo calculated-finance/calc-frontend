@@ -79,6 +79,16 @@ export function getChainName(chainId: ChainId) {
   }[chainId];
 }
 
+export function getChainId(chainName: string): string {
+  return {
+    osmosis: 'osmosis-1',
+    osmosistestnet: 'osmo-test-5',
+    kujira: 'kaiyo-1',
+    kujiratestnet: 'harpoon-4',
+    archwaytestnet: 'constantine-3',
+  }[chainName]!;
+}
+
 export function getChainDexName(chainId: ChainId) {
   return {
     'osmosis-1': 'Osmosis',

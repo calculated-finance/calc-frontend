@@ -1,55 +1,26 @@
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { getChainEndpoint, getGasPrice } from '@helpers/chains';
-import { ChainContext } from '@cosmos-kit/core';
-import { useEffect } from 'react';
-import { ChainId } from '@models/ChainId';
 import { useChainContext } from './useChainContext';
 
 export function useWallet() {
   const chainContext = useChainContext();
 
-  useEffect(() => {
-    if (
-      !chainContext?.isWalletDisconnected &&
-      !chainContext?.isWalletConnected &&
-      !chainContext?.isWalletConnecting &&
-      chainContext?.wallet
-    ) {
-      chainContext.disconnect();
-    }
-  }, [
-    chainContext?.isWalletDisconnected,
-    chainContext?.isWalletConnected,
-    chainContext?.isWalletConnecting,
-    chainContext?.isWalletDisconnected,
-    chainContext?.wallet,
-  ]);
-
-  const getSigningClient = async (context: ChainContext) =>
-    SigningCosmWasmClient.connectWithSigner(
-      getChainEndpoint(context.chain.chain_id as ChainId),
-      context.getOfflineSignerAmino(),
-      {
-        gasPrice: getGasPrice(context.chain.chain_id as ChainId),
-      },
-    );
-
   if (chainContext && chainContext.isWalletConnected) {
     return {
-      connected: chainContext.isWalletConnected,
-      getSigningClient: () => getSigningClient(chainContext),
       walletType: chainContext.wallet?.prettyName,
+      connected: chainContext.isWalletConnected,
+      getSigningClient: chainContext.getSigningCosmWasmClient,
       isConnecting: chainContext.isWalletConnecting,
       ...chainContext,
     };
   }
 
   return {
+    walletType: undefined,
     address: undefined,
     connected: false,
-    getSigningClient: undefined,
-    disconnect: undefined,
-    walletType: undefined,
     isConnecting: false,
+    disconnect: undefined,
+    getSigningClient: () => {
+      throw new Error('Wallet is not connected');
+    },
   };
 }

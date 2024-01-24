@@ -14,9 +14,33 @@ import {
   OSMOSIS_TESTNET_RPC,
 } from 'src/constants';
 import { ChainId } from '@models/ChainId';
+import { getChainId, getGasPrice } from '@helpers/chains';
+import { useEffect, useState } from 'react';
+import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
+import { MainWalletBase } from '@cosmos-kit/core';
 
-export function ChainProvider({ children }: ChildrenProp) {
-  return (
+declare global {
+  interface Window extends KeplrWindow {
+    xfi: { keplr: Keplr };
+    leap: any;
+    keplr: any;
+  }
+}
+
+export function ChainProvider({ children }: ChildrenProp & { wallets: MainWalletBase[] }) {
+  const [wallets, setWallets] = useState<MainWalletBase[]>([]);
+
+  useEffect(() => {
+    setWallets(
+      [
+        ...(window.leap || isMobile ? leapWallets : []),
+        ...(window.keplr ? keplrWallets : []),
+        ...(window.xfi ? xdefiWallets : []),
+      ].filter((wallet) => (isMobile ? !wallet.isModeExtension : wallet.isModeExtension)),
+    );
+  }, []);
+
+  return wallets.length > 0 ? (
     <CosmosKitChainProvider
       chains={chains.filter((chain) =>
         (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).includes(
@@ -24,9 +48,7 @@ export function ChainProvider({ children }: ChildrenProp) {
         ),
       )}
       assetLists={assets}
-      wallets={[...leapWallets, ...keplrWallets, ...xdefiWallets].filter((wallet) =>
-        isMobile ? !wallet.isModeExtension : wallet.isModeExtension,
-      )}
+      wallets={wallets}
       endpointOptions={{
         isLazy: true,
         endpoints: {
@@ -49,6 +71,11 @@ export function ChainProvider({ children }: ChildrenProp) {
             : {}),
         },
       }}
+      signerOptions={{
+        signingCosmwasm: (chain) => ({
+          gasPrice: getGasPrice(getChainId(typeof chain === 'string' ? chain : chain.chain_name) as ChainId),
+        }),
+      }}
       walletConnectOptions={{
         signClient: {
           projectId: '50fa0187387c8c2f72d360c6ba9f3333',
@@ -64,5 +91,7 @@ export function ChainProvider({ children }: ChildrenProp) {
     >
       {children}
     </CosmosKitChainProvider>
+  ) : (
+    <></>
   );
 }
