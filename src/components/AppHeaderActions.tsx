@@ -1,8 +1,8 @@
 import { HStack } from '@chakra-ui/react';
 import CosmosWallet from '@components/CosmosWallet';
-import { ChainSelection } from '../ChainSelection';
+import { ChainSelection } from './ChainSelection';
 
-export function SidebarControls() {
+export function AppHeaderActions() {
   return (
     <HStack>
       <ChainSelection />

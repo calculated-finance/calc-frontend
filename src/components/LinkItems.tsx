@@ -1,25 +1,22 @@
 import { Badge, ComponentWithAs, IconProps } from '@chakra-ui/react';
 import {
   Add1Icon,
-  Add2Icon,
   BoxedImportIcon,
   CrownIcon,
   HomeIcon,
   KnowledgeIcon,
-  PieChartIcon,
   ToolkitIcon,
 } from '@fusion-icons/react/interface';
 import { ChainId } from '@models/ChainId';
 import { SVGProps } from 'react';
-import { Pages } from './Pages';
-import { ControlDeskPages } from './ControlDeskPages';
+import { Pages } from '../pages/Pages';
 
 export interface LinkItem {
   name: string;
   child?: JSX.Element;
   icon: ((props: SVGProps<SVGSVGElement>) => JSX.Element) | ComponentWithAs<'svg', IconProps>;
   active?: boolean;
-  href: Pages | ControlDeskPages;
+  href: Pages;
   exclude?: ChainId[];
 }
 
@@ -38,12 +35,5 @@ export const LinkItems: Array<LinkItem> = [
   },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
-  // { name: 'Settings', icon: SettingsIcon, href: Pages.Settings }
   { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
-];
-
-export const ControlDeskLinkItems: Array<LinkItem> = [
-  { name: 'Create strategy', icon: Add2Icon, href: ControlDeskPages.ControlDeskCreateStrategy },
-  { name: 'Dashboard', icon: PieChartIcon, href: ControlDeskPages.ControlDeskDashboard },
-  { name: 'My strategies', icon: ToolkitIcon, href: ControlDeskPages.ControlDeskStrategies },
 ];

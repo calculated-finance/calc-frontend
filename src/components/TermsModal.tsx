@@ -10,10 +10,14 @@ import {
   Button,
   Box,
   Center,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { AgreementCheckbox } from '@components/AgreementCheckbox';
 import { Form, Formik } from 'formik';
 import Submit from '@components/Submit';
+import { useCookieState } from 'ahooks';
+import { useEffect } from 'react';
+import { useWallet } from '@hooks/useWallet';
 
 export type TermsModalProps = {
   onSubmit?: () => void;

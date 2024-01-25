@@ -1,21 +1,10 @@
-import {
-  Box,
-  Flex,
-  Spacer,
-  Image,
-  BoxProps,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { ReactElement, useEffect } from 'react';
+import { Box, Flex, Spacer, Image, BoxProps, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import { ReactElement } from 'react';
 import { useWallet } from '@hooks/useWallet';
 import ConnectWallet from '@components/ConnectWallet';
 import Spinner from '@components/Spinner';
 import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
-import { useCookieState } from 'ahooks';
 import { Graph2Icon, ViewListIcon } from '@fusion-icons/react/interface';
 import { useAdmin } from '@hooks/useAdmin';
 import { useChainId } from '@hooks/useChainId';
@@ -25,10 +14,9 @@ import { AssetPageStrategyButtons } from '@components/AssetsPageAndForm/AssetPag
 import { isStepOne } from '@helpers/isStepOne';
 import { OSMOSIS_CHAINS } from 'src/constants';
 import Sidebar from './Sidebar';
-import { TermsModal } from '../TermsModal';
-import { SidebarControls } from './SidebarControls';
-import { LinkItem, LinkItems } from './Sidebar/LinkItems';
-import { Pages } from './Sidebar/Pages';
+import { AppHeaderActions } from './AppHeaderActions';
+import { LinkItem, LinkItems } from './LinkItems';
+import { Pages } from '../pages/Pages';
 
 const HEADER_HEIGHT = '64px';
 
@@ -42,7 +30,7 @@ function AppHeaderForSidebar() {
       alignItems="center"
       display={{ base: 'none', md: 'flex' }}
     >
-      <SidebarControls />
+      <AppHeaderActions />
     </Flex>
   );
 }
@@ -59,23 +47,19 @@ function AppHeader() {
         )}
       </LinkWithQuery>
       <Spacer />
-      <SidebarControls />
+      <AppHeaderActions />
     </Flex>
   );
 }
 
 function Content({ children, ...props }: BoxProps) {
   return (
-    <>
-      <main>
-        <Box {...props}>{children}</Box>
-      </main>
-      {/* <Flex display={{ base: 'flex', sm: 'flex', md: 'none' }} p={8}>
-        <Footer />
-      </Flex> */}
-    </>
+    <main>
+      <Box {...props}>{children}</Box>
+    </main>
   );
 }
+
 const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
   '/': { label: 'Dashboard', enabled: true },
   'create-strategy': { label: 'Create strategy', enabled: true },
@@ -94,15 +78,16 @@ const breadcrumbData: Record<string, { label: string; enabled: boolean }> = {
 function FlowBreadcrumbs() {
   const router = useRouter();
   const pathParts = router.asPath.split('/').filter((part) => part?.trim() !== '');
+
   return (
     <Breadcrumb separator=">">
       {pathParts.map((part, index) => {
         const previousParts = pathParts.slice(0, index);
         const href = previousParts?.length > 0 ? `/${previousParts?.join('/')}/${part}` : `/${part}`;
         return breadcrumbData[part] ? (
-          <BreadcrumbItem key={`breadcrum-item-${String(index)}`}>
+          <BreadcrumbItem key={`breadcrumb-item-${String(index)}`}>
             <LinkWithQuery href={breadcrumbData[part].enabled ? href : ''}>
-              <BreadcrumbLink key={`breadcrum-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
+              <BreadcrumbLink key={`breadcrumb-link-${String(index)}`}>{breadcrumbData[part].label}</BreadcrumbLink>
             </LinkWithQuery>
           </BreadcrumbItem>
         ) : null;
@@ -117,8 +102,6 @@ function FlowLayout({ children }: { children: ReactElement }) {
 
   const router = useRouter();
   const { pathname } = router;
-
-  const isControlDesk = pathname.includes('control-desk');
 
   return (
     <>
@@ -140,7 +123,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
           children
         ) : !address ? (
           <ModalWrapper stepsConfig={[]}>
-            {!isControlDesk && <AssetPageStrategyButtons />}
+            <AssetPageStrategyButtons />
             <ConnectWallet h={80} />
           </ModalWrapper>
         ) : (
@@ -157,30 +140,6 @@ export function getFlowLayout(page: ReactElement) {
 
 function SidebarLayout({ children, linkItems }: { children: ReactElement; linkItems: LinkItem[] }) {
   const { isPageLoading } = usePageLoad();
-  const { connected } = useWallet();
-
-  //  create date one year from now
-  const oneYearFromNow = new Date();
-  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
-
-  const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement', {
-    expires: oneYearFromNow,
-  });
-
-  const agreementPreviouslyAccepted = acceptedAgreementState === 'true';
-
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
-  useEffect(() => {
-    if (!agreementPreviouslyAccepted && connected) {
-      onOpen();
-    }
-  }, [agreementPreviouslyAccepted, onOpen, connected]);
-
-  const onSubmit = () => {
-    setAcceptedAgreementState('true');
-  };
-
   const { isAdmin } = useAdmin();
 
   const AdminLinkItems: Array<LinkItem> = [
@@ -211,7 +170,6 @@ function SidebarLayout({ children, linkItems }: { children: ReactElement; linkIt
           {children}
         </Content>
       </Box>
-      <TermsModal isOpen={isOpen} onClose={onClose} showCheckbox onSubmit={onSubmit} />
     </Sidebar>
   );
 }

@@ -18,10 +18,10 @@ import {
 import { useRouter } from 'next/router';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { SidebarControls } from '@components/Layout/SidebarControls';
+import { AppHeaderActions } from '@components/AppHeaderActions';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useChainId } from '@hooks/useChainId';
-import { LinkItem } from './LinkItems';
+import { LinkItem } from '@components/LinkItems';
 
 const SIDEBAR_WIDTH = 64;
 
@@ -80,15 +80,11 @@ const sidebarLogoUrls = {
   'constantine-3': '',
 };
 
-const controlDeskSidebarLogoUrls = {
-  globe: '/images/control-desk-globe.svg',
-};
-
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
   const { chainId: chain } = useChainId();
 
-  const bgImage = router.pathname.includes('control-desk') ? controlDeskSidebarLogoUrls.globe : sidebarLogoUrls[chain];
+  const bgImage = sidebarLogoUrls[chain];
 
   return (
     <Flex
@@ -181,7 +177,7 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
           />
         </Text>
         <Spacer />
-        <SidebarControls />
+        <AppHeaderActions />
       </Flex>
       <Flex w="full" justifyContent="space-between">
         {linkItems

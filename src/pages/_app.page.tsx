@@ -16,6 +16,7 @@ import { queryClient } from './queryClient';
 import { LoadingState } from './LoadingState';
 import { ChainProvider } from './ChainProvider';
 import { InitWrapper } from './InitWrapper';
+import { AgreementAcceptanceDetector } from '@components/AgreementAcceptanceDetector';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -67,6 +68,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             <ChainProvider>
               <QueryClientProvider client={queryClient}>
                 <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                <AgreementAcceptanceDetector />
               </QueryClientProvider>
               <ToastContainer />
             </ChainProvider>
