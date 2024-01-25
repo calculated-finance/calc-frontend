@@ -302,7 +302,7 @@ export const allSchema = {
         if (!value) return true;
         const { chain } = context.options.context || {};
         if (!chain) return true;
-        return value?.length === getChainAddressLength(chain);
+        return getChainAddressLength(chain).includes(value.length);
       },
     })
     .test({
