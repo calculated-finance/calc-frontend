@@ -111,11 +111,11 @@ export function getChainAddressPrefix(chainId: ChainId) {
 
 export function getChainAddressLength(chainId: ChainId) {
   return {
-    'osmosis-1': 43,
-    'osmo-test-5': 43,
-    'kaiyo-1': 45,
-    'harpoon-4': 45,
-    'constantine-3': 46,
+    'osmosis-1': [43, 63],
+    'osmo-test-5': [43, 63],
+    'kaiyo-1': [45, 65],
+    'harpoon-4': [45, 65],
+    'constantine-3': [46, 66],
   }[chainId];
 }
 
