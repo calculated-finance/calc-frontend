@@ -1,5 +1,5 @@
-import { Autostaking } from '@components/helpContent/Autostaking';
-import { OutperformProbability } from '@components/helpContent/OutperformProbability';
+import { Autostaking } from '@components/HelpContent/Autostaking';
+import { OutperformProbability } from '@components/HelpContent/OutperformProbability';
 import { contentData } from 'src/constants';
 import { StepConfig } from './StepConfig';
 
