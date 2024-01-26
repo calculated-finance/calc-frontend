@@ -2,7 +2,7 @@ import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Sp
 import Icon from '@components/Icon';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
-import { FiDivide } from 'react-icons/fi';
+import { FiDivide, FiAperture } from 'react-icons/fi';
 import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
@@ -127,15 +127,6 @@ function Strategies() {
 
   function accumulationStrategies(): StrategyCardProps[] {
     return [
-      // {
-      //   name: 'Streaming Swap',
-      //   description: 'Reduce slippage by swapping smaller amounts over time.',
-      //   advanced: false,
-      //   enabled: true,
-      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
-      //   href: StrategyUrls.StreamingSwap,
-      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
-      // },
       {
         name: 'Standard DCA In',
         description: 'Customise your own dollar-cost average buying strategy.',
@@ -162,20 +153,20 @@ function Strategies() {
         href: StrategyUrls.WeightedScaleIn,
         learnMoreHref: LearningHubLinks.WeightedScale,
       },
+      {
+        name: 'Streaming Swap',
+        description: 'Reduce slippage by swapping smaller amounts over time.',
+        advanced: false,
+        enabled: true,
+        icon: <Icon stroke="white" strokeWidth="px" as={FiAperture} width={8} height={8} />,
+        href: StrategyUrls.StreamingSwap,
+        learnMoreHref: LearningHubLinks.MoreAboutCalc,
+      },
     ] as StrategyCardProps[];
   }
 
   function takeProfitStrategies(): StrategyCardProps[] {
     return [
-      // {
-      //   name: 'Streaming Swap',
-      //   description: 'Reduce slippage by swapping smaller amounts over time.',
-      //   advanced: false,
-      //   enabled: true,
-      //   icon: <Icon stroke="white" strokeWidth="px" as={FiMinimize} width={8} height={8} />,
-      //   href: StrategyUrls.StreamingSwap,
-      //   learnMoreHref: LearningHubLinks.MoreAboutCalc,
-      // },
       {
         name: 'Standard DCA Out',
         description: 'Dollar-cost average out of an asset with ease.',
@@ -201,6 +192,15 @@ function Strategies() {
         href: StrategyUrls.WeightedScaleOut,
         icon: <Icon stroke="white" strokeWidth="px" as={FiDivide} width={8} height={8} />,
         learnMoreHref: LearningHubLinks.WeightedScale,
+      },
+      {
+        name: 'Streaming Swap',
+        description: 'Reduce slippage by swapping smaller amounts over time.',
+        advanced: false,
+        enabled: true,
+        icon: <Icon stroke="white" strokeWidth="px" as={FiAperture} width={8} height={8} />,
+        href: StrategyUrls.StreamingSwap,
+        learnMoreHref: LearningHubLinks.MoreAboutCalc,
       },
     ] as StrategyCardProps[];
   }
