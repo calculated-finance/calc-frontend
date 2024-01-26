@@ -1,5 +1,5 @@
 import { Stack, Text } from '@chakra-ui/react';
-import { OutperformProbability } from '@components/HelpContent/OutperformProbability';
+import { OutperformProbability } from '@components/helpContent/OutperformProbability';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const dcaPlusOutSteps: StepConfig[] = [
