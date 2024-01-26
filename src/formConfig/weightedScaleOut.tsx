@@ -1,5 +1,5 @@
 import { Stack, Text } from '@chakra-ui/react';
-import { SwapMultiplierHelp } from '@components/HelpContent/SwapMultiplierHelp';
+import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
 import { StepConfig } from 'src/formConfig/StepConfig';
 
 const weightedScaleOutSteps: StepConfig[] = [
