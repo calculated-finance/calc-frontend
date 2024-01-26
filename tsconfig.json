@@ -21,7 +21,8 @@
       "@formConfig/*": ["src/formConfig/*"],
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
-      "@models/*": ["src/models/*"]
+      "@models/*": ["src/models/*"],
+      "@pages/*": ["src/pages/*"]
     },
     "sourceMap": true,
 

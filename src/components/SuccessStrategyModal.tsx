@@ -4,10 +4,10 @@ import usePageLoad from '@hooks/usePageLoad';
 import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import Lottie from 'lottie-react';
+import { Pages } from 'src/pages/Pages';
+import { ModalWrapper } from '@components/ModalWrapper';
+import LinkWithQuery from '@components/LinkWithQuery';
 import * as Confetti from '../animations/confetti.json';
-import { Pages } from './Layout/Sidebar/Pages';
-import { ModalWrapper } from './ModalWrapper';
-import LinkWithQuery from './LinkWithQuery';
 
 function ThatsCalculatedThinkingText() {
   return (

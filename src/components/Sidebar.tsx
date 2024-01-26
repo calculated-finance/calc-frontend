@@ -18,10 +18,10 @@ import {
 import { useRouter } from 'next/router';
 import Icon from '@components/Icon';
 import Footer from '@components/Footer';
-import { SidebarControls } from '@components/Layout/SidebarControls';
+import { AppHeaderActions } from '@components/AppHeaderActions';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useChainId } from '@hooks/useChainId';
-import { LinkItem } from './LinkItems';
+import { LinkItem } from '@components/LinkItems';
 
 const SIDEBAR_WIDTH = 64;
 
@@ -80,15 +80,9 @@ const sidebarLogoUrls = {
   'constantine-3': '',
 };
 
-const controlDeskSidebarLogoUrls = {
-  globe: '/images/control-desk-globe.svg',
-};
-
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
-  const { chainId: chain } = useChainId();
-
-  const bgImage = router.pathname.includes('control-desk') ? controlDeskSidebarLogoUrls.globe : sidebarLogoUrls[chain];
+  const { chainId } = useChainId();
 
   return (
     <Flex
@@ -97,7 +91,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={bgImage}
+      bgImage={sidebarLogoUrls[chainId]}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"
@@ -114,7 +108,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
                 'kaiyo-1': '/images/logo.svg',
                 'harpoon-4': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
-              }[chain]
+              }[chainId]
             }
             w={105}
           />
@@ -124,7 +118,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
         {linkItems
-          .filter((link) => !link.exclude?.includes(chain))
+          .filter((link) => !link.exclude?.includes(chainId))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}
@@ -181,7 +175,7 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
           />
         </Text>
         <Spacer />
-        <SidebarControls />
+        <AppHeaderActions />
       </Flex>
       <Flex w="full" justifyContent="space-between">
         {linkItems
