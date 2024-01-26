@@ -2,13 +2,13 @@ import { useDisclosure } from '@chakra-ui/react';
 import { useCookieState } from 'ahooks';
 import { useEffect } from 'react';
 import { useWallet } from '@hooks/useWallet';
-import useDenoms from '@hooks/useDenoms';
 import { TermsModal } from '@components/TermsModal';
 import dayjs from 'dayjs';
+import usePageLoad from '@hooks/usePageLoad';
 
 export function AgreementAcceptanceDetector() {
   const { connected } = useWallet();
-  const { isSuccess } = useDenoms();
+  const { isPageLoading } = usePageLoad();
 
   const oneYearFromNow = dayjs().add(1, 'year').toDate();
 
@@ -21,10 +21,10 @@ export function AgreementAcceptanceDetector() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   useEffect(() => {
-    if (!agreementPreviouslyAccepted && connected && isSuccess) {
+    if (!agreementPreviouslyAccepted && connected && !isPageLoading) {
       onOpen();
     }
-  }, [agreementPreviouslyAccepted, onOpen, connected, isSuccess]);
+  }, [agreementPreviouslyAccepted, onOpen, connected, isPageLoading]);
 
   const onSubmit = () => setAcceptedAgreementState('true');
 

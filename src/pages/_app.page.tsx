@@ -8,12 +8,9 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useChainId } from '@hooks/useChainId';
 import * as Sentry from '@sentry/react';
-import { ChildrenProp } from '@helpers/ChildrenProp';
-import useDenoms from '@hooks/useDenoms';
 import '@interchain-ui/react/styles';
 import { AgreementAcceptanceDetector } from '@components/AgreementAcceptanceDetector';
 import { ToastContainer } from '@components/ToastContainer';
-import { LoadingState } from '@components/LoadingState';
 import { ChainProvider } from '@components/ChainProvider';
 import { InitWrapper } from '@components/InitWrapper';
 import { queryClient } from './queryClient';
@@ -33,12 +30,6 @@ Sentry.init({
   environment: process.env.NODE_ENV,
   enabled: process.env.NEXT_PUBLIC_APP_ENV === 'production',
 });
-
-function AssetListLoader({ children }: ChildrenProp) {
-  const { isSuccess } = useDenoms();
-  // eslint-disable-next-line react/jsx-no-useless-fragment
-  return isSuccess ? <>{children}</> : <LoadingState />;
-}
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { chainId } = useChainId();
@@ -67,7 +58,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
           <InitWrapper>
             <ChainProvider>
               <QueryClientProvider client={queryClient}>
-                <AssetListLoader>{getLayout(<Component {...pageProps} />)}</AssetListLoader>
+                {getLayout(<Component {...pageProps} />)}
                 <AgreementAcceptanceDetector />
               </QueryClientProvider>
               <ToastContainer />
