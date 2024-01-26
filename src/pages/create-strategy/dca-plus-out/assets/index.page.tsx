@@ -2,8 +2,8 @@ import { getFlowLayout } from '@components/Layout';
 import { FormNames } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyType } from '@models/StrategyType';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
-import { Assets } from '../../../../components/AssetsPageAndForm';
+import { StrategyInfoProvider } from '@pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { Assets } from '@components/AssetsPageAndForm';
 
 function Page() {
   return (

@@ -11,12 +11,12 @@ import * as Sentry from '@sentry/react';
 import { ChildrenProp } from '@helpers/ChildrenProp';
 import useDenoms from '@hooks/useDenoms';
 import '@interchain-ui/react/styles';
-import { ToastContainer } from './toast';
-import { queryClient } from './queryClient';
-import { LoadingState } from './LoadingState';
-import { ChainProvider } from './ChainProvider';
-import { InitWrapper } from './InitWrapper';
 import { AgreementAcceptanceDetector } from '@components/AgreementAcceptanceDetector';
+import { ToastContainer } from '@components/ToastContainer';
+import { LoadingState } from '@components/LoadingState';
+import { ChainProvider } from '@components/ChainProvider';
+import { InitWrapper } from '@components/InitWrapper';
+import { queryClient } from './queryClient';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;

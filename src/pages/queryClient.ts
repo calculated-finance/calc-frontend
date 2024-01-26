@@ -1,6 +1,6 @@
 import { QueryCache, QueryClient } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
-import { toast } from './toast';
+import { toast } from '@components/ToastContainer';
 
 const ignoredErrors = ['Load failed', 'Failed to fetch'];
 

@@ -1,7 +1,7 @@
 import { ListItem, OrderedList, Stack, Text, UnorderedList } from '@chakra-ui/react';
-import { RecurringDeposits } from '@components/helpContent/RecurringDeposits';
+import { RecurringDeposits } from '@components/HelpContent/RecurringDeposits';
 import { contentData } from 'src/constants';
-import { Autostaking } from '../components/helpContent/Autostaking';
+import { Autostaking } from '@components/HelpContent/Autostaking';
 import { StepConfig } from './StepConfig';
 
 const dcaInSteps: StepConfig[] = [

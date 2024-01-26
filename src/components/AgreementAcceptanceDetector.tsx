@@ -1,17 +1,16 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { useCookieState } from 'ahooks';
 import { useEffect } from 'react';
-import { TermsModal } from './TermsModal';
 import { useWallet } from '@hooks/useWallet';
 import useDenoms from '@hooks/useDenoms';
+import { TermsModal } from '@components/TermsModal';
+import dayjs from 'dayjs';
 
 export function AgreementAcceptanceDetector() {
   const { connected } = useWallet();
   const { isSuccess } = useDenoms();
 
-  //  create date one year from now
-  const oneYearFromNow = new Date();
-  oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+  const oneYearFromNow = dayjs().add(1, 'year').toDate();
 
   const [acceptedAgreementState, setAcceptedAgreementState] = useCookieState('acceptedAgreement', {
     expires: oneYearFromNow,

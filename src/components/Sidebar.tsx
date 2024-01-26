@@ -82,9 +82,7 @@ const sidebarLogoUrls = {
 
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
   const router = useRouter();
-  const { chainId: chain } = useChainId();
-
-  const bgImage = sidebarLogoUrls[chain];
+  const { chainId } = useChainId();
 
   return (
     <Flex
@@ -93,7 +91,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       pos="fixed"
       h="full"
       boxShadow="inset -4px 0 5px -4px rgba(18, 18, 19, 0.6)"
-      bgImage={bgImage}
+      bgImage={sidebarLogoUrls[chainId]}
       bgPosition="bottom"
       bgSize="contain"
       bgRepeat="no-repeat"
@@ -110,7 +108,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
                 'kaiyo-1': '/images/logo.svg',
                 'harpoon-4': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
-              }[chain]
+              }[chainId]
             }
             w={105}
           />
@@ -120,7 +118,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
         {linkItems
-          .filter((link) => !link.exclude?.includes(chain))
+          .filter((link) => !link.exclude?.includes(chainId))
           .map((link) => (
             <NavItem href={link.href} isActive={link.href === router.route} key={link.name} icon={link.icon}>
               {link.name}

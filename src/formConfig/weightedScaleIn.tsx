@@ -1,6 +1,6 @@
-import { Autostaking } from '@components/helpContent/Autostaking';
+import { Autostaking } from '@components/HelpContent/Autostaking';
 import { contentData } from 'src/constants';
-import { SwapMultiplierHelp } from '@components/helpContent/SwapMultiplierHelp';
+import { SwapMultiplierHelp } from '@components/HelpContent/SwapMultiplierHelp';
 import { StepConfig } from './StepConfig';
 
 export const weightedScaleInSteps: StepConfig[] = [
