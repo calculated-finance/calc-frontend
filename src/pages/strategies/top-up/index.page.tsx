@@ -20,7 +20,7 @@ import {
   getStrategyName,
 } from '@helpers/strategy';
 import { getTimeSaved } from '@helpers/getTimeSaved';
-import { DcaPlusTopUp } from '@components/helpContent/DcaPlusTopUp';
+import { DcaPlusTopUp } from '@components/HelpContent/DcaPlusTopUp';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import TopUpAmount from '@components/TopUpAmount';
