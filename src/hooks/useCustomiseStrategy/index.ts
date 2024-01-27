@@ -14,24 +14,16 @@ import { ConfigureVariables } from './ConfigureVariables';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 
 export function useCustomiseStrategy() {
-  const { address, getSigningClient } = useWallet();
+  const { address, getSigningClient, connected } = useWallet();
   const { track } = useAnalytics();
   const { chainId } = useChainId();
   const queryClient = useQueryClient();
 
   const { data: signingClient } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chainId],
-    async () => {
-      const client = await getSigningClient!();
-
-      if (!client) {
-        throw new Error('No signing client');
-      }
-
-      return client;
-    },
+    getSigningClient,
     {
-      enabled: !!getSigningClient,
+      enabled: connected,
       staleTime: 1000 * 60 * 10,
     },
   );
