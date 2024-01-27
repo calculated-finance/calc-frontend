@@ -244,6 +244,8 @@ export function getStrategyStartDate(strategy: Strategy, pairs: HydratedPair[] |
       year: 'numeric',
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
     });
   }
 
@@ -252,6 +254,8 @@ export function getStrategyStartDate(strategy: Strategy, pairs: HydratedPair[] |
         year: 'numeric',
         month: 'short',
         day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
       })
     : '-';
 }
@@ -283,6 +287,8 @@ export function getStrategyEndDateFromRemainingExecutions(
       year: 'numeric',
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
     });
   }
 
