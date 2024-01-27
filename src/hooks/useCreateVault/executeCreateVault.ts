@@ -26,6 +26,7 @@ export async function executeCreateVault(
   try {
     return getVaultIdFromDeliverTxResponse(await signAndBroadcast(client, senderAddress, msgs));
   } catch (error: any) {
+    console.error(error);
     const errorMatchers: Record<string, string> = {
       'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
       'Failed to fetch': 'Something went wrong when submitting, please try again.',

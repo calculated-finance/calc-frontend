@@ -22,18 +22,18 @@ type ConfigureVariables = {
 };
 
 export function useConfigureStrategy() {
-  const { address, getSigningClient } = useWallet();
+  const { address, getSigningClient, connected } = useWallet();
 
   const { chainId, chainConfig } = useChainId();
-
   const queryClient = useQueryClient();
+
   return useMutation<DeliverTxResponse, Error, ConfigureVariables>(
     async ({ values, strategy }) => {
       if (isNil(address)) {
         throw new Error('address is null or empty');
       }
 
-      if (!getSigningClient) {
+      if (!connected) {
         throw new Error('wallet is not connected');
       }
 

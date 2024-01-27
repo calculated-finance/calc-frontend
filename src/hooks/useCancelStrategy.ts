@@ -38,25 +38,13 @@ function getCancelVaultExecuteMsg(
 }
 
 const useCancelStrategy = () => {
-  const { address, getSigningClient } = useWallet();
+  const { address, getSigningClient, connected } = useWallet();
   const { chainId } = useChainId();
 
-  const { data: client } = useQuery<SigningCosmWasmClient>(
-    ['signingCosmWasmClient', chainId],
-    async () => {
-      const signingClient = await getSigningClient!();
-
-      if (!signingClient) {
-        throw new Error('No signing client');
-      }
-
-      return signingClient;
-    },
-    {
-      enabled: !!chainId && !!getSigningClient,
-      staleTime: 1000 * 60 * 10,
-    },
-  );
+  const { data: client } = useQuery<SigningCosmWasmClient>(['signingCosmWasmClient', chainId], getSigningClient, {
+    enabled: !!chainId && connected,
+    staleTime: 1000 * 60 * 10,
+  });
 
   return useMutation<DeliverTxResponse, Error, Strategy>(
     (strategy: Strategy) => {
