@@ -72,6 +72,7 @@ const chainSelectionAllowedUrls = [
   '/how-it-works',
   '/learn-about-calc',
   '/experimental-features',
+  '/create-strategy/streaming-swap/assets',
 ];
 
 const imageMap = {
