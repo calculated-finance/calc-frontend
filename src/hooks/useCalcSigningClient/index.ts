@@ -10,7 +10,7 @@ export function useCalcSigningClient() {
   const fetchedConfig = useConfig();
   const { connected, getSigningClient } = useWallet();
 
-  const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient | undefined>(
+  const { data: signingClient, ...other } = useQuery<SigningCosmWasmClient>(
     ['signingCosmWasmClient', chainId],
     getSigningClient,
     {

@@ -1,7 +1,7 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getGasPrice } from '@helpers/chains';
 import { ChainContext } from '@cosmos-kit/core';
-import { useChainContext } from './useChainContext';
+import { useChainContext } from '@hooks/useChainContext';
 import { ChainId } from '@models/ChainId';
 
 export function useWallet() {
