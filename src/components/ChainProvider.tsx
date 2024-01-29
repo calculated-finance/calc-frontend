@@ -32,11 +32,9 @@ export function ChainProvider({ children }: ChildrenProp) {
 
   useEffect(() => {
     setWallets(
-      [
-        ...(window.leap || isMobile ? leapWallets : []),
-        ...(window.keplr ? keplrWallets : []),
-        ...(window.xfi ? xdefiWallets : []),
-      ].filter((wallet) => (isMobile ? !wallet.isModeExtension : wallet.isModeExtension)),
+      [...(window.leap || isMobile ? leapWallets : []), ...keplrWallets, ...(window.xfi ? xdefiWallets : [])].filter(
+        (wallet) => (isMobile ? !wallet.isModeExtension : wallet.isModeExtension),
+      ),
     );
   }, []);
 
