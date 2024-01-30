@@ -15,7 +15,7 @@ import {
   Code,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
-import { fromAtomic, getDenomName } from '@utils/getDenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
 
 import { Strategy } from '@models/Strategy';
@@ -23,15 +23,13 @@ import useStrategyEvents from '@hooks/useStrategyEvents';
 import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
 import { getPrettyFee } from '@helpers/getPrettyFee';
 import {
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
   getStrategyType,
   getStrategyStartDate,
   isStrategyCancelled,
   getStrategyName,
   getStrategyEndDate,
   getSlippageToleranceFormatted,
-  getPriceCeilingFloor,
+  getPriceThreshold,
   getConvertedSwapAmount,
   isStrategyAutoStaking,
   isStrategyOperating,
@@ -77,7 +75,7 @@ function Escrowed({ strategy }: { strategy: Strategy }) {
       </GridItem>
       <GridItem colSpan={2}>
         <Text fontSize="sm" data-testid="strategy-escrow-amount">
-          {getEscrowAmount(strategy)} {getDenomName(getStrategyResultingDenom(strategy))}
+          {getEscrowAmount(strategy)} {strategy.resultingDenom.name}
         </Text>
       </GridItem>
     </>
@@ -98,11 +96,11 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-swap-amount">
           {!isNil(min) && !isNil(max) ? (
             <>
-              Between {min} and {max} {getDenomName(getStrategyInitialDenom(strategy))}
+              Between {min} and {max} {strategy.initialDenom.name}
             </>
           ) : (
             <>
-              {getConvertedSwapAmount(strategy)} {getDenomName(getStrategyInitialDenom(strategy))}
+              {getConvertedSwapAmount(strategy)} {strategy.initialDenom.name}
             </>
           )}{' '}
           -{' '}
@@ -134,8 +132,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chainId } = useChainId();
   const { balance, destinations } = strategy.rawData;
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const initialDenom = strategy.initialDenom;
+  const resultingDenom = strategy.resultingDenom;
   const strategyType = getStrategyType(strategy);
   const { pairs } = usePairs();
   const startDate = getStrategyStartDate(strategy, pairs);
@@ -256,8 +254,8 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   <GridItem colSpan={2}>
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                        {getPriceCeilingFloor(strategy, chainId)}{' '}
-                        {getDenomName(isBuyStrategy(strategy) ? initialDenom : resultingDenom)}
+                        {getPriceThreshold(strategy, chainId)}{' '}
+                        {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
                     </HStack>
@@ -269,7 +267,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem colSpan={1}>
                 <Text fontSize="sm" data-testid="strategy-current-balance">
-                  {fromAtomic(initialDenom, Number(balance.amount))} {getDenomName(initialDenom)}
+                  {fromAtomic(initialDenom, Number(balance.amount))} {initialDenom.name}
                 </Text>
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
@@ -302,9 +300,9 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
                 applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
                 basePrice={getBasePrice(strategy, chainId)}
-                initialDenom={getStrategyInitialDenom(strategy)}
-                resultingDenom={getStrategyResultingDenom(strategy)}
-                priceThresholdValue={getPriceCeilingFloor(strategy, chainId)}
+                initialDenom={strategy.initialDenom}
+                resultingDenom={strategy.resultingDenom}
+                priceThresholdValue={getPriceThreshold(strategy, chainId)}
               />
             </Box>
           </Box>

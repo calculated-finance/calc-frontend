@@ -29,6 +29,7 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
+import dayjs from 'dayjs';
 
 export function isStrategyOperating(strategy: Strategy) {
   return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
@@ -107,6 +108,7 @@ export function getStrategyExecutionIntervalData(strategy: Strategy): {
       }
     }
   }
+
   const { time_interval } = strategy.rawData;
 
   return {
@@ -208,11 +210,11 @@ export function getTargetPrice(strategy: Strategy, pairs: HydratedPair[] | undef
   }
 
   if (target_price) {
-    const initialDenom = getStrategyInitialDenom(strategy);
-    const resultingDenom = getStrategyResultingDenom(strategy);
+    const initialDenom = strategy.initialDenom;
+    const resultingDenom = strategy.resultingDenom;
     const pair = pairs && findPair(pairs, resultingDenom, initialDenom);
 
-    if (pair && getBaseDenom(pair).id === getStrategyInitialDenom(strategy).id) {
+    if (pair && getBaseDenom(pair).id === strategy.initialDenom.id) {
       return safeInvert(Number(target_price));
     }
 
@@ -222,11 +224,44 @@ export function getTargetPrice(strategy: Strategy, pairs: HydratedPair[] | undef
   return null;
 }
 
+export function getNextTargetTime(strategy: Strategy) {
+  const { started_at } = strategy.rawData;
+  const startTime = dayjs(Number(started_at) / 1000000);
+  const now = dayjs();
+  const diff = now.diff(startTime, 'seconds');
+
+  if (strategy.rawData.time_interval instanceof Object) {
+    const { custom } = strategy.rawData.time_interval;
+    const iterations = Math.floor(diff / custom.seconds) + 1;
+    return startTime.add(iterations * custom.seconds, 'seconds').toDate();
+  }
+
+  const { timeInterval } = getStrategyExecutionIntervalData(strategy);
+
+  if (timeInterval === 'monthly') {
+    const monthsDiff = now.diff(startTime, 'months') + 1;
+    return startTime.add(monthsDiff, 'months').toDate();
+  }
+
+  const seconds = {
+    minute: SECONDS_IN_A_MINUTE,
+    half_hourly: SECONDS_IN_A_HOUR / 2,
+    hourly: SECONDS_IN_A_HOUR,
+    half_daily: SECONDS_IN_A_DAY / 2,
+    daily: SECONDS_IN_A_DAY,
+    weekly: SECONDS_IN_A_WEEK,
+    fortnightly: SECONDS_IN_A_WEEK * 2,
+  }[timeInterval];
+
+  const iterations = Math.floor(diff / seconds) + 1;
+  return startTime.add(iterations * seconds, 'seconds').toDate();
+}
+
 export function getStrategyStartDate(strategy: Strategy, pairs: HydratedPair[] | undefined) {
   const { trigger } = strategy.rawData;
   const denom = isBuyStrategy(strategy) ? strategy.resultingDenom : strategy.initialDenom;
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const initialDenom = strategy.initialDenom;
+  const resultingDenom = strategy.resultingDenom;
 
   const targetPrice = getTargetPrice(strategy, pairs);
 
@@ -309,9 +344,9 @@ export function isStrategyAutoStaking(strategy: Strategy) {
   return isAutoStaking(strategy.rawData.destinations);
 }
 
-export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: string) {
-  const { significantFigures: initialSF } = getStrategyInitialDenom(strategy);
-  const { significantFigures: resultingSF } = getStrategyResultingDenom(strategy);
+export function convertReceiveAmount(strategy: Strategy, receiveAmount: string) {
+  const { significantFigures: initialSF } = strategy.initialDenom;
+  const { significantFigures: resultingSF } = strategy.resultingDenom;
 
   // start with scaled receive amount
   const scaledReceiveAmount = Number(receiveAmount);
@@ -330,28 +365,26 @@ export function convertReceiveAmountOsmosis(strategy: Strategy, receiveAmount: s
   return Number(directedPrice.toFixed(6));
 }
 
-export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
-  if (OSMOSIS_CHAINS.includes(chain)) {
-    return convertReceiveAmountOsmosis(strategy, receiveAmount);
-  }
+// export function convertReceiveAmount(strategy: Strategy, receiveAmount: string, chain: ChainId) {
+//   if (OSMOSIS_CHAINS.includes(chain)) {
+//     return convertReceiveAmountOsmosis(strategy, receiveAmount);
+//   }
 
-  const resultingDenom = getStrategyResultingDenom(strategy);
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const denom = isBuyStrategy(strategy) ? resultingDenom : initialDenom;
+//   const denom = isBuyStrategy(strategy) ? strategy.resultingDenom : strategy.initialDenom;
 
-  const ratio = isBuyStrategy(strategy)
-    ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
-    : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
+//   const ratio = isBuyStrategy(strategy)
+//     ? parseFloat(strategy.rawData.swap_amount) / parseFloat(receiveAmount)
+//     : parseFloat(receiveAmount) / parseFloat(strategy.rawData.swap_amount);
 
-  return Number(priceFromRatio(denom, ratio).toFixed(denom.pricePrecision));
-}
+//   return Number(priceFromRatio(denom, ratio).toFixed(denom.pricePrecision));
+// }
 
-export function getPriceCeilingFloor(strategy: Strategy, chain: ChainId) {
+export function getPriceThreshold(strategy: Strategy, chain: ChainId) {
   if (!strategy.rawData.minimum_receive_amount) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount, chain);
+  return convertReceiveAmount(strategy, strategy.rawData.minimum_receive_amount);
 }
 
 export function getBasePrice(strategy: Strategy, chain: ChainId) {
@@ -360,7 +393,7 @@ export function getBasePrice(strategy: Strategy, chain: ChainId) {
     return undefined;
   }
 
-  return convertReceiveAmount(strategy, base_receive_amount, chain);
+  return convertReceiveAmount(strategy, base_receive_amount);
 }
 
 export function getStrategyTotalFeesPaid(strategy: Strategy, dexFee: number) {

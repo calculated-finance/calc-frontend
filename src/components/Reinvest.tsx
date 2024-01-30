@@ -29,13 +29,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import {
-  getStrategyExecutionInterval,
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
-  getStrategyType,
-  isStrategyCancelled,
-} from '@helpers/strategy';
+import { getStrategyExecutionInterval, getStrategyType, isStrategyCancelled } from '@helpers/strategy';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
@@ -113,9 +107,9 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
           <Box {...getLabelProps()}>
             <Flex justify="space-between" align="center" gap={4} fontSize="xs">
               <HStack spacing={1}>
-                <DenomIcon showTooltip denomInfo={getStrategyInitialDenom(strategy)} />
+                <DenomIcon showTooltip denomInfo={strategy.initialDenom} />
                 <Icon as={ArrowRightIcon} stroke="grey" />
-                <DenomIcon showTooltip denomInfo={getStrategyResultingDenom(strategy)} />
+                <DenomIcon showTooltip denomInfo={strategy.resultingDenom} />
               </HStack>
               <HStack flexGrow={1} align="center">
                 <Text>
@@ -161,7 +155,7 @@ export function Reinvest({ resultingDenom }: { resultingDenom: DenomInfo }) {
   const filteredStrategies = data
     ?.sort((a, b) => Number(b.id) - Number(a.id))
     .filter((strategy: Strategy) => {
-      if (getStrategyInitialDenom(strategy).id !== resultingDenom.id) {
+      if (strategy.initialDenom.id !== resultingDenom.id) {
         return false;
       }
 

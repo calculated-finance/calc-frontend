@@ -198,11 +198,11 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
           throw new Error(
             `Swap amount of ${fromAtomic(initialDenom, Number(swapAmount))} ${
               initialDenom.name
-            } too high to find dynamic osmosis route.`,
+            } too high for osmosis router.`,
           );
         }
 
-        throw new Error('Error fetching route from Osmosis');
+        return { route: undefined, feeRate: 0.003 };
       }
     },
   };

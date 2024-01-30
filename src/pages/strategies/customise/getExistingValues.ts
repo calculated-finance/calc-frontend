@@ -2,7 +2,7 @@ import { Strategy } from '@models/Strategy';
 import {
   getBasePrice,
   getConvertedSwapAmount,
-  getPriceCeilingFloor,
+  getPriceThreshold,
   getSlippageTolerance,
   getStrategyExecutionIntervalData,
 } from '@helpers/strategy';
@@ -11,7 +11,7 @@ import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
 import { ChainId } from '@models/ChainId';
 
 export function getExistingValues(strategy: Strategy, chain: ChainId) {
-  const priceThreshold = getPriceCeilingFloor(strategy, chain);
+  const priceThreshold = getPriceThreshold(strategy, chain);
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
   const slippageTolerance = getSlippageTolerance(strategy);

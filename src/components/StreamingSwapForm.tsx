@@ -66,6 +66,7 @@ import { useChainId } from '@hooks/useChainId';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { BrowserRouter } from 'react-router-dom';
+import useRoute from '@hooks/useRoute';
 
 function InitialDeposit() {
   const {
@@ -419,11 +420,11 @@ function AdvancedSettings({ expectedPrice }: { expectedPrice: number | undefined
     values: { initialDenom, resultingDenom },
   } = useFormikContext<FormData>();
 
-  const [{ value: slippageToleranceValue }, , slippageToleranceHelpers] = useField<number | undefined>({
+  const [, , slippageToleranceHelpers] = useField<number | undefined>({
     name: 'slippageTolerance',
   });
 
-  const [{ value: priceThresholdValue }, , priceThresholdHelpers] = useField<number | undefined>({
+  const [, , priceThresholdHelpers] = useField<number | undefined>({
     name: 'priceThreshold',
   });
 
@@ -572,18 +573,10 @@ function DurationSlider() {
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
-  // const { route, ...useRouteHelpers } = useRoute(
-  //   swapAmountField.value && initialDenomInfo
-  //     ? coin(BigInt(swapAmountField.value).toString(), initialDenomInfo.id)
-  //     : undefined,
-  //   resultingDenomInfo,
-  // );
-
-  // useEffect(() => {
-  //   routeHelpers.setValue(route);
-  // }, [route]);
-
-  const { route, ...useRouteHelpers } = { route: undefined, isLoading: false };
+  const { route, ...useRouteHelpers } = useRoute(
+    swapAmountField.value && initialDenom ? coin(BigInt(swapAmountField.value).toString(), initialDenom.id) : undefined,
+    resultingDenom,
+  );
 
   const { twap } = useTwapToNow(
     initialDenom,

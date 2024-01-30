@@ -9,7 +9,7 @@ import {
   isStrategyCancelled,
   getStrategyName,
   getSlippageToleranceFormatted,
-  getPriceCeilingFloor,
+  getPriceThreshold,
   getStrategyExecutionInterval,
   isBuyStrategy,
 } from '@helpers/strategy';
@@ -108,7 +108,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceCeilingFloor(strategy, chainId)}{' '}
+                    {getPriceThreshold(strategy, chainId)}{' '}
                     {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>

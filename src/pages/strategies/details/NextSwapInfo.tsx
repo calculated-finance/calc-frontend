@@ -4,16 +4,19 @@ import DenomIcon from '@components/DenomIcon';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 import {
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
   isStrategyOperating,
   isBuyStrategy,
   getTargetPrice,
+  getNextTargetTime,
+  getPriceThreshold,
 } from '@helpers/strategy';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import usePairs from '@hooks/usePairs';
 import { DenomInfo } from '@utils/DenomInfo';
 import { priceFromRatio } from '@utils/getDenomInfo';
+import { useChainId } from '@hooks/useChainId';
+import useTwapToNow from '@hooks/useTwapToNow';
+import { safeInvert } from '@utils/safeInvert';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
   const { name: initialDenomName } = initialDenom;
@@ -38,14 +41,22 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; re
 }
 
 export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
-  let nextSwapInfo;
+  const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom);
+  const { pairs } = usePairs();
+  const { chainId } = useChainId();
+  const priceThreshold = getPriceThreshold(strategy, chainId);
 
   const { trigger } = strategy.rawData;
+  const { initialDenom, resultingDenom } = strategy;
 
-  const initialDenom = getStrategyInitialDenom(strategy);
-  const resultingDenom = getStrategyResultingDenom(strategy);
+  const isBeyondThreshold =
+    !!twap && !!priceThreshold
+      ? isBuyStrategy(strategy)
+        ? priceThreshold <= twap
+        : priceThreshold >= 1 / twap
+      : false;
 
-  const { pairs } = usePairs();
+  let nextSwapInfo;
 
   if (trigger) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -55,15 +66,32 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
 
     const targetPrice = getTargetPrice(strategy, pairs);
 
+    console.log({ priceThreshold, twap, isBeyondThreshold });
+
     if (isStrategyOperating(strategy)) {
-      if (targetTime) {
-        const nextSwapDate = new Date(Number(time?.target_time) / 1000000).toLocaleDateString('en-US', {
+      if (isBeyondThreshold) {
+        if (isBuyStrategy(strategy)) {
+          nextSwapInfo = (
+            <>
+              When price hits 1 {resultingDenom.name} &le; {priceThreshold} {initialDenom.name}
+            </>
+          );
+        } else {
+          nextSwapInfo = (
+            <>
+              When price hits 1 {initialDenom.name} &ge; {priceThreshold} {resultingDenom.name}
+            </>
+          );
+        }
+      } else if (targetTime) {
+        const nextSwap = getNextTargetTime(strategy);
+        const nextSwapDate = nextSwap.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',
         });
 
-        const nextSwapTime = new Date(Number(time?.target_time) / 1000000).toLocaleTimeString('en-US', {
+        const nextSwapTime = nextSwap.toLocaleTimeString('en-US', {
           minute: 'numeric',
           hour: 'numeric',
         });
@@ -104,7 +132,6 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
           {nextSwapInfo}
         </Text>
       </HStack>
-
       <Flex w={{ sm: '50%' }}>
         <Diagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
       </Flex>
