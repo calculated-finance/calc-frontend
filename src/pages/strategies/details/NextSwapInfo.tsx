@@ -66,8 +66,6 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
 
     const targetPrice = getTargetPrice(strategy, pairs);
 
-    console.log({ priceThreshold, twap, isBeyondThreshold });
-
     if (isStrategyOperating(strategy)) {
       if (isBeyondThreshold) {
         if (isBuyStrategy(strategy)) {
