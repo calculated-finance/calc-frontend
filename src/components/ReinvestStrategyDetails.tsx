@@ -108,8 +108,7 @@ export function ReinvestStrategyDetails({ strategy }: { strategy: Strategy }) {
               <GridItem colSpan={2}>
                 <HStack>
                   <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                    {getPriceThreshold(strategy, chainId)}{' '}
-                    {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                    {getPriceThreshold(strategy)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                   </Text>
                   <Badge colorScheme="green">Set</Badge>
                 </HStack>

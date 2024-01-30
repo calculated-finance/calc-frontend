@@ -10,8 +10,6 @@ import { ChainId } from '@models/ChainId';
 import { getEventsFetchLimit, getPairsFetchLimit, getStrategiesFetchLimit } from '@helpers/chains';
 import { transformToStrategyCosmos } from './transformToStrategy';
 
-const GET_PAIRS_LIMIT = 200;
-
 async function fetchAllPairs(
   chainId: ChainId,
   contractAddress: string,
@@ -52,8 +50,6 @@ async function fetchVault(
   return transformToStrategyCosmos(vault, getDenomById, chainId);
 }
 
-export const GET_EVENTS_LIMIT = 200;
-
 async function fetchVaultEvents(
   chainId: ChainId,
   client: CosmWasmClient,
@@ -93,8 +89,6 @@ async function fetchVaultEvents(
 
   return fetchEventsRecursively();
 }
-
-const GET_STRATEGIES_LIMIT = 100;
 
 async function fetchVaultsByAddress(
   chainId: ChainId,

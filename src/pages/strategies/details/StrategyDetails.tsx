@@ -132,8 +132,8 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
 export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
   const { chainId } = useChainId();
   const { balance, destinations } = strategy.rawData;
-  const initialDenom = strategy.initialDenom;
-  const resultingDenom = strategy.resultingDenom;
+  const { initialDenom, resultingDenom } = strategy;
+
   const strategyType = getStrategyType(strategy);
   const { pairs } = usePairs();
   const startDate = getStrategyStartDate(strategy, pairs);
@@ -254,8 +254,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                   <GridItem colSpan={2}>
                     <HStack>
                       <Text fontSize="sm" data-testid="strategy-minimum-receive-amount">
-                        {getPriceThreshold(strategy, chainId)}{' '}
-                        {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
+                        {getPriceThreshold(strategy)} {(isBuyStrategy(strategy) ? initialDenom : resultingDenom).name}
                       </Text>
                       <Badge colorScheme="green">Set</Badge>
                     </HStack>
@@ -299,10 +298,10 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
                 transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
                 applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}
-                basePrice={getBasePrice(strategy, chainId)}
+                basePrice={getBasePrice(strategy)}
                 initialDenom={strategy.initialDenom}
                 resultingDenom={strategy.resultingDenom}
-                priceThresholdValue={getPriceThreshold(strategy, chainId)}
+                priceThresholdValue={getPriceThreshold(strategy)}
               />
             </Box>
           </Box>
