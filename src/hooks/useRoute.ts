@@ -16,6 +16,7 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
     {
       enabled: !!chainId && !!chainClient && !!swapAmount && !!getDenomById(swapAmount!.denom) && !!targetDenom,
       staleTime: 1000 * 60,
+      retry: false,
       meta: {
         errorMessage: 'Error fetching route',
       },

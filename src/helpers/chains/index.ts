@@ -121,7 +121,7 @@ export function getChainAddressLength(chainId: ChainId) {
 
 export function getStrategiesFetchLimit(chainId: ChainId) {
   return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 100,
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 100,
     'osmo-test-5': 100,
     'kaiyo-1': 100,
     'harpoon-4': 100,
@@ -131,7 +131,7 @@ export function getStrategiesFetchLimit(chainId: ChainId) {
 
 export function getEventsFetchLimit(chainId: ChainId) {
   return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 200,
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
     'osmo-test-5': 200,
     'kaiyo-1': 200,
     'harpoon-4': 200,
@@ -141,7 +141,7 @@ export function getEventsFetchLimit(chainId: ChainId) {
 
 export function getPairsFetchLimit(chainId: ChainId) {
   return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 500 : 200,
+    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
     'osmo-test-5': 200,
     'kaiyo-1': 200,
     'harpoon-4': 200,
@@ -159,7 +159,7 @@ export function getOsmosisWebUrl(chainId: ChainId) {
 export function getOsmosisRouterUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://sqs.osmosis.zone',
-    'osmo-test-5': 'https://sqs-stage.osmosis.zone',
+    'osmo-test-5': 'https://sqs.testnet.osmosis.zone',
   }[chainId as string]!;
 }
 
