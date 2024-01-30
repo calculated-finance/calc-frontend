@@ -11,7 +11,7 @@ import { getWeightedScaleConfig } from '@helpers/strategy/isWeightedScale';
 import { ChainId } from '@models/ChainId';
 
 export function getExistingValues(strategy: Strategy, chain: ChainId) {
-  const priceThreshold = getPriceThreshold(strategy, chain);
+  const priceThreshold = getPriceThreshold(strategy);
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
   const slippageTolerance = getSlippageTolerance(strategy);
@@ -25,7 +25,7 @@ export function getExistingValues(strategy: Strategy, chain: ChainId) {
     priceThresholdEnabled: priceThreshold ? YesNoValues.Yes : YesNoValues.No,
     priceThresholdValue: priceThreshold,
     basePriceIsCurrentPrice: YesNoValues.No,
-    basePriceValue: getBasePrice(strategy, chain),
+    basePriceValue: getBasePrice(strategy),
     swapMultiplier: getWeightedScaleConfig(strategy)?.multiplier,
     applyMultiplier: increaseOnly ? YesNoValues.No : YesNoValues.Yes,
     swapAmount,

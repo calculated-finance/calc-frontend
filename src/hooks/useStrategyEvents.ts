@@ -3,8 +3,6 @@ import { Strategy } from '../models/Strategy';
 import { StrategyEvent } from './StrategyEvent';
 import { useCalcClient } from './useCalcClient';
 
-export const GET_EVENTS_LIMIT = 400;
-
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { client } = useCalcClient();
 

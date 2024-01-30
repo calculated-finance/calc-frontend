@@ -16,7 +16,6 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { priceFromRatio } from '@utils/getDenomInfo';
 import { useChainId } from '@hooks/useChainId';
 import useTwapToNow from '@hooks/useTwapToNow';
-import { safeInvert } from '@utils/safeInvert';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
   const { name: initialDenomName } = initialDenom;
@@ -44,7 +43,7 @@ export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
   const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom);
   const { pairs } = usePairs();
   const { chainId } = useChainId();
-  const priceThreshold = getPriceThreshold(strategy, chainId);
+  const priceThreshold = getPriceThreshold(strategy);
 
   const { trigger } = strategy.rawData;
   const { initialDenom, resultingDenom } = strategy;
