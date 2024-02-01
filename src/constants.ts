@@ -26,6 +26,7 @@ export const TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE =
 export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
+export const COINGECKO_API_KEY = 'CG-stTwVSwHSvYBV6S26zfEgz3h';
 
 export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 
