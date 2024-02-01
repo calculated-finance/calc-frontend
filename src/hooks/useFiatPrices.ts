@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
-import { COINGECKO_ENDPOINT } from 'src/constants';
+import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
 import { useQuery } from '@tanstack/react-query';
 import { reduce, values } from 'rambda';
 import useDenoms from './useDenoms';
@@ -35,7 +35,7 @@ const useFiatPrices = () => {
       }
 
       const formattedIds = coingeckoIds.join(',');
-      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true`;
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true&x_cg_demo_api_key=${COINGECKO_API_KEY}`;
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -47,9 +47,10 @@ const useFiatPrices = () => {
       return response.json();
     },
     {
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 10,
       refetchOnWindowFocus: false,
       enabled: !!denomsList,
+      retry: false,
       meta: {
         errorMessage: 'Error fetching fiat prices',
       },

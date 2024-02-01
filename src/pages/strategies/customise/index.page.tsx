@@ -163,10 +163,9 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 function Page() {
   const { query } = useRouter();
   const { data: strategy, isLoading } = useStrategy(query?.id as string);
-  const { chainId: chain } = useChainId();
   const { address } = useWallet();
 
-  if (!strategy || !chain || !address) {
+  if (!strategy || !address) {
     return (
       <NewStrategyModal>
         <NewStrategyModalHeader
@@ -182,7 +181,7 @@ function Page() {
     );
   }
 
-  const existingValues = getExistingValues(strategy, chain);
+  const existingValues = getExistingValues(strategy);
 
   const castValues = {
     ...getCustomiseSchema(strategy).cast(globalInitialValues, { stripUnknown: true }),

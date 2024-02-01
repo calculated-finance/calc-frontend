@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import * as Sentry from '@sentry/react';
-import { COINGECKO_ENDPOINT } from 'src/constants';
+import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
 import { DenomInfo } from '@utils/DenomInfo';
 import dayjs from 'dayjs';
 import useQueryWithNotification from './useQueryWithNotification';
@@ -30,7 +30,7 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
       }
 
       const result = await fetch(
-        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}`,
+        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}&x_cg_demo_api_key=${COINGECKO_API_KEY}`,
       );
 
       if (!result.ok) {
@@ -43,7 +43,8 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
     },
     {
       enabled: !!coingeckoId && !!fiatCurrencyId && !!days,
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 10,
+      retry: false,
       meta: {
         errorMessage: 'Error fetching fiat price history',
       },
