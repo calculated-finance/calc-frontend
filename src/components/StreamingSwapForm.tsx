@@ -587,7 +587,7 @@ function DurationSlider() {
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (1.0 / fiatPrice));
+  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 5) * (1.0 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
@@ -644,7 +644,7 @@ function DurationSlider() {
     fromAtomic(resultingDenom, max(0, expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)));
 
   useEffect(() => {
-    const minSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 1) * (0.51 / fiatPrice));
+    const minSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 5) * (1.0 / fiatPrice));
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
     const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
