@@ -286,6 +286,12 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       icon: '/images/denoms/aqla.svg',
       coingeckoId: 'unknown',
     },
+    [KujiraMainnetDenoms.DYM]: {
+      name: 'DYM',
+      icon: '/images/denoms/dymension.svg',
+      coingeckoId: 'dymension',
+      significantFigures: 18,
+    },
   },
   'harpoon-4': {
     [KujiraTestnetDenoms.Demo]: {
