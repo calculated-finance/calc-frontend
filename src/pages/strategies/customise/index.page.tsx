@@ -99,8 +99,6 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                 <Stack spacing={4}>
                   <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} />
                   <Divider />
-                  {/* {!isDcaPlus(strategy) && <AdvancedSettingsSwitch />} */}
-
                   {!isDcaPlus(strategy) && !isWeightedScale(strategy) && (
                     <Stack spacing={4}>
                       <ExecutionInterval />

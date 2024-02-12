@@ -2,9 +2,7 @@ import { getReceiveAmount } from '../useCreateVault/buildCreateVaultParams';
 import { ConfigureVariables } from './ConfigureVariables';
 
 export function buildPriceThreshold({ values, initialValues, context }: ConfigureVariables) {
-  const isPriceThresholdDirty = values.priceThresholdValue !== initialValues.priceThresholdValue;
-
-  if (isPriceThresholdDirty) {
+  if (values.priceThresholdValue !== initialValues.priceThresholdValue) {
     return {
       minimum_receive_amount: values.priceThresholdValue
         ? getReceiveAmount(
