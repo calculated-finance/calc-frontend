@@ -30,7 +30,7 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
       }
 
       const result = await fetch(
-        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}&x_cg_demo_api_key=${COINGECKO_API_KEY}`,
+        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}`, // &x_cg_demo_api_key=${COINGECKO_API_KEY}`,
       );
 
       if (!result.ok) {
