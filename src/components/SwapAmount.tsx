@@ -33,12 +33,15 @@ export default function SwapAmount({
   };
 
   const executions = totalExecutions(initialDeposit, field.value);
+
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
+
   const displayCustomExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][
       executions * executionIntervalIncrement > 1 ? 1 : 0
     ];
+
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
       <FormLabel>

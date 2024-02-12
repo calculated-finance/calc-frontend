@@ -162,7 +162,7 @@ export function getSwapAmount(strategy: Strategy) {
 
 export function getConvertedSwapAmount(strategy: Strategy) {
   return Number(
-    fromAtomic(strategy.initialDenom, getSwapAmount(strategy)).toFixed(strategy.initialDenom.pricePrecision),
+    fromAtomic(strategy.initialDenom, getSwapAmount(strategy)).toFixed(strategy.initialDenom.significantFigures),
   );
 }
 
