@@ -91,8 +91,9 @@ export function getReceiveAmount(
   isInAtomics = false,
 ) {
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
+
   const deconvertedSwapAmount = isInAtomics ? swapAmount : toAtomic(initialDenom, swapAmount);
-  const unscaledReceiveAmount = deconvertedSwapAmount / directionlessPrice;
+  const unscaledReceiveAmount = Math.round(deconvertedSwapAmount / directionlessPrice);
   const scalingFactor = 10 ** (resultingDenom.significantFigures - initialDenom.significantFigures);
   const scaledReceiveAmount = BigInt(Math.floor(unscaledReceiveAmount * scalingFactor));
 
