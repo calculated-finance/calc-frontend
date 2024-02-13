@@ -1,11 +1,5 @@
 import { StrategyEvent } from '@hooks/StrategyEvent';
 
-export function getCompletedEvents(events: StrategyEvent[] | undefined) {
-  return events?.filter((event) => {
-    const { data } = event;
-    if ('dca_vault_execution_completed' in data) {
-      return data.dca_vault_execution_completed;
-    }
-    return undefined;
-  });
+export function getSwapEvents(events: StrategyEvent[] | undefined) {
+  return events?.filter(({ data }) => 'dca_vault_execution_completed' in data || 'dca_vault_execution_skipped' in data);
 }

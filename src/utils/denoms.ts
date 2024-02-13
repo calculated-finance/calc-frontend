@@ -391,7 +391,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     [OsmosisMainnetDenoms.nBTC]: {
       coingeckoId: 'bitcoin',
       enabledInDcaPlus: true,
-      significantFigures: 14,
       minimumSwapAmount: 0.05 / 10000,
     },
     [OsmosisMainnetDenoms.LINK]: {

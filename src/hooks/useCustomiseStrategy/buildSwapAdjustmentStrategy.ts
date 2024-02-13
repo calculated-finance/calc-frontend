@@ -14,13 +14,14 @@ export function buildSwapAdjustmentStrategy({ values, initialValues, context, st
   }
 
   const castedValues = values as CustomiseSchemaWeightedScale;
-  const castedInvitialValues = initialValues as CustomiseSchemaWeightedScale;
+  const castedInitialValues = initialValues as CustomiseSchemaWeightedScale;
+
   const isWeightedScaleDirty =
-    castedValues.applyMultiplier !== castedInvitialValues.applyMultiplier ||
-    castedValues.basePriceIsCurrentPrice !== castedInvitialValues.basePriceIsCurrentPrice ||
-    castedValues.basePriceValue !== castedInvitialValues.basePriceValue ||
-    castedValues.swapMultiplier !== castedInvitialValues.swapMultiplier ||
-    castedValues.applyMultiplier !== castedInvitialValues.applyMultiplier;
+    castedValues.applyMultiplier !== castedInitialValues.applyMultiplier ||
+    castedValues.basePriceIsCurrentPrice !== castedInitialValues.basePriceIsCurrentPrice ||
+    castedValues.basePriceValue !== castedInitialValues.basePriceValue ||
+    castedValues.swapMultiplier !== castedInitialValues.swapMultiplier ||
+    castedValues.applyMultiplier !== castedInitialValues.applyMultiplier;
 
   if (isWeightedScaleDirty) {
     return {
