@@ -20,7 +20,6 @@ import { COIN_DECIMAL_LIMIT, COIN_DECIMAL_LIMIT_TO_SHOW_2_DECIMALS } from 'src/c
 import { getChartData, getChartDataSwaps } from './getChartData';
 import { StrategyChartStats } from './StrategyChartStats';
 import { DaysRadio } from './DaysRadio';
-import { getFailedChartDataSwaps } from './getFailedChartData';
 
 function CustomLabel(props: VictoryTooltipProps) {
   return (
@@ -93,40 +92,43 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
   const chartData = getChartData(events, coingeckoData?.prices, displayPrices, allDenoms);
   const swapsData = getChartDataSwaps(events, coingeckoData?.prices, displayPrices, allDenoms);
 
-  const swapsFailedData = getFailedChartDataSwaps(events, coingeckoData?.prices, displayPrices);
-  const swapsFailedDataWithLabel = swapsFailedData?.map((swap) => ({
-    ...swap,
-    label: `${swap?.event.failed}. \nDate: ${swap?.date
-      .toLocaleDateString('en-AU', {
-        day: '2-digit',
-        month: 'short',
-        year: '2-digit',
-      })
-      .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
-  }));
+  const swapsFailedDataWithLabel = swapsData
+    ?.filter((swap) => swap?.event.type === 'dca_vault_execution_skipped')
+    ?.map((swap) => ({
+      ...swap,
+      label: `${swap?.event.failed}. \nDate: ${swap?.date
+        .toLocaleDateString('en-AU', {
+          day: '2-digit',
+          month: 'short',
+          year: '2-digit',
+        })
+        .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
+    }));
 
-  const swapsDataWithLabel = swapsData?.map((swap) => ({
-    ...swap,
-    label: `${
-      isBuyStrategy(strategy)
-        ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
-        : `${priceOfDenomName} ➡️ ${priceInDenomName}`
-    }\nSwapped: ${
-      isBuyStrategy(strategy)
-        ? `${roundedDisplay(swap?.event.denomAmountSent)} ${priceInDenomName}`
-        : `${roundedDisplay(swap?.event.denomAmountSent)} ${priceOfDenomName}`
-    }  ➡️  ${roundedDisplay(swap?.event.swapAmount)} ${swap?.event.swapDenom}\nAccumulated: ${roundedDisplay(
-      swap?.event.accumulation,
-    )} ${swap?.event.swapDenom}\nDate: ${swap?.date
-      .toLocaleDateString('en-AU', {
-        day: '2-digit',
-        month: 'short',
-        year: '2-digit',
-      })
-      .replace(',', '')}\n\nBlock Height: ${swap?.blockHeight}\n1 ${priceOfDenomName} = ${Number(
-      swap?.currentPrice,
-    ).toFixed(2)}USD`,
-  }));
+  const swapsDataWithLabel = swapsData
+    ?.filter((swap) => swap?.event.type === 'dca_vault_execution_completed')
+    .map((swap) => ({
+      ...swap,
+      label: `${
+        isBuyStrategy(strategy)
+          ? `${priceInDenomName} ➡️ ${priceOfDenomName}`
+          : `${priceOfDenomName} ➡️ ${priceInDenomName}`
+      }\nSwapped: ${
+        isBuyStrategy(strategy)
+          ? `${roundedDisplay(swap?.event.denomAmountSent)} ${priceInDenomName}`
+          : `${roundedDisplay(swap?.event.denomAmountSent)} ${priceOfDenomName}`
+      }  ➡️  ${roundedDisplay(swap?.event.swapAmount)} ${swap?.event.swapDenom}\nAccumulated: ${roundedDisplay(
+        swap?.event.accumulation,
+      )} ${swap?.event.swapDenom}\nDate: ${swap?.date
+        .toLocaleDateString('en-AU', {
+          day: '2-digit',
+          month: 'short',
+          year: '2-digit',
+        })
+        .replace(',', '')}\n\nBlock Height: ${swap?.blockHeight}\n1 ${priceOfDenomName} = ${Number(
+        swap?.currentPrice,
+      ).toFixed(2)}USD`,
+    }));
 
   return (
     <GridItem colSpan={6}>
@@ -203,14 +205,14 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
               />
               <VictoryScatter
                 style={{
-                  data: { fill: '#3B3C4E', stroke: 'black', strokeWidth: 1 },
+                  data: { fill: 'black', stroke: 'black', strokeWidth: 1, opacity: 0.4 },
                   labels: { fill: 'white', fontSize: 6 },
                 }}
                 size={6}
                 data={swapsFailedDataWithLabel}
                 x="date"
                 y="marketValue"
-                symbol="triangleDown"
+                symbol="diamond"
                 labelComponent={<CustomLabel />}
               />
             </VictoryChart>

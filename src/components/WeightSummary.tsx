@@ -61,7 +61,6 @@ export function WeightsGrid({
       <GridItem colSpan={3}>
         Price ({transactionType === 'buy' ? initialDenom.name : transactionType === 'sell' && resultingDenom.name}) $
       </GridItem>
-
       {weights.map((weight) => {
         const displayPrice = basePrice || price;
         const calcPrice = displayPrice && Number(displayPrice) + Number(displayPrice) * weight;
@@ -76,7 +75,6 @@ export function WeightsGrid({
         }
         return <Spinner size="xs" />;
       })}
-
       <GridItem colSpan={3}>Price Delta</GridItem>
       {weights.map((weight) => {
         const color = weight > 0 ? 'green.200' : weight < 0 ? 'red.200' : undefined;
@@ -86,7 +84,6 @@ export function WeightsGrid({
           </GridItem>
         );
       })}
-
       <GridItem colSpan={3}>
         {priceThresholdValue ? (
           <Tooltip label="Setting a price floor/ceiling may affect your swap amounts.">Swap Amount: *</Tooltip>

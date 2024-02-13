@@ -1,8 +1,9 @@
 import { fromAtomic } from '@utils/getDenomInfo';
 import { StrategyEvent } from '@hooks/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
-import { getCompletedEvents } from '@helpers/getCompletedEvents';
+import { getSwapEvents } from '@helpers/getCompletedEvents';
 import { DenomInfo } from '@utils/DenomInfo';
+import { ExecutionSkippedReason } from 'src/interfaces/v2/generated/response/get_events';
 
 type EventWithAccumulation = {
   time: Date;
@@ -33,6 +34,20 @@ export const findCurrentPriceInTime = (time: Date, fiatPrices: FiatPriceHistoryR
   return currentPrice;
 };
 
+function convertToSentence(reason: ExecutionSkippedReason) {
+  const sentenceMap = {
+    slippage_query_error: 'Slippage tolerance exceeded',
+    slippage_tolerance_exceeded: 'Slippage tolerance exceeded',
+    swap_amount_adjusted_to_zero: 'Swap amount was adjusted to zero.',
+  };
+
+  return typeof reason === 'string'
+    ? sentenceMap[reason]
+    : 'price_threshold_exceeded' in reason
+    ? 'Price threshold exceeded'
+    : reason.unknown_error.msg;
+}
+
 export function getEventsWithAccumulation(completedEvents: StrategyEvent[], denoms: { [x: string]: DenomInfo }) {
   let totalAmount = 0;
 
@@ -49,6 +64,7 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[], deno
       totalAmount += Number(amount);
 
       return {
+        type: 'dca_vault_execution_completed',
         blockHeight: event.block_height,
         time: new Date(Number(event.timestamp) / 1000000),
         accumulation: totalAmount,
@@ -56,6 +72,14 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[], deno
         swapDenom: receivedDenom.name,
         denomSent: initialDenom,
         denomAmountSent: sentAmount,
+      };
+    } else if ('dca_vault_execution_skipped' in data) {
+      return {
+        type: 'dca_vault_execution_skipped',
+        blockHeight: event.block_height,
+        time: new Date(Number(event.timestamp) / 1000000),
+        failed: convertToSentence(data.dca_vault_execution_skipped.reason as ExecutionSkippedReason),
+        accumulation: totalAmount,
       };
     }
 
@@ -84,12 +108,13 @@ export function getChartDataSwaps(
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
   denoms: { [x: string]: DenomInfo },
 ) {
-  const completedEvents = getCompletedEvents(events);
+  const swapEvents = getSwapEvents(events);
 
-  if (!completedEvents || !fiatPrices || !displayPrices) {
-    return null;
+  if (!swapEvents || !fiatPrices || !displayPrices) {
+    return [];
   }
-  const eventsWithAccumulation = getEventsWithAccumulation(completedEvents, denoms);
+
+  const eventsWithAccumulation = getEventsWithAccumulation(swapEvents, denoms);
 
   const chartData = eventsWithAccumulation?.map((event) => {
     const date = new Date(event.time);
@@ -118,7 +143,7 @@ export function getChartData(
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
   denoms: { [x: string]: DenomInfo },
 ) {
-  const completedEvents = getCompletedEvents(events);
+  const completedEvents = getSwapEvents(events);
 
   if (!completedEvents || !fiatPrices) {
     return null;
