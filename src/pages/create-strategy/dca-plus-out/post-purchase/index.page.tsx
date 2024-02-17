@@ -12,7 +12,7 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyType } from '@models/StrategyType';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { actions, state, context } = useDcaInFormPostPurchase();

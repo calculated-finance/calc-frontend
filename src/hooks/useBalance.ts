@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
 import { fromAtomic } from '@utils/getDenomInfo';
-import { useChainId } from './useChainId';
-import { useChainClient } from './useChainClient';
+import { useChainId } from '@hooks/useChainId';
+import { useChainClient } from '@hooks/useChainClient';
 
 export type BalanceResponse = {
   amount: number;

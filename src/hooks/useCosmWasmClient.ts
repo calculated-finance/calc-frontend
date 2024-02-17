@@ -1,18 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainId } from '@models/ChainId';
-import { useChainId } from './useChainId';
-import { useChainContext } from './useChainContext';
+import { useChainId } from '@hooks/useChainId';
+import { useChainContext } from '@hooks/useChainContext';
 
 export function useCosmWasmClient(injectedChainId?: ChainId) {
-  const { chainId } = useChainId();
-  const chainContext = useChainContext(injectedChainId ?? chainId);
+  const { chainId: currentChainId } = useChainId();
+  const chainId = injectedChainId ?? currentChainId;
+  const chainContext = useChainContext(chainId);
 
   const { data: cosmWasmClient } = useQuery<CosmWasmClient | null>(
-    ['cosmWasmClient', injectedChainId ?? chainId],
+    ['cosmWasmClient', chainId],
     () => chainContext!.getCosmWasmClient(),
     {
-      enabled: !!(injectedChainId ?? chainId) && !!chainContext,
+      enabled: !!chainId && !!chainContext,
       staleTime: 1000 * 60 * 10,
     },
   );

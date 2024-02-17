@@ -25,7 +25,7 @@ import { StrategyType } from '@models/StrategyType';
 import { TransactionType } from '@components/TransactionType';
 import Spinner from '@components/Spinner';
 import simpleDcaInSteps from '@formConfig/simpleDcaIn';
-import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import usePageLoad from '@hooks/usePageLoad';
 import * as Sentry from '@sentry/react';

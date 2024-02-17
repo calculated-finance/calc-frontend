@@ -15,7 +15,7 @@ import { useDcaInCustomiseForm } from '@hooks/useDcaInForm';
 import useSteps from '@hooks/useSteps';
 import useValidation from '@hooks/useValidation';
 import { StepConfig } from '@formConfig/StepConfig';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormDca({

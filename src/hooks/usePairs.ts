@@ -2,14 +2,14 @@ import { any, filter } from 'rambda';
 import { isDenomVolatile } from '@utils/getDenomInfo';
 import { HydratedPair, Pair } from '@models/Pair';
 import { getChainContractAddress } from '@helpers/chains';
-import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { ChainId } from '@models/ChainId';
 import { useChainId } from '@hooks/useChainId';
-import { useCosmWasmClient } from './useCosmWasmClient';
-import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import useDenoms from './useDenoms';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
+import useDenoms from '@hooks/useDenoms';
+import { useChainClient } from '@hooks/useChainClient';
+import { useQuery } from '@tanstack/react-query';
 
 const hiddenPairs = [
   JSON.stringify([
@@ -82,12 +82,13 @@ export default function usePairs(injectedChainId?: ChainId) {
   const chainId = injectedChainId ?? currentChainId;
   const { cosmWasmClient } = useCosmWasmClient(chainId);
   const { denoms, getDenomById } = useDenoms();
+  const chainClient = useChainClient(chainId);
 
   const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
-    () => getCalcClient(chainId, getChainContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllPairs(),
+    () => chainClient!.fetchPairs(chainId, getChainContractAddress(chainId), cosmWasmClient!),
     {
-      enabled: !!chainId && !!cosmWasmClient,
+      enabled: !!chainId && !!cosmWasmClient && !!chainClient,
       staleTime: 1000 * 60 * 30,
       meta: {
         errorMessage: 'Error fetching pairs',

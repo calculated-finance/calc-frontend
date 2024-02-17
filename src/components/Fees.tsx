@@ -21,7 +21,6 @@ import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
-import { TransactionType } from './TransactionType';
 
 export function FeeBreakdown({
   initialDenom,

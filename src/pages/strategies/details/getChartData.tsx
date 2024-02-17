@@ -1,5 +1,5 @@
 import { fromAtomic } from '@utils/getDenomInfo';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getSwapEvents } from '@helpers/getCompletedEvents';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -73,7 +73,9 @@ export function getEventsWithAccumulation(completedEvents: StrategyEvent[], deno
         denomSent: initialDenom,
         denomAmountSent: sentAmount,
       };
-    } else if ('dca_vault_execution_skipped' in data) {
+    }
+
+    if ('dca_vault_execution_skipped' in data) {
       return {
         type: 'dca_vault_execution_skipped',
         blockHeight: event.block_height,

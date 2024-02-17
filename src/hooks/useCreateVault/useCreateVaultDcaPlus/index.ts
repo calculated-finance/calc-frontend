@@ -1,7 +1,7 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import { isNil } from 'lodash';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
@@ -11,9 +11,9 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
-import { useTrackCreateVault } from '../useTrackCreateVault';
 
 export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();

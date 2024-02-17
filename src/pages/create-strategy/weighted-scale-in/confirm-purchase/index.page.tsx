@@ -4,7 +4,7 @@ import { TransactionType } from '@components/TransactionType';
 import { weightedScaleInSteps } from 'src/formConfig/weightedScaleIn';
 import { StrategyType } from '@models/StrategyType';
 import { WeightedScaleConfirmPage } from '@components/WeightedScaleConfirmPage';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   return (

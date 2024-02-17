@@ -3,9 +3,9 @@ import { Strategy } from '@models/Strategy';
 import { getChainContractAddress } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { useChainId } from '@hooks/useChainId';
-import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import useDenoms from './useDenoms';
-import { useCosmWasmClient } from './useCosmWasmClient';
+import getCalcClient from '@hooks/useCalcClient/getClient/clients/cosmos';
+import useDenoms from '@hooks/useDenoms';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 export default function useChainStrategies(injectedChainId?: ChainId) {
   const { chainId: currentChainId } = useChainId();

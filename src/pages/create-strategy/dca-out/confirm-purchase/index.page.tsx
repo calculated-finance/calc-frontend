@@ -21,7 +21,7 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { SWAP_FEE } from 'src/constants';
 import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useDcaInConfirmForm();

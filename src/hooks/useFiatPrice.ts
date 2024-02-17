@@ -1,5 +1,5 @@
 import { DenomInfo } from '@utils/DenomInfo';
-import useFiatPrices from './useFiatPrices';
+import useFiatPrices from '@hooks/useFiatPrices';
 
 export type FiatPriceResponse = {
   [key: string]: {

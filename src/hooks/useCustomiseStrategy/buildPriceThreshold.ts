@@ -1,4 +1,4 @@
-import { getReceiveAmount } from '../useCreateVault/buildCreateVaultParams';
+import { getReceiveAmount } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { ConfigureVariables } from './ConfigureVariables';
 
 export function buildPriceThreshold({ values, initialValues, context }: ConfigureVariables) {

@@ -1,7 +1,7 @@
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { useQuery } from '@tanstack/react-query';
-import { useChainId } from './useChainId';
-import { useChainClient } from './useChainClient';
+import { useChainId } from '@hooks/useChainId';
+import { useChainClient } from '@hooks/useChainClient';
 
 const useValidators = () => {
   const { chainId: chain } = useChainId();

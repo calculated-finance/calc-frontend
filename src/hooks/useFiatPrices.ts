@@ -1,10 +1,9 @@
 import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
 import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
-import { useQuery } from '@tanstack/react-query';
 import { reduce, values } from 'rambda';
-import useDenoms from './useDenoms';
-import useQueryWithNotification from './useQueryWithNotification';
+import useDenoms from '@hooks/useDenoms';
+import { useQuery } from '@tanstack/react-query';
 
 export type FiatPriceResponse = {
   [key: string]: {
@@ -18,7 +17,7 @@ const useFiatPrices = () => {
   const { allDenoms } = useDenoms();
   const denomsList = values(allDenoms ?? {});
 
-  const { data: fiatPrices, ...other } = useQueryWithNotification<FiatPriceResponse>(
+  const { data: fiatPrices, ...other } = useQuery<FiatPriceResponse>(
     ['fiat-prices', denomsList.length],
     async () => {
       const coingeckoIds = denomsList.map((denom: any) => denom.coingeckoId);

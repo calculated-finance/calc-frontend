@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/react';
 import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
 import { DenomInfo } from '@utils/DenomInfo';
 import dayjs from 'dayjs';
-import useQueryWithNotification from './useQueryWithNotification';
+import { useQuery } from '@tanstack/react-query';
 
 export type FiatPriceHistoryResponse = {
   prices: number[][];
@@ -15,11 +15,11 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
   const { coingeckoId } = denom || {};
   const fiatCurrencyId = 'usd';
 
-  return useQueryWithNotification<FiatPriceHistoryResponse>(
+  return useQuery<FiatPriceHistoryResponse>(
     ['fiat-price-history', coingeckoId, fiatCurrencyId, days],
     async () => {
       if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
-        let i = 0;
+        let i = 10;
         const price = Math.random();
         return {
           prices: Array.from({ length: 100 }, () => {

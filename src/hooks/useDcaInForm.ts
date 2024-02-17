@@ -7,9 +7,9 @@ import {
   step1ValidationSchema,
   step2ValidationSchema,
 } from '@models/DcaInFormData';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { FormNames, useFormStore } from './useFormStore';
-import { useWallet } from './useWallet';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { FormNames, useFormStore } from '@hooks/useFormStore';
+import { useWallet } from '@hooks/useWallet';
 
 export const getFormState = (state: any, formName: FormNames) => state[formName] || {};
 

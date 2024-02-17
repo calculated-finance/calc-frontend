@@ -2,7 +2,7 @@
 
 import { isNil } from 'lodash';
 import { useRouter } from 'next/router';
-import { useWallet } from './useWallet';
+import { useWallet } from '@hooks/useWallet';
 
 const admins = [
   'kujira13zatchjvrqvtkg2asfxnjmnsur3e7faszm49mt', // d

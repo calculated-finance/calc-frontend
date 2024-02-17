@@ -2,7 +2,7 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainId } from '@models/ChainId';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import getCalcClient from './clients/cosmos';

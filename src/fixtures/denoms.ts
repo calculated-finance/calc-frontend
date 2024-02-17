@@ -6,7 +6,7 @@ import {
   OsmosisMainnetDenoms,
   OsmosisTestnetDenoms,
 } from '@models/Denom';
-import { DenomInfo } from './DenomInfo';
+import { DenomInfo } from '../utils/DenomInfo';
 
 export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
   'kaiyo-1': {

@@ -1,4 +1,4 @@
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 
 export type SwapEvent = {
   time: Date;

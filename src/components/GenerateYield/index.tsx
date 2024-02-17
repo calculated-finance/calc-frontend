@@ -14,7 +14,7 @@ import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
 import Spinner from '../Spinner';
 import DenomIcon from '../DenomIcon';
-import { useMarket } from '../../hooks/useMarket';
+import { useMarket } from '@hooks/useMarket';
 import { YieldOption } from './YieldOption';
 
 export default function GenerateYield({ resultingDenom }: { resultingDenom: DenomInfo }) {

@@ -5,10 +5,10 @@ import {
   WeightedScalePostPurchaseFormSchema,
 } from '@models/weightedScaleFormData';
 import { initialValues } from '@models/DcaInFormData';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
-import { getFormState } from './useDcaInForm';
-import { useFormStore } from './useFormStore';
-import { useWallet } from './useWallet';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { getFormState } from '@hooks/useDcaInForm';
+import { useFormStore } from '@hooks/useFormStore';
+import { useWallet } from '@hooks/useWallet';
 
 export const useWeightedScaleAssetsForm = () => {
   const { formName } = useStrategyInfo();

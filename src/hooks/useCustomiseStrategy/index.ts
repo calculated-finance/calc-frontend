@@ -6,10 +6,10 @@ import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-starg
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChainId } from '../useChainId';
-import { getExecuteMsg } from '../useCreateVault/getCreateVaultExecuteMsg';
-import { STRATEGY_KEY } from '../useStrategy';
-import { useAnalytics } from '../useAnalytics';
+import { useChainId } from '@hooks/useChainId';
+import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
+import { STRATEGY_KEY } from '@hooks/useStrategy';
+import { useAnalytics } from '@hooks/useAnalytics';
 import { ConfigureVariables } from './ConfigureVariables';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 

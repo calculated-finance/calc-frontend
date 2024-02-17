@@ -2,8 +2,8 @@ import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
 import { ChainId } from '@models/ChainId';
-import { useChainId } from './useChainId';
-import { useCosmWasmClient } from './useCosmWasmClient';
+import { useChainId } from '@hooks/useChainId';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 export function useConfig(injectedChainId?: ChainId): Config | undefined {
   const { chainId: currentChainId } = useChainId();

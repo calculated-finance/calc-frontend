@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import YesNoValues from '@models/YesNoValues';
-import {  useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { yesNoData } from './PriceThreshold';
 import { TransactionType } from './TransactionType';
 

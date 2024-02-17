@@ -1,8 +1,8 @@
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from '../models/Strategy';
-import { isAddressAdmin } from './useAdmin';
-import { useCalcClient } from './useCalcClient';
+import { Strategy } from '@models/Strategy';
+import { isAddressAdmin } from '@hooks/useAdmin';
+import { useCalcClient } from '@hooks/useCalcClient';
 
 export const STRATEGY_KEY = 'strategy';
 
@@ -13,13 +13,13 @@ export default function useStrategy(id: Strategy['id'] | null | undefined) {
   return useQuery<Strategy>(
     [STRATEGY_KEY, id, client, address],
     async () => {
-      const result = await client!.fetchVault(id!);
+      const strategy = await client!.fetchVault(id!);
 
-      if (result.owner !== address && !isAddressAdmin(address)) {
+      if (strategy.owner !== address && !isAddressAdmin(address)) {
         throw new Error('Strategy not found');
       }
 
-      return result;
+      return strategy;
     },
     {
       enabled: !!client && !!id && !!address,

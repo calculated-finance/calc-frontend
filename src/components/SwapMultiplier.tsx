@@ -16,7 +16,7 @@ import {
 import YesNoValues from '@models/YesNoValues';
 import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { WeightSummary } from './WeightSummary';
 
 export default function SwapMultiplier({

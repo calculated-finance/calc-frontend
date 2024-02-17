@@ -3,7 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { initialValues } from '@models/DcaInFormData';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 
 export function SummaryWhileSwapping({
   initialDenom,

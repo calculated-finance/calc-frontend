@@ -3,12 +3,12 @@ import Icon from '@components/Icon';
 import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import { ReactElement } from 'react';
 import { FiDivide, FiAperture } from 'react-icons/fi';
-import useQueryWithNotification from '@hooks/useQueryWithNotification';
 import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
 import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '@components/LinkWithQuery';
-import StrategyUrls from './StrategyUrls';
+import { useQuery } from '@tanstack/react-query';
+import StrategyUrls from '@models/StrategyUrls';
 import 'isomorphic-fetch';
 
 type StrategyCardProps = {
@@ -82,13 +82,14 @@ StrategyCard.defaultProps = {
 };
 
 function useFearAndGreed() {
-  const { data, isLoading } = useQueryWithNotification(['fear-and-greed-index'], async () => {
+  const { data, isLoading } = useQuery(['fear-and-greed-index'], async () => {
     const response = await fetch(`https://api.alternative.me/fng/`);
     if (!response.ok) {
       throw new Error('Failed to fetch fear and greed index.');
     }
     return response.json();
   });
+
   return {
     index: data?.data[0].value,
     classification: data?.data[0].value_classification,

@@ -3,31 +3,63 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
 import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import { getChainEndpoint, getOsmosisRouterUrl } from '@helpers/chains';
+import { getChainEndpoint, getOsmosisRouterUrl, getPairsFetchLimit } from '@helpers/chains';
 import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
 import { ARCHWAY_CHAINS, KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
-import { reduce, toPairs } from 'rambda';
+import { forEach, join, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { fromAtomic } from '@utils/getDenomInfo';
 import Long from 'long';
-import { DENOMS } from '@utils/denoms';
+import { DENOMS } from 'src/fixtures/denoms';
+import { Pair } from '@models/Pair';
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
+  fetchPairs: (
+    chainId: ChainId,
+    contractAddress: string,
+    client: CosmWasmClient,
+    startAfter?: string,
+    allPairs?: Pair[],
+  ) => Promise<Pair[]>;
   fetchTokenBalance: (address: string, tokenId: string) => Promise<Coin>;
   fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
   fetchRoute: (
     initialDenom: DenomInfo,
     targetDenom: DenomInfo,
-    swapAmount: number,
+    swapAmount: bigint,
   ) => Promise<{ route: string | undefined; feeRate: number }>;
 };
+
+async function fetchAllPairsFromSwapper(
+  chainId: ChainId,
+  contractAddress: string,
+  client: CosmWasmClient,
+  startAfter?: string,
+  allPairs = [] as Pair[],
+): Promise<Pair[]> {
+  const { pairs } = await client!.queryContractSmart(contractAddress, {
+    get_pairs: {
+      limit: getPairsFetchLimit(chainId),
+      start_after: startAfter,
+    },
+  });
+
+  allPairs.push(...pairs);
+
+  if (pairs.length === getPairsFetchLimit(chainId)) {
+    const newStartAfter = pairs[pairs.length - 1];
+    return fetchAllPairsFromSwapper(chainId, contractAddress, client, newStartAfter, allPairs);
+  }
+
+  return allPairs;
+}
 
 const fetchDenomsKujira = (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> =>
   Promise.resolve(
@@ -119,6 +151,7 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
 
   return {
     fetchDenoms: () => fetchDenomsKujira(chainId),
+    fetchPairs: fetchAllPairsFromSwapper,
     fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
     fetchBalances: (address: string) =>
       queryClient.bank.allBalances(address, {
@@ -132,7 +165,7 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
       const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: number) => ({ route: undefined, feeRate: 0.0075 }),
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({ route: undefined, feeRate: 0.0075 }),
   };
 };
 
@@ -143,6 +176,36 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
 
   return {
     fetchDenoms: () => fetchDenomsOsmosis(chainId),
+    fetchPairs: async (
+      _chainId: ChainId,
+      _contractAddress: string,
+      _client: CosmWasmClient,
+      _startAfter?: string,
+      _allPairs?: Pair[],
+    ) => {
+      const denoms = await fetchDenomsOsmosis(chainId);
+      return values(
+        reduce(
+          (acc: { [x: string]: Pair }, denom: DenomInfo) => {
+            const pairs: { [x: string]: Pair } = {};
+            forEach((otherDenom: DenomInfo) => {
+              if (denom.id !== otherDenom.id) {
+                const key = join(
+                  '-',
+                  sort((a, b) => (a > b ? -1 : 1), [denom.id, otherDenom.id]),
+                );
+                pairs[key] = {
+                  denoms: [denom.id, otherDenom.id],
+                };
+              }
+            }, values(denoms));
+            return { ...acc, ...pairs };
+          },
+          {},
+          values(denoms),
+        ),
+      );
+    },
     fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
     fetchBalances: async (address: string) => {
       const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
@@ -163,19 +226,21 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       });
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: number) => {
+    fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => {
       try {
         const response = await (
           await fetch(
-            `${getOsmosisRouterUrl(chainId!)}/router/single-quote?${new URLSearchParams({
+            `${getOsmosisRouterUrl(chainId!)}/router/quote?${new URLSearchParams({
               tokenIn: `${swapAmount}${initialDenom.id}`,
               tokenOutDenom: targetDenom!.id,
+              singleRoute: 'true',
             })}`,
             {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
               },
+              mode: 'cors',
             },
           )
         ).json();
@@ -215,6 +280,7 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
 
   return {
     fetchDenoms: () => fetchDenomsArchway(chainId),
+    fetchPairs: fetchAllPairsFromSwapper,
     fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
     fetchBalances: async (address: string) => {
       const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
@@ -235,7 +301,7 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       });
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: number) => ({ route: undefined, feeRate: 0.0075 }), // TODO: understand fees
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({ route: undefined, feeRate: 0.0075 }), // TODO: understand fees
   };
 };
 

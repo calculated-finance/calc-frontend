@@ -5,7 +5,7 @@ import { Strategy } from '@models/Strategy';
 import { EventsResponse } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import { ChainId } from '@models/ChainId';
 import { getEventsFetchLimit, getPairsFetchLimit, getStrategiesFetchLimit } from '@helpers/chains';
 import { transformToStrategyCosmos } from './transformToStrategy';

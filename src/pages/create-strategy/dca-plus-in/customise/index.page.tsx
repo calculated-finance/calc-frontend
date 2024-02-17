@@ -17,7 +17,7 @@ import SlippageTolerance from '@components/SlippageTolerance';
 import StrategyDuration from '@components/StrategyDuration';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { TransactionType } from '@components/TransactionType';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { actions, state } = useDCAPlusStep2Form();

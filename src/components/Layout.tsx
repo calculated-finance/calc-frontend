@@ -107,9 +107,7 @@ function FlowLayout({ children }: { children: ReactElement }) {
     <>
       <AppHeader />
       <Content
-        bgImage={
-          OSMOSIS_CHAINS.includes(chain) ? '/images/backgrounds/osmoBackground.svg' : '/images/backgrounds/twist.svg'
-        }
+        bgImage="/images/backgrounds/twist.svg"
         backgroundPosition="bottom"
         backgroundSize={OSMOSIS_CHAINS.includes(chain) ? 'cover' : 'center'}
         backgroundRepeat="no-repeat"

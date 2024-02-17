@@ -7,8 +7,8 @@ import { values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
 import { queryClient } from 'src/pages/queryClient';
-import getCalcClient from './useCalcClient/getClient/clients/cosmos';
-import useDenoms from './useDenoms';
+import getCalcClient from '@hooks/useCalcClient/getClient/clients/cosmos';
+import useDenoms from '@hooks/useDenoms';
 
 const useAllStrategies = () => {
   const chains = values(

@@ -1,5 +1,5 @@
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
-import useValidators from './useValidators';
+import useValidators from '@hooks/useValidators';
 
 const useValidator = (validatorAddress: Validator['operatorAddress'] | null | undefined) => {
   const { validators, ...other } = useValidators();
