@@ -12,9 +12,9 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
-import Spinner from '../Spinner';
-import DenomIcon from '../DenomIcon';
 import { useMarket } from '@hooks/useMarket';
+import Spinner from '@components/Spinner';
+import DenomIcon from '@components/DenomIcon';
 import { YieldOption } from './YieldOption';
 
 export default function GenerateYield({ resultingDenom }: { resultingDenom: DenomInfo }) {
