@@ -1,17 +1,16 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import { isEmpty, isNil } from 'lodash';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import useFiatPrices from '@hooks/useFiatPrices';
-import useDenoms from '@hooks/useDenoms';
+import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
-import { useTrackCreateVault } from '../useTrackCreateVault';
 
 export const useCreateVaultDca = () => {
   const { transactionType } = useStrategyInfo();

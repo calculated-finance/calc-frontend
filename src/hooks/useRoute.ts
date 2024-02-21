@@ -1,9 +1,9 @@
 import { Coin } from '@cosmjs/proto-signing';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useQuery } from '@tanstack/react-query';
-import { useChainId } from './useChainId';
-import { useChainClient } from './useChainClient';
-import useDenoms from './useDenoms';
+import { useChainId } from '@hooks/useChainId';
+import { useChainClient } from '@hooks/useChainClient';
+import useDenoms from '@hooks/useDenoms';
 
 const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   const { chainId } = useChainId();
@@ -12,7 +12,7 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
 
   const result = useQuery(
     ['prices', 'route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
-    () => chainClient?.fetchRoute(getDenomById(swapAmount!.denom)!, targetDenom!, Number(swapAmount!.amount)),
+    () => chainClient?.fetchRoute(getDenomById(swapAmount!.denom)!, targetDenom!, BigInt(swapAmount!.amount)),
     {
       enabled: !!chainId && !!chainClient && !!swapAmount && !!getDenomById(swapAmount!.denom) && !!targetDenom,
       staleTime: 1000 * 60,

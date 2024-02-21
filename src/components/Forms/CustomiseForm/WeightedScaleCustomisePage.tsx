@@ -18,7 +18,7 @@ import { TriggerForm } from '@components/TriggerForm';
 import { StepConfig } from '@formConfig/StepConfig';
 import { AnySchema } from 'yup';
 import PriceThreshold from '@components/PriceThreshold';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 
 export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepConfig[]; formSchema: AnySchema }) {
   const { actions, state } = useWeightedScaleCustomiseForm();

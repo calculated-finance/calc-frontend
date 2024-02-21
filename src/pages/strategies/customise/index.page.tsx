@@ -33,7 +33,7 @@ import BasePrice from '@components/BasePrice';
 import useSpotPrice from '@hooks/useSpotPrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
-import { StrategyInfoProvider } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { StrategyType } from '@models/StrategyType';

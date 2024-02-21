@@ -14,7 +14,7 @@ import {
   getStrategyEndDateFromRemainingExecutions,
   isBuyStrategy,
 } from '@helpers/strategy';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import { DcaPlusPerformanceResponse } from '@hooks/useDcaPlusPerformance';
 import { findLast, isNil } from 'lodash';
 import { getEndDateFromRemainingExecutions } from '@helpers/getEndDateFromRemainingExecutions';

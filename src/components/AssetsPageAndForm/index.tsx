@@ -13,7 +13,7 @@ import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrat
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
 import { getSteps } from '@helpers/assets-page/getSteps';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { useRouter } from 'next/router';
 import { BrowserRouter } from 'react-router-dom';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';

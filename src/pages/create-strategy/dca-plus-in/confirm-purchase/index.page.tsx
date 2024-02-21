@@ -22,7 +22,7 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { ModalWrapper } from '@components/ModalWrapper';
 import useStrategy from '@hooks/useStrategy';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm();

@@ -1,4 +1,4 @@
-import { getSlippageWithoutTrailingZeros } from '../useCreateVault/buildCreateVaultParams';
+import { getSlippageWithoutTrailingZeros } from '@hooks/useCreateVault/buildCreateVaultParams';
 
 export function buildSlippageTolerance(slippageTolerance: number, initialSlippageTolerance: number) {
   const isSlippageToleranceDirty = slippageTolerance !== initialSlippageTolerance;

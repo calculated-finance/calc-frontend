@@ -3,7 +3,7 @@ import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
 import { DenomInfo } from '@utils/DenomInfo';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { DenomPriceInput } from './DenomPriceInput';

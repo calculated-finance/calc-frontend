@@ -9,12 +9,12 @@ import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { EncodeObject } from '@cosmjs/proto-signing';
-import { useChainId } from './useChainId';
-import { Strategy } from '../models/Strategy';
-import { getExecuteMsg } from './useCreateVault/getCreateVaultExecuteMsg';
-import { STRATEGY_KEY } from './useStrategy';
-import { getGrantMsg } from './useCalcSigningClient/getClient/clients/cosmos';
-import { buildCallbackDestinations } from './useCreateVault/buildCreateVaultParams';
+import { useChainId } from '@hooks/useChainId';
+import { Strategy } from '@models/Strategy';
+import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
+import { STRATEGY_KEY } from '@hooks/useStrategy';
+import { getGrantMsg } from '@hooks/useCalcSigningClient/getClient/clients/cosmos';
+import { buildCallbackDestinations } from '@hooks/useCreateVault/buildCreateVaultParams';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;

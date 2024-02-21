@@ -1,6 +1,6 @@
 import { createContext } from 'react';
-import { useChainContext } from './useChainContext';
-import { useChainId } from './useChainId';
+import { useChainContext } from '@hooks/useChainContext';
+import { useChainId } from '@hooks/useChainId';
 
 export interface CalcWalletModalContextState {
   visible: boolean;

@@ -1,8 +1,8 @@
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/stargate';
 import { fromAtomic } from '@utils/getDenomInfo';
-import useExpectedReceiveAmount from './useExpectedReceiveAmount';
-import useDenoms from './useDenoms';
+import useExpectedReceiveAmount from '@hooks/useExpectedReceiveAmount';
+import useDenoms from '@hooks/useDenoms';
 
 export default function useExpectedPrice(
   swapAmount: Coin | undefined,

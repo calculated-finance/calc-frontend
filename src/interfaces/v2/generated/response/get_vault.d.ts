@@ -129,6 +129,7 @@ export interface Vault {
   destinations: Destination[];
   escrow_level: Decimal;
   escrowed_amount: Coin;
+  route?: string;
   id: Uint128;
   label?: string | null;
   minimum_receive_amount?: Uint128 | null;

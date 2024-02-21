@@ -102,7 +102,9 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
           month: 'short',
           year: '2-digit',
         })
-        .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD`,
+        .replace(',', '')}\n1 ${priceOfDenomName} = ${Number(swap?.currentPrice).toFixed(2)}USD\n\nBlock Height: ${
+        swap?.blockHeight
+      }\n`,
     }));
 
   const swapsDataWithLabel = swapsData
@@ -181,7 +183,18 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                   })
                 }
               />
-
+              <VictoryScatter
+                style={{
+                  data: { fill: 'black', stroke: 'black', strokeWidth: 1 },
+                  labels: { fill: 'white', fontSize: 6 },
+                }}
+                size={6}
+                data={swapsFailedDataWithLabel}
+                x="date"
+                y="marketValue"
+                symbol="diamond"
+                labelComponent={<CustomLabel />}
+              />
               <VictoryScatter
                 style={{
                   data: { fill: '#1AEFAF', stroke: 'white', strokeWidth: 1 },
@@ -202,18 +215,6 @@ export function StrategyChart({ strategy }: { strategy: Strategy }) {
                 labelComponent={<CustomLabel />}
                 x="date"
                 y="marketValue"
-              />
-              <VictoryScatter
-                style={{
-                  data: { fill: 'black', stroke: 'black', strokeWidth: 1, opacity: 0.4 },
-                  labels: { fill: 'white', fontSize: 6 },
-                }}
-                size={6}
-                data={swapsFailedDataWithLabel}
-                x="date"
-                y="marketValue"
-                symbol="diamond"
-                labelComponent={<CustomLabel />}
               />
             </VictoryChart>
           )}

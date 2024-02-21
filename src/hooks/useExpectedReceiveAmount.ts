@@ -1,8 +1,8 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
 import { Coin } from '@cosmjs/stargate';
+import { useQuery } from '@tanstack/react-query';
 
 export default function useExpectedReceiveAmount(
   swapAmount: Coin | undefined,
@@ -34,6 +34,7 @@ export default function useExpectedReceiveAmount(
     {
       enabled: !!cosmWasmClient && !!config && !!targetDenom?.id && !!swapAmount && enabled,
       cacheTime: 15000,
+      retry: false,
       meta: {
         errorMessage: 'Error fetching expected receive amount',
       },

@@ -3,7 +3,7 @@ import { getDenomName } from '@utils/getDenomInfo';
 import { Strategy } from '@models/Strategy';
 import Spinner from '@components/Spinner';
 import useStrategyEvents from '@hooks/useStrategyEvents';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import {
   getRemainingExecutionsRange,
   getStandardDcaEndDate,

@@ -2,9 +2,9 @@ import { useWallet } from '@hooks/useWallet';
 import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/v2/generated/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from '../models/Strategy';
-import { useChainId } from './useChainId';
-import { useCosmWasmClient } from './useCosmWasmClient';
+import { Strategy } from '@models/Strategy';
+import { useChainId } from '@hooks/useChainId';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 
 export type DcaPlusPerformanceResponse = DcaPlusPerformanceResponseGenerated;
 

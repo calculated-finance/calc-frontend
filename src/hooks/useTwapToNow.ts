@@ -1,9 +1,9 @@
 import { findPair } from '@helpers/findPair';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { useQuery } from '@tanstack/react-query';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
-import usePairs from './usePairs';
+import usePairs from '@hooks/usePairs';
+import { useQuery } from '@tanstack/react-query';
 
 export default function useTwapToNow(
   initialDenom: DenomInfo | undefined,
@@ -18,7 +18,7 @@ export default function useTwapToNow(
   const pair = pairs && resultingDenom && initialDenom ? findPair(pairs, resultingDenom, initialDenom) : null;
 
   const { data: twap, ...helpers } = useQuery<number>(
-    ['prices', 'twap', cosmWasmClient, initialDenom, resultingDenom, route],
+    ['prices', 'twap', initialDenom?.id, resultingDenom?.id, route],
     async () => {
       const twapToNow = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
         get_twap_to_now: {
@@ -34,8 +34,9 @@ export default function useTwapToNow(
     {
       enabled: !!cosmWasmClient && !!pair && !!config && enabled,
       staleTime: 15000,
+      retry: false,
       meta: {
-        errorMessage: 'Error fetching twap',
+        errorMessage: 'Error fetching twap price',
       },
     },
   );

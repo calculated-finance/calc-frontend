@@ -2,6 +2,8 @@ import { DenomInfo } from './DenomInfo';
 
 export const fromAtomic = (denom: DenomInfo, value: number) => value / 10 ** denom.significantFigures;
 
+export const toAtomicBigInt = (denom: DenomInfo, value: bigint) => value * 10n ** BigInt(denom.significantFigures);
+
 export const toAtomic = (denom: DenomInfo, value: number) => Math.round(value * 10 ** denom.significantFigures);
 
 export const priceFromRatio = (denom: DenomInfo, value: number | null | undefined) =>

@@ -60,7 +60,7 @@ import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
 import useDenoms from '@hooks/useDenoms';
-import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
+import { fromAtomic, toAtomic, toAtomicBigInt } from '@utils/getDenomInfo';
 import useQueryState from '@hooks/useQueryState';
 import { useChainId } from '@hooks/useChainId';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
@@ -83,11 +83,11 @@ function InitialDeposit() {
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
       <NumberInput
-        onChange={(newAmount) =>
+        onChange={(newAmount) => {
           setQueryState({
-            amount: newAmount && initialDenom && BigInt(toAtomic(initialDenom, newAmount)).toString(),
-          })
-        }
+            amount: newAmount && initialDenom && toAtomicBigInt(initialDenom, BigInt(newAmount)).toString(),
+          });
+        }}
         textAlign="right"
         placeholder="Enter amount"
         value={
@@ -258,6 +258,10 @@ function ResultingDenom() {
     name: 'resultingDenom',
   });
 
+  const [{ value: routeStateValue }, ,] = useField<{ route: string | undefined; isLoading: boolean } | undefined>({
+    name: 'routeState',
+  });
+
   useEffect(() => {
     if (!resultingDenomName) return;
     resultingDenomHelpers.setValue(getDenomByName(resultingDenomName));
@@ -271,8 +275,8 @@ function ResultingDenom() {
   const { expectedReceiveAmount } = useExpectedReceiveAmount(
     swapAmount && initialDenom ? coin(BigInt(Math.round(swapAmount)).toString(), initialDenom.id) : undefined,
     resultingDenomValue,
-    undefined,
-    !!swapAmount && !!resultingDenomValue,
+    routeStateValue?.route,
+    !!swapAmount && !!resultingDenomValue && !(routeStateValue?.isLoading || true),
   );
 
   const expectedTotalReceiveAmount =
@@ -567,7 +571,10 @@ function DurationSlider() {
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
   });
-  const [, , _] = useField<string | undefined>({
+  const [, , routeStateHelpers] = useField<{ route: string | undefined; isLoading: boolean } | undefined>({
+    name: 'routeState',
+  });
+  const [, , routeHelpers] = useField<string | undefined>({
     name: 'route',
   });
 
@@ -577,6 +584,11 @@ function DurationSlider() {
     swapAmountField.value && initialDenom ? coin(BigInt(swapAmountField.value).toString(), initialDenom.id) : undefined,
     resultingDenom,
   );
+
+  useEffect(() => {
+    routeHelpers.setValue(route);
+    routeStateHelpers.setValue({ route, isLoading: useRouteHelpers.isLoading });
+  }, [route, useRouteHelpers.isLoading]);
 
   const { twap } = useTwapToNow(
     initialDenom,

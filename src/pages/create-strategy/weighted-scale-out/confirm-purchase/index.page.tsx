@@ -4,7 +4,7 @@ import { StrategyType } from '@models/StrategyType';
 import { FormNames } from '@hooks/useFormStore';
 import weightedScaleOutSteps from '@formConfig/weightedScaleOut';
 import { WeightedScaleConfirmPage } from '@components/WeightedScaleConfirmPage';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   return (

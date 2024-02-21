@@ -2,7 +2,7 @@ import { max } from 'lodash';
 import { TransactionType } from '@components/TransactionType';
 import { DenomInfo } from '@utils/DenomInfo';
 import { safeInvert } from '@utils/safeInvert';
-import useTwapToNow from './useTwapToNow';
+import useTwapToNow from '@hooks/useTwapToNow';
 
 export default function useSpotPrice(
   resultingDenom: DenomInfo | undefined,

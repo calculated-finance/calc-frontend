@@ -1,6 +1,6 @@
 import { Strategy } from '@models/Strategy';
 import { BrowserProvider, formatEther, formatUnits } from 'ethers';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import getEventManagerContract from 'src/interfaces/evm/getEventManagerContract';
 import { getStrategyInitialDenom, getStrategyResultingDenom } from '@helpers/strategy';
 import getVaultContract from 'src/interfaces/evm/getVaultContract/';

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { Strategy } from '../models/Strategy';
-import { StrategyEvent } from './StrategyEvent';
-import { useCalcClient } from './useCalcClient';
+import { useCalcClient } from '@hooks/useCalcClient';
+import { Strategy } from '@models/Strategy';
+import { StrategyEvent } from '@models/StrategyEvent';
 
 export default function useStrategyEvents(id: Strategy['id'] | undefined, enabled = true) {
   const { client } = useCalcClient();

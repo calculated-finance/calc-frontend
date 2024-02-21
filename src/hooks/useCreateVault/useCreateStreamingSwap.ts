@@ -1,15 +1,15 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import useFiatPrices from '@hooks/useFiatPrices';
 import { FormData } from '@models/StreamingSwapFormData';
+import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
-import { useTrackCreateVault } from './useTrackCreateVault';
 
 export const useCreateStreamingSwap = () => {
   const { transactionType } = useStrategyInfo();
@@ -60,6 +60,7 @@ export const useCreateStreamingSwap = () => {
       swapAmount: state.swapAmount,
       priceThreshold: state.priceThreshold || undefined,
       transactionType,
+      route: state.route,
       slippageTolerance: state.slippageTolerance,
       destinationConfig: {
         autoStakeValidator: undefined,

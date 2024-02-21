@@ -1,16 +1,15 @@
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { DenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
-import useDenoms from '@hooks/useDenoms';
+import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
-import { useTrackCreateVault } from '../useTrackCreateVault';
 import { handleError } from '../handleError';
 
 export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {

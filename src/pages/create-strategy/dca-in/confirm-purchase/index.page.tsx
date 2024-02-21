@@ -21,7 +21,7 @@ import { SWAP_FEE } from 'src/constants';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
-import { StrategyInfoProvider } from '../customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useDcaInConfirmForm();

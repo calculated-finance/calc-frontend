@@ -1,5 +1,5 @@
 import { Strategy, StrategyStatus } from '@models/Strategy';
-import { StrategyEvent } from '@hooks/StrategyEvent';
+import { StrategyEvent } from '@models/StrategyEvent';
 import { StrategyType } from '@models/StrategyType';
 import { fromAtomic, isDenomStable, priceFromRatio } from '@utils/getDenomInfo';
 import totalExecutions from '@utils/totalExecutions';
@@ -17,7 +17,6 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { ChainId } from '@models/ChainId';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { safeInvert } from '@utils/safeInvert';

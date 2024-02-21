@@ -22,7 +22,7 @@ import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { SigningState } from '@components/NewStrategyModal';
 import useStrategy from '@hooks/useStrategy';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { state, actions } = useDcaPlusConfirmForm();

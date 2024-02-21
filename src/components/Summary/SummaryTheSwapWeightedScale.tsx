@@ -3,7 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import useSpotPrice from '@hooks/useSpotPrice';
-import { useStrategyInfo } from 'src/pages/create-strategy/dca-in/customise/useStrategyInfo';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 

@@ -6,7 +6,7 @@ import { WeightedScaleCustomiseFormSchema } from '@models/weightedScaleFormData'
 import { TransactionType } from '@components/TransactionType';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { WeightedScaleCustomisePage } from '@components/Forms/CustomiseForm/WeightedScaleCustomisePage';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { resetForm } = useFormStore();

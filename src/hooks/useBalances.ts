@@ -1,7 +1,7 @@
 import { useWallet } from '@hooks/useWallet';
-import useQueryWithNotification from './useQueryWithNotification';
-import { useChainId } from './useChainId';
-import { useChainClient } from './useChainClient';
+import { useChainId } from '@hooks/useChainId';
+import { useChainClient } from '@hooks/useChainClient';
+import { useQuery } from '@tanstack/react-query';
 
 const useBalances = (injectedAddress: string | null = null) => {
   const { address: walletAddress } = useWallet();
@@ -10,7 +10,7 @@ const useBalances = (injectedAddress: string | null = null) => {
 
   const address = injectedAddress ?? walletAddress;
 
-  const { data: balances, ...helpers } = useQueryWithNotification(
+  const { data: balances, ...helpers } = useQuery(
     ['balances', chainId, address],
     () => client!.fetchBalances(address!),
     {

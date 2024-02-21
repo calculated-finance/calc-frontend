@@ -5,7 +5,7 @@ import { TransactionType } from '@components/TransactionType';
 import dcaOutSteps from '@formConfig/dcaOut';
 import { FormNames, useFormStore } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   const { resetForm } = useFormStore();

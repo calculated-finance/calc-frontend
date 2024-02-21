@@ -3,7 +3,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { TransactionType } from '@components/TransactionType';
 import { StrategyType } from '@models/StrategyType';
 import { Assets } from '@components/AssetsPageAndForm';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   return (

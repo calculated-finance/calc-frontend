@@ -14,7 +14,6 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 import usePairs from '@hooks/usePairs';
 import { DenomInfo } from '@utils/DenomInfo';
 import { priceFromRatio } from '@utils/getDenomInfo';
-import { useChainId } from '@hooks/useChainId';
 import useTwapToNow from '@hooks/useTwapToNow';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
@@ -40,9 +39,8 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; re
 }
 
 export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
-  const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom);
+  const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom, strategy.rawData.route);
   const { pairs } = usePairs();
-  const { chainId } = useChainId();
   const priceThreshold = getPriceThreshold(strategy);
 
   const { trigger } = strategy.rawData;

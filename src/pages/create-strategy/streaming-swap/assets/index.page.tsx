@@ -3,7 +3,7 @@ import { FormNames } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
 import { getFlowLayout } from '@components/Layout';
 import { Form } from '@components/StreamingSwapForm';
-import { StrategyInfoProvider } from '../../dca-in/customise/useStrategyInfo';
+import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
   return (

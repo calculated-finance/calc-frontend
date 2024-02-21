@@ -201,6 +201,7 @@ export type BuildCreateVaultContext = {
     increment: number;
     interval: ExecutionIntervals;
   };
+  route?: string;
   timeTrigger?: TimeTrigger;
   startPrice?: number;
   swapAmount: number;
@@ -220,6 +221,7 @@ export function buildCreateVaultMsg(
     label,
     initialDenom,
     resultingDenom,
+    route,
     timeTrigger,
     startPrice,
     timeInterval,
@@ -259,6 +261,7 @@ export function buildCreateVaultMsg(
       label,
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
+      route,
       swap_amount: isInAtomics ? BigInt(Math.round(swapAmount)).toString() : getSwapAmount(initialDenom, swapAmount),
       target_start_time_utc_seconds: timeTrigger && getStartTime(timeTrigger.startDate, timeTrigger.startTime),
       minimum_receive_amount: priceThreshold

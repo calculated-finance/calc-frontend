@@ -3,8 +3,8 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { KeyValuePair, all, indexBy, isNil, map, mergeAll, reduce, toLower, values, zip } from 'rambda';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainId } from '@models/ChainId';
-import { ChainClient, useChainClient } from './useChainClient';
-import { useChainId } from './useChainId';
+import { ChainClient, useChainClient } from '@hooks/useChainClient';
+import { useChainId } from '@hooks/useChainId';
 
 const useDenoms = () => {
   const chainIds = process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS;
