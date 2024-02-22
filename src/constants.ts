@@ -6,7 +6,7 @@ export const HOTJAR_SITE_ID = process.env.NEXT_PUBLIC_HOTJAR_SITE_ID;
 export const CREATE_VAULT_FEE = 0.1; // 10c
 export const CANCEL_VAULT_FEE = 0.5; // $1
 export const ONE_MILLION = 1000000;
-export const COINGECKO_ENDPOINT = 'https://api.coingecko.com/api/v3';
+export const COINGECKO_ENDPOINT = 'https://pro-api.coingecko.com/api/v3';
 export const SWAP_FEE = 0.005;
 export const SWAP_FEE_WS = 0.01;
 export const DELEGATION_FEE = 0.0;
@@ -26,7 +26,7 @@ export const TRANSACTION_INDEXING_DISABLED_ERROR_MESSAGE =
 export const CALC_TELEGRAM_URL = 'https://t.me/calcprotocol';
 
 export const KADO_API_KEY = '020c6cde-5eed-4c46-aa27-e75c40b519e6';
-export const COINGECKO_API_KEY = 'CG-stTwVSwHSvYBV6S26zfEgz3h';
+export const COINGECKO_API_KEY = 'CG-kHyGmfVxJexVwa6qC5zLZWoF';
 
 export const DCA_PLUS_MIN_SWAP_COEFFICIENT = 4;
 

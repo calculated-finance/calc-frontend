@@ -18,19 +18,19 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
   return useQuery<FiatPriceHistoryResponse>(
     ['fiat-price-history', coingeckoId, fiatCurrencyId, days],
     async () => {
-      if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
-        let i = 10;
-        const price = Math.random();
-        return {
-          prices: Array.from({ length: 100 }, () => {
-            i += 1;
-            return [dayjs().subtract(i, 'minutes').toDate().getTime(), price + i / 50];
-          }),
-        };
-      }
+      // if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
+      //   let i = 10;
+      //   const price = Math.random();
+      //   return {
+      //     prices: Array.from({ length: 100 }, () => {
+      //       i += 1;
+      //       return [dayjs().subtract(i, 'minutes').toDate().getTime(), price + i / 50];
+      //     }),
+      //   };
+      // }
 
       const result = await fetch(
-        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}&x_cg_demo_api_key=${COINGECKO_API_KEY}`,
+        `${COINGECKO_ENDPOINT}/coins/${coingeckoId}/market_chart?vs_currency=${fiatCurrencyId}&days=${days}&x_cg_pro_api_key=${COINGECKO_API_KEY}`,
       );
 
       if (!result.ok) {
