@@ -34,7 +34,7 @@ const useFiatPrices = () => {
       }
 
       const formattedIds = coingeckoIds.join(',');
-      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true`; // &x_cg_demo_api_key=${COINGECKO_API_KEY}`;
+      const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true&x_cg_demo_api_key=${COINGECKO_API_KEY}`;
       const response = await fetch(url);
 
       if (!response.ok) {
