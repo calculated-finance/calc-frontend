@@ -134,7 +134,7 @@ function Page() {
       <NewStrategyModalHeader
         stepsConfig={topUpSteps}
         showStepper={false}
-        cancelUrl={generateStrategyDetailUrl(query?.id)}
+        cancelUrl={generateStrategyDetailUrl(query?.id as string)}
       />
       {data && <TopUpForm strategy={data} />}
     </NewStrategyModal>

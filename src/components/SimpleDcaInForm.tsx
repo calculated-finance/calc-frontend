@@ -214,7 +214,7 @@ function SwapAmount({
   );
 }
 
-const SimpleDCAInForm = ({ formValues }: { formValues: SimplifiedDcaInFormData }) => {
+function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }) {
   const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
@@ -281,7 +281,7 @@ const SimpleDCAInForm = ({ formValues }: { formValues: SimplifiedDcaInFormData }
       </Box>
     </Flex>
   );
-};
+}
 
 export default function SimpleDcaIn() {
   const { balances } = useBalances();

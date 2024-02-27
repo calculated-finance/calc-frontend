@@ -18,7 +18,7 @@ function Success() {
       <NewStrategyModalHeader
         showStepper={false}
         stepsConfig={configureSteps}
-        cancelUrl={generateStrategyDetailUrl(query?.id)}
+        cancelUrl={generateStrategyDetailUrl(query?.id as string)}
       />
       <NewStrategyModalBody stepsConfig={configureSteps}>
         <Stack spacing={6} alignItems="center">

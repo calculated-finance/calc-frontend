@@ -18,7 +18,7 @@ function Success() {
       <NewStrategyModalHeader
         showStepper={false}
         stepsConfig={customiseSteps}
-        cancelUrl={generateStrategyDetailUrl(query?.id)}
+        cancelUrl={generateStrategyDetailUrl(query?.id as string)}
       />
       <NewStrategyModalBody stepsConfig={customiseSteps}>
         <Stack spacing={6} alignItems="center">
@@ -33,6 +33,7 @@ function Success() {
     </NewStrategyModal>
   );
 }
+
 Success.getLayout = getFlowLayout;
 
 export default Success;

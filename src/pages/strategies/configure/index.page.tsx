@@ -99,7 +99,7 @@ function Page() {
         <NewStrategyModalHeader
           stepsConfig={configureSteps}
           showStepper={false}
-          cancelUrl={generateStrategyDetailUrl(query?.id)}
+          cancelUrl={generateStrategyDetailUrl(query?.id as string)}
         />
 
         <NewStrategyModalBody stepsConfig={configureSteps} isLoading={isLoading}>
@@ -125,7 +125,7 @@ function Page() {
       <NewStrategyModalHeader
         stepsConfig={configureSteps}
         showStepper={false}
-        cancelUrl={generateStrategyDetailUrl(query?.id)}
+        cancelUrl={generateStrategyDetailUrl(query?.id as string)}
       />
       <ConfigureForm strategy={data} configureStrategyInitialValues={configureStrategyInitialValues} />
     </NewStrategyModal>
