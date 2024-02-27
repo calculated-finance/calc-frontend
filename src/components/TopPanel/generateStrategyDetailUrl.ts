@@ -1,3 +1,3 @@
-export function generateStrategyDetailUrl(id: string | string[] | undefined) {
+export function generateStrategyDetailUrl(id: string | undefined) {
   return { pathname: '/strategies/details', query: { id } };
 }

@@ -49,7 +49,16 @@ export function useCustomiseStrategy() {
       const msgs: EncodeObject[] = [];
 
       const updateVaultMsg = getUpdateVaultMessage(variables);
-      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId)));
+
+      msgs.push(
+        getExecuteMsg(
+          updateVaultMsg,
+          undefined,
+          address,
+          getChainContractAddress(chainId),
+          variables.strategy.initialDenom,
+        ),
+      );
 
       return signingClient.signAndBroadcast(address, msgs, 'auto');
     },

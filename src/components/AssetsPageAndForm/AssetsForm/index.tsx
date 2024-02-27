@@ -58,7 +58,7 @@ function getResultingDenomsFromStrategyType(
 ) {
   if (!strategyType || !pairs || !initialDenom) return [];
 
-  const resultingDenoms = getResultingDenoms(pairs, initialDenom);
+  const resultingDenoms = getResultingDenoms(pairs, initialDenom).filter((denom) => denom.id !== initialDenom.id);
 
   if (strategyType === StrategyType.DCAPlusIn) {
     return resultingDenoms.filter(isSupportedDenomForDcaPlus);

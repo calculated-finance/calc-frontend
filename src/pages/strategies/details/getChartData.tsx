@@ -160,6 +160,7 @@ export function getChartData(
       .toLocaleTimeString()
       .replace(/\b([ap]m)\b/gi, (match) => match.toUpperCase())})`,
   }));
+
   return [...chartData, ...(getChartDataSwaps(events, fiatPrices, displayPrices, denoms) || [])];
 }
 

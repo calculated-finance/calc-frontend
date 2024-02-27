@@ -21,18 +21,6 @@ const useFiatPrices = () => {
     ['fiat-prices', denomsList.length],
     async () => {
       const coingeckoIds = denomsList.map((denom: any) => denom.coingeckoId);
-
-      // if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') {
-      //   return reduce(
-      //     (acc: Record<string, any>, id: string) => ({
-      //       ...acc,
-      //       [id]: { usd: Math.random(), usd_24h_change: Math.random() },
-      //     }),
-      //     {},
-      //     coingeckoIds,
-      //   );
-      // }
-
       const formattedIds = coingeckoIds.join(',');
       const url = `${COINGECKO_ENDPOINT}/simple/price?ids=${formattedIds}&vs_currencies=${FIAT_CURRENCY_ID}&include_24hr_change=true&x_cg_pro_api_key=${COINGECKO_API_KEY}`;
       const response = await fetch(url);

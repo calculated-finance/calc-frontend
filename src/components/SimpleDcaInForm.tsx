@@ -15,7 +15,13 @@ import {
   Text,
   useMediaQuery,
 } from '@chakra-ui/react';
-import { DcaInFormDataStep1, initialValues, simplifiedDcaInValidationSchema } from 'src/models/DcaInFormData';
+import {
+  DcaInFormDataStep1,
+  SimplifiedDcaInFormData,
+  denomInfoSchema,
+  initialValues,
+  simplifiedDcaInValidationSchema,
+} from 'src/models/DcaInFormData';
 import usePairs, { getResultingDenoms, orderAlphabetically } from '@hooks/usePairs';
 import { Formik, FormikHelpers, useField, useFormikContext } from 'formik';
 import useValidation from '@hooks/useValidation';
@@ -116,7 +122,7 @@ function InitialDenom() {
 }
 
 function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
-  const [field, meta, helpers] = useField({ name: 'resultingDenom' });
+  const [{ value: resultingDenom }, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chainId } = useChainId();
   const { getDenomById } = useDenoms();
 
@@ -133,8 +139,8 @@ function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
       <DenomSelect
         denoms={denoms}
         placeholder="Choose asset"
-        defaultValue={field.value?.id}
-        value={field.value?.id}
+        defaultValue={resultingDenom?.id}
+        value={resultingDenom?.id}
         onChange={(v) => v && helpers.setValue(getDenomById(v))}
         optionLabel={`Swapped on ${getChainDexName(chainId)}`}
       />
@@ -150,11 +156,13 @@ function SwapAmount({
   initialDenom: DenomInfo | undefined;
   resultingDenom: DenomInfo | undefined;
 }) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
+  const [{ onChange, value: swapAmount, ...swapAmountField }, meta, { setValue: setSwapAmount }] = useField({
+    name: 'swapAmount',
+  });
   const [{ value: initialDeposit }, depositMeta] = useField({ name: 'initialDeposit' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
 
-  const executions = initialDeposit && field.value ? totalExecutions(initialDeposit, field.value) : 0;
+  const executions = initialDeposit && swapAmount ? totalExecutions(initialDeposit, swapAmount) : 0;
   const displayExecutionInterval =
     executionInterval &&
     executions > 0 &&
@@ -179,19 +187,25 @@ function SwapAmount({
               colorScheme="blue"
               variant="link"
               cursor="pointer"
-              onClick={() => helpers.setValue(initialDeposit)}
+              onClick={() => setSwapAmount(initialDeposit)}
             >
-              {initialDeposit && !depositMeta.error && depositMeta.touched
+              {initialDeposit && depositMeta.touched
                 ? initialDeposit?.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'
                 : '-'}
             </Button>
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} isDisabled={!initialDeposit} />
+      <DenomInput
+        denom={initialDenom}
+        onChange={setSwapAmount}
+        value={swapAmount}
+        {...swapAmountField}
+        isDisabled={!initialDeposit}
+      />
       <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
       <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {initialDeposit && !depositMeta.error && depositMeta.touched && field.value > 0 && (
+      {initialDeposit && !depositMeta.error && depositMeta.touched && swapAmount > 0 && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
         </FormHelperText>
@@ -200,15 +214,15 @@ function SwapAmount({
   );
 }
 
-function Form() {
+const SimpleDCAInForm = ({ formValues }: { formValues: SimplifiedDcaInFormData }) => {
   const { connected } = useWallet();
   const { nextStep } = useSteps(simpleDcaInSteps);
   const { mutate, isError, error, isLoading } = useCreateVaultDca();
   const { pairs } = usePairs();
-  const { balances } = useBalances();
   const { isPageLoading } = usePageLoad();
-  const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [{ value: initialDenom }] = useField({ name: 'initialDenom' });
+  const [{ value: resultingDenom }] = useField({ name: 'resultingDenom' });
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
@@ -235,55 +249,44 @@ function Form() {
     );
   }
 
+  const resultingDenoms = initialDenom
+    ? getResultingDenoms(pairs, initialDenom).filter((denom) => denom.id !== initialDenom?.id)
+    : [];
+
   return (
-    <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-      {({ values: formValues }) => (
-        <Sentry.ErrorBoundary
-          fallback={
-            <Center m={8} p={8} flexDirection="column" gap={6}>
-              <Heading size="lg">Something went wrong</Heading>
-              <Image w={28} h={28} src="/images/notConnected.png" />
-              <Text>Please try again in a new session</Text>
-            </Center>
-          }
-        >
-          <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="center" justifyContent="center" h="full">
-            <Box maxWidth={451} mx="auto">
-              <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
-                {isSuccess ? (
-                  <SuccessStrategyModalBody />
-                ) : (
-                  <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                    <ModalHeader isSuccess={isSuccess} />
-                    <InitialDenom />
-                    <ResultingDenom
-                      denoms={formValues.initialDenom ? getResultingDenoms(pairs, formValues.initialDenom) : []}
-                    />
-                    <ExecutionIntervalLegacy />
-                    <SwapAmount initialDenom={formValues.initialDenom} resultingDenom={formValues.resultingDenom} />
-                    {connected ? (
-                      <SummaryAgreementForm
-                        isError={isError}
-                        error={error}
-                        onSubmit={(agreementData, setSubmitting) =>
-                          handleSubmit(agreementData, setSubmitting, formValues)
-                        }
-                      />
-                    ) : (
-                      <ConnectWalletButton />
-                    )}
-                  </Stack>
-                )}
-              </NewStrategyModalBody>
-            </Box>
-          </Flex>
-        </Sentry.ErrorBoundary>
-      )}
-    </Formik>
+    <Flex layerStyle="panel" p={{ base: 0, sm: 4 }} alignItems="center" justifyContent="center" h="full">
+      <Box maxWidth={451} mx="auto">
+        <NewStrategyModalBody stepsConfig={simpleDcaInSteps} isLoading={isPageLoading} isSigning={isLoading}>
+          {isSuccess ? (
+            <SuccessStrategyModalBody />
+          ) : (
+            <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+              <ModalHeader isSuccess={isSuccess} />
+              <InitialDenom />
+              <ResultingDenom denoms={resultingDenoms} />
+              <ExecutionIntervalLegacy />
+              <SwapAmount initialDenom={initialDenom} resultingDenom={resultingDenom} />
+              {connected ? (
+                <SummaryAgreementForm
+                  isError={isError}
+                  error={error}
+                  onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
+                />
+              ) : (
+                <ConnectWalletButton />
+              )}
+            </Stack>
+          )}
+        </NewStrategyModalBody>
+      </Box>
+    </Flex>
   );
-}
+};
 
 export default function SimpleDcaIn() {
+  const { balances } = useBalances();
+  const { validate } = useValidation(simplifiedDcaInValidationSchema, { balances });
+
   return (
     <StrategyInfoProvider
       strategyInfo={{
@@ -293,7 +296,21 @@ export default function SimpleDcaIn() {
       }}
     >
       <BrowserRouter>
-        <Form />
+        <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
+          {({ values: formValues }) => (
+            <Sentry.ErrorBoundary
+              fallback={
+                <Center m={8} p={8} flexDirection="column" gap={6}>
+                  <Heading size="lg">Something went wrong</Heading>
+                  <Image w={28} h={28} src="/images/notConnected.png" />
+                  <Text>Please try again in a new session</Text>
+                </Center>
+              }
+            >
+              <SimpleDCAInForm formValues={formValues as unknown as SimplifiedDcaInFormData} />
+            </Sentry.ErrorBoundary>
+          )}
+        </Formik>
       </BrowserRouter>
     </StrategyInfoProvider>
   );

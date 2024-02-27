@@ -41,7 +41,7 @@ export function getChainContractAddress(chainId: ChainId) {
     'osmo-test-5': 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f',
     'kaiyo-1': 'kujira1e6fjnq7q20sh9cca76wdkfg69esha5zn53jjewrtjgm4nktk824stzyysu',
     'harpoon-4': 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7',
-    'constantine-3': 'archway1c637d76dhl8qhe5mc4fu8nqlvjugkc70y8yt2uemsf3n75gkjvfq00wf7s',
+    'constantine-3': 'archway1p0w6hpxhcdxvhl6r02wslqgjhrtq60ljs4tky6da2s6ncpha0v0s2s2f6r',
   }[chainId]!;
 }
 
@@ -61,7 +61,7 @@ export function getChainFeeTakerAddress(chainId: ChainId) {
     'osmo-test-5': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
     'kaiyo-1': 'kujira1vq6vrr4nu0w4mmu36pkznzqddmdlf4r5w3qpxy',
     'harpoon-4': 'kujira10fmz64pwj95qy3rgjm0kud2uz62thp3s88ajca',
-    'constantine-3': 'archway1y4k0re9q905nvvcvvmxug3sqtd9e7du46vm3gk',
+    'constantine-3': 'archway15ads3d0eve59f8nhtyyckv9t2r3zxsmj6nrz6h',
   }[chainId];
 }
 

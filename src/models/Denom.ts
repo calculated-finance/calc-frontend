@@ -93,6 +93,7 @@ export enum KujiraMainnetDenoms {
 
 export enum ArchwayTestnetDenoms {
   CONST = 'aconst',
+  'sARCH' = 'archway1erqguqc3hmfajgu7e2dvgaccx6feu5ru3gyatdxu94p66j9hp7msn2kcqp',
   xCONST = 'archway1sdzaas0068n42xk8ndm6959gpu6n09tajmeuq7vak8t9qt5jrp6sjjtnka',
   'USDC.axv' = 'archway1mmu32f7hn0fyw8gh57xl5uhaqu4pq5xx59ynf0tju60n2nzha0as3vtmcm',
   AXL = 'ibc/A1F5AED38B17FC8C2009DD6BD70E463C7D3641B35D1676680CF9329D85C28018',

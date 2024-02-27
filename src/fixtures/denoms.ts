@@ -476,5 +476,8 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       coingeckoId: 'astroport-fi',
       icon: '/images/denoms/astro.png',
     },
+    [ArchwayTestnetDenoms['sARCH']]: {
+      coingeckoId: 'archway',
+    },
   },
 };

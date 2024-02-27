@@ -2,7 +2,7 @@ import { TransactionType } from '@components/TransactionType';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
 import { getFlowLayout } from '@components/Layout';
-import { Form } from '@components/StreamingSwapForm';
+import { StreamingSwapForm } from '@components/StreamingSwapForm';
 import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 
 function Page() {
@@ -14,7 +14,7 @@ function Page() {
         formName: FormNames.SimpleDcaIn,
       }}
     >
-      <Form />
+      <StreamingSwapForm />
     </StrategyInfoProvider>
   );
 }

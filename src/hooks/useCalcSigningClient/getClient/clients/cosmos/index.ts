@@ -114,7 +114,9 @@ async function createStrategy(
     }),
   ];
 
-  msgs.push(getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress));
+  msgs.push(
+    getExecuteMsg(createVaultMsg, funds, senderAddress, chainConfig.contractAddress, createVaultContext.initialDenom),
+  );
 
   addStakingGrants(
     createVaultContext.destinationConfig.autoStakeValidator,
@@ -125,7 +127,7 @@ async function createStrategy(
   );
 
   if (fee) {
-    msgs.push(getFeeMessage(senderAddress, createVaultContext.initialDenom.id, fee, chainConfig.feeTakerAddress));
+    msgs.push(getFeeMessage(senderAddress, createVaultContext.initialDenom, fee, chainConfig.feeTakerAddress));
   }
 
   return executeCreateVault(signer, senderAddress, msgs);
