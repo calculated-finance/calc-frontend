@@ -1,14 +1,13 @@
 import { Button, Stack, Text, Image, Divider, Heading, AbsoluteCenter } from '@chakra-ui/react';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import usePageLoad from '@hooks/usePageLoad';
-import { useRouter } from 'next/router';
 import { StepConfig } from 'src/formConfig/StepConfig';
 import Lottie from 'lottie-react';
 import { Pages } from 'src/pages/Pages';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
-import * as Confetti from '../animations/confetti.json';
 import useQueryState from '@hooks/useQueryState';
+import * as Confetti from '../animations/confetti.json';
 
 function ThatsCalculatedThinkingText() {
   return (

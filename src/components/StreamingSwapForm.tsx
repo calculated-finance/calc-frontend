@@ -916,7 +916,7 @@ function FeeSection() {
   );
 }
 
-const Form = ({ formValues }: { formValues: FormData }) => {
+function Form({ formValues }: { formValues: FormData }) {
   const { connected } = useWallet();
   const { isLoading: isPairsLoading } = usePairs();
   const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
@@ -970,9 +970,9 @@ const Form = ({ formValues }: { formValues: FormData }) => {
       </NewStrategyModalBody>
     </Box>
   );
-};
+}
 
-export const StreamingSwapForm = () => {
+export function StreamingSwapForm() {
   const { balances } = useBalances();
   const { validate } = useValidation(schema, { balances });
 
@@ -983,4 +983,4 @@ export const StreamingSwapForm = () => {
       </Formik>
     </BrowserRouter>
   );
-};
+}

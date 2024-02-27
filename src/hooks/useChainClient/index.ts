@@ -319,7 +319,7 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
   return {
     fetchDenoms: () => fetchDenomsArchway(chainId),
     fetchPairs: async (
-      chainId: ChainId,
+      _chainId: ChainId,
       contractAddress: string,
       client: CosmWasmClient,
       startAfter?: string,

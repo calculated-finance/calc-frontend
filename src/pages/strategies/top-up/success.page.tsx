@@ -23,7 +23,7 @@ function Success() {
         <NewStrategyModalHeader
           showStepper={false}
           stepsConfig={topUpSteps}
-          cancelUrl={generateStrategyDetailUrl(query?.id)}
+          cancelUrl={generateStrategyDetailUrl(query?.id as string)}
         />
         <NewStrategyModalBody isLoading={isLoading} stepsConfig={topUpSteps}>
           loading
@@ -39,7 +39,7 @@ function Success() {
       <NewStrategyModalHeader
         showStepper={false}
         stepsConfig={topUpSteps}
-        cancelUrl={generateStrategyDetailUrl(query?.id)}
+        cancelUrl={generateStrategyDetailUrl(query?.id as string)}
       />
       <NewStrategyModalBody stepsConfig={topUpSteps}>
         <Stack spacing={6} alignItems="center">

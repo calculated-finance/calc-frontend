@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useWallet } from '@hooks/useWallet';
 import * as Sentry from '@sentry/react';
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ExecuteMsg } from 'src/interfaces/generated-osmosis/execute';
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
 import { getChainContractAddress } from '@helpers/chains';
@@ -15,6 +13,7 @@ import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from '@hooks/useStrategy';
 import { getGrantMsg } from '@hooks/useCalcSigningClient/getClient/clients/cosmos';
 import { buildCallbackDestinations } from '@hooks/useCreateVault/buildCreateVaultParams';
+import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;
@@ -23,7 +22,6 @@ type ConfigureVariables = {
 
 export function useConfigureStrategy() {
   const { address, getSigningClient, connected } = useWallet();
-
   const { chainId, chainConfig } = useChainId();
   const queryClient = useQueryClient();
 
@@ -72,9 +70,11 @@ export function useConfigureStrategy() {
             ) || [],
           vault_id: strategy.id,
         },
-      } as ExecuteMsg;
+      };
 
-      msgs.push(getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId)));
+      msgs.push(
+        getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId), strategy.initialDenom),
+      );
 
       return client.signAndBroadcast(address, msgs, 'auto');
     },
