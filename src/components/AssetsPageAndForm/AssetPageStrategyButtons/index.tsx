@@ -301,6 +301,7 @@ export function AssetPageStrategyButtons() {
     onChange: (nextValue: DcaDirection) => setButtonClicked(nextValue),
   });
   const categoryGroup = getRootProps();
+
   return (
     <VStack spacing={4} pb={6}>
       <HStack {...categoryGroup} spacing={{ base: 4, sm: 8 }}>

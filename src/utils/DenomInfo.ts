@@ -12,6 +12,7 @@ export type DenomInfo = {
   significantFigures: number;
   enabledInDcaPlus: boolean;
   pricePrecision: number;
+  isCw20?: boolean;
 };
 
 export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
@@ -33,6 +34,7 @@ export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
     significantFigures: 6,
     pricePrecision: 3,
     enabledInDcaPlus: false,
+    isCw20: false,
     ...denomInfo,
   };
 };

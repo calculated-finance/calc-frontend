@@ -169,7 +169,7 @@ function Page() {
         <NewStrategyModalHeader
           stepsConfig={customiseSteps}
           showStepper={false}
-          cancelUrl={generateStrategyDetailUrl(query?.id)}
+          cancelUrl={generateStrategyDetailUrl(query?.id as string)}
         />
 
         <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isLoading}>

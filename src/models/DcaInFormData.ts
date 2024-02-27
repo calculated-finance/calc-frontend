@@ -434,4 +434,5 @@ export const simplifiedDcaInValidationSchema = dcaSchema.pick([
   'executionIntervalIncrement',
   'sendToWallet',
 ]);
+
 export type SimplifiedDcaInFormData = Yup.InferType<typeof simplifiedDcaInValidationSchema>;

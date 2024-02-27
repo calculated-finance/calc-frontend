@@ -916,21 +916,19 @@ function FeeSection() {
   );
 }
 
-export function Form() {
+const Form = ({ formValues }: { formValues: FormData }) => {
   const { connected } = useWallet();
-  const { nextStep } = useSteps(streamingSwapSteps);
   const { isLoading: isPairsLoading } = usePairs();
   const { mutate, isError, error, isLoading } = useCreateStreamingSwap();
-  const { balances } = useBalances();
-  const { validate } = useValidation(schema, { balances });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [, updateQueryState] = useQueryState();
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
       { state },
       {
         onSuccess: (strategyId) => {
-          nextStep({
+          updateQueryState({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
           });
@@ -943,41 +941,46 @@ export function Form() {
     );
 
   return (
+    <Box maxWidth={451} mx="auto">
+      <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
+        {isSuccess ? (
+          <SuccessStrategyModalBody />
+        ) : (
+          <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
+            <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
+              <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
+                <InitialDenom />
+                <SwapDenoms />
+                <ResultingDenom />
+              </Stack>
+              <DurationSlider />
+            </Stack>
+            <FeeSection />
+            {connected ? (
+              <SummaryAgreementForm
+                isError={isError}
+                error={error}
+                onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
+              />
+            ) : (
+              <ConnectWalletButton />
+            )}
+          </Stack>
+        )}
+      </NewStrategyModalBody>
+    </Box>
+  );
+};
+
+export const StreamingSwapForm = () => {
+  const { balances } = useBalances();
+  const { validate } = useValidation(schema, { balances });
+
+  return (
     <BrowserRouter>
       <Formik initialValues={initialValues} validate={validate} onSubmit={() => {}}>
-        {({ values: formValues }) => (
-          <Box maxWidth={451} mx="auto">
-            <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
-              {isSuccess ? (
-                <SuccessStrategyModalBody />
-              ) : (
-                <Stack direction="column" spacing={4} visibility={isLoading ? 'hidden' : 'visible'}>
-                  <Stack direction="column" spacing={2} visibility={isLoading ? 'hidden' : 'visible'}>
-                    <Stack direction="column" spacing={0} visibility={isLoading ? 'hidden' : 'visible'}>
-                      <InitialDenom />
-                      <SwapDenoms />
-                      <ResultingDenom />
-                    </Stack>
-                    <DurationSlider />
-                  </Stack>
-                  <FeeSection />
-                  {connected ? (
-                    <SummaryAgreementForm
-                      isError={isError}
-                      error={error}
-                      onSubmit={(agreementData, setSubmitting) =>
-                        handleSubmit(agreementData, setSubmitting, formValues)
-                      }
-                    />
-                  ) : (
-                    <ConnectWalletButton />
-                  )}
-                </Stack>
-              )}
-            </NewStrategyModalBody>
-          </Box>
-        )}
+        {({ values: formValues }) => <Form formValues={formValues as unknown as FormData} />}
       </Formik>
     </BrowserRouter>
   );
-}
+};

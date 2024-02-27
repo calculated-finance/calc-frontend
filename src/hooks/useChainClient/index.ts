@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
 import { ARCHWAY_CHAINS, KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
-import { forEach, join, reduce, sort, toPairs, values } from 'rambda';
+import { forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
@@ -106,7 +106,7 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
   );
 };
 
-const fetchDenomsArchway = async (chainId: ChainId) => {
+const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> => {
   const url =
     chainId === 'constantine-3'
       ? 'https://const.astrovault.io/asset?env=public'
@@ -131,6 +131,8 @@ const fetchDenomsArchway = async (chainId: ChainId) => {
         id: asset.id,
         name: asset.label,
         significantFigures: asset.decimals,
+        isCw20: !asset.isNative,
+        coingeckoId: asset.geckoIDPriceSource,
         ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
       }),
     }),
@@ -273,6 +275,42 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
   };
 };
 
+const fetchBalancesArchway = async (
+  queryClient: any,
+  cosmWasmClient: CosmWasmClient,
+  chainId: ChainId,
+  address: string,
+) => {
+  const [{ balances }, denoms] = await Promise.all([
+    queryClient.cosmos.bank.v1beta1.allBalances({
+      address,
+      pagination: {
+        key: Buffer.from(''),
+        offset: Long.fromInt(0),
+        limit: Long.fromInt(1000),
+        countTotal: false,
+        reverse: false,
+      },
+    }),
+    fetchDenomsArchway(chainId),
+  ]);
+
+  return [
+    ...balances,
+    ...(
+      await Promise.all(
+        map(
+          async (denom) => {
+            const { balance } = await cosmWasmClient.queryContractSmart(denom.id, { balance: { address } });
+            return { denom: denom.id, amount: balance };
+          },
+          values(denoms).filter((denom) => denom.isCw20),
+        ),
+      )
+    ).filter((balance) => BigInt(balance.amount) > 0),
+  ];
+};
+
 const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClient): Promise<ChainClient> => {
   const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
     rpcEndpoint: getChainEndpoint(chainId),
@@ -280,21 +318,21 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
 
   return {
     fetchDenoms: () => fetchDenomsArchway(chainId),
-    fetchPairs: fetchAllPairsFromSwapper,
-    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
-    fetchBalances: async (address: string) => {
-      const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
-        address,
-        pagination: {
-          key: Buffer.from(''),
-          offset: Long.fromInt(0),
-          limit: Long.fromInt(1000),
-          countTotal: false,
-          reverse: false,
-        },
-      });
-      return balances;
+    fetchPairs: async (
+      chainId: ChainId,
+      contractAddress: string,
+      client: CosmWasmClient,
+      startAfter?: string,
+      allPairs?: Pair[],
+    ) => {
+      const pairs = await fetchAllPairsFromSwapper(chainId, contractAddress, client, startAfter, allPairs);
+      return pairs.filter((pair) => pair.denoms[0] !== pair.denoms[1]);
     },
+    fetchTokenBalance: async (address: string, tokenId: string) => {
+      const balances = await fetchBalancesArchway(queryClient, cosmWasmClient, chainId, address);
+      return balances.find((b: Coin) => b.denom === tokenId) ?? { denom: tokenId, amount: '0' };
+    },
+    fetchBalances: (address: string) => fetchBalancesArchway(queryClient, cosmWasmClient, chainId, address),
     fetchValidators: async () => {
       const response = await queryClient.cosmos.staking.v1beta1.validators({
         status: 'BOND_STATUS_BONDED',

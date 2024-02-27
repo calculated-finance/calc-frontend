@@ -34,8 +34,9 @@ function Page() {
     );
   }
 
-  strategies?.sort((a: Strategy, b: Strategy) => Number(b.rawData.created_at) - Number(a.rawData.created_at));
-  const activeStrategies = strategies?.filter(isStrategyActive) ?? []; // .sort((a: Strategy, b: Strategy) => Number(b.id) - Number(a.id)) ?? [];
+  const activeStrategies = (strategies?.filter(isStrategyActive) ?? []).sort(
+    (a: Strategy, b: Strategy) => Number(b.rawData.created_at) - Number(a.rawData.created_at),
+  );
 
   return (
     <Stack spacing={8}>

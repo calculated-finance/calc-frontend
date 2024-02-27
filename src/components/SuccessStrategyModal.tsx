@@ -8,6 +8,7 @@ import { Pages } from 'src/pages/Pages';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import * as Confetti from '../animations/confetti.json';
+import useQueryState from '@hooks/useQueryState';
 
 function ThatsCalculatedThinkingText() {
   return (
@@ -27,8 +28,8 @@ function ThatsCalculatedThinkingText() {
 
 export function SuccessStrategyModalBody() {
   const { isPageLoading } = usePageLoad();
-  const { query } = useRouter();
-  const { strategyId, timeSaved } = query;
+  const [{ strategyId, timeSaved }] = useQueryState();
+
   return (
     <>
       <AbsoluteCenter w="100%" h="100%" top="10%">
