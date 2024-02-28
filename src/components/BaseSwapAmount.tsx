@@ -8,6 +8,7 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 export default function BaseSwapAmount({
   initialDenom,
