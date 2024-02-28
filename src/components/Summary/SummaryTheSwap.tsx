@@ -4,6 +4,7 @@ import BadgeButton from '@components/BadgeButton';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
   const { initialDenom, resultingDenom, swapAmount } = state;
@@ -14,7 +15,7 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
-            {String.fromCharCode(8275)} {swapAmount} {initialDenom.name}
+            {String.fromCharCode(8275)} {fromAtomic(initialDenom, swapAmount)} {initialDenom.name}
           </Text>
           <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}

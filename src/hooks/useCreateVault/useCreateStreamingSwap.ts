@@ -70,7 +70,6 @@ export const useCreateStreamingSwap = () => {
         reinvestStrategyId: undefined,
         senderAddress: address,
       },
-      isInAtomics: true,
     };
 
     const fee = createStrategyFeeInTokens(price, state.initialDenom).toFixed(0);

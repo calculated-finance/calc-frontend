@@ -14,10 +14,12 @@ export function SummaryAgreementForm({
   isError,
   error,
   onSubmit,
+  isDisabled,
 }: {
   isError: boolean;
   error: Error | null;
   onSubmit: (values: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>) => void;
+  isDisabled?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -30,33 +32,40 @@ export function SummaryAgreementForm({
 
   return (
     <Formik initialValues={{ acceptedAgreement: false }} validate={validate} onSubmit={onSubmit}>
-      <Form>
-        <Stack spacing={4}>
-          <AgreementCheckbox>
-            <Text textStyle="body-xs">
-              I have read and agree to be bound by the{' '}
-              <Button
-                textDecoration="underline"
-                fontWeight="normal"
-                size="xs"
-                display="inline-flex"
-                colorScheme="blue"
-                variant="unstyled"
-                onClick={onOpen}
+      {({ values: { acceptedAgreement } }) => (
+        <Form>
+          <Stack spacing={4}>
+            <AgreementCheckbox>
+              <Text textStyle="body-xs">
+                I have read and agree to be bound by the{' '}
+                <Button
+                  textDecoration="underline"
+                  fontWeight="normal"
+                  size="xs"
+                  display="inline-flex"
+                  colorScheme="blue"
+                  variant="unstyled"
+                  onClick={onOpen}
+                >
+                  CALC Terms & Conditions.
+                </Button>
+              </Text>
+            </AgreementCheckbox>
+            <FormControl isInvalid={isError}>
+              <Submit
+                w="full"
+                type="submit"
+                rightIcon={<Icon as={CheckedIcon} stroke="navy" />}
+                isDisabled={isDisabled || !acceptedAgreement}
               >
-                CALC Terms & Conditions.
-              </Button>
-            </Text>
-          </AgreementCheckbox>
-          <FormControl isInvalid={isError}>
-            <Submit w="full" type="submit" rightIcon={<Icon as={CheckedIcon} stroke="navy" />}>
-              Confirm
-            </Submit>
-            <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
-          </FormControl>
-          <TermsModal showCheckbox={false} isOpen={isOpen} onClose={onClose} />
-        </Stack>
-      </Form>
+                Confirm
+              </Submit>
+              <FormErrorMessage>Failed to create strategy (Reason: {error?.message})</FormErrorMessage>
+            </FormControl>
+            <TermsModal showCheckbox={false} isOpen={isOpen} onClose={onClose} />
+          </Stack>
+        </Form>
+      )}
     </Formik>
   );
 }

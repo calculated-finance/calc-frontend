@@ -30,14 +30,15 @@ import { getChainDexName } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { DenomInfo } from '@utils/DenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 function FeeBreakdown({
-  initialDenomName,
+  initialDenom,
   swapAmount,
   price,
   dexFee,
 }: {
-  initialDenomName: string;
+  initialDenom: DenomInfo;
   swapAmount: number;
   price: number | undefined;
   dexFee: number;
@@ -85,7 +86,7 @@ function FeeBreakdown({
                     <Text textStyle="body-xs" as="span">
                       {' '}
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   </Flex>
                   <Flex>
@@ -100,7 +101,7 @@ function FeeBreakdown({
                     <Spacer />
                     <Text textStyle="body-xs" textColor="white" as="span">
                       {price ? parseFloat((CREATE_VAULT_FEE / price).toFixed(3)) : <Spinner size="xs" />}{' '}
-                      {initialDenomName}
+                      {initialDenom.name}
                     </Text>
                   </Flex>
                 </Stack>
@@ -117,7 +118,7 @@ function FeeBreakdown({
                     <Text textStyle="body-xs">{getChainDexName(chain)} transaction fees:</Text>
                     <Spacer />
                     <Text textStyle="body-xs">
-                      {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+                      {getPrettyFee(fromAtomic(initialDenom, swapAmount), dexFee)} {initialDenom.name}
                     </Text>
                   </Flex>
                   <Flex>
@@ -126,7 +127,7 @@ function FeeBreakdown({
                     </Text>
                     <Spacer />
                     <Text textStyle="body-xs" textColor="white">
-                      {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+                      {getPrettyFee(fromAtomic(initialDenom, swapAmount), dexFee)} {initialDenom.name}
                     </Text>
                   </Flex>
                 </Stack>
@@ -224,13 +225,13 @@ export default function FeesDcaPlus({
         </Text>{' '}
         +{' '}
         <Text as="span" textColor="white">
-          {String.fromCharCode(8275)} {getPrettyFee(swapAmount, dexFee)} {initialDenomName}
+          {String.fromCharCode(8275)} {getPrettyFee(fromAtomic(initialDenom, swapAmount), dexFee)} {initialDenomName}
         </Text>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap +
         performance fee
       </Text>
 
-      <FeeBreakdown initialDenomName={initialDenomName} swapAmount={swapAmount} price={fiatPrice} dexFee={dexFee} />
+      <FeeBreakdown initialDenom={initialDenom} swapAmount={swapAmount} price={fiatPrice} dexFee={dexFee} />
     </Stack>
   );
 }

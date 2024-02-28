@@ -88,14 +88,12 @@ export function getReceiveAmount(
   price: number,
   resultingDenom: DenomInfo,
   transactionType: TransactionType,
-  isInAtomics = false,
 ) {
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
 
-  const deconvertedSwapAmount = isInAtomics ? swapAmount : toAtomic(initialDenom, swapAmount);
-  const unscaledReceiveAmount = Math.round(deconvertedSwapAmount / directionlessPrice);
+  const unscaledReceiveAmount = Math.round(swapAmount / directionlessPrice);
   const scalingFactor = 10 ** (resultingDenom.significantFigures - initialDenom.significantFigures);
-  const scaledReceiveAmount = BigInt(Math.floor(unscaledReceiveAmount * scalingFactor));
+  const scaledReceiveAmount = BigInt(Math.round(unscaledReceiveAmount * scalingFactor));
 
   return scaledReceiveAmount.toString();
 }
@@ -262,10 +260,10 @@ export function buildCreateVaultMsg(
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
       target_denom: resultingDenom.id,
       route,
-      swap_amount: isInAtomics ? BigInt(Math.round(swapAmount)).toString() : getSwapAmount(initialDenom, swapAmount),
+      swap_amount: BigInt(Math.round(swapAmount)).toString(),
       target_start_time_utc_seconds: timeTrigger && getStartTime(timeTrigger.startDate, timeTrigger.startTime),
       minimum_receive_amount: priceThreshold
-        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType, isInAtomics)
+        ? getReceiveAmount(initialDenom, swapAmount, priceThreshold, resultingDenom, transactionType)
         : undefined,
       slippage_tolerance: slippageTolerance ? getSlippageWithoutTrailingZeros(slippageTolerance) : null,
       destinations: buildCallbackDestinations(
@@ -277,7 +275,7 @@ export function buildCreateVaultMsg(
         destinationConfig.reinvestStrategyId,
       ),
       target_receive_amount: startPrice
-        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType, isInAtomics)
+        ? getReceiveAmount(initialDenom, swapAmount, startPrice, resultingDenom, transactionType)
         : undefined,
       swap_adjustment_strategy: swapAdjustmentStrategy,
       performance_assessment_strategy: performanceAssessmentStrategy,

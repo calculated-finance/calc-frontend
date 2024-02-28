@@ -60,48 +60,14 @@ import useDexFee from '@hooks/useDexFee';
 import { FeeBreakdown } from '@components/Fees';
 import { Swap2Icon } from '@fusion-icons/react/web3';
 import useDenoms from '@hooks/useDenoms';
-import { fromAtomic, toAtomic, toAtomicBigInt } from '@utils/getDenomInfo';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import useQueryState from '@hooks/useQueryState';
 import { useChainId } from '@hooks/useChainId';
 import { NewStrategyModalBody } from '@components/NewStrategyModal';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { BrowserRouter } from 'react-router-dom';
 import useRoute from '@hooks/useRoute';
-
-function InitialDeposit() {
-  const {
-    values: { initialDenom },
-  } = useFormikContext<FormData>();
-
-  const [{ amount }, setQueryState] = useQueryState();
-  const [{ onChange, value, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });
-
-  useEffect(() => {
-    helpers.setValue(amount);
-  }, [amount]);
-
-  return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)} isDisabled={!initialDenom}>
-      <NumberInput
-        onChange={(newAmount) => {
-          setQueryState({
-            amount: newAmount && initialDenom && toAtomicBigInt(initialDenom, BigInt(newAmount)).toString(),
-          });
-        }}
-        textAlign="right"
-        placeholder="Enter amount"
-        value={
-          (amount &&
-            initialDenom &&
-            Number(fromAtomic(initialDenom, amount)?.toFixed(max(initialDenom.significantFigures, 6)))) ??
-          ''
-        }
-        {...field}
-      />
-      <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-    </FormControl>
-  );
-}
+import InitialDeposit from '@components/InitialDeposit';
 
 function InitialDenom() {
   const [isMobile] = useMediaQuery('(max-width: 506px)');

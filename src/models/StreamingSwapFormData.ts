@@ -27,7 +27,7 @@ export const schema = Yup.object({
     .required()
     .nullable()
     .test({
-      name: 'less-than-deposit',
+      name: 'less-than-balance',
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const balances = context?.options?.context?.balances;

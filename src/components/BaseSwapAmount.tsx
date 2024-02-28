@@ -7,6 +7,7 @@ import { formatFiat } from '@helpers/format/formatFiat';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 export default function BaseSwapAmount({
   initialDenom,
@@ -15,15 +16,17 @@ export default function BaseSwapAmount({
   initialDenom: DenomInfo;
   initialDeposit: number;
 }) {
-  const [{ onChange, ...field }, meta, helpers] = useField({ name: 'swapAmount' });
+  const [{ onChange, value: swapAmount, ...field }, swapAmountMeta, swapAmountHelpers] = useField({
+    name: 'swapAmount',
+  });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
 
   const handleClick = () => {
-    helpers.setValue(initialDeposit);
+    swapAmountHelpers.setValue(initialDeposit);
   };
 
-  const executions = totalExecutions(initialDeposit, field.value);
+  const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
@@ -33,7 +36,7 @@ export default function BaseSwapAmount({
     ];
 
   return (
-    <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+    <FormControl isInvalid={Boolean(swapAmountMeta.touched && swapAmountMeta.error)}>
       <FormLabel>Set your base {initialDenom.name} swap amount</FormLabel>
       <FormHelperText>
         <Flex alignItems="flex-start">
@@ -44,22 +47,30 @@ export default function BaseSwapAmount({
               Max:
             </Text>
             <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
-              {initialDeposit.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'}
+              {fromAtomic(initialDenom, initialDeposit).toLocaleString('en-US', {
+                maximumFractionDigits: initialDenom.significantFigures,
+                minimumFractionDigits: 2,
+              }) ?? '-'}
             </Button>
           </Flex>
         </Flex>{' '}
       </FormHelperText>
-      <DenomInput denom={initialDenom} onChange={helpers.setValue} {...field} />
+      <DenomInput
+        denom={initialDenom}
+        value={swapAmount && fromAtomic(initialDenom, swapAmount)}
+        onChange={(input) => swapAmountHelpers.setValue(input && toAtomic(initialDenom, Number(input)))}
+        {...field}
+      />
       <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
 
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
-      {Boolean(field.value) && !meta.error && !executionIntervalIncrement ? (
+      <FormErrorMessage>{swapAmountMeta.error}</FormErrorMessage>
+      {Boolean(swapAmount) && !swapAmountMeta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">
           With no price change, {executions} swaps over {executions} {displayExecutionInterval}.
         </FormHelperText>
       ) : (
-        Boolean(field.value) &&
-        !meta.error && (
+        Boolean(swapAmount) &&
+        !swapAmountMeta.error && (
           <FormHelperText color="brand.200" fontSize="xs">
             With no price change, {executions} swaps over {executions * executionIntervalIncrement}{' '}
             {displayCustomExecutionInterval}.

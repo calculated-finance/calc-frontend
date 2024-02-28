@@ -105,11 +105,7 @@ async function createStrategy(
 
   const funds = [
     Coin.fromPartial({
-      amount: BigInt(
-        createVaultContext.isInAtomics
-          ? Math.round(initialDeposit)
-          : toAtomic(createVaultContext.initialDenom, initialDeposit),
-      ).toString(),
+      amount: BigInt(Math.round(initialDeposit)).toString(),
       denom: createVaultContext.initialDenom.id,
     }),
   ];

@@ -1,6 +1,7 @@
 import { Flex, HStack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import { DenomInfo } from '@utils/DenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 
@@ -16,7 +17,7 @@ export default function DcaDiagram({ initialDenom, initialDeposit, resultingDeno
       <HStack>
         <DenomIcon denomInfo={initialDenom} />
         <Text>
-          {Boolean(initialDeposit) && <>{initialDeposit}&nbsp;</>}
+          {Boolean(initialDeposit) && <>{fromAtomic(initialDenom, Number(initialDeposit))}&nbsp;</>}
           {initialDenom.name}
         </Text>
       </HStack>

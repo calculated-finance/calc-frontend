@@ -52,14 +52,13 @@ export const assetsFormSchema = Yup.object({
     .required()
     .nullable()
     .test({
-      name: 'less-than-deposit',
+      name: 'less-than-balance',
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
-        const { balances } = context?.options?.context || {};
+        const balances = context?.options?.context?.balances;
         if (!balances || !value || value <= 0) return true;
-        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom.id)?.amount;
-        if (!balance) return false;
-        return value <= fromAtomic(context.parent.initialDenom, Number(balance));
+        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom?.id)?.amount;
+        return balance && value <= Number(balance);
       },
     })
     .test({
@@ -124,11 +123,10 @@ export const allSchema = {
       name: 'less-than-deposit',
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
-        const { balances } = context?.options?.context || {};
+        const balances = context?.options?.context?.balances;
         if (!balances || !value || value <= 0) return true;
-        const amount = balances.find((balance: Coin) => balance.denom === context.parent.initialDenom.id)?.amount;
-        if (!amount) return false;
-        return value <= fromAtomic(context.parent.initialDenom, Number(amount));
+        const balance = balances.find((b: Coin) => b.denom === context.parent.initialDenom?.id)?.amount;
+        return balance && value <= Number(balance);
       },
     }),
   advancedSettings: Yup.boolean(),
@@ -191,6 +189,7 @@ export const allSchema = {
         return new Date() <= combineDateAndTime(startDate, value);
       },
     }),
+  route: Yup.string(),
   executionInterval: Yup.mixed<ExecutionIntervals>().required(),
   executionIntervalIncrement: Yup.number()
     .label('Increment')
@@ -374,6 +373,7 @@ export const dcaSchema = Yup.object({
   startDate: allSchema.startDate,
   startPrice: allSchema.startPrice,
   purchaseTime: allSchema.purchaseTime,
+  route: allSchema.route,
   executionInterval: allSchema.executionInterval,
   executionIntervalIncrement: allSchema.executionIntervalIncrement,
   swapAmount: allSchema.swapAmount,
@@ -429,6 +429,7 @@ export const simplifiedDcaInValidationSchema = dcaSchema.pick([
   'initialDenom',
   'resultingDenom',
   'swapAmount',
+  'route',
   'initialDeposit',
   'executionInterval',
   'executionIntervalIncrement',

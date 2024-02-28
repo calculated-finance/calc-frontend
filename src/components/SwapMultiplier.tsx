@@ -18,6 +18,7 @@ import { useField } from 'formik';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { WeightSummary } from './WeightSummary';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export default function SwapMultiplier({
   initialDenom,
@@ -45,7 +46,8 @@ export default function SwapMultiplier({
       <FormHelperText fontSize="xs">Your swap amount will be calculated as:</FormHelperText>
       <Flex justify="center">
         <Code bg="abyss.200" color="white" borderRadius="md" p={1}>
-          {swapAmount || swapAmountInjected || 0} {initialDenom.name} &times; (1 - price delta &times; {value})
+          {fromAtomic(initialDenom, swapAmount) || swapAmountInjected || 0} {initialDenom.name} &times; (1 - price delta
+          &times; {value})
         </Code>
       </Flex>
       <Flex textStyle="body-xs">
@@ -62,9 +64,7 @@ export default function SwapMultiplier({
           <SliderThumb boxSize={6} bg="blue.200" borderWidth={1} borderColor="abyss.200" />
         </Tooltip>
       </Slider>
-
       <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
-
       <WeightSummary
         transactionType={transactionType}
         applyMultiplier={advancedSettings && applyMultiplier}

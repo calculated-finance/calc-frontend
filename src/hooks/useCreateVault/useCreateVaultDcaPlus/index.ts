@@ -81,6 +81,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         senderAddress: address,
       },
     };
+
     const fee = createStrategyFeeInTokens(fiatPrice, initialDenom).toFixed(0);
 
     try {

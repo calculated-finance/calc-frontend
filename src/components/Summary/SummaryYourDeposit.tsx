@@ -3,6 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryYourDeposit({ state }: { state: DcaFormState }) {
   const { initialDenom, initialDeposit } = state;
@@ -15,7 +16,7 @@ export function SummaryYourDeposit({ state }: { state: DcaFormState }) {
         I deposit{' '}
         <BadgeButton url="assets">
           <Text>
-            {initialDeposit} {initialDenom.name}
+            {fromAtomic(initialDenom, initialDeposit)} {initialDenom.name}
           </Text>
           <DenomIcon denomInfo={initialDenom} />{' '}
         </BadgeButton>{' '}

@@ -5,14 +5,20 @@ import { useChainId } from '@hooks/useChainId';
 import { useChainClient } from '@hooks/useChainClient';
 import useDenoms from '@hooks/useDenoms';
 
+export type RouteResult = {
+  route: string | undefined;
+  feeRate: number;
+  routeError: string | undefined;
+};
+
 const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   const { chainId } = useChainId();
   const chainClient = useChainClient(chainId);
   const { getDenomById } = useDenoms();
 
-  const result = useQuery(
+  const result = useQuery<RouteResult>(
     ['prices', 'route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
-    () => chainClient?.fetchRoute(getDenomById(swapAmount!.denom)!, targetDenom!, BigInt(swapAmount!.amount)),
+    () => chainClient!.fetchRoute(getDenomById(swapAmount!.denom)!, targetDenom!, BigInt(swapAmount!.amount)),
     {
       enabled: !!chainId && !!chainClient && !!swapAmount && !!getDenomById(swapAmount!.denom) && !!targetDenom,
       staleTime: 1000 * 60,
@@ -24,8 +30,8 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   );
 
   return {
-    route: result.data?.route,
     ...result,
+    ...result.data,
   };
 };
 
