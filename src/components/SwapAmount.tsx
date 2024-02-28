@@ -12,6 +12,7 @@ import { coin } from '@cosmjs/stargate';
 import { useEffect } from 'react';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 export default function SwapAmount({
   isEdit,
