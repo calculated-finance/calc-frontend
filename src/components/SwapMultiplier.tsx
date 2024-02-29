@@ -19,7 +19,6 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { WeightSummary } from './WeightSummary';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 export default function SwapMultiplier({
   initialDenom,
