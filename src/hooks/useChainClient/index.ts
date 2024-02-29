@@ -23,12 +23,6 @@ export type RouteResult = {
   routeError: string | undefined;
 };
 
-export type RouteResult = {
-  route: string | undefined;
-  feeRate: number;
-  routeError: string | undefined;
-};
-
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
   fetchPairs: (
