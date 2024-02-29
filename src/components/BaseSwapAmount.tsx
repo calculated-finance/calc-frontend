@@ -2,8 +2,9 @@ import { Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Spacer,
 import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
-import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { formatFiat } from '@helpers/format/formatFiat';
+import { getChainMinimumSwapValue } from '@helpers/chains';
+import { useChainId } from '@hooks/useChainId';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { DenomInfo } from '@utils/DenomInfo';
@@ -16,15 +17,12 @@ export default function BaseSwapAmount({
   initialDenom: DenomInfo;
   initialDeposit: number;
 }) {
+  const { chainId } = useChainId();
   const [{ onChange, value: swapAmount, ...field }, swapAmountMeta, swapAmountHelpers] = useField({
     name: 'swapAmount',
   });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
-
-  const handleClick = () => {
-    swapAmountHelpers.setValue(initialDeposit);
-  };
 
   const executions = totalExecutions(initialDeposit, swapAmount);
   const displayExecutionInterval =
@@ -46,7 +44,13 @@ export default function BaseSwapAmount({
             <Text ml={4} mr={1}>
               Max:
             </Text>
-            <Button size="xs" colorScheme="blue" variant="link" cursor="pointer" onClick={handleClick}>
+            <Button
+              size="xs"
+              colorScheme="blue"
+              variant="link"
+              cursor="pointer"
+              onClick={() => swapAmountHelpers.setValue(initialDeposit)}
+            >
               {fromAtomic(initialDenom, initialDeposit).toLocaleString('en-US', {
                 maximumFractionDigits: initialDenom.significantFigures,
                 minimumFractionDigits: 2,
@@ -61,7 +65,7 @@ export default function BaseSwapAmount({
         onChange={(input) => swapAmountHelpers.setValue(input && toAtomic(initialDenom, Number(input)))}
         {...field}
       />
-      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      <FormHelperText>Swap amount must be greater than {formatFiat(getChainMinimumSwapValue(chainId))}</FormHelperText>
 
       <FormErrorMessage>{swapAmountMeta.error}</FormErrorMessage>
       {Boolean(swapAmount) && !swapAmountMeta.error && !executionIntervalIncrement ? (

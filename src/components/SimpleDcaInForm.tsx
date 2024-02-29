@@ -38,7 +38,7 @@ import { AgreementForm, SummaryAgreementForm } from '@components/Summary/Summary
 import { useEffect, useState } from 'react';
 import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
-import { getChainDexName } from '@helpers/chains';
+import { getChainDexName, getChainMinimumSwapValue } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import { DenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
@@ -158,6 +158,7 @@ function SwapAmount({
   initialDenom: DenomInfo | undefined;
   resultingDenom: DenomInfo | undefined;
 }) {
+  const { chainId } = useChainId();
   const [{ onChange, value: swapAmount, ...swapAmountField }, swapAmountMeta, { setValue: setSwapAmount }] = useField({
     name: 'swapAmount',
   });
@@ -236,7 +237,7 @@ function SwapAmount({
         {...swapAmountField}
         isDisabled={!initialDeposit}
       />
-      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      <FormHelperText>Swap amount must be greater than {formatFiat(getChainMinimumSwapValue(chainId))}</FormHelperText>
       <FormErrorMessage>{routeError || swapAmountMeta.error}</FormErrorMessage>
       {initialDeposit && !depositMeta.error && depositMeta.touched && swapAmount > 0 && (
         <FormHelperText color="brand.200" fontSize="xs">
