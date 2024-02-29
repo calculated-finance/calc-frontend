@@ -13,10 +13,15 @@ import { forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { fromAtomic } from '@utils/getDenomInfo';
 import Long from 'long';
 import { DENOMS } from 'src/fixtures/denoms';
 import { Pair } from '@models/Pair';
+
+export type RouteResult = {
+  route: string | undefined;
+  feeRate: number;
+  routeError: string | undefined;
+};
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;
@@ -30,11 +35,7 @@ export type ChainClient = {
   fetchTokenBalance: (address: string, tokenId: string) => Promise<Coin>;
   fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
-  fetchRoute: (
-    initialDenom: DenomInfo,
-    targetDenom: DenomInfo,
-    swapAmount: bigint,
-  ) => Promise<{ route: string | undefined; feeRate: number }>;
+  fetchRoute: (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => Promise<RouteResult>;
 };
 
 async function fetchAllPairsFromSwapper(
@@ -109,8 +110,8 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
 const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> => {
   const url =
     chainId === 'constantine-3'
-      ? 'https://const.astrovault.io/asset?env=public'
-      : 'https://arch.astrovault.io/asset?env=public';
+      ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL!
+      : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
 
   const fetchDenoms = async () => {
     try {
@@ -167,7 +168,11 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
       const response = await queryClient.staking.validators('BOND_STATUS_BONDED');
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({ route: undefined, feeRate: 0.0075 }),
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({
+      route: undefined,
+      feeRate: 0.0075,
+      routeError: undefined,
+    }),
   };
 };
 
@@ -230,6 +235,34 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
     },
     fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => {
       try {
+        const re = await fetch(
+          `${getOsmosisRouterUrl(chainId!)}/router/quote?${new URLSearchParams({
+            tokenIn: `${swapAmount}${initialDenom.id}`,
+            tokenOutDenom: targetDenom!.id,
+            singleRoute: 'true',
+          })}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (!re.ok) {
+          const error = await re.json();
+          const errorMessages: { [x: string]: string } = {
+            'no routes were provided': `No routes exist from ${initialDenom.name} to ${targetDenom.name} on Osmosis`,
+          };
+          return {
+            route: undefined,
+            feeRate: 0.0,
+            routeError:
+              errorMessages[error.message] ??
+              `Unable to fetch a route from ${initialDenom.name} to ${targetDenom.name} on Osmosis`,
+          };
+        }
+
         const response = await (
           await fetch(
             `${getOsmosisRouterUrl(chainId!)}/router/quote?${new URLSearchParams({
@@ -259,17 +292,14 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
             ),
           ).toString('base64'),
           feeRate: 0.003,
+          routeError: undefined,
         };
       } catch (error: any) {
-        if (`${error}`.includes('amount of')) {
-          throw new Error(
-            `Swap amount of ${fromAtomic(initialDenom, Number(swapAmount))} ${
-              initialDenom.name
-            } too high for osmosis router.`,
-          );
-        }
-
-        return { route: undefined, feeRate: 0.003 };
+        return {
+          route: undefined,
+          feeRate: 0.0,
+          routeError: `Unable to fetch a route from ${initialDenom.name} to ${targetDenom.name} on Osmosis`,
+        };
       }
     },
   };
@@ -339,7 +369,11 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       });
       return response as unknown as { validators: Validator[] };
     },
-    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({ route: undefined, feeRate: 0.0075 }), // TODO: understand fees
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({
+      route: undefined,
+      feeRate: 0.0075,
+      routeError: undefined,
+    }), // TODO: understand fees
   };
 };
 

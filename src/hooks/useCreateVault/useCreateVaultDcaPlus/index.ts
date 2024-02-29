@@ -12,10 +12,12 @@ import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
 import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
+import { useChainId } from '@hooks/useChainId';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
 export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
+  const { chainId } = useChainId();
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();
 
@@ -58,7 +60,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
 
     const swapAmount = getSwapAmountFromDuration(state.initialDeposit, state.strategyDuration);
 
-    checkSwapAmountValue(swapAmount, fiatPrice);
+    checkSwapAmountValue(chainId, swapAmount, fiatPrice);
 
     if (!state.resultingDenom) {
       throw new Error('Invalid resulting denom');
@@ -81,6 +83,7 @@ export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
         senderAddress: address,
       },
     };
+
     const fee = createStrategyFeeInTokens(fiatPrice, initialDenom).toFixed(0);
 
     try {

@@ -13,7 +13,6 @@ import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from '@hooks/useStrategy';
 import { getGrantMsg } from '@hooks/useCalcSigningClient/getClient/clients/cosmos';
 import { buildCallbackDestinations } from '@hooks/useCreateVault/buildCreateVaultParams';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
 
 type ConfigureVariables = {
   values: DcaInFormDataPostPurchase;

@@ -3,7 +3,7 @@ import useBalances from '@hooks/useBalances';
 import { fromAtomic } from '@utils/getDenomInfo';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { Coin } from 'src/interfaces/v2/generated/response/get_vault';
+import { Coin } from 'src/interfaces/dca/response/get_vault';
 import { useDenom } from '@hooks/useDenom/useDenom';
 import { truncate } from '@helpers/truncate';
 import useDenoms from '@hooks/useDenoms';

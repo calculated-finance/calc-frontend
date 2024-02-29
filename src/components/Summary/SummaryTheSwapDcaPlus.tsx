@@ -3,6 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getSwapRange } from '@helpers/ml/getSwapRange';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { DenomInfo } from '@utils/DenomInfo';
 import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
 
@@ -31,14 +32,22 @@ export function SummaryTheSwapDcaPlus({
         <ImmediateTriggerInfo />, CALC will swap between{' '}
         <BadgeButton url="customise">
           <Text>
-            {minSwap} {initialDenomName}
+            {minSwap &&
+              fromAtomic(initialDenom, minSwap).toLocaleString('en-US', {
+                maximumFractionDigits: initialDenom.significantFigures,
+              })}{' '}
+            {initialDenomName}
           </Text>
           <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}
         and{' '}
         <BadgeButton url="customise">
           <Text>
-            {maxSwap} {initialDenomName}
+            {maxSwap &&
+              fromAtomic(initialDenom, maxSwap).toLocaleString('en-US', {
+                maximumFractionDigits: initialDenom.significantFigures,
+              })}{' '}
+            {initialDenomName}
           </Text>
           <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}

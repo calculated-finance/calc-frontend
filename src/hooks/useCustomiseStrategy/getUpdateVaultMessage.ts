@@ -1,4 +1,4 @@
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/dca/execute';
 import { ConfigureVariables } from './ConfigureVariables';
 import { buildTimeInterval } from './buildTimeInterval';
 import { buildSlippageTolerance } from './buildSlippageTolerance';

@@ -7,8 +7,6 @@ import useBalances from '@hooks/useBalances';
 import { ModalWrapper } from '@components/ModalWrapper';
 import { StrategyType } from '@models/StrategyType';
 import Spinner from '@components/Spinner';
-import Submit from '@components/Submit';
-import { ConnectWalletButton } from '@components/ConnectWalletButton';
 import { CategoryAndStrategyButtonSelectors } from '@components/CategoryAndStrategyButtonSelectors';
 import { FormNames } from '@hooks/useFormStore';
 import { routerPush } from '@helpers/routerPush';
@@ -17,7 +15,6 @@ import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { useRouter } from 'next/router';
 import { BrowserRouter } from 'react-router-dom';
 import { AssetsFormValues, assetsFormSchema } from '@models/DcaInFormData';
-import { useWallet } from '@hooks/useWallet';
 import { AssetsForm } from './AssetsForm';
 
 const strategyTypesToFormTypes = {
@@ -34,7 +31,6 @@ const strategyTypesToFormTypes = {
 const CUSTOMISE_PAGE_INDEX = 1;
 
 export function Assets() {
-  const { connected } = useWallet();
   const { strategyType } = useStrategyInfo();
   const stepsConfig = getSteps(strategyType);
   const { balances } = useBalances();
@@ -82,7 +78,6 @@ export function Assets() {
             </FormControl>
             <Stack direction="column" spacing={6}>
               <AssetsForm />
-              {connected ? <Submit>Next</Submit> : <ConnectWalletButton />}
             </Stack>
           </Form>
         </ModalWrapper>

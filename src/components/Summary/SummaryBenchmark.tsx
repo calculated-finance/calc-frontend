@@ -3,6 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
   const { initialDenom, resultingDenom, initialDeposit, strategyDuration } = state;
@@ -16,7 +17,10 @@ export function SummaryBenchmark({ state }: { state: DcaPlusState }) {
         The DCA+ performance will be benchmarked against a daily swap of{' '}
         <BadgeButton url="customise">
           <Text>
-            {swapAmount} {initialDenom.name}
+            {fromAtomic(initialDenom, swapAmount).toLocaleString('en-US', {
+              maximumFractionDigits: initialDenom.significantFigures,
+            })}{' '}
+            {initialDenom.name}
           </Text>
           <DenomIcon denomInfo={initialDenom} />{' '}
         </BadgeButton>{' '}

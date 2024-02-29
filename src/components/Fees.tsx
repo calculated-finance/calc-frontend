@@ -21,6 +21,7 @@ import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 
 export function FeeBreakdown({
   initialDenom,
@@ -127,7 +128,11 @@ export function FeeBreakdown({
                   <Text textStyle="body-xs">Sustainability tax:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {Number(getPrettyFee(swapAmount, swapFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {Number(
+                      getPrettyFee(fromAtomic(initialDenom, swapAmount), swapFee).toFixed(
+                        initialDenom.significantFigures,
+                      ),
+                    )}{' '}
                     {initialDenom.name}
                   </Text>
                 </Flex>
@@ -140,7 +145,11 @@ export function FeeBreakdown({
                   <Text textStyle="body-xs">{getChainDexName(chain)} txn fees:</Text>
                   <Spacer />
                   <Text textStyle="body-xs">
-                    {Number(getPrettyFee(swapAmount, dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {Number(
+                      getPrettyFee(fromAtomic(initialDenom, swapAmount), dexFee).toFixed(
+                        initialDenom.significantFigures,
+                      ),
+                    )}{' '}
                     {initialDenom.name}
                   </Text>
                 </Flex>
@@ -150,7 +159,11 @@ export function FeeBreakdown({
                   </Text>
                   <Spacer />
                   <Text textStyle="body-xs" textColor="white">
-                    {Number(getPrettyFee(swapAmount, swapFee + dexFee).toFixed(initialDenom.significantFigures))}{' '}
+                    {Number(
+                      getPrettyFee(fromAtomic(initialDenom, swapAmount), swapFee + dexFee).toFixed(
+                        initialDenom.significantFigures,
+                      ),
+                    )}{' '}
                     {initialDenom.name}
                   </Text>
                 </Flex>
@@ -199,7 +212,8 @@ export default function Fees({
         )}
         <Tooltip label={swapFeeTooltip} placement="top">
           <Text as="span" textColor="white">
-            {String.fromCharCode(8275)} {getPrettyFee(swapAmount, swapFee + dexFee)} {initialDenomName}
+            {String.fromCharCode(8275)} {getPrettyFee(fromAtomic(initialDenom, swapAmount), swapFee + dexFee)}{' '}
+            {initialDenomName}
           </Text>
         </Tooltip>
         {autoStakeValidator && <Text as="span"> &amp; {DELEGATION_FEE * 100}% auto staking fee</Text>} per swap

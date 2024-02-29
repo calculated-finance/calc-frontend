@@ -71,7 +71,7 @@ export type PerformanceAssessmentStrategy = {
     swapped_amount: Coin;
   };
 };
-export type VaultStatus = 'scheduled' | 'active' | 'inactive' | 'cancelled';
+export type VaultStatus = "scheduled" | "active" | "inactive" | "cancelled";
 export type SwapAdjustmentStrategy =
   | {
       risk_weighted_average: {
@@ -87,30 +87,37 @@ export type SwapAdjustmentStrategy =
         multiplier: Decimal;
       };
     };
-export type BaseDenom = 'bitcoin';
-export type PositionType = 'enter' | 'exit';
+export type BaseDenom = "bitcoin";
+export type PositionType = "enter" | "exit";
 export type TimeInterval =
   | (
-      | 'every_second'
-      | 'every_minute'
-      | 'half_hourly'
-      | 'hourly'
-      | 'half_daily'
-      | 'daily'
-      | 'weekly'
-      | 'fortnightly'
-      | 'monthly'
+      | "every_block"
+      | "every_minute"
+      | "half_hourly"
+      | "hourly"
+      | "half_daily"
+      | "daily"
+      | "weekly"
+      | "fortnightly"
+      | "monthly"
     )
   | {
       custom: {
         seconds: number;
       };
     };
-export type TriggerConfiguration = {
-  time: {
-    target_time: Timestamp;
-  };
-};
+export type TriggerConfiguration =
+  | {
+      time: {
+        target_time: Timestamp;
+      };
+    }
+  | {
+      price: {
+        order_idx: Uint128;
+        target_price: Decimal;
+      };
+    };
 
 export interface VaultsResponse {
   vaults: Vault[];
@@ -128,6 +135,7 @@ export interface Vault {
   owner: Addr;
   performance_assessment_strategy?: PerformanceAssessmentStrategy | null;
   received_amount: Coin;
+  route?: Binary | null;
   slippage_tolerance: Decimal;
   started_at?: Timestamp | null;
   status: VaultStatus;

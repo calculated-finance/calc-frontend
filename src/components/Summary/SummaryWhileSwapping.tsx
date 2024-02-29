@@ -37,7 +37,7 @@ export function SummaryWhileSwapping({
           <>
             <BadgeButton url="customise">
               <Text>{resultingDenomName}</Text>
-              <DenomIcon denomInfo={initialDenom} />
+              <DenomIcon denomInfo={resultingDenom} />
             </BadgeButton>{' '}
             price is higher than{' '}
             <BadgeButton url="customise">

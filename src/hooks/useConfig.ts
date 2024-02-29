@@ -1,6 +1,6 @@
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { Config, ConfigResponse } from 'src/interfaces/v2/generated/response/get_config';
+import { Config, ConfigResponse } from 'src/interfaces/dca/response/get_config';
 import { ChainId } from '@models/ChainId';
 import { useChainId } from '@hooks/useChainId';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';

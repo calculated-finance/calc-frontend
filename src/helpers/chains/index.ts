@@ -109,6 +109,16 @@ export function getChainAddressPrefix(chainId: ChainId) {
   }[chainId];
 }
 
+export function getChainMinimumSwapValue(chainId: ChainId) {
+  return {
+    'osmosis-1': 1.0,
+    'osmo-test-5': 1.0,
+    'kaiyo-1': 5.0,
+    'harpoon-4': 1.0,
+    'constantine-3': 1.0,
+  }[chainId];
+}
+
 export function getChainAddressLength(chainId: ChainId) {
   return {
     'osmosis-1': [43, 63],

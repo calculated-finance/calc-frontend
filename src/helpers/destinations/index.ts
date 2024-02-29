@@ -2,7 +2,6 @@ import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
-import { LockableDuration } from 'src/interfaces/generated-osmosis/execute';
 
 export function getStrategyPostSwapDetails(strategy: Strategy) {
   const { destinations } = strategy.rawData;
@@ -69,29 +68,4 @@ export function getStrategyReinvestStrategyId(strategy: Strategy) {
     return postSwapDetails.deposit.vault_id;
   }
   return undefined;
-}
-
-export function getStrategyProvideLiquidityConfig():
-  | {
-      duration: LockableDuration;
-      pool_id: number;
-    }
-  | undefined {
-  return undefined;
-  // const { destinations } = strategy.rawData;
-
-  // const provideLiquidityDestination = destinations?.find((destination: Destination) => {
-  //   if (typeof destination.action === 'object' && 'z_provide_liquidity' in destination.action) {
-  //     return true;
-  //   }
-  //   return false;
-  // });
-  // if (
-  //   provideLiquidityDestination &&
-  //   typeof provideLiquidityDestination.action === 'object' &&
-  //   'z_provide_liquidity' in provideLiquidityDestination.action
-  // ) {
-  //   return provideLiquidityDestination?.action.z_provide_liquidity;
-  // }
-  // return undefined;
 }

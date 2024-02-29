@@ -61,33 +61,34 @@ function Page() {
     return <InvalidData onRestart={handleRestart} />;
   }
 
-  const { initialDenom, resultingDenom } = state;
+  const { initialDenom, resultingDenom, initialDeposit, strategyDuration, slippageTolerance, autoStakeValidator } =
+    state;
 
   return (
     <SigningState isSigning={isLoading}>
       <Stack spacing={4}>
-        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={state.initialDeposit} />
+        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
         <Divider />
         <SummaryYourDeposit state={state} />
         <SummaryTheSwapDcaPlus
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
-          initialDeposit={state.initialDeposit}
-          strategyDuration={state.strategyDuration}
+          initialDeposit={initialDeposit}
+          strategyDuration={strategyDuration}
         />
         <SummaryWhileSwapping
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
           priceThresholdValue={undefined}
-          slippageTolerance={state.slippageTolerance}
+          slippageTolerance={slippageTolerance}
         />
         <SummaryAfterEachSwap state={state} />
         <SummaryBenchmark state={state} />
         <FeesDcaPlus
           initialDenom={initialDenom}
-          strategyDuration={state.strategyDuration}
-          initialDeposit={state.initialDeposit}
-          autoStakeValidator={state.autoStakeValidator}
+          strategyDuration={strategyDuration}
+          initialDeposit={initialDeposit}
+          autoStakeValidator={autoStakeValidator}
         />
         <SummaryAgreementForm isError={isError} error={error} onSubmit={handleSubmit} />
       </Stack>

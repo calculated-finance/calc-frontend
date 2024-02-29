@@ -4,6 +4,7 @@ import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useSpotPrice from '@hooks/useSpotPrice';
 import { isNil } from 'lodash';
 import { DenomInfo } from '@utils/DenomInfo';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
 
 const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
@@ -42,7 +43,8 @@ export function WeightsGrid({
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
 }) {
-  const swapAmountSafe = swapAmount ?? 0;
+  const swapAmountSafe = fromAtomic(initialDenom, swapAmount ?? 0);
+
   const calcSwapFromPriceDelta = (priceDelta: number) => {
     const weightDisabled =
       applyMultiplier === YesNoValues.No && (transactionType === TransactionType.Buy ? priceDelta > 0 : priceDelta < 0);
@@ -50,10 +52,7 @@ export function WeightsGrid({
     const buySellPriceDelta = transactionType === TransactionType.Buy ? priceDelta : -priceDelta;
     const value = weightDisabled ? swapAmountSafe : swapAmountSafe * (1 - buySellPriceDelta * swapMultiplier);
 
-    if (value < 0) {
-      return 0;
-    }
-    return convertLargeNumber(value);
+    return value < 0 ? 0 : convertLargeNumber(value);
   };
 
   return (

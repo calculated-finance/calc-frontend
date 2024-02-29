@@ -197,9 +197,9 @@ function AvailableFundsButton({
             cursor="pointer"
             isDisabled={!displayAmount}
             onClick={() => {
-              const value = deconvertValue ? toAtomic(denom, displayAmount) : displayAmount;
-              setQueryState({ amount: value });
+              setQueryState({ amount: deconvertValue ? toAtomic(denom, displayAmount) : displayAmount });
               helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount);
+              helpers.setTouched(true);
             }}
           >
             {displayAmount}

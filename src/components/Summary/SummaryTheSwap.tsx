@@ -1,6 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
@@ -14,7 +15,7 @@ export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDat
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap{' '}
         <BadgeButton url="customise">
           <Text>
-            {String.fromCharCode(8275)} {swapAmount} {initialDenom.name}
+            {String.fromCharCode(8275)} {fromAtomic(initialDenom, swapAmount)} {initialDenom.name}
           </Text>
           <DenomIcon denomInfo={initialDenom} />
         </BadgeButton>{' '}

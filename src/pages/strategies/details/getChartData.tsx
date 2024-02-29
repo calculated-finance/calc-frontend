@@ -3,7 +3,7 @@ import { StrategyEvent } from '@models/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getSwapEvents } from '@helpers/getCompletedEvents';
 import { DenomInfo } from '@utils/DenomInfo';
-import { ExecutionSkippedReason } from 'src/interfaces/v2/generated/response/get_events';
+import { ExecutionSkippedReason } from 'src/interfaces/dca/response/get_events';
 
 type EventWithAccumulation = {
   time: Date;

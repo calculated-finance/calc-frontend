@@ -18,7 +18,6 @@ import {
 import {
   DcaInFormDataStep1,
   SimplifiedDcaInFormData,
-  denomInfoSchema,
   initialValues,
   simplifiedDcaInValidationSchema,
 } from 'src/models/DcaInFormData';
@@ -54,6 +53,9 @@ import { useWallet } from '@hooks/useWallet';
 import useDenoms from '@hooks/useDenoms';
 import { BrowserRouter } from 'react-router-dom';
 import { values } from 'rambda';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
@@ -97,7 +99,7 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose asset to sell</Text>
           <Spacer />
-          {initialDenom.value && <AvailableFunds denom={initialDenom.value} />}
+          {initialDenom.value && <AvailableFunds deconvertValue denom={initialDenom.value} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>
@@ -156,11 +158,14 @@ function SwapAmount({
   initialDenom: DenomInfo | undefined;
   resultingDenom: DenomInfo | undefined;
 }) {
-  const [{ onChange, value: swapAmount, ...swapAmountField }, meta, { setValue: setSwapAmount }] = useField({
+  const [{ onChange, value: swapAmount, ...swapAmountField }, swapAmountMeta, { setValue: setSwapAmount }] = useField({
     name: 'swapAmount',
   });
   const [{ value: initialDeposit }, depositMeta] = useField({ name: 'initialDeposit' });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
+  const [, routeMeta, routeHelpers] = useField<string | undefined>({
+    name: 'route',
+  });
 
   const executions = initialDeposit && swapAmount ? totalExecutions(initialDeposit, swapAmount) : 0;
   const displayExecutionInterval =
@@ -168,9 +173,34 @@ function SwapAmount({
     executions > 0 &&
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
+  const {
+    route,
+    routeError,
+    isLoading: routeIsLoading,
+  } = useRoute(
+    swapAmount && initialDenom ? coin(BigInt(swapAmount).toString(), initialDenom.id) : undefined,
+    resultingDenom,
+  );
+
+  useEffect(() => {
+    if (routeIsLoading) {
+      routeHelpers.setValue(undefined);
+      routeHelpers.setTouched(false);
+    } else if (routeError) {
+      routeHelpers.setTouched(true, false);
+      routeHelpers.setError(routeError);
+    } else {
+      routeHelpers.setValue(route);
+      routeHelpers.setTouched(true);
+    }
+  }, [route, routeError, routeIsLoading]);
+
   return (
     <FormControl
-      isInvalid={Boolean(meta.touched && meta.error && initialDeposit)}
+      isInvalid={
+        Boolean(swapAmountMeta.touched && swapAmountMeta.error && initialDeposit) ||
+        Boolean(routeMeta.touched && routeError)
+      }
       isDisabled={!executionInterval || !initialDeposit}
     >
       <FormLabel>How much {initialDenom?.name} each purchase?</FormLabel>
@@ -189,8 +219,11 @@ function SwapAmount({
               cursor="pointer"
               onClick={() => setSwapAmount(initialDeposit)}
             >
-              {initialDeposit && depositMeta.touched
-                ? initialDeposit?.toLocaleString('en-US', { maximumFractionDigits: 6, minimumFractionDigits: 2 }) ?? '-'
+              {initialDenom && initialDeposit && depositMeta.touched
+                ? fromAtomic(initialDenom, initialDeposit).toLocaleString('en-US', {
+                    maximumFractionDigits: 6,
+                    minimumFractionDigits: 2,
+                  }) ?? '-'
                 : '-'}
             </Button>
           </Flex>
@@ -198,13 +231,13 @@ function SwapAmount({
       </FormHelperText>
       <DenomInput
         denom={initialDenom}
-        onChange={setSwapAmount}
-        value={swapAmount}
+        onChange={(input) => initialDenom && setSwapAmount(toAtomic(initialDenom, input ?? 0))}
+        value={initialDenom && swapAmount && fromAtomic(initialDenom, swapAmount)}
         {...swapAmountField}
         isDisabled={!initialDeposit}
       />
       <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
-      <FormErrorMessage>{meta.error}</FormErrorMessage>
+      <FormErrorMessage>{routeError || swapAmountMeta.error}</FormErrorMessage>
       {initialDeposit && !depositMeta.error && depositMeta.touched && swapAmount > 0 && (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.
@@ -222,7 +255,9 @@ function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }
   const { isPageLoading } = usePageLoad();
   const [isSuccess, setIsSuccess] = useState(false);
   const [{ value: initialDenom }] = useField({ name: 'initialDenom' });
+  const [, initialDepositMeta] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenom }] = useField({ name: 'resultingDenom' });
+  const [, routeMeta] = useField({ name: 'route' });
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
@@ -271,6 +306,9 @@ function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }
                   isError={isError}
                   error={error}
                   onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
+                  isDisabled={
+                    !routeMeta.touched || !!routeMeta.error || !initialDepositMeta.touched || !!initialDepositMeta.error
+                  }
                 />
               ) : (
                 <ConnectWalletButton />

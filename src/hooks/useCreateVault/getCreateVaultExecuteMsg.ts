@@ -2,7 +2,7 @@ import { toBase64 } from '@helpers/base64';
 import { DenomInfo } from '@utils/DenomInfo';
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/dca/execute';
 
 export function getExecuteMsg(
   msg: ExecuteMsg,

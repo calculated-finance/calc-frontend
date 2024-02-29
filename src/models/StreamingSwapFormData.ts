@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { isNil } from 'rambda';
-import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { Coin } from 'src/interfaces/dca/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { ExecutionIntervals } from './ExecutionIntervals';
 import { denomInfoSchema } from './DcaInFormData';
@@ -27,7 +27,7 @@ export const schema = Yup.object({
     .required()
     .nullable()
     .test({
-      name: 'less-than-deposit',
+      name: 'less-than-balance',
       message: ({ label }) => `${label} must be less than or equal to than your current balance`,
       test(value, context) {
         const balances = context?.options?.context?.balances;

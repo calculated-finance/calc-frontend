@@ -3,6 +3,7 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
 import useSpotPrice from '@hooks/useSpotPrice';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
@@ -27,7 +28,7 @@ export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleSta
         <SummaryTriggerInfo state={state} transactionType={transactionType} />, CALC will swap the amount of{' '}
         <BadgeButton url="customise">
           <Code color="none" bg="none">
-            {swapAmount} {initialDenom.name}
+            {fromAtomic(initialDenom, swapAmount)} {initialDenom.name}
           </Code>
           <DenomIcon denomInfo={initialDenom} />
           <Code color="none" bg="none">

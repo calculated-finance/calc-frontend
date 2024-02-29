@@ -7,12 +7,14 @@ import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useChainId } from '@hooks/useChainId';
 import useFiatPrices from '@hooks/useFiatPrices';
 import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
 export const useCreateVaultDca = () => {
+  const { chainId } = useChainId();
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
@@ -54,7 +56,7 @@ export const useCreateVaultDca = () => {
       throw new Error('No sender address');
     }
 
-    checkSwapAmountValue(state.swapAmount!, price);
+    checkSwapAmountValue(chainId, state.swapAmount!, price);
 
     if (!state.resultingDenom) {
       throw new Error('Invalid resulting denom');
@@ -67,6 +69,7 @@ export const useCreateVaultDca = () => {
       timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,
       swapAmount: state.swapAmount!,
+      route: state.route,
       priceThreshold: state.priceThresholdValue || undefined,
       transactionType,
       slippageTolerance: state.slippageTolerance!,

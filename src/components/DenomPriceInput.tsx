@@ -44,8 +44,8 @@ export function DenomPriceInput({
   const priceOfDenom = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === TransactionType.Buy ? initialDenom : resultingDenom;
 
-  const { name: priceOfDenomName, pricePrecision: priceOfPricePrecision } = priceOfDenom;
-  const { name: priceInDenomName, pricePrecision: priceInPricePrecision } = priceInDenom;
+  const { name: priceOfDenomName, significantFigures: priceOfPricePrecision } = priceOfDenom;
+  const { name: priceInDenomName, significantFigures: priceInPricePrecision } = priceInDenom;
 
   const pricePrecision = Math.max(priceOfPricePrecision, priceInPricePrecision);
 

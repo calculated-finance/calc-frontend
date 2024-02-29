@@ -1,8 +1,8 @@
-import { QueryMsg } from 'src/interfaces/v2/generated/query';
-import { Vault, VaultResponse } from 'src/interfaces/v2/generated/response/get_vault';
+import { QueryMsg } from 'src/interfaces/dca/query';
+import { Vault, VaultResponse } from 'src/interfaces/dca/response/get_vault';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
-import { EventsResponse } from 'src/interfaces/v2/generated/response/get_events_by_resource_id';
+import { EventsResponse } from 'src/interfaces/dca/response/get_events_by_resource_id';
 import { Pair } from '@models/Pair';
 import { DenomInfo } from '@utils/DenomInfo';
 import { StrategyEvent } from '@models/StrategyEvent';
