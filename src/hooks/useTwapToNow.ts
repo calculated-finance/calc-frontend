@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 export default function useTwapToNow(
   initialDenom: DenomInfo | undefined,
   resultingDenom: DenomInfo | undefined,
-  route?: string,
+  route?: string | null,
   enabled = true,
 ) {
   const config = useConfig();

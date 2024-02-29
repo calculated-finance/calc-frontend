@@ -211,7 +211,7 @@ export type IbcMsg =
          */
         amount: Coin;
         /**
-         * exisiting channel to send the tokens over
+         * existing channel to send the tokens over
          */
         channel_id: string;
         /**
@@ -289,7 +289,9 @@ export type WasmMsg =
         code_id: number;
         funds: Coin[];
         /**
-         * A human-readbale label for the contract
+         * A human-readable label for the contract.
+         *
+         * Valid values should: - not be empty - not be bigger than 128 bytes (or some chain-specific limit) - not start / end with whitespace
          */
         label: string;
         /**
@@ -421,7 +423,7 @@ export interface IbcTimeoutBlock {
    */
   height: number;
   /**
-   * the version that the client is currently on (eg. after reseting the chain this could increment 1 as height drops to 0)
+   * the version that the client is currently on (e.g. after resetting the chain this could increment 1 as height drops to 0)
    */
   revision: number;
   [k: string]: unknown;

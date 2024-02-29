@@ -5,7 +5,6 @@ import useValidator from '@hooks/useValidator';
 import useStrategy from '@hooks/useStrategy';
 import { getStrategyExecutionInterval, getStrategyResultingDenom, getStrategyType } from '@helpers/strategy';
 import { DcaFormState } from '@hooks/useCreateVault/DcaFormState';
-import useDenoms from '@hooks/useDenoms';
 
 function ReinvestSummary({ reinvestStrategy }: { reinvestStrategy: string }) {
   const { data: strategy, isLoading } = useStrategy(reinvestStrategy);

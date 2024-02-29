@@ -5,9 +5,9 @@ import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { DenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
-import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 export default function BaseSwapAmount({
   initialDenom,

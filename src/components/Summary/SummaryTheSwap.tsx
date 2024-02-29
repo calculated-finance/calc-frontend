@@ -1,10 +1,10 @@
 import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryTheSwap({ state, transactionType }: { state: DcaInFormDataAll; transactionType: string }) {
   const { initialDenom, resultingDenom, swapAmount } = state;

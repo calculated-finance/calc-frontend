@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react';
 import 'isomorphic-fetch';
 import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
-import { reduce, values } from 'rambda';
+import { values } from 'rambda';
 import useDenoms from '@hooks/useDenoms';
 import { useQuery } from '@tanstack/react-query';
 

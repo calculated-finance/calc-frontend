@@ -1,5 +1,5 @@
 import { Stack } from '@chakra-ui/react';
-import { Form, Formik, useFormikContext } from 'formik';
+import { Form, Formik, useField, useFormikContext } from 'formik';
 import Submit from '@components/Submit';
 import ExecutionInterval from '@components/ExecutionInterval';
 import DcaDiagram from '@components/DcaDiagram';
@@ -19,18 +19,21 @@ import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormDca({
-  step1,
+  step1: { initialDeposit, initialDenom, resultingDenom },
   transactionType,
 }: {
   step1: DcaInFormDataStep1;
   transactionType: TransactionType;
 }) {
-  const { values } = useFormikContext<DcaInFormDataStep2>();
-  const { initialDenom, resultingDenom } = step1;
+  const {
+    values: { advancedSettings },
+  } = useFormikContext<DcaInFormDataStep2>();
+  const [, routeMeta] = useField({ name: 'route' });
+
   return (
     <Form autoComplete="off">
       <Stack direction="column" spacing={4}>
-        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={step1.initialDeposit} />
+        <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
         <AdvancedSettingsSwitch />
         <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
         <ExecutionInterval />
@@ -39,9 +42,9 @@ export function CustomiseFormDca({
           isEdit={false}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
-          initialDeposit={step1.initialDeposit}
+          initialDeposit={initialDeposit}
         />
-        <CollapseWithRender isOpen={values.advancedSettings}>
+        <CollapseWithRender isOpen={advancedSettings}>
           <PriceThreshold
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
@@ -49,7 +52,7 @@ export function CustomiseFormDca({
           />
           <SlippageTolerance />
         </CollapseWithRender>
-        <Submit>Next</Submit>
+        <Submit isDisabled={!routeMeta.touched || !!routeMeta.error}>Next</Submit>
       </Stack>
     </Form>
   );

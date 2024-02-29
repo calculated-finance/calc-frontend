@@ -27,15 +27,17 @@ export interface ConfigResponse {
 }
 export interface Config {
   admin: Addr;
+  automation_fee_percent: Decimal;
   default_page_limit: number;
   default_slippage_tolerance: Decimal;
-  delegation_fee_percent: Decimal;
+  default_swap_fee_percent: Decimal;
+  exchange_contract_address: Addr;
   executors: Addr[];
   fee_collectors: FeeCollector[];
   paused: boolean;
   risk_weighted_average_escrow_level: Decimal;
-  swap_fee_percent: Decimal;
   twap_period: number;
+  weighted_scale_swap_fee_percent: Decimal;
 }
 export interface FeeCollector {
   address: string;

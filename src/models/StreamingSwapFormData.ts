@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { isNil } from 'rambda';
-import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { Coin } from 'src/interfaces/dca/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { ExecutionIntervals } from './ExecutionIntervals';
 import { denomInfoSchema } from './DcaInFormData';

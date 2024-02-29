@@ -1,4 +1,4 @@
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/dca/execute';
 import { ExecuteResult, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainConfig } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
@@ -13,7 +13,7 @@ import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
 import { GenericAuthorization } from 'cosmjs-types/cosmos/authz/v1beta1/authz';
 import { MsgGrant } from 'cosmjs-types/cosmos/authz/v1beta1/tx';
 import { Timestamp } from 'cosmjs-types/google/protobuf/timestamp';
-import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { Config } from 'src/interfaces/dca/response/get_config';
 import { toAtomic } from '@utils/getDenomInfo';
 
 function topUpStrategy(

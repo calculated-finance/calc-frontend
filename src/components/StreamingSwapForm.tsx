@@ -38,7 +38,6 @@ import { AgreementForm, SummaryAgreementForm } from '@components/Summary/Summary
 import { useEffect, useState } from 'react';
 import { DenomSelect } from '@components/DenomSelect';
 import { AvailableFunds } from '@components/AvailableFunds';
-import useSteps from '@hooks/useSteps';
 import { getTimeSaved } from '@helpers/getTimeSaved';
 import { useWallet } from '@hooks/useWallet';
 import NumberInput from '@components/NumberInput';

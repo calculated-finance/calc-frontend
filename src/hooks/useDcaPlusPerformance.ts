@@ -1,5 +1,5 @@
 import { useWallet } from '@hooks/useWallet';
-import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/v2/generated/response/get_dca_plus_performance';
+import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/dca/response/get_dca_plus_performance';
 import { getChainContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';

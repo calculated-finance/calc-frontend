@@ -10,7 +10,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import usePairs, { getResultingDenoms, isSupportedDenomForDcaPlus, orderAlphabetically } from '@hooks/usePairs';
-import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
+import { isDenomStable, isDenomVolatile, toAtomic } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
@@ -23,6 +23,12 @@ import useDenoms from '@hooks/useDenoms';
 import { HydratedPair } from '@models/Pair';
 import Spinner from '@components/Spinner';
 import { values } from 'rambda';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
+import { useEffect } from 'react';
+import Submit from '@components/Submit';
+import { ConnectWalletButton } from '@components/ConnectWalletButton';
+import { useWallet } from '@hooks/useWallet';
 
 function getIsDcaInStrategy(strategyType: string | undefined) {
   const strategy = strategyType && strategyType;
@@ -60,21 +66,46 @@ function getResultingDenomsFromStrategyType(
 
   const resultingDenoms = getResultingDenoms(pairs, initialDenom).filter((denom) => denom.id !== initialDenom.id);
 
-  if (strategyType === StrategyType.DCAPlusIn) {
-    return resultingDenoms.filter(isSupportedDenomForDcaPlus);
-  }
-
-  return resultingDenoms;
+  return strategyType === StrategyType.DCAPlusIn ? resultingDenoms.filter(isSupportedDenomForDcaPlus) : resultingDenoms;
 }
 
 export function AssetsForm() {
+  const { connected } = useWallet();
   const { denoms } = useDenoms();
   const { pairs } = usePairs();
-  const [initialDenom, meta, helpers] = useField({ name: 'initialDenom' });
-  const [resultingDenom, resultingDenomMeta, resultingDenomHelpers] = useField({ name: 'resultingDenom' });
+  const [{ value: initialDenom }, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
+  const [{ value: initialDeposit }, initialDepositMeta] = useField({ name: 'initialDeposit' });
+  const [{ value: resultingDenom }, resultingDenomMeta, resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [strategyType] = useField({ name: 'strategyType' });
   const { chainId } = useChainId();
   const { getDenomById } = useDenoms();
+  const [, routeMeta, routeHelpers] = useField<string | undefined>({
+    name: 'route',
+  });
+
+  const {
+    route,
+    routeError,
+    isLoading: routeIsLoading,
+  } = useRoute(
+    initialDenom && initialDeposit
+      ? coin(BigInt(toAtomic(initialDenom, initialDeposit ?? 1)).toString(), initialDenom.id)
+      : undefined,
+    resultingDenom,
+  );
+
+  useEffect(() => {
+    if (routeIsLoading) {
+      routeHelpers.setValue(undefined);
+      routeHelpers.setTouched(false);
+    } else if (routeError) {
+      routeHelpers.setTouched(true, false);
+      routeHelpers.setError(routeError);
+    } else {
+      routeHelpers.setValue(route);
+      routeHelpers.setTouched(true);
+    }
+  }, [route, routeError, routeIsLoading]);
 
   if (!pairs || !denoms?.[chainId])
     return (
@@ -89,7 +120,7 @@ export function AssetsForm() {
 
   return (
     <>
-      <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
+      <FormControl isInvalid={Boolean(initialDenomMeta.touched && initialDenomMeta.error)}>
         <FormLabel>
           {isDcaInStrategy
             ? 'How will you fund your first investment?'
@@ -103,7 +134,7 @@ export function AssetsForm() {
                 : `CALC currently supports pairs trading on ${getChainDexName(chainId)}.`}{' '}
             </Text>
             <Spacer />
-            <AvailableFunds deconvertValue denom={initialDenom.value} />
+            <AvailableFunds deconvertValue denom={initialDenom} />
           </Center>
         </FormHelperText>
         <SimpleGrid columns={2} spacing={2}>
@@ -115,18 +146,18 @@ export function AssetsForm() {
                   : []
               }
               placeholder="Choose&nbsp;asset"
-              value={initialDenom.value.id}
-              onChange={(v) => v && helpers.setValue(getDenomById(v))}
+              value={initialDenom?.id}
+              onChange={(v) => v && initialDenomHelpers.setValue(getDenomById(v))}
               optionLabel={getChainDexName(chainId)}
             />
-            <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+            <FormErrorMessage>{initialDenomMeta.touched && initialDenomMeta.error}</FormErrorMessage>
           </Box>
           <InitialDeposit />
         </SimpleGrid>
       </FormControl>
       <FormControl
-        isInvalid={Boolean(resultingDenomMeta.touched && resultingDenomMeta.error)}
-        isDisabled={!initialDenom.value}
+        isInvalid={Boolean(resultingDenomMeta.touched && resultingDenomMeta.error) || !!routeMeta.error}
+        isDisabled={!initialDenom}
       >
         <FormLabel hidden={!isDcaInStrategy}>What asset do you want to invest in?</FormLabel>
         <FormLabel hidden={isDcaInStrategy}>How do you want to hold your profits?</FormLabel>
@@ -138,14 +169,19 @@ export function AssetsForm() {
           </Text>
         </FormHelperText>
         <DenomSelect
-          denoms={getResultingDenomsFromStrategyType(strategyType.value, pairs, initialDenom.value)}
+          denoms={getResultingDenomsFromStrategyType(strategyType.value, pairs, initialDenom)}
           placeholder="Choose asset"
-          value={resultingDenom.value}
+          value={resultingDenom}
           onChange={(v) => v && resultingDenomHelpers.setValue(getDenomById(v))}
           optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
-        <FormErrorMessage>{meta.touched && meta.error}</FormErrorMessage>
+        <FormErrorMessage>{(initialDenomMeta.touched && initialDenomMeta.error) || routeError}</FormErrorMessage>
       </FormControl>
+      {connected ? (
+        <Submit isDisabled={!initialDeposit || !routeMeta.touched || !!routeError}>Next</Submit>
+      ) : (
+        <ConnectWalletButton />
+      )}
     </>
   );
 }

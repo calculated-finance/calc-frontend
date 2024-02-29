@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useWallet } from '@hooks/useWallet';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 import { encode } from '@helpers/encode';
-import { ExecuteMsg } from 'src/interfaces/v2/generated/execute';
+import { ExecuteMsg } from 'src/interfaces/dca/execute';
 import { getChainContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { useChainId } from '@hooks/useChainId';

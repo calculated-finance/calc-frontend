@@ -1,5 +1,5 @@
 import { DenomInfo } from '@utils/DenomInfo';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { Vault } from 'src/interfaces/dca/response/get_vault';
 
 export enum StrategyStatus {
   ACTIVE = 'active',

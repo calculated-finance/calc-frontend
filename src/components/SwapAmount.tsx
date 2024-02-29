@@ -6,9 +6,12 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
+import { useEffect } from 'react';
 import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
-import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 
 export default function SwapAmount({
   isEdit,
@@ -28,6 +31,31 @@ export default function SwapAmount({
   });
   const [{ value: executionInterval }] = useField({ name: 'executionInterval' });
   const [{ value: executionIntervalIncrement }] = useField({ name: 'executionIntervalIncrement' });
+  const [, routeMeta, routeHelpers] = useField<string | undefined>({
+    name: 'route',
+  });
+
+  const {
+    route,
+    routeError,
+    isLoading: routeIsLoading,
+  } = useRoute(
+    swapAmount && initialDenom ? coin(BigInt(swapAmount).toString(), initialDenom.id) : undefined,
+    resultingDenom,
+  );
+
+  useEffect(() => {
+    if (routeIsLoading) {
+      routeHelpers.setValue(undefined);
+      routeHelpers.setTouched(false);
+    } else if (routeError) {
+      routeHelpers.setTouched(true, false);
+      routeHelpers.setError(routeError);
+    } else {
+      routeHelpers.setValue(route);
+      routeHelpers.setTouched(true);
+    }
+  }, [route, routeError, routeIsLoading]);
 
   const isSell = transactionType === TransactionType.Sell;
 
@@ -42,7 +70,9 @@ export default function SwapAmount({
     ];
 
   return (
-    <FormControl isInvalid={Boolean(swapAmountMeta.touched && swapAmountMeta.error)}>
+    <FormControl
+      isInvalid={Boolean(swapAmountMeta.touched && swapAmountMeta.error) || Boolean(routeMeta.touched && routeError)}
+    >
       <FormLabel>
         How much {initialDenom.name} each {isSell ? 'swap' : 'purchase'}?
       </FormLabel>
@@ -76,7 +106,7 @@ export default function SwapAmount({
         {...field}
       />
       <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
-      <FormErrorMessage>{swapAmountMeta.error}</FormErrorMessage>
+      <FormErrorMessage>{routeError || swapAmountMeta.error}</FormErrorMessage>
       {Boolean(swapAmount) && !swapAmountMeta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">
           A total of {executions} swaps will take place over {executions} {displayExecutionInterval}.

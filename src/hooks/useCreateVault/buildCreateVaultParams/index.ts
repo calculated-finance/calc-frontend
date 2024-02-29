@@ -6,13 +6,13 @@ import {
   PerformanceAssessmentStrategyParams,
   PositionType,
   SwapAdjustmentStrategyParams,
-} from 'src/interfaces/v2/generated/execute';
+} from 'src/interfaces/dca/execute';
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { ChainConfig, getRedBankAddress } from '@helpers/chains';
-import { Config } from 'src/interfaces/v2/generated/response/get_config';
+import { Config } from 'src/interfaces/dca/response/get_config';
 import { safeInvert } from '@utils/safeInvert';
 import { toAtomic } from '@utils/getDenomInfo';
 
@@ -230,7 +230,6 @@ export function buildCreateVaultMsg(
     destinationConfig,
     swapAdjustment,
     isDcaPlus,
-    isInAtomics,
   }: BuildCreateVaultContext,
 ): ExecuteMsg {
   if (isDcaPlus && swapAdjustment) {
@@ -254,7 +253,7 @@ export function buildCreateVaultMsg(
     ? ('compare_to_standard_dca' as PerformanceAssessmentStrategyParams)
     : undefined;
 
-  const msg = {
+  return {
     create_vault: {
       label,
       time_interval: getExecutionInterval(timeInterval.interval, timeInterval.increment),
@@ -281,6 +280,4 @@ export function buildCreateVaultMsg(
       performance_assessment_strategy: performanceAssessmentStrategy,
     },
   };
-
-  return msg;
 }

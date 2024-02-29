@@ -53,14 +53,14 @@ import { useWallet } from '@hooks/useWallet';
 import useDenoms from '@hooks/useDenoms';
 import { BrowserRouter } from 'react-router-dom';
 import { values } from 'rambda';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
+import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './ConnectWalletButton';
-import useRoute from '@hooks/useRoute';
-import { coin } from '@cosmjs/stargate';
-import { fromAtomic, toAtomic, toAtomicBigInt } from '@utils/getDenomInfo';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -173,24 +173,27 @@ function SwapAmount({
     executions > 0 &&
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
 
-  const { route, routeError, ...useRouteHelpers } = useRoute(
+  const {
+    route,
+    routeError,
+    isLoading: routeIsLoading,
+  } = useRoute(
     swapAmount && initialDenom ? coin(BigInt(swapAmount).toString(), initialDenom.id) : undefined,
     resultingDenom,
   );
 
   useEffect(() => {
-    if (useRouteHelpers.isLoading) {
+    if (routeIsLoading) {
       routeHelpers.setValue(undefined);
       routeHelpers.setTouched(false);
+    } else if (routeError) {
+      routeHelpers.setTouched(true, false);
+      routeHelpers.setError(routeError);
     } else {
       routeHelpers.setValue(route);
       routeHelpers.setTouched(true);
     }
-  }, [route, useRouteHelpers.isLoading]);
-
-  useEffect(() => {
-    routeHelpers.setError(`${routeError}`);
-  }, [routeError]);
+  }, [route, routeError, routeIsLoading]);
 
   return (
     <FormControl
@@ -229,7 +232,7 @@ function SwapAmount({
       <DenomInput
         denom={initialDenom}
         onChange={(input) => initialDenom && setSwapAmount(toAtomic(initialDenom, input ?? 0))}
-        value={initialDenom && fromAtomic(initialDenom, swapAmount)}
+        value={initialDenom && swapAmount && fromAtomic(initialDenom, swapAmount)}
         {...swapAmountField}
         isDisabled={!initialDeposit}
       />
@@ -303,7 +306,9 @@ function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }
                   isError={isError}
                   error={error}
                   onSubmit={(agreementData, setSubmitting) => handleSubmit(agreementData, setSubmitting, formValues)}
-                  isDisabled={!!routeMeta.error || !initialDepositMeta.touched || !!initialDepositMeta.error}
+                  isDisabled={
+                    !routeMeta.touched || !!routeMeta.error || !initialDepositMeta.touched || !!initialDepositMeta.error
+                  }
                 />
               ) : (
                 <ConnectWalletButton />

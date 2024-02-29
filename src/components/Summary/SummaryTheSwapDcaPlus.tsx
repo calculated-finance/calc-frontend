@@ -3,9 +3,9 @@ import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getSwapRange } from '@helpers/ml/getSwapRange';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { DenomInfo } from '@utils/DenomInfo';
 import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryTheSwapDcaPlus({
   initialDenom,

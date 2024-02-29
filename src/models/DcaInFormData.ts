@@ -1,4 +1,3 @@
-import { fromAtomic } from '@utils/getDenomInfo';
 import { ExecutionIntervals } from 'src/models/ExecutionIntervals';
 import TriggerTypes from 'src/models/TriggerTypes';
 import * as Yup from 'yup';
@@ -12,7 +11,7 @@ import {
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
 import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
-import { Coin } from 'src/interfaces/generated-osmosis/response/get_vault';
+import { Coin } from 'src/interfaces/dca/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyType } from './StrategyType';
 import { PostPurchaseOptions } from './PostPurchaseOptions';
@@ -413,6 +412,7 @@ export const step2ValidationSchema = dcaSchema.pick([
   'advancedSettings',
   'startImmediately',
   'triggerType',
+  'route',
   'startDate',
   'startPrice',
   'purchaseTime',

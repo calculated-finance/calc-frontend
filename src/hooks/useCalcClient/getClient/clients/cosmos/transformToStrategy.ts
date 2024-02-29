@@ -1,8 +1,8 @@
 import { ChainId } from '@models/ChainId';
 import { Strategy, StrategyStatus } from '@models/Strategy';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
-import { VaultStatus } from 'src/interfaces/v2/generated/query';
-import { Vault } from 'src/interfaces/v2/generated/response/get_vault';
+import { VaultStatus } from 'src/interfaces/dca/query';
+import { Vault } from 'src/interfaces/dca/response/get_vault';
 
 const vaultStatusMap: Record<VaultStatus, StrategyStatus> = {
   active: StrategyStatus.ACTIVE,

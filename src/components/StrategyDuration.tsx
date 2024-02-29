@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
-import { getProbabilityOfOutperformance } from '@helpers/ml/getProbabilityOfOutperformance';
+import { getProbabilityOfOutPerformance } from '@helpers/ml/getProbabilityOfOutPerformance';
 
 function getHistogram(probability: number | null) {
   if (!probability) {
@@ -35,10 +35,10 @@ function getHistogram(probability: number | null) {
 export default function StrategyDuration() {
   const [{ value }, meta, { setValue }] = useField({ name: 'strategyDuration' });
 
-  const outperformanceProbability = getProbabilityOfOutperformance(value);
+  const outPerformanceProbability = getProbabilityOfOutPerformance(value);
 
-  const outperformanceProbabilityFormatted =
-    outperformanceProbability && `${Math.round(outperformanceProbability * 100)}%`;
+  const outPerformanceProbabilityFormatted =
+    outPerformanceProbability && `${Math.round(outPerformanceProbability * 100)}%`;
 
   return (
     <FormControl isInvalid={Boolean(meta.touched && meta.error)}>
@@ -53,8 +53,8 @@ export default function StrategyDuration() {
         {value}
         <Spacer />
         <HStack>
-          <Image src={getHistogram(outperformanceProbability)} alt="histogram one" />
-          <Text color="green.200">{outperformanceProbabilityFormatted}</Text>
+          <Image src={getHistogram(outPerformanceProbability)} alt="histogram one" />
+          <Text color="green.200">{outPerformanceProbabilityFormatted}</Text>
         </HStack>
       </Flex>
       <Slider

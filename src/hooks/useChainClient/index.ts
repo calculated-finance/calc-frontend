@@ -13,11 +13,15 @@ import { forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { fromAtomic } from '@utils/getDenomInfo';
 import Long from 'long';
 import { DENOMS } from 'src/fixtures/denoms';
 import { Pair } from '@models/Pair';
-import { RouteResult } from '@hooks/useRoute';
+
+export type RouteResult = {
+  route: string | undefined;
+  feeRate: number;
+  routeError: string | undefined;
+};
 
 export type ChainClient = {
   fetchDenoms: () => Promise<{ [x: string]: DenomInfo }>;

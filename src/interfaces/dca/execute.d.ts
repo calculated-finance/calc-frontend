@@ -13,6 +13,7 @@ export type ExecuteMsg =
         minimum_receive_amount?: Uint128 | null;
         owner?: Addr | null;
         performance_assessment_strategy?: PerformanceAssessmentStrategyParams | null;
+        route?: Binary | null;
         slippage_tolerance?: Decimal | null;
         swap_adjustment_strategy?: SwapAdjustmentStrategyParams | null;
         swap_amount: Uint128;
@@ -47,6 +48,7 @@ export type ExecuteMsg =
     }
   | {
       execute_trigger: {
+        route?: Binary | null;
         trigger_id: Uint128;
       };
     }
@@ -83,17 +85,7 @@ export type ExecuteMsg =
       };
     }
   | {
-      old_z_delegate: {
-        amount: Uint128;
-        delegator_address: Addr;
-        denom: string;
-        validator_address: Addr;
-      };
-    }
-  | {
-      migrate_limit_order: {
-        vault_id: Uint128;
-      };
+      receive: Cw20ReceiveMsg;
     };
 /**
  * A human readable address.
@@ -131,7 +123,7 @@ export type Binary = string;
  * let c = Uint128::from(70u32); assert_eq!(c.u128(), 70); ```
  */
 export type Uint128 = string;
-export type PerformanceAssessmentStrategyParams = 'compare_to_standard_dca';
+export type PerformanceAssessmentStrategyParams = "compare_to_standard_dca";
 export type SwapAdjustmentStrategyParams =
   | {
       risk_weighted_average: {
@@ -146,8 +138,8 @@ export type SwapAdjustmentStrategyParams =
         multiplier: Decimal;
       };
     };
-export type BaseDenom = 'bitcoin';
-export type PositionType = 'enter' | 'exit';
+export type BaseDenom = "bitcoin";
+export type PositionType = "enter" | "exit";
 /**
  * A thin wrapper around u64 that is using strings for JSON encoding/decoding, such that the full u64 range can be used for clients that convert JSON numbers to floats, like JavaScript and jq.
  *
@@ -162,15 +154,15 @@ export type PositionType = 'enter' | 'exit';
 export type Uint64 = string;
 export type TimeInterval =
   | (
-      | 'every_block'
-      | 'every_minute'
-      | 'half_hourly'
-      | 'hourly'
-      | 'half_daily'
-      | 'daily'
-      | 'weekly'
-      | 'fortnightly'
-      | 'monthly'
+      | "every_block"
+      | "every_minute"
+      | "half_hourly"
+      | "hourly"
+      | "half_daily"
+      | "daily"
+      | "weekly"
+      | "fortnightly"
+      | "monthly"
     )
   | {
       custom: {
@@ -201,4 +193,12 @@ export interface Destination {
 export interface FeeCollector {
   address: string;
   allocation: Decimal;
+}
+/**
+ * Cw20ReceiveMsg should be de/serialized under `Receive()` variant in a ExecuteMsg
+ */
+export interface Cw20ReceiveMsg {
+  amount: Uint128;
+  msg: Binary;
+  sender: string;
 }
