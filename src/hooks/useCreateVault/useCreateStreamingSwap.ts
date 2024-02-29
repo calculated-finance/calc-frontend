@@ -5,6 +5,7 @@ import { Strategy } from '@models/Strategy';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useChainId } from '@hooks/useChainId';
 import useFiatPrices from '@hooks/useFiatPrices';
 import { FormData } from '@models/StreamingSwapFormData';
 import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
@@ -12,6 +13,7 @@ import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
 
 export const useCreateStreamingSwap = () => {
+  const { chainId } = useChainId();
   const { transactionType } = useStrategyInfo();
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
@@ -44,7 +46,7 @@ export const useCreateStreamingSwap = () => {
       throw new Error('No sender address');
     }
 
-    checkSwapAmountValue(state.swapAmount!, price);
+    checkSwapAmountValue(chainId, state.swapAmount!, price);
 
     if (!state.resultingDenom) {
       throw new Error('Invalid resulting denom');
