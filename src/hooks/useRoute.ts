@@ -5,12 +5,6 @@ import { useChainId } from '@hooks/useChainId';
 import { RouteResult, useChainClient } from '@hooks/useChainClient';
 import useDenoms from '@hooks/useDenoms';
 
-export type RouteResult = {
-  route: string | undefined;
-  feeRate: number;
-  routeError: string | undefined;
-};
-
 const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
   const { chainId } = useChainId();
   const chainClient = useChainClient(chainId);

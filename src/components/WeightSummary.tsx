@@ -6,7 +6,6 @@ import { isNil } from 'lodash';
 import { DenomInfo } from '@utils/DenomInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 const weights = [-0.5, -0.1, -0.05, -0.01, 0, 0.01, 0.05, 0.1, 0.5];
 

@@ -7,7 +7,6 @@ import { fromAtomic } from '@utils/getDenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
-import { fromAtomic } from '@utils/getDenomInfo';
 
 export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
   const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;

@@ -16,7 +16,12 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import Long from 'long';
 import { DENOMS } from 'src/fixtures/denoms';
 import { Pair } from '@models/Pair';
-import { RouteResult } from '@hooks/useRoute';
+
+export type RouteResult = {
+  route: string | undefined;
+  feeRate: number;
+  routeError: string | undefined;
+};
 
 export type RouteResult = {
   route: string | undefined;
