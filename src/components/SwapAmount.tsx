@@ -5,8 +5,9 @@ import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
-import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
+import { useChainId } from '@hooks/useChainId';
+import { getChainMinimumSwapValue } from '@helpers/chains';
 import useRoute from '@hooks/useRoute';
 import { coin } from '@cosmjs/stargate';
 import { useEffect } from 'react';
@@ -26,6 +27,7 @@ export default function SwapAmount({
   isEdit: boolean;
   transactionType: TransactionType;
 }) {
+  const { chainId } = useChainId();
   const [{ onChange, value: swapAmount, ...field }, swapAmountMeta, swapAmountHelpers] = useField({
     name: 'swapAmount',
   });
@@ -105,7 +107,7 @@ export default function SwapAmount({
         onChange={(input) => swapAmountHelpers.setValue(input && toAtomic(initialDenom, Number(input)))}
         {...field}
       />
-      <FormHelperText>Swap amount must be greater than {formatFiat(MINIMUM_SWAP_VALUE_IN_USD)}</FormHelperText>
+      <FormHelperText>Swap amount must be greater than {formatFiat(getChainMinimumSwapValue(chainId))}</FormHelperText>
       <FormErrorMessage>{routeError || swapAmountMeta.error}</FormErrorMessage>
       {Boolean(swapAmount) && !swapAmountMeta.error && !executionIntervalIncrement ? (
         <FormHelperText color="brand.200" fontSize="xs">

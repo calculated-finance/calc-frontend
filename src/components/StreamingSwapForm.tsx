@@ -67,6 +67,7 @@ import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { BrowserRouter } from 'react-router-dom';
 import useRoute from '@hooks/useRoute';
 import InitialDeposit from '@components/InitialDeposit';
+import { getChainMinimumSwapValue } from '@helpers/chains';
 
 function InitialDenom() {
   const [isMobile] = useMediaQuery('(max-width: 506px)');
@@ -564,7 +565,11 @@ function DurationSlider() {
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenom);
 
-  const minimumSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 5) * (1.0 / fiatPrice));
+  const { chainId } = useChainId();
+  const minimumSwapValue = getChainMinimumSwapValue(chainId);
+
+  const minimumSwapAmount =
+    initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, minimumSwapValue) * (1.0 / fiatPrice));
   const maximumSwaps = minimumSwapAmount && Math.ceil(debouncedInitialDeposit / minimumSwapAmount);
 
   const swaps = strategyDuration && maximumSwaps && min(strategyDuration, maximumSwaps);
@@ -621,7 +626,8 @@ function DurationSlider() {
     fromAtomic(resultingDenom, max(0, expectedFinalReceiveAmount - Number(directExpectedReceiveAmount.amount)));
 
   useEffect(() => {
-    const minSwapAmount = initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, 5) * (1.0 / fiatPrice));
+    const minSwapAmount =
+      initialDenom && fiatPrice && Math.floor(toAtomic(initialDenom, minimumSwapValue) * (1.0 / fiatPrice));
     const maxSwaps = debouncedInitialDeposit && minSwapAmount && Math.ceil(debouncedInitialDeposit / minSwapAmount);
 
     const totalSwaps = debouncedStrategyDuration && maxSwaps && min(debouncedStrategyDuration, maxSwaps);
