@@ -1,6 +1,6 @@
 import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
-import { formatFiat } from './format/formatFiat';
 import { ChainId } from '@models/ChainId';
+import { formatFiat } from './format/formatFiat';
 import { getChainMinimumSwapValue } from './chains';
 
 export function checkSwapAmountValue(chainId: ChainId, swapAmount: number, price: number) {

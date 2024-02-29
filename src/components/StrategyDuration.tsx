@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { useField } from 'formik';
 import { MAX_DCA_PLUS_STRATEGY_DURATION, MIN_DCA_PLUS_STRATEGY_DURATION } from 'src/constants';
-import { getProbabilityOfOutPerformance } from '@helpers/ml/getProbabilityOfOutPerformance';
+import { getProbabilityOfOutPerformance } from '@helpers/ml/getProbabilityOfOutperformance';
 
 function getHistogram(probability: number | null) {
   if (!probability) {
