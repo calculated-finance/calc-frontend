@@ -116,8 +116,12 @@ const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: Deno
       : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
 
   const fetchDenoms = async () => {
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    return response.ok ? response.json() : chainId === 'constantine-3' ? constantine3Data : archway1Data;
+    try {
+      const response = await fetch(url);
+      return response.ok ? await response.json() : chainId === 'constantine-3' ? constantine3Data : archway1Data;
+    } catch (error) {
+      return chainId === 'constantine-3' ? constantine3Data : archway1Data;
+    }
   };
 
   const { data: assets } = await fetchDenoms();
