@@ -15,14 +15,11 @@ const useDenoms = () => {
     async () =>
       reduce(
         (
-          acc: { [x: string]: { [x: string]: DenomInfo } },
-          [c, d]: KeyValuePair<ChainId, { [x: string]: DenomInfo }>,
-        ) => ({ ...acc, [c]: d }),
-        {} as { [x: string]: { [x: string]: DenomInfo } },
-        zip(
-          chainIds,
-          await Promise.all(map((client: ChainClient | undefined) => client?.fetchDenoms() ?? {}, chainClients)),
-        ),
+          acc: { [chainId: string]: { [id: string]: DenomInfo } },
+          [chainId, denomsById]: KeyValuePair<ChainId, { [id: string]: DenomInfo }>,
+        ) => ({ ...acc, [chainId]: denomsById }),
+        {} as { [chainId: string]: { [id: string]: DenomInfo } },
+        zip(chainIds, await Promise.all(map((client: ChainClient | undefined) => client!.fetchDenoms(), chainClients))),
       ),
     {
       enabled: all((c) => !isNil(c), chainClients),
@@ -43,7 +40,7 @@ const useDenoms = () => {
     getDenomByName: (name: string, injectedChainId?: ChainId): DenomInfo | undefined =>
       indexBy(
         (d) => toLower(d.name),
-        values(denoms?.[injectedChainId ?? chainId] ?? ({} as { [x: string]: DenomInfo })),
+        values(denoms?.[injectedChainId ?? chainId] ?? ({} as { [id: string]: DenomInfo })),
       )?.[toLower(name)] as DenomInfo,
     ...helpers,
   };
