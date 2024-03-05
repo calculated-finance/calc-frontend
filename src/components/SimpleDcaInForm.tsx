@@ -60,6 +60,7 @@ import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './ConnectWalletButton';
+import useQueryState from '@hooks/useQueryState';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
@@ -258,6 +259,7 @@ function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }
   const [, initialDepositMeta] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenom }] = useField({ name: 'resultingDenom' });
   const [, routeMeta] = useField({ name: 'route' });
+  const [, setQueryState] = useQueryState();
 
   const handleSubmit = (_: AgreementForm, { setSubmitting }: FormikHelpers<AgreementForm>, state: any) =>
     mutate(
@@ -265,6 +267,10 @@ function SimpleDCAInForm({ formValues }: { formValues: SimplifiedDcaInFormData }
       {
         onSuccess: async (strategyId) => {
           nextStep({
+            strategyId,
+            timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
+          });
+          setQueryState({
             strategyId,
             timeSaved: state && getTimeSaved(state.initialDeposit, state.swapAmount),
           });

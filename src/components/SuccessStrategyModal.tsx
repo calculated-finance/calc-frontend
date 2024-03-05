@@ -7,6 +7,7 @@ import { Pages } from 'src/pages/Pages';
 import { ModalWrapper } from '@components/ModalWrapper';
 import LinkWithQuery from '@components/LinkWithQuery';
 import useQueryState from '@hooks/useQueryState';
+import { BrowserRouter } from 'react-router-dom';
 import * as Confetti from '../animations/confetti.json';
 
 function ThatsCalculatedThinkingText() {
@@ -63,8 +64,10 @@ export function SuccessStrategyModalBody() {
 
 export function SuccessStrategyModal({ stepConfig }: { stepConfig: StepConfig[] }) {
   return (
-    <ModalWrapper stepsConfig={stepConfig}>
-      <SuccessStrategyModalBody />
-    </ModalWrapper>
+    <BrowserRouter>
+      <ModalWrapper stepsConfig={stepConfig}>
+        <SuccessStrategyModalBody />
+      </ModalWrapper>
+    </BrowserRouter>
   );
 }
