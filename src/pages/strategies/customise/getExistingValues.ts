@@ -1,7 +1,7 @@
 import { Strategy } from '@models/Strategy';
 import {
   getBasePrice,
-  getConvertedSwapAmount,
+  getSwapAmount,
   getPriceThreshold,
   getSlippageTolerance,
   getStrategyExecutionIntervalData,
@@ -14,7 +14,7 @@ export function getExistingValues(strategy: Strategy) {
   const { timeIncrement, timeInterval } = getStrategyExecutionIntervalData(strategy);
   const increaseOnly = getWeightedScaleConfig(strategy)?.increase_only;
   const slippageTolerance = getSlippageTolerance(strategy);
-  const swapAmount = getConvertedSwapAmount(strategy);
+  const swapAmount = getSwapAmount(strategy);
 
   return {
     advancedSettings: true,

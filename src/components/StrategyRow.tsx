@@ -10,7 +10,7 @@ import {
   getStrategyName,
   isStrategyCancelled,
   getStrategyExecutionInterval,
-  getConvertedSwapAmount,
+  getSwapAmount,
 } from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -88,7 +88,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Interval:</Text>
           <Text textStyle="body-xs">
-            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getConvertedSwapAmount(strategy)}{' '}
+            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getSwapAmount(strategy)}{' '}
             {initialDenom.name}
           </Text>
         </GridItem>

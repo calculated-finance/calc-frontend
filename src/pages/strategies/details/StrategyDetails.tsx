@@ -30,7 +30,7 @@ import {
   getStrategyEndDate,
   getSlippageToleranceFormatted,
   getPriceThreshold,
-  getConvertedSwapAmount,
+  getSwapAmount,
   isStrategyAutoStaking,
   isStrategyOperating,
   isBuyStrategy,
@@ -100,7 +100,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
             </>
           ) : (
             <>
-              {getConvertedSwapAmount(strategy)} {strategy.initialDenom.name}
+              {fromAtomic(strategy.initialDenom, getSwapAmount(strategy))} {strategy.initialDenom.name}
             </>
           )}{' '}
           -{' '}
@@ -294,7 +294,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
             </Heading>
             <Box px={3} py={2} layerStyle="panel">
               <WeightSummary
-                swapAmount={getConvertedSwapAmount(strategy)}
+                swapAmount={getSwapAmount(strategy)}
                 swapMultiplier={Number(getWeightedScaleConfig(strategy)?.multiplier)}
                 transactionType={isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell}
                 applyMultiplier={getWeightedScaleConfig(strategy)?.increase_only ? YesNoValues.No : YesNoValues.Yes}

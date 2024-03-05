@@ -80,6 +80,7 @@ const imageMap = {
   'osmo-test-5': '/images/denoms/osmo.svg',
   'kaiyo-1': '/images/denoms/kuji.svg',
   'harpoon-4': '/images/denoms/kuji.svg',
+  'archway-1': '/images/denoms/archway.svg',
   'constantine-3': '/images/denoms/archway.svg',
 };
 
@@ -91,6 +92,7 @@ export function ChainSelection() {
   const chains = [
     { id: 'kaiyo-1', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: false },
     { id: 'osmosis-1', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: false },
+    // { id: 'archway-1', name: 'Archway', imageSrc: '/images/denoms/archway.svg', isTestnet: false },
     { id: 'harpoon-4', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: true },
     { id: 'osmo-test-5', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: true },
     { id: 'constantine-3', name: 'Archway', imageSrc: '/images/denoms/archway.svg', isTestnet: true },

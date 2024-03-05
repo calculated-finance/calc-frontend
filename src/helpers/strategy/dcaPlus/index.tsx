@@ -8,7 +8,7 @@ import { getSwapRangeFromModel } from '@helpers/ml/getSwapRange';
 import {
   getStrategyBalance,
   getTotalReceived,
-  getConvertedSwapAmount,
+  getSwapAmount,
   getStrategyInitialDenom,
   getTotalSwapped,
   getStrategyEndDateFromRemainingExecutions,
@@ -101,7 +101,7 @@ export function getSwappedSaved(strategy: Strategy) {
 
 export function getNumberOfPastSwaps(strategy: Strategy) {
   const totalSwapped = getStandardDcaTotalSwapped(strategy);
-  const swapAmount = getConvertedSwapAmount(strategy);
+  const swapAmount = getSwapAmount(strategy);
 
   return Math.floor(totalSwapped / swapAmount);
 }
@@ -114,7 +114,7 @@ export function getStrategyModel(strategy: Strategy) {
 
 export function getStrategySwapRange(strategy: Strategy) {
   if (isDcaPlus(strategy)) {
-    const swapAmount = getConvertedSwapAmount(strategy);
+    const swapAmount = getSwapAmount(strategy);
     const model = getStrategyModel(strategy);
 
     const { minimumSwapAmount } = getStrategyInitialDenom(strategy);
@@ -122,7 +122,7 @@ export function getStrategySwapRange(strategy: Strategy) {
   }
   if (isWeightedScale(strategy)) {
     const { multiplier, increase_only } = getWeightedScaleConfig(strategy) || {};
-    const swapAmount = getConvertedSwapAmount(strategy);
+    const swapAmount = getSwapAmount(strategy);
     if (isBuyStrategy(strategy)) {
       const max = Number((swapAmount * (1 - 0.5 * Number(multiplier))).toFixed(6));
       const min = Number((swapAmount * (1 + 0.5 * Number(multiplier))).toFixed(6));
@@ -191,7 +191,7 @@ export function getRemainingExecutionsRange(strategy: Strategy) {
 
 export function getStandardDcaRemainingExecutions(strategy: Strategy) {
   const balance = getStandardDcaRemainingBalance(strategy);
-  const swapAmount = getConvertedSwapAmount(strategy);
+  const swapAmount = getSwapAmount(strategy);
 
   return totalExecutions(balance, swapAmount);
 }

@@ -9,6 +9,7 @@ import {
 import { DenomInfo } from '../utils/DenomInfo';
 
 export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
+  'archway-1': {},
   'kaiyo-1': {
     [KujiraMainnetDenoms.ATOM]: {
       name: 'ATOM',

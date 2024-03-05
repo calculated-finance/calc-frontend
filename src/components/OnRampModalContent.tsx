@@ -21,6 +21,7 @@ function OnRampModalContent() {
     'osmosis-1': 'osmosis',
     'harpoon-4': 'kujira',
     'osmo-test-5': 'osmosis',
+    'archway-1': 'archway',
     'constantine-3': 'archway',
   }[chainId]!;
 

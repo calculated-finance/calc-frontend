@@ -8,7 +8,7 @@ import {
   getPerformanceFactor,
   getSwappedSaved,
 } from '@helpers/strategy/dcaPlus';
-import { getStrategyResultingDenom, getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
+import { getStrategyResultingDenom, getSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useDcaPlusPerformance from '@hooks/useDcaPlusPerformance';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -103,7 +103,7 @@ export function StrategyComparisonCard({ strategy }: { strategy: Strategy }) {
               </Heading>
               <Heading size="3xl">{formatSignedPercentage(performanceFactor)}</Heading>
               <Text textStyle="body">
-                In comparison to traditional DCA, swapping {getConvertedSwapAmount(strategy)}{' '}
+                In comparison to traditional DCA, swapping {getSwapAmount(strategy)}{' '}
                 {getDenomName(getStrategyInitialDenom(strategy))} per day for {numberPastSwaps}{' '}
                 {puraliseDays(numberPastSwaps)}.
               </Text>

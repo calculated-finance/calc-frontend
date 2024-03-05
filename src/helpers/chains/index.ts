@@ -1,7 +1,9 @@
 import { GasPrice } from '@cosmjs/stargate';
 import { ChainId } from '@models/ChainId';
 import {
+  ARCHWAY_MAINNET_RPC,
   ARCHWAY_TESTNET_RPC,
+  COSMOS_KIT_ARCHWAY_MAINNET,
   COSMOS_KIT_ARCHWAY_TESTNET,
   COSMOS_KIT_KUJIRA_MAINNET,
   COSMOS_KIT_KUJIRA_TESTNET,
@@ -20,7 +22,8 @@ export function getGasPrice(chain: ChainId) {
       'osmo-test-5': '0.004uosmo',
       'kaiyo-1': '0.004ukuji',
       'harpoon-4': '0.004ukuji',
-      'constantine-3': '0.004aconst',
+      'constantine-3': '140000000000aconst',
+      'archway-1': '140000000000aarch',
     }[chain],
   );
 }
@@ -31,6 +34,7 @@ export function getChainEndpoint(chain: ChainId): string {
     'osmo-test-5': OSMOSIS_TESTNET_RPC,
     'kaiyo-1': KUJIRA_MAINNET_RPC,
     'harpoon-4': KUJIRA_TESTNET_RPC,
+    'archway-1': ARCHWAY_MAINNET_RPC,
     'constantine-3': ARCHWAY_TESTNET_RPC,
   }[chain];
 }
@@ -41,6 +45,7 @@ export function getChainContractAddress(chainId: ChainId) {
     'osmo-test-5': 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f',
     'kaiyo-1': 'kujira1e6fjnq7q20sh9cca76wdkfg69esha5zn53jjewrtjgm4nktk824stzyysu',
     'harpoon-4': 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7',
+    'archway-1': 'archway1delmknshmvfuhv07uetes90crzrj32za23pgd9cvjtc5mrzfjauq3jqrpa',
     'constantine-3': 'archway1p0w6hpxhcdxvhl6r02wslqgjhrtq60ljs4tky6da2s6ncpha0v0s2s2f6r',
   }[chainId]!;
 }
@@ -51,6 +56,7 @@ export function getAutoCompoundStakingRewardsAddress(chainId: ChainId): string {
     'osmo-test-5': 'osmo1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx626kj2',
     'kaiyo-1': 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj',
     'harpoon-4': 'kujira1xqr6ew6x4qkxe832hhjmfpu9du9vnkhxret7fj',
+    'archway-1': '',
     'constantine-3': '',
   }[chainId];
 }
@@ -61,6 +67,7 @@ export function getChainFeeTakerAddress(chainId: ChainId) {
     'osmo-test-5': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
     'kaiyo-1': 'kujira1vq6vrr4nu0w4mmu36pkznzqddmdlf4r5w3qpxy',
     'harpoon-4': 'kujira10fmz64pwj95qy3rgjm0kud2uz62thp3s88ajca',
+    'archway-1': 'archway15ads3d0eve59f8nhtyyckv9t2r3zxsmj6nrz6h',
     'constantine-3': 'archway15ads3d0eve59f8nhtyyckv9t2r3zxsmj6nrz6h',
   }[chainId];
 }
@@ -75,6 +82,7 @@ export function getChainName(chainId: ChainId) {
     'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
     'kaiyo-1': COSMOS_KIT_KUJIRA_MAINNET,
     'harpoon-4': COSMOS_KIT_KUJIRA_TESTNET,
+    'archway-1': COSMOS_KIT_ARCHWAY_MAINNET,
     'constantine-3': COSMOS_KIT_ARCHWAY_TESTNET,
   }[chainId];
 }
@@ -85,6 +93,7 @@ export function getChainId(chainName: string): string {
     osmosistestnet: 'osmo-test-5',
     kujira: 'kaiyo-1',
     kujiratestnet: 'harpoon-4',
+    archway: 'archway-1',
     archwaytestnet: 'constantine-3',
   }[chainName]!;
 }
@@ -95,6 +104,7 @@ export function getChainDexName(chainId: ChainId) {
     'osmo-test-5': 'Osmosis',
     'kaiyo-1': 'FIN',
     'harpoon-4': 'FIN',
+    'archway-1': 'Astrovault',
     'constantine-3': 'Astrovault',
   }[chainId];
 }
@@ -105,18 +115,17 @@ export function getChainAddressPrefix(chainId: ChainId) {
     'osmo-test-5': 'osmo',
     'kaiyo-1': 'kujira',
     'harpoon-4': 'kujira',
+    'archway-1': 'archway',
     'constantine-3': 'archway',
   }[chainId];
 }
 
 export function getChainMinimumSwapValue(chainId: ChainId) {
-  return {
-    'osmosis-1': 1.0,
-    'osmo-test-5': 1.0,
-    'kaiyo-1': 5.0,
-    'harpoon-4': 1.0,
-    'constantine-3': 1.0,
-  }[chainId];
+  return (
+    {
+      'kaiyo-1': 5.0,
+    }[chainId as string] ?? 1.0
+  );
 }
 
 export function getChainAddressLength(chainId: ChainId) {
@@ -125,38 +134,33 @@ export function getChainAddressLength(chainId: ChainId) {
     'osmo-test-5': [43, 63],
     'kaiyo-1': [45, 65],
     'harpoon-4': [45, 65],
+    'archway-1': [46, 66],
     'constantine-3': [46, 66],
   }[chainId];
 }
 
 export function getStrategiesFetchLimit(chainId: ChainId) {
-  return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 100,
-    'osmo-test-5': 100,
-    'kaiyo-1': 100,
-    'harpoon-4': 100,
-    'constantine-3': 100,
-  }[chainId];
+  return (
+    {
+      'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 100,
+    }[chainId as string] ?? 100
+  );
 }
 
 export function getEventsFetchLimit(chainId: ChainId) {
-  return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
-    'osmo-test-5': 200,
-    'kaiyo-1': 200,
-    'harpoon-4': 200,
-    'constantine-3': 200,
-  }[chainId];
+  return (
+    {
+      'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
+    }[chainId as string] ?? 200
+  );
 }
 
 export function getPairsFetchLimit(chainId: ChainId) {
-  return {
-    'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
-    'osmo-test-5': 200,
-    'kaiyo-1': 200,
-    'harpoon-4': 200,
-    'constantine-3': 200,
-  }[chainId];
+  return (
+    {
+      'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
+    }[chainId as string] ?? 200
+  );
 }
 
 export function getOsmosisWebUrl(chainId: ChainId) {
@@ -194,14 +198,8 @@ export function getMarsUrl(chainId: ChainId) {
   }[chainId as string]!;
 }
 
-export enum ChainType {
-  Cosmos = 'cosmos',
-  EVM = 'evm',
-}
-
 export type ChainConfig = {
   id: ChainId;
-  chainType: ChainType;
   contractAddress: string;
   feeTakerAddress: string;
   autoCompoundStakingRewardsAddress: string;
@@ -213,7 +211,6 @@ export function getChainConfig(chainId: ChainId) {
   }
   return {
     id: chainId,
-    chainType: ChainType.Cosmos,
     contractAddress: getChainContractAddress(chainId),
     feeTakerAddress: getChainFeeTakerAddress(chainId),
     autoCompoundStakingRewardsAddress: getAutoCompoundStakingRewardsAddress(chainId),
