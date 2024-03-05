@@ -55,12 +55,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { values } from 'rambda';
 import useRoute from '@hooks/useRoute';
 import { coin } from '@cosmjs/stargate';
+import useQueryState from '@hooks/useQueryState';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';
 import { ConnectWalletButton } from './ConnectWalletButton';
-import useQueryState from '@hooks/useQueryState';
 
 type SimpleDcaModalHeaderProps = {
   isSuccess: boolean;
