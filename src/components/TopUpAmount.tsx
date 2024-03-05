@@ -16,7 +16,7 @@ import {
 import useBalance from '@hooks/useBalance';
 import { useField } from 'formik';
 import { DenomInput } from '@components/DenomInput';
-import { getConvertedSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
+import { getSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@models/Strategy';
 import { Pages } from 'src/pages/Pages';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
@@ -52,7 +52,7 @@ function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
 
 export default function TopUpAmount({ strategy }: { strategy: Strategy }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'topUpAmount' });
-  const convertedSwapAmount = getConvertedSwapAmount(strategy);
+  const convertedSwapAmount = getSwapAmount(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
   const additionalSwaps = Math.ceil(field.value / convertedSwapAmount);
   const displaySwaps = additionalSwaps > 1 ? `${additionalSwaps} swaps` : 'swap';

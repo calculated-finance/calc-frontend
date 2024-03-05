@@ -77,6 +77,7 @@ const sidebarLogoUrls = {
   'osmo-test-5': '/images/osmoMascot.svg',
   'kaiyo-1': '/images/kujiMascot.svg',
   'harpoon-4': '/images/kujiMascot.svg',
+  'archway-1': '',
   'constantine-3': '',
 };
 
@@ -107,6 +108,7 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
                 'osmo-test-5': '/images/osmoLogo.svg',
                 'kaiyo-1': '/images/logo.svg',
                 'harpoon-4': '/images/logo.svg',
+                'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
               }[chainId]
             }
@@ -168,6 +170,7 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
                 'osmo-test-5': '/images/osmoLogo.svg',
                 'kaiyo-1': '/images/logo.svg',
                 'harpoon-4': '/images/logo.svg',
+                'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
               }[chain]
             }

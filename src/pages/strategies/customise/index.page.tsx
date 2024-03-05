@@ -11,12 +11,7 @@ import { useChainId } from '@hooks/useChainId';
 import { useWallet } from '@hooks/useWallet';
 import { TransactionType } from '@components/TransactionType';
 import { useCustomiseStrategy } from '@hooks/useCustomiseStrategy';
-import {
-  getConvertedSwapAmount,
-  getStrategyInitialDenom,
-  getStrategyResultingDenom,
-  isBuyStrategy,
-} from '@helpers/strategy';
+import { getSwapAmount, getStrategyInitialDenom, getStrategyResultingDenom, isBuyStrategy } from '@helpers/strategy';
 import { Stack, FormControl, FormErrorMessage, Divider } from '@chakra-ui/react';
 import ExecutionInterval from '@components/ExecutionInterval';
 import PriceThreshold from '@components/PriceThreshold';
@@ -35,7 +30,6 @@ import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
 import { FormNames } from '@hooks/useFormStore';
-import { fromAtomic } from '@utils/getDenomInfo';
 import { StrategyType } from '@models/StrategyType';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
 import { customiseSteps } from './customiseSteps';
@@ -49,14 +43,14 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
 
   const resultingDenom = getStrategyResultingDenom(strategy);
   const initialDenom = getStrategyInitialDenom(strategy);
-  const balance = fromAtomic(strategy.initialDenom, Number(strategy.rawData.balance.amount));
+  const balance = Number(strategy.rawData.balance.amount);
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
   const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
 
   const context = {
     initialDenom,
-    swapAmount: getConvertedSwapAmount(strategy),
+    swapAmount: getSwapAmount(strategy),
     resultingDenom,
     transactionType,
     currentPrice: spotPrice,
@@ -114,7 +108,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                         isEdit
                         initialDenom={initialDenom}
                         resultingDenom={resultingDenom}
-                        initialDeposit={balance}
+                        strategyBalance={balance}
                         transactionType={transactionType}
                       />
                     </Stack>

@@ -159,12 +159,6 @@ export function getSwapAmount(strategy: Strategy) {
   return Number(swap_amount);
 }
 
-export function getConvertedSwapAmount(strategy: Strategy) {
-  return Number(
-    fromAtomic(strategy.initialDenom, getSwapAmount(strategy)).toFixed(strategy.initialDenom.significantFigures),
-  );
-}
-
 export function getStrategyType(strategy: Strategy) {
   if (isWeightedScale(strategy)) {
     return isDenomStable(strategy.initialDenom) ? StrategyType.WeightedScaleIn : StrategyType.WeightedScaleOut;
@@ -179,7 +173,7 @@ export function getStrategyType(strategy: Strategy) {
 
 export function getStrategyRemainingExecutions(strategy: Strategy) {
   const balance = getStrategyBalance(strategy);
-  const swapAmount = getConvertedSwapAmount(strategy);
+  const swapAmount = getSwapAmount(strategy);
 
   return totalExecutions(balance, swapAmount);
 }

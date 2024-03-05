@@ -18,12 +18,12 @@ export default function SwapAmount({
   isEdit,
   initialDenom,
   resultingDenom,
-  initialDeposit,
+  strategyBalance,
   transactionType,
 }: {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
-  initialDeposit: number;
+  strategyBalance: number;
   isEdit: boolean;
   transactionType: TransactionType;
 }) {
@@ -61,7 +61,7 @@ export default function SwapAmount({
 
   const isSell = transactionType === TransactionType.Sell;
 
-  const executions = totalExecutions(initialDeposit, swapAmount);
+  const executions = totalExecutions(strategyBalance, swapAmount);
 
   const displayExecutionInterval =
     executionIntervalDisplay[executionInterval as ExecutionIntervals][executions > 1 ? 1 : 0];
@@ -84,16 +84,16 @@ export default function SwapAmount({
           <Spacer />
           <Flex flexDirection="row">
             <Text ml={4} mr={1}>
-              {isEdit ? 'Balance:' : 'Max:'}
+              Max:
             </Text>
             <Button
               size="xs"
               colorScheme="blue"
               variant="link"
               cursor="pointer"
-              onClick={() => swapAmountHelpers.setValue(initialDeposit)}
+              onClick={() => swapAmountHelpers.setValue(strategyBalance)}
             >
-              {fromAtomic(initialDenom, initialDeposit).toLocaleString('en-US', {
+              {fromAtomic(initialDenom, strategyBalance).toLocaleString('en-US', {
                 maximumFractionDigits: initialDenom.significantFigures,
                 minimumFractionDigits: 2,
               }) ?? '-'}

@@ -56,7 +56,6 @@ import { values } from 'rambda';
 import useRoute from '@hooks/useRoute';
 import { coin } from '@cosmjs/stargate';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
-import { MINIMUM_SWAP_VALUE_IN_USD } from 'src/constants';
 import { useCreateVaultDca } from '@hooks/useCreateVault/useCreateVaultDca';
 import ExecutionIntervalLegacy from './ExecutionIntervalLegacy';
 import { DenomInput } from './DenomInput';

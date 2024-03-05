@@ -42,7 +42,7 @@ export function CustomiseFormDca({
           isEdit={false}
           initialDenom={initialDenom}
           resultingDenom={resultingDenom}
-          initialDeposit={initialDeposit}
+          strategyBalance={initialDeposit}
         />
         <CollapseWithRender isOpen={advancedSettings}>
           <PriceThreshold

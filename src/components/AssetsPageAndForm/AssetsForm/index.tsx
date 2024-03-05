@@ -74,7 +74,7 @@ export function AssetsForm() {
   const { denoms } = useDenoms();
   const { pairs } = usePairs();
   const [{ value: initialDenom }, initialDenomMeta, initialDenomHelpers] = useField({ name: 'initialDenom' });
-  const [{ value: initialDeposit }, initialDepositMeta] = useField({ name: 'initialDeposit' });
+  const [{ value: initialDeposit }] = useField({ name: 'initialDeposit' });
   const [{ value: resultingDenom }, resultingDenomMeta, resultingDenomHelpers] = useField({ name: 'resultingDenom' });
   const [strategyType] = useField({ name: 'strategyType' });
   const { chainId } = useChainId();

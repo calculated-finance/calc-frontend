@@ -58,6 +58,7 @@ export function DenomPriceInput({
     'osmo-test-5': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.name}&to=${priceInDenom.name}`,
     'kaiyo-1': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
     'harpoon-4': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
+    'archway-1': () => `https://astrovault.io/trade`,
     'constantine-3': () => `https://testnet.astrovault.io/trade`,
   };
 
