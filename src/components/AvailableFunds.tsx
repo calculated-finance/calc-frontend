@@ -145,12 +145,10 @@ function AvailableFundsButton({
   denom,
   isLoading,
   data,
-  deconvertValue = false,
 }: {
   denom: DenomInfo;
   isLoading: boolean;
   data: Coin | undefined;
-  deconvertValue?: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
@@ -197,8 +195,8 @@ function AvailableFundsButton({
             cursor="pointer"
             isDisabled={!displayAmount}
             onClick={() => {
-              setQueryState({ amount: deconvertValue ? toAtomic(denom, displayAmount) : displayAmount });
-              helpers.setValue(deconvertValue ? toAtomic(denom, displayAmount) : displayAmount);
+              setQueryState({ amount: toAtomic(denom, displayAmount) });
+              helpers.setValue(toAtomic(denom, displayAmount));
               helpers.setTouched(true);
             }}
           >
@@ -232,12 +230,12 @@ function AvailableFundsButton({
   );
 }
 
-export function AvailableFunds({ denom, deconvertValue }: { denom: DenomInfo; deconvertValue?: boolean }) {
+export function AvailableFunds({ denom }: { denom: DenomInfo }) {
   const { data, isLoading } = useBalance(denom);
 
   return (
     <Center textStyle="body-xs">
-      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} deconvertValue={deconvertValue} />
+      <AvailableFundsButton isLoading={isLoading} data={data} denom={denom} />
     </Center>
   );
 }

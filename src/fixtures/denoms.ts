@@ -445,18 +445,25 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
     [ArchwayMainnetDenoms.ANDR]: {
       icon: 'https://astrovault.io/static/media/logo-andr.92aedba42e5bb9a1567c.svg',
+      coingeckoId: 'andromeda-2',
     },
     [ArchwayMainnetDenoms.ARCH]: {
       icon: '/images/denoms/archway.svg',
+      coingeckoId: 'archway',
+      stakeable: true,
+      stakeableAndSupported: true,
     },
     [ArchwayMainnetDenoms.ATOM]: {
       icon: '/images/denoms/atom.svg',
+      enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.AXV]: {
       icon: 'https://astrovault.io/static/media/logo-axv.0add45f1b138f94545ad.svg',
+      coingeckoId: 'astrovault',
     },
     [ArchwayMainnetDenoms.BLD]: {
       icon: 'https://astrovault.io/static/media/logo-bld.cce5f5d778d21520feb0.svg',
+      coingeckoId: 'agoric',
     },
     [ArchwayMainnetDenoms.DEC]: {
       icon: 'https://astrovault.io/static/media/logo-dec.5d1099ecf235c58f1e2e.svg',
@@ -466,51 +473,69 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
     [ArchwayMainnetDenoms.xGRAV]: {
       icon: 'https://astrovault.io/static/media/logo-xgrav.392ea340ed2346825631.svg',
+      coingeckoId: 'graviton',
     },
     [ArchwayMainnetDenoms.xARCH]: {
       icon: 'https://astrovault.io/static/media/logo-xarch.443706fdbdaa8ec3059f.svg',
+      coingeckoId: 'archway',
     },
     [ArchwayMainnetDenoms.xAKT]: {
       icon: 'https://astrovault.io/static/media/logo-xakt.27a88ec2f6afb53e91f4.svg',
+      coingeckoId: 'akash-network',
     },
     [ArchwayMainnetDenoms.xATOM]: {
       icon: 'https://astrovault.io/static/media/logo-xatom.daac6b0df6cab97834b3.svg',
+      coingeckoId: 'cosmos',
+      enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.xBLD]: {
       icon: 'https://astrovault.io/static/media/logo-xbld.f0978297a4fbb94914a1.svg',
+      coingeckoId: 'agoric',
     },
     [ArchwayMainnetDenoms.xDEC]: {
       icon: 'https://astrovault.io/static/media/logo-xdec.f3c06ad600b9d27397ee.svg',
+      coingeckoId: 'decentr',
     },
     [ArchwayMainnetDenoms.IST]: {
       icon: 'https://astrovault.io/static/media/logo-ist.7cfe03e9df8e95a39620.svg',
+      stable: true,
+      enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.JKL]: {
       icon: 'https://astrovault.io/static/media/logo-jkl.775e0818c92acfa58f36.svg',
+      coingeckoId: 'jackal-protocol',
     },
     [ArchwayMainnetDenoms.xJKL]: {
       icon: 'https://astrovault.io/static/media/logo-xjkl.b5e57acef59cdbc18f33.svg',
+      coingeckoId: 'jackal-protocol',
     },
     [ArchwayMainnetDenoms.LVN]: {
       icon: 'https://astrovault.io/static/media/logo-lvn.196cf2fec123062e9b96.svg',
     },
     [ArchwayMainnetDenoms.MPWR]: {
       icon: 'https://astrovault.io/static/media/logo-mpwr.1e64148f0584b0b4acb2.svg',
+      coingeckoId: 'clubrare-empower',
     },
     [ArchwayMainnetDenoms.xMPWR]: {
       icon: 'https://astrovault.io/static/media/logo-xmpwr.f9bb01f39c6dc68f3495.svg',
+      coingeckoId: 'clubrare-empower',
     },
     [ArchwayMainnetDenoms.PLQ]: {
       icon: 'https://astrovault.io/static/media/logo-plq.90dd239427758bf50c90.svg',
     },
     [ArchwayMainnetDenoms.xPLQ]: {
       icon: 'https://astrovault.io/static/media/logo-xplq.164fe915be23486f20da.svg',
+      coingeckoId: 'planq',
     },
     [ArchwayMainnetDenoms.axlUSDC]: {
       icon: 'https://astrovault.io/static/media/logo-usdc.axl.a191012589309094d837.svg',
+      stable: true,
+      enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.USDC]: {
       icon: 'https://astrovault.io/static/media/logo-usdc.nobl.bf893ef8c8414cb29520.svg',
+      stable: true,
+      enabledInDcaPlus: true,
     },
   },
   'constantine-3': {
