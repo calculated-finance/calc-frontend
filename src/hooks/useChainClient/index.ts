@@ -59,7 +59,7 @@ async function fetchAllPairsFromSwapper(
 
     if (pairs.length === getPairsFetchLimit(chainId)) {
       const newStartAfter = pairs[pairs.length - 1];
-      return fetchAllPairsFromSwapper(chainId, contractAddress, client, newStartAfter, allPairs);
+      return await fetchAllPairsFromSwapper(chainId, contractAddress, client, newStartAfter, allPairs);
     }
 
     return allPairs;
