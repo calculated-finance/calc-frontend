@@ -134,7 +134,7 @@ export function AssetsForm() {
                 : `CALC currently supports pairs trading on ${getChainDexName(chainId)}.`}{' '}
             </Text>
             <Spacer />
-            <AvailableFunds deconvertValue denom={initialDenom} />
+            <AvailableFunds denom={initialDenom} />
           </Center>
         </FormHelperText>
         <SimpleGrid columns={2} spacing={2}>

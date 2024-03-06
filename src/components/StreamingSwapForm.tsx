@@ -123,7 +123,7 @@ function InitialDenom() {
         <Center>
           <Text textStyle="body-xs">Choose asset to send</Text>
           <Spacer />
-          {initialDenom.value && <AvailableFunds denom={initialDenom.value} deconvertValue />}
+          {initialDenom.value && <AvailableFunds denom={initialDenom.value} />}
         </Center>
       </FormHelperText>
       <SimpleGrid columns={2} spacing={2}>

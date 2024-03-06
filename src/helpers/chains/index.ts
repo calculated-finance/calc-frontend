@@ -159,7 +159,6 @@ export function getPairsFetchLimit(chainId: ChainId) {
   return (
     {
       'osmosis-1': process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 1000 : 200,
-      'archway-1': 50,
     }[chainId as string] ?? 200
   );
 }
