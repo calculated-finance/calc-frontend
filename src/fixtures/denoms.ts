@@ -1,5 +1,6 @@
 import { ChainId } from '@models/ChainId';
 import {
+  ArchwayMainnetDenoms,
   ArchwayTestnetDenoms,
   KujiraMainnetDenoms,
   KujiraTestnetDenoms,
@@ -9,7 +10,6 @@ import {
 import { DenomInfo } from '../utils/DenomInfo';
 
 export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
-  'archway-1': {},
   'kaiyo-1': {
     [KujiraMainnetDenoms.ATOM]: {
       name: 'ATOM',
@@ -434,6 +434,83 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
     [OsmosisTestnetDenoms.ATOM]: {
       coingeckoId: 'cosmos',
+    },
+  },
+  'archway-1': {
+    [ArchwayMainnetDenoms.AKT]: {
+      icon: '/images/denoms/akt.svg',
+    },
+    [ArchwayMainnetDenoms.ALTER]: {
+      icon: 'https://astrovault.io/static/media/logo-alter.6e8c9d43f186f285f8ca.svg',
+    },
+    [ArchwayMainnetDenoms.ANDR]: {
+      icon: 'https://astrovault.io/static/media/logo-andr.92aedba42e5bb9a1567c.svg',
+    },
+    [ArchwayMainnetDenoms.ARCH]: {
+      icon: '/images/denoms/archway.svg',
+    },
+    [ArchwayMainnetDenoms.ATOM]: {
+      icon: '/images/denoms/atom.svg',
+    },
+    [ArchwayMainnetDenoms.AXV]: {
+      icon: 'https://astrovault.io/static/media/logo-axv.0add45f1b138f94545ad.svg',
+    },
+    [ArchwayMainnetDenoms.BLD]: {
+      icon: 'https://astrovault.io/static/media/logo-bld.cce5f5d778d21520feb0.svg',
+    },
+    [ArchwayMainnetDenoms.DEC]: {
+      icon: 'https://astrovault.io/static/media/logo-dec.5d1099ecf235c58f1e2e.svg',
+    },
+    [ArchwayMainnetDenoms.GRAV]: {
+      icon: 'https://astrovault.io/static/media/logo-grav.50603ca3f3af799ef868.svg',
+    },
+    [ArchwayMainnetDenoms.xGRAV]: {
+      icon: 'https://astrovault.io/static/media/logo-xgrav.392ea340ed2346825631.svg',
+    },
+    [ArchwayMainnetDenoms.xARCH]: {
+      icon: 'https://astrovault.io/static/media/logo-xarch.443706fdbdaa8ec3059f.svg',
+    },
+    [ArchwayMainnetDenoms.xAKT]: {
+      icon: 'https://astrovault.io/static/media/logo-xakt.27a88ec2f6afb53e91f4.svg',
+    },
+    [ArchwayMainnetDenoms.xATOM]: {
+      icon: 'https://astrovault.io/static/media/logo-xatom.daac6b0df6cab97834b3.svg',
+    },
+    [ArchwayMainnetDenoms.xBLD]: {
+      icon: 'https://astrovault.io/static/media/logo-xbld.f0978297a4fbb94914a1.svg',
+    },
+    [ArchwayMainnetDenoms.xDEC]: {
+      icon: 'https://astrovault.io/static/media/logo-xdec.f3c06ad600b9d27397ee.svg',
+    },
+    [ArchwayMainnetDenoms.IST]: {
+      icon: 'https://astrovault.io/static/media/logo-ist.7cfe03e9df8e95a39620.svg',
+    },
+    [ArchwayMainnetDenoms.JKL]: {
+      icon: 'https://astrovault.io/static/media/logo-jkl.775e0818c92acfa58f36.svg',
+    },
+    [ArchwayMainnetDenoms.xJKL]: {
+      icon: 'https://astrovault.io/static/media/logo-xjkl.b5e57acef59cdbc18f33.svg',
+    },
+    [ArchwayMainnetDenoms.LVN]: {
+      icon: 'https://astrovault.io/static/media/logo-lvn.196cf2fec123062e9b96.svg',
+    },
+    [ArchwayMainnetDenoms.MPWR]: {
+      icon: 'https://astrovault.io/static/media/logo-mpwr.1e64148f0584b0b4acb2.svg',
+    },
+    [ArchwayMainnetDenoms.xMPWR]: {
+      icon: 'https://astrovault.io/static/media/logo-xmpwr.f9bb01f39c6dc68f3495.svg',
+    },
+    [ArchwayMainnetDenoms.PLQ]: {
+      icon: 'https://astrovault.io/static/media/logo-plq.90dd239427758bf50c90.svg',
+    },
+    [ArchwayMainnetDenoms.xPLQ]: {
+      icon: 'https://astrovault.io/static/media/logo-xplq.164fe915be23486f20da.svg',
+    },
+    [ArchwayMainnetDenoms.axlUSDC]: {
+      icon: 'https://astrovault.io/static/media/logo-usdc.axl.a191012589309094d837.svg',
+    },
+    [ArchwayMainnetDenoms.USDC]: {
+      icon: 'https://astrovault.io/static/media/logo-usdc.nobl.bf893ef8c8414cb29520.svg',
     },
   },
   'constantine-3': {
