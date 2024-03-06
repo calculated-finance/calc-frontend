@@ -88,8 +88,8 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
           <Text fontSize="sm">Interval:</Text>
           <Text textStyle="body-xs">
-            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>: {getSwapAmount(strategy)}{' '}
-            {initialDenom.name}
+            <Text as="span">{getStrategyExecutionInterval(strategy)}</Text>:{' '}
+            {fromAtomic(strategy.initialDenom, getSwapAmount(strategy))} {initialDenom.name}
           </Text>
         </GridItem>
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>

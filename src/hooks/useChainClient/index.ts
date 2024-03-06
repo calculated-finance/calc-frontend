@@ -47,21 +47,26 @@ async function fetchAllPairsFromSwapper(
   startAfter?: string,
   allPairs = [] as Pair[],
 ): Promise<Pair[]> {
-  const { pairs } = await client!.queryContractSmart(contractAddress, {
-    get_pairs: {
-      limit: getPairsFetchLimit(chainId),
-      start_after: startAfter,
-    },
-  });
+  try {
+    const { pairs } = await client!.queryContractSmart(contractAddress, {
+      get_pairs: {
+        limit: getPairsFetchLimit(chainId),
+        start_after: startAfter,
+      },
+    });
 
-  allPairs.push(...pairs);
+    allPairs.push(...pairs);
 
-  if (pairs.length === getPairsFetchLimit(chainId)) {
-    const newStartAfter = pairs[pairs.length - 1];
-    return fetchAllPairsFromSwapper(chainId, contractAddress, client, newStartAfter, allPairs);
+    if (pairs.length === getPairsFetchLimit(chainId)) {
+      const newStartAfter = pairs[pairs.length - 1];
+      return fetchAllPairsFromSwapper(chainId, contractAddress, client, newStartAfter, allPairs);
+    }
+
+    return allPairs;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
-
-  return allPairs;
 }
 
 const fetchDenomsKujira = (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> =>
@@ -129,15 +134,19 @@ const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: Deno
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: any) => ({
       ...acc,
-      [asset.id]: fromPartial({
-        chain: chainId,
-        id: asset.id,
-        name: asset.label,
-        significantFigures: asset.decimals,
-        isCw20: !asset.isNative,
-        coingeckoId: asset.geckoIDPriceSource,
-        ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
-      }),
+      ...(asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]
+        ? {
+            [asset.id]: fromPartial({
+              chain: chainId,
+              id: asset.id,
+              name: asset.label,
+              significantFigures: asset.decimals,
+              isCw20: !asset.isNative,
+              coingeckoId: asset.geckoIDPriceSource,
+              ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
+            }),
+          }
+        : {}),
     }),
     {},
     assets,
