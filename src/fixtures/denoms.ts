@@ -53,7 +53,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       minimumSwapAmount: 0.05 / 1000,
       enabledInDcaPlus: true,
     },
-    [KujiraMainnetDenoms.Stars]: {
+    [KujiraMainnetDenoms.STARS]: {
       name: 'STARS',
       icon: '/images/denoms/stars.svg',
       stakeable: true,
@@ -340,6 +340,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
   },
   'osmosis-1': {
+    [OsmosisMainnetDenoms.axlWBTC]: {
+      coingeckoId: 'wrapped-bitcoin',
+      enabledInDcaPlus: true,
+      minimumSwapAmount: 0.05 / 10000,
+    },
     [OsmosisMainnetDenoms.axlUSDC]: {
       coingeckoId: 'usd-coin',
       stable: true,
