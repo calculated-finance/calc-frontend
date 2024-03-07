@@ -9,11 +9,11 @@ import { SummaryTriggerInfo } from './SummaryTriggerInfo';
 import { IncrementAndInterval } from './IncrementAndInterval';
 
 export function SummaryTheSwapWeightedScale({ state }: { state: WeightedScaleState }) {
-  const { initialDenom, resultingDenom, swapAmount, swapMultiplier, basePriceValue } = state;
+  const { initialDenom, resultingDenom, route, swapAmount, swapMultiplier, basePriceValue } = state;
 
   const { transactionType } = useStrategyInfo();
 
-  const { formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, route);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;

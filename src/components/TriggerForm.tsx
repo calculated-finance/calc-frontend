@@ -11,7 +11,15 @@ import StartPrice from './StartPrice';
 import { TransactionType } from './TransactionType';
 import { CollapseWithRender } from './CollapseWithRender';
 
-export function TriggerForm({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
+export function TriggerForm({
+  initialDenom,
+  resultingDenom,
+  route,
+}: {
+  initialDenom: DenomInfo;
+  resultingDenom: DenomInfo;
+  route: string | null | undefined;
+}) {
   const { values } = useFormikContext<DcaInFormDataAll>();
   const { startImmediately, triggerType, advancedSettings } = values;
   const { transactionType } = useStrategyInfo();
@@ -34,7 +42,12 @@ export function TriggerForm({ initialDenom, resultingDenom }: { initialDenom: De
           </CollapseWithRender>
         </CollapseWithRender>
         <CollapseWithRender isOpen={triggerType === 'price'}>
-          <StartPrice transactionType={transactionType} initialDenom={initialDenom} resultingDenom={resultingDenom} />
+          <StartPrice
+            transactionType={transactionType}
+            initialDenom={initialDenom}
+            resultingDenom={resultingDenom}
+            route={route}
+          />
         </CollapseWithRender>
       </CollapseWithRender>
     </Box>

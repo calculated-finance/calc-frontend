@@ -107,6 +107,7 @@ export function WeightSummary({
   basePrice,
   initialDenom,
   resultingDenom,
+  route,
   priceThresholdValue,
 }: {
   swapAmount: number;
@@ -116,9 +117,10 @@ export function WeightSummary({
   basePrice: number | null | undefined;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
   priceThresholdValue: number | undefined | null;
 }) {
-  const { spotPrice: price, formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
+  const { spotPrice: price, formattedPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, route);
 
   const priceOfDenom = transactionType === 'buy' ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === 'buy' ? initialDenom : resultingDenom;

@@ -19,7 +19,7 @@ import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { TransactionType } from '@components/TransactionType';
 
 export function CustomiseFormDca({
-  step1: { initialDeposit, initialDenom, resultingDenom },
+  step1: { initialDeposit, initialDenom, resultingDenom, route },
   transactionType,
 }: {
   step1: DcaInFormDataStep1;
@@ -35,7 +35,7 @@ export function CustomiseFormDca({
       <Stack direction="column" spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
         <AdvancedSettingsSwitch />
-        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
+        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} route={route} />
         <ExecutionInterval />
         <SwapAmount
           transactionType={transactionType}
@@ -49,6 +49,7 @@ export function CustomiseFormDca({
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
             transactionType={transactionType}
+            route={route}
           />
           <SlippageTolerance />
         </CollapseWithRender>

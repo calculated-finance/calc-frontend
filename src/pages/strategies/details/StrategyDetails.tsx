@@ -96,7 +96,15 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-swap-amount">
           {!isNil(min) && !isNil(max) ? (
             <>
-              Between {min} and {max} {strategy.initialDenom.name}
+              Between{' '}
+              {fromAtomic(strategy.initialDenom, min).toLocaleString('en-US', {
+                maximumSignificantDigits: strategy.initialDenom.significantFigures,
+              })}{' '}
+              and{' '}
+              {fromAtomic(strategy.initialDenom, max).toLocaleString('en-US', {
+                maximumSignificantDigits: strategy.initialDenom.significantFigures,
+              })}{' '}
+              {strategy.initialDenom.name}
             </>
           ) : (
             <>
@@ -301,6 +309,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 basePrice={getBasePrice(strategy)}
                 initialDenom={strategy.initialDenom}
                 resultingDenom={strategy.resultingDenom}
+                route={strategy.rawData.route}
                 priceThresholdValue={getPriceThreshold(strategy)}
               />
             </Box>

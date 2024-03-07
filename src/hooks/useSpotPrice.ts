@@ -8,7 +8,7 @@ export default function useSpotPrice(
   resultingDenom: DenomInfo | undefined,
   initialDenom: DenomInfo | undefined,
   transactionType: TransactionType,
-  route?: string,
+  route: string | null | undefined,
   enabled = true,
 ) {
   const { twap, ...helpers } = useTwapToNow(initialDenom, resultingDenom, route, enabled);

@@ -54,6 +54,7 @@ function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
 type PriceThresholdProps = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
   forceOpen?: boolean;
   transactionType: TransactionType;
 };
@@ -61,6 +62,7 @@ type PriceThresholdProps = {
 export default function PriceThreshold({
   initialDenom,
   resultingDenom,
+  route,
   forceOpen,
   transactionType,
 }: PriceThresholdProps) {
@@ -84,6 +86,7 @@ export default function PriceThreshold({
           <DenomPriceInput
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
+            route={route}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}

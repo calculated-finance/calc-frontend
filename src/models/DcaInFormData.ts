@@ -219,6 +219,7 @@ export const allSchema = {
     .test({
       name: 'greater-than-minimum-swap',
       test(value, context) {
+        if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') return true;
         if (isNil(value)) return true;
         const { initialDenom = null } = { ...context.parent, ...context.options.context };
         if (!initialDenom) return true;
@@ -394,6 +395,7 @@ export const step1ValidationSchema = Yup.object({
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit,
+  route: allSchema.route,
 });
 export type DcaInFormDataStep1 = Yup.InferType<typeof step1ValidationSchema>;
 

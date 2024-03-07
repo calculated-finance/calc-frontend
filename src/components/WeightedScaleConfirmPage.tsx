@@ -51,6 +51,7 @@ function PageInternal({
         basePrice={state.basePriceValue}
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}
+        route={state.route}
         priceThresholdValue={state.priceThresholdValue}
       />
       <SummaryWhileSwapping

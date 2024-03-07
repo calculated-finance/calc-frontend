@@ -23,10 +23,12 @@ import { WeightSummary } from './WeightSummary';
 export default function SwapMultiplier({
   initialDenom,
   resultingDenom,
+  route,
   swapAmountInjected,
 }: {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
   swapAmountInjected?: number;
 }) {
   const { transactionType } = useStrategyInfo();
@@ -73,6 +75,7 @@ export default function SwapMultiplier({
         basePrice={basePriceIsCurrentPrice === YesNoValues.No && advancedSettings ? basePrice : null}
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}
+        route={route}
         priceThresholdValue={priceThresholdValue}
       />
     </FormControl>
