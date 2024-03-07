@@ -46,7 +46,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   const balance = Number(strategy.rawData.balance.amount);
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
-  const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType);
+  const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, strategy.rawData.route);
 
   const context = {
     initialDenom,
@@ -101,6 +101,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                           forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                           resultingDenom={resultingDenom}
                           initialDenom={initialDenom}
+                          route={strategy.rawData.route}
                           transactionType={transactionType}
                         />
                       </CollapseWithRender>
@@ -129,6 +130,7 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                             forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                             resultingDenom={resultingDenom}
                             initialDenom={initialDenom}
+                            route={strategy.rawData.route}
                             transactionType={transactionType}
                           />
                         </Stack>

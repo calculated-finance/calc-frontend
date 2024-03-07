@@ -35,6 +35,7 @@ export const weightedScaleSchema = Yup.object({
   resultingDenom: allSchema.resultingDenom,
   initialDenom: allSchema.initialDenom,
   initialDeposit: allSchema.initialDeposit,
+  route: allSchema.route,
   advancedSettings: allSchema.advancedSettings,
   slippageTolerance: allSchema.slippageTolerance,
   sendToWallet: allSchema.sendToWallet,
@@ -69,6 +70,7 @@ export const WeightedScaleAssetsFormSchema = weightedScaleSchema.pick([
   'resultingDenom',
   'initialDenom',
   'initialDeposit',
+  'route',
 ]);
 export const WeightedScaleCustomiseFormSchema = weightedScaleSchema.pick([
   'advancedSettings',

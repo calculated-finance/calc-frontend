@@ -25,6 +25,7 @@ export function DenomPriceInput({
   transactionType,
   initialDenom,
   resultingDenom,
+  route,
   error,
   onChange,
   type,
@@ -35,11 +36,12 @@ export function DenomPriceInput({
   transactionType: TransactionType;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
   error: ReactNode;
   onChange: (value: number | undefined) => void;
 } & InputProps) {
   const { chainId } = useChainId();
-  const { formattedPrice, isLoading } = useSpotPrice(resultingDenom, initialDenom, transactionType);
+  const { formattedPrice, isLoading } = useSpotPrice(resultingDenom, initialDenom, transactionType, route);
 
   const priceOfDenom = transactionType === TransactionType.Buy ? resultingDenom : initialDenom;
   const priceInDenom = transactionType === TransactionType.Buy ? initialDenom : resultingDenom;

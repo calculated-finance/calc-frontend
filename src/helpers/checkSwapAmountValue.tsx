@@ -3,6 +3,7 @@ import { formatFiat } from './format/formatFiat';
 import { getChainMinimumSwapValue } from './chains';
 
 export function checkSwapAmountValue(chainId: ChainId, swapAmount: number, price: number) {
+  if (process.env.NEXT_PUBLIC_APP_ENV !== 'production') return;
   const swapAmountValue = swapAmount * price;
   const minimumSwapAmount = getChainMinimumSwapValue(chainId);
   if (!(swapAmountValue >= minimumSwapAmount)) {

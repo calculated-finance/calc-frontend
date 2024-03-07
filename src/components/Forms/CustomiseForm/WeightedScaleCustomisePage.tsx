@@ -40,7 +40,7 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
     return <InvalidData onRestart={handleRestart} />;
   }
 
-  const { initialDenom, resultingDenom } = state.step1;
+  const { initialDenom, resultingDenom, route } = state.step1;
 
   const onSubmit = (data: DcaInFormDataStep2) => {
     actions.updateAction(data);
@@ -81,6 +81,7 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
                     initialDenom={initialDenom}
                     resultingDenom={resultingDenom}
                     transactionType={transactionType}
+                    route={route}
                   />
                   <SlippageTolerance />
                 </Stack>

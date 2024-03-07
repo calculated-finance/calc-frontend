@@ -96,7 +96,15 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
         <Text fontSize="sm" data-testid="strategy-swap-amount">
           {!isNil(min) && !isNil(max) ? (
             <>
-              Between {min} and {max} {strategy.initialDenom.name}
+              Between{' '}
+              {fromAtomic(strategy.initialDenom, min).toLocaleString('en-US', {
+                maximumSignificantDigits: strategy.initialDenom.significantFigures,
+              })}{' '}
+              and{' '}
+              {fromAtomic(strategy.initialDenom, max).toLocaleString('en-US', {
+                maximumSignificantDigits: strategy.initialDenom.significantFigures,
+              })}{' '}
+              {strategy.initialDenom.name}
             </>
           ) : (
             <>
