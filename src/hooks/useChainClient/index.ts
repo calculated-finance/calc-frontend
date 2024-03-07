@@ -115,17 +115,17 @@ const fetchDenomsOsmosis = async (chainId: ChainId): Promise<{ [x: string]: Deno
 };
 
 const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: DenomInfo }> => {
-  const url =
-    chainId === 'constantine-3'
-      ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL!
-      : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
+  const isTestnet = chainId === 'constantine-3';
+  const url = isTestnet
+    ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL!
+    : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
 
   const fetchDenoms = async () => {
     try {
       const response = await fetch(url);
-      return response.ok ? await response.json() : chainId === 'constantine-3' ? constantine3Data : archway1Data;
+      return response.ok ? await response.json() : isTestnet ? constantine3Data : archway1Data;
     } catch (error) {
-      return chainId === 'constantine-3' ? constantine3Data : archway1Data;
+      return isTestnet ? constantine3Data : archway1Data;
     }
   };
 

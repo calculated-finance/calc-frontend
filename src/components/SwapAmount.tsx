@@ -15,7 +15,6 @@ import { DenomInput } from './DenomInput';
 import { TransactionType } from './TransactionType';
 
 export default function SwapAmount({
-  isEdit,
   initialDenom,
   resultingDenom,
   strategyBalance,
