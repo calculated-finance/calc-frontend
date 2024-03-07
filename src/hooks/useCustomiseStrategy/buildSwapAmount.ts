@@ -9,13 +9,14 @@ export function buildSwapAmount({ values, initialValues, context, strategy }: Co
     return {};
   }
   const castedValues = values as CustomiseSchemaDca;
-  const castedInvitialValues = initialValues as CustomiseSchemaDca;
-  const isSwapAmountDirty = castedValues.swapAmount !== castedInvitialValues.swapAmount;
+  const castedInitialValues = initialValues as CustomiseSchemaDca;
+  const isSwapAmountDirty = castedValues.swapAmount !== castedInitialValues.swapAmount;
 
   if (isSwapAmountDirty) {
     return {
-      swap_amount: getSwapAmount(context.initialDenom, castedValues.swapAmount),
+      swap_amount: `${castedValues.swapAmount}`,
     };
   }
+
   return {};
 }
