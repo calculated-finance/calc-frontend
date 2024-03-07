@@ -67,16 +67,16 @@ export function WeightedScaleCustomisePage({ steps, formSchema }: { steps: StepC
             />
             <AdvancedSettingsSwitch />
             <Collapse in={values.advancedSettings}>
-              <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
+              <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} route={state.step1.route} />
             </Collapse>
             <ExecutionInterval />
             <BaseSwapAmount initialDenom={initialDenom} initialDeposit={state.step1.initialDeposit} />
-            <SwapMultiplier initialDenom={initialDenom} resultingDenom={resultingDenom} />
+            <SwapMultiplier initialDenom={initialDenom} resultingDenom={resultingDenom} route={state.step1.route} />
             <Collapse in={values.advancedSettings}>
               <Box m="px">
                 <Stack spacing={4}>
                   <ApplyMultiplier />
-                  <BasePrice initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                  <BasePrice initialDenom={initialDenom} resultingDenom={resultingDenom} route={state.step1.route} />
                   <PriceThreshold
                     initialDenom={initialDenom}
                     resultingDenom={resultingDenom}

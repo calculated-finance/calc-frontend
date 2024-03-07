@@ -120,12 +120,17 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
                       <SwapMultiplier
                         initialDenom={initialDenom}
                         resultingDenom={resultingDenom}
+                        route={strategy.rawData.route}
                         swapAmountInjected={context.swapAmount}
                       />
                       <CollapseWithRender isOpen={values.advancedSettings}>
                         <Stack spacing={4}>
                           <ApplyMultiplier />
-                          <BasePrice initialDenom={initialDenom} resultingDenom={resultingDenom} />
+                          <BasePrice
+                            initialDenom={initialDenom}
+                            resultingDenom={resultingDenom}
+                            route={strategy.rawData.route}
+                          />
                           <PriceThreshold
                             forceOpen={initialValues.priceThresholdEnabled === YesNoValues.Yes}
                             resultingDenom={resultingDenom}

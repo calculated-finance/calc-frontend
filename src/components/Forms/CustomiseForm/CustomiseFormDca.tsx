@@ -35,7 +35,7 @@ export function CustomiseFormDca({
       <Stack direction="column" spacing={4}>
         <DcaDiagram initialDenom={initialDenom} resultingDenom={resultingDenom} initialDeposit={initialDeposit} />
         <AdvancedSettingsSwitch />
-        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} />
+        <TriggerForm initialDenom={initialDenom} resultingDenom={resultingDenom} route={route} />
         <ExecutionInterval />
         <SwapAmount
           transactionType={transactionType}

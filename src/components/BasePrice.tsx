@@ -40,9 +40,10 @@ function BasePriceToggle() {
 type BasePriceProps = {
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
 };
 
-export default function BasePrice({ initialDenom, resultingDenom }: BasePriceProps) {
+export default function BasePrice({ initialDenom, resultingDenom, route }: BasePriceProps) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'basePriceValue' });
   const [priceThresholdField] = useField({ name: 'basePriceIsCurrentPrice' });
 
@@ -57,6 +58,7 @@ export default function BasePrice({ initialDenom, resultingDenom }: BasePricePro
           <DenomPriceInput
             initialDenom={initialDenom}
             resultingDenom={resultingDenom}
+            route={route}
             transactionType={transactionType}
             error={meta.touched && meta.error}
             onChange={helpers.setValue}

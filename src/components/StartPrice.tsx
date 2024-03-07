@@ -8,10 +8,12 @@ export default function StartPrice({
   transactionType,
   initialDenom,
   resultingDenom,
+  route,
 }: {
   transactionType: TransactionType;
   initialDenom: DenomInfo;
   resultingDenom: DenomInfo;
+  route: string | null | undefined;
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
 
@@ -22,6 +24,7 @@ export default function StartPrice({
       <DenomPriceInput
         initialDenom={initialDenom}
         resultingDenom={resultingDenom}
+        route={route}
         transactionType={transactionType}
         error={meta.touched && meta.error}
         onChange={helpers.setValue}

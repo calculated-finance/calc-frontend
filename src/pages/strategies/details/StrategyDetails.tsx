@@ -309,6 +309,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
                 basePrice={getBasePrice(strategy)}
                 initialDenom={strategy.initialDenom}
                 resultingDenom={strategy.resultingDenom}
+                route={strategy.rawData.route}
                 priceThresholdValue={getPriceThreshold(strategy)}
               />
             </Box>
