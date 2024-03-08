@@ -537,7 +537,9 @@ function DurationSlider() {
   const [, , executionIntervalIncrementHelpers] = useField<number>({
     name: 'executionIntervalIncrement',
   });
-  const [, , routeStateHelpers] = useField<{ route: string | undefined; isLoading: boolean } | undefined>({
+  const [, , routeStateHelpers] = useField<
+    { route: string | undefined; isLoading: boolean; error: string | undefined } | undefined
+  >({
     name: 'routeState',
   });
   const [, , routeHelpers] = useField<string | undefined>({
@@ -546,21 +548,21 @@ function DurationSlider() {
 
   const debouncedInitialDeposit = useDebounce(initialDeposit, { wait: 500 });
 
-  const { route, ...useRouteHelpers } = useRoute(
+  const { route, routeError, ...useRouteHelpers } = useRoute(
     swapAmountField.value && initialDenom ? coin(BigInt(swapAmountField.value).toString(), initialDenom.id) : undefined,
     resultingDenom,
   );
 
   useEffect(() => {
     routeHelpers.setValue(route);
-    routeStateHelpers.setValue({ route, isLoading: useRouteHelpers.isLoading });
+    routeStateHelpers.setValue({ route, isLoading: useRouteHelpers.isLoading, error: routeError });
   }, [route, useRouteHelpers.isLoading]);
 
   const { twap } = useTwapToNow(
     initialDenom,
     resultingDenom,
     route,
-    !!resultingDenom && !!initialDenom && !useRouteHelpers.isLoading,
+    !routeError && !!resultingDenom && !!initialDenom && !useRouteHelpers.isLoading,
   );
   const { dexFee } = useDexFee();
   const { fiatPrice } = useFiatPrice(initialDenom);
@@ -583,7 +585,7 @@ function DurationSlider() {
     swapAmount,
     resultingDenom,
     route,
-    !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
+    !routeError && !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const expectedPriceImpact = !twap || !expectedPrice ? null : ((expectedPrice - twap) / twap) * 100;
@@ -598,7 +600,7 @@ function DurationSlider() {
     swapAmount,
     resultingDenom,
     route,
-    !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
+    !routeError && !!swapAmountField.value && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const { expectedReceiveAmount: directExpectedReceiveAmount } = useExpectedReceiveAmount(
@@ -607,7 +609,7 @@ function DurationSlider() {
       : undefined,
     resultingDenom,
     route,
-    !!debouncedInitialDeposit && !!initialDenom && !!resultingDenom && !useRouteHelpers.isLoading,
+    !routeError && !!debouncedInitialDeposit && !!initialDenom && !!resultingDenom && !useRouteHelpers.isLoading,
   );
 
   const expectedTotalReceiveAmount =
@@ -714,7 +716,7 @@ function DurationSlider() {
           </SliderTrack>
           <SliderThumb boxSize={4} bg="blue.200" borderWidth={1} zIndex={0} />
         </Slider>
-        {!!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
+        {!routeError && !!swaps && !!initialDenom && !!debouncedInitialDeposit && !!resultingDenom && (
           <FormHelperText>
             <Text color="brand.200" fontSize="xs">
               {swaps} {swaps > 1 ? 'swaps' : 'swap'} of{' '}
@@ -732,7 +734,9 @@ function DurationSlider() {
           </FormHelperText>
         )}
       </FormControl>
-      <Collapse in={!!swaps && !!debouncedInitialDeposit && !!resultingDenom}>
+      <Collapse
+        in={!useRouteHelpers.isLoading && !routeError && !!swaps && !!debouncedInitialDeposit && !!resultingDenom}
+      >
         <Stack spacing={4}>
           <Box position="relative" borderRadius="lg" p={4}>
             <Box
@@ -843,10 +847,16 @@ function FeeSection() {
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { dexFee } = useDexFee();
 
+  const [{ value: routeState }] = useField<
+    { route: string | undefined; isLoading: boolean; error: string | undefined } | undefined
+  >({
+    name: 'routeState',
+  });
+
   if (!initialDenom) return null;
 
   return (
-    <Collapse in={!!initialDenom && !!initialDeposit && !!resultingDenom && !!swapAmount}>
+    <Collapse in={!routeState?.error && !!initialDenom && !!initialDeposit && !!resultingDenom && !!swapAmount}>
       <Stack spacing={0}>
         <Text textStyle="body-xs" as="span">
           Estimated fees:
@@ -911,6 +921,12 @@ function Form({ formValues }: { formValues: FormData }) {
       },
     );
 
+  const [{ value: routeState }] = useField<
+    { route: string | undefined; isLoading: boolean; error: string | undefined } | undefined
+  >({
+    name: 'routeState',
+  });
+
   return (
     <Box maxWidth={451} mx="auto">
       <NewStrategyModalBody stepsConfig={streamingSwapSteps} isLoading={isPairsLoading} isSigning={isLoading}>
@@ -927,6 +943,9 @@ function Form({ formValues }: { formValues: FormData }) {
               <DurationSlider />
             </Stack>
             <FeeSection />
+            <FormControl isInvalid={!!routeState?.error}>
+              <FormErrorMessage>{routeState?.error}</FormErrorMessage>
+            </FormControl>
             {connected ? (
               <SummaryAgreementForm
                 isError={isError}
