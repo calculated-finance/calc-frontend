@@ -1,6 +1,8 @@
 import { DenomInfo } from './DenomInfo';
+import BigNumber from 'bignumber.js';
 
-export const fromAtomic = (denom: DenomInfo, value: number) => value / 10 ** denom.significantFigures;
+export const fromAtomic = (denom: DenomInfo, value: number) =>
+  new BigNumber(value).dividedBy(BigNumber(10 ** denom.significantFigures)).toNumber();
 
 export const toAtomicBigInt = (denom: DenomInfo, value: bigint) => value * 10n ** BigInt(denom.significantFigures);
 
