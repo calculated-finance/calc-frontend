@@ -548,6 +548,10 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       icon: 'https://astrovault.io/static/media/logo-usdt.grav.1c50785c9a42c563a1b6.svg',
       stable: true,
     },
+    [ArchwayMainnetDenoms.axlBTC]: {
+      icon: 'https://astrovault.io/static/media/logo-wbtc.axl.82bde40ecf2b5608fec5.svg',
+      enabledInDcaPlus: true,
+    },
   },
   'constantine-3': {
     [ArchwayTestnetDenoms.CONST]: {
