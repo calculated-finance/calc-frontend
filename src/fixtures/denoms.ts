@@ -535,12 +535,18 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     [ArchwayMainnetDenoms.axlUSDC]: {
       icon: 'https://astrovault.io/static/media/logo-usdc.axl.a191012589309094d837.svg',
       stable: true,
-      enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.USDC]: {
       icon: 'https://astrovault.io/static/media/logo-usdc.nobl.bf893ef8c8414cb29520.svg',
       stable: true,
-      enabledInDcaPlus: true,
+    },
+    [ArchwayMainnetDenoms.gravUSDC]: {
+      icon: 'https://astrovault.io/static/media/logo-usdc.grav.c884abd5db71c6605def.svg',
+      stable: true,
+    },
+    [ArchwayMainnetDenoms.gravUSDT]: {
+      icon: 'https://astrovault.io/static/media/logo-usdt.grav.1c50785c9a42c563a1b6.svg',
+      stable: true,
     },
   },
   'constantine-3': {
