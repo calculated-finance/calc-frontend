@@ -8,11 +8,8 @@ export const toAtomicBigInt = (denom: DenomInfo, value: bigint) => value * 10n *
 
 export const toAtomic = (denom: DenomInfo, value: number) => Math.round(value * 10 ** denom.significantFigures);
 
-export const priceFromRatio = (denom: DenomInfo, value: number | null | undefined) =>
-  Number(value) * 10 ** (denom.significantFigures - 6);
-
-export const ratioFromPrice = (denom: DenomInfo, value: number | null | undefined) =>
-  Number(value) / 10 ** (denom.significantFigures - 6);
+export const priceFromRatio = (denom: DenomInfo, value: number) =>
+  new BigNumber(value).multipliedBy(new BigNumber(10 ** (denom.significantFigures - 6))).toNumber();
 
 export function getDenomName(denomInfo: DenomInfo) {
   return denomInfo.name;
