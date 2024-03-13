@@ -1,4 +1,3 @@
-const totalExecutions = (initialDeposit: number | undefined, swapAmount: number) =>
-  Math.ceil((initialDeposit || 0) / swapAmount);
+const totalExecutions = (initialDeposit: number, swapAmount: number) => Math.ceil(initialDeposit / swapAmount);
 
 export default totalExecutions;
