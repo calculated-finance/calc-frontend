@@ -28,6 +28,7 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
+import BigNumber from 'bignumber.js';
 
 export function isStrategyOperating(strategy: Strategy) {
   return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
@@ -172,10 +173,10 @@ export function getStrategyType(strategy: Strategy) {
 }
 
 export function getStrategyRemainingExecutions(strategy: Strategy) {
-  const balance = getStrategyBalance(strategy);
-  const swapAmount = getSwapAmount(strategy);
+  const balance = new BigNumber(strategy.rawData.balance.amount);
+  const swapAmount = new BigNumber(strategy.rawData.swap_amount);
 
-  return totalExecutions(balance, swapAmount);
+  return totalExecutions(balance.toNumber(), swapAmount.toNumber());
 }
 
 export function isBuyStrategy(strategy: Strategy) {
