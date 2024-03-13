@@ -77,8 +77,8 @@ const sidebarLogoUrls = {
   'osmo-test-5': '/images/osmoMascot.svg',
   'kaiyo-1': '/images/kujiMascot.svg',
   'harpoon-4': '/images/kujiMascot.svg',
-  'archway-1': '',
-  'constantine-3': '',
+  'archway-1': 'images/archwaySidebarLogo.svg',
+  'constantine-3': 'images/archwaySidebarLogo.svg',
 };
 
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {

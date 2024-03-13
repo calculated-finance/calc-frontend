@@ -22,8 +22,8 @@ export function getGasPrice(chain: ChainId) {
       'osmo-test-5': '0.004uosmo',
       'kaiyo-1': '0.004ukuji',
       'harpoon-4': '0.004ukuji',
-      'constantine-3': '140000000000aconst',
       'archway-1': '140000000000aarch',
+      'constantine-3': '140000000000aconst',
     }[chain],
   );
 }
