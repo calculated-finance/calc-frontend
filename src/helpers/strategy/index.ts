@@ -20,6 +20,7 @@ import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { safeInvert } from '@utils/safeInvert';
+import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import { executionIntervalLabel } from '../executionIntervalDisplay';
 import { formatDate } from '../format/formatDate';
@@ -28,7 +29,6 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
-import BigNumber from 'bignumber.js';
 
 export function isStrategyOperating(strategy: Strategy) {
   return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
