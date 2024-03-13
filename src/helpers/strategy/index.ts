@@ -29,7 +29,6 @@ import { getLastExecutionDateFromStrategyEvents } from '../getLastExecutionDateF
 import { isAutoStaking } from '../isAutoStaking';
 import { getWeightedScaleConfig, isWeightedScale } from './isWeightedScale';
 import { isDcaPlus } from './isDcaPlus';
-import BigNumber from 'bignumber.js';
 
 export function isStrategyOperating(strategy: Strategy) {
   return strategy.status === StrategyStatus.ACTIVE || strategy.status === StrategyStatus.SCHEDULED;
