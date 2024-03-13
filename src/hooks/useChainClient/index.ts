@@ -242,7 +242,7 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       })) as unknown as { validators: Validator[] },
     fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => {
       try {
-        const re = await fetch(
+        const response = await fetch(
           `${getOsmosisRouterUrl(chainId!)}/router/quote?${new URLSearchParams({
             tokenIn: `${swapAmount}${initialDenom.id}`,
             tokenOutDenom: targetDenom!.id,
@@ -256,8 +256,8 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
           },
         );
 
-        if (!re.ok) {
-          const error = await re.json();
+        if (!response.ok) {
+          const error = await response.json();
           const errorMessages: { [x: string]: string } = {
             'no routes were provided': `No routes exist from ${initialDenom.name} to ${targetDenom.name} on Osmosis`,
           };
@@ -270,27 +270,12 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
           };
         }
 
-        const response = await (
-          await fetch(
-            `${getOsmosisRouterUrl(chainId!)}/router/quote?${new URLSearchParams({
-              tokenIn: `${swapAmount}${initialDenom.id}`,
-              tokenOutDenom: targetDenom!.id,
-              singleRoute: 'true',
-            })}`,
-            {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              mode: 'cors',
-            },
-          )
-        ).json();
+        const { route } = await response.json();
 
         return {
           route: Buffer.from(
             JSON.stringify(
-              response.route.flatMap((r: any) =>
+              route.flatMap((r: any) =>
                 r.pools.map((pool: any) => ({
                   pool_id: `${pool.id}`,
                   token_out_denom: pool.token_out_denom,

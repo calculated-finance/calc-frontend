@@ -29,6 +29,8 @@ import useSpotPrice from '@hooks/useSpotPrice';
 import { CollapseWithRender } from '@components/CollapseWithRender';
 import { generateStrategyDetailUrl } from '@components/TopPanel/generateStrategyDetailUrl';
 import { StrategyInfoProvider } from '@hooks/useStrategyInfo';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
 import { FormNames } from '@hooks/useFormStore';
 import { StrategyType } from '@models/StrategyType';
 import { CustomiseSchema, CustomiseSchemaDca, getCustomiseSchema } from './CustomiseSchemaDca';
@@ -46,7 +48,8 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
   const balance = Number(strategy.rawData.balance.amount);
   const transactionType = isBuyStrategy(strategy) ? TransactionType.Buy : TransactionType.Sell;
 
-  const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, strategy.rawData.route);
+  const { route } = useRoute(coin(strategy.rawData.swap_amount, strategy.initialDenom.id), strategy.resultingDenom);
+  const { spotPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, route || strategy.rawData.route);
 
   const context = {
     initialDenom,
