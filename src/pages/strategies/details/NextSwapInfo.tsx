@@ -15,6 +15,8 @@ import usePairs from '@hooks/usePairs';
 import { DenomInfo } from '@utils/DenomInfo';
 import { priceFromRatio } from '@utils/getDenomInfo';
 import useTwapToNow from '@hooks/useTwapToNow';
+import useRoute from '@hooks/useRoute';
+import { coin } from '@cosmjs/stargate';
 
 function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
   const { name: initialDenomName } = initialDenom;
@@ -39,7 +41,8 @@ function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; re
 }
 
 export function NextSwapInfo({ strategy }: { strategy: Strategy }) {
-  const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom, strategy.rawData.route);
+  const { route } = useRoute(coin(strategy.rawData.swap_amount, strategy.initialDenom.id), strategy.resultingDenom);
+  const { twap } = useTwapToNow(strategy.initialDenom, strategy.resultingDenom, route || strategy.rawData.route);
   const { pairs } = usePairs();
   const priceThreshold = getPriceThreshold(strategy);
 
