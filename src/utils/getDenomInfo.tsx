@@ -6,6 +6,9 @@ export const fromAtomic = (denom: DenomInfo, value: number) =>
 
 export const toAtomicBigInt = (denom: DenomInfo, value: bigint) => value * 10n ** BigInt(denom.significantFigures);
 
+export const toAtomicSafe = (denom: DenomInfo, value: number) =>
+  new BigNumber(value).multipliedBy(new BigNumber(10).exponentiatedBy(denom.significantFigures)).decimalPlaces(0);
+
 export const toAtomic = (denom: DenomInfo, value: number) => Math.round(value * 10 ** denom.significantFigures);
 
 export const priceFromRatio = (denom: DenomInfo, value: number) =>

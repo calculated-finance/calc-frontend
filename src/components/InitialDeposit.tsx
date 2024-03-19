@@ -4,7 +4,7 @@ import NumberInput from '@components/NumberInput';
 import { DenomInfo } from '@utils/DenomInfo';
 import useQueryState from '@hooks/useQueryState';
 import { useEffect } from 'react';
-import { fromAtomic, toAtomicBigInt } from '@utils/getDenomInfo';
+import { fromAtomic, toAtomicSafe } from '@utils/getDenomInfo';
 import { max } from 'rambda';
 
 export default function InitialDeposit() {
@@ -24,7 +24,7 @@ export default function InitialDeposit() {
       <NumberInput
         onChange={(newAmount) => {
           setQueryState({
-            amount: newAmount && initialDenom && toAtomicBigInt(initialDenom, BigInt(newAmount)).toString(),
+            amount: newAmount && initialDenom && toAtomicSafe(initialDenom, newAmount).toString(),
           });
         }}
         textAlign="right"
