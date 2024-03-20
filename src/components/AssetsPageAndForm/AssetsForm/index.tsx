@@ -88,7 +88,7 @@ export function AssetsForm() {
     routeError,
     isLoading: routeIsLoading,
   } = useRoute(
-    initialDenom ? coin(BigInt(toAtomic(initialDenom, 1)).toString(), initialDenom.id) : undefined,
+    initialDenom.significantFigures ? coin(BigInt(toAtomic(initialDenom, 1)).toString(), initialDenom.id) : undefined,
     resultingDenom,
   );
 
