@@ -88,9 +88,7 @@ export function AssetsForm() {
     routeError,
     isLoading: routeIsLoading,
   } = useRoute(
-    initialDenom && initialDeposit
-      ? coin(BigInt(toAtomic(initialDenom, initialDeposit ?? 1)).toString(), initialDenom.id)
-      : undefined,
+    initialDenom ? coin(BigInt(toAtomic(initialDenom, 1)).toString(), initialDenom.id) : undefined,
     resultingDenom,
   );
 
