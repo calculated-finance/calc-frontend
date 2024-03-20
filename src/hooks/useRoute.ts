@@ -14,7 +14,7 @@ const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
     ['prices', 'route', chainId, swapAmount?.denom, swapAmount?.amount, targetDenom?.id],
     () => chainClient!.fetchRoute(getDenomById(swapAmount!.denom)!, targetDenom!, BigInt(swapAmount!.amount)),
     {
-      enabled: !!chainId && !!chainClient && !!swapAmount && !!getDenomById(swapAmount!.denom) && !!targetDenom,
+      enabled: !!chainId && !!chainClient && !!swapAmount && !!getDenomById(swapAmount!.denom) && !!targetDenom?.name,
       staleTime: 1000 * 60,
       retry: false,
       meta: {
