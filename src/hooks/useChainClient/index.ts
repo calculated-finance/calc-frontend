@@ -3,12 +3,12 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
 import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import { getChainEndpoint, getOsmosisRouterUrl, getPairsFetchLimit } from '@helpers/chains';
+import { getChainEndpoint, getNeutronApiUrl, getOsmosisRouterUrl, getPairsFetchLimit } from '@helpers/chains';
 import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
-import { ARCHWAY_CHAINS, KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
+import { ARCHWAY_CHAINS, KUJIRA_CHAINS, NEUTRON_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
 import { forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
@@ -18,6 +18,7 @@ import { DENOMS } from 'src/fixtures/denoms';
 import { Pair } from '@models/Pair';
 import constantine3Data from 'src/assetLists/constantine-3';
 import archway1Data from 'src/assetLists/archway-1';
+import { QueryClient, coin, setupBankExtension, setupStakingExtension } from '@cosmjs/stargate';
 
 export type RouteResult = {
   route: string | undefined;
@@ -297,6 +298,86 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
   };
 };
 
+const fetchDenomsNeutron = async (chainId: ChainId) => {
+  const response = await fetch(
+    `${getNeutronApiUrl(chainId)}/api/trpc/tokens.getAll?input={"json":{"chainId":"${chainId}"}}`,
+  );
+
+  const {
+    data: { json: assets },
+  } = await response.json();
+
+  return reduce(
+    (acc: { [x: string]: DenomInfo }, asset: any) => ({
+      ...acc,
+      ...(asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]
+        ? {
+            [asset.id]: fromPartial({
+              chain: chainId,
+              id: asset.token,
+              name: asset.symbol ?? asset.token,
+              significantFigures: asset.decimals,
+              isCw20: (asset.token as string).startsWith('neutron1'),
+              coingeckoId: asset.coingeckoId,
+              ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
+            }),
+          }
+        : {}),
+    }),
+    {},
+    assets,
+  );
+};
+
+const neutronChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClient): Promise<ChainClient> => {
+  return {
+    fetchDenoms: () => fetchDenomsNeutron(chainId),
+    fetchPairs: async (
+      _chainId: ChainId,
+      _contractAddress: string,
+      _client: CosmWasmClient,
+      _startAfter?: string,
+      _allPairs?: Pair[],
+    ) => {
+      const denoms = await fetchDenomsNeutron(chainId);
+      console.log({ denoms });
+      const pairs = values(
+        reduce(
+          (acc: { [x: string]: Pair }, denom: DenomInfo) => {
+            const pairs: { [x: string]: Pair } = {};
+            forEach((otherDenom: DenomInfo) => {
+              if (denom.id !== otherDenom.id) {
+                const key = join(
+                  '-',
+                  sort((a, b) => (a > b ? -1 : 1), [denom.id, otherDenom.id]),
+                );
+                pairs[key] = {
+                  denoms: [denom.id, otherDenom.id],
+                };
+              }
+            }, values(denoms));
+            return { ...acc, ...pairs };
+          },
+          {},
+          values(denoms),
+        ),
+      );
+
+      console.log({ pairs });
+
+      return pairs;
+    },
+    fetchTokenBalance: (address: string, tokenId: string) => Promise.resolve(coin(100, tokenId)), // cosmWasmClient!.getBalance(address, tokenId),
+    fetchBalances: (address: string) => Promise.resolve([]), // queryClient.bank.allBalances(address),
+    fetchValidators: () => Promise.resolve({ validators: [] }), // queryClient.staking.validators('BOND_STATUS_BONDED'),
+    fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({
+      route: undefined,
+      feeRate: 0.0075,
+      routeError: undefined,
+    }),
+  };
+};
+
 const fetchBalancesArchway = async (
   queryClient: any,
   cosmWasmClient: CosmWasmClient,
@@ -391,6 +472,10 @@ export function useChainClient(chainId: ChainId) {
 
       if (ARCHWAY_CHAINS.includes(chainId)) {
         return archwayChainClient(chainId, cosmWasmClient!);
+      }
+
+      if (NEUTRON_CHAINS.includes(chainId)) {
+        return neutronChainClient(chainId, cosmWasmClient!);
       }
 
       throw new Error(`Unsupported chain ${chainId}`);

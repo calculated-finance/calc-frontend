@@ -23,6 +23,8 @@ function OnRampModalContent() {
     'osmo-test-5': 'osmosis',
     'archway-1': 'archway',
     'constantine-3': 'archway',
+    'neutron-1': 'neutron',
+    'pion-1': 'neutron',
   }[chainId]!;
 
   const { isWalletConnected, address } = chainContext;

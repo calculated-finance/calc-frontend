@@ -441,6 +441,8 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       coingeckoId: 'cosmos',
     },
   },
+  'neutron-1': {},
+  'pion-1': {},
   'archway-1': {
     [ArchwayMainnetDenoms.AKT]: {
       icon: '/images/denoms/akt.svg',

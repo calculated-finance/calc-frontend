@@ -79,6 +79,8 @@ const sidebarLogoUrls = {
   'harpoon-4': '/images/kujiMascot.svg',
   'archway-1': 'images/archwaySidebarLogo.svg',
   'constantine-3': 'images/archwaySidebarLogo.svg',
+  'neutron-1': 'images/neutronSidebarLogo.svg',
+  'pion-1': 'images/neutronSidebarLogo.svg',
 };
 
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
@@ -110,6 +112,8 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
                 'harpoon-4': '/images/logo.svg',
                 'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
+                'neutron-1': '/images/logo.svg',
+                'pion-1': '/images/logo.svg',
               }[chainId]
             }
             w={105}
@@ -172,6 +176,8 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
                 'harpoon-4': '/images/logo.svg',
                 'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
+                'neutron-1': '/images/logo.svg',
+                'pion-1': '/images/logo.svg',
               }[chain]
             }
             w={105}
