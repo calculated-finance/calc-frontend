@@ -10,7 +10,7 @@ import {
   MAX_DCA_PLUS_STRATEGY_DURATION,
   MIN_DCA_PLUS_STRATEGY_DURATION,
 } from 'src/constants';
-import { getChainAddressLength, getChainAddressPrefix } from '@helpers/chains';
+import { getChainAddressLength, getAddressPrefix } from '@helpers/chains';
 import { Coin } from 'src/interfaces/dca/response/get_vault';
 import YesNoValues from './YesNoValues';
 import { StrategyType } from './StrategyType';
@@ -311,7 +311,7 @@ export const allSchema = {
         if (!value) return true;
         const { chain } = context.options.context || {};
         if (!chain) return true;
-        return value?.startsWith(getChainAddressPrefix(chain));
+        return value?.startsWith(getAddressPrefix(chain));
       },
     }),
   autoStakeValidator: Yup.string()

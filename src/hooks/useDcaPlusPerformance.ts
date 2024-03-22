@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { DcaPlusPerformanceResponse as DcaPlusPerformanceResponseGenerated } from 'src/interfaces/dca/response/get_dca_plus_performance';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { useChainId } from '@hooks/useChainId';
@@ -16,7 +16,7 @@ export default function useDcaPlusPerformance(id: Strategy['id'], enabled: boole
   return useQuery<DcaPlusPerformanceResponse>(
     ['strategy-dca-plus-performance', id, cosmWasmClient, address],
     () =>
-      cosmWasmClient!.queryContractSmart(getChainContractAddress(chain), {
+      cosmWasmClient!.queryContractSmart(getDCAContractAddress(chain), {
         get_vault_performance: {
           vault_id: id,
         },

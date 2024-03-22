@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { useChainId } from '@hooks/useChainId';
 import getCalcClient from '@hooks/useCalcClient/getClient/clients/cosmos';
@@ -15,7 +15,7 @@ export default function useChainStrategies(injectedChainId?: ChainId) {
 
   const { data: strategies, ...other } = useQuery<Strategy[]>(
     ['strategies', chainId],
-    () => getCalcClient(chainId, getChainContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllVaults(),
+    () => getCalcClient(chainId, getDCAContractAddress(chainId), cosmWasmClient!, getDenomById).fetchAllVaults(),
     {
       enabled: !!chainId && !!cosmWasmClient,
       refetchOnWindowFocus: false,

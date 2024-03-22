@@ -47,7 +47,7 @@ export function getChainEndpoint(chain: ChainId): string {
   }[chain];
 }
 
-export function getChainContractAddress(chainId: ChainId) {
+export function getDCAContractAddress(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo1zacxlu90sl6j2zf90uctpddhfmux84ryrw794ywnlcwx2zeh5a4q67qtc9',
     'osmo-test-5': 'osmo1sk0qr7kljlsas09tn8lgh4zfcskwx76p4gypmwtklq2883pun3gs8rhs7f',
@@ -56,7 +56,7 @@ export function getChainContractAddress(chainId: ChainId) {
     'archway-1': 'archway1delmknshmvfuhv07uetes90crzrj32za23pgd9cvjtc5mrzfjauq3jqrpa',
     'constantine-3': 'archway1p0w6hpxhcdxvhl6r02wslqgjhrtq60ljs4tky6da2s6ncpha0v0s2s2f6r',
     'neutron-1': 'neutron1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx6j2xj2',
-    'pion-1': 'neutron1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx6j2xj2',
+    'pion-1': 'neutron1taf86htl6uymn2dvy8yyje6rh926aesuqadg86m7kd925sapd3fqw2wkvj',
   }[chainId]!;
 }
 
@@ -73,7 +73,7 @@ export function getAutoCompoundStakingRewardsAddress(chainId: ChainId): string {
   }[chainId];
 }
 
-export function getChainFeeTakerAddress(chainId: ChainId) {
+export function getFeeTakerAddress(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
     'osmo-test-5': 'osmo1263dq8542dgacr5txhdrmtxpup6px7g7tteest',
@@ -84,10 +84,6 @@ export function getChainFeeTakerAddress(chainId: ChainId) {
     'neutron-1': '',
     'pion-1': '',
   }[chainId];
-}
-
-export function getChainStakingRouterContractAddress(chainId: ChainId) {
-  return getChainContractAddress(chainId);
 }
 
 export function getChainName(chainId: ChainId) {
@@ -129,7 +125,7 @@ export function getChainDexName(chainId: ChainId) {
   }[chainId];
 }
 
-export function getChainAddressPrefix(chainId: ChainId) {
+export function getAddressPrefix(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo',
     'osmo-test-5': 'osmo',
@@ -146,6 +142,7 @@ export function getChainMinimumSwapValue(chainId: ChainId) {
   return (
     {
       'kaiyo-1': 5.0,
+      'archway-1': 50.0,
     }[chainId as string] ?? 1.0
   );
 }
@@ -242,8 +239,8 @@ export function getChainConfig(chainId: ChainId) {
   }
   return {
     id: chainId,
-    contractAddress: getChainContractAddress(chainId),
-    feeTakerAddress: getChainFeeTakerAddress(chainId),
+    contractAddress: getDCAContractAddress(chainId),
+    feeTakerAddress: getFeeTakerAddress(chainId),
     autoCompoundStakingRewardsAddress: getAutoCompoundStakingRewardsAddress(chainId),
   };
 }

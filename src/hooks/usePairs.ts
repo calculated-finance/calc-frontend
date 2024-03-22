@@ -1,7 +1,7 @@
 import { any, filter } from 'rambda';
 import { isDenomVolatile } from '@utils/getDenomInfo';
 import { HydratedPair, Pair } from '@models/Pair';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { DenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { ChainId } from '@models/ChainId';
@@ -86,10 +86,10 @@ export default function usePairs(injectedChainId?: ChainId) {
 
   const { data: pairs, ...other } = useQuery<Pair[]>(
     ['pairs', chainId],
-    () => chainClient!.fetchPairs(chainId, getChainContractAddress(chainId), cosmWasmClient!),
+    () => chainClient!.fetchPairs(chainId, getDCAContractAddress(chainId), cosmWasmClient!),
     {
       enabled: !!chainId && !!cosmWasmClient && !!chainClient,
-      staleTime: 1000 * 60 * 30,
+      staleTime: 1000 * 1,
       meta: {
         errorMessage: 'Error fetching pairs',
       },

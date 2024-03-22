@@ -310,7 +310,7 @@ const fetchDenomsNeutron = async (chainId: ChainId) => {
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: any) => ({
       ...acc,
-      ...(asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]
+      ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || true
         ? {
             [asset.id]: fromPartial({
               chain: chainId,
@@ -339,6 +339,7 @@ const neutronChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       _startAfter?: string,
       _allPairs?: Pair[],
     ) => {
+      console.log('fetching pairs');
       const denoms = await fetchDenomsNeutron(chainId);
       console.log({ denoms });
       const pairs = values(
@@ -475,6 +476,7 @@ export function useChainClient(chainId: ChainId) {
       }
 
       if (NEUTRON_CHAINS.includes(chainId)) {
+        console.log('fetching neutron chain client');
         return neutronChainClient(chainId, cosmWasmClient!);
       }
 
@@ -482,7 +484,7 @@ export function useChainClient(chainId: ChainId) {
     },
     {
       enabled: !!chainId && !!cosmWasmClient,
-      staleTime: 1000 * 60 * 10,
+      staleTime: 1000 * 1,
       meta: {
         errorMessage: 'Error fetching chain client',
       },

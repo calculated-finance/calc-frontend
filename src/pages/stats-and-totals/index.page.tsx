@@ -22,7 +22,7 @@ import { DenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
 import { useChainId } from '@hooks/useChainId';
-import { getChainContractAddress, getChainFeeTakerAddress } from '@helpers/chains';
+import { getDCAContractAddress, getFeeTakerAddress } from '@helpers/chains';
 import useFiatPrices from '@hooks/useFiatPrices';
 import useDenoms from '@hooks/useDenoms';
 import { values } from 'rambda';
@@ -281,8 +281,8 @@ export function uniqueAddresses(allStrategies: Strategy[] | undefined) {
 function Page() {
   const { denoms } = useDenoms();
   const { chainId } = useChainId();
-  const { balances: contractBalances } = useBalances(getChainContractAddress(chainId));
-  const { balances: feeTakerBalances } = useBalances(getChainFeeTakerAddress(chainId));
+  const { balances: contractBalances } = useBalances(getDCAContractAddress(chainId));
+  const { balances: feeTakerBalances } = useBalances(getFeeTakerAddress(chainId));
   const { fiatPrices } = useFiatPrices();
 
   const { strategies } = useAllStrategies();

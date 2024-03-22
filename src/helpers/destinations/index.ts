@@ -1,4 +1,4 @@
-import { getChainContractAddress, getRedBankAddress } from '@helpers/chains';
+import { getDCAContractAddress, getRedBankAddress } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { Strategy } from '@models/Strategy';
 import { PostPurchaseOptions } from '@models/PostPurchaseOptions';
@@ -37,7 +37,7 @@ export function getStrategyPostSwapType(strategy: Strategy, chainId: ChainId) {
     return PostPurchaseOptions.GenerateYield;
   }
 
-  if (destination.address === getChainContractAddress(chainId)) {
+  if (destination.address === getDCAContractAddress(chainId)) {
     if (getStrategyValidatorAddress(strategy)) {
       return PostPurchaseOptions.Stake;
     }
