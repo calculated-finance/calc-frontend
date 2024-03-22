@@ -89,7 +89,7 @@ export default function usePairs(injectedChainId?: ChainId) {
     () => chainClient!.fetchPairs(chainId, getDCAContractAddress(chainId), cosmWasmClient!),
     {
       enabled: !!chainId && !!cosmWasmClient && !!chainClient,
-      staleTime: 1000 * 60 * 30,
+      staleTime: 1000 * 1,
       meta: {
         errorMessage: 'Error fetching pairs',
       },

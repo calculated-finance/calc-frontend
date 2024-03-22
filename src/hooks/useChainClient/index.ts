@@ -525,6 +525,7 @@ export function useChainClient(chainId: ChainId) {
       }
 
       if (NEUTRON_CHAINS.includes(chainId)) {
+        console.log('fetching neutron chain client');
         return neutronChainClient(chainId, cosmWasmClient!);
       }
 
@@ -532,7 +533,7 @@ export function useChainClient(chainId: ChainId) {
     },
     {
       enabled: !!chainId && !!cosmWasmClient,
-      staleTime: 1000 * 60 * 10,
+      staleTime: 1000 * 1,
       meta: {
         errorMessage: 'Error fetching chain client',
       },
