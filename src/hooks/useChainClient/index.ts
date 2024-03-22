@@ -19,7 +19,6 @@ import { Pair } from '@models/Pair';
 import constantine3Data from 'src/assetLists/constantine-3';
 import archway1Data from 'src/assetLists/archway-1';
 import { QueryClient, coin, setupBankExtension, setupStakingExtension } from '@cosmjs/stargate';
-import { AssetTypeRequest } from 'osmojs/types/codegen/osmosis/superfluid/query';
 
 export type RouteResult = {
   route: string | undefined;
@@ -307,9 +306,7 @@ const fetchDenomsNeutron = async (chainId: ChainId) => {
   );
 
   const {
-    result: {
-      data: { json: assets },
-    },
+    data: { json: assets },
   } = await response.json();
 
   return reduce(
@@ -371,7 +368,7 @@ const fetchBalances = async (queryClient: any, cosmWasmClient: CosmWasmClient, c
   }
 };
 
-const fetchBalance = async (queryClient: any, cosmWasmClient: CosmWasmClient, address: string, denom: DenomInfo) => {
+const fetchBalance = async (_queryClient: any, cosmWasmClient: CosmWasmClient, address: string, denom: DenomInfo) => {
   try {
     if (denom.isCw20) {
       const { balance } = await cosmWasmClient.queryContractSmart(denom.id, { balance: { address } });
