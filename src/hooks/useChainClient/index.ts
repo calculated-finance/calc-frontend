@@ -378,7 +378,7 @@ const fetchBalance = async (_queryClient: any, cosmWasmClient: CosmWasmClient, a
       return { denom: denom.id, amount: balance };
     }
 
-    return cosmWasmClient.getBalance(address, denom.id);
+    return await cosmWasmClient.getBalance(address, denom.id);
   } catch (error) {
     return { denom: denom.id, amount: 0 };
   }

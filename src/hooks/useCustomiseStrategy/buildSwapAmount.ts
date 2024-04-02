@@ -1,10 +1,9 @@
 import { isWeightedScale } from '@helpers/strategy/isWeightedScale';
-import { getSwapAmount } from '@hooks/useCreateVault/buildCreateVaultParams';
 import { CustomiseSchemaDca } from 'src/pages/strategies/customise/CustomiseSchemaDca';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import { ConfigureVariables } from './ConfigureVariables';
 
-export function buildSwapAmount({ values, initialValues, context, strategy }: ConfigureVariables) {
+export function buildSwapAmount({ values, initialValues, strategy }: ConfigureVariables) {
   if (isDcaPlus(strategy) || isWeightedScale(strategy)) {
     return {};
   }
