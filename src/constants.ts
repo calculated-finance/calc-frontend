@@ -88,8 +88,8 @@ export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
 export const ARCHWAY_CHAINS = ['archway-1', 'constantine-3'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
 export const NEUTRON_CHAINS = ['neutron-1', 'pion-1'] as ChainId[];
-export const CHAINS = [...KUJIRA_CHAINS, ...OSMOSIS_CHAINS, ...ARCHWAY_CHAINS, ...NEUTRON_CHAINS] as ChainId[];
-export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1', 'archway-1', 'neutron-1'] as ChainId[];
+export const CHAINS = [...KUJIRA_CHAINS, ...OSMOSIS_CHAINS, ...ARCHWAY_CHAINS] as ChainId[];
+export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1', 'archway-1'] as ChainId[];
 
 export const OSMOSIS_MAINNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_MAINNET_RPC!;
 export const OSMOSIS_TESTNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_TESTNET_RPC!;
