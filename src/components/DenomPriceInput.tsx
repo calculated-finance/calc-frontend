@@ -62,6 +62,8 @@ export function DenomPriceInput({
     'harpoon-4': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
     'archway-1': () => `https://astrovault.io/trade`,
     'constantine-3': () => `https://testnet.astrovault.io/trade`,
+    'neutron-1': () => `https://app.astroport.fi/swap?from=${initialDenom.id}&to=${resultingDenom.id}`,
+    'pion-1': () => `https://testnet.astroport.fi/swap?from=${initialDenom.id}&to=${resultingDenom.id}`,
   };
 
   return (

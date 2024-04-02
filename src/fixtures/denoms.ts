@@ -4,6 +4,8 @@ import {
   ArchwayTestnetDenoms,
   KujiraMainnetDenoms,
   KujiraTestnetDenoms,
+  NeutronMainnetDenoms,
+  NeutronTestnetDenoms,
   OsmosisMainnetDenoms,
   OsmosisTestnetDenoms,
 } from '@models/Denom';
@@ -422,6 +424,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     [OsmosisMainnetDenoms.USDC]: {
       stable: true,
     },
+    [OsmosisMainnetDenoms.BADDOG]: {},
   },
   'osmo-test-5': {
     [OsmosisTestnetDenoms.USDC]: {
@@ -439,6 +442,46 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
     },
     [OsmosisTestnetDenoms.ATOM]: {
       coingeckoId: 'cosmos',
+    },
+  },
+  'neutron-1': {
+    [NeutronMainnetDenoms.NTRN]: {
+      icon: '/images/denoms/neutron.svg',
+      coingeckoId: 'neutron',
+    },
+    [NeutronMainnetDenoms.ATOM]: {
+      icon: '/images/denoms/atom.svg',
+      enabledInDcaPlus: true,
+      coingeckoId: 'cosmos',
+    },
+    [NeutronMainnetDenoms.USDC]: {
+      icon: '/images/denoms/usdc.svg',
+      stable: true,
+      coingeckoId: 'usd-coin',
+    },
+    [NeutronMainnetDenoms.ASTRO]: {
+      icon: '/images/denoms/astro.png',
+      coingeckoId: 'astroport-fi',
+    },
+  },
+  'pion-1': {
+    [NeutronTestnetDenoms.NTRN]: {
+      icon: '/images/denoms/neutron.svg',
+      coingeckoId: 'neutron',
+    },
+    [NeutronTestnetDenoms.ATOM]: {
+      icon: '/images/denoms/atom.svg',
+      enabledInDcaPlus: true,
+      coingeckoId: 'cosmos',
+    },
+    [NeutronTestnetDenoms.USDC]: {
+      icon: '/images/denoms/usdc.svg',
+      stable: true,
+      coingeckoId: 'usd-coin',
+    },
+    [NeutronTestnetDenoms.ASTRO]: {
+      icon: '/images/denoms/astro.png',
+      coingeckoId: 'astroport-fi',
     },
   },
   'archway-1': {

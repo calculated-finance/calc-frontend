@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeliverTxResponse } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { DcaInFormDataPostPurchase } from '@models/DcaInFormData';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChainId } from '@hooks/useChainId';
@@ -72,7 +72,7 @@ export function useConfigureStrategy() {
       };
 
       msgs.push(
-        getExecuteMsg(updateVaultMsg, undefined, address, getChainContractAddress(chainId), strategy.initialDenom),
+        getExecuteMsg(updateVaultMsg, undefined, address, getDCAContractAddress(chainId), strategy.initialDenom),
       );
 
       return client.signAndBroadcast(address, msgs, 'auto');

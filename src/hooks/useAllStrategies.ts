@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { useChains } from '@cosmos-kit/react';
-import { getChainContractAddress, getChainName } from '@helpers/chains';
+import { getDCAContractAddress, getChainName } from '@helpers/chains';
 import { values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
@@ -28,7 +28,7 @@ const useAllStrategies = () => {
         const client = await chain.getCosmWasmClient();
         const calcClient = getCalcClient(
           chain.chain.chain_id as ChainId,
-          getChainContractAddress(chain.chain.chain_id as ChainId),
+          getDCAContractAddress(chain.chain.chain_id as ChainId),
           client,
           getDenomById,
         );

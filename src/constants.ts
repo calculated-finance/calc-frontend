@@ -56,6 +56,8 @@ export const COSMOS_KIT_OSMOSIS_MAINNET = 'osmosis';
 export const COSMOS_KIT_OSMOSIS_TESTNET = 'osmosistestnet';
 export const COSMOS_KIT_ARCHWAY_MAINNET = 'archway';
 export const COSMOS_KIT_ARCHWAY_TESTNET = 'archwaytestnet';
+export const COSMOS_KIT_NEUTRON_MAINNET = 'neutron';
+export const COSMOS_KIT_NEUTRON_TESTNET = 'neutrontestnet';
 
 export const ETH_DCA_FACTORY_CONTRACT_ADDRESS = '0x8c7877a15DEad1732e33d4756899CD13bC61d0BD';
 
@@ -85,8 +87,9 @@ export const contentData = {
 export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
 export const ARCHWAY_CHAINS = ['archway-1', 'constantine-3'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
-export const CHAINS = [...KUJIRA_CHAINS, ...OSMOSIS_CHAINS, ...ARCHWAY_CHAINS] as ChainId[];
-export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1', 'archway-1'] as ChainId[];
+export const NEUTRON_CHAINS = ['neutron-1', 'pion-1'] as ChainId[];
+export const CHAINS = [...KUJIRA_CHAINS, ...OSMOSIS_CHAINS, ...ARCHWAY_CHAINS, ...NEUTRON_CHAINS] as ChainId[];
+export const MAINNET_CHAINS = ['kaiyo-1', 'osmosis-1', 'archway-1', 'neutron-1'] as ChainId[];
 
 export const OSMOSIS_MAINNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_MAINNET_RPC!;
 export const OSMOSIS_TESTNET_RPC = process.env.NEXT_PUBLIC_OSMOSIS_TESTNET_RPC!;
@@ -94,3 +97,5 @@ export const KUJIRA_MAINNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_MAINNET_RPC!;
 export const KUJIRA_TESTNET_RPC = process.env.NEXT_PUBLIC_KUJIRA_TESTNET_RPC!;
 export const ARCHWAY_MAINNET_RPC = process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_RPC!;
 export const ARCHWAY_TESTNET_RPC = process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_RPC!;
+export const NEUTRON_MAINNET_RPC = process.env.NEXT_PUBLIC_NEUTRON_MAINNET_RPC!;
+export const NEUTRON_TESTNET_RPC = process.env.NEXT_PUBLIC_NEUTRON_TESTNET_RPC!;

@@ -3,13 +3,13 @@ import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { kujiraQueryClient } from 'kujira.js';
 import { Coin } from '@models/index';
 import { HttpBatchClient, Tendermint34Client } from '@cosmjs/tendermint-rpc';
-import { getChainEndpoint, getOsmosisRouterUrl, getPairsFetchLimit } from '@helpers/chains';
+import { getChainEndpoint, getNeutronApiUrl, getOsmosisRouterUrl, getPairsFetchLimit } from '@helpers/chains';
 import { osmosis } from 'osmojs';
 import { useQuery } from '@tanstack/react-query';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DenomInfo, fromPartial } from '@utils/DenomInfo';
-import { ARCHWAY_CHAINS, KUJIRA_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
-import { forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
+import { ARCHWAY_CHAINS, KUJIRA_CHAINS, NEUTRON_CHAINS, OSMOSIS_CHAINS } from 'src/constants';
+import { filter, forEach, join, map, reduce, sort, toPairs, values } from 'rambda';
 import { Asset } from '@chain-registry/types';
 import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
@@ -18,6 +18,8 @@ import { DENOMS } from 'src/fixtures/denoms';
 import { Pair } from '@models/Pair';
 import constantine3Data from 'src/assetLists/constantine-3';
 import archway1Data from 'src/assetLists/archway-1';
+import { QueryClient, coin, setupBankExtension, setupStakingExtension } from '@cosmjs/stargate';
+import { AssetTypeRequest } from 'osmojs/types/codegen/osmosis/superfluid/query';
 
 export type RouteResult = {
   route: string | undefined;
@@ -34,7 +36,7 @@ export type ChainClient = {
     startAfter?: string,
     allPairs?: Pair[],
   ) => Promise<Pair[]>;
-  fetchTokenBalance: (address: string, tokenId: string) => Promise<Coin>;
+  fetchTokenBalance: (address: string, tokenId: DenomInfo) => Promise<Coin>;
   fetchBalances: (address: string) => Promise<Coin[]>;
   fetchValidators: () => Promise<{ validators: Validator[] }>;
   fetchRoute: (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => Promise<RouteResult>;
@@ -119,13 +121,17 @@ const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: Deno
   const url = isTestnet
     ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL!
     : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
+  const fallbackData = isTestnet ? constantine3Data : archway1Data;
 
   const fetchDenoms = async () => {
+    if (process.env.NEXT_PUBLIC_APP_ENV === 'dev') {
+      return fallbackData;
+    }
     try {
       const response = await fetch(url);
-      return response.ok ? await response.json() : isTestnet ? constantine3Data : archway1Data;
+      return response.ok ? await response.json() : fallbackData;
     } catch (error) {
-      return isTestnet ? constantine3Data : archway1Data;
+      return fallbackData;
     }
   };
 
@@ -134,22 +140,20 @@ const fetchDenomsArchway = async (chainId: ChainId): Promise<{ [x: string]: Deno
   return reduce(
     (acc: { [x: string]: DenomInfo }, asset: any) => ({
       ...acc,
-      ...(asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]
-        ? {
-            [asset.id]: fromPartial({
-              chain: chainId,
-              id: asset.id,
-              name: asset.label,
-              significantFigures: asset.decimals,
-              isCw20: !asset.isNative,
-              coingeckoId: asset.geckoIDPriceSource,
-              ...((asset.id in DENOMS[chainId] && DENOMS[chainId][asset.id]) || {}),
-            }),
-          }
-        : {}),
+      ...{
+        [asset.id]: fromPartial({
+          chain: chainId,
+          id: asset.id,
+          name: asset.label,
+          significantFigures: asset.decimals,
+          isCw20: !asset.isNative,
+          coingeckoId: asset.geckoIDPriceSource,
+          ...DENOMS[chainId][asset.id],
+        }),
+      },
     }),
     {},
-    assets,
+    filter((asset: any) => asset.id in DENOMS[chainId], assets),
   );
 };
 
@@ -166,7 +170,7 @@ const kujiraChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClien
   return {
     fetchDenoms: () => fetchDenomsKujira(chainId),
     fetchPairs: fetchAllPairsFromSwapper,
-    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
+    fetchTokenBalance: (address: string, denom: DenomInfo) => cosmWasmClient!.getBalance(address, denom.id),
     fetchBalances: (address: string) =>
       queryClient.bank.allBalances(address, {
         key: Buffer.from(''),
@@ -222,7 +226,7 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
         ),
       );
     },
-    fetchTokenBalance: (address: string, tokenId: string) => cosmWasmClient!.getBalance(address, tokenId),
+    fetchTokenBalance: (address: string, denom: DenomInfo) => cosmWasmClient!.getBalance(address, denom.id),
     fetchBalances: async (address: string) => {
       const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
         address,
@@ -297,12 +301,38 @@ const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
   };
 };
 
-const fetchBalancesArchway = async (
-  queryClient: any,
-  cosmWasmClient: CosmWasmClient,
-  chainId: ChainId,
-  address: string,
-) => {
+const fetchDenomsNeutron = async (chainId: ChainId) => {
+  const response = await fetch(
+    `${getNeutronApiUrl(chainId)}/api/trpc/tokens.getAll?input={"json":{"chainId":"${chainId}"}}`,
+  );
+
+  const {
+    result: {
+      data: { json: assets },
+    },
+  } = await response.json();
+
+  return reduce(
+    (acc: { [x: string]: DenomInfo }, asset: any) => ({
+      ...acc,
+      ...{
+        [asset.token]: fromPartial({
+          chain: chainId,
+          id: asset.token,
+          name: asset.symbol,
+          significantFigures: asset.decimals,
+          isCw20: (asset.token as string).startsWith('neutron1'),
+          coingeckoId: asset.coingeckoId,
+          ...DENOMS[chainId][asset.token],
+        }),
+      },
+    }),
+    {},
+    filter((asset: any) => asset.token in DENOMS[chainId], values(assets)),
+  );
+};
+
+const fetchBalances = async (queryClient: any, cosmWasmClient: CosmWasmClient, chainId: ChainId, address: string) => {
   try {
     const [{ balances: nativeBalances }, denoms] = await Promise.all([
       queryClient.cosmos.bank.v1beta1.allBalances({
@@ -341,6 +371,108 @@ const fetchBalancesArchway = async (
   }
 };
 
+const fetchBalance = async (queryClient: any, cosmWasmClient: CosmWasmClient, address: string, denom: DenomInfo) => {
+  try {
+    if (denom.isCw20) {
+      const { balance } = await cosmWasmClient.queryContractSmart(denom.id, { balance: { address } });
+      return { denom: denom.id, amount: balance };
+    }
+
+    return cosmWasmClient.getBalance(address, denom.id);
+  } catch (error) {
+    return { denom: denom.id, amount: 0 };
+  }
+};
+
+const neutronChainClient = async (chainId: ChainId, _cosmWasmClient: CosmWasmClient): Promise<ChainClient> => {
+  const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
+    rpcEndpoint: getChainEndpoint(chainId),
+  });
+
+  return {
+    fetchDenoms: () => fetchDenomsNeutron(chainId),
+    fetchPairs: async (
+      _chainId: ChainId,
+      _contractAddress: string,
+      _client: CosmWasmClient,
+      _startAfter?: string,
+      _allPairs?: Pair[],
+    ) => {
+      const denoms = values(await fetchDenomsNeutron(chainId));
+      return values(
+        reduce(
+          (acc: { [x: string]: Pair }, denom: DenomInfo) => {
+            const pairs: { [x: string]: Pair } = {};
+            forEach((otherDenom: DenomInfo) => {
+              if (denom.id !== otherDenom.id) {
+                const key = join(
+                  '-',
+                  sort((a, b) => (a > b ? -1 : 1), [denom.id, otherDenom.id]),
+                );
+                pairs[key] = {
+                  denoms: [denom.id, otherDenom.id],
+                };
+              }
+            }, denoms);
+            return { ...acc, ...pairs };
+          },
+          {},
+          denoms,
+        ),
+      );
+    },
+    fetchTokenBalance: (address: string, denom: DenomInfo) =>
+      fetchBalance(queryClient, _cosmWasmClient, address, denom),
+    fetchBalances: (address: string) => fetchBalances(queryClient, _cosmWasmClient, chainId, address),
+    fetchValidators: () => Promise.resolve({ validators: [] }),
+    fetchRoute: async (initialDenom: DenomInfo, targetDenom: DenomInfo, swapAmount: bigint) => {
+      const response = await fetch(
+        `${getNeutronApiUrl(chainId)}/api/routes?${new URLSearchParams({
+          start: initialDenom.id,
+          end: targetDenom.id,
+          amount: swapAmount.toString(),
+          chainId,
+          limit: '1',
+        })}`,
+      );
+
+      if (!response.ok) {
+        return {
+          route: undefined,
+          feeRate: 0.0,
+          routeError: `Unable to fetch a route from ${initialDenom.name} to ${targetDenom.name} on Astroport`,
+        };
+      }
+
+      const { swaps } = (await response.json())[0];
+
+      const route = Buffer.from(
+        JSON.stringify(
+          map(
+            (swap: any) => ({
+              astro_swap: {
+                offer_asset_info: swap.from.startsWith('neutron')
+                  ? { token: { contract_addr: swap.from } }
+                  : { native_token: { denom: swap.from } },
+                ask_asset_info: swap.to.startsWith('neutron')
+                  ? { token: { contract_addr: swap.to } }
+                  : { native_token: { denom: swap.to } },
+              },
+            }),
+            swaps,
+          ),
+        ),
+      ).toString('base64');
+
+      return {
+        route,
+        feeRate: 0.003 * swaps.length,
+        routeError: undefined,
+      };
+    },
+  };
+};
+
 const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClient): Promise<ChainClient> => {
   const queryClient = await osmosis.ClientFactory.createRPCQueryClient({
     rpcEndpoint: getChainEndpoint(chainId),
@@ -358,20 +490,22 @@ const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmWasmClie
       const pairs = await fetchAllPairsFromSwapper(chainId, contractAddress, client, startAfter, allPairs);
       return pairs.filter((pair) => pair.denoms[0] !== pair.denoms[1]);
     },
-    fetchTokenBalance: async (address: string, tokenId: string) =>
-      (await fetchBalancesArchway(queryClient, cosmWasmClient, chainId, address)).find(
-        (b: Coin) => b.denom === tokenId,
-      ) ?? { denom: tokenId, amount: '0' },
-    fetchBalances: (address: string) => fetchBalancesArchway(queryClient, cosmWasmClient, chainId, address),
+    fetchTokenBalance: async (address: string, denom: DenomInfo) =>
+      (await fetchBalances(queryClient, cosmWasmClient, chainId, address)).find((b: Coin) => b.denom === denom.id) ?? {
+        denom: denom.id,
+        amount: '0',
+      },
+    fetchBalances: (address: string) => fetchBalances(queryClient, cosmWasmClient, chainId, address),
     fetchValidators: async () =>
       (await queryClient.cosmos.staking.v1beta1.validators({
         status: 'BOND_STATUS_BONDED',
       })) as unknown as { validators: Validator[] },
+
     fetchRoute: async (_: DenomInfo, __: DenomInfo, ___: bigint) => ({
       route: undefined,
       feeRate: 0.0075,
       routeError: undefined,
-    }), // TODO: understand fees
+    }),
   };
 };
 
@@ -380,7 +514,7 @@ export function useChainClient(chainId: ChainId) {
 
   const { data: chainClient } = useQuery<ChainClient>(
     ['chainClient', chainId],
-    () => {
+    async () => {
       if (KUJIRA_CHAINS.includes(chainId)) {
         return kujiraChainClient(chainId, cosmWasmClient!);
       }
@@ -391,6 +525,10 @@ export function useChainClient(chainId: ChainId) {
 
       if (ARCHWAY_CHAINS.includes(chainId)) {
         return archwayChainClient(chainId, cosmWasmClient!);
+      }
+
+      if (NEUTRON_CHAINS.includes(chainId)) {
+        return neutronChainClient(chainId, cosmWasmClient!);
       }
 
       throw new Error(`Unsupported chain ${chainId}`);

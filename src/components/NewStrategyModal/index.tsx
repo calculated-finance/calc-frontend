@@ -80,6 +80,7 @@ export function NewStrategyModalBody({
   const router = useRouter();
   const step = findStep(router.pathname, stepsConfig);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <Box p={6} bg="darkGrey" borderRadius="2xl" boxShadow="deepHorizon">
       <Box position="relative" w="full">

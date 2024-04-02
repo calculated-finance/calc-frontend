@@ -18,7 +18,6 @@ import { getChainId, getGasPrice } from '@helpers/chains';
 import { useEffect, useState } from 'react';
 import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
 import { MainWalletBase } from '@cosmos-kit/core';
-import { lowerCase } from 'lodash';
 
 declare global {
   interface Window extends KeplrWindow {
@@ -39,13 +38,13 @@ export function ChainProvider({ children }: ChildrenProp) {
     );
   }, []);
 
+  const supportedChains = chains.filter((chain) =>
+    (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).includes(chain.chain_id as ChainId),
+  );
+
   return wallets.length > 0 ? (
     <CosmosKitChainProvider
-      chains={chains.filter((chain) =>
-        (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).includes(
-          chain.chain_id as ChainId,
-        ),
-      )}
+      chains={supportedChains}
       assetLists={assets}
       wallets={wallets}
       endpointOptions={{

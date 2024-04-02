@@ -6,7 +6,7 @@ import TriggerType from '@components/TriggerType';
 import { useChainId } from '@hooks/useChainId';
 import YesNoValues from '@models/YesNoValues';
 
-const startImediatelyData: { value: YesNoValues; label: string }[] = [
+const startImmediatelyData: { value: YesNoValues; label: string }[] = [
   {
     value: YesNoValues.Yes,
     label: 'Yes',
@@ -33,7 +33,7 @@ export default function StartImmediately() {
       <FormHelperText>Starting immediately means your first swap occurs straight after set-up.</FormHelperText>
       <HStack>
         <Radio {...getRootProps}>
-          {startImediatelyData.map((option) => {
+          {startImmediatelyData.map((option) => {
             const radio = getRadioProps({ value: option.value });
             return (
               <RadioCard key={option.label} {...radio}>

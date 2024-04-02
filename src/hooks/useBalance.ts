@@ -10,16 +10,16 @@ export type BalanceResponse = {
   amount: number;
 };
 
-function useBalance(token: DenomInfo) {
+function useBalance(denom: DenomInfo) {
   const { address } = useWallet();
   const { chainId } = useChainId();
   const client = useChainClient(chainId);
 
   const result = useQuery<Coin>(
-    ['balance', chainId, address, token.id],
-    () => client!.fetchTokenBalance(address!, token.id),
+    ['balance', chainId, address, denom.id],
+    () => client!.fetchTokenBalance(address!, denom),
     {
-      enabled: !!token.id && !!address && !!chainId && !!client,
+      enabled: !!denom.id && !!address && !!chainId && !!client,
       meta: {
         errorMessage: 'Error fetching balance',
       },
@@ -27,7 +27,7 @@ function useBalance(token: DenomInfo) {
   );
 
   return {
-    displayAmount: result.data ? fromAtomic(token, Number(result.data.amount)) : 0,
+    displayAmount: result.data ? fromAtomic(denom, Number(result.data.amount)) : 0,
     ...result,
   };
 }

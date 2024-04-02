@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { isNil } from 'lodash';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
 import { useChainId } from '@hooks/useChainId';
 import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
@@ -55,7 +55,7 @@ export function useCustomiseStrategy() {
           updateVaultMsg,
           undefined,
           address,
-          getChainContractAddress(chainId),
+          getDCAContractAddress(chainId),
           variables.strategy.initialDenom,
         ),
       );

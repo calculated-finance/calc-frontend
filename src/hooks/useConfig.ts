@@ -1,4 +1,4 @@
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { Config, ConfigResponse } from 'src/interfaces/dca/response/get_config';
 import { ChainId } from '@models/ChainId';
@@ -13,7 +13,7 @@ export function useConfig(injectedChainId?: ChainId): Config | undefined {
   const { data: response } = useQuery<ConfigResponse>(
     ['config', chainId],
     () =>
-      cosmWasmClient!.queryContractSmart(getChainContractAddress(chainId!), {
+      cosmWasmClient!.queryContractSmart(getDCAContractAddress(chainId!), {
         get_config: {},
       }),
     {

@@ -1,6 +1,6 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { ChainId } from '@models/ChainId';
-import { getChainContractAddress } from '@helpers/chains';
+import { getDCAContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { StrategyEvent } from '@models/StrategyEvent';
 import { Pair } from '@models/Pair';
@@ -21,5 +21,5 @@ export default function getClient(
   getDenomById: (denom: string) => DenomInfo | undefined,
 ) {
   if (!cosmWasmClient) return null;
-  return getCalcClient(chainId, getChainContractAddress(chainId), cosmWasmClient, getDenomById);
+  return getCalcClient(chainId, getDCAContractAddress(chainId), cosmWasmClient, getDenomById);
 }
