@@ -371,14 +371,14 @@ const fetchBalances = async (queryClient: any, cosmWasmClient: CosmWasmClient, c
   }
 };
 
-const fetchBalance = async (queryClient: any, cosmWasmClient: CosmWasmClient, address: string, denom: DenomInfo) => {
+const fetchBalance = async (_queryClient: any, cosmWasmClient: CosmWasmClient, address: string, denom: DenomInfo) => {
   try {
     if (denom.isCw20) {
       const { balance } = await cosmWasmClient.queryContractSmart(denom.id, { balance: { address } });
       return { denom: denom.id, amount: balance };
     }
 
-    return cosmWasmClient.getBalance(address, denom.id);
+    return await cosmWasmClient.getBalance(address, denom.id);
   } catch (error) {
     return { denom: denom.id, amount: 0 };
   }
