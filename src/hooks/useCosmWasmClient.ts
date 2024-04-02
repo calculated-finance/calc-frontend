@@ -14,7 +14,7 @@ export function useCosmWasmClient(injectedChainId?: ChainId) {
     () => chainContext!.getCosmWasmClient(),
     {
       enabled: !!chainId && !!chainContext,
-      staleTime: 1000 * 1,
+      staleTime: 1000 * 60 * 10,
     },
   );
 

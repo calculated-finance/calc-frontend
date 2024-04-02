@@ -7,16 +7,14 @@ import { ChainId } from '@models/ChainId';
 export function useWallet() {
   const chainContext = useChainContext();
 
-  const getSigningClient = async (context: ChainContext) => {
-    console.log({ context, endpoint: getChainEndpoint(context.chain.chain_id as ChainId) });
-    return SigningCosmWasmClient.connectWithSigner(
+  const getSigningClient = async (context: ChainContext) =>
+    SigningCosmWasmClient.connectWithSigner(
       getChainEndpoint(context.chain.chain_id as ChainId),
       context.getOfflineSigner(),
       {
         gasPrice: getGasPrice(context.chain.chain_id as ChainId),
       },
     );
-  };
 
   if (chainContext?.isWalletConnected) {
     return {
