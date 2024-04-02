@@ -25,3 +25,5 @@ export function isDenomStable(denom: DenomInfo | undefined) {
 export function isDenomVolatile(denom: DenomInfo | undefined) {
   return !isDenomStable(denom);
 }
+
+export const denomHasCoingeckoId = (denom: DenomInfo) => !!denom.coingeckoId;

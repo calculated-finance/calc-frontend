@@ -28,7 +28,7 @@ export const assetsFormInitialValues = {
 export const denomInfoSchema = {
   id: Yup.string().required(),
   name: Yup.string().required(),
-  coingeckoId: Yup.string().required(),
+  coingeckoId: Yup.string().required().label('Coingecko ID'),
   icon: Yup.string().required(),
   minimumSwapAmount: Yup.number().required(),
   chain: Yup.string().required(),

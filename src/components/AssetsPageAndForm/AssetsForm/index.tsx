@@ -10,7 +10,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import usePairs, { getResultingDenoms, isSupportedDenomForDcaPlus, orderAlphabetically } from '@hooks/usePairs';
-import { isDenomStable, isDenomVolatile, toAtomic } from '@utils/getDenomInfo';
+import { denomHasCoingeckoId, isDenomStable, isDenomVolatile, toAtomic } from '@utils/getDenomInfo';
 import { useField } from 'formik';
 import { AvailableFunds } from '@components/AvailableFunds';
 import { DenomSelect } from '@components/DenomSelect';
@@ -40,21 +40,13 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyType | undefined
     return [];
   }
 
-  const isDcaInStrategy = getIsDcaInStrategy(strategyType);
-
-  if (isDcaInStrategy) {
-    return denoms.filter(isDenomStable);
-  }
-
-  if (strategyType === StrategyType.DCAPlusOut) {
-    return denoms.filter(isSupportedDenomForDcaPlus);
-  }
-
-  if (strategyType === StrategyType.DCAOut) {
-    return denoms.filter(isDenomVolatile);
-  }
-
-  return denoms;
+  return denoms.filter(
+    (denom) =>
+      (getIsDcaInStrategy(strategyType) ? isDenomStable(denom) : true) &&
+      (strategyType === StrategyType.DCAPlusOut ? isSupportedDenomForDcaPlus(denom) : true) &&
+      (strategyType === StrategyType.DCAOut ? isDenomVolatile(denom) : true) &&
+      denomHasCoingeckoId(denom),
+  );
 }
 
 function getResultingDenomsFromStrategyType(
@@ -148,7 +140,13 @@ export function AssetsForm() {
               onChange={(v) => v && initialDenomHelpers.setValue(getDenomById(v))}
               optionLabel={getChainDexName(chainId)}
             />
-            <FormErrorMessage>{initialDenomMeta.touched && initialDenomMeta.error}</FormErrorMessage>
+            <FormErrorMessage>
+              {initialDenomMeta.touched && initialDenomMeta.error
+                ? typeof initialDenomMeta.error === 'string'
+                  ? initialDenomMeta.error
+                  : values(initialDenomMeta.error)[0]
+                : null}
+            </FormErrorMessage>
           </Box>
           <InitialDeposit />
         </SimpleGrid>
@@ -173,7 +171,11 @@ export function AssetsForm() {
           onChange={(v) => v && resultingDenomHelpers.setValue(getDenomById(v))}
           optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
-        <FormErrorMessage>{(initialDenomMeta.touched && initialDenomMeta.error) || routeError}</FormErrorMessage>
+        <FormErrorMessage>
+          {(resultingDenomMeta.touched && resultingDenomMeta.error) ||
+            (initialDenomMeta.touched && initialDenomMeta.error) ||
+            routeError}
+        </FormErrorMessage>
       </FormControl>
       {connected ? (
         <Submit isDisabled={!initialDeposit || !routeMeta.touched || !!routeError}>Next</Submit>

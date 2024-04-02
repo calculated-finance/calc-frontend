@@ -10,8 +10,8 @@ export type FiatPriceHistoryResponse = {
   market_caps: number[][];
 };
 
-const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
-  const { coingeckoId } = denom || {};
+const useFiatPriceHistory = (denom: DenomInfo, days: string) => {
+  const { coingeckoId } = denom;
   const fiatCurrencyId = 'usd';
 
   return useQuery<FiatPriceHistoryResponse>(
@@ -30,7 +30,6 @@ const useFiatPriceHistory = (denom: DenomInfo | undefined, days: string) => {
       return result.json();
     },
     {
-      enabled: !!coingeckoId && !!fiatCurrencyId && !!days,
       staleTime: 1000 * 60 * 10,
       retry: false,
       meta: {

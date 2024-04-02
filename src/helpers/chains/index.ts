@@ -55,7 +55,7 @@ export function getDCAContractAddress(chainId: ChainId) {
     'harpoon-4': 'kujira1hvfe75f6gsse9jh3r02zy4e6gl8fg7r4ktznwwsg94npspqkcm8stq56d7',
     'archway-1': 'archway1delmknshmvfuhv07uetes90crzrj32za23pgd9cvjtc5mrzfjauq3jqrpa',
     'constantine-3': 'archway1p0w6hpxhcdxvhl6r02wslqgjhrtq60ljs4tky6da2s6ncpha0v0s2s2f6r',
-    'neutron-1': 'neutron1xqr6ew6x4qkxe832hhjmfpu9du9vnkhx6j2xj2',
+    'neutron-1': 'neutron1xqr6ew6x4q',
     'pion-1': 'neutron1taf86htl6uymn2dvy8yyje6rh926aesuqadg86m7kd925sapd3fqw2wkvj',
   }[chainId]!;
 }
@@ -81,8 +81,8 @@ export function getFeeTakerAddress(chainId: ChainId) {
     'harpoon-4': 'kujira10fmz64pwj95qy3rgjm0kud2uz62thp3s88ajca',
     'archway-1': 'archway15ads3d0eve59f8nhtyyckv9t2r3zxsmj6nrz6h',
     'constantine-3': 'archway15ads3d0eve59f8nhtyyckv9t2r3zxsmj6nrz6h',
-    'neutron-1': '',
-    'pion-1': '',
+    'neutron-1': 'neutron1vrzedty5989ydkthh4t99979lc256zyklpuymw',
+    'pion-1': 'neutron1vrzedty5989ydkthh4t99979lc256zyklpuymw',
   }[chainId];
 }
 
