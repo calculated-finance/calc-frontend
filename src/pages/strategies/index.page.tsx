@@ -13,9 +13,8 @@ import { useStrategies } from '@hooks/useStrategies';
 import { StrategyList } from './StrategyList';
 import { sortAndCategorizeStrategies } from './sortAndCategorizeStrategies';
 
-function StrategyAccordians() {
+function StrategyAccordions() {
   const { data: strategies, isLoading } = useStrategies();
-
   const { active, scheduled, completed, cancelled } = sortAndCategorizeStrategies(strategies);
 
   return (
@@ -111,7 +110,7 @@ function Page() {
         My CALC Strategies
       </Heading>
 
-      {!connected ? <ConnectWallet layerStyle="panel" /> : <StrategyAccordians />}
+      {!connected ? <ConnectWallet layerStyle="panel" /> : <StrategyAccordions />}
     </>
   );
 }

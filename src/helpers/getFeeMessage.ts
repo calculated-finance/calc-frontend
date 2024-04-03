@@ -1,11 +1,11 @@
 import { coin } from '@cosmjs/proto-signing';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { MsgSend } from 'cosmjs-types/cosmos/bank/v1beta1/tx';
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx';
 
 export function getFeeMessage(
   senderAddress: string,
-  denom: DenomInfo,
+  denom: InitialDenomInfo,
   amount: string,
   feeTakerAddress: string,
 ): { typeUrl: string; value: MsgSend | MsgExecuteContract } {

@@ -12,13 +12,19 @@ import {
 } from '@helpers/strategy';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import usePairs from '@hooks/usePairs';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { priceFromRatio } from '@utils/getDenomInfo';
 import useTwapToNow from '@hooks/useTwapToNow';
 import useRoute from '@hooks/useRoute';
 import { coin } from '@cosmjs/stargate';
 
-function Diagram({ initialDenom, resultingDenom }: { initialDenom: DenomInfo; resultingDenom: DenomInfo }) {
+function Diagram({
+  initialDenom,
+  resultingDenom,
+}: {
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
+}) {
   const { name: initialDenomName } = initialDenom;
   const { name: resultingDenomName } = resultingDenom;
 

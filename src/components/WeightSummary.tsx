@@ -3,7 +3,7 @@ import YesNoValues from '@models/YesNoValues';
 import { formatSignedPercentage } from '@helpers/format/formatSignedPercentage';
 import useSpotPrice from '@hooks/useSpotPrice';
 import { isNil } from 'lodash';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { TransactionType } from './TransactionType';
 
@@ -40,8 +40,8 @@ export function WeightsGrid({
   basePrice: number | null | undefined;
   price: number | undefined;
   priceThresholdValue: number | undefined | null;
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
 }) {
   const swapAmountSafe = fromAtomic(initialDenom, swapAmount ?? 0);
 
@@ -115,8 +115,8 @@ export function WeightSummary({
   transactionType: TransactionType;
   applyMultiplier: YesNoValues;
   basePrice: number | null | undefined;
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
   priceThresholdValue: number | undefined | null;
 }) {

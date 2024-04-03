@@ -2,7 +2,7 @@ import { any, filter } from 'rambda';
 import { isDenomVolatile } from '@utils/getDenomInfo';
 import { HydratedPair, Pair } from '@models/Pair';
 import { getDCAContractAddress } from '@helpers/chains';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom, getQuoteDenom } from '@utils/pair';
 import { ChainId } from '@models/ChainId';
 import { useChainId } from '@hooks/useChainId';
@@ -26,11 +26,11 @@ function isPairVisible(denoms: string[]) {
   return !hiddenPairs.includes(JSON.stringify(denoms));
 }
 
-export function isSupportedDenomForDcaPlus(denom: DenomInfo) {
+export function isSupportedDenomForDcaPlus(denom: InitialDenomInfo) {
   return denom.enabledInDcaPlus && isDenomVolatile(denom);
 }
 
-export function orderAlphabetically(denoms: DenomInfo[]) {
+export function orderAlphabetically(denoms: InitialDenomInfo[]) {
   return denoms.sort((a, b) => {
     const { name: nameA } = a;
     const { name: nameB } = b;
@@ -46,13 +46,13 @@ export function uniqueBaseDenoms(pairs: HydratedPair[] | undefined) {
   return Array.from(new Set(pairs?.map(getBaseDenom)));
 }
 
-export function uniqueBaseDenomsFromQuoteDenom(initialDenom: DenomInfo, pairs: HydratedPair[] | undefined) {
+export function uniqueBaseDenomsFromQuoteDenom(initialDenom: InitialDenomInfo, pairs: HydratedPair[] | undefined) {
   return Array.from(
     new Set(filter((pair: HydratedPair) => getQuoteDenom(pair).id === initialDenom.id, pairs ?? []).map(getBaseDenom)),
   );
 }
 
-export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: DenomInfo, pairs: HydratedPair[] | undefined) {
+export function uniqueQuoteDenomsFromBaseDenom(resultingDenom: ResultingDenomInfo, pairs: HydratedPair[] | undefined) {
   return Array.from(
     new Set(
       filter((pair: HydratedPair) => getBaseDenom(pair).id === resultingDenom.id, pairs ?? []).map(getQuoteDenom),
@@ -64,7 +64,7 @@ export function allDenomsFromPairs(pairs: HydratedPair[] | undefined) {
   return Array.from(new Set(pairs?.map((pair) => getQuoteDenom(pair)).concat(pairs?.map(getBaseDenom))));
 }
 
-export function getResultingDenoms(pairs: HydratedPair[], initialDenom?: DenomInfo) {
+export function getResultingDenoms(pairs: HydratedPair[], initialDenom?: InitialDenomInfo) {
   return !initialDenom
     ? []
     : orderAlphabetically(

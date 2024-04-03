@@ -1,6 +1,6 @@
 import { HydratedPair } from '@models/Pair';
-import { DenomInfo } from './DenomInfo';
+import { InitialDenomInfo } from './DenomInfo';
 
-export const getBaseDenom = (pair: HydratedPair): DenomInfo => pair.denoms[0];
+export const getBaseDenom = (pair: HydratedPair): InitialDenomInfo => pair.denoms[0];
 
-export const getQuoteDenom = (pair: HydratedPair): DenomInfo => pair.denoms[1];
+export const getQuoteDenom = (pair: HydratedPair): InitialDenomInfo => pair.denoms[1];

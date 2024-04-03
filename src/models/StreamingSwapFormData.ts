@@ -20,7 +20,9 @@ export const initialValues = {
 
 export const schema = Yup.object({
   initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
-  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
+  resultingDenom: Yup.object({ ...denomInfoSchema, coingeckoId: Yup.string().notRequired() })
+    .label('Resulting Denom')
+    .required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
     .positive()

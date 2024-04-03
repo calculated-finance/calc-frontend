@@ -14,8 +14,8 @@ const useFiatPrice = (denom: DenomInfo | undefined) => {
   const { fiatPrices, ...other } = useFiatPrices();
 
   return {
-    fiatPrice: denom && fiatPrices?.[denom.coingeckoId]?.[FIAT_CURRENCY_ID],
-    priceChange24Hr: denom && fiatPrices?.[denom.coingeckoId]?.[PRICE_CHANGE_KEY],
+    fiatPrice: denom && denom.coingeckoId ? fiatPrices?.[denom.coingeckoId]?.[FIAT_CURRENCY_ID] : undefined,
+    priceChange24Hr: denom && denom.coingeckoId ? fiatPrices?.[denom.coingeckoId]?.[PRICE_CHANGE_KEY] : undefined,
     ...other,
   };
 };

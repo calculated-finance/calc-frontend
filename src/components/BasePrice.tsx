@@ -2,7 +2,7 @@ import { FormControl, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui
 import { useField } from 'formik';
 
 import YesNoValues from '@models/YesNoValues';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
@@ -38,8 +38,8 @@ function BasePriceToggle() {
 }
 
 type BasePriceProps = {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
 };
 

@@ -40,7 +40,7 @@ import { SuccessStrategyModalBody } from '@components/SuccessStrategyModal';
 import { DenomSelect } from '@components/DenomSelect';
 import { getChainDexName, getChainMinimumSwapValue } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { AvailableFunds } from '@components/AvailableFunds';
 import InitialDeposit from '@components/InitialDeposit';
 import useSteps from '@hooks/useSteps';
@@ -123,7 +123,7 @@ function InitialDenom() {
   );
 }
 
-function ResultingDenom({ denoms }: { denoms: DenomInfo[] }) {
+function ResultingDenom({ denoms }: { denoms: InitialDenomInfo[] }) {
   const [{ value: resultingDenom }, meta, helpers] = useField({ name: 'resultingDenom' });
   const { chainId } = useChainId();
   const { getDenomById } = useDenoms();
@@ -155,8 +155,8 @@ function SwapAmount({
   initialDenom,
   resultingDenom,
 }: {
-  initialDenom: DenomInfo | undefined;
-  resultingDenom: DenomInfo | undefined;
+  initialDenom: InitialDenomInfo | undefined;
+  resultingDenom: ResultingDenomInfo | undefined;
 }) {
   const { chainId } = useChainId();
   const [{ onChange, value: swapAmount, ...swapAmountField }, swapAmountMeta, { setValue: setSwapAmount }] = useField({

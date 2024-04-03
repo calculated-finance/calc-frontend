@@ -43,7 +43,7 @@ export const denomInfoSchema = {
 
 export const assetsFormSchema = Yup.object({
   strategyType: Yup.mixed<StrategyType>().required(),
-  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom'),
+  resultingDenom: Yup.object({ ...denomInfoSchema, coingeckoId: Yup.string().notRequired() }).label('Resulting Denom'),
   initialDenom: Yup.object(denomInfoSchema).label('Initial Denom'),
   initialDeposit: Yup.number()
     .label('Initial Deposit')
@@ -111,7 +111,9 @@ export const initialValues = {
 const timeFormat = /^([01][0-9]|2[0-3]):([0-5][0-9])$/;
 
 export const allSchema = {
-  resultingDenom: Yup.object(denomInfoSchema).label('Resulting Denom').required(),
+  resultingDenom: Yup.object({ ...denomInfoSchema, coingeckoId: Yup.string().notRequired() })
+    .label('Resulting Denom')
+    .required(),
   initialDenom: Yup.object(denomInfoSchema).label('Initial Denom').required(),
   initialDeposit: Yup.number()
     .label('Initial Deposit')

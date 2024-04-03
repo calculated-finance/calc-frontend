@@ -17,7 +17,7 @@ import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
 import { useChainId } from '@hooks/useChainId';
 import { getOsmosisWebUrl } from '@helpers/chains';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { getPairAddress } from 'src/fixtures/addresses';
 import { TransactionType } from './TransactionType';
 
@@ -34,8 +34,8 @@ export function DenomPriceInput({
   ...inputProps
 }: {
   transactionType: TransactionType;
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
   error: ReactNode;
   onChange: (value: number | undefined) => void;

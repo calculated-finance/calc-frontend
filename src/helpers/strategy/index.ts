@@ -17,7 +17,7 @@ import {
   SWAP_FEE,
 } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { getBaseDenom } from '@utils/pair';
 import { safeInvert } from '@utils/safeInvert';
 import BigNumber from 'bignumber.js';
@@ -60,11 +60,11 @@ export function getStrategyInitialDenomId(strategy: Strategy): string {
   return strategy.rawData.balance.denom;
 }
 
-export function getStrategyInitialDenom(strategy: Strategy): DenomInfo {
+export function getStrategyInitialDenom(strategy: Strategy): InitialDenomInfo {
   return strategy.initialDenom;
 }
 
-export function getStrategyResultingDenom(strategy: Strategy): DenomInfo {
+export function getStrategyResultingDenom(strategy: Strategy): ResultingDenomInfo {
   return strategy.resultingDenom;
 }
 

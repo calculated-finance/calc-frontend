@@ -4,7 +4,7 @@ import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { Strategy } from '@models/Strategy';
 import { EventsResponse } from 'src/interfaces/dca/response/get_events_by_resource_id';
 import { Pair } from '@models/Pair';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { StrategyEvent } from '@models/StrategyEvent';
 import { ChainId } from '@models/ChainId';
 import { getEventsFetchLimit, getPairsFetchLimit, getStrategiesFetchLimit } from '@helpers/chains';
@@ -39,7 +39,7 @@ async function fetchVault(
   client: CosmWasmClient,
   contractAddress: string,
   id: string | undefined,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ): Promise<Strategy> {
   const { vault } = (await client.queryContractSmart(contractAddress, {
     get_vault: {
@@ -55,7 +55,7 @@ async function fetchVaultEvents(
   client: CosmWasmClient,
   contractAddress: string,
   id: string | undefined,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ): Promise<StrategyEvent[]> {
   const vault = await fetchVault(chainId, client, contractAddress, id, getDenomById);
 
@@ -95,7 +95,7 @@ async function fetchVaultsByAddress(
   client: CosmWasmClient,
   contractAddress: string,
   userAddress: string,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ): Promise<Strategy[]> {
   const fetchVaultsByAddressRecursively = async (
     startAfter = null,
@@ -126,7 +126,7 @@ const fetchAllVaults = async (
   chainId: ChainId,
   client: CosmWasmClient,
   contractAddress: string,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ): Promise<Strategy[]> => {
   const fetchAllVaultsRecursively = async (startAfter = null, allVaults = [] as Strategy[]): Promise<Strategy[]> => {
     const { vaults } = await client.queryContractSmart(contractAddress, {
@@ -153,7 +153,7 @@ export default function getCalcClient(
   chainId: ChainId,
   contractAddress: string,
   cosmWasmClient: CosmWasmClient,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ) {
   return {
     fetchAllPairs: () => fetchAllPairs(chainId, contractAddress, cosmWasmClient),

@@ -1,6 +1,6 @@
 import { ChainId } from '@models/ChainId';
 import { Strategy, StrategyStatus } from '@models/Strategy';
-import { DenomInfo, fromPartial } from '@utils/DenomInfo';
+import { InitialDenomInfo, fromPartial } from '@utils/DenomInfo';
 import { VaultStatus } from 'src/interfaces/dca/query';
 import { Vault } from 'src/interfaces/dca/response/get_vault';
 
@@ -13,10 +13,11 @@ const vaultStatusMap: Record<VaultStatus, StrategyStatus> = {
 
 export function transformToStrategyCosmos(
   vaultData: Vault,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
   chainId: ChainId,
 ): Strategy {
   return {
+    chainId,
     id: vaultData.id,
     owner: vaultData.owner,
     status: vaultStatusMap[vaultData.status],

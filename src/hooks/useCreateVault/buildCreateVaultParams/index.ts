@@ -10,7 +10,7 @@ import {
 import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { ChainConfig, getRedBankAddress } from '@helpers/chains';
 import { Config } from 'src/interfaces/dca/response/get_config';
 import { safeInvert } from '@utils/safeInvert';
@@ -83,10 +83,10 @@ export function buildCallbackDestinations(
 }
 
 export function getReceiveAmount(
-  initialDenom: DenomInfo,
+  initialDenom: InitialDenomInfo,
   swapAmount: number,
   price: number,
-  resultingDenom: DenomInfo,
+  resultingDenom: ResultingDenomInfo,
   transactionType: TransactionType,
 ) {
   const directionlessPrice = transactionType === TransactionType.Buy ? price : safeInvert(price);
@@ -108,7 +108,7 @@ function getStartTime(startDate: Date | undefined, purchaseTime: string | undefi
   return startTimeSeconds;
 }
 
-export function getSwapAmount(initialDenom: DenomInfo, swapAmount: number) {
+export function getSwapAmount(initialDenom: InitialDenomInfo, swapAmount: number) {
   return BigInt(toAtomic(initialDenom, swapAmount)).toString();
 }
 
@@ -132,10 +132,10 @@ export function getExecutionInterval(executionInterval: ExecutionIntervals, exec
 }
 
 export function buildWeightedScaleAdjustmentStrategy(
-  initialDenom: DenomInfo,
+  initialDenom: InitialDenomInfo,
   swapAmount: number,
   basePriceValue: number,
-  resultingDenom: DenomInfo,
+  resultingDenom: ResultingDenomInfo,
   transactionType: TransactionType,
   increaseOnly: boolean,
   swapMultiplier: number,
@@ -193,8 +193,8 @@ export type DestinationConfig = {
 
 export type BuildCreateVaultContext = {
   label?: string;
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   timeInterval: {
     increment: number;
     interval: ExecutionIntervals;

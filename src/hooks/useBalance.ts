@@ -1,6 +1,6 @@
 import { useWallet } from '@hooks/useWallet';
 import { useQuery } from '@tanstack/react-query';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { Coin } from '@cosmjs/proto-signing';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { useChainId } from '@hooks/useChainId';
@@ -10,7 +10,7 @@ export type BalanceResponse = {
   amount: number;
 };
 
-function useBalance(denom: DenomInfo) {
+function useBalance(denom: InitialDenomInfo) {
   const { address } = useWallet();
   const { chainId } = useChainId();
   const client = useChainClient(chainId);

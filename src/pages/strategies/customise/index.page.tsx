@@ -83,7 +83,10 @@ function CustomiseForm({ strategy, initialValues }: { strategy: Strategy; initia
     <Formik initialValues={initialValues} validationSchema={getCustomiseSchema(strategy)} onSubmit={onSubmit}>
       {({ values }) => (
         <NewStrategyModal>
-          <NewStrategyModalHeader stepsConfig={customiseSteps} cancelUrl={generateStrategyDetailUrl(strategy.id)} />
+          <NewStrategyModalHeader
+            stepsConfig={customiseSteps}
+            cancelUrl={generateStrategyDetailUrl(strategy.id, strategy.chainId)}
+          />
           <NewStrategyModalBody stepsConfig={customiseSteps} isLoading={isPageLoading && !isLoading}>
             <StrategyInfoProvider
               strategyInfo={{

@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik';
 import StartDate from '@components/StartDate';
 import StartImmediately from '@components/StartImmediately';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import PurchaseTime from './PurchaseTime';
@@ -16,8 +16,8 @@ export function TriggerForm({
   resultingDenom,
   route,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
 }) {
   const { values } = useFormikContext<DcaInFormDataAll>();

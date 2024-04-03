@@ -1,12 +1,12 @@
 import { max } from 'lodash';
 import { TransactionType } from '@components/TransactionType';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { safeInvert } from '@utils/safeInvert';
 import useTwapToNow from '@hooks/useTwapToNow';
 
 export default function useSpotPrice(
-  resultingDenom: DenomInfo | undefined,
-  initialDenom: DenomInfo | undefined,
+  resultingDenom: ResultingDenomInfo | undefined,
+  initialDenom: InitialDenomInfo | undefined,
   transactionType: TransactionType,
   route: string | null | undefined,
   enabled = true,

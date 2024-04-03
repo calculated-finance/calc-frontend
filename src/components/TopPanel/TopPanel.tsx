@@ -109,6 +109,7 @@ function ActiveWithOne() {
   if (!activeStrategy) {
     return null;
   }
+
   const {
     initialDenom,
     rawData: { balance },
@@ -132,12 +133,12 @@ function ActiveWithOne() {
         <Text fontSize="sm">You have the ability to edit and fine tune your strategy at any time.</Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy?.id)}>
+        <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy.id)}>
           <Button w="full" size="sm" colorScheme="blue">
             Top up my strategy
           </Button>
         </LinkWithQuery>
-        <LinkWithQuery passHref href={generateStrategyDetailUrl(activeStrategy?.id)}>
+        <LinkWithQuery passHref href={generateStrategyDetailUrl(activeStrategy.id, activeStrategy.chainId)}>
           <Button w="full" size="sm" colorScheme="blue" variant="outline">
             Review performance
           </Button>

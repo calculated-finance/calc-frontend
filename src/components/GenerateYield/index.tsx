@@ -11,13 +11,13 @@ import {
   GridItem,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { DenomInfo } from '@utils/DenomInfo';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 import { useMarket } from '@hooks/useMarket';
 import Spinner from '@components/Spinner';
 import DenomIcon from '@components/DenomIcon';
 import { YieldOption } from './YieldOption';
 
-export default function GenerateYield({ resultingDenom }: { resultingDenom: DenomInfo }) {
+export default function GenerateYield({ resultingDenom }: { resultingDenom: ResultingDenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'yieldOption' });
 
   const { data: marketData, isLoading } = useMarket(resultingDenom);

@@ -15,8 +15,8 @@ function LinkWithQuery({ href, ...props }: LinkProps & PropsWithChildren) {
       href={{
         pathname,
         query: {
-          ...query,
           chain: router.query.chain,
+          ...query,
         },
       }}
     />

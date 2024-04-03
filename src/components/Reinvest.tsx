@@ -34,7 +34,7 @@ import Icon from '@components/Icon';
 import { ArrowRightIcon, BoxedExportIcon } from '@fusion-icons/react/interface';
 import { isEmpty } from 'lodash';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
-import { DenomInfo } from '@utils/DenomInfo';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 import { useStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 import Spinner from './Spinner';
@@ -142,7 +142,7 @@ function StrategyOption(props: UseRadioProps & FlexProps & { strategy: Strategy 
   );
 }
 
-export function Reinvest({ resultingDenom }: { resultingDenom: DenomInfo }) {
+export function Reinvest({ resultingDenom }: { resultingDenom: ResultingDenomInfo }) {
   const [field, meta, helpers] = useField({ name: 'reinvestStrategy' });
   const { getRootProps, getRadioProps } = useRadioGroup({
     ...field,

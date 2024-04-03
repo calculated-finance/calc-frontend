@@ -24,7 +24,7 @@ import useBalance from '@hooks/useBalance';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { useField } from 'formik';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import OnRampModal from '@components/OnRampModalContent';
 import SquidModal from '@components/SquidModal';
 import { Coin } from '@cosmjs/proto-signing';
@@ -146,7 +146,7 @@ function AvailableFundsButton({
   isLoading,
   data,
 }: {
-  denom: DenomInfo;
+  denom: InitialDenomInfo;
   isLoading: boolean;
   data: Coin | undefined;
 }) {
@@ -230,7 +230,7 @@ function AvailableFundsButton({
   );
 }
 
-export function AvailableFunds({ denom }: { denom: DenomInfo }) {
+export function AvailableFunds({ denom }: { denom: InitialDenomInfo }) {
   const { data, isLoading } = useBalance(denom);
 
   return (

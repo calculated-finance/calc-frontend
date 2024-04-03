@@ -1,4 +1,16 @@
-import { Button, Grid, GridItem, Heading, Text, Flex, useDisclosure, HStack, Stack } from '@chakra-ui/react';
+import {
+  Button,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+  Flex,
+  useDisclosure,
+  HStack,
+  Stack,
+  Image,
+  Box,
+} from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
@@ -49,11 +61,22 @@ function CancelButton({ strategy }: { strategy: Strategy }) {
   );
 }
 
+const imageMap = {
+  'osmosis-1': '/images/denoms/osmo.svg',
+  'osmo-test-5': '/images/denoms/osmo.svg',
+  'kaiyo-1': '/images/denoms/kuji.svg',
+  'harpoon-4': '/images/denoms/kuji.svg',
+  'archway-1': '/images/denoms/archway.svg',
+  'constantine-3': '/images/denoms/archway.svg',
+  'neutron-1': '/images/denoms/neutron.svg',
+  'pion-1': '/images/denoms/neutron.svg',
+};
+
 function StrategyRow({ strategy }: { strategy: Strategy }) {
   const { initialDenom, resultingDenom } = strategy;
 
   return (
-    <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
+    <LinkWithQuery href={generateStrategyDetailUrl(strategy.id, strategy.chainId)}>
       <Grid
         templateRows="repeat(1, 1fr)"
         templateColumns="repeat(15, 1fr)"
@@ -68,7 +91,10 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         _hover={{ cursor: 'pointer', bg: 'abyss.200' }}
       >
         <GridItem colSpan={{ base: 15, sm: 8, xl: 4 }} rowStart={{ base: 1, sm: 1, xl: 'auto' }}>
-          <Heading size="md">{strategy.rawData.label || getStrategyType(strategy)}</Heading>
+          <HStack>
+            <Image src={imageMap[strategy.chainId]} w={4} />
+            <Heading size="md">{strategy.rawData.label || getStrategyType(strategy)}</Heading>
+          </HStack>
           <Text textStyle="body-xs"> {getStrategyName(strategy)}</Text>
         </GridItem>
         <GridItem colSpan={{ base: 7, sm: 4, xl: 2 }}>
@@ -121,7 +147,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         </GridItem>
         <GridItem colSpan={{ base: 15, sm: 15, xl: 2 }}>
           <Flex justifyContent="end" alignItems="center" h="full">
-            <LinkWithQuery href={generateStrategyDetailUrl(strategy.id)}>
+            <LinkWithQuery href={generateStrategyDetailUrl(strategy.id, strategy.chainId)}>
               <Button width={{ base: 'full', xl: 'initial' }}>
                 <HStack>
                   <Text>View</Text>

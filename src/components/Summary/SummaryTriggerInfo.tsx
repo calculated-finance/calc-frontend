@@ -4,7 +4,7 @@ import DenomIcon from '@components/DenomIcon';
 import TriggerTypes from '@models/TriggerTypes';
 import { DcaInFormDataAll } from '@models/DcaInFormData';
 import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 
 export function ImmediateTriggerInfo() {
@@ -58,8 +58,8 @@ export function PriceTriggerInfo({
   startPrice,
   transactionType,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   startPrice: number | null | undefined;
   transactionType: string;
 }) {

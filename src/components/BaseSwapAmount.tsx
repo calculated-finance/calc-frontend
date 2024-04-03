@@ -7,14 +7,14 @@ import { getChainMinimumSwapValue } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { DenomInput } from './DenomInput';
 
 export default function BaseSwapAmount({
   initialDenom,
   initialDeposit,
 }: {
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   initialDeposit: number;
 }) {
   const { chainId } = useChainId();

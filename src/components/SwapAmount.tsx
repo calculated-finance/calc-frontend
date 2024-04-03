@@ -3,7 +3,7 @@ import { useField } from 'formik';
 import totalExecutions from 'src/utils/totalExecutions';
 import executionIntervalDisplay from '@helpers/executionIntervalDisplay';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { formatFiat } from '@helpers/format/formatFiat';
 import { fromAtomic, toAtomic } from '@utils/getDenomInfo';
 import { useChainId } from '@hooks/useChainId';
@@ -20,8 +20,8 @@ export default function SwapAmount({
   strategyBalance,
   transactionType,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   strategyBalance: number;
   isEdit: boolean;
   transactionType: TransactionType;

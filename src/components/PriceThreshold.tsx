@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup, Stack } from '@chakra-ui/react';
 import { useField } from 'formik';
 import YesNoValues from '@models/YesNoValues';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import RadioCard from './RadioCard';
 import Radio from './Radio';
 import { DenomPriceInput } from './DenomPriceInput';
@@ -52,8 +52,8 @@ function PriceThresholdToggle({ forceOpen = false }: { forceOpen?: boolean }) {
 }
 
 type PriceThresholdProps = {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
   forceOpen?: boolean;
   transactionType: TransactionType;

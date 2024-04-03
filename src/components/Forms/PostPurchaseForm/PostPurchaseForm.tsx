@@ -6,7 +6,7 @@ import AutoStakeValidator, { DummyAutoStakeValidator } from '@components/AutoSta
 import DcaInSendToWallet from '@components/DcaInSendToWallet';
 import { useChainId } from '@hooks/useChainId';
 import { ChildrenProp } from '@helpers/ChildrenProp';
-import { DenomInfo } from '@utils/DenomInfo';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import GenerateYield from '@components/GenerateYield';
 import AutoCompoundStakingRewards from '@components/AutoCompoundStakingRewards';
@@ -88,7 +88,7 @@ export function PostPurchaseForm({
   autoCompoundStakingRewardsEnabled,
   submitButton,
 }: {
-  resultingDenom: DenomInfo;
+  resultingDenom: ResultingDenomInfo;
   autoCompoundStakingRewardsEnabled?: boolean;
   submitButton?: JSX.Element;
 }) {

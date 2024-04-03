@@ -18,7 +18,7 @@ import InitialDeposit from '@components/InitialDeposit';
 import { useChainId } from '@hooks/useChainId';
 import { getChainDexName } from '@helpers/chains';
 import { StrategyType } from '@models/StrategyType';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import useDenoms from '@hooks/useDenoms';
 import { HydratedPair } from '@models/Pair';
 import Spinner from '@components/Spinner';
@@ -35,7 +35,10 @@ function getIsDcaInStrategy(strategyType: string | undefined) {
   return [StrategyType.DCAIn, StrategyType.DCAPlusIn, StrategyType.WeightedScaleIn].includes(strategy as StrategyType);
 }
 
-function getInitialDenomsFromStrategyType(strategyType: StrategyType | undefined, denoms: DenomInfo[]): DenomInfo[] {
+function getInitialDenomsFromStrategyType(
+  strategyType: StrategyType | undefined,
+  denoms: InitialDenomInfo[],
+): InitialDenomInfo[] {
   if (!strategyType || !denoms) {
     return [];
   }
@@ -52,7 +55,7 @@ function getInitialDenomsFromStrategyType(strategyType: StrategyType | undefined
 function getResultingDenomsFromStrategyType(
   strategyType: StrategyType | undefined,
   pairs: HydratedPair[],
-  initialDenom: DenomInfo,
+  initialDenom: InitialDenomInfo,
 ) {
   if (!strategyType || !pairs || !initialDenom) return [];
 
@@ -172,7 +175,11 @@ export function AssetsForm() {
           optionLabel={`Swapped on ${getChainDexName(chainId)}`}
         />
         <FormErrorMessage>
-          {(resultingDenomMeta.touched && resultingDenomMeta.error) ||
+          {(resultingDenomMeta.touched && resultingDenomMeta.error
+            ? typeof resultingDenomMeta.error === 'string'
+              ? resultingDenomMeta.error
+              : values(resultingDenomMeta.error)[0]
+            : null) ||
             (initialDenomMeta.touched && initialDenomMeta.error) ||
             routeError}
         </FormErrorMessage>

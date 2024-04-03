@@ -5,7 +5,6 @@ export type DenomInfo = {
   icon: string;
   stakeable: boolean;
   stable: boolean;
-  coingeckoId: string;
   stakeableAndSupported: boolean;
   enabled: boolean;
   minimumSwapAmount: number;
@@ -13,9 +12,16 @@ export type DenomInfo = {
   enabledInDcaPlus: boolean;
   pricePrecision: number;
   isCw20?: boolean;
+  coingeckoId?: string | undefined;
 };
 
-export const fromPartial = (denomInfo: Partial<DenomInfo>): DenomInfo => {
+export type InitialDenomInfo = DenomInfo & {
+  coingeckoId: string;
+};
+
+export type ResultingDenomInfo = DenomInfo;
+
+export const fromPartial = (denomInfo: Partial<InitialDenomInfo>): InitialDenomInfo => {
   if (!denomInfo.chain || !denomInfo.id) {
     throw new Error(`Invalid partial denom info: ${JSON.stringify(denomInfo)}`);
   }

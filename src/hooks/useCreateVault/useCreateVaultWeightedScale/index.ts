@@ -5,7 +5,7 @@ import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { Strategy } from '@models/Strategy';
 import useFiatPrice from '@hooks/useFiatPrice';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import YesNoValues from '@models/YesNoValues';
 import { useChainId } from '@hooks/useChainId';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
@@ -13,7 +13,7 @@ import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
-export const useCreateVaultWeightedScale = (initialDenom: DenomInfo | undefined) => {
+export const useCreateVaultWeightedScale = (initialDenom: InitialDenomInfo | undefined) => {
   const { transactionType } = useStrategyInfo();
   const { chainId } = useChainId();
   const { address } = useWallet();

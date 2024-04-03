@@ -29,7 +29,7 @@ import { CREATE_VAULT_FEE, DELEGATION_FEE } from 'src/constants';
 import { getChainDexName } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 
 function FeeBreakdown({
@@ -38,7 +38,7 @@ function FeeBreakdown({
   price,
   dexFee,
 }: {
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   swapAmount: number;
   price: number | undefined;
   dexFee: number;
@@ -203,7 +203,7 @@ export default function FeesDcaPlus({
   strategyDuration,
   autoStakeValidator,
 }: {
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   initialDeposit: number;
   strategyDuration: number;
   autoStakeValidator: string | null | undefined;

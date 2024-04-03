@@ -1,7 +1,7 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
-import { DenomInfo } from '@utils/DenomInfo';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 import { useChainId } from '@hooks/useChainId';
 
 // from https://github.com/mars-protocol/interface/blob/main/src/types/interfaces/redbank.d.ts
@@ -11,7 +11,8 @@ interface InterestRateModel {
   slope_1: string;
   slope_2: string;
 }
-export interface Market {
+
+interface Market {
   denom: string;
   max_loan_to_value: string;
   liquidation_threshold: string;
@@ -30,7 +31,7 @@ export interface Market {
   deposit_cap: string;
 }
 
-export function useMarket(resultingDenom: DenomInfo | undefined) {
+export function useMarket(resultingDenom: ResultingDenomInfo | undefined) {
   const { chainId } = useChainId();
   const { cosmWasmClient } = useCosmWasmClient();
 
