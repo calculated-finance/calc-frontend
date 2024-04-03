@@ -2,7 +2,7 @@ import { fromAtomic } from '@utils/getDenomInfo';
 import { StrategyEvent } from '@models/StrategyEvent';
 import { FiatPriceHistoryResponse } from '@hooks/useFiatPriceHistory';
 import { getSwapEvents } from '@helpers/getCompletedEvents';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { ExecutionSkippedReason } from 'src/interfaces/dca/response/get_events';
 
 type EventWithAccumulation = {
@@ -48,7 +48,7 @@ function convertToSentence(reason: ExecutionSkippedReason) {
     : reason.unknown_error.msg;
 }
 
-export function getEventsWithAccumulation(completedEvents: StrategyEvent[], denoms: { [x: string]: DenomInfo }) {
+export function getEventsWithAccumulation(completedEvents: StrategyEvent[], denoms: { [x: string]: InitialDenomInfo }) {
   let totalAmount = 0;
 
   return completedEvents?.map((event) => {
@@ -108,7 +108,7 @@ export function getChartDataSwaps(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  denoms: { [x: string]: DenomInfo },
+  denoms: { [x: string]: InitialDenomInfo },
 ) {
   const swapEvents = getSwapEvents(events);
 
@@ -143,7 +143,7 @@ export function getChartData(
   events: StrategyEvent[] | undefined,
   fiatPrices: FiatPriceHistoryResponse['prices'] | undefined,
   displayPrices: FiatPriceHistoryResponse['prices'] | undefined,
-  denoms: { [x: string]: DenomInfo },
+  denoms: { [x: string]: InitialDenomInfo },
 ) {
   const completedEvents = getSwapEvents(events);
 

@@ -1,24 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { KeyValuePair, all, indexBy, isNil, map, mergeAll, reduce, toLower, values, zip } from 'rambda';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainId } from '@models/ChainId';
-import { ChainClient, useChainClient } from '@hooks/useChainClient';
+import { useChainClient } from '@hooks/useChainClient';
 import { useChainId } from '@hooks/useChainId';
+import { ChainClient } from './useChainClient/helpers';
 
 const useDenoms = () => {
   const chainIds = process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS;
   const chainClients = chainIds.map(useChainClient);
 
-  const { data: denoms, ...helpers } = useQuery<{ [x: string]: { [x: string]: DenomInfo } }>(
+  const { data: denoms, ...helpers } = useQuery<{ [x: string]: { [x: string]: InitialDenomInfo } }>(
     ['denoms', chainIds],
     async () =>
       reduce(
         (
-          acc: { [chainId: string]: { [id: string]: DenomInfo } },
-          [chainId, denomsById]: KeyValuePair<ChainId, { [id: string]: DenomInfo }>,
+          acc: { [chainId: string]: { [id: string]: InitialDenomInfo } },
+          [chainId, denomsById]: KeyValuePair<ChainId, { [id: string]: InitialDenomInfo }>,
         ) => ({ ...acc, [chainId]: denomsById }),
-        {} as { [chainId: string]: { [id: string]: DenomInfo } },
+        {} as { [chainId: string]: { [id: string]: InitialDenomInfo } },
         zip(chainIds, await Promise.all(map((client: ChainClient | undefined) => client!.fetchDenoms(), chainClients))),
       ),
     {
@@ -31,17 +32,17 @@ const useDenoms = () => {
   );
 
   const { chainId } = useChainId();
-  const allDenoms = (denoms ? denoms && mergeAll(values(denoms)) : {}) as { [x: string]: DenomInfo };
+  const allDenoms = (denoms ? denoms && mergeAll(values(denoms)) : {}) as { [x: string]: InitialDenomInfo };
 
   return {
     denoms,
     allDenoms,
-    getDenomById: (id: string): DenomInfo | undefined => allDenoms[id],
-    getDenomByName: (name: string, injectedChainId?: ChainId): DenomInfo | undefined =>
+    getDenomById: (id: string): InitialDenomInfo | undefined => allDenoms[id],
+    getDenomByName: (name: string, injectedChainId?: ChainId): InitialDenomInfo | undefined =>
       indexBy(
         (d) => toLower(d.name),
-        values(denoms?.[injectedChainId ?? chainId] ?? ({} as { [id: string]: DenomInfo })),
-      )?.[toLower(name)] as DenomInfo,
+        values(denoms?.[injectedChainId ?? chainId] ?? ({} as { [id: string]: InitialDenomInfo })),
+      )?.[toLower(name)] as InitialDenomInfo,
     ...helpers,
   };
 };

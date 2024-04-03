@@ -1,5 +1,6 @@
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { Vault } from 'src/interfaces/dca/response/get_vault';
+import { ChainId } from './ChainId';
 
 export enum StrategyStatus {
   ACTIVE = 'active',
@@ -9,10 +10,11 @@ export enum StrategyStatus {
 }
 
 export type Strategy = {
+  chainId: ChainId;
   id: string;
   owner: string;
   status: StrategyStatus;
-  resultingDenom: DenomInfo;
-  initialDenom: DenomInfo;
+  resultingDenom: ResultingDenomInfo;
+  initialDenom: InitialDenomInfo;
   rawData: Omit<Vault, 'id' | 'owner' | 'status'>;
 };

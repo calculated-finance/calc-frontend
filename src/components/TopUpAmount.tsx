@@ -20,10 +20,10 @@ import { getSwapAmount, getStrategyInitialDenom } from '@helpers/strategy';
 import { Strategy } from '@models/Strategy';
 import { Pages } from 'src/pages/Pages';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import LinkWithQuery from '@components/LinkWithQuery';
 
-function TopUpAvailableFunds({ initialDenom }: { initialDenom: DenomInfo }) {
+function TopUpAvailableFunds({ initialDenom }: { initialDenom: InitialDenomInfo }) {
   const { displayAmount, isLoading } = useBalance(initialDenom);
 
   const [, , helpers] = useField('topUpAmount');

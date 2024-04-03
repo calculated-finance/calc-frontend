@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import YesNoValues from '@models/YesNoValues';
 import { useField } from 'formik';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { WeightSummary } from './WeightSummary';
@@ -26,8 +26,8 @@ export default function SwapMultiplier({
   route,
   swapAmountInjected,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
   swapAmountInjected?: number;
 }) {

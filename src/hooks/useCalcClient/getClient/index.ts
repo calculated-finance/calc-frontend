@@ -4,7 +4,7 @@ import { getDCAContractAddress } from '@helpers/chains';
 import { Strategy } from '@models/Strategy';
 import { StrategyEvent } from '@models/StrategyEvent';
 import { Pair } from '@models/Pair';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import getCalcClient from './clients/cosmos';
 
 export type CalcClient = {
@@ -18,7 +18,7 @@ export type CalcClient = {
 export default function getClient(
   chainId: ChainId,
   cosmWasmClient: CosmWasmClient | null,
-  getDenomById: (denom: string) => DenomInfo | undefined,
+  getDenomById: (denom: string) => InitialDenomInfo | undefined,
 ) {
   if (!cosmWasmClient) return null;
   return getCalcClient(chainId, getDCAContractAddress(chainId), cosmWasmClient, getDenomById);

@@ -1,11 +1,12 @@
 import { Coin } from '@cosmjs/proto-signing';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useQuery } from '@tanstack/react-query';
 import { useChainId } from '@hooks/useChainId';
-import { RouteResult, useChainClient } from '@hooks/useChainClient';
+import { useChainClient } from '@hooks/useChainClient';
 import useDenoms from '@hooks/useDenoms';
+import { RouteResult } from './useChainClient/helpers';
 
-const useRoute = (swapAmount?: Coin, targetDenom?: DenomInfo) => {
+const useRoute = (swapAmount?: Coin, targetDenom?: ResultingDenomInfo) => {
   const { chainId } = useChainId();
   const chainClient = useChainClient(chainId);
   const { getDenomById } = useDenoms();

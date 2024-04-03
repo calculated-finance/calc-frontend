@@ -1,12 +1,12 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { DenomInfo } from '@utils/DenomInfo';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
 import { Coin } from '@cosmjs/stargate';
 import { useQuery } from '@tanstack/react-query';
 
 export default function useExpectedReceiveAmount(
   swapAmount: Coin | undefined,
-  targetDenom: DenomInfo | undefined,
+  targetDenom: ResultingDenomInfo | undefined,
   route?: string,
   enabled = true,
 ) {

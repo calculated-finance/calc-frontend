@@ -20,7 +20,7 @@ import useFiatPrice from '@hooks/useFiatPrice';
 import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
 import { getChainDexName } from '@helpers/chains';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 
 export function FeeBreakdown({
@@ -31,7 +31,7 @@ export function FeeBreakdown({
   swapFee,
   excludeDepositFee,
 }: {
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   swapAmount: number;
   price: number | undefined;
   dexFee: number;
@@ -185,7 +185,7 @@ export default function Fees({
   excludeDepositFee = false,
 }: {
   swapFee: number;
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   swapAmount: number;
   autoStakeValidator: string | null | undefined;
   swapFeeTooltip?: string;

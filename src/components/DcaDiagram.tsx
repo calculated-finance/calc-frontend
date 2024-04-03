@@ -1,14 +1,14 @@
 import { Flex, HStack, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { fromAtomic } from '@utils/getDenomInfo';
 import Lottie from 'lottie-react';
 import arrow from 'src/animations/arrow.json';
 
 type DcaDiagramProps = {
-  initialDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
   initialDeposit?: string | number;
-  resultingDenom: DenomInfo;
+  resultingDenom: ResultingDenomInfo;
 };
 
 export default function DcaDiagram({ initialDenom, initialDeposit, resultingDenom }: DcaDiagramProps) {

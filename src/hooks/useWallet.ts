@@ -35,5 +35,6 @@ export function useWallet() {
     disconnect: undefined,
     walletType: undefined,
     isConnecting: false,
+    ...chainContext,
   };
 }

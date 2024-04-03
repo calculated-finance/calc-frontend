@@ -7,7 +7,7 @@ import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { DcaPlusState } from '@models/dcaPlusFormData';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
@@ -16,7 +16,7 @@ import { useChainId } from '@hooks/useChainId';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
-export const useCreateVaultDcaPlus = (initialDenom: DenomInfo | undefined) => {
+export const useCreateVaultDcaPlus = (initialDenom: InitialDenomInfo | undefined) => {
   const { chainId } = useChainId();
   const { transactionType } = useStrategyInfo();
   const { address } = useWallet();

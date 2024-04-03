@@ -1,5 +1,4 @@
 import 'isomorphic-fetch';
-import * as Sentry from '@sentry/react';
 import { COINGECKO_API_KEY, COINGECKO_ENDPOINT } from 'src/constants';
 import { DenomInfo } from '@utils/DenomInfo';
 import { useQuery } from '@tanstack/react-query';
@@ -23,13 +22,13 @@ const useFiatPriceHistory = (denom: DenomInfo, days: string) => {
 
       if (!result.ok) {
         const error = await result.json();
-        Sentry.captureException(error.error);
         throw new Error('Failed to fetch fiat price history');
       }
 
       return result.json();
     },
     {
+      enabled: !!coingeckoId,
       staleTime: 1000 * 60 * 10,
       retry: false,
       meta: {

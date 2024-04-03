@@ -1,7 +1,7 @@
 import { FormControl, FormErrorMessage } from '@chakra-ui/react';
 import { useField, useFormikContext } from 'formik';
 import NumberInput from '@components/NumberInput';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import useQueryState from '@hooks/useQueryState';
 import { useEffect } from 'react';
 import { fromAtomic, toAtomicSafe } from '@utils/getDenomInfo';
@@ -10,7 +10,7 @@ import { max } from 'rambda';
 export default function InitialDeposit() {
   const {
     values: { initialDenom },
-  } = useFormikContext<{ initialDenom: DenomInfo | undefined }>();
+  } = useFormikContext<{ initialDenom: InitialDenomInfo | undefined }>();
 
   const [{ amount }, setQueryState] = useQueryState();
   const [{ onChange, value, ...field }, meta, helpers] = useField({ name: 'initialDeposit' });

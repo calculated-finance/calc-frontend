@@ -4,7 +4,7 @@ import BadgeButton from '@components/BadgeButton';
 import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
 import { getSwapRange } from '@helpers/ml/getSwapRange';
 import { fromAtomic } from '@utils/getDenomInfo';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { ImmediateTriggerInfo } from './SummaryTriggerInfo';
 
 export function SummaryTheSwapDcaPlus({
@@ -13,8 +13,8 @@ export function SummaryTheSwapDcaPlus({
   strategyDuration,
   initialDeposit,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   strategyDuration: number;
   initialDeposit: number;
 }) {

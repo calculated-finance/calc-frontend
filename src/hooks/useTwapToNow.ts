@@ -1,13 +1,13 @@
 import { findPair } from '@helpers/findPair';
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useConfig } from '@hooks/useConfig';
 import usePairs from '@hooks/usePairs';
 import { useQuery } from '@tanstack/react-query';
 
 export default function useTwapToNow(
-  initialDenom: DenomInfo | undefined,
-  resultingDenom: DenomInfo | undefined,
+  initialDenom: InitialDenomInfo | undefined,
+  resultingDenom: ResultingDenomInfo | undefined,
   route: string | null | undefined,
   enabled = true,
 ) {

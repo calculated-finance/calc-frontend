@@ -3,7 +3,7 @@ import { Strategy } from '@models/Strategy';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { useChains } from '@cosmos-kit/react';
 import { getDCAContractAddress, getChainName } from '@helpers/chains';
-import { values } from 'rambda';
+import { map, values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
 import { queryClient } from 'src/pages/queryClient';
@@ -22,7 +22,7 @@ const useAllStrategies = () => {
   const { denoms, getDenomById } = useDenoms();
 
   const { data: strategies, ...helpers } = useQuery<Strategy[]>(
-    ['all_vaults'],
+    ['all_strategies'],
     async () => {
       const fetchAllStrategies = async (chain: ChainContext) => {
         const client = await chain.getCosmWasmClient();
@@ -37,7 +37,10 @@ const useAllStrategies = () => {
         return chainStrategies;
       };
 
-      return (await Promise.all(chains.map(fetchAllStrategies))).flat();
+      return map(
+        (result: PromiseSettledResult<Strategy[]>) => (result.status === 'fulfilled' ? result.value : []),
+        await Promise.allSettled(chains.map(fetchAllStrategies)),
+      ).flat();
     },
     {
       enabled: !!chains && !!denoms,

@@ -28,7 +28,7 @@ import CalcIcon from './Icon';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
-  const { address, disconnect, walletType } = useWallet();
+  const { address, username, disconnect, walletType } = useWallet();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
@@ -67,7 +67,7 @@ function CosmosWallet() {
           <Popover placement="bottom-start" closeOnBlur isOpen={isOpen} onOpen={onOpen} onClose={onClose}>
             <PopoverTrigger>
               <Button variant="outline" rightIcon={isOpen ? <Icon as={FiChevronUp} /> : <Icon as={FiChevronDown} />}>
-                {truncate(address)}
+                {truncate(username ?? address)}
               </Button>
             </PopoverTrigger>
             <PopoverContent bg="deepHorizon" boxShadow="deepHorizon" p={6} borderWidth={0} w={270}>
@@ -112,7 +112,7 @@ function CosmosWallet() {
                   size="xs"
                   w="max-content"
                   variant="link"
-                  onClick={() => disconnect()}
+                  onClick={() => disconnect?.()}
                   leftIcon={<CalcIcon as={Remove1Icon} stroke="brand.200" />}
                 >
                   Disconnect from {walletType}

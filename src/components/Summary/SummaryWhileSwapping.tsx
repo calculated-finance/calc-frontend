@@ -2,7 +2,7 @@ import { Box, Text } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
 import BadgeButton from '@components/BadgeButton';
 import { initialValues } from '@models/DcaInFormData';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useStrategyInfo } from '@hooks/useStrategyInfo';
 
 export function SummaryWhileSwapping({
@@ -11,8 +11,8 @@ export function SummaryWhileSwapping({
   priceThresholdValue,
   slippageTolerance,
 }: {
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   priceThresholdValue: number | null | undefined;
   slippageTolerance: number | null | undefined;
 }) {

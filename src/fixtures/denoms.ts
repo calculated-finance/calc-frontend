@@ -9,9 +9,9 @@ import {
   OsmosisMainnetDenoms,
   OsmosisTestnetDenoms,
 } from '@models/Denom';
-import { DenomInfo } from '../utils/DenomInfo';
+import { InitialDenomInfo } from '../utils/DenomInfo';
 
-export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
+export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> = {
   'kaiyo-1': {
     [KujiraMainnetDenoms.ATOM]: {
       name: 'ATOM',
@@ -500,6 +500,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<DenomInfo>>> = {
       coingeckoId: 'archway',
       stakeable: true,
       stakeableAndSupported: true,
+      significantFigures: 18,
     },
     [ArchwayMainnetDenoms.ATOM]: {
       icon: '/images/denoms/atom.svg',

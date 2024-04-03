@@ -18,7 +18,7 @@ import {
   isStrategyAutoStaking,
 } from '@helpers/strategy';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { isNaN } from 'lodash';
 import useBalances from '@hooks/useBalances';
 import { useChainId } from '@hooks/useChainId';
@@ -27,7 +27,7 @@ import useFiatPrices from '@hooks/useFiatPrices';
 import useDenoms from '@hooks/useDenoms';
 import { values } from 'rambda';
 
-function orderCoinList(denoms: { [x: string]: DenomInfo }, coinList: Coin[], fiatPrices: any) {
+function orderCoinList(denoms: { [x: string]: InitialDenomInfo }, coinList: Coin[], fiatPrices: any) {
   if (!coinList) {
     return [];
   }
@@ -45,14 +45,14 @@ function orderCoinList(denoms: { [x: string]: DenomInfo }, coinList: Coin[], fia
     .sort((a, b) => Number(b.fiatAmount) - Number(a.fiatAmount));
 }
 
-function getTotalSwappedForDenom(denom: DenomInfo, strategies: Strategy[]) {
+function getTotalSwappedForDenom(denom: InitialDenomInfo, strategies: Strategy[]) {
   return strategies
     .filter((strategy) => strategy.rawData.swapped_amount.denom === denom.id)
     .reduce((total, strategy) => total + Number(strategy.rawData.swapped_amount.amount), 0)
     .toFixed(6);
 }
 
-export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
+export function getTotalSwapped(strategies: Strategy[], supportedDenoms: InitialDenomInfo[]) {
   const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
@@ -64,14 +64,14 @@ export function getTotalSwapped(strategies: Strategy[], supportedDenoms: DenomIn
   return totalSwapped;
 }
 
-function getTotalReceivedForDenom(denom: DenomInfo, strategies: Strategy[]) {
+function getTotalReceivedForDenom(denom: InitialDenomInfo, strategies: Strategy[]) {
   return strategies
     .filter((strategy) => strategy.rawData.received_amount.denom === denom.id)
     .reduce((total, strategy) => total + Number(strategy.rawData.received_amount.amount), 0)
     .toFixed(6);
 }
 
-function getTotalReceived(strategies: Strategy[], supportedDenoms: DenomInfo[]) {
+function getTotalReceived(strategies: Strategy[], supportedDenoms: InitialDenomInfo[]) {
   const totalSwapped = supportedDenoms.map(
     (denom) =>
       ({
@@ -102,7 +102,7 @@ function getStrategiesByType(allStrategies: Strategy[], type: StrategyType) {
   return { strategiesByType, percentage };
 }
 
-export function totalFromCoins(denoms: { [x: string]: DenomInfo }, coins: Coin[] | undefined, fiatPrices: any) {
+export function totalFromCoins(denoms: { [x: string]: InitialDenomInfo }, coins: Coin[] | undefined, fiatPrices: any) {
   return (
     coins
       ?.filter((coin) => coin.denom in denoms)
@@ -177,7 +177,7 @@ function getFeesUntilDate(strategy: Strategy, date: Date) {
   return getFeesPerSwapForStrategy(strategy) * swapCount;
 }
 
-function getFiatPriceFromList(fiatPrices: any, denom: DenomInfo) {
+function getFiatPriceFromList(fiatPrices: any, denom: InitialDenomInfo) {
   return fiatPrices[denom.coingeckoId]?.usd;
 }
 

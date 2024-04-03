@@ -1,7 +1,7 @@
 import { FormControl, FormHelperText, FormLabel } from '@chakra-ui/react';
 import { DenomPriceInput } from '@components/DenomPriceInput';
 import { TransactionType } from '@components/TransactionType';
-import { DenomInfo } from '@utils/DenomInfo';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { useField } from 'formik';
 
 export default function StartPrice({
@@ -11,8 +11,8 @@ export default function StartPrice({
   route,
 }: {
   transactionType: TransactionType;
-  initialDenom: DenomInfo;
-  resultingDenom: DenomInfo;
+  initialDenom: InitialDenomInfo;
+  resultingDenom: ResultingDenomInfo;
   route: string | null | undefined;
 }) {
   const [{ onChange, ...field }, meta, helpers] = useField({ name: 'startPrice' });
