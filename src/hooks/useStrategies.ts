@@ -28,7 +28,7 @@ function useChainStrategies(chain: ChainContext) {
         getDenomById,
       );
       const userAddress = (await chain.getOfflineSigner().getAccounts())[0].address;
-      return await calcClient.fetchVaults(userAddress);
+      return calcClient.fetchVaults(userAddress);
     },
     {
       enabled: !!chain,
@@ -45,7 +45,8 @@ export function useStrategies() {
     useChains((process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(getChainName)),
   );
 
-  const queries = map((chain) => useChainStrategies(chain), chains);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queries = chains.map((chain) => useChainStrategies(chain));
   const strategies: Strategy[] = flatten(map((strategy) => strategy.data ?? [], queries));
 
   return {
