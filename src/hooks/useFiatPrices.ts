@@ -27,7 +27,6 @@ const useFiatPrices = () => {
 
       if (!response.ok) {
         const error = await response.json();
-        Sentry.captureException(error.error);
         throw new Error('Failed to fetch fiat prices');
       }
 

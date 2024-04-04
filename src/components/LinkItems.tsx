@@ -1,12 +1,5 @@
-import { Badge, ComponentWithAs, IconProps } from '@chakra-ui/react';
-import {
-  Add1Icon,
-  BoxedImportIcon,
-  CrownIcon,
-  HomeIcon,
-  KnowledgeIcon,
-  ToolkitIcon,
-} from '@fusion-icons/react/interface';
+import { ComponentWithAs, IconProps } from '@chakra-ui/react';
+import { Add1Icon, BoxedImportIcon, HomeIcon, KnowledgeIcon, ToolkitIcon } from '@fusion-icons/react/interface';
 import { ChainId } from '@models/ChainId';
 import { SVGProps } from 'react';
 import { Pages } from '../pages/Pages';
@@ -23,16 +16,6 @@ export interface LinkItem {
 export const LinkItems: Array<LinkItem> = [
   { name: 'Home', icon: HomeIcon, href: Pages.Home },
   { name: 'Create strategy', icon: Add1Icon, href: Pages.CreateStrategy },
-  {
-    name: 'Pro strategies',
-    icon: CrownIcon,
-    href: Pages.ProStrategies,
-    child: (
-      <Badge colorScheme="brand" marginLeft={2}>
-        New
-      </Badge>
-    ),
-  },
   { name: 'My strategies', icon: ToolkitIcon, href: Pages.Strategies },
   { name: 'Bridge assets', icon: BoxedImportIcon, href: Pages.GetAssets },
   { name: 'Learning hub', icon: KnowledgeIcon, href: Pages.LearnAboutCalc },
