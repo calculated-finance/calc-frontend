@@ -5,7 +5,7 @@ export function StrategyList({ strategies = [] }: { strategies: Strategy[] }) {
   return (
     <>
       {strategies.map((strategy: Strategy) => (
-        <StrategyRow key={strategy.id} strategy={strategy} />
+        <StrategyRow key={`${strategy.chainId}-${strategy.id}`} strategy={strategy} />
       ))}
     </>
   );
