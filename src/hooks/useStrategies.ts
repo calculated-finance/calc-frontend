@@ -9,12 +9,14 @@ import { getChainName, getDCAContractAddress } from '@helpers/chains';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import useDenoms from './useDenoms';
+import { useWallet } from './useWallet';
 
 const QUERY_KEY = 'get_vaults_by_address';
 
 export const invalidateStrategies = () => queryClient.invalidateQueries([QUERY_KEY]);
 
 function useChainStrategies(chain: ChainContext) {
+  const { connected } = useWallet();
   const { getDenomById } = useDenoms();
 
   return useQuery<Strategy[]>(
@@ -31,7 +33,7 @@ function useChainStrategies(chain: ChainContext) {
       return calcClient.fetchVaults(userAddress);
     },
     {
-      enabled: !!chain,
+      enabled: connected && !!chain,
       refetchInterval: 1000 * 60,
       meta: {
         errorMessage: `Error fetching strategies for ${chain.address} on chain ${chain.chain.chain_name}`,
