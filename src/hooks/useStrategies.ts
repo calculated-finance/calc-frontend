@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useIsFetching, useQuery } from '@tanstack/react-query';
 import { queryClient } from 'src/pages/queryClient';
 import { Strategy } from '@models/Strategy';
 import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
-import { all, flatten, map, values } from 'rambda';
+import { all, any, flatten, map, values } from 'rambda';
 import { useChains } from '@cosmos-kit/react';
 import { getChainName, getDCAContractAddress } from '@helpers/chains';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
@@ -33,8 +33,7 @@ function useChainStrategies(chain: ChainContext) {
       return calcClient.fetchVaults(userAddress);
     },
     {
-      enabled: connected && !!chain,
-      refetchInterval: 1000 * 60,
+      enabled: connected && !!chain.address,
       meta: {
         errorMessage: `Error fetching strategies for ${chain.address} on chain ${chain.chain.chain_name}`,
       },
@@ -49,10 +48,13 @@ export function useStrategies() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const queries = chains.map((chain) => useChainStrategies(chain));
-  const strategies: Strategy[] = flatten(map((strategy) => strategy.data ?? [], queries));
+  const isLoading = any((strategy) => strategy.isLoading || strategy.isFetching, queries);
+  const strategies: Strategy[] | undefined = isLoading
+    ? undefined
+    : flatten(map((strategy) => strategy.data ?? [], queries));
 
   return {
     data: strategies,
-    isLoading: all((strategy) => strategy.isLoading, queries),
+    isLoading,
   };
 }
