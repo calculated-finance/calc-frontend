@@ -33,7 +33,7 @@ function useChainStrategies(chain: ChainContext) {
       return calcClient.fetchVaults(userAddress);
     },
     {
-      enabled: connected && !!chain,
+      enabled: connected && !!chain.address,
       refetchInterval: 1000 * 60,
       meta: {
         errorMessage: `Error fetching strategies for ${chain.address} on chain ${chain.chain.chain_name}`,
