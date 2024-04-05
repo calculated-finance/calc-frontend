@@ -142,7 +142,7 @@ export function getChainMinimumSwapValue(chainId: ChainId) {
   return (
     {
       'kaiyo-1': 5.0,
-      'archway-1': 50.0,
+      'archway-1': 35.0,
     }[chainId as string] ?? 1.0
   );
 }
