@@ -49,7 +49,9 @@ export const useCreateVaultDca = () => {
     const price = state.initialDenom?.coingeckoId && fiatPrices?.[state.initialDenom?.coingeckoId]?.usd;
 
     if (!price) {
-      throw Error('Invalid price');
+      throw Error(
+        `Coingecko listing is required for ${state.initialDenom?.name} in order to evaluate the minimum viable swap amount`,
+      );
     }
 
     if (!address) {

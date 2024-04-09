@@ -52,7 +52,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       stakeable: true,
       coingeckoId: 'weth',
       significantFigures: 18,
-      minimumSwapAmount: 0.05 / 1000,
       enabledInDcaPlus: true,
     },
     [KujiraMainnetDenoms.STARS]: {
@@ -87,7 +86,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/wbnb.svg',
       stakeable: true,
       coingeckoId: 'binancecoin',
-      minimumSwapAmount: 0.05 / 1000,
       significantFigures: 18,
       enabledInDcaPlus: true,
     },
@@ -102,7 +100,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/dot.svg',
       stakeable: true,
       coingeckoId: 'polkadot',
-      minimumSwapAmount: 0.05 / 1000,
       significantFigures: 10,
       enabledInDcaPlus: true,
     },
@@ -112,7 +109,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       stakeable: true,
       coingeckoId: 'pax-gold',
       significantFigures: 18,
-      minimumSwapAmount: 0.05 / 1000,
     },
     [KujiraMainnetDenoms.MARS]: {
       name: 'MARS',
@@ -204,7 +200,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/wbtc.png',
       coingeckoId: 'wrapped-bitcoin',
       significantFigures: 8,
-      minimumSwapAmount: 0.05 / 10000,
     },
     [KujiraMainnetDenoms.WINK]: {
       name: 'WINK',
@@ -240,7 +235,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       coingeckoId: 'bitcoin',
       enabledInDcaPlus: true,
       significantFigures: 14,
-      minimumSwapAmount: 0.05 / 10000,
     },
     [KujiraMainnetDenoms.NSTK]: {
       name: 'NSTK',
@@ -345,7 +339,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [OsmosisMainnetDenoms.axlWBTC]: {
       coingeckoId: 'wrapped-bitcoin',
       enabledInDcaPlus: true,
-      minimumSwapAmount: 0.05 / 10000,
     },
     [OsmosisMainnetDenoms.axlUSDC]: {
       coingeckoId: 'usd-coin',
@@ -368,7 +361,6 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [OsmosisMainnetDenoms.wETH]: {
       enabledInDcaPlus: true,
       coingeckoId: 'weth',
-      minimumSwapAmount: 0.05 / 1000,
     },
     [OsmosisMainnetDenoms.FTM]: {
       coingeckoId: 'wrapped-fantom',
@@ -394,15 +386,12 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [OsmosisMainnetDenoms.wBTC]: {
       coingeckoId: 'wrapped-bitcoin',
       enabledInDcaPlus: true,
-      minimumSwapAmount: 0.05 / 10000,
     },
     [OsmosisMainnetDenoms.nBTC]: {
       coingeckoId: 'bitcoin',
       enabledInDcaPlus: true,
-      minimumSwapAmount: 0.05 / 10000,
     },
     [OsmosisMainnetDenoms.LINK]: {
-      minimumSwapAmount: 1e16,
       coingeckoId: 'chainlink',
     },
     [OsmosisMainnetDenoms.PSTAKE]: {
@@ -424,7 +413,9 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [OsmosisMainnetDenoms.USDC]: {
       stable: true,
     },
-    [OsmosisMainnetDenoms.BADDOG]: {},
+    [OsmosisMainnetDenoms['XRP.core']]: {
+      coingeckoId: 'xrp',
+    },
   },
   'osmo-test-5': {
     [OsmosisTestnetDenoms.USDC]: {
@@ -507,7 +498,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       enabledInDcaPlus: true,
     },
     [ArchwayMainnetDenoms.AXV]: {
-      icon: 'https://astrovault.io/static/media/logo-axv.0add45f1b138f94545ad.svg',
+      icon: 'https://astrovault.io/static/media/logo-axv.5f0b26624713d87c354e.svg',
       coingeckoId: 'astrovault',
     },
     [ArchwayMainnetDenoms.BLD]: {
@@ -626,7 +617,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/weth.svg',
     },
     [ArchwayTestnetDenoms.AXL]: {
-      coingeckoId: 'axelar-network',
+      coingeckoId: 'axelar',
       icon: '/images/denoms/axl.svg',
     },
     [ArchwayTestnetDenoms['USDT.axv']]: {

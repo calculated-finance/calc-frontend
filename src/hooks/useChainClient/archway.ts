@@ -4,13 +4,13 @@ import { getChainEndpoint } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
 import { Pair } from '@models/Pair';
-import { reduce, filter, map, toPairs, flatten } from 'rambda';
+import { reduce, filter, map, toPairs, flatten, keys, split } from 'rambda';
 import { osmosis } from 'osmojs';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DENOMS } from 'src/fixtures/denoms';
 import constantine3Data from 'src/assetLists/constantine-3';
 import archway1Data from 'src/assetLists/archway-1';
-import { ROUTES } from 'src/fixtures/routes';
+import { fetchAllRoutes, fetchRoute } from 'src/fixtures/routes';
 import { ChainClient, fetchBalances } from './helpers';
 
 const fetchDenoms = async (chainId: ChainId): Promise<{ [x: string]: InitialDenomInfo }> => {
@@ -67,14 +67,7 @@ export const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
       _client: CosmWasmClient,
       _startAfter?: string,
       _allPairs?: Pair[],
-    ) =>
-      flatten(
-        map(
-          ([from, destinations]: [string, { [x: string]: any[] }]) =>
-            map(([to, _]: [string, any]) => ({ denoms: [from, to] }), toPairs(destinations)),
-          toPairs(ROUTES[chainId]),
-        ),
-      ),
+    ) => map((key) => ({ denoms: split('-', key) as [string, string] }), keys(fetchAllRoutes(chainId)) as string[]),
     fetchTokenBalance: async (address: string, denom: InitialDenomInfo) =>
       (await fetchBalances(queryClient, cosmWasmClient, address, await fetchDenoms(chainId))).find(
         (b: Coin) => b.denom === denom.id,
@@ -90,7 +83,7 @@ export const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
       })) as unknown as { validators: Validator[] },
 
     fetchRoute: async (initialDenom: InitialDenomInfo, targetDenom: ResultingDenomInfo, ___: bigint) => {
-      const route = ROUTES[chainId][initialDenom.id][targetDenom.id];
+      const route = fetchRoute(chainId, initialDenom.id, targetDenom.id);
       return {
         route: route ? Buffer.from(JSON.stringify(route)).toString('base64') : undefined,
         feeRate: 0.0075, // TODO: figure this out
