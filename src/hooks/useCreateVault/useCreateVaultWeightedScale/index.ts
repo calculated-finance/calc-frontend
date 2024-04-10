@@ -67,6 +67,7 @@ export const useCreateVaultWeightedScale = (initialDenom: InitialDenomInfo | und
       timeTrigger: { startDate: state.startDate, startTime: state.purchaseTime },
       startPrice: state.startPrice || undefined,
       swapAmount: state.swapAmount,
+      route: state.route,
       priceThreshold: state.priceThresholdValue || undefined,
       transactionType,
       slippageTolerance: state.slippageTolerance,
