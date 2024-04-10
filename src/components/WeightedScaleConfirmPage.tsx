@@ -85,7 +85,7 @@ export function WeightedScaleConfirmPage({ steps }: { steps: StepConfig[] }) {
 
   const { transactionType } = useStrategyInfo();
 
-  const { spotPrice: dexPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, undefined, !!state);
+  const { spotPrice: dexPrice } = useSpotPrice(resultingDenom, initialDenom, transactionType, state?.route, !!state);
 
   const { data: reinvestStrategyData } = useStrategy(state?.reinvestStrategy);
 
