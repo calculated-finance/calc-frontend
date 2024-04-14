@@ -133,7 +133,7 @@ function ActiveWithOne() {
         <Text fontSize="sm">You have the ability to edit and fine tune your strategy at any time.</Text>
       </Stack>
       <Stack direction={['column', 'column', 'row']} w="full" maxWidth={600}>
-        <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy.id)}>
+        <LinkWithQuery passHref href={generateStrategyTopUpUrl(activeStrategy.id, activeStrategy.chainId)}>
           <Button w="full" size="sm" colorScheme="blue">
             Top up my strategy
           </Button>

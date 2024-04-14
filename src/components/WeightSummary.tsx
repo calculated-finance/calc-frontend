@@ -133,7 +133,7 @@ export function WeightSummary({
       <Stack spacing={3}>
         <HStack justify="space-between">
           <Text>
-            Base Swap: {swapAmount || 0} {initialDenom.name}
+            Base Swap: {fromAtomic(initialDenom, swapAmount) || 0} {initialDenom.name}
           </Text>
           <Text>|</Text>
           <Text>Multiplier: {swapMultiplier}</Text>

@@ -233,7 +233,7 @@ export type ChainConfig = {
   autoCompoundStakingRewardsAddress: string;
 };
 
-export function getChainConfig(chainId: ChainId) {
+export function getChainConfig(chainId: ChainId | undefined) {
   if (!chainId) {
     return undefined;
   }

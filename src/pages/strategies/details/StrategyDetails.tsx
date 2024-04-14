@@ -50,7 +50,7 @@ import { isNil } from 'lodash';
 import { getWeightedScaleConfig, isWeightedScale } from '@helpers/strategy/isWeightedScale';
 import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
-import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyConfigureUrl copy';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
@@ -155,7 +155,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
           <HStack align="center" pb={4}>
             <Heading size="md">Strategy details</Heading>
             {showEditButton && (
-              <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id)}>
+              <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id, strategy.chainId)}>
                 <Button
                   size="xs"
                   variant="ghost"
@@ -279,7 +279,7 @@ export default function StrategyDetails({ strategy }: { strategy: Strategy }) {
               </GridItem>
               <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
                 <Flex justify="end">
-                  <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
+                  <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id, strategy.chainId)}>
                     <Button
                       size="xs"
                       variant="ghost"
