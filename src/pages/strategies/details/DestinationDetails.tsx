@@ -35,7 +35,7 @@ export function ConfigureButton({ strategy }: { strategy: Strategy }) {
   return (
     <GridItem visibility={isStrategyCancelled(strategy) ? 'hidden' : 'visible'}>
       <Flex justify="end">
-        <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id)}>
+        <LinkWithQuery href={generateStrategyConfigureUrl(strategy.id, strategy.chainId)}>
           <Button size="xs" variant="ghost" colorScheme="brand" leftIcon={<Icon fontSize="md" as={HiOutlineCube} />}>
             Configure
           </Button>

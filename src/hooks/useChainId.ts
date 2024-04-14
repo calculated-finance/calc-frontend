@@ -17,7 +17,7 @@ export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
       chainId: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 'kaiyo-1' : 'harpoon-4',
-      setChain: (chain: ChainId) => set({ chainId: chain }),
+      setChain: (chainId: ChainId) => set({ chainId }),
     }),
     {
       name: 'chain',

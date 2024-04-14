@@ -131,7 +131,7 @@ function StrategyRow({ strategy }: { strategy: Strategy }) {
         >
           <Flex justifyContent={{ base: 'left', sm: 'end' }} alignItems="center" h="full">
             <Stack direction={{ base: 'column', sm: 'row' }} w="full">
-              <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id)}>
+              <LinkWithQuery href={generateStrategyTopUpUrl(strategy.id, strategy.chainId)}>
                 <Button
                   size="xs"
                   variant={{ base: 'outline', sm: 'ghost' }}
