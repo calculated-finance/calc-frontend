@@ -110,9 +110,6 @@ export const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
           })}`,
           {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
           },
         );
 
