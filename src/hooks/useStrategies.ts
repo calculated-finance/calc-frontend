@@ -36,8 +36,9 @@ export function useStrategies() {
         );
         const userAddress = bech32.encode(
           getAddressPrefix(chain.chain.chain_id as ChainId),
-          bech32.decode((await chain.getOfflineSigner().getAccounts())[0].address).words,
+          bech32.decode(address!).words,
         );
+        console.log({ userAddress, chain });
         return calcClient.fetchVaults(userAddress);
       };
 
