@@ -38,7 +38,6 @@ export function useStrategies() {
           getAddressPrefix(chain.chain.chain_id as ChainId),
           bech32.decode(address!).words,
         );
-        console.log({ userAddress, chain });
         return calcClient.fetchVaults(userAddress);
       };
 
