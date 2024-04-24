@@ -125,6 +125,19 @@ export function getChainDexName(chainId: ChainId) {
   }[chainId];
 }
 
+export function getChainName(chainId: ChainId) {
+  return {
+    'osmosis-1': 'Osmosis',
+    'osmo-test-5': 'Osmosis',
+    'kaiyo-1': 'Kujira',
+    'harpoon-4': 'Kujira',
+    'archway-1': 'Archway',
+    'constantine-3': 'Archway',
+    'neutron-1': 'Neutron',
+    'pion-1': 'Neutron',
+  }[chainId];
+}
+
 export function getAddressPrefix(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo',

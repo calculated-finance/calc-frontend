@@ -11,6 +11,7 @@ import {
   Alert,
   useDisclosure,
   Spacer,
+  Button,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -41,8 +42,10 @@ import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { getChainMinimumSwapValue, getChainDexName } from '@helpers/chains';
+import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
 import { fromAtomic } from '@utils/getDenomInfo';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
+import { EditIcon } from '@chakra-ui/icons';
 
 export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
@@ -140,14 +143,21 @@ function Page() {
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
           <Image mr={4} src="/images/warningIcon.svg" />
           <Text fontSize="sm" mr={4}>
-            {`The expected swap value of $${expectedSwapValue.toFixed(
-              2,
-            )} USD is below the minimum swap value of $${minimumSwapValue} USD on ${getChainDexName(
+            {`In order to cover gas costs of swapping on ${getChainName(
               strategy.chainId,
-            )}.`}
+            )}, the swap amount of your strategy must be larger than $${minimumSwapValue} USD. Please consider updating the swap amount.`}
           </Text>
           <Spacer />
-          <CalcIcon as={CloseBoxedIcon} stroke="white" onClick={onClose} />
+          <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id, strategy.chainId)}>
+            <Button
+              size="xs"
+              variant="ghost"
+              colorScheme="brand"
+              leftIcon={<CalcIcon as={EditIcon} stroke="brand.200" width={4} height={4} />}
+            >
+              Edit
+            </Button>
+          </LinkWithQuery>
         </Alert>
       )}
       <NextSwapInfo strategy={strategy} />
