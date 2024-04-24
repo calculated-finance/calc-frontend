@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Strategy } from '@models/Strategy';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { useChains } from '@cosmos-kit/react';
-import { getDCAContractAddress, getChainName } from '@helpers/chains';
+import { getDCAContractAddress, getChainCosmosName } from '@helpers/chains';
 import { map, values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
@@ -14,7 +14,7 @@ const useAllStrategies = () => {
   const chains = values(
     useChains(
       (process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map((chainId) =>
-        getChainName(chainId),
+        getChainCosmosName(chainId),
       ),
     ),
   );

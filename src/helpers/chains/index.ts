@@ -86,7 +86,7 @@ export function getFeeTakerAddress(chainId: ChainId) {
   }[chainId];
 }
 
-export function getChainName(chainId: ChainId) {
+export function getChainCosmosName(chainId: ChainId) {
   return {
     'osmosis-1': COSMOS_KIT_OSMOSIS_MAINNET,
     'osmo-test-5': COSMOS_KIT_OSMOSIS_TESTNET,
@@ -143,6 +143,7 @@ export function getChainMinimumSwapValue(chainId: ChainId) {
     {
       'kaiyo-1': 5.0,
       'archway-1': 35.0,
+      'constantine-3': 35.0,
     }[chainId as string] ?? 1.0
   );
 }

@@ -5,7 +5,7 @@ import { ChainContext } from '@cosmos-kit/core';
 import { ChainId } from '@models/ChainId';
 import { any, map, values } from 'rambda';
 import { useChains } from '@cosmos-kit/react';
-import { getAddressPrefix, getChainName, getDCAContractAddress } from '@helpers/chains';
+import { getAddressPrefix, getChainCosmosName, getDCAContractAddress } from '@helpers/chains';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { bech32 } from 'bech32';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
@@ -20,7 +20,7 @@ export function useStrategies() {
   const { address, connected } = useWallet();
   const { getDenomById } = useDenoms();
   const chains = values(
-    useChains((process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(getChainName)),
+    useChains((process.env.NEXT_PUBLIC_APP_ENV === 'production' ? MAINNET_CHAINS : CHAINS).map(getChainCosmosName)),
   );
 
   const { data: strategies, isLoading } = useQuery<Strategy[]>(
