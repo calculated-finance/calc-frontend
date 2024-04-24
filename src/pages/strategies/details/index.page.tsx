@@ -11,6 +11,7 @@ import {
   Alert,
   useDisclosure,
   Spacer,
+  Button,
 } from '@chakra-ui/react';
 import CalcIcon from '@components/Icon';
 import Spinner from '@components/Spinner';
@@ -28,7 +29,7 @@ import {
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { Strategy } from '@models/Strategy';
-import { getStrategyName } from '@helpers/strategy';
+import { getStrategyName, getSwapAmount } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
@@ -40,6 +41,11 @@ import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
+import { fromAtomic } from '@utils/getDenomInfo';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
+import { EditIcon } from '@chakra-ui/icons';
 
 export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
@@ -82,6 +88,7 @@ function Page() {
   const { data: strategy } = useStrategy(id as string);
   const { data: events } = useStrategyEvents(id as string);
   const { isOpen: isVisible, onClose } = useDisclosure({ defaultIsOpen: true });
+  const { fiatPrice } = useFiatPrice(strategy?.initialDenom);
 
   const { connected } = useWallet();
 
@@ -96,7 +103,10 @@ function Page() {
       </Center>
     );
   }
+
   const lastSwapSlippageError = getLatestSwapError(strategy, events);
+  const expectedSwapValue = fiatPrice && fromAtomic(strategy.initialDenom, getSwapAmount(strategy)) * fiatPrice;
+  const minimumSwapValue = getChainMinimumSwapValue(strategy.chainId);
 
   return (
     <>
@@ -127,6 +137,27 @@ function Page() {
           </Text>
           <Spacer />
           <CalcIcon as={CloseBoxedIcon} stroke="white" onClick={onClose} />
+        </Alert>
+      )}
+      {expectedSwapValue && expectedSwapValue < minimumSwapValue && (
+        <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
+          <Image mr={4} src="/images/warningIcon.svg" />
+          <Text fontSize="sm" mr={4}>
+            {`In order to cover gas costs of swapping on ${getChainName(
+              strategy.chainId,
+            )}, the swap amount of your strategy must be larger than $${minimumSwapValue} USD. Please consider updating the swap amount by editing your strategy.`}
+          </Text>
+          <Spacer />
+          <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id, strategy.chainId)}>
+            <Button
+              size="xs"
+              variant="ghost"
+              colorScheme="brand"
+              leftIcon={<CalcIcon as={EditIcon} stroke="brand.200" width={4} height={4} />}
+            >
+              Edit
+            </Button>
+          </LinkWithQuery>
         </Alert>
       )}
       <NextSwapInfo strategy={strategy} />
