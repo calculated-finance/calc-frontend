@@ -42,10 +42,15 @@ import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
 import useFiatPrice from '@hooks/useFiatPrice';
+<<<<<<< HEAD
 import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
 import { EditIcon } from '@chakra-ui/icons';
+=======
+import { getChainMinimumSwapValue, getChainDexName } from '@helpers/chains';
+import { fromAtomic } from '@utils/getDenomInfo';
+>>>>>>> 3c53b7f3 (add warning for small swap amounts)
 
 export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
