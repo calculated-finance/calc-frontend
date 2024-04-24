@@ -4,7 +4,7 @@ import { getChainEndpoint } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
 import { Pair } from '@models/Pair';
-import { reduce, filter, map, toPairs, flatten, keys, split } from 'rambda';
+import { reduce, filter, map, keys, split } from 'rambda';
 import { osmosis } from 'osmojs';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
 import { DENOMS } from 'src/fixtures/denoms';

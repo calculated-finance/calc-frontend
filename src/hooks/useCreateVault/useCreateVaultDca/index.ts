@@ -97,7 +97,7 @@ export const useCreateVaultDca = () => {
       track();
       return createResponse;
     } catch (error) {
-      return handleError(createVaultContext)(error);
+      handleError(createVaultContext)(error);
     }
   });
 };

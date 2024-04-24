@@ -28,7 +28,7 @@ const fetchDenoms = async (chainId: ChainId) => {
           id: asset.token,
           name: asset.symbol,
           significantFigures: asset.decimals,
-          isCw20: (asset.token as string).startsWith('neutron1'),
+          isCw20: (asset.token as string)?.startsWith('neutron1') ?? false,
           coingeckoId: asset.coingeckoId,
           ...DENOMS[chainId][asset.token],
         }),
