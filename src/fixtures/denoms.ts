@@ -438,21 +438,107 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
   'neutron-1': {
     [NeutronMainnetDenoms.NTRN]: {
       icon: '/images/denoms/neutron.svg',
-      coingeckoId: 'neutron',
     },
     [NeutronMainnetDenoms.ATOM]: {
       icon: '/images/denoms/atom.svg',
       enabledInDcaPlus: true,
-      coingeckoId: 'cosmos',
     },
     [NeutronMainnetDenoms.USDC]: {
       icon: '/images/denoms/usdc.svg',
       stable: true,
-      coingeckoId: 'usd-coin',
     },
     [NeutronMainnetDenoms.ASTRO]: {
       icon: '/images/denoms/astro.png',
-      coingeckoId: 'astroport-fi',
+      name: 'ASTRO',
+    },
+    [NeutronMainnetDenoms.AXL]: {
+      icon: '/images/denoms/axl.svg',
+    },
+    [NeutronMainnetDenoms.stATOM]: {
+      icon: '/images/denoms/statom.svg',
+    },
+    [NeutronMainnetDenoms.CRBRUS]: {
+      icon: '/images/denoms/crbrus.png',
+    },
+    [NeutronMainnetDenoms.DOT]: {
+      icon: '/images/denoms/dot.svg',
+    },
+    [NeutronMainnetDenoms.DYM]: {
+      icon: '/images/denoms/dymension.svg',
+    },
+    [NeutronMainnetDenoms.HUAHUA]: {
+      icon: 'https://raw.githubusercontent.com/cosmos/chain-registry/master/chihuahua/images/huahua.svg',
+    },
+    [NeutronMainnetDenoms.KSM]: {
+      icon: '/images/denoms/ksm.svg',
+    },
+    [NeutronMainnetDenoms.MARS]: {
+      icon: '/images/denoms/mars.svg',
+    },
+    [NeutronMainnetDenoms.NLS]: {
+      icon: '/images/denoms/nolus.svg',
+    },
+    [NeutronMainnetDenoms.STRD]: {
+      icon: '/images/denoms/strd.svg',
+    },
+    [NeutronMainnetDenoms.OSMO]: {
+      icon: '/images/denoms/osmo.svg',
+    },
+    [NeutronMainnetDenoms.TIA]: {
+      icon: '/images/denoms/tia.svg',
+    },
+    [NeutronMainnetDenoms['USDC.axl']]: {
+      icon: '/images/denoms/usdc.svg',
+      stable: true,
+    },
+    [NeutronMainnetDenoms['USDT.axl']]: {
+      icon: '/images/denoms/usdt.png',
+      stable: true,
+    },
+    [NeutronMainnetDenoms['WBTC (Osmosis)']]: {
+      icon: '/images/denoms/wbtc.png',
+    },
+    [NeutronMainnetDenoms['WETH.axl']]: {
+      icon: '/images/denoms/weth.svg',
+    },
+    [NeutronMainnetDenoms.stDYDX]: {
+      icon: '/images/denoms/stDYDX.webp',
+    },
+    [NeutronMainnetDenoms.stDYM]: {
+      icon: '/images/denoms/stdym.svg',
+    },
+    [NeutronMainnetDenoms.stTIA]: {
+      icon: '/images/denoms/sttia.svg',
+    },
+    [NeutronMainnetDenoms.stkATOM]: {
+      icon: '/images/denoms/stkatom.svg',
+    },
+    [NeutronMainnetDenoms.vDOT]: {
+      icon: '/images/denoms/vdot.svg',
+    },
+    [NeutronMainnetDenoms.wstETH]: {
+      icon: '/images/denoms/wsteth.svg',
+    },
+    [NeutronMainnetDenoms['wstETH.axl']]: {
+      icon: '/images/denoms/wsteth.svg',
+    },
+    [NeutronMainnetDenoms.IST]: {
+      icon: '/images/denoms/ist.webp',
+    },
+    [NeutronMainnetDenoms.SHD]: {
+      icon: '/images/denoms/shd.svg',
+    },
+    [NeutronMainnetDenoms.STARS]: {
+      icon: '/images/denoms/stars.svg',
+    },
+    [NeutronMainnetDenoms.SAGA]: {
+      icon: '/images/denoms/saga.svg',
+    },
+    [NeutronMainnetDenoms.stSAGA]: {
+      icon: '/images/denoms/stSAGA.svg',
+    },
+    [NeutronMainnetDenoms.HAVA]: {
+      icon: '/images/denoms/hava.webp',
     },
   },
   'pion-1': {
