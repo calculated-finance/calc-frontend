@@ -42,8 +42,8 @@ import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
 import useFiatPrice from '@hooks/useFiatPrice';
-import { fromAtomic } from '@utils/getDenomInfo';
 import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
+import { fromAtomic } from '@utils/getDenomInfo';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
 import { EditIcon } from '@chakra-ui/icons';
 
