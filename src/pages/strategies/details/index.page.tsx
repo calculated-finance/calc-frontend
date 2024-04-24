@@ -106,12 +106,10 @@ function Page() {
             <Icon as={FiArrowLeft} stroke="brand.200" />
           </IconButton>
         </LinkWithQuery>
-
         <HStack spacing={8} alignItems="center">
           <Heading data-testid="details-heading">{getStrategyName(strategy)}</Heading>
         </HStack>
       </HStack>
-
       {isEscrowPending(strategy) && (
         <Alert status="warning" mb={8} borderWidth={1} borderColor="green.200">
           <Image mr={4} src="/images/lightBulbOutlineGreen.svg" />
@@ -121,7 +119,6 @@ function Page() {
           </Text>
         </Alert>
       )}
-
       {Boolean(lastSwapSlippageError) && isVisible && (
         <Alert status="warning" mb={8} borderWidth={1} borderColor="yellow.200">
           <Image mr={4} src="/images/warningIcon.svg" />
@@ -129,13 +126,10 @@ function Page() {
             {lastSwapSlippageError}
           </Text>
           <Spacer />
-
           <CalcIcon as={CloseBoxedIcon} stroke="white" onClick={onClose} />
         </Alert>
       )}
-
       <NextSwapInfo strategy={strategy} />
-
       <Grid
         gap={6}
         mb={6}
