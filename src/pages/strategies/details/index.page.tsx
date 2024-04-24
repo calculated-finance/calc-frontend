@@ -35,30 +35,23 @@ import { formatDate } from '@helpers/format/formatDate';
 import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlus';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import LinkWithQuery from '@components/LinkWithQuery';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { fromAtomic } from '@utils/getDenomInfo';
+import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
+import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
+import { EditIcon } from '@chakra-ui/icons';
 import StrategyPerformance from './StrategyPerformance';
 import StrategyDetails from './StrategyDetails';
 import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
-import useFiatPrice from '@hooks/useFiatPrice';
-import { fromAtomic } from '@utils/getDenomInfo';
-import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
-import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
-import { EditIcon } from '@chakra-ui/icons';
 
 export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
   if (!events) {
     return undefined;
   }
-  const executionTriggeredIndex = findLastIndex(events, (event) => {
-    const { data } = event;
-    if ('dca_vault_execution_triggered' in data) {
-      return true;
-    }
-    return false;
-  });
-
+  const executionTriggeredIndex = findLastIndex(events, (event) => 'dca_vault_execution_triggered' in event.data);
   const executionSkippedIndex = executionTriggeredIndex + 1;
 
   if (executionTriggeredIndex === -1 || executionSkippedIndex >= events.length) {
