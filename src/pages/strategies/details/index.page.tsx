@@ -145,7 +145,7 @@ function Page() {
           <Text fontSize="sm" mr={4}>
             {`In order to cover gas costs of swapping on ${getChainName(
               strategy.chainId,
-            )}, the swap amount of your strategy must be larger than $${minimumSwapValue} USD. Please consider updating the swap amount.`}
+            )}, the swap amount of your strategy must be larger than $${minimumSwapValue} USD. Please consider updating the swap amount by editing your strategy.`}
           </Text>
           <Spacer />
           <LinkWithQuery href={generateStrategyCustomiseUrl(strategy.id, strategy.chainId)}>
