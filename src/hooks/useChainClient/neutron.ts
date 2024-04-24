@@ -1,7 +1,7 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getNeutronApiUrl } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
-import { InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
+import { DenomInfo, InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
 import { values, reduce, forEach, join, map, filter, sort } from 'rambda';
 import { osmosis } from 'osmojs';
 import { Pair } from '@models/Pair';
