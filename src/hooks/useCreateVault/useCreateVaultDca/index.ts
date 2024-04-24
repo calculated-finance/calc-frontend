@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { useWallet } from '@hooks/useWallet';
 import { useMutation } from '@tanstack/react-query';
 import { isEmpty, isNil } from 'lodash';
