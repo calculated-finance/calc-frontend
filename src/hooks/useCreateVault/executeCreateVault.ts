@@ -15,7 +15,12 @@ function getStrategyIdFromEvents(events: readonly Event[]) {
 
 export function getVaultIdFromDeliverTxResponse(data: DeliverTxResponse | undefined) {
   const id = data?.events && getStrategyIdFromEvents(data.events);
-  return id || undefined;
+
+  if (id) {
+    return id;
+  }
+
+  throw new Error('Transaction succeeded but vault creation failed.');
 }
 
 export async function executeCreateVault(
@@ -29,6 +34,8 @@ export async function executeCreateVault(
     console.error(error);
     const errorMatchers: Record<string, string> = {
       'out of gas': OUT_OF_GAS_ERROR_MESSAGE,
+      'Transaction succeeded but vault creation failed.':
+        'Vault was not created. This is most likely due to insufficient fees. Please ensure you have enough for the vault deposit and gas.',
       'Failed to fetch': 'Something went wrong when submitting, please try again.',
       // 'insufficient fees': 'Insufficient fees. Please ensure you have enough for the transaction fees and gas.',
       "Type URL '/cosmos.authz.v1beta1.MsgGrant' does not exist in the Amino message type register":
