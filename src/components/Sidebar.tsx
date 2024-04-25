@@ -79,8 +79,8 @@ const sidebarLogoUrls = {
   'harpoon-4': '/images/kujiMascot.svg',
   'archway-1': 'images/archwaySidebarLogo.svg',
   'constantine-3': 'images/archwaySidebarLogo.svg',
-  'neutron-1': 'images/neutronSidebarLogo.svg',
-  'pion-1': 'images/neutronSidebarLogo.svg',
+  'neutron-1': 'images/neutronMascot.svg',
+  'pion-1': 'images/neutronMascot.svg',
 };
 
 function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkItems: LinkItem[] }) {
@@ -119,7 +119,6 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
             w={105}
           />
         </LinkWithQuery>
-
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       <Box backdropFilter="auto" backdropBlur="3px">
