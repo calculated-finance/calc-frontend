@@ -23,12 +23,10 @@ import { useWallet } from '@hooks/useWallet';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { StrategyEvent } from '@models/StrategyEvent';
 import ConnectWallet from '@components/ConnectWallet';
-import { findLastIndex } from 'lodash';
 import {
   PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
-import { Strategy } from '@models/Strategy';
 import { getStrategyName, getSwapAmount } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import { formatDate } from '@helpers/format/formatDate';
@@ -47,31 +45,14 @@ import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
 
-export function getLatestSwapError(strategy: Strategy, events: StrategyEvent[] | undefined): string | undefined {
-  if (!events) {
-    return undefined;
-  }
-  const executionTriggeredIndex = findLastIndex(events, (event) => 'dca_vault_execution_triggered' in event.data);
-  const executionSkippedIndex = executionTriggeredIndex + 1;
-
-  if (executionTriggeredIndex === -1 || executionSkippedIndex >= events.length) {
-    return undefined;
-  }
-
-  const { data } = events[executionSkippedIndex];
-
-  if (!('dca_vault_execution_skipped' in data)) return undefined;
-
-  const swapReasonMessages: Record<string, string> = {
-    slippage_tolerance_exceeded: PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
-    unknown_failure: PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
-  };
-
-  const swapSkippedReason = data.dca_vault_execution_skipped?.reason.toString();
-
-  return (
-    (Object.keys(swapReasonMessages).includes(swapSkippedReason) && swapReasonMessages[swapSkippedReason]) || undefined
-  );
+export function getLatestSwapError(events: StrategyEvent[] | undefined): string | undefined {
+  const finalEvent = events && events.length > 0 && events[events.length - 1];
+  return finalEvent && 'dca_vault_execution_skipped' in finalEvent.data
+    ? {
+        slippage_tolerance_exceeded: PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
+        unknown_failure: PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
+      }[finalEvent.data.dca_vault_execution_skipped.reason.toString()] ?? 'Strategy swap skipped for an unknown reason.'
+    : undefined;
 }
 
 function Page() {
@@ -97,7 +78,7 @@ function Page() {
     );
   }
 
-  const lastSwapSlippageError = getLatestSwapError(strategy, events);
+  const lastSwapSlippageError = getLatestSwapError(events);
   const expectedSwapValue = fiatPrice && fromAtomic(strategy.initialDenom, getSwapAmount(strategy)) * fiatPrice;
   const minimumSwapValue = getChainMinimumSwapValue(strategy.chainId);
 
