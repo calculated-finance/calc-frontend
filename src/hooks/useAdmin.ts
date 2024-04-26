@@ -21,6 +21,7 @@ const admins = [
   '0xfc0b5423c193953e55446aa75d24c167620f293a',
   '0x1Af6fca482cD73c198b8C0f3C883be8d9Bf5cF74',
   'archway1y4k0re9q905nvvcvvmxug3sqtd9e7du46vm3gk',
+  'neutron1y4k0re9q905nvvcvvmxug3sqtd9e7du4tcwhcx',
 ];
 
 export function isAddressAdmin(address: string | undefined | null) {
