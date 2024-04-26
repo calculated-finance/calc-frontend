@@ -156,7 +156,7 @@ export function getChainMinimumSwapValue(chainId: ChainId) {
     {
       'kaiyo-1': 5.0,
       'archway-1': 35.0,
-      'constantine-3': 35.0,
+      'neutron-1': 10.0,
     }[chainId as string] ?? 1.0
   );
 }
