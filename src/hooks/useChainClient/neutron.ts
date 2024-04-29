@@ -19,6 +19,8 @@ const fetchDenoms = async (chainId: ChainId) => {
     },
   } = await response.json();
 
+  console.log(filter((asset: any) => asset.symbol === 'NEWT', values(assets)));
+
   return reduce(
     (acc: { [x: string]: InitialDenomInfo }, asset: any) => ({
       ...acc,

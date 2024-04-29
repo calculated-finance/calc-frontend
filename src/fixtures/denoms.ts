@@ -539,6 +539,10 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [NeutronMainnetDenoms.HAVA]: {
       icon: '/images/denoms/hava.webp',
     },
+    [NeutronMainnetDenoms.NEWT]: {
+      icon: '/images/denoms/NEWT.webp',
+      coingeckoId: 'newt',
+    },
   },
   'pion-1': {
     [NeutronTestnetDenoms.NTRN]: {
