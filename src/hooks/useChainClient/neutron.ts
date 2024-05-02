@@ -102,7 +102,17 @@ export const neutronChainClient = async (chainId: ChainId, _cosmWasmClient: Cosm
         };
       }
 
-      const { swaps } = (await response.json())[0];
+      const routes = await response.json();
+
+      if (routes.length === 0) {
+        return {
+          route: undefined,
+          feeRate: 0.0,
+          routeError: `Unable to fetch a route from ${initialDenom.name} to ${targetDenom.name} on Astroport`,
+        };
+      }
+
+      const { swaps } = routes[0];
 
       const route = Buffer.from(
         JSON.stringify(
