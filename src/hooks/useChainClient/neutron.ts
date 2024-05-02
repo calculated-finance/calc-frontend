@@ -90,7 +90,7 @@ export const neutronChainClient = async (chainId: ChainId, _cosmWasmClient: Cosm
           end: targetDenom.id,
           amount: swapAmount.toString(),
           chainId,
-          limit: '1',
+          limit: '5',
         })}`,
       );
 
