@@ -1,6 +1,6 @@
 import { ChainId } from '@models/ChainId';
 import { ArchwayMainnetDenoms } from '@models/Denom';
-import { keys, map, reduce } from 'rambda';
+import { keys, map, reduce, reverse } from 'rambda';
 
 type Pool =
   | {
@@ -15,30 +15,32 @@ type Pool =
 
 const reverseRoute = (route: Pool[] | undefined) =>
   route &&
-  map(
-    (pool: Pool) =>
-      'stable_hop_info' in pool
-        ? {
-            stable_hop_info: {
-              pool: pool.stable_hop_info.pool,
-              from_asset_index: pool.stable_hop_info.to_asset_index,
-              to_asset_index: pool.stable_hop_info.from_asset_index,
+  reverse(
+    map(
+      (pool: Pool) =>
+        'stable_hop_info' in pool
+          ? {
+              stable_hop_info: {
+                pool: pool.stable_hop_info.pool,
+                from_asset_index: pool.stable_hop_info.to_asset_index,
+                to_asset_index: pool.stable_hop_info.from_asset_index,
+              },
+            }
+          : 'standard_hop_info' in pool
+          ? {
+              standard_hop_info: {
+                pool: pool.standard_hop_info.pool,
+                from_asset_index: pool.standard_hop_info.from_asset_index === 1 ? 0 : 1,
+              },
+            }
+          : {
+              ratio_hop_info: {
+                pool: pool.ratio_hop_info.pool,
+                from_asset_index: pool.ratio_hop_info.from_asset_index === 1 ? 0 : 1,
+              },
             },
-          }
-        : 'standard_hop_info' in pool
-        ? {
-            standard_hop_info: {
-              pool: pool.standard_hop_info.pool,
-              from_asset_index: pool.standard_hop_info.from_asset_index === 1 ? 0 : 1,
-            },
-          }
-        : {
-            ratio_hop_info: {
-              pool: pool.ratio_hop_info.pool,
-              from_asset_index: pool.ratio_hop_info.from_asset_index === 1 ? 0 : 1,
-            },
-          },
-    route,
+      route,
+    ),
   );
 
 export const ARCHWAY_MAINNET: { [x: string]: Pool[] } = {
