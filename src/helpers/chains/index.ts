@@ -1,4 +1,5 @@
-import { GasPrice } from '@cosmjs/stargate';
+// import { GasPrice } from '@cosmjs/stargate';
+import { GasPrice } from '@cosmjs/stargate/build/fee';
 import { ChainId } from '@models/ChainId';
 import {
   ARCHWAY_MAINNET_RPC,
