@@ -71,7 +71,7 @@ export function ChainProvider({ children }: ChildrenProp) {
       }}
       signerOptions={{
         signingCosmwasm: (chain) => ({
-          gasPrice: getGasPrice(getChainId(typeof chain === 'string' ? chain : chain.chain_name) as ChainId) as any,
+          gasPrice: getGasPrice(getChainId(typeof chain === 'string' ? chain : chain.chain_name) as ChainId),
         }),
       }}
       walletConnectOptions={{
