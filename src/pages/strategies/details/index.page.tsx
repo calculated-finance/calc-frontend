@@ -35,6 +35,7 @@ import { getStandardDcaEndDate, isEscrowPending } from '@helpers/strategy/dcaPlu
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
 import LinkWithQuery from '@components/LinkWithQuery';
 import useFiatPrice from '@hooks/useFiatPrice';
+import { find } from 'rambda';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { getChainMinimumSwapValue, getChainName } from '@helpers/chains';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
@@ -45,12 +46,11 @@ import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
-import { find } from 'rambda';
 
 export function getLatestSwapError(events: StrategyEvent[] | undefined): string | undefined {
-  const finalEvent = events && events.length > 0 ? events[events.length - 1] : undefined;
+  const finalEvent = events && events.length > 0 && events[events.length - 1];
 
-  return !!finalEvent
+  return finalEvent
     ? (find(
         ([key, _]) => JSON.stringify(finalEvent.data).includes(key),
         [
