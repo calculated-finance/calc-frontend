@@ -18,6 +18,7 @@ import { getChainId, getGasPrice } from '@helpers/chains';
 import { useEffect, useState } from 'react';
 import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
 import { MainWalletBase } from '@cosmos-kit/core';
+import { EventData, ExecutionSkippedReason } from 'src/interfaces/dca/response/get_events_by_resource_id';
 
 declare global {
   interface Window extends KeplrWindow {

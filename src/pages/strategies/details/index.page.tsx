@@ -25,6 +25,7 @@ import { StrategyEvent } from '@models/StrategyEvent';
 import ConnectWallet from '@components/ConnectWallet';
 import {
   PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
+  PREVIOUS_SWAP_FAILED_DUE_TO_PRICE_THRESHOLD,
   PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
 } from 'src/constants';
 import { getStrategyName, getSwapAmount } from '@helpers/strategy';
@@ -44,14 +45,19 @@ import StrategyComparison from './StrategyComparison';
 import { NextSwapInfo } from './NextSwapInfo';
 import { StrategyChart } from './StrategyChart';
 import { StrategyComparisonChart } from './StrategyComparisonChart';
+import { find } from 'rambda';
 
 export function getLatestSwapError(events: StrategyEvent[] | undefined): string | undefined {
-  const finalEvent = events && events.length > 0 && events[events.length - 1];
-  return finalEvent && 'dca_vault_execution_skipped' in finalEvent.data
-    ? {
-        slippage_tolerance_exceeded: PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE,
-        unknown_failure: PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE,
-      }[finalEvent.data.dca_vault_execution_skipped.reason.toString()] ?? 'Strategy swap skipped for an unknown reason.'
+  const finalEvent = events && events.length > 0 ? events[events.length - 1] : undefined;
+
+  return !!finalEvent
+    ? (find(
+        ([key, _]) => JSON.stringify(finalEvent.data).includes(key),
+        [
+          ['slippage_tolerance_exceeded', PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE],
+          ['price_threshold_exceeded', PREVIOUS_SWAP_FAILED_DUE_TO_PRICE_THRESHOLD],
+        ],
+      ) ?? ['unknown_failure', PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE])[1]
     : undefined;
 }
 

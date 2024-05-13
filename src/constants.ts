@@ -15,6 +15,8 @@ export const FIN_TAKER_FEE = 0.0015;
 export const OUT_OF_GAS_ERROR_MESSAGE = 'The transaction ran out of gas during execution. Please provide more gas.';
 export const PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE =
   'The previous swap failed due to slippage or price impact being exceeded - your funds are safe, and the next swap is scheduled. You can edit the slippage settings at anytime.';
+export const PREVIOUS_SWAP_FAILED_DUE_TO_PRICE_THRESHOLD =
+  'The previous swap failed due to the price floor or ceiling being exceeded - your funds are safe, and the next swap is scheduled. You can edit the price threshold settings at anytime.';
 export const PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE =
   'The previous swap failed and this strategy has moved to complete. This is likely due to a swap amount that is too small to be swapped without losing a large part of the funds to gas. Please cancel the vault to get your remaining funds back.';
 export const LEDGER_AUTHZ_NOT_INCLUDED_ERROR_MESSAGE =
