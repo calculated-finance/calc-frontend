@@ -50,14 +50,17 @@ import { StrategyComparisonChart } from './StrategyComparisonChart';
 export function getLatestSwapError(events: StrategyEvent[] | undefined): string | undefined {
   const finalEvent = events && events.length > 0 && events[events.length - 1];
 
-  return finalEvent
+  return finalEvent && 'dca_vault_execution_skipped' in finalEvent.data
     ? (find(
         ([key, _]) => JSON.stringify(finalEvent.data).includes(key),
         [
           ['slippage_tolerance_exceeded', PREVIOUS_SWAP_FAILED_DUE_TO_SLIPPAGE_ERROR_MESSAGE],
           ['price_threshold_exceeded', PREVIOUS_SWAP_FAILED_DUE_TO_PRICE_THRESHOLD],
         ],
-      ) ?? ['unknown_failure', PREVIOUS_SWAP_FAILED_DUE_TO_INSUFFICIENT_FUNDS_ERROR_MESSAGE])[1]
+      ) ?? [
+        'unknown_failure',
+        `The previous swap failed due to an unknown reason. Please contact the CALC team at `,
+      ])[1]
     : undefined;
 }
 
