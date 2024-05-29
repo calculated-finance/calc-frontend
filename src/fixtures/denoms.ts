@@ -543,6 +543,39 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/NEWT.webp',
       coingeckoId: 'newt',
     },
+    [NeutronMainnetDenoms.JIMMY]: {
+      icon: '/images/denoms/jimmy.png',
+    },
+    [NeutronMainnetDenoms.GODRD]: {
+      icon: '/images/denoms/gdd.svg',
+    },
+    [NeutronMainnetDenoms.CIRCUS]: {
+      icon: '/images/denoms/circus.webp',
+    },
+    [NeutronMainnetDenoms.WOSMO]: {
+      icon: '/images/denoms/wosmo.webp',
+    },
+    [NeutronMainnetDenoms.BAD]: {
+      icon: '/images/denoms/BAD.webp',
+    },
+    [NeutronMainnetDenoms.PROP16]: {
+      icon: '/images/denoms/prop16.webp',
+    },
+    [NeutronMainnetDenoms.BADDOG]: {
+      icon: '/images/denoms/baddog.webp',
+    },
+    [NeutronMainnetDenoms.CORGI]: {
+      icon: '/images/denoms/BABYCORGI.webp',
+    },
+    [NeutronMainnetDenoms.ECLIP]: {
+      icon: '/images/denoms/eclipse.svg',
+    },
+    [NeutronMainnetDenoms.ASTROPEPE]: {
+      icon: '/images/denoms/astropepe.webp',
+    },
+    [NeutronMainnetDenoms.WOOF]: {
+      icon: '/images/denoms/woof.webp',
+    },
   },
   'pion-1': {
     [NeutronTestnetDenoms.NTRN]: {
