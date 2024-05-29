@@ -20,6 +20,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       coingeckoId: 'cosmos',
       enabledInDcaPlus: true,
     },
+    [KujiraMainnetDenoms.NAMI]: {
+      name: 'NAMI',
+      icon: '/images/denoms/nami.png',
+      coingeckoId: 'nami-protocol',
+    },
     [KujiraMainnetDenoms.stATOM]: {
       name: 'stATOM',
       icon: '/images/denoms/statom.svg',
@@ -70,14 +75,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [KujiraMainnetDenoms.LOCAL]: {
       name: 'LOCAL',
       icon: '/images/denoms/local.svg',
-      stakeable: true,
-
       coingeckoId: 'local-money',
     },
     [KujiraMainnetDenoms.LUNA]: {
       name: 'LUNA',
       icon: '/images/denoms/luna.svg',
-      stakeable: true,
       coingeckoId: 'terra-luna-2',
       enabled: true,
     },
@@ -106,14 +108,12 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [KujiraMainnetDenoms.GPAXG]: {
       name: 'gPAXG',
       icon: '/images/denoms/gpaxg.svg',
-      stakeable: true,
       coingeckoId: 'pax-gold',
       significantFigures: 18,
     },
     [KujiraMainnetDenoms.MARS]: {
       name: 'MARS',
       icon: '/images/denoms/mars.svg',
-      stakeable: true,
       coingeckoId: 'mars-protocol-a7fcbcfb-fd61-4017-92f0-7ee9f9cc6da3',
     },
     [KujiraMainnetDenoms.STRD]: {

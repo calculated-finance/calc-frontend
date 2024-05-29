@@ -91,6 +91,7 @@ export enum KujiraMainnetDenoms {
   TORI = 'ibc/91DAE8E9D19A6A770D2A787E54E1D388F8E603D89093FC4939CE36125CB8284D',
   AQLA = 'factory/kujira1xe0awk5planmtsmjel5xtx2hzhqdw5p8z66yqd/uaqla',
   DYM = 'ibc/9012F7E79EACC34CE81A4404ECBEED5A5DFFD61CCEE23F2B8600BAC948C483E6',
+  NAMI = 'factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/unami',
 }
 
 export enum ArchwayMainnetDenoms {
