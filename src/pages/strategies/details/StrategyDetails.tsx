@@ -50,9 +50,9 @@ import { WeightSummary } from '@components/WeightSummary';
 import YesNoValues from '@models/YesNoValues';
 import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrategyCustomise';
 import LinkWithQuery from '@components/LinkWithQuery';
+import { getChainDexName } from '@helpers/chains';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
-import { getChainDexName } from '@helpers/chains';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
   return (
