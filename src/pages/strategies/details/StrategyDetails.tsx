@@ -17,7 +17,6 @@ import {
 import CalcIcon from '@components/Icon';
 import { fromAtomic } from '@utils/getDenomInfo';
 import { generateStrategyTopUpUrl } from '@components/TopPanel/generateStrategyTopUpUrl';
-
 import { Strategy } from '@models/Strategy';
 import useStrategyEvents from '@hooks/useStrategyEvents';
 import { DELEGATION_FEE, SWAP_FEE, SWAP_FEE_WS } from 'src/constants';
@@ -39,7 +38,6 @@ import {
   getStrategyPriceTrigger,
 } from '@helpers/strategy';
 import { StrategyStatusBadge } from '@components/StrategyStatusBadge';
-
 import { getEscrowAmount, getStrategyEndDateRange, getStrategySwapRange } from '@helpers/strategy/dcaPlus';
 import { useChainId } from '@hooks/useChainId';
 import useDexFee from '@hooks/useDexFee';
@@ -54,6 +52,7 @@ import { generateStrategyCustomiseUrl } from '@components/TopPanel/generateStrat
 import LinkWithQuery from '@components/LinkWithQuery';
 import { CancelButton } from './CancelButton';
 import { DestinationDetails } from './DestinationDetails';
+import { getChainDexName } from '@helpers/chains';
 
 function Escrowed({ strategy }: { strategy: Strategy }) {
   return (
@@ -122,8 +121,7 @@ export function SwapEachCycle({ strategy }: { strategy: Strategy }) {
                   isWeightedScale(strategy) && <Text>CALC sustainability fee: {getPrettyFee(100, SWAP_FEE_WS)}%</Text>
                 )}
                 <Text>
-                  {['osmosis-1', 'osmo-test-5'].includes(chainId) ? 'Osmosis swap' : 'Kujira'} fee:{' '}
-                  {getPrettyFee(100, dexFee)}%
+                  {`${getChainDexName(chainId)} swap fee`}: {getPrettyFee(100, dexFee)}%
                 </Text>
                 {isStrategyAutoStaking(strategy) && <Text>Automation fee: {getPrettyFee(100, DELEGATION_FEE)}%</Text>}
               </Box>
