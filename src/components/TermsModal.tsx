@@ -70,8 +70,8 @@ export function TermsModal({ isOpen, onClose, onSubmit, showCheckbox }: TermsMod
                       read and accepted the terms and conditions.
                     </Text>
                     <Text>
-                      CALC is a decentralized peer-to-peer app built on the Kujira and Osmosis blockchains that people
-                      can use to participate in decentralized financial products.
+                      CALC is a decentralized peer-to-peer app built on the Kujira, Osmosis, Archway and Neutron
+                      blockchains that people can use to participate in decentralized financial products.
                     </Text>
                     <Text>
                       AS DESCRIBED IN THE CALC LICENSES, THE CALC PROTOCOL IS PROVIDED &ldquo;AS IS&rdquo;, AT YOUR OWN
