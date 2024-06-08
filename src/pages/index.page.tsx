@@ -33,25 +33,6 @@ import useDenoms from '@hooks/useDenoms';
 import { values } from 'rambda';
 import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
 
-function WarningPanel() {
-  return (
-    <Stack direction="row" layerStyle="panel" px={8} py={8} spacing={4} h="full">
-      <Image src="/images/warning.svg" />
-      <Flex alignItems="center" p={4}>
-        <Text textStyle="body">
-          <Text as="span" fontWeight="bold" color="white">
-            Be Aware:
-          </Text>{' '}
-          Crypto markets often experience similar behavioral herding. Most investors blindly mimic the behavior of other
-          investors without seeking the rationality behind it. As asset prices pump and valuation metrics get stretched,
-          FOMO strengthens. People grow impatient watching Twitter users and friends make “easy” money. One by one,
-          reluctant investors join the herd despite their concerns.
-        </Text>
-      </Flex>
-    </Stack>
-  );
-}
-
 const isStrategyAccumulating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
 
 const isStrategyProfitTaking = (strategy: Strategy) => isDenomVolatile(getStrategyInitialDenom(strategy));
@@ -206,7 +187,6 @@ export function LearnAboutCalcPanel() {
 }
 
 function HomeGrid() {
-  const { connected } = useWallet();
   const { data: strategies, isLoading } = useStrategies();
 
   const activeStrategies = strategies?.filter(isStrategyOperating) ?? [];
@@ -216,25 +196,17 @@ function HomeGrid() {
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={3}>
         <SimpleDcaIn />
       </GridItem>
-
       {Boolean(activeStrategies.length) && (
         <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
           <InvestmentThesisWithActiveStrategies strategies={strategies} isLoading={isLoading} />
         </GridItem>
       )}
-
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
         <TotalInvestment />
       </GridItem>
-
       <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
         <LearnAboutCalcPanel />
       </GridItem>
-      {(!connected || activeStrategies.length === 0) && (
-        <GridItem colSpan={[10, 10, 10, 10, 5, 5]} rowSpan={1}>
-          <WarningPanel />{' '}
-        </GridItem>
-      )}
     </Grid>
   );
 }
