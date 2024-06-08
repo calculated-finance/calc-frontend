@@ -5,7 +5,6 @@ import {
   Text,
   Stack,
   Center,
-  Image,
   Flex,
   Grid,
   GridItem,
@@ -20,7 +19,6 @@ import Spinner from '@components/Spinner';
 import useAllStrategies from '@hooks/useAllStrategies';
 import { Strategy } from '@models/Strategy';
 import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
-import { useWallet } from '@hooks/useWallet';
 import { getStrategyInitialDenom, isStrategyOperating } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import LinkWithQuery from '@components/LinkWithQuery';
