@@ -25,6 +25,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/nami.png',
       coingeckoId: 'nami-protocol',
     },
+    [KujiraMainnetDenoms.YUM]: {
+      name: 'YUM.axl',
+      icon: '/images/denoms/yum.png',
+      coingeckoId: '',
+    },
     [KujiraMainnetDenoms.stATOM]: {
       name: 'stATOM',
       icon: '/images/denoms/statom.svg',
