@@ -286,7 +286,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [KujiraMainnetDenoms.AQLA]: {
       name: 'AQLA',
       icon: '/images/denoms/aqla.svg',
-      coingeckoId: 'unknown',
+      coingeckoId: 'aqualibre',
     },
     [KujiraMainnetDenoms.DYM]: {
       name: 'DYM',
