@@ -16,25 +16,23 @@ export function useWallet() {
       },
     );
 
-  if (chainContext?.isWalletConnected) {
-    return {
-      connected: chainContext.isWalletConnected,
-      getSigningClient: () => getSigningClient(chainContext),
-      walletType: chainContext.wallet?.prettyName,
-      isConnecting: chainContext.isWalletConnecting,
-      ...chainContext,
-    };
-  }
-
-  return {
-    address: undefined,
-    connected: false,
-    getSigningClient: () => {
-      throw new Error('Attempting to get signing client while not connected');
-    },
-    disconnect: undefined,
-    walletType: undefined,
-    isConnecting: false,
-    ...chainContext,
-  };
+  return chainContext?.isWalletConnected
+    ? {
+        connected: chainContext.isWalletConnected,
+        getSigningClient: () => getSigningClient(chainContext),
+        walletType: chainContext.wallet?.prettyName,
+        isConnecting: chainContext.isWalletConnecting,
+        ...chainContext,
+      }
+    : {
+        address: undefined,
+        connected: false,
+        getSigningClient: () => {
+          throw new Error('Attempting to get signing client while not connected');
+        },
+        disconnect: undefined,
+        walletType: undefined,
+        isConnecting: false,
+        ...chainContext,
+      };
 }

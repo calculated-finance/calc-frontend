@@ -8,8 +8,5 @@ export default function getClient(
   fetchedConfig: Config | undefined,
   signingClient: SigningCosmWasmClient | null | undefined,
 ) {
-  if (!signingClient) return null;
-  if (!fetchedConfig) return null;
-
-  return getCosmosCalcSigningClient(signingClient, chainConfig, fetchedConfig);
+  return signingClient && fetchedConfig && getCosmosCalcSigningClient(signingClient, chainConfig, fetchedConfig);
 }

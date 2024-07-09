@@ -374,11 +374,15 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       coingeckoId: 'inter-stable-token',
       stable: true,
     },
+    [OsmosisMainnetDenoms.USDT]: {
+      coingeckoId: 'tether',
+      stable: true,
+    },
     [OsmosisMainnetDenoms.axlUSDT]: {
       coingeckoId: 'axelar-usdt',
       stable: true,
     },
-    [OsmosisMainnetDenoms.USDT]: {
+    [OsmosisMainnetDenoms['USDT.kava']]: {
       coingeckoId: 'tether',
       stable: true,
     },
