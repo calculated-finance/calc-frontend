@@ -294,6 +294,10 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       coingeckoId: 'dymension',
       significantFigures: 18,
     },
+    [KujiraMainnetDenoms.KART]: {
+      name: 'KART',
+      icon: '/images/denoms/kart.png',
+    },
   },
   'harpoon-4': {
     [KujiraTestnetDenoms.Demo]: {

@@ -94,6 +94,7 @@ export enum KujiraMainnetDenoms {
   DYM = 'ibc/9012F7E79EACC34CE81A4404ECBEED5A5DFFD61CCEE23F2B8600BAC948C483E6',
   NAMI = 'factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/unami',
   YUM = 'ibc/507BE7E33F06026652F519AD4D36716251F2D34DF04514A905D3B19A7D8130F7',
+  KART = 'factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart',
 }
 
 export enum ArchwayMainnetDenoms {
