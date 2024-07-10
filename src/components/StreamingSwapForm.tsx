@@ -710,6 +710,7 @@ function DurationSlider() {
             setStrategyDuration(getStrategyDurationFromSlider(value));
             setDebouncedStrategyDuration(getStrategyDurationFromSlider(value));
           }}
+          focusThumbOnChange={false}
         >
           <SliderTrack>
             <SliderFilledTrack />
