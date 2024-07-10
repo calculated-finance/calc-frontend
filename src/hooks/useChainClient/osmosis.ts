@@ -24,7 +24,7 @@ const fetchDenoms = async (chainId: ChainId): Promise<{ [x: string]: InitialDeno
       const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
       const significantFigures = findDenomUnits?.exponent || 6;
 
-      const denom = asset.base as OsmosisMainnetDenoms | OsmosisTestnetDenoms;
+      const denom = asset.base;
       const overrides = (denom in allOverrides && allOverrides[denom]) || {};
 
       return {

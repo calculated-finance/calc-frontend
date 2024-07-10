@@ -387,6 +387,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       stable: true,
     },
     [OsmosisMainnetDenoms['USDT.kava']]: {
+      name: 'USDT.kava',
       coingeckoId: 'tether',
       stable: true,
     },
