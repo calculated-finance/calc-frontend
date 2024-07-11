@@ -28,11 +28,11 @@ const fetchDenoms = async (chainId: ChainId): Promise<{ [x: string]: InitialDeno
 
       return {
         ...acc,
-        [asset.base]: fromPartial({
+        [denom]: fromPartial({
           chain: chainId,
           id: denom,
           name: asset.symbol,
-          icon: asset.logo_URIs?.svg || asset.logo_URIs?.png,
+          icon: asset.logoURIs?.svg || asset.logoURIs?.png,
           coingeckoId: asset.coingeckoId || '',
           significantFigures,
           ...overrides,
