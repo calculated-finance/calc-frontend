@@ -14,27 +14,26 @@ import { ChainClient } from './helpers';
 
 const fetchDenoms = async (chainId: ChainId): Promise<{ [x: string]: InitialDenomInfo }> => {
   const baseUrl = 'https://raw.githubusercontent.com/osmosis-labs/assetlists/main';
-  const response = await fetch(`${baseUrl}/${chainId}/${chainId}.assetlist.json`);
+  const response = await fetch(`${baseUrl}/${chainId}/generated/frontend/assetlist.json`);
   const { assets } = await response.json();
 
   const allOverrides = DENOMS[chainId];
 
   return reduce(
-    (acc: { [x: string]: InitialDenomInfo }, asset: Asset) => {
-      const findDenomUnits = asset.denom_units.find((du) => du.denom === asset.display);
-      const significantFigures = findDenomUnits?.exponent || 6;
+    (acc: { [x: string]: InitialDenomInfo }, asset: any) => {
+      const significantFigures = asset.decimals || 6;
 
-      const denom = asset.base;
+      const denom = asset.coinMinimalDenom;
       const overrides = (denom in allOverrides && allOverrides[denom]) || {};
 
       return {
         ...acc,
         [asset.base]: fromPartial({
           chain: chainId,
-          id: asset.base,
+          id: denom,
           name: asset.symbol,
           icon: asset.logo_URIs?.svg || asset.logo_URIs?.png,
-          coingeckoId: asset.coingecko_id || '',
+          coingeckoId: asset.coingeckoId || '',
           significantFigures,
           ...overrides,
         }),
