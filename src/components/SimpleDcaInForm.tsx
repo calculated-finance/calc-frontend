@@ -83,7 +83,7 @@ function InitialDenom() {
   const [isMobile] = useMediaQuery('(max-width: 506px)');
 
   useEffect(() => {
-    if (!!pairs && !initialDenom.value) {
+    if (!!pairs && pairs.length > 0 && !initialDenom.value) {
       const randomPair = pairs[Math.floor(Math.random() * pairs.length)];
       initialDenomHelpers.setValue(randomPair.denoms[0]);
       resultingDenomHelpers.setValue(randomPair.denoms[1]);
