@@ -17,6 +17,7 @@ const admins = {
   osmo1a0uqtx4erytfy2hgeysccjqusrz8ygq9frr65e: 'osmo1a0uqtx4erytfy2hgeysccjqusrz8ygq9frr65e',
   archway1y4k0re9q905nvvcvvmxug3sqtd9e7du46vm3gk: 'archway1y4k0re9q905nvvcvvmxug3sqtd9e7du46vm3gk',
   neutron1y4k0re9q905nvvcvvmxug3sqtd9e7du4tcwhcx: 'neutron1y4k0re9q905nvvcvvmxug3sqtd9e7du4tcwhcx',
+  osmo1xl263saj5j6k45eyg36fs6m4lzmyt2qy47lvqq: 'osmo1xl263saj5j6k45eyg36fs6m4lzmyt2qy47lvqq',
 };
 
 export const isAddressAdmin = (address: string | undefined | null) => address && address in admins;
