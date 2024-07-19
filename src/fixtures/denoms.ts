@@ -297,6 +297,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [KujiraMainnetDenoms.KART]: {
       name: 'KART',
       icon: '/images/denoms/kart.png',
+      coingeckoId: 'the-kartel-project',
     },
   },
   'harpoon-4': {
