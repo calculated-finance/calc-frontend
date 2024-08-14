@@ -12,13 +12,14 @@ import {
   MAINNET_CHAINS,
   OSMOSIS_MAINNET_RPC,
   OSMOSIS_TESTNET_RPC,
+  ARCHWAY_TESTNET_RPC,
+  ARCHWAY_MAINNET_RPC,
 } from 'src/constants';
 import { ChainId } from '@models/ChainId';
 import { getChainId, getGasPrice } from '@helpers/chains';
 import { useEffect, useState } from 'react';
 import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
 import { MainWalletBase } from '@cosmos-kit/core';
-import { EventData, ExecutionSkippedReason } from 'src/interfaces/dca/response/get_events_by_resource_id';
 
 declare global {
   interface Window extends KeplrWindow {
@@ -57,6 +58,9 @@ export function ChainProvider({ children }: ChildrenProp) {
           osmosis: {
             rpc: [OSMOSIS_MAINNET_RPC],
           },
+          archway: {
+            rpc: [ARCHWAY_MAINNET_RPC],
+          },
           ...(process.env.NEXT_PUBLIC_APP_ENV !== 'production'
             ? {
                 kujiratestnet: {
@@ -65,7 +69,9 @@ export function ChainProvider({ children }: ChildrenProp) {
                 osmosistestnet: {
                   rpc: [OSMOSIS_TESTNET_RPC],
                 },
-                archwaytestnet: {},
+                archwaytestnet: {
+                  rpc: [ARCHWAY_TESTNET_RPC],
+                },
               }
             : {}),
         },
