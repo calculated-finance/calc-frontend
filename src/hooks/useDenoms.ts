@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { InitialDenomInfo } from '@utils/DenomInfo';
-import { KeyValuePair, all, indexBy, isNil, map, mergeAll, pick, reduce, toLower, values, zip } from 'rambda';
+import { KeyValuePair, all, filter, indexBy, isNil, map, mergeAll, reduce, toLower, values, zip } from 'rambda';
 import { CHAINS, MAINNET_CHAINS } from 'src/constants';
 import { ChainId } from '@models/ChainId';
 import { useChainClient } from '@hooks/useChainClient';
@@ -20,7 +20,16 @@ const useDenoms = () => {
           [chainId, denomsById]: KeyValuePair<ChainId, { [id: string]: InitialDenomInfo }>,
         ) => ({ ...acc, [chainId]: denomsById }),
         {} as { [chainId: string]: { [id: string]: InitialDenomInfo } },
-        zip(chainIds, await Promise.all(map((client: ChainClient | undefined) => client!.fetchDenoms(), chainClients))),
+        zip(
+          chainIds,
+          map(
+            (r: any) => r.value,
+            filter(
+              (r) => r.status === 'fulfilled',
+              await Promise.allSettled(map((client: ChainClient | undefined) => client!.fetchDenoms(), chainClients)),
+            ),
+          ) as any[],
+        ),
       ),
     {
       enabled: all((c) => !isNil(c), chainClients),
