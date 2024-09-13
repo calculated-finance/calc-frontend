@@ -3,7 +3,6 @@ import { Coin } from '@cosmjs/proto-signing';
 import { getChainEndpoint } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
 import { InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
-import { Pair } from '@models/Pair';
 import { reduce, filter, map, keys, split } from 'rambda';
 import { osmosis } from 'osmojs';
 import { Validator } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
@@ -16,12 +15,12 @@ import { ChainClient, fetchBalances } from './helpers';
 const fetchDenoms = async (chainId: ChainId): Promise<{ [x: string]: InitialDenomInfo }> => {
   const isTestnet = chainId === 'constantine-3';
   const url = isTestnet
-    ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL!
-    : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL!;
+    ? process.env.NEXT_PUBLIC_ARCHWAY_TESTNET_API_URL
+    : process.env.NEXT_PUBLIC_ARCHWAY_MAINNET_API_URL;
   const fallbackData = isTestnet ? constantine3Data : archway1Data;
 
   const fetchDenomsWithFallback = async () => {
-    if (process.env.NEXT_PUBLIC_APP_ENV === 'dev') {
+    if (process.env.NEXT_PUBLIC_APP_ENV === 'dev' || !url) {
       return fallbackData;
     }
     try {
@@ -61,13 +60,8 @@ export const archwayChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
 
   return {
     fetchDenoms: () => fetchDenoms(chainId),
-    fetchPairs: async (
-      _chainId: ChainId,
-      _contractAddress: string,
-      _client: CosmWasmClient,
-      _startAfter?: string,
-      _allPairs?: Pair[],
-    ) => map((key) => ({ denoms: split('-', key) as [string, string] }), keys(fetchAllRoutes(chainId)) as string[]),
+    fetchPairs: async () =>
+      map((key) => ({ denoms: split('-', key) as [string, string] }), keys(fetchAllRoutes(chainId)) as string[]),
     fetchTokenBalance: async (address: string, denom: InitialDenomInfo) =>
       (await fetchBalances(queryClient, cosmWasmClient, address, await fetchDenoms(chainId))).find(
         (b: Coin) => b.denom === denom.id,
