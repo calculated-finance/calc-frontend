@@ -10,7 +10,7 @@ import { ChainClient, fetchBalance, fetchBalances } from './helpers';
 
 const fetchDenoms = async (chainId: ChainId) => {
   const response = await fetch(
-    `${getNeutronApiUrl(chainId)}/api/trpc/tokens.getAll?input={"json":{"chainId":"${chainId}"}}`,
+    `${getNeutronApiUrl(chainId)}/api/trpc/tokens.getAll?input={"json":{"chainId":["${chainId}"]}}`,
   );
 
   const {
@@ -35,7 +35,7 @@ const fetchDenoms = async (chainId: ChainId) => {
       },
     }),
     {},
-    filter((asset: any) => asset.token in DENOMS[chainId], values(assets)),
+    filter((asset: any) => asset.token in DENOMS[chainId], values(assets[chainId])),
   );
 };
 
@@ -46,13 +46,7 @@ export const neutronChainClient = async (chainId: ChainId, _cosmWasmClient: Cosm
 
   return {
     fetchDenoms: () => fetchDenoms(chainId),
-    fetchPairs: async (
-      _chainId: ChainId,
-      _contractAddress: string,
-      _client: CosmWasmClient,
-      _startAfter?: string,
-      _allPairs?: Pair[],
-    ) => {
+    fetchPairs: async () => {
       const denoms = values(await fetchDenoms(chainId));
       return values(
         reduce(
