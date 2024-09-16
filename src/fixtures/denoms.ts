@@ -29,6 +29,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       name: 'YUM.axl',
       icon: '/images/denoms/YUM.png',
       coingeckoId: 'yum',
+      significantFigures: 18,
     },
     [KujiraMainnetDenoms.stATOM]: {
       name: 'stATOM',
