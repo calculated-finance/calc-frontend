@@ -155,7 +155,7 @@ export function getAddressPrefix(chainId: ChainId) {
 export function getChainMinimumSwapValue(chainId: ChainId) {
   return (
     {
-      'kaiyo-1': 5.0,
+      'kaiyo-1': 25.0,
       'archway-1': 35.0,
       'neutron-1': 10.0,
     }[chainId as string] ?? 1.0
