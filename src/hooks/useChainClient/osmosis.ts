@@ -1,8 +1,6 @@
-import { Asset } from '@chain-registry/types';
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
 import { getChainEndpoint, getOsmosisRouterUrl } from '@helpers/chains';
 import { ChainId } from '@models/ChainId';
-import { OsmosisMainnetDenoms, OsmosisTestnetDenoms } from '@models/Denom';
 import { InitialDenomInfo, ResultingDenomInfo, fromPartial } from '@utils/DenomInfo';
 import { reduce, values, forEach, join, sort } from 'rambda';
 import { osmosis } from 'osmojs';
@@ -51,13 +49,7 @@ export const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
 
   return {
     fetchDenoms: () => fetchDenoms(chainId),
-    fetchPairs: async (
-      _chainId: ChainId,
-      _contractAddress: string,
-      _client: CosmWasmClient,
-      _startAfter?: string,
-      _allPairs?: Pair[],
-    ) => {
+    fetchPairs: async () => {
       const denoms = await fetchDenoms(chainId);
       return values(
         reduce(

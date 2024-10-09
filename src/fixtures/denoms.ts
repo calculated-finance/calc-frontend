@@ -466,6 +466,10 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     [NeutronMainnetDenoms.ASTRO]: {
       icon: '/images/denoms/astro.png',
     },
+    [NeutronMainnetDenoms.dATOM]: {
+      icon: '/images/denoms/datom.svg',
+      coingeckoId: 'drop-staked-atom',
+    },
     [NeutronMainnetDenoms.AXL]: {
       icon: '/images/denoms/axl.svg',
     },
