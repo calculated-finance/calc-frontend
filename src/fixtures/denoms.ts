@@ -366,6 +366,9 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       coingeckoId: 'dai',
       stable: true,
     },
+    [OsmosisMainnetDenoms.DGN]: {
+      coingeckoId: 'dragon-coin-2',
+    },
     [OsmosisMainnetDenoms.DOT]: {
       coingeckoId: 'polkadot',
     },
@@ -464,6 +467,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       stable: true,
     },
     [NeutronMainnetDenoms.ASTRO]: {
+      name: 'ASTRO.cw20',
+      icon: '/images/denoms/astro.png',
+    },
+    [NeutronMainnetDenoms['ASTRO.factory']]: {
+      name: 'ASTRO',
       icon: '/images/denoms/astro.png',
     },
     [NeutronMainnetDenoms.dATOM]: {
@@ -492,6 +500,11 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
       icon: '/images/denoms/ksm.svg',
     },
     [NeutronMainnetDenoms.MARS]: {
+      name: 'MARS.ibc',
+      icon: '/images/denoms/mars.svg',
+    },
+    [NeutronMainnetDenoms['MARS.factory']]: {
+      name: 'MARS',
       icon: '/images/denoms/mars.svg',
     },
     [NeutronMainnetDenoms.NLS]: {
