@@ -1,5 +1,5 @@
 import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
+import { getChainName, getMarsParamsAddress, getRedBankAddress } from '@helpers/chains';
 import { useQuery } from '@tanstack/react-query';
 import { ResultingDenomInfo } from '@utils/DenomInfo';
 import { useChainId } from '@hooks/useChainId';
@@ -38,16 +38,27 @@ export function useMarket(resultingDenom: ResultingDenomInfo | undefined) {
   return useQuery<Market>(
     ['mars-market', cosmWasmClient, resultingDenom?.id],
     async () => {
+      if (!cosmWasmClient) {
+        throw new Error('No cosmwasm client');
+      }
+
       if (!resultingDenom) {
         throw new Error('No resulting denom');
       }
 
+      const redBankAddress = getRedBankAddress(chainId);
+      const marsParamsAddress = getMarsParamsAddress(chainId);
+
+      if (!redBankAddress || !marsParamsAddress) {
+        throw new Error(`Mars not supported on ${getChainName(chainId)}`);
+      }
+
       try {
         const [marketResult, paramsResult] = await Promise.all([
-          cosmWasmClient!.queryContractSmart(getRedBankAddress(chainId), {
+          cosmWasmClient.queryContractSmart(redBankAddress, {
             market: { denom: resultingDenom.id },
           }),
-          cosmWasmClient!.queryContractSmart(getMarsParamsAddress(chainId), {
+          cosmWasmClient.queryContractSmart(marsParamsAddress, {
             asset_params: { denom: resultingDenom.id },
           }),
         ]);
