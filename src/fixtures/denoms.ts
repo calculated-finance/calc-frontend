@@ -662,6 +662,7 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     },
     [ArchwayMainnetDenoms.DEC]: {
       icon: 'https://astrovault.io/static/media/logo-dec.5d1099ecf235c58f1e2e.svg',
+      coingeckoId: 'decentr',
     },
     [ArchwayMainnetDenoms.GRAV]: {
       icon: 'https://astrovault.io/static/media/logo-grav.50603ca3f3af799ef868.svg',
