@@ -11,7 +11,7 @@ import { combineDateAndTime } from '@helpers/combineDateAndTime';
 import { SECONDS_IN_A_DAY, SECONDS_IN_A_HOUR, SECONDS_IN_A_MINUTE, SECONDS_IN_A_WEEK } from 'src/constants';
 import { ExecutionIntervals } from '@models/ExecutionIntervals';
 import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
-import { ChainConfig, getRedBankAddress } from '@helpers/chains';
+import { ChainConfig, getChainName, getRedBankAddress } from '@helpers/chains';
 import { Config } from 'src/interfaces/dca/response/get_config';
 import { safeInvert } from '@utils/safeInvert';
 import { toAtomic } from '@utils/getDenomInfo';
@@ -71,8 +71,14 @@ export function buildCallbackDestinations(
           on_behalf_of: senderAddress,
         },
       };
+      const redBankAddress = getRedBankAddress(chainConfig.id);
+
+      if (!redBankAddress) {
+        throw new Error(`Red bank not supported on ${getChainName(chainConfig.id)}`);
+      }
+
       destinations.push({
-        address: getRedBankAddress(chainConfig.id),
+        address: redBankAddress,
         allocation: '1.0',
         msg: Buffer.from(JSON.stringify(msg)).toString('base64'),
       });
