@@ -1,5 +1,4 @@
-// import { GasPrice } from '@cosmjs/stargate';
-import { GasPrice } from '@cosmjs/stargate/build/fee';
+import { GasPrice } from '@cosmjs/stargate';
 import { ChainId } from '@models/ChainId';
 import {
   ARCHWAY_MAINNET_RPC,
@@ -58,7 +57,7 @@ export function getDCAContractAddress(chainId: ChainId) {
     'constantine-3': 'archway1p0w6hpxhcdxvhl6r02wslqgjhrtq60ljs4tky6da2s6ncpha0v0s2s2f6r',
     'neutron-1': 'neutron1cc5adah6vekm2nz5yp6qs332g704q90jgc03v8zxpzaqh297jvqqae2eez',
     'pion-1': 'neutron1taf86htl6uymn2dvy8yyje6rh926aesuqadg86m7kd925sapd3fqw2wkvj',
-  }[chainId]!;
+  }[chainId];
 }
 
 export function getAutoCompoundStakingRewardsAddress(chainId: ChainId): string {
@@ -100,7 +99,7 @@ export function getChainCosmosName(chainId: ChainId) {
   }[chainId];
 }
 
-export function getChainId(chainName: string): string {
+export function getChainId(chainName: string) {
   return {
     osmosis: 'osmosis-1',
     osmosistestnet: 'osmo-test-5',
@@ -110,7 +109,7 @@ export function getChainId(chainName: string): string {
     archwaytestnet: 'constantine-3',
     neutron: 'neutron-1',
     neutrontestnet: 'pion-1',
-  }[chainName]!;
+  }[chainName];
 }
 
 export function getChainDexName(chainId: ChainId) {
@@ -203,42 +202,42 @@ export function getOsmosisWebUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://app.osmosis.zone',
     'osmo-test-5': 'https://testnet.osmosis.zone',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export function getOsmosisRouterUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://sqs.osmosis.zone',
     'osmo-test-5': 'https://sqs.testnet.osmosis.zone',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export function getRedBankAddress(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo1c3ljch9dfw5kf52nfwpxd2zmj2ese7agnx0p9tenkrryasrle5sqf3ftpg',
     'osmo-test-5': 'osmo1dl4rylasnd7mtfzlkdqn2gr0ss4gvyykpvr6d7t5ylzf6z535n9s5jjt8u',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export function getMarsParamsAddress(chainId: ChainId) {
   return {
     'osmosis-1': 'osmo1nlmdxt9ctql2jr47qd4fpgzg84cjswxyw6q99u4y4u4q6c2f5ksq7ysent',
     'osmo-test-5': 'osmo1h334tvddn82m4apm08rm9k6kt32ws7vy0c4n30ngrvu6h6yxh8eq9l9jfh',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export function getMarsUrl(chainId: ChainId) {
   return {
     'osmosis-1': 'https://mars.osmosis.zone',
     'osmo-test-5': 'https://testnet-osmosis.marsprotocol.io/',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export function getNeutronApiUrl(chainId: ChainId) {
   return {
     'neutron-1': 'https://app.astroport.fi',
     'pion-1': 'https://testnet.astroport.fi',
-  }[chainId as string]!;
+  }[chainId as string];
 }
 
 export type ChainConfig = {
