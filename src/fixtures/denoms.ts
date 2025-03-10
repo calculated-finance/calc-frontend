@@ -347,6 +347,9 @@ export const DENOMS: Record<ChainId, Record<string, Partial<InitialDenomInfo>>> 
     },
   },
   'osmosis-1': {
+    [OsmosisMainnetDenoms.PAXG]: {
+      coingeckoId: 'pax-gold',
+    },
     [OsmosisMainnetDenoms.axlWBTC]: {
       coingeckoId: 'wrapped-bitcoin',
       enabledInDcaPlus: true,
