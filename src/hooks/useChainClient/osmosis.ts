@@ -78,7 +78,7 @@ export const osmosisChainClient = async (chainId: ChainId, cosmWasmClient: CosmW
       const { balances } = await queryClient.cosmos.bank.v1beta1.allBalances({
         address,
         pagination: {
-          key: Buffer.from(''),
+          key: Uint8Array.from(''),
           offset: Long.fromInt(0),
           limit: Long.fromInt(1000),
           countTotal: false,
