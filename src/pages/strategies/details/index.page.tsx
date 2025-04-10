@@ -59,7 +59,7 @@ export function getLatestSwapError(events: StrategyEvent[] | undefined): string 
         ],
       ) ?? [
         'unknown_failure',
-        `The previous swap failed due to an unknown reason. Please contact the CALC team at `,
+        `The previous swap failed due to an unknown reason. Please contact the CALC team at https://t.me/calcprotocol`,
       ])[1]
     : undefined;
 }
