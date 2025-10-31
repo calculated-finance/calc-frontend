@@ -1,12 +1,12 @@
+import { getChainConfig } from '@helpers/chains';
 import { useFormStore } from '@hooks/useFormStore';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChainId } from '@models/ChainId';
 import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'querystring';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CHAINS } from 'src/constants';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { ParsedUrlQuery } from 'querystring';
-import { getChainConfig } from '@helpers/chains';
-import { CHAINS } from 'src/constants';
-import { ChainId } from '@models/ChainId';
 
 type ChainState = {
   chainId: ChainId;
@@ -16,7 +16,7 @@ type ChainState = {
 export const useChainStore = create<ChainState>()(
   persist(
     (set) => ({
-      chainId: process.env.NEXT_PUBLIC_APP_ENV === 'production' ? 'kaiyo-1' : 'harpoon-4',
+      chainId: 'osmosis-1',
       setChain: (chainId: ChainId) => set({ chainId }),
     }),
     {

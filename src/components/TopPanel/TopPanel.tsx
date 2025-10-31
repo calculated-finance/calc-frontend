@@ -1,14 +1,13 @@
-import { Button, Heading, Text, Stack, Center, Image, HStack, Box, GridItem, Flex } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, GridItem, Heading, HStack, Image, Stack, Text } from '@chakra-ui/react';
 import Icon from '@components/Icon';
+import LinkWithQuery from '@components/LinkWithQuery';
 import Spinner from '@components/Spinner';
 import { BarChartIcon, Block3DIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
+import { isStrategyOperating } from '@helpers/strategy';
 import { useStrategies } from '@hooks/useStrategies';
+import { useWallet } from '@hooks/useWallet';
 import { Strategy } from '@models/Strategy';
 import { fromAtomic } from '@utils/getDenomInfo';
-import { useWallet } from '@hooks/useWallet';
-import { isStrategyOperating } from '@helpers/strategy';
-import LinkWithQuery from '@components/LinkWithQuery';
-import { useAnalytics } from '@hooks/useAnalytics';
 import { generateStrategyDetailUrl } from './generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './generateStrategyTopUpUrl';
 
@@ -65,7 +64,6 @@ function Returning() {
   );
 }
 function LearnNewUsers() {
-  const { track } = useAnalytics();
   return (
     <>
       <HStack>
@@ -91,7 +89,6 @@ function LearnNewUsers() {
             size="sm"
             bgColor="blue.200"
             _hover={{ bgColor: 'blue.300' }}
-            onClick={() => track('Learning hub button clicked')}
           >
             Learn how CALC works
           </Button>

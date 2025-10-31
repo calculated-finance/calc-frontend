@@ -1,8 +1,8 @@
-import { ModalBody, ModalCloseButton, ModalContent, ModalHeader, Center, Modal, ModalOverlay } from '@chakra-ui/react';
-import { KADO_API_KEY } from 'src/constants';
+import { Center, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react';
 import ConnectWallet from '@components/ConnectWallet';
-import { useChainId } from '@hooks/useChainId';
 import { useChainContext } from '@hooks/useChainContext';
+import { useChainId } from '@hooks/useChainId';
+import { KADO_API_KEY } from 'src/constants';
 
 function OnRampModalContent() {
   const chainContext = useChainContext();
@@ -19,7 +19,6 @@ function OnRampModalContent() {
   const network = {
     'kaiyo-1': 'kujira',
     'osmosis-1': 'osmosis',
-    'harpoon-4': 'kujira',
     'osmo-test-5': 'osmosis',
     'archway-1': 'archway',
     'constantine-3': 'archway',

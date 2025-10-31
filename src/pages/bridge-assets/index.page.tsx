@@ -1,9 +1,9 @@
-import { Button, Flex, Heading, Stack, Text, Image, SimpleGrid, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Heading, Image, SimpleGrid, Stack, Text, useDisclosure } from '@chakra-ui/react';
 import { getSidebarLayout } from '@components/Layout';
-import SquidModal from '@components/SquidModal';
-import 'isomorphic-fetch';
 import OnRampModal from '@components/OnRampModalContent';
+import SquidModal from '@components/SquidModal';
 import { useChainId } from '@hooks/useChainId';
+import 'isomorphic-fetch';
 
 type GetAssetsCardProps = {
   name: string;
@@ -42,7 +42,7 @@ function BridgeAssetsCards() {
   return (
     <Stack direction="column" spacing={8}>
       <SimpleGrid columns={[1, null, null, 2, null, 4]} gap={8}>
-        {['kaiyo-1', 'harpoon-4'].includes(chain) && (
+        {['kaiyo-1'].includes(chain) && (
           <>
             <BridgeAssetsCard
               name="Cross Chain Bridge"
@@ -67,7 +67,7 @@ function BridgeAssetsCards() {
           onClick={onOpen}
           cta="Get axlUSDC now"
         />
-        {['kaiyo-1', 'harpoon-4'].includes(chain) && (
+        {['kaiyo-1'].includes(chain) && (
           <BridgeAssetsCard
             name="Mint USK"
             description="Use ATOM or DOT as collateral to mint the USK stablecoin."

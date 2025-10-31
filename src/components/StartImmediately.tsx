@@ -1,10 +1,10 @@
-import { FormControl, FormHelperText, FormLabel, useRadioGroup, HStack } from '@chakra-ui/react';
-import { useField } from 'formik';
+import { FormControl, FormHelperText, FormLabel, HStack, useRadioGroup } from '@chakra-ui/react';
 import Radio from '@components/Radio';
 import RadioCard from '@components/RadioCard';
 import TriggerType from '@components/TriggerType';
 import { useChainId } from '@hooks/useChainId';
 import YesNoValues from '@models/YesNoValues';
+import { useField } from 'formik';
 
 const startImmediatelyData: { value: YesNoValues; label: string }[] = [
   {
@@ -42,7 +42,7 @@ export default function StartImmediately() {
             );
           })}
         </Radio>
-        {['kaiyo-1', 'harpoon-4'].includes(chain) && <TriggerType />}
+        {['kaiyo-1'].includes(chain) && <TriggerType />}
       </HStack>
     </FormControl>
   );

@@ -1,35 +1,28 @@
 import {
-  Button,
   Box,
-  Heading,
-  Text,
-  Stack,
-  Center,
+  Button,
   Flex,
   Grid,
   GridItem,
+  Heading,
   HStack,
-  Divider,
-  Wrap,
-  VStack,
   Icon,
+  Image,
+  Stack,
+  Text,
+  VStack,
+  Wrap,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
-import Spinner from '@components/Spinner';
-import useAllStrategies from '@hooks/useAllStrategies';
-import { Strategy } from '@models/Strategy';
-import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
-import { getStrategyInitialDenom, isStrategyOperating } from '@helpers/strategy';
 import { getSidebarLayout } from '@components/Layout';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useAnalytics } from '@hooks/useAnalytics';
-import { useStrategies } from '@hooks/useStrategies';
-import { CrownIcon, KnowledgeIcon, DropIcon } from '@fusion-icons/react/interface';
-import useFiatPrices from '@hooks/useFiatPrices';
 import SimpleDcaIn from '@components/SimpleDcaInForm';
-import useDenoms from '@hooks/useDenoms';
-import { values } from 'rambda';
-import { getTotalSwapped, totalFromCoins } from './stats-and-totals/index.page';
+import Spinner from '@components/Spinner';
+import { CrownIcon, KnowledgeIcon } from '@fusion-icons/react/interface';
+import { getStrategyInitialDenom, isStrategyOperating } from '@helpers/strategy';
+import { useStrategies } from '@hooks/useStrategies';
+import { Strategy } from '@models/Strategy';
+import { isDenomStable, isDenomVolatile } from '@utils/getDenomInfo';
 
 const isStrategyAccumulating = (strategy: Strategy) => isDenomStable(getStrategyInitialDenom(strategy));
 
@@ -101,55 +94,38 @@ function InvestmentThesisWithActiveStrategies({
 }
 
 function TotalInvestment() {
-  const { allDenoms } = useDenoms();
-  const { fiatPrices } = useFiatPrices();
-  const { strategies } = useAllStrategies();
-
-  if (!fiatPrices || !strategies || !allDenoms) {
-    return (
-      <Center layerStyle="panel" p={8} h="full">
-        <Spinner />
-      </Center>
-    );
-  }
-
-  const totalSwappedAmounts = getTotalSwapped(strategies, values(allDenoms ?? {}));
-  const totalSwappedTotal = totalFromCoins(allDenoms, totalSwappedAmounts, fiatPrices);
-
-  const formattedValue =
-    totalSwappedTotal >= 1000000
-      ? `$${(totalSwappedTotal / 1000000).toFixed(3)}m`
-      : `$${Math.floor(totalSwappedTotal / 1000)}k`;
-
   return (
-    <Stack layerStyle="panel" p={8} h="full" spacing={6}>
-      <HStack spacing={2}>
-        <Icon as={DropIcon} stroke="blue.200" strokeWidth={5} w={6} h={6} />
-        <Heading size="md">How much is CALC reducing stress and saving time?</Heading>
-      </HStack>
-      <Flex gap={12} direction={['column', null, 'row']}>
-        <Stack spacing={4}>
-          <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {strategies.length}
-            <Text fontSize="md">total strategies created</Text>
-          </Heading>
+    <Box layerStyle="panel" p={8}>
+      <Stack spacing={8}>
+        <HStack spacing={2}>
+          <Image src="/images/denoms/ruji.svg" w={6} h={6} />
+          <Heading size="md">Try CALC on Rujira</Heading>
+        </HStack>
+        <Stack spacing={1}>
+          <Text fontSize="sm">Start a cross-chain DCA strategy on Rujira using Thorchain secured assets.</Text>
+          <Text fontSize="sm" textStyle="body">
+            Native BTC, ETH, AVAX, USDC, USDT, and many more...
+          </Text>
         </Stack>
-        <Divider display={['none', null, 'flex']} orientation="vertical" />
-        <Divider display={['flex', null, 'none']} />
-        <Stack spacing={4}>
-          <Heading data-testid="active-strategy-count" fontSize="5xl">
-            {formattedValue}
-            <Text fontSize="md">total swapped (USD)</Text>
-          </Heading>
+        <Stack direction={{ base: 'column', sm: 'row' }}>
+          <Button
+            as="a"
+            href="https://rujira.network/trade/RUJI/USDC?order=recurring"
+            target="_blank"
+            px={9}
+            size="sm"
+            bgColor="blue.200"
+            _hover={{ bgColor: 'blue.300' }}
+          >
+            Start trading Cross Chain
+          </Button>
         </Stack>
-      </Flex>
-    </Stack>
+      </Stack>
+    </Box>
   );
 }
 
 export function LearnAboutCalcPanel() {
-  const { track } = useAnalytics();
-
   return (
     <Box layerStyle="panel" p={8} backgroundImage="/images/backgrounds/twist-thin-blue.svg" backgroundSize="cover">
       <VStack alignItems="left" spacing={8}>
@@ -167,14 +143,7 @@ export function LearnAboutCalcPanel() {
         </Stack>
         <Stack direction={{ base: 'column', sm: 'row' }}>
           <LinkWithQuery passHref href="/learn-about-calc">
-            <Button
-              px={12}
-              maxWidth={402}
-              size="sm"
-              bgColor="blue.200"
-              _hover={{ bgColor: 'blue.300' }}
-              onClick={() => track('Learning hub button clicked')}
-            >
+            <Button px={12} maxWidth={402} size="sm" bgColor="blue.200" _hover={{ bgColor: 'blue.300' }}>
               Learn how CALC works
             </Button>
           </LinkWithQuery>

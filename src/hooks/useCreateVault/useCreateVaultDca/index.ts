@@ -1,16 +1,15 @@
 /* eslint-disable consistent-return */
-import { useWallet } from '@hooks/useWallet';
-import { useMutation } from '@tanstack/react-query';
-import { isEmpty, isNil } from 'lodash';
-import { useStrategyInfo } from '@hooks/useStrategyInfo';
-import { Strategy } from '@models/Strategy';
-import { DcaInFormDataAll } from '@models/DcaInFormData';
-import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useChainId } from '@hooks/useChainId';
 import useFiatPrices from '@hooks/useFiatPrices';
-import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { useWallet } from '@hooks/useWallet';
+import { DcaInFormDataAll } from '@models/DcaInFormData';
+import { Strategy } from '@models/Strategy';
+import { useMutation } from '@tanstack/react-query';
+import { isEmpty, isNil } from 'lodash';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
@@ -20,8 +19,6 @@ export const useCreateVaultDca = () => {
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
   const { fiatPrices } = useFiatPrices();
-
-  const track = useTrackCreateVault();
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -95,7 +92,6 @@ export const useCreateVaultDca = () => {
         fee,
         createVaultContext,
       );
-      track();
       return createResponse;
     } catch (error) {
       handleError(createVaultContext)(error);

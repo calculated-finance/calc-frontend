@@ -1,15 +1,14 @@
-import { useWallet } from '@hooks/useWallet';
-import { useMutation } from '@tanstack/react-query';
-import { WeightedScaleState } from '@models/weightedScaleFormData';
-import { useStrategyInfo } from '@hooks/useStrategyInfo';
-import { Strategy } from '@models/Strategy';
-import useFiatPrice from '@hooks/useFiatPrice';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
-import { InitialDenomInfo } from '@utils/DenomInfo';
-import YesNoValues from '@models/YesNoValues';
-import { useChainId } from '@hooks/useChainId';
 import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
-import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
+import { useChainId } from '@hooks/useChainId';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { useWallet } from '@hooks/useWallet';
+import { Strategy } from '@models/Strategy';
+import { WeightedScaleState } from '@models/weightedScaleFormData';
+import YesNoValues from '@models/YesNoValues';
+import { useMutation } from '@tanstack/react-query';
+import { InitialDenomInfo } from '@utils/DenomInfo';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
@@ -19,7 +18,6 @@ export const useCreateVaultWeightedScale = (initialDenom: InitialDenomInfo | und
   const { address } = useWallet();
   const { fiatPrice } = useFiatPrice(initialDenom);
   const { calcSigningClient: client } = useCalcSigningClient();
-  const track = useTrackCreateVault();
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -88,10 +86,6 @@ export const useCreateVaultWeightedScale = (initialDenom: InitialDenomInfo | und
 
     return client
       .createStrategy(address, state.initialDeposit, undefined, createVaultContext)
-      .then((result) => {
-        track();
-        return result;
-      })
       .catch(handleError(createVaultContext));
   });
 };

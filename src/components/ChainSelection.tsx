@@ -1,20 +1,19 @@
 import {
-  useDisclosure,
-  Menu,
-  MenuButton,
-  MenuList,
+  Button,
+  HStack,
   Icon,
   Image,
-  Button,
+  Menu,
+  MenuButton,
   MenuItemOption,
-  Tooltip,
+  MenuList,
   Text,
-  HStack,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useChainId } from '@hooks/useChainId';
 import { ChainId } from '@models/ChainId';
 import { useRouter } from 'next/router';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const chainSelectionAllowedUrls = [
   '/',
@@ -31,7 +30,6 @@ const imageMap = {
   'osmosis-1': '/images/denoms/osmo.svg',
   'osmo-test-5': '/images/denoms/osmo.svg',
   'kaiyo-1': '/images/denoms/kuji.svg',
-  'harpoon-4': '/images/denoms/kuji.svg',
   'archway-1': '/images/denoms/archway.svg',
   'constantine-3': '/images/denoms/archway.svg',
   'neutron-1': '/images/denoms/neutron.svg',
@@ -44,11 +42,11 @@ export function ChainSelection() {
   const router = useRouter();
 
   const chains = [
+    { id: 'thorchain', name: 'Rujira', imageSrc: '/images/denoms/ruji.svg', isTestnet: false },
     { id: 'kaiyo-1', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: false },
     { id: 'osmosis-1', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: false },
     { id: 'archway-1', name: 'Archway', imageSrc: '/images/denoms/archway.svg', isTestnet: false },
     { id: 'neutron-1', name: 'Neutron', imageSrc: '/images/denoms/neutron.svg', isTestnet: false },
-    { id: 'harpoon-4', name: 'Kujira', imageSrc: '/images/denoms/kuji.svg', isTestnet: true },
     { id: 'osmo-test-5', name: 'Osmosis', imageSrc: '/images/denoms/osmo.svg', isTestnet: true },
     { id: 'constantine-3', name: 'Archway', imageSrc: '/images/denoms/archway.svg', isTestnet: true },
     { id: 'pion-1', name: 'Neutron', imageSrc: '/images/denoms/neutron.svg', isTestnet: true },
@@ -70,25 +68,45 @@ export function ChainSelection() {
       <MenuList fontSize="sm">
         {chains
           .filter((chain) => !chain.isTestnet || process.env.NEXT_PUBLIC_APP_ENV !== 'production')
-          .map((chain) => (
-            <MenuItemOption
-              key={chain.id}
-              _checked={{ bg: 'blue.500', color: 'navy' }}
-              isChecked={chainId === chain.id}
-              onClick={() => {
-                setChain(chain.id as ChainId);
-                onClose();
-              }}
-            >
-              <HStack>
-                <Image src={chain.imageSrc} w={5} />
-                <Text>
-                  {chain.name}
-                  {chain.isTestnet ? ' (testnet)' : ''}
-                </Text>
-              </HStack>
-            </MenuItemOption>
-          ))}
+          .map((chain) =>
+            chain.id === 'thorchain' ? (
+              <MenuItemOption
+                key={chain.id}
+                _checked={{ bg: 'blue.500', color: 'navy' }}
+                isChecked={false}
+                onClick={() => {
+                  window.open('https://rujira.network/trade/RUJI/USDC?order=recurring', '_blank');
+                  onClose();
+                }}
+              >
+                <HStack>
+                  <Image src={chain.imageSrc} w={5} />
+                  <Text>
+                    {chain.name}
+                    {chain.isTestnet ? ' (testnet)' : ''}
+                  </Text>
+                </HStack>
+              </MenuItemOption>
+            ) : (
+              <MenuItemOption
+                key={chain.id}
+                _checked={{ bg: 'blue.500', color: 'navy' }}
+                isChecked={chainId === chain.id}
+                onClick={() => {
+                  setChain(chain.id as ChainId);
+                  onClose();
+                }}
+              >
+                <HStack>
+                  <Image src={chain.imageSrc} w={5} />
+                  <Text>
+                    {chain.name}
+                    {chain.isTestnet ? ' (testnet)' : ''}
+                  </Text>
+                </HStack>
+              </MenuItemOption>
+            ),
+          )}
       </MenuList>
     </Menu>
   );

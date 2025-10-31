@@ -1,18 +1,17 @@
-import { useWallet } from '@hooks/useWallet';
-import { useMutation } from '@tanstack/react-query';
-import { isNil } from 'lodash';
-import { useStrategyInfo } from '@hooks/useStrategyInfo';
-import { Strategy } from '@models/Strategy';
-import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
-import { ExecutionIntervals } from '@models/ExecutionIntervals';
-import { DcaPlusState } from '@models/dcaPlusFormData';
-import useFiatPrice from '@hooks/useFiatPrice';
-import { InitialDenomInfo } from '@utils/DenomInfo';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
-import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
-import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
+import { getSwapAmountFromDuration } from '@helpers/getSwapAmountFromDuration';
+import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useChainId } from '@hooks/useChainId';
+import useFiatPrice from '@hooks/useFiatPrice';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { useWallet } from '@hooks/useWallet';
+import { ExecutionIntervals } from '@models/ExecutionIntervals';
+import { Strategy } from '@models/Strategy';
+import { DcaPlusState } from '@models/dcaPlusFormData';
+import { useMutation } from '@tanstack/react-query';
+import { InitialDenomInfo } from '@utils/DenomInfo';
+import { isNil } from 'lodash';
 import { BuildCreateVaultContext } from '../buildCreateVaultParams';
 import { handleError } from '../handleError';
 
@@ -22,7 +21,6 @@ export const useCreateVaultDcaPlus = (initialDenom: InitialDenomInfo | undefined
   const { address } = useWallet();
 
   const { calcSigningClient } = useCalcSigningClient();
-  const track = useTrackCreateVault();
 
   const { fiatPrice } = useFiatPrice(initialDenom);
 
@@ -93,7 +91,6 @@ export const useCreateVaultDcaPlus = (initialDenom: InitialDenomInfo | undefined
         fee,
         createVaultContext,
       );
-      track();
       return createResponse;
     } catch (error) {
       return handleError(createVaultContext)(error);

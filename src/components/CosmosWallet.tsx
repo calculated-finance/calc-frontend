@@ -1,30 +1,29 @@
-import React from 'react';
-import { useWallet } from '@hooks/useWallet';
 import {
-  HStack,
   Box,
   Button,
-  Popover,
+  Divider,
+  HStack,
   Icon,
+  Image,
+  Popover,
   PopoverContent,
   PopoverTrigger,
-  useDisclosure,
   Stack,
-  useToast,
   useClipboard,
+  useDisclosure,
   useOutsideClick,
-  Image,
-  Divider,
+  useToast,
 } from '@chakra-ui/react';
+import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
+import { useWallet } from '@hooks/useWallet';
+import React from 'react';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useWalletModal } from 'src/hooks/useWalletModal';
-import { CopytoclipboardIcon, Remove1Icon } from '@fusion-icons/react/interface';
-import { useAnalytics } from '@hooks/useAnalytics';
-import { SpendableBalances } from './SpendableBalances';
-import OnRampModal from './OnRampModalContent';
-import SquidModal from './SquidModal';
 import { truncate } from '../helpers/truncate';
 import CalcIcon from './Icon';
+import OnRampModal from './OnRampModalContent';
+import { SpendableBalances } from './SpendableBalances';
+import SquidModal from './SquidModal';
 
 function CosmosWallet() {
   const { visible, setVisible } = useWalletModal();
@@ -33,7 +32,6 @@ function CosmosWallet() {
   const { isOpen: isOnRampOpen, onClose: onOnRampClose, onOpen: onOnRampOpen } = useDisclosure();
   const { isOpen: isSquidOpen, onClose: onSquidClose, onOpen: onSquidOpen } = useDisclosure();
   const { onCopy } = useClipboard(address || '');
-  const { track } = useAnalytics();
   const ref = React.createRef<HTMLElement>();
   useOutsideClick({
     ref,
@@ -43,7 +41,6 @@ function CosmosWallet() {
   const toast = useToast();
 
   const handleClick = () => {
-    track('Connect wallet button clicked');
     setVisible(!visible);
   };
 
