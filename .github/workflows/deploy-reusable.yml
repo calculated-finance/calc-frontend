@@ -20,12 +20,10 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      NEXT_PUBLIC_HOTJAR_SITE_ID:
-        required: true
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest-m
+    runs-on: ubuntu-latest
     name: Deploy Infrastructure
     environment: ${{ inputs.ENVIRONMENT }}
     env:
@@ -36,7 +34,6 @@ jobs:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
       BUCKET_DOMAIN_NAME: ${{ inputs.BUCKET_DOMAIN_NAME }}
       PROJECT_NAME: calc
-      NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
