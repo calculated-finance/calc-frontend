@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { queryClient } from 'src/pages/queryClient';
-import { Strategy } from '@models/Strategy';
 import { ChainContext } from '@cosmos-kit/core';
-import { ChainId } from '@models/ChainId';
-import { any, map, values } from 'rambda';
 import { useChains } from '@cosmos-kit/react';
 import { getAddressPrefix, getChainCosmosName, getDCAContractAddress } from '@helpers/chains';
-import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { ChainId } from '@models/ChainId';
+import { Strategy } from '@models/Strategy';
+import { useQuery } from '@tanstack/react-query';
 import { bech32 } from 'bech32';
+import { map, values } from 'rambda';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { queryClient } from 'src/pages/queryClient';
 import getCalcClient from './useCalcClient/getClient/clients/cosmos';
 import useDenoms from './useDenoms';
 import { useWallet } from './useWallet';
@@ -31,7 +31,7 @@ export function useStrategies() {
         const calcClient = getCalcClient(
           chain.chain.chain_id as ChainId,
           getDCAContractAddress(chain.chain.chain_id as ChainId),
-          client,
+          client as any,
           getDenomById,
         );
         const userAddress = bech32.encode(

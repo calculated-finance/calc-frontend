@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { Strategy } from '@models/Strategy';
-import { CHAINS, MAINNET_CHAINS } from 'src/constants';
-import { useChains } from '@cosmos-kit/react';
-import { getDCAContractAddress, getChainCosmosName } from '@helpers/chains';
-import { map, values } from 'rambda';
 import { ChainContext } from '@cosmos-kit/core';
-import { ChainId } from '@models/ChainId';
-import { queryClient } from 'src/pages/queryClient';
+import { useChains } from '@cosmos-kit/react';
+import { getChainCosmosName, getDCAContractAddress } from '@helpers/chains';
 import getCalcClient from '@hooks/useCalcClient/getClient/clients/cosmos';
 import useDenoms from '@hooks/useDenoms';
+import { ChainId } from '@models/ChainId';
+import { Strategy } from '@models/Strategy';
+import { useQuery } from '@tanstack/react-query';
+import { map, values } from 'rambda';
+import { CHAINS, MAINNET_CHAINS } from 'src/constants';
+import { queryClient } from 'src/pages/queryClient';
 
 const useAllStrategies = () => {
   const chains = values(
@@ -29,7 +29,7 @@ const useAllStrategies = () => {
         const calcClient = getCalcClient(
           chain.chain.chain_id as ChainId,
           getDCAContractAddress(chain.chain.chain_id as ChainId),
-          client,
+          client as any,
           getDenomById,
         );
         const chainStrategies = await calcClient.fetchAllVaults();

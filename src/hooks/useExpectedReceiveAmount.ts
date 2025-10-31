@@ -1,8 +1,8 @@
-import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
-import { ResultingDenomInfo } from '@utils/DenomInfo';
-import { useConfig } from '@hooks/useConfig';
 import { Coin } from '@cosmjs/stargate';
+import { useConfig } from '@hooks/useConfig';
+import { useCosmWasmClient } from '@hooks/useCosmWasmClient';
 import { useQuery } from '@tanstack/react-query';
+import { ResultingDenomInfo } from '@utils/DenomInfo';
 
 export default function useExpectedReceiveAmount(
   swapAmount: Coin | undefined,
@@ -17,13 +17,15 @@ export default function useExpectedReceiveAmount(
     ['prices', 'expected-receive-amount', swapAmount?.denom, swapAmount?.amount, targetDenom?.id, route],
     async () => {
       try {
-        return await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
+        const result = await cosmWasmClient!.queryContractSmart(config!.exchange_contract_address, {
           get_expected_receive_amount: {
             swap_amount: swapAmount,
             target_denom: targetDenom!.id,
             route,
           },
         });
+
+        return result;
       } catch (error) {
         if (`${error}`.includes('amount of')) {
           throw new Error(`Invalid swap or receive amount`);

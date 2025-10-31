@@ -1,25 +1,25 @@
-import { ChildrenProp } from '@helpers/ChildrenProp';
-import { ChainProvider as CosmosKitChainProvider } from '@cosmos-kit/react';
-import { assets, chains } from 'chain-registry';
+import { MainWalletBase } from '@cosmos-kit/core';
 import { wallets as keplrWallets } from '@cosmos-kit/keplr';
 import { wallets as leapWallets } from '@cosmos-kit/leap';
+import { ChainProvider as CosmosKitChainProvider } from '@cosmos-kit/react';
 import { wallets as xdefiWallets } from '@cosmos-kit/xdefi';
+import { getChainId, getGasPrice } from '@helpers/chains';
+import { ChildrenProp } from '@helpers/ChildrenProp';
+import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
+import { ChainId } from '@models/ChainId';
+import { assets, chains } from 'chain-registry';
+import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
+  ARCHWAY_MAINNET_RPC,
+  ARCHWAY_TESTNET_RPC,
   CHAINS,
   KUJIRA_MAINNET_RPC,
   KUJIRA_TESTNET_RPC,
   MAINNET_CHAINS,
   OSMOSIS_MAINNET_RPC,
   OSMOSIS_TESTNET_RPC,
-  ARCHWAY_TESTNET_RPC,
-  ARCHWAY_MAINNET_RPC,
 } from 'src/constants';
-import { ChainId } from '@models/ChainId';
-import { getChainId, getGasPrice } from '@helpers/chains';
-import { useEffect, useState } from 'react';
-import { Keplr, Window as KeplrWindow } from '@keplr-wallet/types';
-import { MainWalletBase } from '@cosmos-kit/core';
 
 declare global {
   interface Window extends KeplrWindow {
@@ -76,10 +76,12 @@ export function ChainProvider({ children }: ChildrenProp) {
             : {}),
         },
       }}
+      throwErrors={false}
       signerOptions={{
-        signingCosmwasm: (chain) => ({
-          gasPrice: getGasPrice(getChainId(typeof chain === 'string' ? chain : chain.chain_name) as ChainId),
-        }),
+        signingCosmwasm: (chain) =>
+          ({
+            gasPrice: getGasPrice(getChainId(typeof chain === 'string' ? chain : chain.chain_name) as ChainId),
+          } as any),
       }}
       walletConnectOptions={{
         signClient: {

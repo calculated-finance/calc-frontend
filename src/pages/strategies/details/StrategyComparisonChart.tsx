@@ -1,5 +1,15 @@
-import { Heading, GridItem, Box, Center, HStack, Stack } from '@chakra-ui/react';
+import { Box, Center, GridItem, Heading, HStack, Stack } from '@chakra-ui/react';
+import Spinner from '@components/Spinner';
+import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
+import { getStrategyInitialDenom, getStrategyResultingDenom, getTotalReceived, isBuyStrategy } from '@helpers/strategy';
+import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
+import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
 import useStrategyEvents from '@hooks/useStrategyEvents';
+import { Strategy } from '@models/Strategy';
+import { DenomInfo } from '@utils/DenomInfo';
+import { getDenomName } from '@utils/getDenomInfo';
+import { useSize } from 'ahooks';
+import { useRef, useState } from 'react';
 import {
   VictoryAxis,
   VictoryChart,
@@ -8,18 +18,8 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
 } from 'victory';
-import { useRef, useState } from 'react';
-import { Strategy } from '@models/Strategy';
-import { useSize } from 'ahooks';
-import useFiatPriceHistory from '@hooks/useFiatPriceHistory';
-import { getStrategyInitialDenom, getStrategyResultingDenom, getTotalReceived, isBuyStrategy } from '@helpers/strategy';
-import { buildLineChartData, buildSwapsChartData, convertDcaPlusEvents, convertTradEvents } from '@helpers/chart';
-import { getDenomName } from '@utils/getDenomInfo';
-import Spinner from '@components/Spinner';
-import { getStandardDcaTotalReceived } from '@helpers/strategy/dcaPlus';
-import { DenomInfo } from '@utils/DenomInfo';
-import { getPriceData } from './getChartData';
 import { DaysRadio } from './DaysRadio';
+import { getPriceData } from './getChartData';
 import { StrategyComparisonChartStats } from './StrategyComparisonChartStats';
 
 function formatPriceTick(priceMax: number) {
@@ -142,7 +142,7 @@ export function StrategyComparisonChart({ strategy }: { strategy: Strategy }) {
                 dependentAxis
                 key={0}
                 style={valueAxisStyle}
-                tickFormat={(tick) => (tick * lineChartMax).toFixed(2)}
+                tickFormat={(tick: number) => (tick * lineChartMax).toFixed(2)}
               />
               {/* Price axis */}
               <VictoryAxis

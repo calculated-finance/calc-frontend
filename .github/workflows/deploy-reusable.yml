@@ -19,7 +19,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-m
     name: Deploy Infrastructure
     environment: ${{ inputs.ENVIRONMENT }}
     env:
