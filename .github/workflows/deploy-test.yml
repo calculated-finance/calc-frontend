@@ -17,7 +17,6 @@ jobs:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      NEXT_PUBLIC_HOTJAR_SITE_ID: ${{ secrets.NEXT_PUBLIC_HOTJAR_SITE_ID }}
 
   e2e-calc-fi-frontend-production:
     name: E2E (production)
