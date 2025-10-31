@@ -1,16 +1,4 @@
 const addresses: Record<string, Record<string, string>> = {
-  'harpoon-4': {
-    'factory/kujira1ltvwg69sw3c5z99c6rr08hal7v0kdzfxz07yj5/demoukuji':
-      'kujira1suhgf5svhu4usrurvxzlgn54ksxmn8gljarjtxqnapv8kjnp4nrsqq4jjh',
-    'factory/kujira1r85reqy6h0lu02vyz0hnzhv5whsns55gdt4w0d7ft87utzk7u0wqr4ssll/uuskukuji':
-      'kujira1wl003xxwqltxpg5pkre0rl605e406ktmq5gnv0ngyjamq69mc2kqm06ey6',
-    'ibc/85CE72EE820A66F0ABD5EE3907A34E243E4BE2D6CFAEB4C08DF85BD6C0784FA2ukuji':
-      'kujira1pvrwmjuusn9wh34j7y520g8gumuy9xtl3gvprlljfdpwju3x7ucseu6vw3',
-    'ibc/A1E1A20C1E4F2F76F301DA625CC476FBD0FCD8CA94DAF60814CA5257B6CD3E3Eukuji':
-      'kujira1mf6ptkssddfmxvhdx0ech0k03ktp6kf9yk59renau2gvht3nq2gqx97zgq',
-    'ibc/ED07A3391A112B175915CD8FAF43A2DA8E4790EDE12566649D0C2F97716B8518ukuji':
-      'kujira14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9sl4e867',
-  },
   'kaiyo-1': {
     'factory/kujira1643jxg8wasy5cfcn7xm8rd742yeazcksqlg4d7/umntafactory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk':
       'kujira1mf4v3x3pkuthha5a4r9jd0slgulcxkucy4weuqsvx2n030twduzqewuznf',
@@ -100,4 +88,4 @@ const addresses: Record<string, Record<string, string>> = {
 };
 
 export const getPairAddress = (swapDenom: string, targetDenom: string): string | undefined =>
-  ({ ...addresses['kaiyo-1'], ...addresses['harpoon-4'] }[[swapDenom, targetDenom].sort().join('')]);
+  ({ ...addresses['kaiyo-1'] }[[swapDenom, targetDenom].sort().join('')]);

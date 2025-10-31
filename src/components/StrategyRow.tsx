@@ -1,39 +1,27 @@
-import {
-  Button,
-  Grid,
-  GridItem,
-  Heading,
-  Text,
-  Flex,
-  useDisclosure,
-  HStack,
-  Stack,
-  Image,
-  Box,
-} from '@chakra-ui/react';
+import { Button, Flex, Grid, GridItem, Heading, HStack, Image, Stack, Text, useDisclosure } from '@chakra-ui/react';
 import Icon from '@components/Icon';
 import { ArrowRightIcon, CloseBoxedIcon } from '@fusion-icons/react/interface';
 import { invalidateStrategies } from '@hooks/useStrategies';
 import { Strategy } from '@models/Strategy';
 
-import { fromAtomic } from '@utils/getDenomInfo';
-import {
-  getStrategyType,
-  getStrategyName,
-  isStrategyCancelled,
-  getStrategyExecutionInterval,
-  getSwapAmount,
-} from '@helpers/strategy';
 import { PlusSquareIcon } from '@chakra-ui/icons';
+import {
+  getStrategyExecutionInterval,
+  getStrategyName,
+  getStrategyType,
+  getSwapAmount,
+  isStrategyCancelled,
+} from '@helpers/strategy';
 import { isDcaPlus } from '@helpers/strategy/isDcaPlus';
+import { fromAtomic } from '@utils/getDenomInfo';
 import React from 'react';
 import { FiExternalLink } from 'react-icons/fi';
 import CancelStrategyModal from './CancelStrategyModal';
 import DenomIcon from './DenomIcon';
+import LinkWithQuery from './LinkWithQuery';
 import { StrategyStatusBadge } from './StrategyStatusBadge';
 import { generateStrategyDetailUrl } from './TopPanel/generateStrategyDetailUrl';
 import { generateStrategyTopUpUrl } from './TopPanel/generateStrategyTopUpUrl';
-import LinkWithQuery from './LinkWithQuery';
 
 function CancelButton({ strategy }: { strategy: Strategy }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,7 +53,6 @@ const imageMap = {
   'osmosis-1': '/images/denoms/osmo.svg',
   'osmo-test-5': '/images/denoms/osmo.svg',
   'kaiyo-1': '/images/denoms/kuji.svg',
-  'harpoon-4': '/images/denoms/kuji.svg',
   'archway-1': '/images/denoms/archway.svg',
   'constantine-3': '/images/denoms/archway.svg',
   'neutron-1': '/images/denoms/neutron.svg',

@@ -1,23 +1,23 @@
 import {
+  Button,
   FormErrorMessage,
   FormHelperText,
   HStack,
+  Input,
   InputGroup,
   InputLeftElement,
-  Text,
-  Button,
-  Link,
-  Input,
   InputProps,
+  Link,
   Stack,
+  Text,
 } from '@chakra-ui/react';
 import DenomIcon from '@components/DenomIcon';
+import { getOsmosisWebUrl } from '@helpers/chains';
+import { useChainId } from '@hooks/useChainId';
 import useSpotPrice from '@hooks/useSpotPrice';
+import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { ReactNode } from 'react';
 import { NumberFormatValues, NumericFormat } from 'react-number-format';
-import { useChainId } from '@hooks/useChainId';
-import { getOsmosisWebUrl } from '@helpers/chains';
-import { InitialDenomInfo, ResultingDenomInfo } from '@utils/DenomInfo';
 import { getPairAddress } from 'src/fixtures/addresses';
 import { TransactionType } from './TransactionType';
 
@@ -59,7 +59,6 @@ export function DenomPriceInput({
     'osmosis-1': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.name}&to=${priceInDenom.name}`,
     'osmo-test-5': () => `${getOsmosisWebUrl(chainId)}?from=${priceOfDenom.name}&to=${priceInDenom.name}`,
     'kaiyo-1': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
-    'harpoon-4': () => `https://fin.kujira.app/trade/${getPairAddress(initialDenom!.id, resultingDenom!.id)}`,
     'archway-1': () => `https://astrovault.io/trade`,
     'constantine-3': () => `https://testnet.astrovault.io/trade`,
     'neutron-1': () => `https://app.astroport.fi/swap?from=${initialDenom.id}&to=${resultingDenom.id}`,

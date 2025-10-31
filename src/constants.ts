@@ -84,7 +84,7 @@ export const contentData = {
   },
 };
 
-export const KUJIRA_CHAINS = ['kaiyo-1', 'harpoon-4'] as ChainId[];
+export const KUJIRA_CHAINS = ['kaiyo-1'] as ChainId[];
 export const ARCHWAY_CHAINS = ['archway-1', 'constantine-3'] as ChainId[];
 export const OSMOSIS_CHAINS = ['osmosis-1', 'osmo-test-5'] as ChainId[];
 export const NEUTRON_CHAINS = ['neutron-1', 'pion-1'] as ChainId[];

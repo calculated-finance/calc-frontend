@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useWallet } from '@hooks/useWallet';
-import * as Sentry from '@sentry/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DeliverTxResponse, SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { isNil } from 'lodash';
-import { getDCAContractAddress } from '@helpers/chains';
 import { EncodeObject } from '@cosmjs/proto-signing';
+import { getDCAContractAddress } from '@helpers/chains';
 import { useChainId } from '@hooks/useChainId';
 import { getExecuteMsg } from '@hooks/useCreateVault/getCreateVaultExecuteMsg';
 import { STRATEGY_KEY } from '@hooks/useStrategy';
-import { useAnalytics } from '@hooks/useAnalytics';
+import { useWallet } from '@hooks/useWallet';
+import * as Sentry from '@sentry/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { isNil } from 'lodash';
 import { ConfigureVariables } from './ConfigureVariables';
 import { getUpdateVaultMessage } from './getUpdateVaultMessage';
 
 export function useCustomiseStrategy() {
   const { address, getSigningClient, connected } = useWallet();
-  const { track } = useAnalytics();
   const { chainId } = useChainId();
   const queryClient = useQueryClient();
 
@@ -64,7 +62,6 @@ export function useCustomiseStrategy() {
     },
     {
       onSuccess: (_, variables) => {
-        track('Strategy Customisation Updated', { msg: getUpdateVaultMessage(variables) });
         queryClient.invalidateQueries({ queryKey: [STRATEGY_KEY, variables.strategy.id] });
       },
       onError: (error, { values }) => {

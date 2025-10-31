@@ -4,7 +4,7 @@ import { FIN_TAKER_FEE } from 'src/constants';
 export default function useDexFee() {
   const { chainId } = useChainId();
 
-  if (['kaiyo-1', 'harpoon-4'].includes(chainId)) {
+  if (['kaiyo-1'].includes(chainId)) {
     return { dexFee: FIN_TAKER_FEE };
   }
 

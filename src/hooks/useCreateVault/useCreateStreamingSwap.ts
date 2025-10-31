@@ -1,14 +1,13 @@
-import { useWallet } from '@hooks/useWallet';
-import { useMutation } from '@tanstack/react-query';
-import { useStrategyInfo } from '@hooks/useStrategyInfo';
-import { Strategy } from '@models/Strategy';
-import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { checkSwapAmountValue } from '@helpers/checkSwapAmountValue';
 import { createStrategyFeeInTokens } from '@helpers/createStrategyFeeInTokens';
+import { useCalcSigningClient } from '@hooks/useCalcSigningClient';
 import { useChainId } from '@hooks/useChainId';
 import useFiatPrices from '@hooks/useFiatPrices';
+import { useStrategyInfo } from '@hooks/useStrategyInfo';
+import { useWallet } from '@hooks/useWallet';
+import { Strategy } from '@models/Strategy';
 import { FormData } from '@models/StreamingSwapFormData';
-import { useTrackCreateVault } from '@hooks/useCreateVault/useTrackCreateVault';
+import { useMutation } from '@tanstack/react-query';
 import { BuildCreateVaultContext } from './buildCreateVaultParams';
 import { handleError } from './handleError';
 
@@ -18,8 +17,6 @@ export const useCreateStreamingSwap = () => {
   const { calcSigningClient } = useCalcSigningClient();
   const { address } = useWallet();
   const { fiatPrices: prices } = useFiatPrices();
-
-  const track = useTrackCreateVault();
 
   return useMutation<
     Strategy['id'] | undefined,
@@ -83,7 +80,6 @@ export const useCreateStreamingSwap = () => {
         fee,
         createVaultContext,
       );
-      track();
       return createResponse;
     } catch (error) {
       return handleError(createVaultContext)(error);

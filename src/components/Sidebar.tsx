@@ -1,27 +1,27 @@
-import { ReactNode } from 'react';
 import {
   Box,
+  BoxProps,
   CloseButton,
-  Flex,
-  useColorModeValue,
   Drawer,
   DrawerContent,
-  Text,
-  useDisclosure,
-  BoxProps,
+  Flex,
   FlexProps,
-  Image,
-  Stack,
-  Spacer,
   IconButton,
+  Image,
+  Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import Icon from '@components/Icon';
-import Footer from '@components/Footer';
 import { AppHeaderActions } from '@components/AppHeaderActions';
+import Footer from '@components/Footer';
+import Icon from '@components/Icon';
+import { LinkItem } from '@components/LinkItems';
 import LinkWithQuery from '@components/LinkWithQuery';
 import { useChainId } from '@hooks/useChainId';
-import { LinkItem } from '@components/LinkItems';
+import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
 
 const SIDEBAR_WIDTH = 64;
 
@@ -76,7 +76,6 @@ const sidebarLogoUrls = {
   'osmosis-1': '/images/osmoMascot.svg',
   'osmo-test-5': '/images/osmoMascot.svg',
   'kaiyo-1': '/images/kujiMascot.svg',
-  'harpoon-4': '/images/kujiMascot.svg',
   'archway-1': 'images/archwaySidebarLogo.svg',
   'constantine-3': 'images/archwaySidebarLogo.svg',
   'neutron-1': 'images/neutronMascot.svg',
@@ -109,7 +108,6 @@ function SidebarContent({ onClose, linkItems, ...rest }: SidebarProps & { linkIt
                 'osmosis-1': '/images/osmoLogo.svg',
                 'osmo-test-5': '/images/osmoLogo.svg',
                 'kaiyo-1': '/images/logo.svg',
-                'harpoon-4': '/images/logo.svg',
                 'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
                 'neutron-1': '/images/logo.svg',
@@ -172,7 +170,6 @@ function MobileNav({ onOpen, linkItems, ...rest }: MobileProps & { linkItems: Li
                 'osmosis-1': '/images/osmoLogo.svg',
                 'osmo-test-5': '/images/osmoLogo.svg',
                 'kaiyo-1': '/images/logo.svg',
-                'harpoon-4': '/images/logo.svg',
                 'archway-1': '/images/logo.svg',
                 'constantine-3': '/images/logo.svg',
                 'neutron-1': '/images/logo.svg',
