@@ -13,10 +13,8 @@ jobs:
       ENVIRONMENT: test
       BUCKET_DOMAIN_NAME: test.calculated.fi
     secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   e2e-calc-fi-frontend-production:
     name: E2E (production)
