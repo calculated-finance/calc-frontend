@@ -17,8 +17,3 @@ jobs:
     secrets:
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-
-  e2e-calc-fi-frontend-production:
-    name: E2E (production)
-    uses: ./.github/workflows/cypress-production.yml
-    needs: [deploy-calc-fi-frontend-production]

@@ -31,13 +31,6 @@
     // relative to your source root folder.
     "sourceRoot": "/"
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/pages/strategies/details",
-    "__mocks__/styleMock.ts",
-    "cypress.config.ignore"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/strategies/details", "__mocks__/styleMock.ts"],
   "exclude": ["node_modules"]
 }
