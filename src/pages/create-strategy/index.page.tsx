@@ -1,15 +1,15 @@
-import { Button, Flex, Heading, Stack, Text, Image, Box, Badge, Spacer, Wrap, Spinner } from '@chakra-ui/react';
+import { Badge, Box, Button, Flex, Heading, Image, Spacer, Spinner, Stack, Text, Wrap } from '@chakra-ui/react';
 import Icon from '@components/Icon';
-import { Code3Icon, Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
-import { ReactElement } from 'react';
-import { FiDivide, FiAperture } from 'react-icons/fi';
-import { useRouter } from 'next/router';
 import { getSidebarLayout } from '@components/Layout';
-import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 import LinkWithQuery from '@components/LinkWithQuery';
-import { useQuery } from '@tanstack/react-query';
+import { Fullscreen1Icon, Fullscreen2Icon } from '@fusion-icons/react/interface';
 import StrategyUrls from '@models/StrategyUrls';
+import { useQuery } from '@tanstack/react-query';
 import 'isomorphic-fetch';
+import { useRouter } from 'next/router';
+import { ReactElement } from 'react';
+import { FiAperture, FiDivide } from 'react-icons/fi';
+import { LearningHubLinks } from 'src/pages/learn-about-calc/LearningHubLinks';
 
 type StrategyCardProps = {
   name: string;
@@ -137,15 +137,6 @@ function Strategies() {
         learnMoreHref: LearningHubLinks.Dca,
       },
       {
-        name: 'Algorithm DCA+ In',
-        description: 'DCA into large cap assets based on market risk.',
-        advanced: true,
-        href: StrategyUrls.DCAPlusIn,
-        enabled: true,
-        icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-        learnMoreHref: LearningHubLinks.DcaPlus,
-      },
-      {
         name: 'Weighted Scale In',
         description: 'Buy more when the price is low, and less when the price is high.',
         advanced: true,
@@ -175,15 +166,6 @@ function Strategies() {
         enabled: true,
         href: StrategyUrls.DCAOut,
         learnMoreHref: LearningHubLinks.Dca,
-      },
-      {
-        name: 'Algorithm DCA+ Out',
-        description: 'DCA out of large cap assets based on market risk.',
-        advanced: true,
-        href: StrategyUrls.DCAPlusOut,
-        icon: <Icon stroke="white" strokeWidth={2} as={Code3Icon} width={8} height={8} />,
-        enabled: true,
-        learnMoreHref: LearningHubLinks.DcaPlus,
       },
       {
         name: 'Weighted Scale Out',
